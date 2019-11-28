@@ -36,6 +36,7 @@ import com.feitianzhu.fu700.shop.ShopDao;
 import com.feitianzhu.fu700.shop.ShopHelp;
 import com.feitianzhu.fu700.shop.ui.MyOrderActivity;
 import com.feitianzhu.fu700.utils.ToastUtils;
+import com.feitianzhu.fu700.view.CircleImageView;
 import com.feitianzhu.fu700.vip.VipActivity;
 import com.shehuan.niv.NiceImageView;
 import com.socks.library.KLog;
@@ -70,7 +71,7 @@ public class MyCenterFragment extends SFFragment {
     @BindView(R.id.recyclerview)
     RecyclerView mRecyclerView;
     @BindView(R.id.civ_head)
-    NiceImageView civHead;
+    CircleImageView civHead;
     @BindView(R.id.nickName)
     TextView nickName;
     @BindView(R.id.gradeName)
@@ -85,8 +86,8 @@ public class MyCenterFragment extends SFFragment {
     private MineInfoModel mTempData = null;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    Integer[] integers = {R.mipmap.b08_05yuer, R.mipmap.b08_06zhanghu, R.mipmap.b08_08dingdan,
-            R.mipmap.b08_09shangpu, R.mipmap.b08_10shouchang, R.mipmap.b08_11dizhi, R.mipmap.b08_12huiyuan, R.mipmap.b08_12huiyuan};
+    Integer[] integers = {R.mipmap.b08_05yuer, R.mipmap.b08_06zhanghu, R.mipmap.b08_07lianmeng, R.mipmap.b08_08dingdan,
+            R.mipmap.b08_09shangpu, R.mipmap.b08_10shouchang, R.mipmap.b08_11dizhi, R.mipmap.b08_12huiyuan, R.mipmap.b08_13yinhangka};
 
     public MyCenterFragment() {
     }
@@ -194,15 +195,24 @@ public class MyCenterFragment extends SFFragment {
                 Intent intent;
                 switch (position) {
                     case 0: //余额
-                        JumpActivity(getContext(), MyWalletActivity.class);
+                        //JumpActivity(getContext(), MyWalletActivity.class);
+                        intent = new Intent(getActivity(), BalanceActivity.class);
+                        startActivity(intent);
                         break;
                     case 1: //账户认证
                         startActivity(new Intent(getActivity(), MyVerificationActivity.class));
                         break;
-                    case 2://我的订单
+                    case 2: //联盟
+                        ToastUtils.showShortToast("待开发");
+                       /* intent = new Intent(getContext(), UnionlevelActivity.class);
+                        intent.putExtra("AgentName", agentName);
+                        intent.putExtra("Rate", rate);
+                        startActivity(intent);*/
+                        break;
+                    case 3://我的订单
                         JumpActivity(getContext(), MyOrderActivity.class);
                         break;
-                    case 3://商铺管理
+                    case 4://商铺管理
                         if (!Constant.loadUserAuth) {
                             ToastUtils.showShortToast("正在获取授权信息，稍候进入");
                             ShopDao.loadUserAuthImpl();
@@ -211,17 +221,18 @@ public class MyCenterFragment extends SFFragment {
                             ShopHelp.veriJumpActivity(getActivity());
                         }
                         break;
-                    case 4://我的收藏
+                    case 5://我的收藏
                         JumpActivity(getContext(), MineCollectionActivity.class);
                         break;
-                    case 5: //地址管理
+                    case 6: //地址管理
+                        ToastUtils.showShortToast("待开发");
                         break;
-                    case 6: //成为会员
+                    case 7: //成为会员
                         intent = new Intent(getContext(), VipActivity.class);
                         startActivity(intent);
                         break;
-                    case 7: //银行卡 //暂不提供银行卡功能
-                        /*if (!Constant.loadUserAuth) {
+                    case 8: //银行卡 //暂不提供银行卡功能
+                        if (!Constant.loadUserAuth) {
                             ToastUtils.showShortToast("正在获取授权信息，稍候进入");
                             ShopDao.loadUserAuthImpl();
                             return;
@@ -237,7 +248,7 @@ public class MyCenterFragment extends SFFragment {
                                     ToastUtils.showShortToast(result);
                                 }
                             });
-                        }*/
+                        }
                         break;
                 }
             }

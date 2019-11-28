@@ -148,7 +148,8 @@
             android:id="@+id/ll_protocol"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <CheckBox
                 android:id="@+id/cb_protocol"
@@ -199,7 +200,6 @@
 
         <Button
             android:id="@+id/sign_in_button"
-            style="?android:textAppearanceSmall"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"

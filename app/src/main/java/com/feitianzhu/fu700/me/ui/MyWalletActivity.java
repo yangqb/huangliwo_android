@@ -200,13 +200,15 @@ public class MyWalletActivity extends BaseActivity {
         }
         switch (view.getId()) {
             case R.id.duixian:
-                VeriPassword(1, wallet.balance);
+                //VeriPassword(1, wallet.balance);
+                ToastUtils.showShortToast("待开发");
                 break;
             case R.id.right_text:
-                Intent mIntent = new Intent(this, LazyWebActivity.class);
+               /* Intent mIntent = new Intent(this, LazyWebActivity.class);
                 mIntent.putExtra(Constant.URL, Constant.MYMONEY_INDEX);
                 mIntent.putExtra(Constant.H5_TITLE, "说明");
-                startActivity(mIntent);
+                startActivity(mIntent);*/
+                ToastUtils.showShortToast("待开发");
                 break;
             case R.id.f_one:
                 VeriPassword(2, wallet.merchantBalance);
@@ -240,8 +242,9 @@ public class MyWalletActivity extends BaseActivity {
 
     @OnClick(R.id.txt_chongzhi)
     public void onChongzhiClicked() {
-        Intent intent = new Intent(this, WalletPayActivity.class);
-        startActivity(intent);
+       /* Intent intent = new Intent(this, WalletPayActivity.class);
+        startActivity(intent);*/
+        ToastUtils.showShortToast("待开发");
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)

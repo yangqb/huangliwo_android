@@ -9,9 +9,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
@@ -24,8 +26,10 @@ import com.feitianzhu.fu700.shop.ShopDao;
 import com.feitianzhu.fu700.shop.ui.dialog.ProvinceCallBack;
 import com.feitianzhu.fu700.shop.ui.dialog.ProvincehDialog;
 import com.feitianzhu.fu700.utils.ToastUtils;
+import com.gyf.immersionbar.ImmersionBar;
 import com.jph.takephoto.model.TResult;
 import com.socks.library.KLog;
+
 import java.util.ArrayList;
 
 /**
@@ -33,9 +37,6 @@ import java.util.ArrayList;
  * autour: dicallc
  */
 public class VerificationActivity extends SelectPhotoActivity {
-
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
     @BindView(R.id.txt_one)
     TextView mTxtOne;
     @BindView(R.id.take_photo_one)
@@ -109,6 +110,8 @@ public class VerificationActivity extends SelectPhotoActivity {
     @BindView(R.id.txt_shops_type)
     TextView txtShopsType;
     private String mPath;
+    @BindView(R.id.title_name)
+    TextView titleName;
     /**
      * 0 代表对着招 1代表正面照 2代表背面照 3是商户照片
      */
@@ -152,7 +155,7 @@ public class VerificationActivity extends SelectPhotoActivity {
             } else {
                 mTxtIdcardType.setText(mList.get(num - 1));
             }
-        }catch (Exception mE){
+        } catch (Exception mE) {
 
         }
 
@@ -164,18 +167,19 @@ public class VerificationActivity extends SelectPhotoActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verification);
         ButterKnife.bind(this);
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                finish();
-            }
-        });
+        ImmersionBar.with(this)
+                .fitsSystemWindows(true)
+                .statusBarDarkFont(true, 0.2f)
+                .statusBarColor(R.color.white)
+                .init();
         mVeri_shops = getIntent().getBooleanExtra(Constant.VERI_SHOPS, false);
         //mVeri_shops = true;
+        titleName.setText("账户认证");
         initData();
     }
 
     private void initData() {
-        isCorp=false;
+        isCorp = false;
         //showloadDialog("获取验证信息");
         if (mVeri_shops) {
             doVeriShop();
@@ -226,7 +230,7 @@ public class VerificationActivity extends SelectPhotoActivity {
     @OnClick({
             R.id.edit_name, R.id.ly_type, R.id.edt_id_num, R.id.ly_huji, R.id.take_photo_one,
             R.id.take_photo_two, R.id.take_photo_three, R.id.btn_submit, R.id.img_update_yinye_card,
-            R.id.btn_shops_submit, R.id.ly_shops_type
+            R.id.btn_shops_submit, R.id.ly_shops_type, R.id.left_button
     })
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -247,7 +251,7 @@ public class VerificationActivity extends SelectPhotoActivity {
                 branchDialog.setSelectOnListener(new ProvinceCallBack() {
                     @Override
                     public void onWhellFinish(Province province, Province.CityListBean city,
-                        Province.AreaListBean mAreaListBean) {
+                                              Province.AreaListBean mAreaListBean) {
                         String mProvince_name = province.name;
                         String mCity_name = city.name;
                         String mProvince_id = province.id;
@@ -290,6 +294,9 @@ public class VerificationActivity extends SelectPhotoActivity {
                 break;
             case R.id.btn_shops_submit:
                 showShopsWait();
+                break;
+            case R.id.left_button:
+                finish();
                 break;
         }
     }
@@ -342,7 +349,7 @@ public class VerificationActivity extends SelectPhotoActivity {
             ToastUtils.showShortToast("还没有填写证件号码");
             return;
         }
-        if (18<id_num.length()){
+        if (18 < id_num.length()) {
             ToastUtils.showShortToast("证件号码格式错误");
             return;
         }
@@ -368,7 +375,7 @@ public class VerificationActivity extends SelectPhotoActivity {
             return;
         }
         String address_num = mTxtAddressType.getText().toString().trim();
-        if (TextUtils.isEmpty(address_num)||null==mOnSelectProvince) {
+        if (TextUtils.isEmpty(address_num) || null == mOnSelectProvince) {
             ToastUtils.showShortToast("还没有选择地区");
             return;
         }

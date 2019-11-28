@@ -18,6 +18,7 @@ import com.feitianzhu.fu700.me.helper.ImageUtil;
 import com.feitianzhu.fu700.me.ui.totalScore.MineQrcodeActivity;
 import com.feitianzhu.fu700.shop.ui.ShopsPayActivity;
 import com.feitianzhu.fu700.utils.ToastUtils;
+import com.gyf.immersionbar.ImmersionBar;
 import com.uuzuche.lib_zxing.activity.CaptureFragment;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 
@@ -50,7 +51,11 @@ public class ScannerActivity extends BaseActivity {
 
     @Override
     protected void initTitle() {
-
+        ImmersionBar.with(this)
+                .fitsSystemWindows(true)
+                .statusBarDarkFont(true, 0.2f)
+                .statusBarColor(R.color.bg_yellow)
+                .init();
         title.setText("扫一扫");
         tvRight.setText("相册");
         title.setVisibility(View.VISIBLE);
@@ -179,10 +184,18 @@ public class ScannerActivity extends BaseActivity {
     }
 */
 
-    @OnClick(R.id.textview)
+    @OnClick({R.id.textview, R.id.left_button})
     public void onClick(View v) {
-        Intent intent = new Intent(ScannerActivity.this, MineQrcodeActivity.class);
-        startActivity(intent);
+        switch (v.getId()) {
+            case R.id.textview:
+                Intent intent = new Intent(ScannerActivity.this, MineQrcodeActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.left_button:
+                finish();
+                break;
+        }
+
     }
 
     public String getStringByUrl(String url, String typeName) {

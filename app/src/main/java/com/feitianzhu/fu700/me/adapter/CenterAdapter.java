@@ -29,11 +29,11 @@ public class CenterAdapter extends BaseQuickAdapter<Integer, BaseViewHolder> {
         ImageView imageView = helper.getView(R.id.image);
         loadImg(item, imageView);
         TextView textView = helper.getView(R.id.name);
-        if (helper.getAdapterPosition() == 7) {
+        /*if (helper.getAdapterPosition() == 8) {
             helper.getView(R.id.item).setVisibility(View.INVISIBLE);
         } else {
             helper.getView(R.id.item).setVisibility(View.VISIBLE);
-        }
+        }*/
         switch (helper.getAdapterPosition()) {
             case 0:
                 textView.setText("余额");
@@ -42,21 +42,24 @@ public class CenterAdapter extends BaseQuickAdapter<Integer, BaseViewHolder> {
                 textView.setText("账户认证");
                 break;
             case 2:
-                textView.setText("我的订单");
+                textView.setText("联盟");
                 break;
             case 3:
-                textView.setText("商铺管理");
+                textView.setText("我的订单");
                 break;
             case 4:
-                textView.setText("我的收藏");
+                textView.setText("商铺管理");
                 break;
             case 5:
-                textView.setText("地址管理");
+                textView.setText("我的收藏");
                 break;
             case 6:
-                textView.setText("成为会员");
+                textView.setText("地址管理");
                 break;
             case 7:
+                textView.setText("成为会员");
+                break;
+            case 8:
                 textView.setText("银行卡");
                 break;
         }

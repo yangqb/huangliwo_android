@@ -19,6 +19,7 @@ import com.feitianzhu.fu700.model.RecommndShopModel;
 import com.feitianzhu.fu700.shop.ShopDao;
 import com.feitianzhu.fu700.shop.adapter.ShopRecommendAdapter;
 import com.feitianzhu.fu700.shop.adapter.ShopSearchAdapter;
+import com.feitianzhu.fu700.utils.ToastUtils;
 import com.gyf.immersionbar.ImmersionBar;
 
 import java.util.ArrayList;
@@ -111,7 +112,8 @@ public class ShopSearchActivity extends SFActivity {
     @OnClick(R.id.btn_search)
     public void onViewClicked() {
         keyword = etKeyword.getText().toString().trim();
-        initData();
+        ToastUtils.showShortToast("待开发");
+        //initData();
     }
 
 //    @Override

@@ -36,6 +36,7 @@ import com.feitianzhu.fu700.shop.adapter.RightAdapter;
 import com.feitianzhu.fu700.shop.ui.ShopSearchActivity;
 import com.feitianzhu.fu700.shop.ui.dialog.ProvinceCallBack;
 import com.feitianzhu.fu700.shop.ui.dialog.ProvincehDialog;
+import com.feitianzhu.fu700.utils.ToastUtils;
 import com.socks.library.KLog;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
@@ -270,18 +271,21 @@ public class CommodityClassificationFragment extends SFFragment implements View.
                 break;
             case R.id.iv_shoukuan:
                 popupWindow.dismiss();
-                Intent collIntent = new Intent(getActivity(), CollectMoneyActivity.class);
-                ShopHelp.veriUserShopJumpActivity(getActivity(), collIntent);
+                ToastUtils.showShortToast("待开发");
+                /*Intent collIntent = new Intent(getActivity(), CollectMoneyActivity.class);
+                ShopHelp.veriUserShopJumpActivity(getActivity(), collIntent);*/
                 break;
             case R.id.iv_ludan:
                 popupWindow.dismiss();
-                Intent intent = new Intent(getActivity(), ShopRecordActivity.class);
-                ShopHelpTwo.veriUserShopJumpActivity(getActivity(), intent);
+                ToastUtils.showShortToast("待开发");
+               /* Intent intent = new Intent(getActivity(), ShopRecordActivity.class);
+                ShopHelpTwo.veriUserShopJumpActivity(getActivity(), intent);*/
                 break;
             case R.id.iv_fabufuwu:
                 popupWindow.dismiss();
-                Intent pushIntent = new Intent(getActivity(), PushServiceActivity.class);
-                ShopHelp.veriUserShopJumpActivity(getActivity(), pushIntent);
+                ToastUtils.showShortToast("待开发");
+                /*Intent pushIntent = new Intent(getActivity(), PushServiceActivity.class);
+                ShopHelp.veriUserShopJumpActivity(getActivity(), pushIntent);*/
                 break;
             case R.id.button1:
                 mParam1 = 1;

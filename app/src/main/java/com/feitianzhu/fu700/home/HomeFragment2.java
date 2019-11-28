@@ -12,6 +12,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.fu700.App;
 import com.feitianzhu.fu700.MainActivity;
@@ -33,10 +35,12 @@ import com.feitianzhu.fu700.home.adapter.HAdapter;
 import com.feitianzhu.fu700.home.adapter.HomeRecommendAdapter2;
 import com.feitianzhu.fu700.home.entity.HomeEntity;
 import com.feitianzhu.fu700.me.ui.CollectMoneyActivity;
+import com.feitianzhu.fu700.me.ui.PersonalCenterActivity2;
 import com.feitianzhu.fu700.me.ui.PushServiceActivity;
 import com.feitianzhu.fu700.me.ui.ScannerActivity;
 import com.feitianzhu.fu700.me.ui.ServiceDetailActivity;
 import com.feitianzhu.fu700.me.ui.ShopRecordActivity;
+import com.feitianzhu.fu700.model.MineInfoModel;
 import com.feitianzhu.fu700.model.Province;
 import com.feitianzhu.fu700.shop.ShopDetailActivity;
 import com.feitianzhu.fu700.shop.ShopHelp;
@@ -47,6 +51,7 @@ import com.feitianzhu.fu700.shop.ui.dialog.ProvinceCallBack;
 import com.feitianzhu.fu700.shop.ui.dialog.ProvincehDialog;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.utils.Urls;
+import com.feitianzhu.fu700.view.CircleImageView;
 import com.google.gson.Gson;
 import com.socks.library.KLog;
 import com.yanzhenjie.permission.AndPermission;
@@ -72,8 +77,12 @@ import butterknife.Unbinder;
 import okhttp3.Call;
 import okhttp3.Response;
 
+import static com.feitianzhu.fu700.common.Constant.ACCESSTOKEN;
+import static com.feitianzhu.fu700.common.Constant.Common_HEADER;
 import static com.feitianzhu.fu700.common.Constant.ISADMIN;
 import static com.feitianzhu.fu700.common.Constant.MERCHANTID;
+import static com.feitianzhu.fu700.common.Constant.POST_MINE_INFO;
+import static com.feitianzhu.fu700.common.Constant.USERID;
 
 /**
  * @class name：com.feitianzhu.fu700.home
@@ -101,6 +110,9 @@ public class HomeFragment2 extends SFFragment implements SwipeRefreshLayout.OnRe
     RelativeLayout rlMerchants;
     @BindView(R.id.rl_mall)
     RelativeLayout rlMall;
+    @BindView(R.id.iv_head)
+    CircleImageView ivHead;
+
     private List<HomeEntity.RecommendListBean> mRecommends = new ArrayList<>();
     private List<HomeEntity.ServiceRecommendListBean> serviceRecommendList = new ArrayList<>();
     private View mHeader;
@@ -206,8 +218,9 @@ public class HomeFragment2 extends SFFragment implements SwipeRefreshLayout.OnRe
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (!TextUtils.isEmpty(Constant.mCity)) mTxtLocation.setText(Constant.mCity);
+        //if (!TextUtils.isEmpty(Constant.mCity)) mTxtLocation.setText(Constant.mCity);
         getData();
+        requestData();
     }
 
 
@@ -221,7 +234,8 @@ public class HomeFragment2 extends SFFragment implements SwipeRefreshLayout.OnRe
                 branchDialog.show(getChildFragmentManager());
                 break;
             case R.id.iv_head: //
-
+                Intent intent = new Intent(getActivity(), PersonalCenterActivity2.class);
+                startActivity(intent);
                 break;
         }
 
@@ -358,10 +372,12 @@ public class HomeFragment2 extends SFFragment implements SwipeRefreshLayout.OnRe
                 JumpActivity(getContext(), ServiceDetailActivity.class, mHomeEntity.bannerList.get(i).idValue);
                 break;
             case 3:
-                WebViewActivity.startActivity(getActivity(), mHomeEntity.bannerList.get(i).outUrl, "");
+                ToastUtils.showShortToast("待开发");
+                //WebViewActivity.startActivity(getActivity(), mHomeEntity.bannerList.get(i).outUrl, "");
                 break;
             case 4:
-                WebViewActivity.startActivity(getActivity(), mHomeEntity.bannerList.get(i).outUrl, "");
+                ToastUtils.showShortToast("待开发");
+                // WebViewActivity.startActivity(getActivity(), mHomeEntity.bannerList.get(i).outUrl, "");
                 break;
 
         }
@@ -402,24 +418,36 @@ public class HomeFragment2 extends SFFragment implements SwipeRefreshLayout.OnRe
                 break;
             case R.id.iv_shoukuan:
                 popupWindow.dismiss();
-                Intent collIntent = new Intent(getActivity(), CollectMoneyActivity.class);
-                ShopHelp.veriUserShopJumpActivity(getActivity(), collIntent);
+                ToastUtils.showShortToast("待开发");
+                /*Intent collIntent = new Intent(getActivity(), CollectMoneyActivity.class);
+                ShopHelp.veriUserShopJumpActivity(getActivity(), collIntent);*/
                 break;
             case R.id.iv_ludan:
                 popupWindow.dismiss();
-                intent = new Intent(getActivity(), ShopRecordActivity.class);
-                ShopHelpTwo.veriUserShopJumpActivity(getActivity(), intent);
+                ToastUtils.showShortToast("待开发");
+               /* intent = new Intent(getActivity(), ShopRecordActivity.class);
+                ShopHelpTwo.veriUserShopJumpActivity(getActivity(), intent);*/
                 break;
             case R.id.iv_fabufuwu:
                 popupWindow.dismiss();
-                Intent pushIntent = new Intent(getActivity(), PushServiceActivity.class);
-                ShopHelp.veriUserShopJumpActivity(getActivity(), pushIntent);
+                ToastUtils.showShortToast("待开发");
+                /*Intent pushIntent = new Intent(getActivity(), PushServiceActivity.class);
+                ShopHelp.veriUserShopJumpActivity(getActivity(), pushIntent);*/
                 break;
             case R.id.rl_merchants: //商家
                 mCallbackBFragment.skipToCommodityFragment(1, v);
                 break;
             case R.id.rl_mall: //商城
                 mCallbackBFragment.skipToCommodityFragment(2, v);
+                break;
+            case R.id.rl_ticket:
+                ToastUtils.showShortToast("待开发");
+                break;
+            case R.id.rl_financial:
+                ToastUtils.showShortToast("待开发");
+                break;
+            case R.id.rl_travel:
+                ToastUtils.showShortToast("待开发");
                 break;
         }
     }
@@ -486,6 +514,32 @@ public class HomeFragment2 extends SFFragment implements SwipeRefreshLayout.OnRe
         public void onBind(final Context context, HomeEntity.BannerListBean data, final int position, final int size) {
             Glide.with(context).load(R.mipmap.a04_01banner).into(mImageView);
         }
+    }
+
+    /*
+     * 获取头像
+     * */
+    private void requestData() {
+        OkHttpUtils.post()//
+                .url(Common_HEADER + POST_MINE_INFO)
+                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
+                .addParams(USERID, Constant.LOGIN_USERID)
+                .build()
+                .execute(new Callback<MineInfoModel>() {
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        Log.e("wangyan", "onError---->" + e.getMessage());
+                        ToastUtils.showShortToast(e.getMessage());
+                    }
+
+                    @Override
+                    public void onResponse(MineInfoModel response, int id) {
+                        String headImg = response.getHeadImg();
+                        Glide.with(mContext).load(headImg).apply(RequestOptions.placeholderOf(R.mipmap.b08_01touxiang).dontAnimate())
+                                .into(ivHead);
+                    }
+                });
     }
 
     @Override

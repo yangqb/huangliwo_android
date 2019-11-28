@@ -81,8 +81,6 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
     TextView mTxtMe;
     @BindView(R.id.tab_menu)
     LinearLayout mTabMenu;
-    @BindView(R.id.div_tab_bar)
-    View mDivTabBar;
     @BindView(R.id.fragment_container)
     FrameLayout mFragmentContainer;
     @BindView(R.id.img_index)
@@ -196,6 +194,7 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
                     mTransaction.show(mMessageFragment);
                 }
                 mTransaction.commit();
+                ToastUtils.showShortToast("待开发");
                 break;
 
             case R.id.ly_me:

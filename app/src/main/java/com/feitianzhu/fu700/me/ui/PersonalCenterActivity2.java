@@ -133,7 +133,8 @@ public class PersonalCenterActivity2 extends BaseTakePhotoActivity {
                 startActivity(intent);
                 break;
             case R.id.right_button: //分享名片
-                showShare();
+                // showShare();
+                ToastUtils.showShortToast("待开发");
                 break;
             case R.id.left_button:
                 finish();

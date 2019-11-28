@@ -151,7 +151,7 @@ public class MineQrcodeActivity extends BaseActivity {
             qrUrl = "http://www.baidu.com";
         }
         Log.e("Test", "-------->" + qrUrl);
-        bitmap = CodeUtils.createImage(qrUrl, 400, 400, BitmapFactory.decodeResource(getResources(), R.mipmap.icon_fu));
+        bitmap = CodeUtils.createImage(qrUrl, 400, 400, BitmapFactory.decodeResource(getResources(), R.mipmap.logo));
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
         byte[] bytes = baos.toByteArray();
@@ -174,7 +174,8 @@ public class MineQrcodeActivity extends BaseActivity {
                 saveBitmapToLocal(bitmap);
                 break;
             case R.id.bt_shared:
-                showShare();
+                //showShare();
+                ToastUtils.showShortToast("待开发");
                 break;
         }
     }

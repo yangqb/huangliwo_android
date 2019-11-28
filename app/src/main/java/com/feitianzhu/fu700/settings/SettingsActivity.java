@@ -146,16 +146,18 @@ public class SettingsActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.rl_about:
-                intent = new Intent(this, LazyWebActivity.class);
+               /* intent = new Intent(this, LazyWebActivity.class);
                 intent.putExtra(Constant.URL, Urls.H5_ABOUT_ME);
                 intent.putExtra(Constant.H5_TITLE, "关于我们");
-                startActivity(intent);
+                startActivity(intent);*/
+                ToastUtils.showShortToast("待开发");
                 break;
             case R.id.rl_help:
-                intent = new Intent(this, LazyWebActivity.class);
+                /*intent = new Intent(this, LazyWebActivity.class);
                 intent.putExtra(Constant.URL, Urls.H5_HELPER);
                 intent.putExtra(Constant.H5_TITLE, "帮助");
-                startActivity(intent);
+                startActivity(intent);*/
+                ToastUtils.showShortToast("待开发");
                 break;
             case R.id.rl_update:
                 updateDiy();

@@ -24,6 +24,7 @@ import com.zhy.http.okhttp.callback.Callback;
 import java.io.ByteArrayOutputStream;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 import okhttp3.Call;
 
 import static com.feitianzhu.fu700.common.Constant.ACCESSTOKEN;
@@ -41,6 +42,8 @@ public class CollectMoneyActivity extends BaseActivity {
     TextView mLocalName;
     @BindView(R.id.civ_pic)
     CircleImageView mCivPic;
+    @BindView(R.id.title_name)
+    TextView titleName;
 
     @Override
     protected int getLayoutId() {
@@ -49,14 +52,9 @@ public class CollectMoneyActivity extends BaseActivity {
 
     @Override
     protected void initTitle() {
-        defaultNavigationBar = new DefaultNavigationBar
-                .Builder(CollectMoneyActivity.this, (ViewGroup)findViewById(R.id.Rl_titleContainer))
-                .setTitle("我要收款")
-                .setStatusHeight(CollectMoneyActivity.this)
-                .setLeftIcon(R.drawable.iconfont_fanhuijiantou)
-                .builder();
-        defaultNavigationBar.setImmersion(R.color.status_bar);
+        titleName.setText("我要收款");
     }
+
     //{"qrCodeUrl":"http://118.190.156.13/merchantqrcode/7.png","expire":30}
     @Override
     protected void initView() {
@@ -73,7 +71,7 @@ public class CollectMoneyActivity extends BaseActivity {
 
                     @Override
                     public void onError(Call call, Exception e, int id) {
-                        Log.e("wangyan","onError---->"+e.getMessage());
+                        Log.e("wangyan", "onError---->" + e.getMessage());
                         ToastUtils.showShortToast(e.getMessage());
                     }
 
@@ -85,17 +83,22 @@ public class CollectMoneyActivity extends BaseActivity {
                 });
     }
 
+    @OnClick(R.id.left_button)
+    public void onClick() {
+        finish();
+    }
+
     private void setShowData(MineCollectionMoneyModel response) {
         //mQrcode
         //Constant.USER_INFO.headImg;
         String qrUrl = response.getQrCodeUrl();
-        if(TextUtils.isEmpty(qrUrl)){
+        if (TextUtils.isEmpty(qrUrl)) {
             qrUrl = "http://www.fu700.cn/?id=7";
         }
-       Bitmap bitmap = CodeUtils.createImage(qrUrl,400,400, BitmapFactory.decodeResource(getResources(), R.mipmap.icon_fu));
+        Bitmap bitmap = CodeUtils.createImage(qrUrl, 400, 400, BitmapFactory.decodeResource(getResources(), R.mipmap.icon_fu));
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        byte[] bytes=baos.toByteArray();
+        byte[] bytes = baos.toByteArray();
         Glide.with(mContext).load(bytes).apply(RequestOptions.placeholderOf(R.mipmap.pic_fuwutujiazaishibai)).into(mQrcode);
         Glide.with(mContext).load(response.getMerchantHeadImg()).apply(RequestOptions.placeholderOf(R.mipmap.pic_fuwutujiazaishibai).dontAnimate())
                 .into(mCivPic);
