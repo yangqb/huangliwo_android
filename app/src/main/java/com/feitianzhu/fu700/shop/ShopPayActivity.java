@@ -110,7 +110,7 @@ public class ShopPayActivity extends BaseActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        //ShopDao.loadUserAuthImpl();
+        ShopDao.loadUserAuthImpl();
     }
 
     @SuppressLint("SetTextI18n")

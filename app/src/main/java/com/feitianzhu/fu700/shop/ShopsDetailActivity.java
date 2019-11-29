@@ -138,7 +138,12 @@ public class ShopsDetailActivity extends BaseActivity {
             case R.id.tv_pay:
                 Intent intent = new Intent(ShopsDetailActivity.this, ShopPayActivity.class);
                 intent.putExtra(ShopPayActivity.IS_SHOW_ADDRESS, true);
-                intent.putExtra(ShopPayActivity.PAY_AMOUNT, shopsList.price);
+                if (shopsList != null) {
+                    intent.putExtra(ShopPayActivity.PAY_AMOUNT, shopsList.price);
+                } else {
+                    intent.putExtra(ShopPayActivity.PAY_AMOUNT, 0.00);
+                }
+
                 startActivity(intent);
                 break;
         }
