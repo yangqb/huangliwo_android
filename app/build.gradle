@@ -109,10 +109,10 @@ android {
                 output ->
                     def outputFile = output.outputFile
                     if (outputFile != null && outputFile.name.contains('release')) {
-                        def fileName = "黄鹂窝-${variant.name}-v${variant.versionName}-v${variant.versionCode}.apk"
+                        def fileName = "huangliwo-${variant.name}-v${variant.versionName}-v${variant.versionCode}.apk"
                         outputFileName = fileName
                     } else if (outputFile != null && outputFile.name.contains('debug')) {
-                        def fileName = "黄鹂窝-${variant.name}-v${variant.versionName}-v${variant.versionCode}.apk"
+                        def fileName = "huangliwo-${variant.name}-v${variant.versionName}-v${variant.versionCode}.apk"
                         outputFileName = fileName
                     }
             }
@@ -176,7 +176,7 @@ dependencies {
     // 支付宝
     implementation(name: 'alipaySdk-15.6.8-20191021122514', ext: 'aar')
     //圆角图片
-    implementation 'com.github.SheHuan:NiceImageView:1.0.5'
+    implementation 'com.github.open-android:RoundedImageView:v1.0.0'
 
     // 基础依赖包，必须要依赖
     implementation 'com.gyf.immersionbar:immersionbar:3.0.0'

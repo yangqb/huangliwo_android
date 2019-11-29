@@ -1,5 +1,7 @@
 package com.feitianzhu.fu700.home.entity;
 
+import com.chad.library.adapter.base.entity.MultiItemEntity;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -8,16 +10,14 @@ import java.util.List;
  */
 
 public class HomeEntity {
-
     /**
      * code : 0
      * data : {"bannerList":[{"linkType":2,"idValue":5,"imagUrl":"/images/1/images/grade/2017/08/xx.jpg"}],"recommendList":[{"merchantId":7,"merchantName":"d哈哈哈","merchantHeadImg":"http://118.190.156.13/user/merchant/453044af7c0c4e239f1cdb800bf3af1a.png","collectId":6,"clsName":"餐饮酒店"},{"merchantId":8,"merchantName":"dd","merchantHeadImg":"http://118.190.156.13/user/merchant/453044af7c0c4e239f1cdb800bf3af1a.png","clsName":"餐饮酒店"}],"serviceRecommendList":[{"serviceId":3,"serviceName":"老王卖瓜","price":1,"rebate":1,"adImg":"http://118.190.156.13/user/merchant/service/7b128700e6bb4193b80eef1b164e90d5.png","serviceAddr":"老王卖瓜.com"},{"serviceId":7,"serviceName":"老王卖瓜","price":1,"rebate":1,"adImg":"http://118.190.156.13/user/merchant/service/316fc915cf13450a9ba9f42d30ea2252.png","serviceAddr":"老王卖瓜.com","collectId":2},{"serviceId":4,"serviceName":"老王卖瓜","price":1,"rebate":1,"adImg":"http://118.190.156.13/user/merchant/service/1f368c17d2f1416b92cd2ff45439c010.png","serviceAddr":"老王卖瓜.com"}]}
      */
-
-
     public List<BannerListBean> bannerList;
     public List<RecommendListBean> recommendList;
     public List<ServiceRecommendListBean> serviceRecommendList;
+    public List<ShopsList> goodsList;
 
     public static class BannerListBean {
         /**
@@ -42,7 +42,7 @@ public class HomeEntity {
         }
     }
 
-    public static class RecommendListBean {
+    public static class RecommendListBean implements Serializable{
         /**
          * merchantId : 7
          * merchantName : d哈哈哈
@@ -100,6 +100,52 @@ public class HomeEntity {
                     ", collectId=" + collectId +
                     '}';
         }
+    }
+
+    public static class ShopsList implements Serializable {
+        public int goodsId;
+        public int clsId;
+        public String goodsName;
+        public String title;
+        public String summary;
+        public String goodsImg;
+        public double price;
+        public double rebatePv;
+        public int sales;
+        public String details;
+        public int stockCount;
+        public String speci;
+        public double postage;
+        /**
+         * 上架状态（1：上架，0：下架）
+         */
+        public String isShelf;
+        //是否是推广商品（1：是，0：否）
+        public String isExtend;
+        public String createDate;
+        public String createBy;
+        public String updateBy;
+        public String updateDate;
+        /**
+         * 商品明细图片集合
+         */
+        public List<GoodsImgs> goodsImgsList;
+        public int collectId;
+        public String connectPhone;
+
+        public String priceOrderBy;
+        public String isPoints;  //是否是积分商品(1：是）
+
+        /**
+         * 库存减少量
+         */
+        public int stockCountReduceNum;
+    }
+
+    public static class GoodsImgs implements Serializable {
+        public int imgId;
+        public int goodsId;
+        public String goodsImg;
     }
 
     @Override

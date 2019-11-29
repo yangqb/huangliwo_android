@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,15 +18,12 @@ import com.feitianzhu.fu700.R;
 import com.feitianzhu.fu700.common.Constant;
 import com.feitianzhu.fu700.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.fu700.common.impl.onNetFinishLinstenerT;
-import com.feitianzhu.fu700.home.HomeFragment2;
 import com.feitianzhu.fu700.home.entity.HomeEntity;
 import com.feitianzhu.fu700.me.base.BaseActivity;
 import com.feitianzhu.fu700.model.MultipleItem;
 import com.feitianzhu.fu700.model.ServiceDetailModel;
-import com.feitianzhu.fu700.shop.adapter.RightAdapter;
 import com.feitianzhu.fu700.shop.adapter.ShopDetailAdapter;
 import com.feitianzhu.fu700.utils.ToastUtils;
-import com.gyf.immersionbar.ImmersionBar;
 import com.zhpan.bannerview.BannerViewPager;
 import com.zhpan.bannerview.enums.IndicatorStyle;
 import com.zhpan.bannerview.holder.ViewHolder;
@@ -50,8 +46,11 @@ import static com.feitianzhu.fu700.common.Constant.USERID;
  * @anthor yangqinbo
  * @email QQ:694125155
  * @Date 2019/11/21 0021 下午 5:45
+ * <p>
+ * 商家详情页
  */
-public class ShopDetailActivity extends BaseActivity {
+public class MerchantsDetailActivity extends BaseActivity {
+    public static final String MERCHANT_DATA = "data";
     public static final String SERVICE_RECOMMEND_BEAN = "serviceRecommendBean";
     private ShopDetailAdapter adapter;
     private List<MultipleItem> multipleItemList = new ArrayList<>();
@@ -66,7 +65,7 @@ public class ShopDetailActivity extends BaseActivity {
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
     @BindView(R.id.viewpager)
-    BannerViewPager<Integer, ShopDetailActivity.DataViewHolder> mViewpager;
+    BannerViewPager<Integer, MerchantsDetailActivity.DataViewHolder> mViewpager;
     @BindView(R.id.shop_name)
     TextView shopName;
     @BindView(R.id.address)
@@ -85,10 +84,15 @@ public class ShopDetailActivity extends BaseActivity {
         button1.setSelected(true);
         button2.setSelected(false);
 
+        HomeEntity.RecommendListBean recommendListBean = (HomeEntity.RecommendListBean) getIntent().getSerializableExtra(MERCHANT_DATA);
+
         HomeEntity.ServiceRecommendListBean serviceRecommendBean = (HomeEntity.ServiceRecommendListBean) getIntent().getSerializableExtra(SERVICE_RECOMMEND_BEAN);
         if (serviceRecommendBean != null) {
             shopName.setText(serviceRecommendBean.serviceName);
             address.setText(serviceRecommendBean.serviceAddr);
+        }
+        if (recommendListBean != null) {
+            shopName.setText(recommendListBean.merchantName);
         }
         for (int i = 0; i < 20; i++) {
             MultipleItem item = new MultipleItem(1);
@@ -102,7 +106,10 @@ public class ShopDetailActivity extends BaseActivity {
         mRecyclerView.setNestedScrollingEnabled(false);
 
         if (serviceRecommendBean != null) {
-            requestShowData(serviceRecommendBean.serviceId + "");
+            requestShowData(2 + "");
+        }
+        if (recommendListBean != null) {
+            requestShowData(2 + "");
         }
         initListener();
     }
@@ -211,7 +218,7 @@ public class ShopDetailActivity extends BaseActivity {
                 int type = adapter.getItemViewType(position);
                 if (type == 1) {
                     //套餐详情页
-                    Intent intent = new Intent(ShopDetailActivity.this, ShopInfoDetailActivity.class);
+                    Intent intent = new Intent(MerchantsDetailActivity.this, ShopInfoDetailActivity.class);
                     startActivity(intent);
                 } else {
                     //评论
@@ -236,7 +243,7 @@ public class ShopDetailActivity extends BaseActivity {
                 .setRoundCorner(10)
                 .setIndicatorRadius(8)
                 .setIndicatorColor(Color.parseColor("#FFFFFF"), Color.parseColor("#6C6D72"))
-                .setHolderCreator(ShopDetailActivity.DataViewHolder::new).setOnPageClickListener(new BannerViewPager.OnPageClickListener() {
+                .setHolderCreator(MerchantsDetailActivity.DataViewHolder::new).setOnPageClickListener(new BannerViewPager.OnPageClickListener() {
             @Override
             public void onPageClick(int position) {
                 onClickBanner(position);

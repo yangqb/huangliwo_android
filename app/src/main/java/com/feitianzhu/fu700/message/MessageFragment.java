@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.feitianzhu.fu700.R;
 import com.feitianzhu.fu700.me.base.BaseFragment;
 import com.flyco.tablayout.SlidingTabLayout;
+import com.gyf.immersionbar.ImmersionBar;
 
 import butterknife.BindView;
 import butterknife.OnClick;

@@ -184,14 +184,14 @@ public class ScannerActivity extends BaseActivity {
     }
 */
 
-    @OnClick({R.id.textview, R.id.left_button})
+    @OnClick({R.id.textview, R.id.fl_back})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.textview:
                 Intent intent = new Intent(ScannerActivity.this, MineQrcodeActivity.class);
                 startActivity(intent);
                 break;
-            case R.id.left_button:
+            case R.id.fl_back:
                 finish();
                 break;
         }

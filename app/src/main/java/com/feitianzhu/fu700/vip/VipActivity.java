@@ -6,6 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -16,6 +18,7 @@ import com.feitianzhu.fu700.R;
 import com.feitianzhu.fu700.common.Constant;
 import com.feitianzhu.fu700.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.fu700.dao.NetworkDao;
+import com.feitianzhu.fu700.home.WebViewActivity;
 import com.feitianzhu.fu700.login.LoginActivity;
 import com.feitianzhu.fu700.me.adapter.CenterAdapter;
 import com.feitianzhu.fu700.me.base.BaseActivity;
@@ -25,6 +28,7 @@ import com.feitianzhu.fu700.model.SelectPayNeedModel;
 import com.feitianzhu.fu700.model.UnionLevelModel;
 import com.feitianzhu.fu700.payforme.PayForMeEvent;
 import com.feitianzhu.fu700.utils.ToastUtils;
+import com.feitianzhu.fu700.utils.Urls;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.gyf.immersionbar.ImmersionBar;
@@ -60,7 +64,7 @@ import static com.feitianzhu.fu700.common.Constant.USERID;
  * @email QQ:694125155
  * @Date 2019/11/22 0022 下午 6:53
  */
-public class VipActivity extends BaseActivity {
+public class VipActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener {
     private List<UnionLevelModel> mList = new ArrayList<>();
     private SelectPayNeedModel model;
     @BindView(R.id.title_name)
@@ -73,6 +77,8 @@ public class VipActivity extends BaseActivity {
     TextView moreVip;
     @BindView(R.id.btn_submit)
     TextView btnSumbit;
+    @BindView(R.id.cb_protocol)
+    CheckBox mCheckBox;
 
     @Override
     protected int getLayoutId() {
@@ -90,11 +96,14 @@ public class VipActivity extends BaseActivity {
 
         titleName.setText("成为会员");
         requestData();
+        mCheckBox.setChecked(true);
+        mCheckBox.setOnCheckedChangeListener(this);
+        mCheckBox.setButtonDrawable(getResources().getDrawable(R.mipmap.f01_06xuanzhong5));
     }
 
     boolean ismore = true;
 
-    @OnClick({R.id.left_button, R.id.moreVip, R.id.btn_submit})
+    @OnClick({R.id.left_button, R.id.moreVip, R.id.btn_submit, R.id.tv_protocol})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.left_button:
@@ -120,6 +129,11 @@ public class VipActivity extends BaseActivity {
                 } else {
                     ToastUtils.showShortToast("无会员级别数据");
                 }
+                break;
+
+            case R.id.tv_protocol:
+                Intent intent = new Intent(VipActivity.this, ProtocolActivity.class);
+                startActivity(intent);
                 break;
         }
 
@@ -202,6 +216,8 @@ public class VipActivity extends BaseActivity {
                     btnSumbit.setText("恭喜您已成为会员");
                     btnSumbit.setBackgroundResource(R.drawable.shape_e6e5e5_r5);
                     btnSumbit.setEnabled(false);
+                    mCheckBox.setButtonDrawable(getResources().getDrawable(R.mipmap.f01_06xuanzhong5));
+                    mCheckBox.setEnabled(false);
                 }
             }
         });
@@ -210,5 +226,20 @@ public class VipActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if (buttonView.getId() == R.id.cb_protocol) {
+            if (!isChecked) {
+                btnSumbit.setEnabled(false);
+                mCheckBox.setButtonDrawable(getResources().getDrawable(R.mipmap.f01_06weixuanzhong4));
+                btnSumbit.setBackgroundResource(R.drawable.shape_e6e5e5_r5);
+            } else {
+                btnSumbit.setEnabled(true);
+                mCheckBox.setButtonDrawable(getResources().getDrawable(R.mipmap.f01_06xuanzhong5));
+                btnSumbit.setBackgroundResource(R.drawable.shape_fed428_r5);
+            }
+        }
     }
 }

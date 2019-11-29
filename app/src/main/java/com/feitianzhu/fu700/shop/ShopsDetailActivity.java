@@ -12,12 +12,12 @@ import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.feitianzhu.fu700.R;
+import com.feitianzhu.fu700.home.entity.HomeEntity;
 import com.feitianzhu.fu700.me.base.BaseActivity;
 import com.zhpan.bannerview.BannerViewPager;
 import com.zhpan.bannerview.enums.IndicatorStyle;
@@ -25,6 +25,7 @@ import com.zhpan.bannerview.holder.ViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -34,14 +35,18 @@ import butterknife.OnClick;
  * @anthor yangqinbo
  * @email QQ:694125155
  * @Date 2019/11/24 0024 下午 2:37
+ * <p>
+ * 商品详情页面
  */
-public class CommodityDetailActivity extends BaseActivity {
+public class ShopsDetailActivity extends BaseActivity {
+    public static final String SHOP_DATA = "data";
+    private HomeEntity.ShopsList shopsList;
     @BindView(R.id.tv_amount)
     TextView tvAmount;
     @BindView(R.id.title_name)
     TextView titleName;
     @BindView(R.id.viewpager)
-    BannerViewPager<Integer, CommodityDetailActivity.DataViewHolder> mViewpager;
+    BannerViewPager<Integer, ShopsDetailActivity.DataViewHolder> mViewpager;
 
     @Override
     protected int getLayoutId() {
@@ -51,10 +56,15 @@ public class CommodityDetailActivity extends BaseActivity {
     @Override
     protected void initView() {
 
+        shopsList = (HomeEntity.ShopsList) getIntent().getSerializableExtra(SHOP_DATA);
+
         titleName.setText("商品详情");
         tvAmount.setText("");
         String str2 = "¥ ";
-        String str3 = "188.00";
+        String str3 = "0.00";
+        if (shopsList != null) {
+            str3 = String.format(Locale.getDefault(), "%.2f", shopsList.price);
+        }
 
         SpannableString span2 = new SpannableString(str2);
         SpannableString span3 = new SpannableString(str3);
@@ -86,7 +96,7 @@ public class CommodityDetailActivity extends BaseActivity {
                 //.setIndicatorSlideMode(IndicatorSlideMode.SMOOTH)
                 .setIndicatorRadius(8)
                 .setIndicatorColor(Color.parseColor("#FFFFFF"), Color.parseColor("#6C6D72"))
-                .setHolderCreator(CommodityDetailActivity.DataViewHolder::new).setOnPageClickListener(new BannerViewPager.OnPageClickListener() {
+                .setHolderCreator(ShopsDetailActivity.DataViewHolder::new).setOnPageClickListener(new BannerViewPager.OnPageClickListener() {
             @Override
             public void onPageClick(int position) {
                 onClickBanner(position);
@@ -126,8 +136,9 @@ public class CommodityDetailActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.tv_pay:
-                Intent intent = new Intent(CommodityDetailActivity.this, ShopPayActivity.class);
+                Intent intent = new Intent(ShopsDetailActivity.this, ShopPayActivity.class);
                 intent.putExtra(ShopPayActivity.IS_SHOW_ADDRESS, true);
+                intent.putExtra(ShopPayActivity.PAY_AMOUNT, shopsList.price);
                 startActivity(intent);
                 break;
         }

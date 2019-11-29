@@ -216,14 +216,7 @@
                     android:id="@+id/recyclerview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/white"
-                    tools:visibility="visible" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="20dp"
-                    android:background="#f5f5f5"
-                    android:visibility="gone" />
+                    android:background="@android:color/white" />
             </LinearLayout>
 
 

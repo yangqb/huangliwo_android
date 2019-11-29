@@ -68,6 +68,7 @@ import okhttp3.Call;
  */
 public class ShopPayActivity extends BaseActivity {
     public static final String IS_SHOW_ADDRESS = "is_show_address";
+    public static final String PAY_AMOUNT = "pay_amount";
 
     @BindView(R.id.amount)
     TextView bottomAmount;
@@ -109,7 +110,7 @@ public class ShopPayActivity extends BaseActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        ShopDao.loadUserAuthImpl();
+        //ShopDao.loadUserAuthImpl();
     }
 
     @SuppressLint("SetTextI18n")
@@ -126,7 +127,7 @@ public class ShopPayActivity extends BaseActivity {
          */
         str1 = "合计：";
         str2 = "¥ ";
-        amount = "188.35";
+        amount = String.format(Locale.getDefault(), "%.2f", getIntent().getDoubleExtra(PAY_AMOUNT, 0.00));
         totalAmount = amount;
         tvCount.setText("×1");
         topAmount.setText("");
@@ -173,7 +174,8 @@ public class ShopPayActivity extends BaseActivity {
                     ToastUtils.showShortToast("请输入收货地址");
                     return;
                 }
-                ShopHelp.veriPassword(this, new onConnectionFinishLinstener() {
+                ToastUtils.showShortToast("待开发");
+                /*ShopHelp.veriPassword(this, new onConnectionFinishLinstener() {
                     @Override
                     public void onSuccess(int code, Object result) {
                         String passowrd = (String) result;
@@ -184,7 +186,7 @@ public class ShopPayActivity extends BaseActivity {
                     public void onFail(int code, String result) {
                         ToastUtils.showShortToast(result);
                     }
-                });
+                });*/
                 break;
             case R.id.weixinPay_icon:
                 weiXinIcon.setBackgroundResource(R.mipmap.e01_23xuanzhong);

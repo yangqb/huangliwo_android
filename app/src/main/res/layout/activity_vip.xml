@@ -60,7 +60,8 @@
 
         <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginBottom="120dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -243,20 +244,56 @@
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
 
-        <TextView
-            android:id="@+id/btn_submit"
+        <LinearLayout
+            android:id="@+id/bottom"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="100dp"
             android:layout_gravity="bottom"
-            android:layout_marginLeft="60dp"
-            android:layout_marginRight="60dp"
-            android:layout_marginBottom="25dp"
-            android:background="@drawable/shape_fed428_r5"
-            android:gravity="center"
-            android:text="立即升级成为会员"
-            android:textColor="@color/color_333333"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/cb_protocol"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:padding="5dp"
+                    android:text="您已阅读并同意"
+                    android:textColor="@color/color_333333"
+                    android:textSize="@dimen/sp_12" />
+
+                <TextView
+                    android:id="@+id/tv_protocol"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="《黄鹂窝优选会员服务协议》"
+                    android:textColor="@color/color_289CFE"
+                    android:textSize="@dimen/sp_12" />
+
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/btn_submit"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginLeft="60dp"
+                android:layout_marginRight="60dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="@dimen/dp_10"
+                android:background="@drawable/shape_fed428_r5"
+                android:gravity="center"
+                android:text="立即升级成为会员"
+                android:textColor="@color/color_333333"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
     </FrameLayout>
 
 

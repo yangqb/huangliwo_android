@@ -1,9 +1,6 @@
 package com.feitianzhu.fu700.splash;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -19,7 +16,6 @@ import com.feitianzhu.fu700.common.Constant;
 import com.feitianzhu.fu700.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.fu700.dao.NetworkDao;
 import com.feitianzhu.fu700.login.LoginActivity;
-import com.feitianzhu.fu700.shop.ShopDetailActivity;
 import com.feitianzhu.fu700.utils.LocationUtils;
 import com.feitianzhu.fu700.utils.SPUtils;
 import com.feitianzhu.fu700.view.CustomVideoView;

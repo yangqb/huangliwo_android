@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -27,24 +26,20 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.fu700.App;
-import com.feitianzhu.fu700.MainActivity;
 import com.feitianzhu.fu700.R;
 import com.feitianzhu.fu700.common.Constant;
 import com.feitianzhu.fu700.common.base.SFFragment;
 import com.feitianzhu.fu700.home.adapter.HAdapter;
 import com.feitianzhu.fu700.home.adapter.HomeRecommendAdapter2;
 import com.feitianzhu.fu700.home.entity.HomeEntity;
-import com.feitianzhu.fu700.me.ui.CollectMoneyActivity;
+import com.feitianzhu.fu700.home.entity.ShopAndMerchants;
 import com.feitianzhu.fu700.me.ui.PersonalCenterActivity2;
-import com.feitianzhu.fu700.me.ui.PushServiceActivity;
 import com.feitianzhu.fu700.me.ui.ScannerActivity;
 import com.feitianzhu.fu700.me.ui.ServiceDetailActivity;
-import com.feitianzhu.fu700.me.ui.ShopRecordActivity;
 import com.feitianzhu.fu700.model.MineInfoModel;
 import com.feitianzhu.fu700.model.Province;
-import com.feitianzhu.fu700.shop.ShopDetailActivity;
-import com.feitianzhu.fu700.shop.ShopHelp;
-import com.feitianzhu.fu700.shop.ShopHelpTwo;
+import com.feitianzhu.fu700.shop.ShopsDetailActivity;
+import com.feitianzhu.fu700.shop.MerchantsDetailActivity;
 import com.feitianzhu.fu700.shop.ui.ShopSearchActivity;
 import com.feitianzhu.fu700.shop.ui.ShopsActivity;
 import com.feitianzhu.fu700.shop.ui.dialog.ProvinceCallBack;
@@ -59,7 +54,6 @@ import com.yanzhenjie.permission.PermissionListener;
 import com.yanzhenjie.permission.Rationale;
 import com.yanzhenjie.permission.RationaleListener;
 import com.zhpan.bannerview.BannerViewPager;
-import com.zhpan.bannerview.enums.IndicatorSlideMode;
 import com.zhpan.bannerview.enums.IndicatorStyle;
 import com.zhpan.bannerview.holder.ViewHolder;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -112,9 +106,10 @@ public class HomeFragment2 extends SFFragment implements SwipeRefreshLayout.OnRe
     RelativeLayout rlMall;
     @BindView(R.id.iv_head)
     CircleImageView ivHead;
-
-    private List<HomeEntity.RecommendListBean> mRecommends = new ArrayList<>();
+    private List<ShopAndMerchants> shopAndMerchants = new ArrayList<>();
+    private List<HomeEntity.RecommendListBean> recommendListBeanList = new ArrayList<>();
     private List<HomeEntity.ServiceRecommendListBean> serviceRecommendList = new ArrayList<>();
+    private List<HomeEntity.ShopsList> shopsLists = new ArrayList<>();
     private View mHeader;
     private HomeRecommendAdapter2 mAdapter;
     private HAdapter hAdapter;
@@ -170,17 +165,17 @@ public class HomeFragment2 extends SFFragment implements SwipeRefreshLayout.OnRe
         rlMall.setOnClickListener(this);
 
         mRecyclerview.setLayoutManager(new LinearLayoutManager(getActivity()));
-
         hAdapter = new HAdapter(serviceRecommendList);
         hList.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
         hList.setAdapter(hAdapter);
         hAdapter.notifyDataSetChanged();
 
-        //人气商户
-        mAdapter = new HomeRecommendAdapter2(mRecommends);
+        //商品
+        mAdapter = new HomeRecommendAdapter2(shopAndMerchants);
         mRecyclerview.setAdapter(mAdapter);
         mRecyclerview.setNestedScrollingEnabled(false);
         hList.setNestedScrollingEnabled(false);
+        //商家
 
         ivRight.setOnClickListener(this);
         mSearchLayout.setOnClickListener(this);
@@ -196,9 +191,18 @@ public class HomeFragment2 extends SFFragment implements SwipeRefreshLayout.OnRe
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                if (mHomeEntity != null && mHomeEntity.recommendList != null && position < mHomeEntity.recommendList.size()) {
-                    startShopsActivity(mHomeEntity.recommendList.get(position).merchantId);
+                if (adapter.getItemViewType(position) == ShopAndMerchants.TYPE_SERIES) {
+                    //商品详情
+                    Intent intent = new Intent(getActivity(), ShopsDetailActivity.class);
+                    intent.putExtra(ShopsDetailActivity.SHOP_DATA, shopsLists.get(position));
+                    startActivity(intent);
+                } else {
+                    //商家
+                    Intent intent = new Intent(getActivity(), MerchantsDetailActivity.class);
+                    intent.putExtra(MerchantsDetailActivity.MERCHANT_DATA, recommendListBeanList.get(position - shopsLists.size()));
+                    startActivity(intent);
                 }
+                //startShopsActivity(mHomeEntity.recommendList.get(position).merchantId);
             }
         });
 
@@ -207,8 +211,8 @@ public class HomeFragment2 extends SFFragment implements SwipeRefreshLayout.OnRe
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 if (mHomeEntity != null && mHomeEntity.serviceRecommendList != null && position < mHomeEntity.serviceRecommendList.size()) {
                     HomeEntity.ServiceRecommendListBean serviceRecommendBean = mHomeEntity.serviceRecommendList.get(position);
-                    Intent intent = new Intent(getActivity(), ShopDetailActivity.class);
-                    intent.putExtra(ShopDetailActivity.SERVICE_RECOMMEND_BEAN, serviceRecommendBean);
+                    Intent intent = new Intent(getActivity(), MerchantsDetailActivity.class);
+                    intent.putExtra(MerchantsDetailActivity.SERVICE_RECOMMEND_BEAN, serviceRecommendBean);
                     startActivity(intent);
                 }
             }
@@ -218,7 +222,9 @@ public class HomeFragment2 extends SFFragment implements SwipeRefreshLayout.OnRe
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        //if (!TextUtils.isEmpty(Constant.mCity)) mTxtLocation.setText(Constant.mCity);
+        if (!TextUtils.isEmpty(Constant.mCity)) {
+            mTxtLocation.setText(Constant.mCity);
+        }
         getData();
         requestData();
     }
@@ -271,10 +277,6 @@ public class HomeFragment2 extends SFFragment implements SwipeRefreshLayout.OnRe
                         }
                         mHomeEntity = (HomeEntity) response;
 
-                        if (mHomeEntity == null) {
-                            return;
-                        }
-
                         //1.set banner
                         if (mHomeEntity.bannerList != null && !mHomeEntity.bannerList.isEmpty()) {
                             mBanners.clear();
@@ -297,12 +299,30 @@ public class HomeFragment2 extends SFFragment implements SwipeRefreshLayout.OnRe
 
                         }
 
-                        //人气商户
-                        if (mHomeEntity.recommendList != null && !mHomeEntity.recommendList.isEmpty()) {
-                            mRecommends.clear();
-                            mRecommends.addAll(mHomeEntity.recommendList);
-                            mAdapter.notifyDataSetChanged();
+
+                        shopAndMerchants.clear();
+                        //商品
+                        if (mHomeEntity.goodsList != null) {
+                            shopsLists = mHomeEntity.goodsList;
+                            for (int i = 0; i < mHomeEntity.goodsList.size(); i++) {
+                                ShopAndMerchants entity = new ShopAndMerchants(ShopAndMerchants.TYPE_SERIES);
+                                entity.setShopsList(mHomeEntity.goodsList.get(i));
+                                shopAndMerchants.add(entity);
+                            }
                         }
+
+                        //商家
+                        if (mHomeEntity.recommendList != null) {
+                            recommendListBeanList = mHomeEntity.recommendList;
+                            for (int i = 0; i < mHomeEntity.recommendList.size(); i++) {
+                                ShopAndMerchants entity = new ShopAndMerchants(ShopAndMerchants.TYPE_PESALE);
+                                entity.setRecommendListBean(mHomeEntity.recommendList.get(i));
+                                shopAndMerchants.add(entity);
+                            }
+                        }
+                        mAdapter.setNewData(shopAndMerchants);
+                        mAdapter.notifyDataSetChanged();
+
 
                         //热门服务
                         if (mHomeEntity.serviceRecommendList != null && !mHomeEntity.serviceRecommendList.isEmpty()) {

@@ -7,7 +7,7 @@ import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.feitianzhu.fu700.R;
-import com.shehuan.niv.NiceImageView;
+import com.itheima.roundedimageview.RoundedImageView;
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ public class ShopInfoDetailImgAdapter extends BaseQuickAdapter<Integer, BaseView
 
     @Override
     protected void convert(BaseViewHolder helper, Integer item) {
-        NiceImageView imageView = helper.getView(R.id.img);
+        RoundedImageView imageView = helper.getView(R.id.img);
         Glide.with(mContext).load(R.mipmap.e01_16taocantupian1).into(imageView);
     }
 }

@@ -1,22 +1,38 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:orientation="vertical">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:background="@color/bg_yellow"
-        android:gravity="center"
-        android:text="关注" />
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="关注"
+            android:textColor="@color/color_333333"
+            android:textSize="17sp" />
+    </LinearLayout>
+
+
+    <ImageView
+        android:id="@+id/img_empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="200dp"
+        android:src="@mipmap/fail" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
         android:layout_gravity="center"
-        android:text="功能待开发"
-        android:textColor="@color/color_666666"
-        android:textSize="20sp" />
+        android:layout_marginTop="@dimen/dp_20"
+        android:text="此功能正在开发中"
+        android:textColor="@color/txt_middle" />
 
-</RelativeLayout>
+</LinearLayout>

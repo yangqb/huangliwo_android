@@ -75,14 +75,14 @@ public class ShopDetailActivity extends BaseActivity {
     @Override
     protected void initTitle() {
 //        defaultNavigationBar = new DefaultNavigationBar
-//                .Builder(ShopDetailActivity.this, (ViewGroup)findViewById(R.id.Rl_titleContainer))
+//                .Builder(MerchantsDetailActivity.this, (ViewGroup)findViewById(R.id.Rl_titleContainer))
 //               // .setStatusHeight()
 //                .setLeftIcon(R.drawable.iconfont_fanhuijiantou)
 //                .showRightPic(R.drawable.icon_gengduo, AbsNavigationbar.PIC_THREE,new View.OnClickListener(){
 //
 //                    @Override
 //                    public void onClick(View v) {
-//                        Toast.makeText(ShopDetailActivity.this,"AAAAAAAAAA",Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(MerchantsDetailActivity.this,"AAAAAAAAAA",Toast.LENGTH_SHORT).show();
 //                    }
 //                })
 //                .builder();

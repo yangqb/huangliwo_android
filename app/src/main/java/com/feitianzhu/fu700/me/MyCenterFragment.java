@@ -38,7 +38,6 @@ import com.feitianzhu.fu700.shop.ui.MyOrderActivity;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.view.CircleImageView;
 import com.feitianzhu.fu700.vip.VipActivity;
-import com.shehuan.niv.NiceImageView;
 import com.socks.library.KLog;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
@@ -203,11 +202,14 @@ public class MyCenterFragment extends SFFragment {
                         startActivity(new Intent(getActivity(), MyVerificationActivity.class));
                         break;
                     case 2: //联盟
-                        ToastUtils.showShortToast("待开发");
+                        //ToastUtils.showShortToast("待开发");
                        /* intent = new Intent(getContext(), UnionlevelActivity.class);
                         intent.putExtra("AgentName", agentName);
                         intent.putExtra("Rate", rate);
                         startActivity(intent);*/
+
+                        intent = new Intent(getActivity(), UnionlevelActivity2.class);
+                        startActivity(intent);
                         break;
                     case 3://我的订单
                         JumpActivity(getContext(), MyOrderActivity.class);
@@ -232,7 +234,8 @@ public class MyCenterFragment extends SFFragment {
                         startActivity(intent);
                         break;
                     case 8: //银行卡 //暂不提供银行卡功能
-                        if (!Constant.loadUserAuth) {
+                        ToastUtils.showShortToast("待开发");
+                        /*if (!Constant.loadUserAuth) {
                             ToastUtils.showShortToast("正在获取授权信息，稍候进入");
                             ShopDao.loadUserAuthImpl();
                             return;
@@ -248,7 +251,7 @@ public class MyCenterFragment extends SFFragment {
                                     ToastUtils.showShortToast(result);
                                 }
                             });
-                        }
+                        }*/
                         break;
                 }
             }

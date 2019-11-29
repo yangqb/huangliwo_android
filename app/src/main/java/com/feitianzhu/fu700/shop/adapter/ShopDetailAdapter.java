@@ -1,6 +1,5 @@
 package com.feitianzhu.fu700.shop.adapter;
 
-import android.content.ContentResolver;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -10,7 +9,6 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.feitianzhu.fu700.R;
 import com.feitianzhu.fu700.model.MultipleItem;
-import com.feitianzhu.fu700.shop.ShopDetailActivity;
 
 import java.util.ArrayList;
 import java.util.List;

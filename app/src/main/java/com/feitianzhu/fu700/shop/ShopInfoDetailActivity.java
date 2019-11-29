@@ -60,7 +60,7 @@ public class ShopInfoDetailActivity extends BaseActivity {
         bottomAmount.setText("");
         String str1 = "合计：";
         String str2 = "¥ ";
-        String str3 = "399.00";
+        String str3 = "0.00";
         SpannableString span1 = new SpannableString(str1);
         SpannableString span2 = new SpannableString(str2);
         SpannableString span3 = new SpannableString(str3);

@@ -21,14 +21,10 @@ import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.fu700.App;
-import com.feitianzhu.fu700.MainActivity;
 import com.feitianzhu.fu700.R;
 import com.feitianzhu.fu700.common.Constant;
 import com.feitianzhu.fu700.common.base.SFFragment;
-import com.feitianzhu.fu700.me.ui.CollectMoneyActivity;
-import com.feitianzhu.fu700.me.ui.PushServiceActivity;
 import com.feitianzhu.fu700.me.ui.ScannerActivity;
-import com.feitianzhu.fu700.me.ui.ShopRecordActivity;
 import com.feitianzhu.fu700.model.MultipleItem;
 import com.feitianzhu.fu700.model.Province;
 import com.feitianzhu.fu700.shop.adapter.LeftAdapter;
@@ -145,9 +141,13 @@ public class CommodityClassificationFragment extends SFFragment implements View.
                 multipleItemList.add(item);
             }
             list = new ArrayList<>();
-            for (int i = 0; i < 20; i++) {
-                list.add("商家分类" + i);
-            }
+            list.add("休闲娱乐");
+            list.add("健身/游泳");
+            list.add("丽人/美发");
+            list.add("医疗/牙科");
+            list.add("结婚摄影");
+            list.add("信用卡");
+
         } else {//商城
             button1.setSelected(false);
             button2.setSelected(true);
@@ -156,9 +156,21 @@ public class CommodityClassificationFragment extends SFFragment implements View.
                 multipleItemList.add(item);
             }
             list = new ArrayList<>();
-            for (int i = 0; i < 15; i++) {
-                list.add("商城分类" + i);
-            }
+            list.add("水果");
+            list.add("蔬菜");
+            list.add("肉蛋");
+            list.add("粮油");
+            list.add("休闲食品");
+            list.add("服饰");
+            list.add("电器");
+            list.add("海外甄选");
+            list.add("乳品");
+            list.add("家居");
+            list.add("个护");
+            list.add("美妆");
+            list.add("餐厨");
+            list.add("母婴");
+            list.add("宠物");
         }
 
         button1.setOnClickListener(this);
@@ -211,11 +223,11 @@ public class CommodityClassificationFragment extends SFFragment implements View.
                 int type = adapter.getItemViewType(position);
                 if (type == 1) {
                     //商家
-                    Intent intent = new Intent(getActivity(), ShopDetailActivity.class);
+                    Intent intent = new Intent(getActivity(), MerchantsDetailActivity.class);
                     startActivity(intent);
                 } else {
                     //商品详情
-                    Intent intent = new Intent(getActivity(), CommodityDetailActivity.class);
+                    Intent intent = new Intent(getActivity(), ShopsDetailActivity.class);
                     startActivity(intent);
                 }
 
@@ -291,10 +303,15 @@ public class CommodityClassificationFragment extends SFFragment implements View.
                 mParam1 = 1;
                 button1.setSelected(true);
                 button2.setSelected(false);
-                list.clear();
-                for (int i = 0; i < 15; i++) {
-                    list.add("商家分类" + i);
-                }
+                list = new ArrayList<>();
+                list.add("休闲娱乐");
+                list.add("健身/游泳");
+                list.add("丽人/美发");
+                list.add("医疗/牙科");
+                list.add("结婚摄影");
+                list.add("信用卡");
+                leftAdapter.setSelect(0);
+                leftAdapter.setNewData(list);
                 leftAdapter.notifyDataSetChanged();
 
                 multipleItemList.clear();
@@ -308,10 +325,24 @@ public class CommodityClassificationFragment extends SFFragment implements View.
                 mParam1 = 2;
                 button1.setSelected(false);
                 button2.setSelected(true);
-                list.clear();
-                for (int i = 0; i < 15; i++) {
-                    list.add("商城分类" + i);
-                }
+                list = new ArrayList<>();
+                list.add("水果");
+                list.add("蔬菜");
+                list.add("肉蛋");
+                list.add("粮油");
+                list.add("休闲食品");
+                list.add("服饰");
+                list.add("电器");
+                list.add("海外甄选");
+                list.add("乳品");
+                list.add("家居");
+                list.add("个护");
+                list.add("美妆");
+                list.add("餐厨");
+                list.add("母婴");
+                list.add("宠物");
+                leftAdapter.setSelect(0);
+                leftAdapter.setNewData(list);
                 leftAdapter.notifyDataSetChanged();
 
                 multipleItemList.clear();
