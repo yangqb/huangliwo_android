@@ -33,7 +33,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     @BindView(R.id.password1)
     EditText mPasswordEditText1;
     @BindView(R.id.sign_in_button)
-    Button mSignInButton;
+    TextView mSignInButton;
 
     @BindView(R.id.tv_forget_password)
     TextView mForgetLayout;

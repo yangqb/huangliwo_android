@@ -7,9 +7,9 @@ package com.feitianzhu.fu700.utils;
 public class Urls {
 
     //正式
-    //private static final String HOST_URL = "http://39.106.65.35";
+    private static final String HOST_URL = "http://39.106.65.35";
     //测试
-    private static final String HOST_URL = "http://192.168.0.21";
+    //private static final String HOST_URL = "http://192.168.0.21";
 
     private static final String HOST_PORT = "8089";
 

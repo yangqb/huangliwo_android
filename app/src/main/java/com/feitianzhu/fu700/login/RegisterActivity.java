@@ -41,7 +41,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     @BindView(R.id.password1)
     EditText mPasswordEditText1;
     @BindView(R.id.sign_in_button)
-    Button mSignInButton;
+    TextView mSignInButton;
     @BindView(R.id.edt_code)
     EditText mEditTextCode;
     @BindView(R.id.et_parentId)
@@ -116,7 +116,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         mForgetLayout.setOnClickListener(this);
         mTvProtocol.setOnClickListener(this);
         mCheckBox.setOnCheckedChangeListener(this);
-        mCheckBox.setButtonDrawable(getResources().getDrawable(R.mipmap.d01_03tongyi));
+        mCheckBox.setButtonDrawable(getResources().getDrawable(R.mipmap.f01_06xuanzhong5));
         mRegister.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
         mForgetLayout.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
     }
@@ -307,11 +307,11 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         if (buttonView.getId() == R.id.cb_protocol) {
             if (!isChecked) {
                 mSignInButton.setEnabled(false);
-                mCheckBox.setButtonDrawable(getResources().getDrawable(R.mipmap.d01_03weitongyi));
+                mCheckBox.setButtonDrawable(getResources().getDrawable(R.mipmap.f01_06weixuanzhong4));
                 mSignInButton.setBackgroundResource(R.drawable.button_shape_gray);
             } else {
                 mSignInButton.setEnabled(true);
-                mCheckBox.setButtonDrawable(getResources().getDrawable(R.mipmap.d01_03tongyi));
+                mCheckBox.setButtonDrawable(getResources().getDrawable(R.mipmap.f01_06xuanzhong5));
                 mSignInButton.setBackgroundResource(R.drawable.button_shape_blue);
             }
         }

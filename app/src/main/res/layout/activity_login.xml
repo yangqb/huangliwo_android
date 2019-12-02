@@ -91,11 +91,12 @@
             android:textSize="14sp" />
     </RelativeLayout>
 
-    <Button
+    <TextView
         android:id="@+id/sign_in_button"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
         android:layout_marginLeft="@dimen/dp_40"
+        android:gravity="center"
         android:layout_marginTop="100dp"
         android:layout_marginRight="@dimen/dp_40"
         android:background="@drawable/button_shape_blue"

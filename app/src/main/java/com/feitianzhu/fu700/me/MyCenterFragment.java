@@ -227,7 +227,8 @@ public class MyCenterFragment extends SFFragment {
                         JumpActivity(getContext(), MineCollectionActivity.class);
                         break;
                     case 6: //地址管理
-                        ToastUtils.showShortToast("待开发");
+                        intent = new Intent(getActivity(), AddressManagementActivity.class);
+                        startActivity(intent);
                         break;
                     case 7: //成为会员
                         intent = new Intent(getContext(), VipActivity.class);
