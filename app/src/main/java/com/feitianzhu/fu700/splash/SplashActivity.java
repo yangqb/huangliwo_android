@@ -16,6 +16,7 @@ import com.feitianzhu.fu700.common.Constant;
 import com.feitianzhu.fu700.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.fu700.dao.NetworkDao;
 import com.feitianzhu.fu700.login.LoginActivity;
+import com.feitianzhu.fu700.shop.ui.MyOrderActivity2;
 import com.feitianzhu.fu700.utils.LocationUtils;
 import com.feitianzhu.fu700.utils.SPUtils;
 import com.feitianzhu.fu700.view.CustomVideoView;
@@ -87,7 +88,9 @@ public class SplashActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                realLogin();
+                //realLogin();
+                Intent intent = new Intent(SplashActivity.this, MyOrderActivity2.class);
+                startActivity(intent);
             }
         }, 3000);
     }
@@ -133,13 +136,6 @@ public class SplashActivity extends AppCompatActivity {
             startActivity(new Intent(SplashActivity.this, LoginActivity.class));
             finish();
         }
-    }
-
-
-    @Override
-    protected void onStop() {
-        realLogin();
-        super.onStop();
     }
 
     private void startMainActivity() {

@@ -41,9 +41,14 @@ public class Urls {
     public static final String GET_SHOP_CLASS = BASE_URL + "fhwl/shop/getshop";
 
     /*
-    * 商城分类的商品
-    * */
+     * 商城分类的商品
+     * */
     public static final String GET_SHOP = BASE_URL + "fhwl/shop/getclsid";
+
+    /*
+     * 商品详情数据
+     * */
+    public static final String GET_SHOP_DETAIL = BASE_URL + "fhwl/shop/getGoodsId";
 
     /**
      * 更换手机号

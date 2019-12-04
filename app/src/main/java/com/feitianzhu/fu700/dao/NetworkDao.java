@@ -1042,7 +1042,7 @@ public class NetworkDao {
     }
 
     /**
-     * 为我买单
+     * 修改已驳回订单（为我买单）
      *
      * @param merchantName 商户名称
      * @param merchantAddr 商户地址

@@ -9,6 +9,7 @@ import com.feitianzhu.fu700.model.MultipleItem;
 import com.itheima.roundedimageview.RoundedImageView;
 
 import java.util.List;
+import java.util.Locale;
 
 /**
  * @class name：com.feitianzhu.fu700.shop.adapter
@@ -32,7 +33,7 @@ public class RightAdapter extends BaseMultiItemQuickAdapter<MultipleItem, BaseVi
                 break;
             case MultipleItem.IMG:
                 helper.setText(R.id.tv_category, item.getGoodsListBean().getGoodsName());
-                helper.setText(R.id.price, "¥" + item.getGoodsListBean().getPrice());
+                helper.setText(R.id.price, "¥" + String.format(Locale.getDefault(), "%.2f", item.getGoodsListBean().getPrice()));
                 helper.setText(R.id.tvContent, item.getGoodsListBean().getSummary());
                 Glide.with(mContext).load(item.getGoodsListBean().getGoodsImg())
                         .apply(new RequestOptions().placeholder(R.drawable.pic_fuwutujiazaishibai)).into((RoundedImageView) helper.getView(R.id.image));

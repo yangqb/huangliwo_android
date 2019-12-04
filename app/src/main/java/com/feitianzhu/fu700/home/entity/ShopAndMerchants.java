@@ -1,6 +1,7 @@
 package com.feitianzhu.fu700.home.entity;
 
 import com.chad.library.adapter.base.entity.MultiItemEntity;
+import com.feitianzhu.fu700.model.BaseGoodsListBean;
 
 /**
  * @class name：com.feitianzhu.fu700.home.entity
@@ -23,7 +24,7 @@ public class ShopAndMerchants implements MultiItemEntity {
     }
 
     public HomeEntity.RecommendListBean recommendListBean;
-    public HomeEntity.ShopsList shopsList;
+    public BaseGoodsListBean shopsList;
 
     public HomeEntity.RecommendListBean getRecommendListBean() {
         return recommendListBean;
@@ -33,11 +34,11 @@ public class ShopAndMerchants implements MultiItemEntity {
         this.recommendListBean = recommendListBean;
     }
 
-    public HomeEntity.ShopsList getShopsList() {
+    public BaseGoodsListBean getShopsList() {
         return shopsList;
     }
 
-    public void setShopsList(HomeEntity.ShopsList shopsList) {
+    public void setShopsList(BaseGoodsListBean shopsList) {
         this.shopsList = shopsList;
     }
 }

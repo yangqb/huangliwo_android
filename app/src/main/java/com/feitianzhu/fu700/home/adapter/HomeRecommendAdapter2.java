@@ -11,6 +11,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.feitianzhu.fu700.R;
 import com.feitianzhu.fu700.home.entity.HomeEntity;
 import com.feitianzhu.fu700.home.entity.ShopAndMerchants;
+import com.feitianzhu.fu700.model.BaseGoodsListBean;
 import com.itheima.roundedimageview.RoundedImageView;
 
 import java.util.List;
@@ -34,10 +35,10 @@ public class HomeRecommendAdapter2 extends BaseMultiItemQuickAdapter<ShopAndMerc
     public void convert(@NonNull BaseViewHolder holder, ShopAndMerchants item) {
         switch (item.getItemType()) {
             case ShopAndMerchants.TYPE_SERIES:
-                HomeEntity.ShopsList shopsList = item.getShopsList();
-                holder.setText(R.id.tv_category, shopsList.goodsName);
-                if (shopsList.goodsImg != null) {
-                    Glide.with(mContext).load(shopsList.goodsImg).apply(RequestOptions.errorOf(R.mipmap.a06_01tupian).placeholder(R.mipmap.a06_01tupian)).into((RoundedImageView) holder.getView(R.id.image));
+                BaseGoodsListBean shopsList = item.getShopsList();
+                holder.setText(R.id.tv_category, shopsList.getGoodsName());
+                if (shopsList.getGoodsImg() != null) {
+                    Glide.with(mContext).load(shopsList.getGoodsImg()).apply(RequestOptions.errorOf(R.mipmap.a06_01tupian).placeholder(R.mipmap.a06_01tupian)).into((RoundedImageView) holder.getView(R.id.image));
                 } else {
                     Glide.with(mContext).load(R.mipmap.a06_01tupian).into((RoundedImageView) holder.getView(R.id.image));
                 }

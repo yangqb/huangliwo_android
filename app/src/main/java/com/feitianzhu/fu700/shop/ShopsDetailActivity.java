@@ -2,26 +2,45 @@ package com.feitianzhu.fu700.shop;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.support.v4.app.NavUtils;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.feitianzhu.fu700.R;
 import com.feitianzhu.fu700.home.entity.HomeEntity;
 import com.feitianzhu.fu700.me.base.BaseActivity;
+import com.feitianzhu.fu700.model.BaseGoodsListBean;
+import com.feitianzhu.fu700.utils.GlideUtils;
+import com.feitianzhu.fu700.utils.ToastUtils;
+import com.feitianzhu.fu700.utils.Urls;
+import com.google.gson.Gson;
+import com.socks.library.KLog;
+import com.tencent.mm.opensdk.utils.Log;
 import com.zhpan.bannerview.BannerViewPager;
 import com.zhpan.bannerview.enums.IndicatorStyle;
 import com.zhpan.bannerview.holder.ViewHolder;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.Callback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +48,8 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * @class name：com.feitianzhu.fu700.shop
@@ -39,14 +60,21 @@ import butterknife.OnClick;
  * 商品详情页面
  */
 public class ShopsDetailActivity extends BaseActivity {
-    public static final String SHOP_DATA = "data";
-    private HomeEntity.ShopsList shopsList;
+    public static final String GOODS_DETAIL_DATA = "goods_detail_data";
+    private String str3 = "0.00";
+    private BaseGoodsListBean goodsListBean;
     @BindView(R.id.tv_amount)
     TextView tvAmount;
     @BindView(R.id.title_name)
     TextView titleName;
     @BindView(R.id.viewpager)
-    BannerViewPager<Integer, ShopsDetailActivity.DataViewHolder> mViewpager;
+    BannerViewPager<BaseGoodsListBean.GoodsImgsListBean, ShopsDetailActivity.DataViewHolder> mViewpager;
+    @BindView(R.id.goodsName)
+    TextView goodsName;
+    @BindView(R.id.goodsSummary)
+    TextView goodsSummary;
+    @BindView(R.id.detail_img)
+    ImageView imgDetail;
 
     @Override
     protected int getLayoutId() {
@@ -55,15 +83,19 @@ public class ShopsDetailActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-
-        shopsList = (HomeEntity.ShopsList) getIntent().getSerializableExtra(SHOP_DATA);
-
+        goodsListBean = (BaseGoodsListBean) getIntent().getSerializableExtra(GOODS_DETAIL_DATA);
         titleName.setText("商品详情");
         tvAmount.setText("");
         String str2 = "¥ ";
-        String str3 = "0.00";
-        if (shopsList != null) {
-            str3 = String.format(Locale.getDefault(), "%.2f", shopsList.price);
+
+        if (goodsListBean != null) {
+            str3 = String.format(Locale.getDefault(), "%.2f", goodsListBean.getPrice());
+            goodsName.setText(goodsListBean.getGoodsName());
+            goodsSummary.setText(goodsListBean.getSummary());
+
+            Glide.with(this).load(goodsListBean.getGoodsIntroduceImg())
+                    .apply(new RequestOptions().placeholder(R.drawable.pic_fuwutujiazaishibai).error(R.drawable.pic_fuwutujiazaishibai))
+                    .into(GlideUtils.getImageView(this, goodsListBean.getGoodsIntroduceImg(), imgDetail));
         }
 
         SpannableString span2 = new SpannableString(str2);
@@ -84,25 +116,25 @@ public class ShopsDetailActivity extends BaseActivity {
 
     }
 
+
     @Override
     protected void initData() {
-        List<Integer> integers = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            integers.add(i);
+        if (goodsListBean != null && goodsListBean.getGoodsImgsList() != null) {
+            List<BaseGoodsListBean.GoodsImgsListBean> bannerList = goodsListBean.getGoodsImgsList();
+            mViewpager.setCanLoop(true)
+                    .setAutoPlay(true)
+                    .setIndicatorStyle(IndicatorStyle.CIRCLE)
+                    //.setIndicatorSlideMode(IndicatorSlideMode.SMOOTH)
+                    .setIndicatorRadius(8)
+                    .setIndicatorColor(Color.parseColor("#FFFFFF"), Color.parseColor("#6C6D72"))
+                    .setHolderCreator(ShopsDetailActivity.DataViewHolder::new).setOnPageClickListener(new BannerViewPager.OnPageClickListener() {
+                @Override
+                public void onPageClick(int position) {
+                    onClickBanner(position);
+                }
+            }).create(bannerList);//.create(mBanners);
+            mViewpager.startLoop();
         }
-        mViewpager.setCanLoop(true)
-                .setAutoPlay(true)
-                .setIndicatorStyle(IndicatorStyle.CIRCLE)
-                //.setIndicatorSlideMode(IndicatorSlideMode.SMOOTH)
-                .setIndicatorRadius(8)
-                .setIndicatorColor(Color.parseColor("#FFFFFF"), Color.parseColor("#6C6D72"))
-                .setHolderCreator(ShopsDetailActivity.DataViewHolder::new).setOnPageClickListener(new BannerViewPager.OnPageClickListener() {
-            @Override
-            public void onPageClick(int position) {
-                onClickBanner(position);
-            }
-        }).create(integers);//.create(mBanners);
-        mViewpager.startLoop();
     }
 
     /*
@@ -112,7 +144,7 @@ public class ShopsDetailActivity extends BaseActivity {
 
     }
 
-    public class DataViewHolder implements ViewHolder<Integer> {
+    public class DataViewHolder implements ViewHolder<BaseGoodsListBean.GoodsImgsListBean> {
         private ImageView mImageView;
 
         @Override
@@ -124,8 +156,8 @@ public class ShopsDetailActivity extends BaseActivity {
         }
 
         @Override
-        public void onBind(final Context context, Integer data, final int position, final int size) {
-            Glide.with(context).load(R.mipmap.e01_25shangping).into(mImageView);
+        public void onBind(final Context context, BaseGoodsListBean.GoodsImgsListBean data, final int position, final int size) {
+            Glide.with(context).load(data.getGoodsImg()).apply(new RequestOptions().placeholder(R.drawable.pic_fuwutujiazaishibai).error(R.drawable.pic_fuwutujiazaishibai)).into(mImageView);
         }
     }
 
@@ -138,12 +170,9 @@ public class ShopsDetailActivity extends BaseActivity {
             case R.id.tv_pay:
                 Intent intent = new Intent(ShopsDetailActivity.this, ShopPayActivity.class);
                 intent.putExtra(ShopPayActivity.IS_SHOW_ADDRESS, true);
-                if (shopsList != null) {
-                    intent.putExtra(ShopPayActivity.PAY_AMOUNT, shopsList.price);
-                } else {
-                    intent.putExtra(ShopPayActivity.PAY_AMOUNT, 0.00);
+                if (goodsListBean != null) {
+                    intent.putExtra(ShopPayActivity.PAY_DATA, goodsListBean);
                 }
-
                 startActivity(intent);
                 break;
         }

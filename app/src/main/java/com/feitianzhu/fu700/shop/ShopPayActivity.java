@@ -28,6 +28,7 @@ import com.feitianzhu.fu700.common.impl.onNetFinishLinstenerT;
 import com.feitianzhu.fu700.me.base.BaseActivity;
 import com.feitianzhu.fu700.me.ui.ShopRecordDetailActivity;
 import com.feitianzhu.fu700.me.ui.totalScore.TransferVoucherActivity;
+import com.feitianzhu.fu700.model.BaseGoodsListBean;
 import com.feitianzhu.fu700.model.PayInfo;
 import com.feitianzhu.fu700.model.SelectPayNeedModel;
 import com.feitianzhu.fu700.model.WXModel;
@@ -68,7 +69,7 @@ import okhttp3.Call;
  */
 public class ShopPayActivity extends BaseActivity {
     public static final String IS_SHOW_ADDRESS = "is_show_address";
-    public static final String PAY_AMOUNT = "pay_amount";
+    public static final String PAY_DATA = "pay_data";
 
     @BindView(R.id.amount)
     TextView bottomAmount;
@@ -94,6 +95,10 @@ public class ShopPayActivity extends BaseActivity {
     LinearLayout llAddress;
     @BindView(R.id.edit_address)
     EditText editAddress;
+    @BindView(R.id.name)
+    TextView tvName;
+    @BindView(R.id.summary)
+    TextView tvSummary;
     private String amount;
     private String totalAmount;
     private SelectPayNeedModel selectPayNeedModel;
@@ -101,6 +106,7 @@ public class ShopPayActivity extends BaseActivity {
     private String str1;
     private String str2;
     private boolean isShow;
+    private BaseGoodsListBean goodsListBean;
 
     @Override
     protected int getLayoutId() {
@@ -116,6 +122,9 @@ public class ShopPayActivity extends BaseActivity {
     @SuppressLint("SetTextI18n")
     @Override
     protected void initView() {
+
+        goodsListBean = (BaseGoodsListBean) getIntent().getSerializableExtra(PAY_DATA);
+
         selectPayNeedModel = new SelectPayNeedModel();
         titleName.setText("确认订单");
         weiXinIcon.setBackgroundResource(R.mipmap.e01_23xuanzhong);
@@ -127,7 +136,14 @@ public class ShopPayActivity extends BaseActivity {
          */
         str1 = "合计：";
         str2 = "¥ ";
-        amount = String.format(Locale.getDefault(), "%.2f", getIntent().getDoubleExtra(PAY_AMOUNT, 0.00));
+        if (goodsListBean != null) {
+            amount = String.format(Locale.getDefault(), "%.2f", goodsListBean.getPrice());
+            tvName.setText(goodsListBean.getGoodsName());
+            tvSummary.setText(goodsListBean.getSummary());
+        } else {
+            amount = String.format(Locale.getDefault(), "%.2f", 0.00);
+        }
+
         totalAmount = amount;
         tvCount.setText("×1");
         topAmount.setText("");
@@ -174,8 +190,8 @@ public class ShopPayActivity extends BaseActivity {
                     ToastUtils.showShortToast("请输入收货地址");
                     return;
                 }
-                ToastUtils.showShortToast("待开发");
-                /*ShopHelp.veriPassword(this, new onConnectionFinishLinstener() {
+
+                ShopHelp.veriPassword(this, new onConnectionFinishLinstener() {
                     @Override
                     public void onSuccess(int code, Object result) {
                         String passowrd = (String) result;
@@ -186,7 +202,7 @@ public class ShopPayActivity extends BaseActivity {
                     public void onFail(int code, String result) {
                         ToastUtils.showShortToast(result);
                     }
-                });*/
+                });
                 break;
             case R.id.weixinPay_icon:
                 weiXinIcon.setBackgroundResource(R.mipmap.e01_23xuanzhong);
@@ -268,14 +284,14 @@ public class ShopPayActivity extends BaseActivity {
             public void onSuccess(int code, Object result) {
                 ToastUtils.showShortToast("支付成功");
                 selectPayNeedModel.setIsPay("1");
-                //payResult(selectPayNeedModel, orderNo);
+                payResult(selectPayNeedModel, orderNo);
                 finish();
             }
 
             @Override
             public void onFail(int code, String result) {
                 selectPayNeedModel.setIsPay("0");
-                //payResult(selectPayNeedModel, orderNo);
+                payResult(selectPayNeedModel, orderNo);
                 ToastUtils.showShortToast("支付失败");
             }
         });
@@ -324,11 +340,11 @@ public class ShopPayActivity extends BaseActivity {
             case PayInfo.ShopPay:
                 if (msg.getIsSuccess() == PayInfo.SUCCESS) {
                     selectPayNeedModel.setIsPay("1");
-                    // payResult(selectPayNeedModel, orderNo);
+                    payResult(selectPayNeedModel, orderNo);
                     finish();
                 } else {
                     selectPayNeedModel.setIsPay("0");
-                    // payResult(selectPayNeedModel, orderNo);
+                    payResult(selectPayNeedModel, orderNo);
                 }
 
                 break;

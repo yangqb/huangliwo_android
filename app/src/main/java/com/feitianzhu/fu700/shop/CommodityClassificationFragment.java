@@ -246,6 +246,7 @@ public class CommodityClassificationFragment extends SFFragment implements View.
                 } else {
                     //商品详情
                     Intent intent = new Intent(getActivity(), ShopsDetailActivity.class);
+                    intent.putExtra(ShopsDetailActivity.GOODS_DETAIL_DATA, goodsListBeans.get(position));
                     startActivity(intent);
                 }
 

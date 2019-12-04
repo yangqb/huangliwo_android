@@ -34,10 +34,13 @@ import com.feitianzhu.fu700.home.adapter.HomeRecommendAdapter2;
 import com.feitianzhu.fu700.home.entity.HomeEntity;
 import com.feitianzhu.fu700.home.entity.ShopAndMerchants;
 import com.feitianzhu.fu700.me.ui.PersonalCenterActivity2;
+import com.feitianzhu.fu700.me.ui.PushServiceActivity;
 import com.feitianzhu.fu700.me.ui.ScannerActivity;
 import com.feitianzhu.fu700.me.ui.ServiceDetailActivity;
+import com.feitianzhu.fu700.model.BaseGoodsListBean;
 import com.feitianzhu.fu700.model.MineInfoModel;
 import com.feitianzhu.fu700.model.Province;
+import com.feitianzhu.fu700.shop.ShopHelp;
 import com.feitianzhu.fu700.shop.ShopsDetailActivity;
 import com.feitianzhu.fu700.shop.MerchantsDetailActivity;
 import com.feitianzhu.fu700.shop.ui.ShopSearchActivity;
@@ -109,7 +112,7 @@ public class HomeFragment2 extends SFFragment implements SwipeRefreshLayout.OnRe
     private List<ShopAndMerchants> shopAndMerchants = new ArrayList<>();
     private List<HomeEntity.RecommendListBean> recommendListBeanList = new ArrayList<>();
     private List<HomeEntity.ServiceRecommendListBean> serviceRecommendList = new ArrayList<>();
-    private List<HomeEntity.ShopsList> shopsLists = new ArrayList<>();
+    private List<BaseGoodsListBean> shopsLists = new ArrayList<>();
     private View mHeader;
     private HomeRecommendAdapter2 mAdapter;
     private HAdapter hAdapter;
@@ -194,7 +197,7 @@ public class HomeFragment2 extends SFFragment implements SwipeRefreshLayout.OnRe
                 if (adapter.getItemViewType(position) == ShopAndMerchants.TYPE_SERIES) {
                     //商品详情
                     Intent intent = new Intent(getActivity(), ShopsDetailActivity.class);
-                    intent.putExtra(ShopsDetailActivity.SHOP_DATA, shopsLists.get(position));
+                    intent.putExtra(ShopsDetailActivity.GOODS_DETAIL_DATA, shopsLists.get(position));
                     startActivity(intent);
                 } else {
                     //商家
@@ -450,9 +453,9 @@ public class HomeFragment2 extends SFFragment implements SwipeRefreshLayout.OnRe
                 break;
             case R.id.iv_fabufuwu:
                 popupWindow.dismiss();
-                ToastUtils.showShortToast("待开发");
-                /*Intent pushIntent = new Intent(getActivity(), PushServiceActivity.class);
-                ShopHelp.veriUserShopJumpActivity(getActivity(), pushIntent);*/
+                //ToastUtils.showShortToast("待开发");
+                Intent pushIntent = new Intent(getActivity(), PushServiceActivity.class);
+                ShopHelp.veriUserShopJumpActivity(getActivity(), pushIntent);
                 break;
             case R.id.rl_merchants: //商家
                 mCallbackBFragment.skipToCommodityFragment(1, v);

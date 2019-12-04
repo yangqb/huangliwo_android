@@ -129,9 +129,9 @@ public class ShopsSellerFragment extends Fragment {
                     mShopsInfo.adImgs = str;
                     mTxtShopsDes.setText(mShopsInfo.introduce);
                     mTxtShopType.setText(mShopsInfo.clsName + "");
-                    //mTxtAddress.setText(Html.fromHtml("<u>" + mShopsInfo.dtlAddr + "" + "</u>"));
-                    mTxtAddress.setText(Html.fromHtml("<u>" +
-                            "广东省深圳市宝安区航空路与顺昌路交汇处" + "</u>"));
+                    mTxtAddress.setText(Html.fromHtml("<u>" + mShopsInfo.dtlAddr + "" + "</u>"));
+                    /*mTxtAddress.setText(Html.fromHtml("<u>" +
+                            "广东省深圳市宝安区航空路与顺昌路交汇处" + "</u>"));*/
 
                 } catch (Exception mE) {
                     mShopsInfo.adImgs = "";

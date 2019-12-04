@@ -1,6 +1,6 @@
 package com.feitianzhu.fu700.home.entity;
 
-import com.chad.library.adapter.base.entity.MultiItemEntity;
+import com.feitianzhu.fu700.model.BaseGoodsListBean;
 
 import java.io.Serializable;
 import java.util.List;
@@ -17,7 +17,15 @@ public class HomeEntity {
     public List<BannerListBean> bannerList;
     public List<RecommendListBean> recommendList;
     public List<ServiceRecommendListBean> serviceRecommendList;
-    public List<ShopsList> goodsList;
+    public List<BaseGoodsListBean> goodsList;
+
+    public List<BaseGoodsListBean> getGoodsList() {
+        return goodsList;
+    }
+
+    public void setGoodsList(List<BaseGoodsListBean> goodsList) {
+        this.goodsList = goodsList;
+    }
 
     public static class BannerListBean {
         /**
@@ -42,7 +50,7 @@ public class HomeEntity {
         }
     }
 
-    public static class RecommendListBean implements Serializable{
+    public static class RecommendListBean implements Serializable {
         /**
          * merchantId : 7
          * merchantName : d哈哈哈
@@ -100,52 +108,6 @@ public class HomeEntity {
                     ", collectId=" + collectId +
                     '}';
         }
-    }
-
-    public static class ShopsList implements Serializable {
-        public int goodsId;
-        public int clsId;
-        public String goodsName;
-        public String title;
-        public String summary;
-        public String goodsImg;
-        public double price;
-        public double rebatePv;
-        public int sales;
-        public String details;
-        public int stockCount;
-        public String speci;
-        public double postage;
-        /**
-         * 上架状态（1：上架，0：下架）
-         */
-        public String isShelf;
-        //是否是推广商品（1：是，0：否）
-        public String isExtend;
-        public String createDate;
-        public String createBy;
-        public String updateBy;
-        public String updateDate;
-        /**
-         * 商品明细图片集合
-         */
-        public List<GoodsImgs> goodsImgsList;
-        public int collectId;
-        public String connectPhone;
-
-        public String priceOrderBy;
-        public String isPoints;  //是否是积分商品(1：是）
-
-        /**
-         * 库存减少量
-         */
-        public int stockCountReduceNum;
-    }
-
-    public static class GoodsImgs implements Serializable {
-        public int imgId;
-        public int goodsId;
-        public String goodsImg;
     }
 
     @Override

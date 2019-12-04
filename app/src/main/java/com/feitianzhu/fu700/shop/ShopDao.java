@@ -757,6 +757,9 @@ public class ShopDao {
         });
     }
 
+    /*
+     * 微信充值支付
+     * */
     public static void postWxPay(String money, String chanel, final onNetFinishLinstenerT<WXModel> mLinstener) {
         OkHttpUtils.get()//
                 .url(Common_HEADER + WX_PAY_URL).addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
@@ -767,9 +770,12 @@ public class ShopDao {
         });
     }
 
+    /*
+     * 阿里充值支付
+     * */
     public static void postAliPayPay(String money, final onConnectionFinishLinstener mLinstener) {
         OkHttpUtils.get()//
-                .url(Common_HEADER + WX_PAY_URL).addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
+                .url(Common_HEADER + WX_PAY_URL).addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//goodsId
                 .addParams(USERID, Constant.LOGIN_USERID)//
                 .addParams(AMOUNT, money + "")//
                 .addParams(CHANNEL, "alipay")//

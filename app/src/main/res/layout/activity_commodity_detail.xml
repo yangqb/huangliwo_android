@@ -45,6 +45,7 @@
                         android:textSize="17sp" />
 
                     <TextView
+                        android:id="@+id/goodsName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingTop="8dp"
@@ -54,6 +55,7 @@
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/goodsSummary"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingTop="5dp"
@@ -72,10 +74,12 @@
 
 
                 <ImageView
+                    android:id="@+id/detail_img"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:scaleType="fitXY"
                     android:layout_marginBottom="100dp"
-                    android:src="@mipmap/e01_30xiangqing" />
+                    android:background="@mipmap/e01_30xiangqing" />
             </LinearLayout>
 
         </android.support.v4.widget.NestedScrollView>

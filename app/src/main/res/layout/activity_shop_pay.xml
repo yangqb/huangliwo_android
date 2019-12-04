@@ -135,21 +135,23 @@
                             android:orientation="vertical">
 
                             <TextView
+                                android:id="@+id/name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:ellipsize="end"
                                 android:maxLines="1"
-                                android:text="套餐名称套餐名称套餐套餐名称套餐名称套餐"
+                                android:text=""
                                 android:textColor="@color/color_333333"
                                 android:textSize="14sp" />
 
                             <TextView
+                                android:id="@+id/summary"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="3dp"
                                 android:ellipsize="end"
                                 android:maxLines="3"
-                                android:text="广告语广告语广告语广告语广告语"
+                                android:text=""
                                 android:textColor="@color/color_999999"
                                 android:textSize="12sp" />
 
