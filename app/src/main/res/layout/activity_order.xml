@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_f7f7f7"
+    android:orientation="vertical">
+
+    <include layout="@layout/layout_head" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/dp_10">
+
+        <LinearLayout
+            android:id="@+id/ll_all_order"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="bottom|center_horizontal"
+            android:orientation="vertical"
+            android:paddingRight="22dp">
+
+            <TextView
+                android:id="@+id/all_order"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="bottom"
+                android:paddingBottom="5dp"
+                android:text="全部"
+                android:textColor="@drawable/select_order_color"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="22dp"
+                android:layout_height="2dp"
+                android:background="@color/bg_yellow" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_wait_pay_order"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="bottom|center_horizontal"
+            android:orientation="vertical"
+            android:paddingRight="22dp">
+
+            <TextView
+                android:id="@+id/wait_pay_order"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="bottom"
+                android:paddingBottom="5dp"
+                android:text="待付款"
+                android:textColor="@drawable/select_order_color"
+                android:textSize="14sp" />
+
+            <View
+                android:layout_width="22dp"
+                android:layout_height="2dp"
+                android:background="@color/bg_yellow" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_wait_sending_order"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="bottom|center_horizontal"
+            android:orientation="vertical"
+            android:paddingRight="22dp">
+
+            <TextView
+                android:id="@+id/wait_sending_order"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="bottom"
+                android:paddingBottom="5dp"
+                android:text="待发货"
+                android:textColor="@drawable/select_order_color"
+                android:textSize="14sp" />
+
+            <View
+                android:layout_width="22dp"
+                android:layout_height="2dp"
+                android:background="@color/bg_yellow" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_wait_receive_order"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="bottom|center_horizontal"
+            android:orientation="vertical"
+            android:paddingRight="22dp">
+
+            <TextView
+                android:id="@+id/wait_receive_order"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="bottom"
+                android:paddingBottom="5dp"
+                android:text="待收货"
+                android:textColor="@drawable/select_order_color"
+                android:textSize="14sp" />
+
+            <View
+                android:layout_width="22dp"
+                android:layout_height="2dp"
+                android:background="@color/bg_yellow" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_wait_evaluate_order"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="bottom|center_horizontal"
+            android:orientation="vertical"
+            android:paddingRight="22dp">
+
+            <TextView
+                android:id="@+id/wait_evaluate_order"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="bottom"
+                android:paddingBottom="5dp"
+                android:text="待评价"
+                android:textColor="@drawable/select_order_color"
+                android:textSize="14sp" />
+
+            <View
+                android:layout_width="22dp"
+                android:layout_height="2dp"
+                android:background="@color/bg_yellow" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_all_after_sales"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="bottom|center_horizontal"
+            android:orientation="vertical"
+            android:paddingRight="22dp">
+
+            <TextView
+                android:id="@+id/all_after_sales"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="bottom"
+                android:paddingBottom="5dp"
+                android:text="售后"
+                android:textColor="@drawable/select_order_color"
+                android:textSize="14sp" />
+
+            <View
+                android:layout_width="22dp"
+                android:layout_height="2dp"
+                android:background="@color/bg_yellow" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </android.support.v7.widget.RecyclerView>
+
+</LinearLayout>

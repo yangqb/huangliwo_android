@@ -12,7 +12,16 @@ public class MultipleItem implements MultiItemEntity {
     public static final int TEXT = 1;
     public static final int IMG = 2;
     private int itemType;
-    private String text;
+
+    public BaseGoodsListBean goodsListBean;
+
+    public BaseGoodsListBean getGoodsListBean() {
+        return goodsListBean;
+    }
+
+    public void setGoodsListBean(BaseGoodsListBean goodsListBean) {
+        this.goodsListBean = goodsListBean;
+    }
 
     public MultipleItem(int itemType) {
         this.itemType = itemType;
@@ -23,11 +32,4 @@ public class MultipleItem implements MultiItemEntity {
         return itemType;
     }
 
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
 }

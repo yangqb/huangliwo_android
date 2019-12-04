@@ -20,6 +20,7 @@
             android:id="@+id/image"
             android:layout_width="75dp"
             android:layout_height="75dp"
+            android:scaleType="centerCrop"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="5dp"
@@ -45,6 +46,7 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/tvContent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -56,6 +58,7 @@
                 android:textSize="12sp" />
 
             <TextView
+                android:id="@+id/price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="￥68.00"

@@ -25,19 +25,26 @@ import com.feitianzhu.fu700.R;
 import com.feitianzhu.fu700.common.Constant;
 import com.feitianzhu.fu700.common.base.SFFragment;
 import com.feitianzhu.fu700.me.ui.ScannerActivity;
+import com.feitianzhu.fu700.model.BaseGoodsListBean;
 import com.feitianzhu.fu700.model.MultipleItem;
 import com.feitianzhu.fu700.model.Province;
+import com.feitianzhu.fu700.model.ShopClassify;
+import com.feitianzhu.fu700.model.Shops;
 import com.feitianzhu.fu700.shop.adapter.LeftAdapter;
 import com.feitianzhu.fu700.shop.adapter.RightAdapter;
 import com.feitianzhu.fu700.shop.ui.ShopSearchActivity;
 import com.feitianzhu.fu700.shop.ui.dialog.ProvinceCallBack;
 import com.feitianzhu.fu700.shop.ui.dialog.ProvincehDialog;
 import com.feitianzhu.fu700.utils.ToastUtils;
+import com.feitianzhu.fu700.utils.Urls;
+import com.google.gson.Gson;
 import com.socks.library.KLog;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
 import com.yanzhenjie.permission.Rationale;
 import com.yanzhenjie.permission.RationaleListener;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.Callback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +53,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * @class name：com.feitianzhu.fu700.shop
@@ -86,7 +95,8 @@ public class CommodityClassificationFragment extends SFFragment implements View.
     private View vPopupWindow;
     private LeftAdapter leftAdapter;
     private RightAdapter rightAdapter;
-    private List<String> list;
+    private List<ShopClassify.GGoodsClsListBean> shopClassifyLsit = new ArrayList<>();
+    private List<BaseGoodsListBean> goodsListBeans;
     private List<MultipleItem> multipleItemList = new ArrayList<>();
 
     public CommodityClassificationFragment() {
@@ -136,48 +146,16 @@ public class CommodityClassificationFragment extends SFFragment implements View.
         if (mParam1 == 1) { //商家
             button1.setSelected(true);
             button2.setSelected(false);
-            for (int i = 0; i < 20; i++) {
-                MultipleItem item = new MultipleItem(1);
-                multipleItemList.add(item);
-            }
-            list = new ArrayList<>();
-            list.add("休闲娱乐");
-            list.add("健身/游泳");
-            list.add("丽人/美发");
-            list.add("医疗/牙科");
-            list.add("结婚摄影");
-            list.add("信用卡");
-
         } else {//商城
             button1.setSelected(false);
             button2.setSelected(true);
-            for (int i = 0; i < 20; i++) {
-                MultipleItem item = new MultipleItem(2);
-                multipleItemList.add(item);
-            }
-            list = new ArrayList<>();
-            list.add("水果");
-            list.add("蔬菜");
-            list.add("肉蛋");
-            list.add("粮油");
-            list.add("休闲食品");
-            list.add("服饰");
-            list.add("电器");
-            list.add("海外甄选");
-            list.add("乳品");
-            list.add("家居");
-            list.add("个护");
-            list.add("美妆");
-            list.add("餐厨");
-            list.add("母婴");
-            list.add("宠物");
         }
 
         button1.setOnClickListener(this);
         button2.setOnClickListener(this);
 
 
-        leftAdapter = new LeftAdapter(list);
+        leftAdapter = new LeftAdapter(shopClassifyLsit);
         leftRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         leftRecyclerView.setAdapter(leftAdapter);
         leftAdapter.notifyDataSetChanged();
@@ -206,6 +184,44 @@ public class CommodityClassificationFragment extends SFFragment implements View.
         if (mSwipeLayout != null) {
             mSwipeLayout.setRefreshing(false);
         }
+        OkHttpUtils.post()
+                .url(Urls.GET_SHOP_CLASS)
+                .build()
+                .execute(new Callback() {
+                    @Override
+                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
+                        return new Gson().fromJson(mData, ShopClassify.class);
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        if (mSwipeLayout != null) {
+                            mSwipeLayout.setRefreshing(false);
+                        }
+                        Toast.makeText(getActivity(), TextUtils.isEmpty(e.getMessage()) ? "加载失败，请重试" : e.getMessage(), Toast.LENGTH_SHORT).show();
+                        KLog.e(e);
+                    }
+
+                    @Override
+                    public void onResponse(Object response, int id) {
+                        ShopClassify shopClassify = (ShopClassify) response;
+                        shopClassifyLsit = shopClassify.getGGoodsClsList();
+                        leftAdapter.setSelect(-1);
+                        leftAdapter.setNewData(shopClassifyLsit);
+                        leftAdapter.notifyDataSetChanged();
+                        multipleItemList.clear();
+                        goodsListBeans = shopClassify.getGoodsList();
+                        for (int i = 0; i < goodsListBeans.size(); i++) {
+                            MultipleItem multipleItem = new MultipleItem(MultipleItem.IMG);
+                            multipleItem.setGoodsListBean(goodsListBeans.get(i));
+                            multipleItemList.add(multipleItem);
+                        }
+                        rightAdapter.setNewData(multipleItemList);
+                        rightAdapter.notifyDataSetChanged();
+                    }
+                });
+
+
     }
 
     public void initListener() {
@@ -214,6 +230,8 @@ public class CommodityClassificationFragment extends SFFragment implements View.
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 leftAdapter.setSelect(position);
                 leftAdapter.notifyDataSetChanged();
+                //获取当前分类的商品
+                getShops(shopClassifyLsit.get(position).getClsId());
             }
         });
 
@@ -236,6 +254,39 @@ public class CommodityClassificationFragment extends SFFragment implements View.
 
     }
 
+
+    public void getShops(int clsId) {
+        OkHttpUtils.post()
+                .url(Urls.GET_SHOP)
+                .addParams("cls_id", clsId + "")
+                .build()
+                .execute(new Callback() {
+                    @Override
+                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
+                        return new Gson().fromJson(mData, Shops.class);
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+
+                    }
+
+                    @Override
+                    public void onResponse(Object response, int id) {
+                        Shops shops = (Shops) response;
+                        multipleItemList.clear();
+                        List<BaseGoodsListBean> goodslistBean = shops.getGoodslist();
+                        for (int i = 0; i < goodslistBean.size(); i++) {
+                            MultipleItem multipleItem = new MultipleItem(MultipleItem.IMG);
+                            multipleItem.setGoodsListBean(goodslistBean.get(i));
+                            multipleItemList.add(multipleItem);
+                        }
+                        rightAdapter.setNewData(multipleItemList);
+                        rightAdapter.notifyDataSetChanged();
+                    }
+                });
+
+    }
 
     @OnClick(R.id.ll_location)
     public void onViewClicked() {
@@ -303,54 +354,15 @@ public class CommodityClassificationFragment extends SFFragment implements View.
                 mParam1 = 1;
                 button1.setSelected(true);
                 button2.setSelected(false);
-                list = new ArrayList<>();
-                list.add("休闲娱乐");
-                list.add("健身/游泳");
-                list.add("丽人/美发");
-                list.add("医疗/牙科");
-                list.add("结婚摄影");
-                list.add("信用卡");
-                leftAdapter.setSelect(0);
-                leftAdapter.setNewData(list);
-                leftAdapter.notifyDataSetChanged();
 
-                multipleItemList.clear();
-                for (int i = 0; i < 20; i++) {
-                    MultipleItem item = new MultipleItem(1);
-                    multipleItemList.add(item);
-                }
-                rightAdapter.notifyDataSetChanged();
+                initData();
                 break;
             case R.id.button2:
                 mParam1 = 2;
                 button1.setSelected(false);
                 button2.setSelected(true);
-                list = new ArrayList<>();
-                list.add("水果");
-                list.add("蔬菜");
-                list.add("肉蛋");
-                list.add("粮油");
-                list.add("休闲食品");
-                list.add("服饰");
-                list.add("电器");
-                list.add("海外甄选");
-                list.add("乳品");
-                list.add("家居");
-                list.add("个护");
-                list.add("美妆");
-                list.add("餐厨");
-                list.add("母婴");
-                list.add("宠物");
-                leftAdapter.setSelect(0);
-                leftAdapter.setNewData(list);
-                leftAdapter.notifyDataSetChanged();
 
-                multipleItemList.clear();
-                for (int i = 0; i < 20; i++) {
-                    MultipleItem item = new MultipleItem(2);
-                    multipleItemList.add(item);
-                }
-                rightAdapter.notifyDataSetChanged();
+                initData();
                 break;
         }
 

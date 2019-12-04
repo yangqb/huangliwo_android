@@ -138,6 +138,7 @@ public class OkHttpUtils {
                   Object o = finalCallback.parseNetworkResponse(mData, response, id);
                   OkHttpUtils.this.sendSuccessResultCallback(o, finalCallback, id);
                 } catch (Exception e ) {
+                  //String s = e.getMessage();
                   sendFailResultCallback(call, new Exception("服务器错误"), finalCallback, id);
                 }
               }

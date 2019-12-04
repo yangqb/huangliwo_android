@@ -1,9 +1,12 @@
 package com.feitianzhu.fu700.shop.adapter;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.feitianzhu.fu700.R;
 import com.feitianzhu.fu700.model.MultipleItem;
+import com.itheima.roundedimageview.RoundedImageView;
 
 import java.util.List;
 
@@ -28,7 +31,11 @@ public class RightAdapter extends BaseMultiItemQuickAdapter<MultipleItem, BaseVi
                 // helper.setImageUrl(R.id.tv, item.getContent());
                 break;
             case MultipleItem.IMG:
-                //helper.setImageUrl(R.id.iv, item.getContent());
+                helper.setText(R.id.tv_category, item.getGoodsListBean().getGoodsName());
+                helper.setText(R.id.price, "¥" + item.getGoodsListBean().getPrice());
+                helper.setText(R.id.tvContent, item.getGoodsListBean().getSummary());
+                Glide.with(mContext).load(item.getGoodsListBean().getGoodsImg())
+                        .apply(new RequestOptions().placeholder(R.drawable.pic_fuwutujiazaishibai)).into((RoundedImageView) helper.getView(R.id.image));
                 break;
         }
     }

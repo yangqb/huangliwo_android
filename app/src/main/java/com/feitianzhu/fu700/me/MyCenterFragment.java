@@ -35,6 +35,7 @@ import com.feitianzhu.fu700.settings.SettingsActivity;
 import com.feitianzhu.fu700.shop.ShopDao;
 import com.feitianzhu.fu700.shop.ShopHelp;
 import com.feitianzhu.fu700.shop.ui.MyOrderActivity;
+import com.feitianzhu.fu700.shop.ui.MyOrderActivity2;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.view.CircleImageView;
 import com.feitianzhu.fu700.vip.VipActivity;
@@ -212,7 +213,9 @@ public class MyCenterFragment extends SFFragment {
                         startActivity(intent);
                         break;
                     case 3://我的订单
-                        JumpActivity(getContext(), MyOrderActivity.class);
+                        // JumpActivity(getContext(), MyOrderActivity.class);
+                        intent = new Intent(getActivity(), MyOrderActivity2.class);
+                        startActivity(intent);
                         break;
                     case 4://商铺管理
                         if (!Constant.loadUserAuth) {

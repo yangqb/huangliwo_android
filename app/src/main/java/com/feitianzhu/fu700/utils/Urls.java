@@ -7,9 +7,9 @@ package com.feitianzhu.fu700.utils;
 public class Urls {
 
     //正式
-    private static final String HOST_URL = "http://39.106.65.35";
+    //private static final String HOST_URL = "http://39.106.65.35";
     //测试
-    //private static final String HOST_URL = "http://192.168.0.21";
+    private static final String HOST_URL = "http://192.168.0.21";
 
     private static final String HOST_PORT = "8089";
 
@@ -34,6 +34,16 @@ public class Urls {
      * 获取首页数据
      */
     public static final String GET_INDEX = BASE_URL + "fhwl/index/getindex";
+
+    /*
+     * 获取商城分类
+     * */
+    public static final String GET_SHOP_CLASS = BASE_URL + "fhwl/shop/getshop";
+
+    /*
+    * 商城分类的商品
+    * */
+    public static final String GET_SHOP = BASE_URL + "fhwl/shop/getclsid";
 
     /**
      * 更换手机号

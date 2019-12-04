@@ -383,7 +383,6 @@ public class MyVerificationActivity extends SelectPhotoActivity {
             case R.id.edit_name:
                 break;
             case R.id.ly_user_veri:
-                //showloadDialog("");
                 mBtnToShops.setVisibility(View.GONE);
                 veriUser();
                 ShowVeriUserCompleteView();

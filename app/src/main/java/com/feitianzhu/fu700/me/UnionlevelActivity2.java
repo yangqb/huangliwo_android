@@ -136,9 +136,6 @@ public class UnionlevelActivity2 extends BaseActivity implements BaseQuickAdapte
     }
 
     private void requestData(final boolean isLoadMore) {
-        if (!isLoadMore) {
-            showloadDialog("");
-        }
         ShopDao.loadFUFriend(index + "", new onNetFinishLinstenerT<FuFriendModel>() {
             @Override
             public void onSuccess(int code, FuFriendModel result) {
@@ -149,14 +146,12 @@ public class UnionlevelActivity2 extends BaseActivity implements BaseQuickAdapte
                     adapter2.addData(result.list);
                 }
                 if (isLoadMore) adapter2.loadMoreComplete();
-                goneloadDialog();
             }
 
             @Override
             public void onFail(int code, String result) {
                 if (isLoadMore)
                     adapter2.loadMoreFail();
-                goneloadDialog();
                 ToastUtils.showShortToast(result);
             }
         });

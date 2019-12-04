@@ -487,6 +487,10 @@
             android:name=".me.EditAddressActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".shop.ui.MyOrderActivity2"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:screenOrientation="portrait" />
 
     </application>
 
