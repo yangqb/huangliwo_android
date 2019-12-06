@@ -21,14 +21,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.feitianzhu.fu700.R;
 import com.feitianzhu.fu700.common.Constant;
 import com.feitianzhu.fu700.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.fu700.common.impl.onNetFinishLinstenerT;
+import com.feitianzhu.fu700.me.AddressManagementActivity;
 import com.feitianzhu.fu700.me.base.BaseActivity;
 import com.feitianzhu.fu700.me.ui.ShopRecordDetailActivity;
 import com.feitianzhu.fu700.me.ui.totalScore.TransferVoucherActivity;
 import com.feitianzhu.fu700.model.BaseGoodsListBean;
+import com.feitianzhu.fu700.model.GoodsOrderModel;
 import com.feitianzhu.fu700.model.PayInfo;
 import com.feitianzhu.fu700.model.SelectPayNeedModel;
 import com.feitianzhu.fu700.model.WXModel;
@@ -40,6 +43,13 @@ import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.utils.Urls;
 import com.feitianzhu.fu700.view.AmountView;
 import com.feitianzhu.fu700.vip.VipUpgradeActivity;
+import com.google.gson.Gson;
+import com.lljjcoder.Interface.OnCityItemClickListener;
+import com.lljjcoder.bean.CityBean;
+import com.lljjcoder.bean.DistrictBean;
+import com.lljjcoder.bean.ProvinceBean;
+import com.lljjcoder.style.cityjd.JDCityConfig;
+import com.lljjcoder.style.cityjd.JDCityPicker;
 import com.socks.library.KLog;
 import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
@@ -54,10 +64,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Locale;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import okhttp3.Call;
+import okhttp3.Response;
+
+import static com.feitianzhu.fu700.common.Constant.ACCESSTOKEN;
+import static com.feitianzhu.fu700.common.Constant.USERID;
 
 /**
  * @class name：com.feitianzhu.fu700.shop
@@ -87,6 +102,8 @@ public class ShopPayActivity extends BaseActivity {
     TextView tvTotalAmount;
     @BindView(R.id.rl_address)
     RelativeLayout rlAddress;
+    @BindView(R.id.tv_address)
+    TextView tvAddress;
     @BindView(R.id.amount_view)
     AmountView mAmountView;
     @BindView(R.id.count)
@@ -99,10 +116,14 @@ public class ShopPayActivity extends BaseActivity {
     TextView tvName;
     @BindView(R.id.summary)
     TextView tvSummary;
+    @BindView(R.id.image)
+    ImageView imageView;
     private String amount;
     private String totalAmount;
     private SelectPayNeedModel selectPayNeedModel;
+    private GoodsOrderModel goodsOrderModel;
     private String orderNo = "";//订单号
+    private String orderInfo = "";
     private String str1;
     private String str2;
     private boolean isShow;
@@ -126,6 +147,7 @@ public class ShopPayActivity extends BaseActivity {
         goodsListBean = (BaseGoodsListBean) getIntent().getSerializableExtra(PAY_DATA);
 
         selectPayNeedModel = new SelectPayNeedModel();
+        goodsOrderModel = new GoodsOrderModel();
         titleName.setText("确认订单");
         weiXinIcon.setBackgroundResource(R.mipmap.e01_23xuanzhong);
         /**
@@ -140,6 +162,8 @@ public class ShopPayActivity extends BaseActivity {
             amount = String.format(Locale.getDefault(), "%.2f", goodsListBean.getPrice());
             tvName.setText(goodsListBean.getGoodsName());
             tvSummary.setText(goodsListBean.getSummary());
+            Glide.with(this).load(goodsListBean.getGoodsImg())
+                    .apply(new RequestOptions().placeholder(R.drawable.pic_fuwutujiazaishibai).error(R.drawable.pic_fuwutujiazaishibai)).into(imageView);
         } else {
             amount = String.format(Locale.getDefault(), "%.2f", 0.00);
         }
@@ -182,7 +206,7 @@ public class ShopPayActivity extends BaseActivity {
         });
     }
 
-    @OnClick({R.id.tv_pay, R.id.weixinPay_icon, R.id.alipay_icon, R.id.balancePay_icon})
+    @OnClick({R.id.left_button, R.id.tv_pay, R.id.weixinPay_icon, R.id.alipay_icon, R.id.balancePay_icon, R.id.rl_address})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_pay:
@@ -194,8 +218,9 @@ public class ShopPayActivity extends BaseActivity {
                 ShopHelp.veriPassword(this, new onConnectionFinishLinstener() {
                     @Override
                     public void onSuccess(int code, Object result) {
-                        String passowrd = (String) result;
-                        pay(passowrd);
+                        String password = (String) result;
+                        //pay(password);
+                        pay2(password);
                     }
 
                     @Override
@@ -209,25 +234,80 @@ public class ShopPayActivity extends BaseActivity {
                 alipayIcon.setBackgroundResource(R.mipmap.e01_24weixuanzhong);
                 balancePayIcon.setBackgroundResource(R.mipmap.e01_24weixuanzhong);
                 selectPayNeedModel.setPayChannel("wx");
+                goodsOrderModel.setChannel("wx");
                 break;
             case R.id.alipay_icon:
                 weiXinIcon.setBackgroundResource(R.mipmap.e01_24weixuanzhong);
                 alipayIcon.setBackgroundResource(R.mipmap.e01_23xuanzhong);
                 balancePayIcon.setBackgroundResource(R.mipmap.e01_24weixuanzhong);
                 selectPayNeedModel.setPayChannel("alipay");
+                goodsOrderModel.setChannel("alipay");
                 break;
             case R.id.balancePay_icon:
                 weiXinIcon.setBackgroundResource(R.mipmap.e01_24weixuanzhong);
                 alipayIcon.setBackgroundResource(R.mipmap.e01_24weixuanzhong);
                 balancePayIcon.setBackgroundResource(R.mipmap.e01_23xuanzhong);
-                selectPayNeedModel.setPayChannel("");
+                selectPayNeedModel.setPayChannel("balance");
+                goodsOrderModel.setChannel("balance");
+                break;
+            case R.id.left_button:
+                finish();
+                break;
+            case R.id.rl_address:
+                Intent intent = new Intent(ShopPayActivity.this, AddressManagementActivity.class);
+                startActivity(intent);
                 break;
         }
     }
 
+
+    private void pay2(String password) {
+        OkHttpUtils.post()
+                .url(Urls.PAY_SHOPS)
+                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
+                .addParams(USERID, Constant.LOGIN_USERID)
+                .addParams("payPass", password)
+                .addParams("amount", totalAmount)
+                .addParams("channel", selectPayNeedModel.getPayChannel())
+                .build()
+                .execute(new Callback() {
+
+                    @Override
+                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
+                        return mData;
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+
+                    }
+
+                    @Override
+                    public void onResponse(Object response, int id) {
+                        try {
+                            JSONObject object = new JSONObject(response.toString());
+                            orderInfo = object.getString("payParam");
+                            orderNo = object.getString("orderNo");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        if ("wx".equals(goodsOrderModel.getChannel())) {
+
+                        } else if ("alipay".equals(goodsOrderModel.getChannel())) {
+                            aliPay(orderInfo, orderNo);
+                            goodsOrderModel.setAmount(Double.parseDouble(totalAmount));
+                            goodsOrderModel.setPostage(goodsListBean.getPostage());
+                            goodsOrderModel.setRebatePv(goodsListBean.getRebatePv());
+                            goodsOrderModel.setDetailAddr(editAddress.getText().toString().trim());
+                            goodsOrderModel.setOrderNo(orderNo);
+                        }
+                    }
+                });
+    }
+
     private void pay(String mPassowrd) {
         String merchantid = "2";
-        if ("wx".equals(selectPayNeedModel.getPayChannel())) {
+        if ("wx".equals(goodsOrderModel.getChannel())) {
             showloadDialog("");
             ShopDao.postShopWxPay(merchantid, totalAmount, selectPayNeedModel.getPayChannel(), mPassowrd,
                     new onNetFinishLinstenerT<WXModel>() {
@@ -284,14 +364,15 @@ public class ShopPayActivity extends BaseActivity {
             public void onSuccess(int code, Object result) {
                 ToastUtils.showShortToast("支付成功");
                 selectPayNeedModel.setIsPay("1");
-                payResult(selectPayNeedModel, orderNo);
-                finish();
+                goodsOrderModel.setStatus(1);
+                payResult(orderNo);
             }
 
             @Override
             public void onFail(int code, String result) {
                 selectPayNeedModel.setIsPay("0");
-                payResult(selectPayNeedModel, orderNo);
+                goodsOrderModel.setStatus(0);
+                payResult(orderNo);
                 ToastUtils.showShortToast("支付失败");
             }
         });
@@ -300,26 +381,24 @@ public class ShopPayActivity extends BaseActivity {
     /*
      * 将支付结果反馈给后台
      * */
-    public void payResult(SelectPayNeedModel mSelectModel, String orderNo) {
+    public void payResult(String orderNo) {
         /*
         * int userId,int gradeId,String provinceId,String provinceName,String cityId,String cityName,String areaId,
            String areaName,String payChannel,String isPay
         * */
         OkHttpUtils
                 .post()
-                .url(Urls.PAY_RESULT)
+                .url(Urls.SHOPS_PAY_RESULT)
                 .addParams("accessToken", Constant.ACCESS_TOKEN)
                 .addParams("userId", Constant.LOGIN_USERID)
-                .addParams("gradeId", "")
-                .addParams("provinceId", "")
-                .addParams("provinceName", "")
-                .addParams("cityId", "")
-                .addParams("cityName", "")
-                .addParams("areaId", "")
-                .addParams("areaName", "")
-                .addParams("payChannel", mSelectModel.getPayChannel())
-                .addParams("isPay", mSelectModel.isPay)
+                //.addParams("goodsOrder", json)
                 .addParams("orderNo", orderNo)
+                .addParams("amount", totalAmount)
+                .addParams("postage", goodsListBean.getPostage() + "")
+                .addParams("rebatePv", goodsListBean.getRebatePv() + "")
+                .addParams("channel", goodsOrderModel.getChannel())
+                .addParams("status", goodsOrderModel.getStatus() + "")
+                .addParams("detailAddr", goodsOrderModel.getDetailAddr())
                 .build()
                 .execute(new Callback() {
                     @Override
@@ -339,12 +418,12 @@ public class ShopPayActivity extends BaseActivity {
         switch (msg.getCurrentInfo()) {
             case PayInfo.ShopPay:
                 if (msg.getIsSuccess() == PayInfo.SUCCESS) {
-                    selectPayNeedModel.setIsPay("1");
-                    payResult(selectPayNeedModel, orderNo);
+                    goodsOrderModel.setStatus(1);
+                    payResult(orderNo);
                     finish();
                 } else {
-                    selectPayNeedModel.setIsPay("0");
-                    payResult(selectPayNeedModel, orderNo);
+                    goodsOrderModel.setStatus(0);
+                    payResult(orderNo);
                 }
 
                 break;
@@ -381,10 +460,5 @@ public class ShopPayActivity extends BaseActivity {
         bottomAmount.append(span2);
         bottomAmount.append(span3);
 
-    }
-
-    @OnClick(R.id.left_button)
-    public void onClick() {
-        finish();
     }
 }

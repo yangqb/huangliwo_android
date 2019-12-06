@@ -142,6 +142,7 @@
                             android:textSize="14sp" />
 
                         <ImageView
+                            android:id="@+id/call_phone"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
@@ -292,6 +293,7 @@
                             android:textSize="11sp" />
 
                         <TextView
+                            android:id="@+id/orderNo"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"

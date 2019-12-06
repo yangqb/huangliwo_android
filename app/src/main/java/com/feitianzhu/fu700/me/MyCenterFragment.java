@@ -3,8 +3,6 @@ package com.feitianzhu.fu700.me;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -23,6 +21,7 @@ import com.feitianzhu.fu700.common.base.SFFragment;
 import com.feitianzhu.fu700.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.fu700.login.LoginEvent;
 import com.feitianzhu.fu700.me.adapter.CenterAdapter;
+import com.feitianzhu.fu700.me.ui.BalanceRechargeActivity;
 import com.feitianzhu.fu700.me.ui.MyVerificationActivity;
 import com.feitianzhu.fu700.me.ui.MyWalletActivity;
 import com.feitianzhu.fu700.me.ui.PersonalCenterActivity;
@@ -86,8 +85,8 @@ public class MyCenterFragment extends SFFragment {
     private MineInfoModel mTempData = null;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    Integer[] integers = {R.mipmap.b08_05yuer, R.mipmap.b08_06zhanghu, R.mipmap.b08_07lianmeng, R.mipmap.b08_08dingdan,
-            R.mipmap.b08_09shangpu, R.mipmap.b08_10shouchang, R.mipmap.b08_11dizhi, R.mipmap.b08_12huiyuan, R.mipmap.b08_13yinhangka};
+    Integer[] integers = {R.mipmap.b08_05yuer, R.mipmap.b08_06zhanghu, R.mipmap.b08_07yinhangka, R.mipmap.b08_08dingdan, R.mipmap.b08_09shangpu,
+            R.mipmap.b08_10shouchang, R.mipmap.b08_11dizhi, R.mipmap.b08_12huiyuan, R.mipmap.b08_13lianmeng, R.mipmap.b08_15fenxiang};
 
     public MyCenterFragment() {
     }
@@ -202,42 +201,8 @@ public class MyCenterFragment extends SFFragment {
                     case 1: //账户认证
                         startActivity(new Intent(getActivity(), MyVerificationActivity.class));
                         break;
-                    case 2: //联盟
-                        //ToastUtils.showShortToast("待开发");
-                       /* intent = new Intent(getContext(), UnionlevelActivity.class);
-                        intent.putExtra("AgentName", agentName);
-                        intent.putExtra("Rate", rate);
-                        startActivity(intent);*/
-
-                        intent = new Intent(getActivity(), UnionlevelActivity2.class);
-                        startActivity(intent);
-                        break;
-                    case 3://我的订单
-                        // JumpActivity(getContext(), MyOrderActivity.class);
-                        intent = new Intent(getActivity(), MyOrderActivity2.class);
-                        startActivity(intent);
-                        break;
-                    case 4://商铺管理
-                        if (!Constant.loadUserAuth) {
-                            ToastUtils.showShortToast("正在获取授权信息，稍候进入");
-                            ShopDao.loadUserAuthImpl();
-                            return;
-                        } else {
-                            ShopHelp.veriJumpActivity(getActivity());
-                        }
-                        break;
-                    case 5://我的收藏
-                        JumpActivity(getContext(), MineCollectionActivity.class);
-                        break;
-                    case 6: //地址管理
-                        intent = new Intent(getActivity(), AddressManagementActivity.class);
-                        startActivity(intent);
-                        break;
-                    case 7: //成为会员
-                        intent = new Intent(getContext(), VipActivity.class);
-                        startActivity(intent);
-                        break;
-                    case 8: //银行卡 //暂不提供银行卡功能
+                    case 2:
+                        //银行卡 //暂不提供银行卡功能
                         ToastUtils.showShortToast("待开发");
                         /*if (!Constant.loadUserAuth) {
                             ToastUtils.showShortToast("正在获取授权信息，稍候进入");
@@ -256,6 +221,44 @@ public class MyCenterFragment extends SFFragment {
                                 }
                             });
                         }*/
+                        break;
+                    case 3://我的订单
+                        // JumpActivity(getContext(), MyOrderActivity.class);
+                        intent = new Intent(getActivity(), MyOrderActivity2.class);
+                        startActivity(intent);
+                        break;
+                    case 4: //推店
+                        if (!Constant.loadUserAuth) {
+                            ToastUtils.showShortToast("正在获取授权信息，稍候进入");
+                            ShopDao.loadUserAuthImpl();
+                            return;
+                        } else {
+                            ShopHelp.veriJumpActivity(getActivity());
+                        }
+                        break;
+                    case 5://我的收藏
+                        JumpActivity(getContext(), MineCollectionActivity.class);
+                        break;
+                    case 6://地址管理
+                        intent = new Intent(getActivity(), AddressManagementActivity.class);
+                        startActivity(intent);
+                        break;
+                    case 7://成为会员
+                        intent = new Intent(getContext(), VipActivity.class);
+                        startActivity(intent);
+                        break;
+                    case 8: //联盟
+                        //ToastUtils.showShortToast("待开发");
+                       /* intent = new Intent(getContext(), UnionlevelActivity.class);
+                        intent.putExtra("AgentName", agentName);
+                        intent.putExtra("Rate", rate);
+                        startActivity(intent);*/
+
+                        intent = new Intent(getActivity(), UnionlevelActivity2.class);
+                        startActivity(intent);
+                        break;
+                    case 9: //分享
+                        ToastUtils.showShortToast("待开发");
                         break;
                 }
             }

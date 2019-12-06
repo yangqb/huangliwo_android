@@ -96,9 +96,20 @@ public class Urls {
     public static final String USER_FEEDBACK = BASE_URL + "fhwl/user/userfeedback";
 
     /**
-     * 支付结果反馈
+     * 399支付结果反馈
      */
     public static final String PAY_RESULT = BASE_URL + "fhwl/grade/buy-return";
+
+    /*
+     * 商品支付反馈结果
+     * */
+    public static final String SHOPS_PAY_RESULT = BASE_URL + "fhwl/order/svbill/return-goods";
+
+    /*
+     *
+     * 线上商品支付
+     * */
+    public static final String PAY_SHOPS = BASE_URL + "fhwl/order/svbill/create-goods";
 
     /**
      * 删除银行卡

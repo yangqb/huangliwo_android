@@ -51,6 +51,12 @@ import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.utils.Urls;
 import com.feitianzhu.fu700.view.CircleImageView;
 import com.google.gson.Gson;
+import com.lljjcoder.Interface.OnCityItemClickListener;
+import com.lljjcoder.bean.CityBean;
+import com.lljjcoder.bean.DistrictBean;
+import com.lljjcoder.bean.ProvinceBean;
+import com.lljjcoder.citywheel.CityConfig;
+import com.lljjcoder.style.citypickerview.CityPickerView;
 import com.socks.library.KLog;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
@@ -186,7 +192,6 @@ public class HomeFragment2 extends SFFragment implements SwipeRefreshLayout.OnRe
         mSwipeLayout.setColorSchemeColors(getActivity().getResources().getColor(R.color.sf_blue));
 
         initListener();
-
         return view;
     }
 

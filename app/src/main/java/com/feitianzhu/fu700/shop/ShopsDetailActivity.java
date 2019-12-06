@@ -23,8 +23,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.feitianzhu.fu700.R;
 import com.feitianzhu.fu700.home.entity.HomeEntity;
@@ -94,7 +96,11 @@ public class ShopsDetailActivity extends BaseActivity {
             goodsSummary.setText(goodsListBean.getSummary());
 
             Glide.with(this).load(goodsListBean.getGoodsIntroduceImg())
-                    .apply(new RequestOptions().placeholder(R.drawable.pic_fuwutujiazaishibai).error(R.drawable.pic_fuwutujiazaishibai))
+                    .apply(new RequestOptions()
+                            .placeholder(R.drawable.pic_fuwutujiazaishibai)
+                            .error(R.drawable.pic_fuwutujiazaishibai)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL))
                     .into(GlideUtils.getImageView(this, goodsListBean.getGoodsIntroduceImg(), imgDetail));
         }
 
@@ -161,7 +167,7 @@ public class ShopsDetailActivity extends BaseActivity {
         }
     }
 
-    @OnClick({R.id.left_button, R.id.tv_pay})
+    @OnClick({R.id.left_button, R.id.tv_pay, R.id.rl_more_evaluation})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.left_button:
@@ -173,6 +179,10 @@ public class ShopsDetailActivity extends BaseActivity {
                 if (goodsListBean != null) {
                     intent.putExtra(ShopPayActivity.PAY_DATA, goodsListBean);
                 }
+                startActivity(intent);
+                break;
+            case R.id.rl_more_evaluation: //更多评论
+                intent = new Intent(ShopsDetailActivity.this, CommentsDetailActivity.class);
                 startActivity(intent);
                 break;
         }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -64,6 +65,113 @@
                         android:textSize="12sp" />
                 </LinearLayout>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp_10"
+                    android:layout_marginRight="@dimen/dp_10"
+                    android:background="@drawable/bg_ffffff_r5"
+                    android:orientation="vertical"
+                    android:padding="@dimen/dp_10">
+
+                    <RelativeLayout
+                        android:id="@+id/rl_more_evaluation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:background="@color/white"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:text="评价(560)"
+                            android:textColor="@color/color_333333"
+                            android:textSize="17sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:drawableRight="@mipmap/e01_35jiniru"
+                            android:drawablePadding="5dp"
+                            android:text="查看更多评价"
+                            android:textColor="@color/color_FEA811"
+                            android:textSize="14sp" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:background="@color/white">
+
+                        <com.itheima.roundedimageview.RoundedImageView
+                            android:id="@+id/iv_head"
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:layout_marginRight="10dp"
+                            android:src="@mipmap/b08_01touxiang"
+                            app:riv_border_color="@color/color_cccccc"
+                            app:riv_border_width="0.5dp"
+                            app:riv_oval="true" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="7dp"
+                            android:layout_toRightOf="@id/iv_head"
+                            android:text="jsond"
+                            android:textColor="@color/color_666666"
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginTop="7dp"
+                            android:text="2019.10.11"
+                            android:textColor="@color/color_666666"
+                            android:textSize="13sp" />
+
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="环境：个人觉得这个店的装修挺不错的，也很高大尚，主要是卫生做的好！"
+                            android:textColor="@color/color_666666"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:text="服务：个人觉得这个店的装修挺不错的，也很高大尚，主要是卫生做的好！"
+                            android:textColor="@color/color_666666"
+                            android:textSize="12sp" />
+
+                       <!-- <android.support.v7.widget.RecyclerView
+                            android:id="@+id/recyclerView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dp_10">
+
+                        </android.support.v7.widget.RecyclerView>-->
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -77,9 +185,9 @@
                     android:id="@+id/detail_img"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:scaleType="fitXY"
                     android:layout_marginBottom="100dp"
-                    android:background="@mipmap/e01_30xiangqing" />
+                    android:background="@drawable/pic_fuwutujiazaishibai"
+                    android:scaleType="fitCenter" />
             </LinearLayout>
 
         </android.support.v4.widget.NestedScrollView>

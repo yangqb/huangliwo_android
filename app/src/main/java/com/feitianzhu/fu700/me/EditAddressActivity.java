@@ -9,6 +9,12 @@ import com.feitianzhu.fu700.R;
 import com.feitianzhu.fu700.me.base.BaseActivity;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.view.SwitchButton;
+import com.lljjcoder.Interface.OnCityItemClickListener;
+import com.lljjcoder.bean.CityBean;
+import com.lljjcoder.bean.DistrictBean;
+import com.lljjcoder.bean.ProvinceBean;
+import com.lljjcoder.style.cityjd.JDCityConfig;
+import com.lljjcoder.style.cityjd.JDCityPicker;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
 
@@ -27,6 +33,8 @@ public class EditAddressActivity extends BaseActivity {
     SwitchButton switchButton;
     @BindView(R.id.delete_address)
     RelativeLayout deleteAddress;
+    @BindView(R.id.tvAddress)
+    TextView tvAddress;
 
     @Override
     protected int getLayoutId() {
@@ -53,7 +61,7 @@ public class EditAddressActivity extends BaseActivity {
     }
 
 
-    @OnClick({R.id.left_button, R.id.right_button, R.id.delete_address})
+    @OnClick({R.id.left_button, R.id.right_button, R.id.delete_address, R.id.add_address})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.left_button:
@@ -73,7 +81,32 @@ public class EditAddressActivity extends BaseActivity {
                         .bindLayout(R.layout.layout_dialog) //绑定已有布局
                         .show();
                 break;
+            case R.id.add_address:
+                setSelectAddress();
+                break;
         }
+    }
+
+    public void setSelectAddress() {
+        JDCityPicker cityPicker = new JDCityPicker();
+        JDCityConfig jdCityConfig = new JDCityConfig.Builder().build();
+
+        jdCityConfig.setShowType(JDCityConfig.ShowType.PRO_CITY_DIS);
+        cityPicker.init(this);
+        cityPicker.setConfig(jdCityConfig);
+        cityPicker.setOnCityItemClickListener(new OnCityItemClickListener() {
+            @Override
+            public void onSelected(ProvinceBean province, CityBean city, DistrictBean district) {
+                tvAddress.setText(province.getName() + "(" + province.getId() + ")\n"
+                        + city.getName() + "(" + city.getId() + ")\n"
+                        + district.getName() + "(" + district.getId() + ")");
+            }
+
+            @Override
+            public void onCancel() {
+            }
+        });
+        cityPicker.showCityPicker();
     }
 
     @Override

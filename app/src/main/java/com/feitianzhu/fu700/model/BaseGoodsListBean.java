@@ -20,12 +20,12 @@ public class BaseGoodsListBean implements Serializable {
     private String title;
     private String goodsImg;
     private double price;
-    private int rebatePv;
+    private double rebatePv;
     private String summary;
     private String goodsIntroduceImg; //长图
     private String sales;
     private String stockCount;
-    private String postage;
+    private double postage;
     private String isExtend;
     private String connectPhone;
     private String isPoints;
@@ -55,11 +55,11 @@ public class BaseGoodsListBean implements Serializable {
         this.stockCount = stockCount;
     }
 
-    public String getPostage() {
+    public double getPostage() {
         return postage;
     }
 
-    public void setPostage(String postage) {
+    public void setPostage(double postage) {
         this.postage = postage;
     }
 
@@ -143,11 +143,11 @@ public class BaseGoodsListBean implements Serializable {
         this.price = price;
     }
 
-    public int getRebatePv() {
+    public double getRebatePv() {
         return rebatePv;
     }
 
-    public void setRebatePv(int rebatePv) {
+    public void setRebatePv(double rebatePv) {
         this.rebatePv = rebatePv;
     }
 

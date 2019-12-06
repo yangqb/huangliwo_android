@@ -91,9 +91,11 @@
                     android:background="@color/color_eeeeee" />
 
                 <RelativeLayout
+                    android:id="@+id/add_address"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:background="@color/white">
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:minHeight="50dp">
 
                     <TextView
                         android:id="@+id/address_tag"
@@ -104,15 +106,14 @@
                         android:textColor="@color/color_666666"
                         android:textSize="14sp" />
 
-                    <EditText
+                    <TextView
+                        android:id="@+id/tvAddress"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_toRightOf="@id/address_tag"
-                        android:background="@null"
                         android:gravity="center_vertical"
-                        android:hint="请选择地址"
+                        android:text=""
                         android:textColor="@color/color_333333"
-                        android:textColorHint="@color/color_cccccc"
                         android:textSize="14sp" />
 
                 </RelativeLayout>

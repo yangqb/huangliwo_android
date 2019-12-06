@@ -73,7 +73,7 @@
                     android:maxLines="2"
                     android:paddingTop="5dp"
                     android:paddingBottom="8dp"
-                    android:text="商品说明商品说明商品说明商品说明商品说明商品说明商品说明"
+                    android:text="商品说明商品说明商品说明商品说明商品说明商品说明商品说明说明商品说明商品说明"
                     android:textColor="@color/color_666666"
                     android:textSize="12sp" />
 

@@ -96,7 +96,7 @@ public class CommodityClassificationFragment extends SFFragment implements View.
     private LeftAdapter leftAdapter;
     private RightAdapter rightAdapter;
     private List<ShopClassify.GGoodsClsListBean> shopClassifyLsit = new ArrayList<>();
-    private List<BaseGoodsListBean> goodsListBeans;
+    private List<BaseGoodsListBean> goodsListBeans = new ArrayList<>();
     private List<MultipleItem> multipleItemList = new ArrayList<>();
 
     public CommodityClassificationFragment() {
@@ -210,6 +210,7 @@ public class CommodityClassificationFragment extends SFFragment implements View.
                         leftAdapter.setNewData(shopClassifyLsit);
                         leftAdapter.notifyDataSetChanged();
                         multipleItemList.clear();
+                        goodsListBeans.clear();
                         goodsListBeans = shopClassify.getGoodsList();
                         for (int i = 0; i < goodsListBeans.size(); i++) {
                             MultipleItem multipleItem = new MultipleItem(MultipleItem.IMG);
@@ -276,10 +277,11 @@ public class CommodityClassificationFragment extends SFFragment implements View.
                     public void onResponse(Object response, int id) {
                         Shops shops = (Shops) response;
                         multipleItemList.clear();
-                        List<BaseGoodsListBean> goodslistBean = shops.getGoodslist();
-                        for (int i = 0; i < goodslistBean.size(); i++) {
+                        goodsListBeans.clear();
+                        goodsListBeans = shops.getGoodslist();
+                        for (int i = 0; i < goodsListBeans.size(); i++) {
                             MultipleItem multipleItem = new MultipleItem(MultipleItem.IMG);
-                            multipleItem.setGoodsListBean(goodslistBean.get(i));
+                            multipleItem.setGoodsListBean(goodsListBeans.get(i));
                             multipleItemList.add(multipleItem);
                         }
                         rightAdapter.setNewData(multipleItemList);

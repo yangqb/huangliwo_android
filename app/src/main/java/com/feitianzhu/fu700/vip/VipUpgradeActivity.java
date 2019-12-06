@@ -342,6 +342,7 @@ public class VipUpgradeActivity extends BaseActivity {
 
     public void showDialog() {
         new XPopup.Builder(this)
+                .enableDrag(false)
                 .asCustom(new CustomPopup(this).onClose(new Runnable() {
                     @Override
                     public void run() {

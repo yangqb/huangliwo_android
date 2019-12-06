@@ -190,8 +190,8 @@ public class MyOrderActivity2 extends BaseActivity {
                 setSelect(allOrder, false);
                 setSelect(waitPayOrder, false);
                 setSelect(waitSendingOrder, false);
-                setSelect(waitReceiveOrder, true);
-                setSelect(waitEvaluateOrder, false);
+                setSelect(waitReceiveOrder, false);
+                setSelect(waitEvaluateOrder, true);
                 setSelect(lineAll, false);
                 setSelect(lineWaitPay, false);
                 setSelect(lineWaitSending, false);

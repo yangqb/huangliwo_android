@@ -52,7 +52,7 @@
                     android:paddingTop="18dp"
                     android:paddingRight="10dp"
                     android:paddingBottom="18dp"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
                     <ImageView
                         android:id="@+id/icon"
@@ -91,6 +91,7 @@
                         </LinearLayout>
 
                         <TextView
+                            android:id="@+id/tv_address"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
@@ -123,9 +124,10 @@
 
                         <ImageView
                             android:id="@+id/image"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
                             android:layout_marginRight="13dp"
+                            android:scaleType="centerCrop"
                             android:src="@mipmap/e01_15pingjiatu1" />
 
                         <LinearLayout
