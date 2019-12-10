@@ -120,7 +120,6 @@ public class ShopPayActivity extends BaseActivity {
     ImageView imageView;
     private String amount;
     private String totalAmount;
-    private SelectPayNeedModel selectPayNeedModel;
     private GoodsOrderModel goodsOrderModel;
     private String orderNo = "";//订单号
     private String orderInfo = "";
@@ -145,9 +144,8 @@ public class ShopPayActivity extends BaseActivity {
     protected void initView() {
 
         goodsListBean = (BaseGoodsListBean) getIntent().getSerializableExtra(PAY_DATA);
-
-        selectPayNeedModel = new SelectPayNeedModel();
         goodsOrderModel = new GoodsOrderModel();
+        goodsOrderModel.setChannel("wx");
         titleName.setText("确认订单");
         weiXinIcon.setBackgroundResource(R.mipmap.e01_23xuanzhong);
         /**
@@ -233,21 +231,18 @@ public class ShopPayActivity extends BaseActivity {
                 weiXinIcon.setBackgroundResource(R.mipmap.e01_23xuanzhong);
                 alipayIcon.setBackgroundResource(R.mipmap.e01_24weixuanzhong);
                 balancePayIcon.setBackgroundResource(R.mipmap.e01_24weixuanzhong);
-                selectPayNeedModel.setPayChannel("wx");
                 goodsOrderModel.setChannel("wx");
                 break;
             case R.id.alipay_icon:
                 weiXinIcon.setBackgroundResource(R.mipmap.e01_24weixuanzhong);
                 alipayIcon.setBackgroundResource(R.mipmap.e01_23xuanzhong);
                 balancePayIcon.setBackgroundResource(R.mipmap.e01_24weixuanzhong);
-                selectPayNeedModel.setPayChannel("alipay");
                 goodsOrderModel.setChannel("alipay");
                 break;
             case R.id.balancePay_icon:
                 weiXinIcon.setBackgroundResource(R.mipmap.e01_24weixuanzhong);
                 alipayIcon.setBackgroundResource(R.mipmap.e01_24weixuanzhong);
                 balancePayIcon.setBackgroundResource(R.mipmap.e01_23xuanzhong);
-                selectPayNeedModel.setPayChannel("balance");
                 goodsOrderModel.setChannel("balance");
                 break;
             case R.id.left_button:
@@ -268,7 +263,7 @@ public class ShopPayActivity extends BaseActivity {
                 .addParams(USERID, Constant.LOGIN_USERID)
                 .addParams("payPass", password)
                 .addParams("amount", totalAmount)
-                .addParams("channel", selectPayNeedModel.getPayChannel())
+                .addParams("channel", goodsOrderModel.getChannel())
                 .build()
                 .execute(new Callback() {
 
@@ -286,76 +281,45 @@ public class ShopPayActivity extends BaseActivity {
                     public void onResponse(Object response, int id) {
                         try {
                             JSONObject object = new JSONObject(response.toString());
-                            orderInfo = object.getString("payParam");
-                            orderNo = object.getString("orderNo");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        if ("wx".equals(goodsOrderModel.getChannel())) {
 
-                        } else if ("alipay".equals(goodsOrderModel.getChannel())) {
-                            aliPay(orderInfo, orderNo);
+                            if ("wx".equals(goodsOrderModel.getChannel())) {
+                                WXModel wxModel = new Gson().fromJson(object.toString(), WXModel.class);
+                                orderNo = wxModel.orderNo;
+                                wexinPay(wxModel);
+                            } else if ("alipay".equals(goodsOrderModel.getChannel())) {
+                                orderInfo = object.getString("payParam");
+                                orderNo = object.getString("orderNo");
+                                aliPay(orderInfo, orderNo);
+                            }
                             goodsOrderModel.setAmount(Double.parseDouble(totalAmount));
                             goodsOrderModel.setPostage(goodsListBean.getPostage());
                             goodsOrderModel.setRebatePv(goodsListBean.getRebatePv());
                             goodsOrderModel.setDetailAddr(editAddress.getText().toString().trim());
                             goodsOrderModel.setOrderNo(orderNo);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
                     }
                 });
     }
 
-    private void pay(String mPassowrd) {
-        String merchantid = "2";
-        if ("wx".equals(goodsOrderModel.getChannel())) {
-            showloadDialog("");
-            ShopDao.postShopWxPay(merchantid, totalAmount, selectPayNeedModel.getPayChannel(), mPassowrd,
-                    new onNetFinishLinstenerT<WXModel>() {
-                        @Override
-                        public void onSuccess(int code, WXModel result) {
-                            Constant.PayFlag = PayInfo.ShopPay;
-                            IWXAPI api = WXAPIFactory.createWXAPI(ShopPayActivity.this, result.appid);
-                            api.registerApp(result.appid);
-                            PayReq mPayReq = new PayReq();
-                            orderNo = result.orderNo;
-                            Constant.WX_APP_ID = result.appid + "";
-                            mPayReq.appId = result.appid;
-                            mPayReq.partnerId = result.partnerid;
-                            mPayReq.prepayId = result.prepayid;
-                            mPayReq.packageValue = "Sign=WXPay";
-                            mPayReq.nonceStr = result.noncestr;
-                            mPayReq.timeStamp = result.timestamp + "";
-                            mPayReq.sign = result.sign;
-                            api.sendReq(mPayReq);
-                            goneloadDialog();
-                            ToastUtils.showShortToast("正在打开微信中");
-                        }
-
-                        @Override
-                        public void onFail(int code, String result) {
-                            goneloadDialog();
-                            ToastUtils.showShortToast(result);
-                        }
-                    });
-        } else {
-            ShopDao.postShopPay(merchantid, totalAmount, selectPayNeedModel.getPayChannel(), mPassowrd,
-                    new onConnectionFinishLinstener() {
-                        @Override
-                        public void onSuccess(int code, Object result) {
-                            if ("alipay".equals(selectPayNeedModel.getPayChannel())) {
-                                String orderInfo = result.toString();
-                                aliPay(orderInfo, orderNo);
-                            }
-                        }
-
-                        @Override
-                        public void onFail(int code, String result) {
-                            ToastUtils.showShortToast(result);
-                        }
-                    });
-        }
-
+    private void wexinPay(WXModel result) {
+        Constant.PayFlag = PayInfo.ShopPay;
+        IWXAPI api = WXAPIFactory.createWXAPI(ShopPayActivity.this, result.appid);
+        api.registerApp(result.appid);
+        PayReq mPayReq = new PayReq();
+        Constant.WX_APP_ID = result.appid + "";
+        mPayReq.appId = result.appid;
+        mPayReq.partnerId = result.partnerid;
+        mPayReq.prepayId = result.prepayid;
+        mPayReq.packageValue = "Sign=WXPay";
+        mPayReq.nonceStr = result.noncestr;
+        mPayReq.timeStamp = result.timestamp + "";
+        mPayReq.sign = result.sign;
+        api.sendReq(mPayReq);
+        ToastUtils.showShortToast("正在打开微信中");
     }
+
 
     private void aliPay(String orderInfo, String orderNo) {
 
@@ -363,14 +327,12 @@ public class ShopPayActivity extends BaseActivity {
             @Override
             public void onSuccess(int code, Object result) {
                 ToastUtils.showShortToast("支付成功");
-                selectPayNeedModel.setIsPay("1");
                 goodsOrderModel.setStatus(1);
                 payResult(orderNo);
             }
 
             @Override
             public void onFail(int code, String result) {
-                selectPayNeedModel.setIsPay("0");
                 goodsOrderModel.setStatus(0);
                 payResult(orderNo);
                 ToastUtils.showShortToast("支付失败");
@@ -393,6 +355,7 @@ public class ShopPayActivity extends BaseActivity {
                 .addParams("userId", Constant.LOGIN_USERID)
                 //.addParams("goodsOrder", json)
                 .addParams("orderNo", orderNo)
+                .addParams("goodsId", goodsListBean.getGoodsId() + "")
                 .addParams("amount", totalAmount)
                 .addParams("postage", goodsListBean.getPostage() + "")
                 .addParams("rebatePv", goodsListBean.getRebatePv() + "")
@@ -408,31 +371,28 @@ public class ShopPayActivity extends BaseActivity {
 
                     @Override
                     public void onResponse(Object response, int id) {
-
+                        finish();
                     }
                 });
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void onPayMessageCall(PayInfo msg) {
-        switch (msg.getCurrentInfo()) {
-            case PayInfo.ShopPay:
-                if (msg.getIsSuccess() == PayInfo.SUCCESS) {
-                    goodsOrderModel.setStatus(1);
-                    payResult(orderNo);
-                    finish();
-                } else {
-                    goodsOrderModel.setStatus(0);
-                    payResult(orderNo);
-                }
-
-                break;
+        if (msg.getCurrentInfo() == PayInfo.ShopPay) {
+            if (msg.getIsSuccess() == PayInfo.SUCCESS) {
+                goodsOrderModel.setStatus(1);
+                ToastUtils.showShortToast("支付成功");
+            } else {
+                goodsOrderModel.setStatus(0);
+                ToastUtils.showShortToast("支付失败");
+            }
+            payResult(orderNo);
         }
     }
 
     @Override
     protected void initData() {
-
+        EventBus.getDefault().register(this);
     }
 
     @SuppressLint("SetTextI18n")
@@ -460,5 +420,11 @@ public class ShopPayActivity extends BaseActivity {
         bottomAmount.append(span2);
         bottomAmount.append(span3);
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

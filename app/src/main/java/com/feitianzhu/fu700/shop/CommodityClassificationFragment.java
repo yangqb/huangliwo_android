@@ -270,7 +270,7 @@ public class CommodityClassificationFragment extends SFFragment implements View.
 
                     @Override
                     public void onError(Call call, Exception e, int id) {
-
+                        ToastUtils.showShortToast(e.getMessage());
                     }
 
                     @Override

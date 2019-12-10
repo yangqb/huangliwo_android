@@ -50,6 +50,31 @@ public class Urls {
      * */
     public static final String GET_SHOP_DETAIL = BASE_URL + "fhwl/shop/getGoodsId";
 
+    /*
+     * 商品规格参数
+     * */
+    public static final String GET_PRODUCT_PARAMETERS = BASE_URL + "fhwl/shop/getskuValue";
+
+    /*
+     * 添加地址
+     * */
+    public static final String ADD_ADDRESS = BASE_URL + "fhwl/shop/addUserAddr";
+
+    /*
+     * 删除地址
+     * */
+    public static final String DELETE_ADDRESS = BASE_URL + "fhwl/shop/deleteAddr";
+
+    /*
+     * 修改地址
+     * */
+    public static final String UPDATA_ADDRESS = BASE_URL + "fhwl/shop/upateAddr";
+
+    /*
+     * 地址列表
+     * */
+    public static final String GET_ADDRESS = BASE_URL + "fhwl/shop/selectUserAddr";
+
     /**
      * 更换手机号
      */

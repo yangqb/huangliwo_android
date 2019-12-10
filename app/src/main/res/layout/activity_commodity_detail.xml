@@ -72,6 +72,53 @@
                     android:layout_marginRight="@dimen/dp_10"
                     android:background="@drawable/bg_ffffff_r5"
                     android:orientation="vertical"
+                    android:paddingLeft="@dimen/dp_10"
+                    android:paddingTop="@dimen/dp_20"
+                    android:paddingRight="@dimen/dp_10"
+                    android:paddingBottom="@dimen/dp_20">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="规格"
+                            android:layout_marginRight="5dp"
+                            android:textColor="@color/color_333333"
+                            android:textSize="17sp" />
+
+                        <TextView
+                            android:id="@+id/specifications_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="颜色"
+                            android:textColor="@color/color_333333"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recyclerView"
+                        android:layout_marginTop="15dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    </android.support.v7.widget.RecyclerView>
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp_10"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:layout_marginRight="@dimen/dp_10"
+                    android:background="@drawable/bg_ffffff_r5"
+                    android:orientation="vertical"
                     android:padding="@dimen/dp_10">
 
                     <RelativeLayout
@@ -159,14 +206,6 @@
                             android:text="服务：个人觉得这个店的装修挺不错的，也很高大尚，主要是卫生做的好！"
                             android:textColor="@color/color_666666"
                             android:textSize="12sp" />
-
-                       <!-- <android.support.v7.widget.RecyclerView
-                            android:id="@+id/recyclerView"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/dp_10">
-
-                        </android.support.v7.widget.RecyclerView>-->
 
                     </LinearLayout>
 

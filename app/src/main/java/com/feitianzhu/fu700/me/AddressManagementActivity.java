@@ -1,6 +1,7 @@
 package com.feitianzhu.fu700.me;
 
 import android.content.Intent;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -8,24 +9,36 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.fu700.R;
+import com.feitianzhu.fu700.common.Constant;
 import com.feitianzhu.fu700.me.adapter.AddressManagementAdapter;
 import com.feitianzhu.fu700.me.base.BaseActivity;
+import com.feitianzhu.fu700.model.AddressInfo;
+import com.feitianzhu.fu700.utils.PayUtils;
+import com.feitianzhu.fu700.utils.Urls;
+import com.google.gson.Gson;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.Callback;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import okhttp3.Call;
+import okhttp3.Response;
 
 public class AddressManagementActivity extends BaseActivity {
-
+    private static final int REQUEST_CODE = 1000;
     private AddressManagementAdapter adapter;
+    private List<AddressInfo.ShopAddressListBean> addressInfos = new ArrayList<>();
     @BindView(R.id.title_name)
     TextView titleName;
     @BindView(R.id.right_text)
     TextView rightText;
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
+    @BindView(R.id.swipeLayout)
+    SwipeRefreshLayout mSwipeLayout;
 
     @Override
     protected int getLayoutId() {
@@ -38,15 +51,12 @@ public class AddressManagementActivity extends BaseActivity {
         rightText.setText("新增");
         rightText.setVisibility(View.VISIBLE);
 
-        List<Integer> list = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            list.add(i);
-        }
-
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new AddressManagementAdapter(list);
+        adapter = new AddressManagementAdapter(addressInfos);
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
+
+        mSwipeLayout.setColorSchemeColors(getResources().getColor(R.color.sf_blue));
 
         initListener();
 
@@ -62,6 +72,13 @@ public class AddressManagementActivity extends BaseActivity {
             }
         });
 
+        mSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                initData();
+            }
+        });
+
     }
 
     @OnClick({R.id.left_button, R.id.right_button})
@@ -73,7 +90,7 @@ public class AddressManagementActivity extends BaseActivity {
             case R.id.right_button:
                 Intent intent = new Intent(AddressManagementActivity.this, EditAddressActivity.class);
                 intent.putExtra(EditAddressActivity.IS_ADD_ADDRESS, true);
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_CODE);
                 break;
         }
 
@@ -81,6 +98,40 @@ public class AddressManagementActivity extends BaseActivity {
 
     @Override
     protected void initData() {
+        OkHttpUtils.post()
+                .url(Urls.GET_ADDRESS)
+                .addParams("accessToken", Constant.ACCESS_TOKEN)
+                .addParams("userId", Constant.LOGIN_USERID)
+                .build()
+                .execute(new Callback() {
+                    @Override
+                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
+                        return new Gson().fromJson(mData, AddressInfo.class);
+                    }
 
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        mSwipeLayout.setRefreshing(false);
+                    }
+
+                    @Override
+                    public void onResponse(Object response, int id) {
+                        AddressInfo addressInfo = (AddressInfo) response;
+                        addressInfos = addressInfo.getShopAddressList();
+                        adapter.setNewData(addressInfos);
+                        adapter.notifyDataSetChanged();
+                        mSwipeLayout.setRefreshing(false);
+                    }
+                });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_CODE) {
+                initData();
+            }
+        }
     }
 }

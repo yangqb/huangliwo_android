@@ -41,6 +41,7 @@
                         android:textSize="14sp" />
 
                     <EditText
+                        android:id="@+id/editName"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_toRightOf="@id/name_tag"
@@ -73,6 +74,7 @@
                         android:textSize="14sp" />
 
                     <EditText
+                        android:id="@+id/editPhone"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_toRightOf="@id/phone_tag"
@@ -139,6 +141,7 @@
                         android:textSize="14sp" />
 
                     <EditText
+                        android:id="@+id/editAddressDetail"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_toRightOf="@id/address_detail_tag"

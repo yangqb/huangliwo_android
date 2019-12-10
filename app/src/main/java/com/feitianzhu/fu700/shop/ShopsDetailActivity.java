@@ -7,6 +7,9 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v4.app.NavUtils;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -28,10 +31,14 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.fu700.R;
+import com.feitianzhu.fu700.common.Constant;
 import com.feitianzhu.fu700.home.entity.HomeEntity;
 import com.feitianzhu.fu700.me.base.BaseActivity;
 import com.feitianzhu.fu700.model.BaseGoodsListBean;
+import com.feitianzhu.fu700.model.ProductParameters;
+import com.feitianzhu.fu700.shop.adapter.ProductParametersAdapter;
 import com.feitianzhu.fu700.utils.GlideUtils;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.utils.Urls;
@@ -43,8 +50,10 @@ import com.zhpan.bannerview.enums.IndicatorStyle;
 import com.zhpan.bannerview.holder.ViewHolder;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
+import com.zhy.http.okhttp.https.HttpsUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -65,6 +74,8 @@ public class ShopsDetailActivity extends BaseActivity {
     public static final String GOODS_DETAIL_DATA = "goods_detail_data";
     private String str3 = "0.00";
     private BaseGoodsListBean goodsListBean;
+    private List<ProductParameters.GoodslistBean.SkuValueListBean> skuValueListBean = new ArrayList<>();
+    private ProductParametersAdapter mAdapter;
     @BindView(R.id.tv_amount)
     TextView tvAmount;
     @BindView(R.id.title_name)
@@ -77,6 +88,10 @@ public class ShopsDetailActivity extends BaseActivity {
     TextView goodsSummary;
     @BindView(R.id.detail_img)
     ImageView imgDetail;
+    @BindView(R.id.recyclerView)
+    RecyclerView recyclerView;
+    @BindView(R.id.specifications_name)
+    TextView specificationsName;
 
     @Override
     protected int getLayoutId() {
@@ -120,11 +135,12 @@ public class ShopsDetailActivity extends BaseActivity {
         tvAmount.append(span2);
         tvAmount.append(span3);
 
-    }
 
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+        mAdapter = new ProductParametersAdapter(skuValueListBean);
+        recyclerView.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
 
-    @Override
-    protected void initData() {
         if (goodsListBean != null && goodsListBean.getGoodsImgsList() != null) {
             List<BaseGoodsListBean.GoodsImgsListBean> bannerList = goodsListBean.getGoodsImgsList();
             mViewpager.setCanLoop(true)
@@ -138,9 +154,56 @@ public class ShopsDetailActivity extends BaseActivity {
                 public void onPageClick(int position) {
                     onClickBanner(position);
                 }
-            }).create(bannerList);//.create(mBanners);
+            }).create(bannerList);
             mViewpager.startLoop();
         }
+
+
+        initListener();
+    }
+
+    public void initListener() {
+        mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                mAdapter.setSelect(position);
+                mAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+
+    @Override
+    protected void initData() {
+        OkHttpUtils.post()
+                .url(Urls.GET_PRODUCT_PARAMETERS)
+                .addParams("accessToken", Constant.ACCESS_TOKEN)
+                .addParams("userId", Constant.LOGIN_USERID)
+                .addParams("goodsId", goodsListBean.getGoodsId() + "")
+                .build()
+                .execute(new Callback() {
+
+                    @Override
+                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
+                        return new Gson().fromJson(mData, ProductParameters.class);
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        ToastUtils.showShortToast(e.getMessage());
+                    }
+
+                    @Override
+                    public void onResponse(Object response, int id) {
+                        ProductParameters productParameters = (ProductParameters) response;
+                        if (productParameters != null && productParameters.getGoodslist() != null) {
+                            specificationsName.setText(productParameters.getGoodslist().get(0).getAttributeName());
+                            skuValueListBean = productParameters.getGoodslist().get(0).getSkuValueList();
+                            mAdapter.setNewData(skuValueListBean);
+                            mAdapter.notifyDataSetChanged();
+                        }
+                    }
+                });
     }
 
     /*
