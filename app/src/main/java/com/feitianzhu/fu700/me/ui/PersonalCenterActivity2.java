@@ -1,16 +1,11 @@
 package com.feitianzhu.fu700.me.ui;
 
-import android.app.Dialog;
+
 import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -22,18 +17,24 @@ import com.feitianzhu.fu700.login.LoginEvent;
 import com.feitianzhu.fu700.me.base.BaseTakePhotoActivity;
 import com.feitianzhu.fu700.model.MineInfoModel;
 import com.feitianzhu.fu700.model.SharedInfoModel;
+import com.feitianzhu.fu700.shop.ui.EditApplyRefundActivity;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.view.CircleImageView;
-import com.jph.takephoto.model.TResult;
+import com.feitianzhu.fu700.view.CustomRefundView;
+import com.feitianzhu.fu700.view.CustomSelectPhotoView;
+import com.lxj.xpopup.XPopup;
 import com.socks.library.KLog;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
 
+import org.devio.takephoto.model.TResult;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import butterknife.BindView;
@@ -183,6 +184,24 @@ public class PersonalCenterActivity2 extends BaseTakePhotoActivity {
 
     }
 
+    public void showDialog() {
+        new XPopup.Builder(this)
+                .asCustom(new CustomSelectPhotoView(PersonalCenterActivity2.this)
+                        .setOnSelectTakePhotoListener(new CustomSelectPhotoView.OnSelectTakePhotoListener() {
+                            @Override
+                            public void onTakePhotoClick() {
+                                TakePhoto(false, 1);
+                            }
+                        })
+                        .setSelectCameraListener(new CustomSelectPhotoView.OnSelectCameraListener() {
+                            @Override
+                            public void onCameraClick() {
+                                TakeCamera(false);
+                            }
+                        }))
+                .show();
+    }
+
     /**
      * 获取分享的信息
      */
@@ -260,57 +279,21 @@ public class PersonalCenterActivity2 extends BaseTakePhotoActivity {
         oks.show(PersonalCenterActivity2.this);
     }
 
-    protected void showDialog() {
-        mCameraDialog = new Dialog(this, R.style.BottomDialog);
-        LinearLayout root =
-                (LinearLayout) LayoutInflater.from(this).inflate(R.layout.dialog_view_takephoto, null);
-        //初始化视图
-        root.findViewById(R.id.btn_choose_img).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TakePhoto();
-                mCameraDialog.dismiss();
-            }
-        });
-        root.findViewById(R.id.btn_open_camera).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TakeCamera();
-                mCameraDialog.dismiss();
-            }
-        });
-        root.findViewById(R.id.btn_cancel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCameraDialog.dismiss();
-            }
-        });
-        mCameraDialog.setContentView(root);
-        Window dialogWindow = mCameraDialog.getWindow();
-        dialogWindow.setGravity(Gravity.BOTTOM);
-        //        dialogWindow.setWindowAnimations(R.style.dialogstyle); // 添加动画
-        WindowManager.LayoutParams lp = dialogWindow.getAttributes(); // 获取对话框当前的参数值
-        lp.x = 0; // 新位置X坐标
-        lp.y = 0; // 新位置Y坐标
-        lp.width = (int) getResources().getDisplayMetrics().widthPixels; // 宽度
-        root.measure(0, 0);
-        lp.height = root.getMeasuredHeight();
-
-        lp.alpha = 9f; // 透明度
-        dialogWindow.setAttributes(lp);
-        mCameraDialog.show();
-    }
-
-    @Override
-    public void takeCancel() {
-        super.takeCancel();
-    }
-
     @Override
     public void takeSuccess(TResult result) {
         String compressPath = result.getImage().getCompressPath();
         Glide.with(mContext).load(compressPath).into(ivHead);
         uploadPic(compressPath);
+    }
+
+    @Override
+    public void takeFail(TResult result, String msg) {
+
+    }
+
+    @Override
+    public void takeCancel() {
+
     }
 
     private void uploadPic(String compressPath) {
@@ -346,15 +329,15 @@ public class PersonalCenterActivity2 extends BaseTakePhotoActivity {
     }
 
     @Override
-    public void takeFail(TResult result, String msg) {
-        super.takeFail(result, msg);
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
+    }
+
+    @Override
+    protected void onWheelSelect(int num, ArrayList<String> mList) {
+
     }
 }

@@ -8,14 +8,16 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
 import com.bumptech.glide.Glide;
 import com.feitianzhu.fu700.R;
 import com.feitianzhu.fu700.common.Constant;
-import com.feitianzhu.fu700.common.SelectPhotoActivity;
 import com.feitianzhu.fu700.common.impl.onConnectionFinishLinstener;
+import com.feitianzhu.fu700.me.base.BaseTakePhotoActivity;
 import com.feitianzhu.fu700.model.LocationPost;
 import com.feitianzhu.fu700.model.MyPoint;
 import com.feitianzhu.fu700.model.Province;
@@ -25,10 +27,14 @@ import com.feitianzhu.fu700.shop.ui.dialog.ProvinceCallBack;
 import com.feitianzhu.fu700.shop.ui.dialog.ProvincehAreaDialog;
 import com.feitianzhu.fu700.utils.LocationUtils;
 import com.feitianzhu.fu700.utils.ToastUtils;
-import com.jph.takephoto.model.TResult;
+import com.feitianzhu.fu700.view.CustomSelectPhotoView;
+import com.lxj.xpopup.XPopup;
 import com.socks.library.KLog;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import org.devio.takephoto.model.TResult;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -37,10 +43,7 @@ import org.greenrobot.eventbus.ThreadMode;
  * description: 创建商铺
  * autour: dicallc
  */
-public class ShopsCreateActivity extends SelectPhotoActivity {
-
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
+public class ShopsCreateActivity extends BaseTakePhotoActivity {
     @BindView(R.id.txt_shop_name)
     EditText mTxtShopName;
     @BindView(R.id.ly_huji)
@@ -75,14 +78,8 @@ public class ShopsCreateActivity extends SelectPhotoActivity {
     private List<ShopsType> mList;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_shops_create);
-        ButterKnife.bind(this);
-        EventBus.getDefault().register(this);
-        LocationUtils.getInstance().start();
-        initView();
-        initData();
+    protected int getLayoutId() {
+        return R.layout.activity_shops_create;
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true) //在ui线程执行
@@ -96,7 +93,8 @@ public class ShopsCreateActivity extends SelectPhotoActivity {
         }
     }
 
-    private void initData() {
+    @Override
+    protected void initData() {
         loadShopsType(false);
     }
 
@@ -124,7 +122,6 @@ public class ShopsCreateActivity extends SelectPhotoActivity {
 
     @Override
     public void takeSuccess(TResult result) {
-        super.takeSuccess(result);
         switch (photo_type) {
             case 0:
                 photo_file_one = result.getImage().getCompressPath();
@@ -139,16 +136,24 @@ public class ShopsCreateActivity extends SelectPhotoActivity {
     }
 
     @Override
+    public void takeFail(TResult result, String msg) {
+
+    }
+
+    @Override
+    public void takeCancel() {
+
+    }
+
+    @Override
     protected void onWheelSelect(int num, ArrayList<String> mList) {
         mTxtShopTypes.setText(mShopsTypes.get(num - 1));
     }
 
-    private void initView() {
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                finish();
-            }
-        });
+    @Override
+    protected void initView() {
+        EventBus.getDefault().register(this);
+        LocationUtils.getInstance().start();
     }
 
     @OnClick({R.id.btn_icon, R.id.btn_cover, R.id.btn_create, R.id.ly_huji, R.id.ly_shop_type})
@@ -160,14 +165,14 @@ public class ShopsCreateActivity extends SelectPhotoActivity {
                 branchDialog.setSelectOnListener(new ProvinceCallBack() {
                     @Override
                     public void onWhellFinish(Province province, Province.CityListBean city,
-                        Province.AreaListBean mAreaListBean) {
+                                              Province.AreaListBean mAreaListBean) {
                         String mProvince_name = province.name;
                         String mCity_name = city.name;
                         String mProvince_id = province.id;
                         String mCity_id = city.id;
-                        mOnSelectProvince = new Province(mProvince_name, mCity_name, mCity_id, mProvince_id,mAreaListBean.name,mAreaListBean.id);
+                        mOnSelectProvince = new Province(mProvince_name, mCity_name, mCity_id, mProvince_id, mAreaListBean.name, mAreaListBean.id);
                         KLog.e("mProvince" + mProvince_name + "mCity_name" + mCity_name);
-                        mTxtSelectAddress.setText(mProvince_name + " " + mCity_name+" "+mAreaListBean.name);
+                        mTxtSelectAddress.setText(mProvince_name + " " + mCity_name + " " + mAreaListBean.name);
                     }
                 });
                 branchDialog.show(getSupportFragmentManager());
@@ -245,6 +250,24 @@ public class ShopsCreateActivity extends SelectPhotoActivity {
                         mList.get(selectIndex - 1).clsId + "", shopIntro, Constant.mPoint);
                 break;
         }
+    }
+
+    public void showDialog() {
+        new XPopup.Builder(this)
+                .asCustom(new CustomSelectPhotoView(ShopsCreateActivity.this)
+                        .setOnSelectTakePhotoListener(new CustomSelectPhotoView.OnSelectTakePhotoListener() {
+                            @Override
+                            public void onTakePhotoClick() {
+                                TakePhoto(false, 1);
+                            }
+                        })
+                        .setSelectCameraListener(new CustomSelectPhotoView.OnSelectCameraListener() {
+                            @Override
+                            public void onCameraClick() {
+                                TakeCamera(false);
+                            }
+                        }))
+                .show();
     }
 
     @Override

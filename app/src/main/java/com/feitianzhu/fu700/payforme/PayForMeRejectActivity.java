@@ -18,10 +18,16 @@ import com.feitianzhu.fu700.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.fu700.dao.NetworkDao;
 import com.feitianzhu.fu700.me.base.BaseTakePhotoActivity;
 import com.feitianzhu.fu700.me.navigationbar.DefaultNavigationBar;
+import com.feitianzhu.fu700.me.ui.PersonalCenterActivity2;
 import com.feitianzhu.fu700.payforme.entity.PayForMeEntity;
 import com.feitianzhu.fu700.utils.ToastUtils;
-import com.jph.takephoto.model.TResult;
+import com.feitianzhu.fu700.view.CustomSelectPhotoView;
+import com.lxj.xpopup.XPopup;
 import com.socks.library.KLog;
+
+import org.devio.takephoto.model.TResult;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -185,6 +191,24 @@ public class PayForMeRejectActivity extends BaseTakePhotoActivity {
         }
     }
 
+    public void showDialog() {
+        new XPopup.Builder(this)
+                .asCustom(new CustomSelectPhotoView(PayForMeRejectActivity.this)
+                        .setOnSelectTakePhotoListener(new CustomSelectPhotoView.OnSelectTakePhotoListener() {
+                            @Override
+                            public void onTakePhotoClick() {
+                                TakePhoto(false, 1);
+                            }
+                        })
+                        .setSelectCameraListener(new CustomSelectPhotoView.OnSelectCameraListener() {
+                            @Override
+                            public void onCameraClick() {
+                                TakeCamera(false);
+                            }
+                        }))
+                .show();
+    }
+
     @Override
     public void takeSuccess(TResult result) {
         String compressPath = result.getImage().getCompressPath();
@@ -214,4 +238,8 @@ public class PayForMeRejectActivity extends BaseTakePhotoActivity {
         Toast.makeText(this, "takeFail", Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    protected void onWheelSelect(int num, ArrayList<String> mList) {
+
+    }
 }

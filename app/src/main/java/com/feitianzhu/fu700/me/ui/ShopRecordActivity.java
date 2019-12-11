@@ -23,12 +23,15 @@ import com.feitianzhu.fu700.model.PromotionPercentModel;
 import com.feitianzhu.fu700.model.SelectPayNeedModel;
 import com.feitianzhu.fu700.utils.MathUtils;
 import com.feitianzhu.fu700.utils.ToastUtils;
+import com.feitianzhu.fu700.view.CustomSelectPhotoView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.jph.takephoto.model.TResult;
+import com.lxj.xpopup.XPopup;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.builder.PostFormBuilder;
 import com.zhy.http.okhttp.callback.Callback;
+
+import org.devio.takephoto.model.TResult;
 
 import java.io.File;
 import java.lang.reflect.Type;
@@ -82,8 +85,9 @@ public class ShopRecordActivity extends BaseTakePhotoActivity {
 
     private List<PromotionPercentModel> mList;
     private int feedId = 0;
-    private String OrderNo,RetryMemberId;
+    private String OrderNo, RetryMemberId;
     private String ConsumeAmount;
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_shop_record;
@@ -95,10 +99,10 @@ public class ShopRecordActivity extends BaseTakePhotoActivity {
         OrderNo = intent.getStringExtra("OrderNo");
         RetryMemberId = intent.getStringExtra("RetryMemberId");
         ConsumeAmount = intent.getStringExtra("ConsumeAmount");
-        if(RetryMemberId != null){
+        if (RetryMemberId != null) {
             mVipId.setText(RetryMemberId);
         }
-        if(ConsumeAmount != null){
+        if (ConsumeAmount != null) {
             mConsumptionAmount.setText(ConsumeAmount);
         }
         mData = new ArrayList<>();
@@ -133,16 +137,16 @@ public class ShopRecordActivity extends BaseTakePhotoActivity {
 
                     @Override
                     public void onResponse(List<PromotionPercentModel> response, int id) {
-                        if(response == null){
+                        if (response == null) {
                             return;
                         }
                         mList.addAll(response);
                         for (PromotionPercentModel item : response) {
                             mData.add(item.getRate() + "%");
                         }
-                        if(mList.size()>0){
+                        if (mList.size() > 0) {
                             feedId = mList.get(0).getFeeId();
-                            mPercent.setText(mList.get(0).getRate()+"%");
+                            mPercent.setText(mList.get(0).getRate() + "%");
                             currentPercent = mList.get(0).getRate();
 
                         }
@@ -170,7 +174,7 @@ public class ShopRecordActivity extends BaseTakePhotoActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                Log.e("Test","打印------》str==="+s.toString()+"-----currentPercent++++"+currentPercent);
+                Log.e("Test", "打印------》str===" + s.toString() + "-----currentPercent++++" + currentPercent);
                 if (!TextUtils.isEmpty(s)) {
                     inputNum = Double.valueOf(s.toString());
                     if (inputNum > 0) {
@@ -229,7 +233,7 @@ public class ShopRecordActivity extends BaseTakePhotoActivity {
                 showDialog();
                 break;
             case R.id.rl_SureButton:
-                if(!TextUtils.isEmpty(OrderNo)&&!TextUtils.isEmpty(RetryMemberId)){
+                if (!TextUtils.isEmpty(OrderNo) && !TextUtils.isEmpty(RetryMemberId)) {
                     //重新提交订单
                     showloadDialog("正在提交...");
                     RetryUpdateOrder();
@@ -237,20 +241,19 @@ public class ShopRecordActivity extends BaseTakePhotoActivity {
                 }
 
 
-
-                if (mPicList.size() <3) {
+                if (mPicList.size() < 3) {
                     ToastUtils.showShortToast("请上传完整图片");
                     return;
                 }
                 Intent mintent = new Intent(ShopRecordActivity.this, SelectPayActivity.class);
                 //通过SelectPayNeedModel封装参数传递过去
                 SelectPayNeedModel selectPayNeedModel = new SelectPayNeedModel();
-                Log.e("wangyan","showText----"+showTxt);
-                if(mPicList.size()<3){
+                Log.e("wangyan", "showText----" + showTxt);
+                if (mPicList.size() < 3) {
                     ToastUtils.showLongToast("必须上传完整的图片信息!");
                     return;
                 }
-                if(TextUtils.isEmpty(mVipId.getText())||inputNum<=0||showTxt<=0){
+                if (TextUtils.isEmpty(mVipId.getText()) || inputNum <= 0 || showTxt <= 0) {
                     ToastUtils.showLongToast("会员编号和金额必须填写!");
                     return;
                 }
@@ -274,14 +277,32 @@ public class ShopRecordActivity extends BaseTakePhotoActivity {
         }
     }
 
+    public void showDialog() {
+        new XPopup.Builder(this)
+                .asCustom(new CustomSelectPhotoView(ShopRecordActivity.this)
+                        .setOnSelectTakePhotoListener(new CustomSelectPhotoView.OnSelectTakePhotoListener() {
+                            @Override
+                            public void onTakePhotoClick() {
+                                TakePhoto(false, 1);
+                            }
+                        })
+                        .setSelectCameraListener(new CustomSelectPhotoView.OnSelectCameraListener() {
+                            @Override
+                            public void onCameraClick() {
+                                TakeCamera(false);
+                            }
+                        }))
+                .show();
+    }
+
     private void RetryUpdateOrder() {
         PostFormBuilder mPost = OkHttpUtils.post();
         mPost.setMultipart(true);
-        if(!TextUtils.isEmpty(pic1)||!TextUtils.isEmpty(pic2)||!TextUtils.isEmpty(pic3)){
+        if (!TextUtils.isEmpty(pic1) || !TextUtils.isEmpty(pic2) || !TextUtils.isEmpty(pic3)) {
             mPost.addFile("placeImgFile", "placeImgFile.png", new File(pic1))// 消费场所
                     .addFile("objImgFile", "objImgFile.png", new File(pic2))// 消费实物
                     .addFile("rcptImgFile", "rcptImgFile.png", new File(pic3));// 消费发票
-        }else{
+        } else {
             ToastUtils.showLongToast("必须要上传图片");
             return;
         }
@@ -306,7 +327,7 @@ public class ShopRecordActivity extends BaseTakePhotoActivity {
                         if ("数据为空".equals(e.getMessage())) {
 
                             ToastUtils.showShortToast("提交成功!");
-                            Intent intent = new Intent(ShopRecordActivity.this,ShopRecordDetailActivity.class);
+                            Intent intent = new Intent(ShopRecordActivity.this, ShopRecordDetailActivity.class);
                             startActivity(intent);
                             finish();
 
@@ -347,7 +368,9 @@ public class ShopRecordActivity extends BaseTakePhotoActivity {
         defaultNavigationBar.setImmersion(R.color.status_bar);
 
     }
-    private String pic1,pic2,pic3;
+
+    private String pic1, pic2, pic3;
+
     @Override
     public void takeSuccess(TResult result) {
         String compressPath = result.getImage().getCompressPath();
@@ -378,5 +401,10 @@ public class ShopRecordActivity extends BaseTakePhotoActivity {
     @Override
     public void takeFail(TResult result, String msg) {
         Toast.makeText(ShopRecordActivity.this, "takeFail", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onWheelSelect(int num, ArrayList<String> mList) {
+
     }
 }

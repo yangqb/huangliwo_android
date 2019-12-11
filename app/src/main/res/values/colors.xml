@@ -55,6 +55,7 @@
     <color name="divider">#ffd2d2d2</color>
     <color name="color_289CFE">#289CFE</color>
     <color name="color_F1EFEF">#F1EFEF</color>
+    <color name="color_B3FFFFFF">#B3FFFFFF</color>
 
     <color name="color_wheel_sel">#1c1c1d</color>
     <color name="color_wheel_unsel">#4d4f54</color>

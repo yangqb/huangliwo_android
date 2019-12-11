@@ -100,7 +100,6 @@ public class BalanceActivity extends BaseActivity {
             case R.id.detailed_rules: //细则
                 Intent intent = new Intent(BalanceActivity.this, DetailedRulesActivity.class);
                 startActivity(intent);
-                ToastUtils.showShortToast("待开发");
                 break;
         }
     }

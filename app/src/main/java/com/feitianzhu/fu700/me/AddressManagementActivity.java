@@ -13,7 +13,6 @@ import com.feitianzhu.fu700.common.Constant;
 import com.feitianzhu.fu700.me.adapter.AddressManagementAdapter;
 import com.feitianzhu.fu700.me.base.BaseActivity;
 import com.feitianzhu.fu700.model.AddressInfo;
-import com.feitianzhu.fu700.utils.PayUtils;
 import com.feitianzhu.fu700.utils.Urls;
 import com.google.gson.Gson;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -68,6 +67,7 @@ public class AddressManagementActivity extends BaseActivity {
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Intent intent = new Intent(AddressManagementActivity.this, EditAddressActivity.class);
                 intent.putExtra(EditAddressActivity.IS_ADD_ADDRESS, false);
+                intent.putExtra(EditAddressActivity.ADDRESS_DATA, addressInfos.get(position));
                 startActivity(intent);
             }
         });

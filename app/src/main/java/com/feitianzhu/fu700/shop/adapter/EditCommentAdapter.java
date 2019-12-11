@@ -29,17 +29,19 @@ public class EditCommentAdapter extends BaseMultiItemQuickAdapter<MultiItemComme
 
     @Override
     protected void convert(@NonNull BaseViewHolder helper, MultiItemComment item) {
-
         if (getItemViewType(helper.getAdapterPosition()) == MultiItemComment.upImg) {
             Glide.with(mContext).load(R.mipmap.g01_01shangchuan)
                     .into((RoundedImageView) helper.getView(R.id.roundImage));
+            helper.setVisible(R.id.btn_cancel, false);
         } else {
-           /* Glide.with(mContext).load(item.getLocalMediaList().getCompressPath()).apply(new RequestOptions()
+            Glide.with(mContext).load(item.getPath()).apply(new RequestOptions()
                     .placeholder(R.drawable.pic_fuwutujiazaishibai)
                     .error(R.drawable.pic_fuwutujiazaishibai))
-                    .into((RoundedImageView) helper.getView(R.id.roundImage));*/
+                    .into((RoundedImageView) helper.getView(R.id.roundImage));
+            helper.setVisible(R.id.btn_cancel, true);
         }
 
+        helper.addOnClickListener(R.id.btn_cancel);
 
     }
 }

@@ -15,18 +15,23 @@ import com.feitianzhu.fu700.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.fu700.dao.NetworkDao;
 import com.feitianzhu.fu700.me.base.BaseTakePhotoActivity;
 import com.feitianzhu.fu700.me.navigationbar.DefaultNavigationBar;
+import com.feitianzhu.fu700.me.ui.PersonalCenterActivity2;
 import com.feitianzhu.fu700.me.ui.ShopRecordDetailActivity;
 import com.feitianzhu.fu700.model.OfflineModel;
 import com.feitianzhu.fu700.model.SelectPayNeedModel;
 import com.feitianzhu.fu700.shop.ShopDao;
 import com.feitianzhu.fu700.shop.ShopHelp;
 import com.feitianzhu.fu700.utils.ToastUtils;
-import com.jph.takephoto.model.TResult;
+import com.feitianzhu.fu700.view.CustomSelectPhotoView;
+import com.lxj.xpopup.XPopup;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.builder.PostFormBuilder;
 import com.zhy.http.okhttp.callback.Callback;
 
+import org.devio.takephoto.model.TResult;
+
 import java.io.File;
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -91,10 +96,10 @@ public class TransferVoucherActivity extends BaseTakePhotoActivity {
             @Override
             public void onSuccess(int code, Object result) {
                 goneloadDialog();
-                if(result != null){
-                    OfflineModel mData = (OfflineModel)result;
-                    if(mData != null){
-                        mTvTop.setText(mData.getOpenBank()+" "+mData.getOpenSubbranch());
+                if (result != null) {
+                    OfflineModel mData = (OfflineModel) result;
+                    if (mData != null) {
+                        mTvTop.setText(mData.getOpenBank() + " " + mData.getOpenSubbranch());
                         mTvMiddle.setText(mData.getAccName());
                         mTvBottom.setText(mData.getAccNo());
                         Glide.with(TransferVoucherActivity.this).load(mData.getBankLogo())
@@ -120,6 +125,24 @@ public class TransferVoucherActivity extends BaseTakePhotoActivity {
                 sendRequest();
                 break;
         }
+    }
+
+    public void showDialog() {
+        new XPopup.Builder(this)
+                .asCustom(new CustomSelectPhotoView(TransferVoucherActivity.this)
+                        .setOnSelectTakePhotoListener(new CustomSelectPhotoView.OnSelectTakePhotoListener() {
+                            @Override
+                            public void onTakePhotoClick() {
+                                TakePhoto(false, 1);
+                            }
+                        })
+                        .setSelectCameraListener(new CustomSelectPhotoView.OnSelectCameraListener() {
+                            @Override
+                            public void onCameraClick() {
+                                TakeCamera(false);
+                            }
+                        }))
+                .show();
     }
 
     /**
@@ -202,16 +225,16 @@ public class TransferVoucherActivity extends BaseTakePhotoActivity {
                             });
                 } else if (mModel.getType() == SelectPayNeedModel.TYPE_UNION_LEVEL) {
                     String gradeid = "";
-                    if(mModel!=null&&mModel.gradeId!=null){
+                    if (mModel != null && mModel.gradeId != null) {
                         gradeid = mModel.gradeId;
-                    }else {
+                    } else {
                         gradeid = "";
                     }
                     PostFormBuilder mPost = OkHttpUtils.post();
                     mPost.url(Common_HEADER + Constant.POST_UNION_LEVEL_PAY)
                             .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
                             .addParams(USERID, Constant.LOGIN_USERID)
-                            .addParams("gradeId",gradeid)
+                            .addParams("gradeId", gradeid)
                             .addParams("payPass", result.toString())//二级密码 线下支付可以不传
                             .addParams("payChannel", mModel.getPayChannel())
                             .addFile("payProofFile", "payLevelProofFile.png", new File(mModel.getPayProofFile()))  //线下支付，必须要传
@@ -240,7 +263,7 @@ public class TransferVoucherActivity extends BaseTakePhotoActivity {
                                 }
                             });
                 } else if (mModel.getType() == SelectPayNeedModel.TYPE_HUANGHUALI) {
-                    
+
                     NetworkDao.buyHuangHuaLi(mModel.getPayProofFile(), new onConnectionFinishLinstener() {
                         @Override
                         public void onSuccess(int code, Object result) {
@@ -275,12 +298,17 @@ public class TransferVoucherActivity extends BaseTakePhotoActivity {
     }
 
     @Override
-    public void takeCancel() {
-        super.takeCancel();
+    public void takeFail(TResult result, String msg) {
+
     }
 
     @Override
-    public void takeFail(TResult result, String msg) {
-        super.takeFail(result, msg);
+    public void takeCancel() {
+
+    }
+
+    @Override
+    protected void onWheelSelect(int num, ArrayList<String> mList) {
+
     }
 }

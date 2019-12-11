@@ -118,6 +118,14 @@
                         android:textColor="@color/color_333333"
                         android:textSize="14sp" />
 
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/dp_10"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:src="@mipmap/b08_04jinru" />
+
                 </RelativeLayout>
 
                 <View

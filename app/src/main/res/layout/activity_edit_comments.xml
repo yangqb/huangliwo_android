@@ -7,35 +7,40 @@
 
     <include layout="@layout/layout_head" />
 
-    <LinearLayout
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/dp_10"
-        android:background="@drawable/bg_ffffff_r10"
-        android:minHeight="350dp"
-        android:orientation="vertical"
-        android:paddingLeft="15dp"
-        android:paddingTop="@dimen/dp_20"
-        android:paddingRight="15dp"
-        android:paddingBottom="@dimen/dp_20">
+        android:layout_height="match_parent">
 
-        <EditText
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@null"
-            android:gravity="top"
-            android:hint="宝贝有哪里让您满意或者不足的地方都可以写出 来哦!"
-            android:textColor="@color/color_333333"
-            android:textColorHint="@color/color_999999"
-            android:textSize="15sp" />
+            android:layout_margin="@dimen/dp_10"
+            android:background="@drawable/bg_ffffff_r10"
+            android:minHeight="350dp"
+            android:orientation="vertical"
+            android:paddingLeft="15dp"
+            android:paddingTop="@dimen/dp_20"
+            android:paddingRight="15dp"
+            android:paddingBottom="@dimen/dp_20">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:gravity="top"
+                android:hint="宝贝有哪里让您满意或者不足的地方都可以写出 来哦!"
+                android:textColor="@color/color_333333"
+                android:textColorHint="@color/color_999999"
+                android:textSize="15sp" />
 
-        </android.support.v7.widget.RecyclerView>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_100">
 
-    </LinearLayout>
+            </android.support.v7.widget.RecyclerView>
 
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
 </LinearLayout>

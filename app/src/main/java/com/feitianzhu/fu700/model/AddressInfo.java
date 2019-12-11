@@ -22,7 +22,7 @@ public class AddressInfo implements Serializable {
         this.shopAddressList = shopAddressList;
     }
 
-    public static class ShopAddressListBean {
+    public static class ShopAddressListBean implements Serializable{
         /**
          * addressId : 1
          * userId : 4

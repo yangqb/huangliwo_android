@@ -15,13 +15,17 @@ import com.feitianzhu.fu700.common.Constant;
 import com.feitianzhu.fu700.me.base.BaseTakePhotoActivity;
 import com.feitianzhu.fu700.me.navigationbar.DefaultNavigationBar;
 import com.feitianzhu.fu700.utils.ToastUtils;
-import com.jph.takephoto.model.InvokeParam;
-import com.jph.takephoto.model.TResult;
+import com.feitianzhu.fu700.view.CustomSelectPhotoView;
+import com.lxj.xpopup.XPopup;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.builder.PostFormBuilder;
 import com.zhy.http.okhttp.callback.Callback;
 
+import org.devio.takephoto.model.InvokeParam;
+import org.devio.takephoto.model.TResult;
+
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -147,6 +151,25 @@ public class PushServiceActivity extends BaseTakePhotoActivity{
                 requestData();
                 break;
         }
+    }
+
+
+    public void showDialog() {
+        new XPopup.Builder(this)
+                .asCustom(new CustomSelectPhotoView(PushServiceActivity.this)
+                        .setOnSelectTakePhotoListener(new CustomSelectPhotoView.OnSelectTakePhotoListener() {
+                            @Override
+                            public void onTakePhotoClick() {
+                                TakePhoto(false, 1);
+                            }
+                        })
+                        .setSelectCameraListener(new CustomSelectPhotoView.OnSelectCameraListener() {
+                            @Override
+                            public void onCameraClick() {
+                                TakeCamera(false);
+                            }
+                        }))
+                .show();
     }
 
 
@@ -300,4 +323,8 @@ public class PushServiceActivity extends BaseTakePhotoActivity{
         Toast.makeText(PushServiceActivity.this,"takeCancel",Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    protected void onWheelSelect(int num, ArrayList<String> mList) {
+
+    }
 }

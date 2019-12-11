@@ -21,16 +21,19 @@ import com.feitianzhu.fu700.model.SharedInfoModel;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.view.CircleImageView;
 import com.feitianzhu.fu700.view.CustomPopWindow;
-import com.jph.takephoto.model.TResult;
+import com.feitianzhu.fu700.view.CustomSelectPhotoView;
+import com.lxj.xpopup.XPopup;
 import com.socks.library.KLog;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
 
+import org.devio.takephoto.model.TResult;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import butterknife.BindView;
@@ -269,10 +272,22 @@ public class PersonalCenterActivity extends BaseTakePhotoActivity implements Swi
         }
     }
 
-
-    @Override
-    public void takeCancel() {
-        super.takeCancel();
+    public void showDialog() {
+        new XPopup.Builder(this)
+                .asCustom(new CustomSelectPhotoView(PersonalCenterActivity.this)
+                        .setOnSelectTakePhotoListener(new CustomSelectPhotoView.OnSelectTakePhotoListener() {
+                            @Override
+                            public void onTakePhotoClick() {
+                                TakePhoto(false, 1);
+                            }
+                        })
+                        .setSelectCameraListener(new CustomSelectPhotoView.OnSelectCameraListener() {
+                            @Override
+                            public void onCameraClick() {
+                                TakeCamera(false);
+                            }
+                        }))
+                .show();
     }
 
     @Override
@@ -280,6 +295,16 @@ public class PersonalCenterActivity extends BaseTakePhotoActivity implements Swi
         String compressPath = result.getImage().getCompressPath();
         Glide.with(mContext).load(compressPath).into(mCircleImage);
         uploadPic(compressPath);
+    }
+
+    @Override
+    public void takeFail(TResult result, String msg) {
+
+    }
+
+    @Override
+    public void takeCancel() {
+
     }
 
     private void uploadPic(String compressPath) {
@@ -312,11 +337,6 @@ public class PersonalCenterActivity extends BaseTakePhotoActivity implements Swi
 
                     }
                 });
-    }
-
-    @Override
-    public void takeFail(TResult result, String msg) {
-        super.takeFail(result, msg);
     }
 
     protected void showPopMenu(View v) {
@@ -438,5 +458,10 @@ public class PersonalCenterActivity extends BaseTakePhotoActivity implements Swi
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
+    }
+
+    @Override
+    protected void onWheelSelect(int num, ArrayList<String> mList) {
+
     }
 }

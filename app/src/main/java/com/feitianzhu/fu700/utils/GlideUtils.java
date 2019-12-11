@@ -37,4 +37,25 @@ public class GlideUtils {
 
         return imgDetail;
     }
+
+    public static ImageView getImageView2(Activity mContext, int res, ImageView imgDetail) {
+        Glide.with(mContext).asBitmap().load(res).into(new SimpleTarget<Bitmap>() {
+            @Override
+            public void onResourceReady(Bitmap bitmap, Transition<? super Bitmap> transition) {
+                int bWidth = bitmap.getWidth();
+                int bHeight = bitmap.getHeight();
+                WindowManager manager = mContext.getWindowManager();
+                DisplayMetrics outMetrics = new DisplayMetrics();
+                manager.getDefaultDisplay().getMetrics(outMetrics);
+                int screenWidth = outMetrics.widthPixels;
+                Log.e("====", bWidth + " " + bHeight + " " + bHeight);
+                int height = (screenWidth - 150) * bHeight / bWidth;
+                ViewGroup.LayoutParams para = imgDetail.getLayoutParams();
+                para.height = height;
+                imgDetail.setLayoutParams(para);
+            }
+        });
+
+        return imgDetail;
+    }
 }

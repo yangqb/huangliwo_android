@@ -15,13 +15,17 @@ import com.feitianzhu.fu700.me.base.BaseTakePhotoActivity;
 import com.feitianzhu.fu700.me.navigationbar.DefaultNavigationBar;
 import com.feitianzhu.fu700.model.ShopsService;
 import com.feitianzhu.fu700.utils.ToastUtils;
-import com.jph.takephoto.model.InvokeParam;
-import com.jph.takephoto.model.TResult;
+import com.feitianzhu.fu700.view.CustomSelectPhotoView;
+import com.lxj.xpopup.XPopup;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.builder.PostFormBuilder;
 import com.zhy.http.okhttp.callback.Callback;
 
+import org.devio.takephoto.model.InvokeParam;
+import org.devio.takephoto.model.TResult;
+
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -78,7 +82,8 @@ public class EditServiceActivity extends BaseTakePhotoActivity {
     LinearLayout ll_addPic5;
 
     protected InvokeParam invokeParam;
-    private  ShopsService.ListEntity mData;
+    private ShopsService.ListEntity mData;
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_edit_service;
@@ -87,14 +92,14 @@ public class EditServiceActivity extends BaseTakePhotoActivity {
     @Override
     protected void initTitle() {
         defaultNavigationBar = new DefaultNavigationBar
-                .Builder(EditServiceActivity.this, (ViewGroup)findViewById(R.id.Rl_titleContainer))
+                .Builder(EditServiceActivity.this, (ViewGroup) findViewById(R.id.Rl_titleContainer))
                 .setTitle("发布服务")
                 .setStatusHeight(EditServiceActivity.this)
                 .setLeftIcon(R.drawable.iconfont_fanhuijiantou)
                 .setRightText("删除", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(EditServiceActivity.this,"点击删除",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(EditServiceActivity.this, "点击删除", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .builder();
@@ -107,20 +112,21 @@ public class EditServiceActivity extends BaseTakePhotoActivity {
         Intent mIntent = getIntent();
 
         mData = (ShopsService.ListEntity) mIntent.getSerializableExtra("serviceAdmin");
-        if(mData!= null){
+        if (mData != null) {
             setReShowData();
         }
     }
+
     /**
      * 回显数据
-     * */
+     */
     private void setReShowData() {
 
         mTradeName.setText(mData.serviceName);
         mTradePrice.setText(mData.price);
         mTradeBenefit.setText(mData.rebate);
-        mContact.setText(mData.contactPerson==null?"":mData.contactPerson.toString());
-        mContactNum.setText(mData.contactTel==null?"":mData.contactTel+"");
+        mContact.setText(mData.contactPerson == null ? "" : mData.contactPerson.toString());
+        mContactNum.setText(mData.contactTel == null ? "" : mData.contactTel + "");
         mContactAddress.setText(mData.serviceAddr);
         mTradeDesc.setText(mData.serviceDesc);
     }
@@ -130,14 +136,15 @@ public class EditServiceActivity extends BaseTakePhotoActivity {
 
     }
 
-    private  int ClickType = -1;
+    private int ClickType = -1;
     private String avatar;
-    private Map<String,File> mPicList;
-    @OnClick({R.id.ll_addCover,R.id.ll_addPic1,R.id.ll_addPic2,
-            R.id.ll_addPic3,R.id.ll_addPic4,R.id.ll_addPic5,
+    private Map<String, File> mPicList;
+
+    @OnClick({R.id.ll_addCover, R.id.ll_addPic1, R.id.ll_addPic2,
+            R.id.ll_addPic3, R.id.ll_addPic4, R.id.ll_addPic5,
             R.id.bt_send})
-    public void onClick(View v){
-        switch (v.getId()){
+    public void onClick(View v) {
+        switch (v.getId()) {
             case R.id.ll_addCover:
                 ClickType = 111;
                 showDialog();
@@ -170,6 +177,24 @@ public class EditServiceActivity extends BaseTakePhotoActivity {
         }
     }
 
+    public void showDialog() {
+        new XPopup.Builder(this)
+                .asCustom(new CustomSelectPhotoView(EditServiceActivity.this)
+                        .setOnSelectTakePhotoListener(new CustomSelectPhotoView.OnSelectTakePhotoListener() {
+                            @Override
+                            public void onTakePhotoClick() {
+                                TakePhoto(false, 1);
+                            }
+                        })
+                        .setSelectCameraListener(new CustomSelectPhotoView.OnSelectCameraListener() {
+                            @Override
+                            public void onCameraClick() {
+                                TakeCamera(false);
+                            }
+                        }))
+                .show();
+    }
+
 
     /**
      * 编辑服务
@@ -178,39 +203,41 @@ public class EditServiceActivity extends BaseTakePhotoActivity {
 
         PostFormBuilder mPost = OkHttpUtils.post();
         File mAvatar = new File(avatar);
-        if(mAvatar!=null){
-            if(!mAvatar.exists()){
+        if (mAvatar != null) {
+            if (!mAvatar.exists()) {
                 ToastUtils.showShortToast("请上传图片");
                 return;
             }
-        }else{
+        } else {
             ToastUtils.showShortToast("图片不存在，请重新上传图片");
             return;
         }
 
-        if(mPicList.size()<1){
+        if (mPicList.size() < 1) {
             ToastUtils.showShortToast("请上传图片");
             return;
         }
-        mPost.addFile("cover", "avatarAAA.png",mAvatar )//
-                .addFiles("goodsPic",mPicList)
+        mPost.addFile("cover", "avatarAAA.png", mAvatar)//
+                .addFiles("goodsPic", mPicList)
                 .url(Common_HEADER + POST_PUSH_EDITSERVICE)
                 .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
                 .addParams(USERID, Constant.LOGIN_USERID)
-                .addParams("serviceId",mData.serviceId+"")
-                .addParams("serviceName",mTradeName.getText().toString())
-                .addParams("price",mTradePrice.getText().toString())
-                .addParams("rebate",mTradeBenefit.getText().toString())
-                .addParams("contactTel",mContactNum.getText().toString())
-                .addParams("contactPerson",mContact.getText().toString())
-                .addParams("serviceAddr",mContactAddress.getText().toString())
-                .addParams("serviceDesc",mTradeDesc.getText().toString())
+                .addParams("serviceId", mData.serviceId + "")
+                .addParams("serviceName", mTradeName.getText().toString())
+                .addParams("price", mTradePrice.getText().toString())
+                .addParams("rebate", mTradeBenefit.getText().toString())
+                .addParams("contactTel", mContactNum.getText().toString())
+                .addParams("contactPerson", mContact.getText().toString())
+                .addParams("serviceAddr", mContactAddress.getText().toString())
+                .addParams("serviceDesc", mTradeDesc.getText().toString())
                 .build()
                 .execute(new Callback() {
-                    @Override public Object parseNetworkResponse(String mData, Response response, int id)
+                    @Override
+                    public Object parseNetworkResponse(String mData, Response response, int id)
                             throws Exception {
                         return mData;
                     }
+
                     @Override
                     public void onError(Call call, Exception e, int id) {
                         if ("数据为空".equals(e.getMessage())) {
@@ -231,40 +258,40 @@ public class EditServiceActivity extends BaseTakePhotoActivity {
     @Override
     public void takeSuccess(TResult result) {
         String compressPath = result.getImage().getCompressPath();
-        switch (ClickType){
+        switch (ClickType) {
             case 111:  //添加封面
                 avatar = compressPath;
                 Glide.with(mContext).load(compressPath).into(mIvCover);
                 break;
             case 1:  //添加图片
-                mPicList.put("Picture"+ClickType+".png",new File(compressPath));
+                mPicList.put("Picture" + ClickType + ".png", new File(compressPath));
                 Glide.with(mContext).load(compressPath).into(mIvPic1);
                 showNextButton(ClickType);
                 break;
             case 2:  //添加图片
-                mPicList.put("Picture"+ClickType+".png",new File(compressPath));
+                mPicList.put("Picture" + ClickType + ".png", new File(compressPath));
                 Glide.with(mContext).load(compressPath).into(mIvPic2);
                 showNextButton(ClickType);
                 break;
             case 3:  //添加图片
-                mPicList.put("Picture"+ClickType+".png",new File(compressPath));
+                mPicList.put("Picture" + ClickType + ".png", new File(compressPath));
                 Glide.with(mContext).load(compressPath).into(mIvPic3);
                 showNextButton(ClickType);
                 break;
             case 4:  //添加图片
-                mPicList.put("Picture"+ClickType+".png",new File(compressPath));
+                mPicList.put("Picture" + ClickType + ".png", new File(compressPath));
                 Glide.with(mContext).load(compressPath).into(mIvPic4);
                 showNextButton(ClickType);
                 break;
             case 5:  //添加图片
-                mPicList.put("Picture"+ClickType+".png",new File(compressPath));
+                mPicList.put("Picture" + ClickType + ".png", new File(compressPath));
                 Glide.with(mContext).load(compressPath).into(mIvPic5);
                 break;
         }
     }
 
     private void showNextButton(int clickType) {
-        switch (clickType){
+        switch (clickType) {
             case 1:
                 ll_addPic2.setVisibility(View.VISIBLE);
                 ll_addPic2.setClickable(true);
@@ -291,12 +318,16 @@ public class EditServiceActivity extends BaseTakePhotoActivity {
 
     @Override
     public void takeFail(TResult result, String msg) {
-        Toast.makeText(EditServiceActivity.this,"takeFail",Toast.LENGTH_SHORT).show();
+        Toast.makeText(EditServiceActivity.this, "takeFail", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void takeCancel() {
-        Toast.makeText(EditServiceActivity.this,"takeCancel",Toast.LENGTH_SHORT).show();
+        Toast.makeText(EditServiceActivity.this, "takeCancel", Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    protected void onWheelSelect(int num, ArrayList<String> mList) {
+
+    }
 }

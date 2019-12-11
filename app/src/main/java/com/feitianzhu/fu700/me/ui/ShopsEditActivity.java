@@ -16,8 +16,8 @@ import butterknife.OnClick;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.feitianzhu.fu700.R;
-import com.feitianzhu.fu700.common.SelectPhotoActivity;
 import com.feitianzhu.fu700.common.impl.onConnectionFinishLinstener;
+import com.feitianzhu.fu700.me.base.BaseTakePhotoActivity;
 import com.feitianzhu.fu700.model.Province;
 import com.feitianzhu.fu700.model.ShopsInfo;
 import com.feitianzhu.fu700.model.ShopsType;
@@ -25,8 +25,11 @@ import com.feitianzhu.fu700.shop.ShopDao;
 import com.feitianzhu.fu700.shop.ui.dialog.ProvinceCallBack;
 import com.feitianzhu.fu700.shop.ui.dialog.ProvincehAreaDialog;
 import com.feitianzhu.fu700.utils.ToastUtils;
-import com.jph.takephoto.model.TResult;
+import com.feitianzhu.fu700.view.CustomSelectPhotoView;
+import com.lxj.xpopup.XPopup;
 import com.socks.library.KLog;
+
+import org.devio.takephoto.model.TResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,10 +38,7 @@ import java.util.List;
  * description: 编辑商铺
  * autour: dicallc
  */
-public class ShopsEditActivity extends SelectPhotoActivity {
-
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
+public class ShopsEditActivity extends BaseTakePhotoActivity {
     @BindView(R.id.txt_shop_name)
     EditText mTxtShopName;
     @BindView(R.id.txt_select_address)
@@ -73,17 +73,13 @@ public class ShopsEditActivity extends SelectPhotoActivity {
     private ShopsInfo mShopsInfo;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_shops_edit);
-        ButterKnife.bind(this);
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-        initData();
+    protected int getLayoutId() {
+        return R.layout.activity_shops_edit;
+    }
+
+    @Override
+    protected void initView() {
+
     }
 
     @Override
@@ -91,7 +87,8 @@ public class ShopsEditActivity extends SelectPhotoActivity {
         mTxtShopTypes.setText(mShopsTypes.get(num - 1));
     }
 
-    private void initData() {
+    @Override
+    protected void initData() {
         loadShopsType(false);
         ShopDao.loadShopsInfo("", new onConnectionFinishLinstener() {
             @Override
@@ -204,6 +201,24 @@ public class ShopsEditActivity extends SelectPhotoActivity {
         }
     }
 
+    public void showDialog() {
+        new XPopup.Builder(this)
+                .asCustom(new CustomSelectPhotoView(ShopsEditActivity.this)
+                        .setOnSelectTakePhotoListener(new CustomSelectPhotoView.OnSelectTakePhotoListener() {
+                            @Override
+                            public void onTakePhotoClick() {
+                                TakePhoto(false, 1);
+                            }
+                        })
+                        .setSelectCameraListener(new CustomSelectPhotoView.OnSelectCameraListener() {
+                            @Override
+                            public void onCameraClick() {
+                                TakeCamera(false);
+                            }
+                        }))
+                .show();
+    }
+
     private void loadShopsType(final boolean mB) {
         if (mB) showloadDialog("");
 
@@ -228,7 +243,6 @@ public class ShopsEditActivity extends SelectPhotoActivity {
 
     @Override
     public void takeSuccess(TResult result) {
-        super.takeSuccess(result);
         switch (photo_type) {
             case 0:
                 photo_file_one = result.getImage().getCompressPath();
@@ -240,5 +254,15 @@ public class ShopsEditActivity extends SelectPhotoActivity {
                 break;
         }
         KLog.i("takeSuccess：" + result.getImage().getCompressPath() + "photo_type" + photo_type);
+    }
+
+    @Override
+    public void takeFail(TResult result, String msg) {
+
+    }
+
+    @Override
+    public void takeCancel() {
+
     }
 }

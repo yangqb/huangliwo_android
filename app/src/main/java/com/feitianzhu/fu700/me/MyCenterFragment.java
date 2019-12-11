@@ -30,6 +30,7 @@ import com.feitianzhu.fu700.me.ui.consumeralliance.UnionlevelActivity;
 import com.feitianzhu.fu700.me.ui.totalScore.MineCollectionActivity;
 import com.feitianzhu.fu700.me.ui.totalScore.MineQrcodeActivity;
 import com.feitianzhu.fu700.model.MineInfoModel;
+import com.feitianzhu.fu700.pushshop.PushShopHomeActivity;
 import com.feitianzhu.fu700.settings.SettingsActivity;
 import com.feitianzhu.fu700.shop.ShopDao;
 import com.feitianzhu.fu700.shop.ShopHelp;
@@ -233,7 +234,9 @@ public class MyCenterFragment extends SFFragment {
                             ShopDao.loadUserAuthImpl();
                             return;
                         } else {
-                            ShopHelp.veriJumpActivity(getActivity());
+                            //ShopHelp.veriJumpActivity(getActivity());
+                            intent = new Intent(getActivity(), PushShopHomeActivity.class);
+                            startActivity(intent);
                         }
                         break;
                     case 5://我的收藏

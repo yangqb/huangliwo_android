@@ -12,12 +12,5 @@
     <string name="tip_permission_camera">No permission to use the camera, open the rights management</string>
     <string name="tip_permission_storage">No permission to use the SD card, open the rights management</string>
     <string name="tip_permission_camera_storage">No permission to use the camera and SD card, open the rights management</string>
-    <!--custom multipleimageselect -->
-    <string name="album_view">选择图片</string>
-    <string name="image_view">单击选择</string>
-
-    <string name="add">确定</string>
-    <string name="selected">已选</string>
-    <string name="limit_exceeded">最多能选 %d 张</string>
 
 </resources>

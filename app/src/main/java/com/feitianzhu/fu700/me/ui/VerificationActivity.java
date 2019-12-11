@@ -2,7 +2,6 @@ package com.feitianzhu.fu700.me.ui;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -19,16 +18,19 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.feitianzhu.fu700.R;
 import com.feitianzhu.fu700.common.Constant;
-import com.feitianzhu.fu700.common.SelectPhotoActivity;
 import com.feitianzhu.fu700.common.impl.onConnectionFinishLinstener;
+import com.feitianzhu.fu700.me.base.BaseTakePhotoActivity;
 import com.feitianzhu.fu700.model.Province;
 import com.feitianzhu.fu700.shop.ShopDao;
 import com.feitianzhu.fu700.shop.ui.dialog.ProvinceCallBack;
 import com.feitianzhu.fu700.shop.ui.dialog.ProvincehDialog;
 import com.feitianzhu.fu700.utils.ToastUtils;
+import com.feitianzhu.fu700.view.CustomSelectPhotoView;
 import com.gyf.immersionbar.ImmersionBar;
-import com.jph.takephoto.model.TResult;
+import com.lxj.xpopup.XPopup;
 import com.socks.library.KLog;
+
+import org.devio.takephoto.model.TResult;
 
 import java.util.ArrayList;
 
@@ -36,7 +38,7 @@ import java.util.ArrayList;
  * description: 认证界面
  * autour: dicallc
  */
-public class VerificationActivity extends SelectPhotoActivity {
+public class VerificationActivity extends BaseTakePhotoActivity {
     @BindView(R.id.txt_one)
     TextView mTxtOne;
     @BindView(R.id.take_photo_one)
@@ -125,7 +127,6 @@ public class VerificationActivity extends SelectPhotoActivity {
 
     @Override
     public void takeSuccess(TResult result) {
-        super.takeSuccess(result);
         switch (photo_type) {
             case 0:
                 photo_file_one = result.getImage().getCompressPath();
@@ -148,6 +149,16 @@ public class VerificationActivity extends SelectPhotoActivity {
     }
 
     @Override
+    public void takeFail(TResult result, String msg) {
+
+    }
+
+    @Override
+    public void takeCancel() {
+
+    }
+
+    @Override
     protected void onWheelSelect(int num, ArrayList<String> mList) {
         try {
             if (mVeri_shops) {
@@ -160,26 +171,20 @@ public class VerificationActivity extends SelectPhotoActivity {
         }
 
     }
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_verification;
+    }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        getTakePhoto().onCreate(savedInstanceState);
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_verification);
-        ButterKnife.bind(this);
-        ImmersionBar.with(this)
-                .fitsSystemWindows(true)
-                .statusBarDarkFont(true, 0.2f)
-                .statusBarColor(R.color.white)
-                .init();
+    protected void initView() {
         mVeri_shops = getIntent().getBooleanExtra(Constant.VERI_SHOPS, false);
         //mVeri_shops = true;
         titleName.setText("账户认证");
-        initData();
     }
 
-    private void initData() {
-        isCorp = false;
+    @Override
+    protected void initData() {
         //showloadDialog("获取验证信息");
         if (mVeri_shops) {
             doVeriShop();
@@ -299,6 +304,25 @@ public class VerificationActivity extends SelectPhotoActivity {
                 finish();
                 break;
         }
+    }
+
+    public void showDialog() {
+        new XPopup.Builder(this)
+                .asCustom(new CustomSelectPhotoView(VerificationActivity.this)
+                        .setOnSelectTakePhotoListener(new CustomSelectPhotoView.OnSelectTakePhotoListener() {
+                            @Override
+                            public void onTakePhotoClick() {
+                                TakePhoto(false, 1);
+                            }
+                        })
+                        .setSelectCameraListener(new CustomSelectPhotoView.OnSelectCameraListener() {
+                            @Override
+                            public void onCameraClick() {
+                                TakeCamera(false);
+                            }
+                        }))
+                .show();
+
     }
 
     private void showShopsWait() {

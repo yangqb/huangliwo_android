@@ -1,28 +1,17 @@
 package com.feitianzhu.fu700.me.base;
 
-import android.graphics.Point;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.view.Display;
-import android.view.KeyCharacterMap;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewConfiguration;
-import android.view.WindowManager;
 import android.widget.EditText;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.feitianzhu.fu700.R;
-import com.feitianzhu.fu700.common.SelectPhotoActivity;
+import com.feitianzhu.fu700.common.SelectPhotoActivity2;
 import com.feitianzhu.fu700.me.navigationbar.DefaultNavigationBar;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.view.CustomPopWindow;
 import com.gyf.immersionbar.ImmersionBar;
-
-import java.util.ArrayList;
 
 import butterknife.ButterKnife;
 
@@ -30,15 +19,15 @@ import butterknife.ButterKnife;
  * Created by Vya on 2017/9/12 0012.
  */
 
-public abstract class BaseTakePhotoActivity extends SelectPhotoActivity {
+public abstract class BaseTakePhotoActivity extends SelectPhotoActivity2 {
     protected DefaultNavigationBar defaultNavigationBar;
     protected MaterialDialog mDialog;
     protected CustomPopWindow mCustomPopWindow;
 
-    @Override
+   /* @Override
     protected void onWheelSelect(int num, ArrayList<String> mList) {
 
-    }
+    }*/
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

@@ -102,16 +102,14 @@ public class ShopPayActivity extends BaseActivity {
     TextView tvTotalAmount;
     @BindView(R.id.rl_address)
     RelativeLayout rlAddress;
+    @BindView(R.id.no_address)
+    LinearLayout noAddress;
     @BindView(R.id.tv_address)
     TextView tvAddress;
     @BindView(R.id.amount_view)
     AmountView mAmountView;
     @BindView(R.id.count)
     TextView tvCount;
-    @BindView(R.id.ll_address)
-    LinearLayout llAddress;
-    @BindView(R.id.edit_address)
-    EditText editAddress;
     @BindView(R.id.name)
     TextView tvName;
     @BindView(R.id.summary)
@@ -126,6 +124,7 @@ public class ShopPayActivity extends BaseActivity {
     private String str1;
     private String str2;
     private boolean isShow;
+    private boolean isDefault;
     private BaseGoodsListBean goodsListBean;
 
     @Override
@@ -185,9 +184,16 @@ public class ShopPayActivity extends BaseActivity {
 
         isShow = getIntent().getBooleanExtra(IS_SHOW_ADDRESS, false);
         if (isShow) {
-            llAddress.setVisibility(View.VISIBLE);
+            //是否有默认地址
+            if (isDefault) {
+                noAddress.setVisibility(View.GONE);
+                rlAddress.setVisibility(View.VISIBLE);
+            } else {
+                noAddress.setVisibility(View.VISIBLE);
+                rlAddress.setVisibility(View.GONE);
+            }
         } else {
-            llAddress.setVisibility(View.GONE);
+            rlAddress.setVisibility(View.GONE);
         }
 
         mAmountView = (AmountView) findViewById(R.id.amount_view);
@@ -204,11 +210,11 @@ public class ShopPayActivity extends BaseActivity {
         });
     }
 
-    @OnClick({R.id.left_button, R.id.tv_pay, R.id.weixinPay_icon, R.id.alipay_icon, R.id.balancePay_icon, R.id.rl_address})
+    @OnClick({R.id.left_button, R.id.tv_pay, R.id.weixinPay_icon, R.id.alipay_icon, R.id.balancePay_icon, R.id.rl_address, R.id.no_address})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_pay:
-                if (isShow && TextUtils.isEmpty(editAddress.getText().toString().trim())) {
+                if (isShow && TextUtils.isEmpty(tvAddress.getText().toString().trim())) {
                     ToastUtils.showShortToast("请输入收货地址");
                     return;
                 }
@@ -248,6 +254,7 @@ public class ShopPayActivity extends BaseActivity {
             case R.id.left_button:
                 finish();
                 break;
+            case R.id.no_address:
             case R.id.rl_address:
                 Intent intent = new Intent(ShopPayActivity.this, AddressManagementActivity.class);
                 startActivity(intent);
@@ -294,7 +301,7 @@ public class ShopPayActivity extends BaseActivity {
                             goodsOrderModel.setAmount(Double.parseDouble(totalAmount));
                             goodsOrderModel.setPostage(goodsListBean.getPostage());
                             goodsOrderModel.setRebatePv(goodsListBean.getRebatePv());
-                            goodsOrderModel.setDetailAddr(editAddress.getText().toString().trim());
+                            goodsOrderModel.setDetailAddr(tvAddress.getText().toString().trim());
                             goodsOrderModel.setOrderNo(orderNo);
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -393,6 +400,14 @@ public class ShopPayActivity extends BaseActivity {
     @Override
     protected void initData() {
         EventBus.getDefault().register(this);
+        getAddress();
+    }
+
+    /*
+     * 获取默认收货地址
+     * */
+    public void getAddress() {
+
     }
 
     @SuppressLint("SetTextI18n")

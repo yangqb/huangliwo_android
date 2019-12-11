@@ -196,7 +196,7 @@ public class ShopsDetailActivity extends BaseActivity {
                     @Override
                     public void onResponse(Object response, int id) {
                         ProductParameters productParameters = (ProductParameters) response;
-                        if (productParameters != null && productParameters.getGoodslist() != null) {
+                        if (productParameters != null && productParameters.getGoodslist() != null && productParameters.getGoodslist().size() > 0) {
                             specificationsName.setText(productParameters.getGoodslist().get(0).getAttributeName());
                             skuValueListBean = productParameters.getGoodslist().get(0).getSkuValueList();
                             mAdapter.setNewData(skuValueListBean);

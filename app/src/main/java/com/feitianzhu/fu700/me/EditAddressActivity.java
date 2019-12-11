@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.feitianzhu.fu700.R;
 import com.feitianzhu.fu700.common.Constant;
 import com.feitianzhu.fu700.me.base.BaseActivity;
+import com.feitianzhu.fu700.model.AddressInfo;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.utils.Urls;
 import com.feitianzhu.fu700.view.SwitchButton;
@@ -30,11 +31,13 @@ import okhttp3.Call;
 import okhttp3.Response;
 
 public class EditAddressActivity extends BaseActivity {
-
+    public static final String ADDRESS_DATA = "address_data";
     public static final String IS_ADD_ADDRESS = "is_add_address";
+    private boolean isAdd;
     private ProvinceBean mProvince;
     private CityBean mCity;
     private DistrictBean mDistrict;
+    private AddressInfo.ShopAddressListBean shopAddressListBean;
     @BindView(R.id.title_name)
     TextView titleName;
     @BindView(R.id.right_text)
@@ -59,7 +62,19 @@ public class EditAddressActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        boolean isAdd = getIntent().getBooleanExtra(IS_ADD_ADDRESS, false);
+        isAdd = getIntent().getBooleanExtra(IS_ADD_ADDRESS, false);
+        shopAddressListBean = (AddressInfo.ShopAddressListBean) getIntent().getSerializableExtra(ADDRESS_DATA);
+        if (shopAddressListBean != null) {
+            editName.setText(shopAddressListBean.getUserName());
+            editPhone.setText(shopAddressListBean.getPhone());
+            editAddressDetail.setText(shopAddressListBean.getDetailAddress());
+            tvAddress.setText(shopAddressListBean.getAreaName());
+            mProvince.setId(shopAddressListBean.getProvinceId());
+            //mProvince.setName(shopAddressListBean.get);
+            mCity.setId(shopAddressListBean.getCityId());
+            mDistrict.setId(shopAddressListBean.getAreaId());
+            mDistrict.setName(shopAddressListBean.getAreaName());
+        }
         if (isAdd) {
             titleName.setText("新建地址");
             deleteAddress.setVisibility(View.GONE);
@@ -114,37 +129,72 @@ public class EditAddressActivity extends BaseActivity {
     }
 
     public void submit() {
+        if (isAdd) {
+            //新增地址
+            OkHttpUtils.post()
+                    .url(Urls.ADD_ADDRESS)
+                    .addParams("accessToken", Constant.ACCESS_TOKEN)
+                    .addParams("userId", Constant.LOGIN_USERID)
+                    .addParams("provinceId", mProvince.getId())
+                    .addParams("cityId", mCity.getId())
+                    .addParams("areaId", mDistrict.getId())
+                    .addParams("areaName", mDistrict.getName())
+                    .addParams("detailAddress", editAddressDetail.getText().toString())
+                    .addParams("userName", editName.getText().toString().trim())
+                    .addParams("phone", editName.getText().toString().trim())
+                    .build()
+                    .execute(new Callback() {
 
-        OkHttpUtils.post()
-                .url(Urls.ADD_ADDRESS)
-                .addParams("accessToken", Constant.ACCESS_TOKEN)
-                .addParams("userId", Constant.LOGIN_USERID)
-                .addParams("provinceId", mProvince.getId())
-                .addParams("cityId", mCity.getId())
-                .addParams("areaId", mDistrict.getId())
-                .addParams("areaName", mDistrict.getName())
-                .addParams("detailAddress", editAddressDetail.getText().toString())
-                .addParams("userName", editName.getText().toString().trim())
-                .addParams("phone", editName.getText().toString().trim())
-                .build()
-                .execute(new Callback() {
+                        @Override
+                        public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
+                            return super.parseNetworkResponse(mData, response, id);
+                        }
 
-                    @Override
-                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                        return super.parseNetworkResponse(mData, response, id);
-                    }
+                        @Override
+                        public void onError(Call call, Exception e, int id) {
+                            ToastUtils.showShortToast("添加失败");
+                        }
 
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-                        ToastUtils.showShortToast("添加失败");
-                    }
+                        @Override
+                        public void onResponse(Object response, int id) {
+                            setResult(RESULT_OK);
+                            finish();
+                        }
+                    });
+        } else {
+            //修改地址
+            OkHttpUtils.post()
+                    .url(Urls.ADD_ADDRESS)
+                    .addParams("accessToken", Constant.ACCESS_TOKEN)
+                    .addParams("userId", Constant.LOGIN_USERID)
+                    .addParams("provinceId", mProvince.getId())
+                    .addParams("cityId", mCity.getId())
+                    .addParams("areaId", mDistrict.getId())
+                    .addParams("areaName", mDistrict.getName())
+                    .addParams("detailAddress", editAddressDetail.getText().toString())
+                    .addParams("userName", editName.getText().toString().trim())
+                    .addParams("phone", editName.getText().toString().trim())
+                    .build()
+                    .execute(new Callback() {
 
-                    @Override
-                    public void onResponse(Object response, int id) {
-                        setResult(RESULT_OK);
-                        finish();
-                    }
-                });
+                        @Override
+                        public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
+                            return super.parseNetworkResponse(mData, response, id);
+                        }
+
+                        @Override
+                        public void onError(Call call, Exception e, int id) {
+                            ToastUtils.showShortToast("添加失败");
+                        }
+
+                        @Override
+                        public void onResponse(Object response, int id) {
+                            setResult(RESULT_OK);
+                            finish();
+                        }
+                    });
+        }
+
 
     }
 
@@ -161,9 +211,9 @@ public class EditAddressActivity extends BaseActivity {
                 mProvince = province;
                 mCity = city;
                 mDistrict = district;
-                tvAddress.setText(province.getName() + "(" + province.getId() + ")\n"
-                        + city.getName() + "(" + city.getId() + ")\n"
-                        + district.getName() + "(" + district.getId() + ")");
+                tvAddress.setText(province.getName() + "\n"
+                        + city.getName() + "\n"
+                        + district.getName());
             }
 
             @Override
