@@ -451,7 +451,7 @@
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".shop.MerchantsDetailActivity"
+            android:name=".shop.ShopSetMealActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
@@ -548,6 +548,10 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".pushshop.PushShopProtocolActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".pushshop.MerchantsDetailActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
 

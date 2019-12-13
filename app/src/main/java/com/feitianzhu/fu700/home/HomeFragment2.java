@@ -41,8 +41,8 @@ import com.feitianzhu.fu700.model.BaseGoodsListBean;
 import com.feitianzhu.fu700.model.MineInfoModel;
 import com.feitianzhu.fu700.model.Province;
 import com.feitianzhu.fu700.shop.ShopHelp;
+import com.feitianzhu.fu700.shop.ShopSetMealActivity;
 import com.feitianzhu.fu700.shop.ShopsDetailActivity;
-import com.feitianzhu.fu700.shop.MerchantsDetailActivity;
 import com.feitianzhu.fu700.shop.ui.ShopSearchActivity;
 import com.feitianzhu.fu700.shop.ui.ShopsActivity;
 import com.feitianzhu.fu700.shop.ui.dialog.ProvinceCallBack;
@@ -51,12 +51,6 @@ import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.utils.Urls;
 import com.feitianzhu.fu700.view.CircleImageView;
 import com.google.gson.Gson;
-import com.lljjcoder.Interface.OnCityItemClickListener;
-import com.lljjcoder.bean.CityBean;
-import com.lljjcoder.bean.DistrictBean;
-import com.lljjcoder.bean.ProvinceBean;
-import com.lljjcoder.citywheel.CityConfig;
-import com.lljjcoder.style.citypickerview.CityPickerView;
 import com.socks.library.KLog;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
@@ -205,9 +199,9 @@ public class HomeFragment2 extends SFFragment implements SwipeRefreshLayout.OnRe
                     intent.putExtra(ShopsDetailActivity.GOODS_DETAIL_DATA, shopsLists.get(position));
                     startActivity(intent);
                 } else {
-                    //商家
-                    Intent intent = new Intent(getActivity(), MerchantsDetailActivity.class);
-                    intent.putExtra(MerchantsDetailActivity.MERCHANT_DATA, recommendListBeanList.get(position - shopsLists.size()));
+                    //套餐详情页
+                    Intent intent = new Intent(getActivity(), ShopSetMealActivity.class);
+                    intent.putExtra(ShopSetMealActivity.MERCHANT_DATA, recommendListBeanList.get(position - shopsLists.size()));
                     startActivity(intent);
                 }
                 //startShopsActivity(mHomeEntity.recommendList.get(position).merchantId);
@@ -219,8 +213,8 @@ public class HomeFragment2 extends SFFragment implements SwipeRefreshLayout.OnRe
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 if (mHomeEntity != null && mHomeEntity.serviceRecommendList != null && position < mHomeEntity.serviceRecommendList.size()) {
                     HomeEntity.ServiceRecommendListBean serviceRecommendBean = mHomeEntity.serviceRecommendList.get(position);
-                    Intent intent = new Intent(getActivity(), MerchantsDetailActivity.class);
-                    intent.putExtra(MerchantsDetailActivity.SERVICE_RECOMMEND_BEAN, serviceRecommendBean);
+                    Intent intent = new Intent(getActivity(), ShopSetMealActivity.class);
+                    intent.putExtra(ShopSetMealActivity.SERVICE_RECOMMEND_BEAN, serviceRecommendBean);
                     startActivity(intent);
                 }
             }

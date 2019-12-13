@@ -70,7 +70,7 @@ public class GetMoneyActivity extends BaseActivity {
         Intent intent = getIntent();
         mData = (GetMoneyModel) intent.getSerializableExtra("getMoneyBean");
         mLeftName.setText(mData.points + "");
-      //  double rate = 0;
+        //  double rate = 0;
     /*    try {
             Log.e("Test","Point==="+Double.valueOf(mData.points));
 //            rate = mData.points * mData.rate / 100;
@@ -114,17 +114,13 @@ public class GetMoneyActivity extends BaseActivity {
 
                     @Override
                     public void onError(Call call, Exception e, int id) {
-                        if ("数据为空".equals(e.getMessage())) {
-                            ToastUtils.showShortToast("支付成功");
-                            finish();
-                        } else {
-                            ToastUtils.showShortToast(e.getMessage());
-                        }
+                        ToastUtils.showShortToast(e.getMessage());
                     }
 
                     @Override
                     public void onResponse(Object response, int id) {
-
+                        ToastUtils.showShortToast("支付成功");
+                        finish();
                     }
                 });
     }

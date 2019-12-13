@@ -15,6 +15,7 @@ import com.feitianzhu.fu700.model.BaseGoodsListBean;
 import com.itheima.roundedimageview.RoundedImageView;
 
 import java.util.List;
+import java.util.Locale;
 
 
 /**
@@ -37,6 +38,10 @@ public class HomeRecommendAdapter2 extends BaseMultiItemQuickAdapter<ShopAndMerc
             case ShopAndMerchants.TYPE_SERIES:
                 BaseGoodsListBean shopsList = item.getShopsList();
                 holder.setText(R.id.tv_category, shopsList.getGoodsName());
+                holder.setText(R.id.summary, shopsList.getSummary());
+                holder.setText(R.id.price, "¥" + String.format(Locale.getDefault(), "%.2f", shopsList.getPrice()));
+                holder.setVisible(R.id.price, true);
+                holder.setVisible(R.id.address, false);
                 if (shopsList.getGoodsImg() != null) {
                     Glide.with(mContext).load(shopsList.getGoodsImg()).apply(RequestOptions.errorOf(R.mipmap.a06_01tupian).placeholder(R.mipmap.a06_01tupian)).into((RoundedImageView) holder.getView(R.id.image));
                 } else {
@@ -46,6 +51,9 @@ public class HomeRecommendAdapter2 extends BaseMultiItemQuickAdapter<ShopAndMerc
             case ShopAndMerchants.TYPE_PESALE:
                 HomeEntity.RecommendListBean recommendListBean = item.getRecommendListBean();
                 holder.setText(R.id.tv_category, recommendListBean.merchantName);
+                holder.setText(R.id.address, "");
+                holder.setVisible(R.id.price, false);
+                holder.setVisible(R.id.address, true);
                 if (recommendListBean.merchantHeadImg != null) {
                     Glide.with(mContext).load(recommendListBean.merchantHeadImg).apply(RequestOptions.errorOf(R.mipmap.a06_01tupian).placeholder(R.mipmap.a06_01tupian)).into((RoundedImageView) holder.getView(R.id.image));
                 } else {

@@ -9,15 +9,13 @@ import okhttp3.Call;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public abstract class Callback<T>
-{
+public abstract class Callback<T> {
     /**
      * UI Thread
      *
      * @param request
      */
-    public void onBefore(Request request, int id)
-    {
+    public void onBefore(Request request, int id) {
     }
 
     /**
@@ -25,8 +23,7 @@ public abstract class Callback<T>
      *
      * @param
      */
-    public void onAfter(int id)
-    {
+    public void onAfter(int id) {
     }
 
     /**
@@ -34,8 +31,7 @@ public abstract class Callback<T>
      *
      * @param progress
      */
-    public void inProgress(float progress, long total , int id)
-    {
+    public void inProgress(float progress, long total, int id) {
 
     }
 
@@ -45,8 +41,7 @@ public abstract class Callback<T>
      * @param response
      * @return
      */
-    public boolean validateReponse(Response response, int id)
-    {
+    public boolean validateReponse(Response response, int id) {
         return response.isSuccessful();
     }
 
@@ -56,9 +51,9 @@ public abstract class Callback<T>
      * @param mData
      * @param response
      */
-    public  T parseNetworkResponse(String mData, Response response, int id) throws Exception {
+    public T parseNetworkResponse(String mData, Response response, int id) throws Exception {
         Gson gson = new Gson();
-        T t = (T) gson.fromJson(mData,analysisClazzInfo(this));
+        T t = (T) gson.fromJson(mData, analysisClazzInfo(this));
         return t;
     }
 
@@ -77,20 +72,15 @@ public abstract class Callback<T>
     }
 
 
-
-    public static Callback CALLBACK_DEFAULT = new Callback()
-    {
-
+    public static Callback CALLBACK_DEFAULT = new Callback() {
 
         @Override
-        public void onError(Call call, Exception e, int id)
-        {
+        public void onError(Call call, Exception e, int id) {
 
         }
 
         @Override
-        public void onResponse(Object response, int id)
-        {
+        public void onResponse(Object response, int id) {
 
         }
     };

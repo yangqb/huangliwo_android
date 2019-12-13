@@ -22,7 +22,7 @@ public class AddressInfo implements Serializable {
         this.shopAddressList = shopAddressList;
     }
 
-    public static class ShopAddressListBean implements Serializable{
+    public static class ShopAddressListBean implements Serializable {
         /**
          * addressId : 1
          * userId : 4
@@ -39,6 +39,8 @@ public class AddressInfo implements Serializable {
         private int addressId;
         private int userId;
         private String provinceId;
+        private String provinceName;
+        private String cityName;
         private String cityId;
         private String areaId;
         private String areaName;
@@ -46,6 +48,22 @@ public class AddressInfo implements Serializable {
         private String userName;
         private String phone;
         private int isDefalt;
+
+        public String getProvinceName() {
+            return provinceName;
+        }
+
+        public void setProvinceName(String provinceName) {
+            this.provinceName = provinceName;
+        }
+
+        public String getCityName() {
+            return cityName;
+        }
+
+        public void setCityName(String cityName) {
+            this.cityName = cityName;
+        }
 
         public int getAddressId() {
             return addressId;

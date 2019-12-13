@@ -190,19 +190,16 @@ public class TransferVoucherActivity extends BaseTakePhotoActivity {
                                 @Override
                                 public void onError(Call call, Exception e, int id) {
                                     goneloadDialog();
-                                    if ("数据为空".equals(e.getMessage())) {
-                                        ToastUtils.showShortToast("支付成功");
-                                        Intent Recordintent = new Intent(TransferVoucherActivity.this, ShopRecordDetailActivity.class);
-                                        startActivity(Recordintent);
-                                        finish();
-                                    } else {
-                                        ToastUtils.showShortToast("支付失败");
-                                    }
+                                    ToastUtils.showShortToast("支付失败");
                                 }
 
                                 @Override
                                 public void onResponse(Object response, int id) {
                                     goneloadDialog();
+                                    ToastUtils.showShortToast("支付成功");
+                                    Intent Recordintent = new Intent(TransferVoucherActivity.this, ShopRecordDetailActivity.class);
+                                    startActivity(Recordintent);
+                                    finish();
                                 }
                             });
                 } else if (mModel.getType() == SelectPayNeedModel.TYPE_PAY_FOR_ME) {
@@ -249,17 +246,14 @@ public class TransferVoucherActivity extends BaseTakePhotoActivity {
                                 @Override
                                 public void onError(Call call, Exception e, int id) {
                                     goneloadDialog();
-                                    if ("数据为空".equals(e.getMessage())) {
-                                        ToastUtils.showShortToast("支付成功");
-                                        finish();
-                                    } else {
-                                        ToastUtils.showShortToast("支付失败");
-                                    }
+                                    ToastUtils.showShortToast("支付失败");
                                 }
 
                                 @Override
                                 public void onResponse(Object response, int id) {
                                     goneloadDialog();
+                                    ToastUtils.showShortToast("支付成功");
+                                    finish();
                                 }
                             });
                 } else if (mModel.getType() == SelectPayNeedModel.TYPE_HUANGHUALI) {

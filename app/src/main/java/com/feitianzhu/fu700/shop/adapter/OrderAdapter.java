@@ -12,33 +12,62 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.feitianzhu.fu700.R;
+import com.feitianzhu.fu700.model.GoodsOrderInfo;
+import com.itheima.roundedimageview.RoundedImageView;
 
 import java.util.List;
 import java.util.Locale;
 
-public class OrderAdapter extends BaseQuickAdapter<Integer, BaseViewHolder> {
+public class OrderAdapter extends BaseQuickAdapter<GoodsOrderInfo.GoodsOrderListBean, BaseViewHolder> {
     private String str1;
     private String str2;
     private String amount;
+    private String price;
 
-    public OrderAdapter(@Nullable List<Integer> data) {
+    public OrderAdapter(@Nullable List<GoodsOrderInfo.GoodsOrderListBean> data) {
         super(R.layout.layout_order_item, data);
     }
 
     @Override
-    protected void convert(@NonNull BaseViewHolder helper, Integer item) {
+    protected void convert(@NonNull BaseViewHolder helper, GoodsOrderInfo.GoodsOrderListBean item) {
         str1 = "合计：";
         str2 = "¥ ";
-        amount = String.format(Locale.getDefault(), "%.2f", 69.0);
+        amount = String.format(Locale.getDefault(), "%.2f", item.getAmount());
+        price = String.format(Locale.getDefault(), "%.2f", item.getPrice());
         setSpannableString(amount, helper.getView(R.id.amount));
-        setSpannableString2(amount, helper.getView(R.id.tv_amount));
+        setSpannableString2(price, helper.getView(R.id.tv_amount));
+        helper.setText(R.id.goodsName, item.getGoodsName());
+        helper.setText(R.id.summary, item.getSummary());
+        helper.setText(R.id.count, "×" + item.getGoodsQTY());
+        helper.setText(R.id.tvCount, "共" + item.getGoodsQTY() + "件商品");
+        Glide.with(mContext).load(item.getGoodsImg()).apply(new RequestOptions()
+                .placeholder(R.drawable.pic_fuwutujiazaishibai)
+                .error(R.drawable.pic_fuwutujiazaishibai)).into((RoundedImageView) helper.getView(R.id.image));
 
         helper.addOnClickListener(R.id.btn_refund);
         helper.addOnClickListener(R.id.btn_logistics);
         helper.addOnClickListener(R.id.btn_confirm_goods);
+
+        if (item.getStatus() == -1) {
+            helper.setText(R.id.tvStatus, "已退款");
+        } else if (item.getStatus() == 0) {
+            helper.setText(R.id.tvStatus, "等待付款");
+        } else if (item.getStatus() == 1) {
+            helper.setText(R.id.tvStatus, "等待发货");
+        } else if (item.getStatus() == 2) {
+            helper.setText(R.id.tvStatus, "等待收货");
+        } else if (item.getStatus() == 3) {
+            helper.setText(R.id.tvStatus, "交易成功");
+        } else if (item.getStatus() == 4) {
+            helper.setText(R.id.tvStatus, "退款中");
+        } else if (item.getStatus() == 5) {
+            helper.setText(R.id.tvStatus, "订单关闭");
+        }
 
         if (helper.getAdapterPosition() == 0) {
             helper.setText(R.id.btn_confirm_goods, "评价");

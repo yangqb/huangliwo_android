@@ -10,18 +10,30 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.fu700.R;
+import com.feitianzhu.fu700.common.Constant;
 import com.feitianzhu.fu700.me.base.BaseActivity;
+import com.feitianzhu.fu700.model.GoodsOrderInfo;
 import com.feitianzhu.fu700.shop.ShopPayActivity;
 import com.feitianzhu.fu700.shop.adapter.OrderAdapter;
+import com.feitianzhu.fu700.utils.Urls;
+import com.google.gson.Gson;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.Callback;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import okhttp3.Call;
+import okhttp3.Response;
+
+import static com.feitianzhu.fu700.common.Constant.ACCESSTOKEN;
+import static com.feitianzhu.fu700.common.Constant.USERID;
 
 public class MyOrderActivity2 extends BaseActivity {
     private OrderAdapter adapter;
+    private List<GoodsOrderInfo.GoodsOrderListBean> goodsOrderList = new ArrayList<>();
     @BindView(R.id.all_order)
     TextView allOrder;
     @BindView(R.id.wait_pay_order)
@@ -74,12 +86,7 @@ public class MyOrderActivity2 extends BaseActivity {
         lineWaitReceive.setSelected(false);
         lineWaitEvaluate.setSelected(false);
 
-        List<Integer> integers = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            integers.add(i);
-        }
-
-        adapter = new OrderAdapter(integers);
+        adapter = new OrderAdapter(goodsOrderList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
@@ -93,6 +100,7 @@ public class MyOrderActivity2 extends BaseActivity {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Intent intent = new Intent(MyOrderActivity2.this, OrderDetailActivity.class);
+                intent.putExtra(OrderDetailActivity.ORDER_DATA, goodsOrderList.get(position));
                 startActivity(intent);
             }
         });
@@ -208,6 +216,32 @@ public class MyOrderActivity2 extends BaseActivity {
 
     @Override
     protected void initData() {
+        OkHttpUtils.post()
+                .url(Urls.GET_ORDER_INFO)
+                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)
+                .addParams(USERID, Constant.LOGIN_USERID)
+                .build()
+                .execute(new Callback() {
+
+                    @Override
+                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
+                        return new Gson().fromJson(mData, GoodsOrderInfo.class);
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+
+                    }
+
+                    @Override
+                    public void onResponse(Object response, int id) {
+                        GoodsOrderInfo goodsOrderInfo = (GoodsOrderInfo) response;
+                        goodsOrderList = goodsOrderInfo.getGoodsOrderList();
+                        adapter.setNewData(goodsOrderList);
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+
 
     }
 }

@@ -43,7 +43,7 @@ import static com.feitianzhu.fu700.common.Constant.USERID;
  * Created by Vya on 2017/8/31 0031.
  */
 
-public class PushServiceActivity extends BaseTakePhotoActivity{
+public class PushServiceActivity extends BaseTakePhotoActivity {
     @BindView(R.id.et_TradeName)
     EditText mTradeName;
     @BindView(R.id.et_TradePrice)
@@ -83,9 +83,8 @@ public class PushServiceActivity extends BaseTakePhotoActivity{
     LinearLayout ll_addPic5;
 
 
-
     protected InvokeParam invokeParam;
-    private  int ClickType = -1;
+    private int ClickType = -1;
     private String avatar;
 
     @Override
@@ -96,7 +95,7 @@ public class PushServiceActivity extends BaseTakePhotoActivity{
     @Override
     protected void initTitle() {
         defaultNavigationBar = new DefaultNavigationBar
-                .Builder(PushServiceActivity.this, (ViewGroup)findViewById(R.id.Rl_titleContainer))
+                .Builder(PushServiceActivity.this, (ViewGroup) findViewById(R.id.Rl_titleContainer))
                 .setTitle("发布服务")
                 .setStatusHeight(PushServiceActivity.this)
                 .setLeftIcon(R.drawable.iconfont_fanhuijiantou)
@@ -114,12 +113,14 @@ public class PushServiceActivity extends BaseTakePhotoActivity{
     protected void initData() {
         mPicList = new HashMap<>();
     }
-    private Map<String,File> mPicList;
-    @OnClick({R.id.ll_addCover,R.id.ll_addPic1,R.id.ll_addPic2,
-            R.id.ll_addPic3,R.id.ll_addPic4,R.id.ll_addPic5,
+
+    private Map<String, File> mPicList;
+
+    @OnClick({R.id.ll_addCover, R.id.ll_addPic1, R.id.ll_addPic2,
+            R.id.ll_addPic3, R.id.ll_addPic4, R.id.ll_addPic5,
             R.id.bt_send})
-    public void onClick(View v){
-        switch (v.getId()){
+    public void onClick(View v) {
+        switch (v.getId()) {
 
             case R.id.ll_addCover:
                 ClickType = 111;
@@ -186,63 +187,62 @@ public class PushServiceActivity extends BaseTakePhotoActivity{
           cover 否 File 封面
           goodsPic 否 File[] 图片
           */
+
     /**
      * 发布服务
      */
     private void requestData() {
-        if(avatar == null){
-            avatar= "";
+        if (avatar == null) {
+            avatar = "";
         }
-        if(TextUtils.isEmpty(mTradeName.getText())||TextUtils.isEmpty(mTradePrice.getText())
-                || TextUtils.isEmpty(mTradeBenefit.getText())||TextUtils.isEmpty(mContact.getText())
-                || TextUtils.isEmpty(mContactNum.getText())||TextUtils.isEmpty(mContactAddress.getText())
-                || TextUtils.isEmpty(mTradeDesc.getText())){
+        if (TextUtils.isEmpty(mTradeName.getText()) || TextUtils.isEmpty(mTradePrice.getText())
+                || TextUtils.isEmpty(mTradeBenefit.getText()) || TextUtils.isEmpty(mContact.getText())
+                || TextUtils.isEmpty(mContactNum.getText()) || TextUtils.isEmpty(mContactAddress.getText())
+                || TextUtils.isEmpty(mTradeDesc.getText())) {
             ToastUtils.showShortToast("有内容未填写，必须填写后才能发布!");
             return;
         }
         showloadDialog("正在发布...");
-        File mCoverFile =  new File(avatar);
-        if(!mCoverFile.exists()){
+        File mCoverFile = new File(avatar);
+        if (!mCoverFile.exists()) {
             ToastUtils.showShortToast("必须要上传封面图片");
             return;
         }
         PostFormBuilder mPost = OkHttpUtils.post();
         mPost.addFile("cover", "avatarAAA.png", mCoverFile)//
-              //  .addFile("goodsPic", "filesBBB.png", new File(files))//
-                .addFiles("goodsPic",mPicList)
+                //  .addFile("goodsPic", "filesBBB.png", new File(files))//
+                .addFiles("goodsPic", mPicList)
                 .url(Common_HEADER + POST_PUSH_SHOPSERVICE)
                 .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
                 .addParams(USERID, Constant.LOGIN_USERID)
-                .addParams("serviceName",mTradeName.getText().toString())
-                .addParams("price",mTradePrice.getText().toString())
-                .addParams("rebate",mTradeBenefit.getText().toString())
-                .addParams("contactPerson",mContact.getText().toString())
-                .addParams("contactTel",mContactNum.getText().toString())
-                .addParams("serviceAddr",mContactAddress.getText().toString())
-                .addParams("serviceDesc",mTradeDesc.getText().toString())
+                .addParams("serviceName", mTradeName.getText().toString())
+                .addParams("price", mTradePrice.getText().toString())
+                .addParams("rebate", mTradeBenefit.getText().toString())
+                .addParams("contactPerson", mContact.getText().toString())
+                .addParams("contactTel", mContactNum.getText().toString())
+                .addParams("serviceAddr", mContactAddress.getText().toString())
+                .addParams("serviceDesc", mTradeDesc.getText().toString())
                 .build()
                 .execute(new Callback() {
-                    @Override public Object parseNetworkResponse(String mData, Response response, int id)
+                    @Override
+                    public Object parseNetworkResponse(String mData, Response response, int id)
                             throws Exception {
                         return mData;
                     }
+
                     @Override
                     public void onError(Call call, Exception e, int id) {
-                        if ("数据为空".equals(e.getMessage())) {
-                            ToastUtils.showShortToast("发布成功");
-                            goneloadDialog();
-                            finish();
-                        } else {
-                            ToastUtils.showShortToast(e.getMessage());
-                            goneloadDialog();
-                        }
+                        ToastUtils.showShortToast(e.getMessage());
+                        goneloadDialog();
 
                     }
 
                     @Override
                     public void onResponse(Object response, int id) {
-                       Log.e("Test","--------response------>"+response.toString());
+                        Log.e("Test", "--------response------>" + response.toString());
+                        ToastUtils.showShortToast("发布成功");
                         goneloadDialog();
+                        finish();
                     }
                 });
     }
@@ -251,36 +251,36 @@ public class PushServiceActivity extends BaseTakePhotoActivity{
     @Override
     public void takeSuccess(TResult result) {
         String compressPath = result.getImage().getCompressPath();
-        if(compressPath == null){
+        if (compressPath == null) {
             compressPath = "";
         }
-        switch (ClickType){
+        switch (ClickType) {
             case 111:  //添加封面
                 avatar = compressPath;
                 Glide.with(mContext).load(compressPath).into(mIvCover);
                 break;
             case 1:  //添加图片
-                mPicList.put("Picture"+ClickType+".png",new File(compressPath));
+                mPicList.put("Picture" + ClickType + ".png", new File(compressPath));
                 Glide.with(mContext).load(compressPath).into(mIvPic1);
                 showNextButton(ClickType);
                 break;
             case 2:  //添加图片
-                mPicList.put("Picture"+ClickType+".png",new File(compressPath));
+                mPicList.put("Picture" + ClickType + ".png", new File(compressPath));
                 Glide.with(mContext).load(compressPath).into(mIvPic2);
                 showNextButton(ClickType);
                 break;
             case 3:  //添加图片
-                mPicList.put("Picture"+ClickType+".png",new File(compressPath));
+                mPicList.put("Picture" + ClickType + ".png", new File(compressPath));
                 Glide.with(mContext).load(compressPath).into(mIvPic3);
                 showNextButton(ClickType);
                 break;
             case 4:  //添加图片
-                mPicList.put("Picture"+ClickType+".png",new File(compressPath));
+                mPicList.put("Picture" + ClickType + ".png", new File(compressPath));
                 Glide.with(mContext).load(compressPath).into(mIvPic4);
                 showNextButton(ClickType);
                 break;
             case 5:  //添加图片
-                mPicList.put("Picture"+ClickType+".png",new File(compressPath));
+                mPicList.put("Picture" + ClickType + ".png", new File(compressPath));
                 Glide.with(mContext).load(compressPath).into(mIvPic5);
                 break;
         }
@@ -288,7 +288,7 @@ public class PushServiceActivity extends BaseTakePhotoActivity{
     }
 
     private void showNextButton(int clickType) {
-        switch (clickType){
+        switch (clickType) {
             case 1:
                 ll_addPic2.setVisibility(View.VISIBLE);
                 ll_addPic2.setClickable(true);
@@ -315,12 +315,12 @@ public class PushServiceActivity extends BaseTakePhotoActivity{
 
     @Override
     public void takeFail(TResult result, String msg) {
-        Toast.makeText(PushServiceActivity.this,"takeFail",Toast.LENGTH_SHORT).show();
+        Toast.makeText(PushServiceActivity.this, "takeFail", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void takeCancel() {
-        Toast.makeText(PushServiceActivity.this,"takeCancel",Toast.LENGTH_SHORT).show();
+        Toast.makeText(PushServiceActivity.this, "takeCancel", Toast.LENGTH_SHORT).show();
     }
 
     @Override

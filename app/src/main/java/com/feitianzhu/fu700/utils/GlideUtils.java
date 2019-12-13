@@ -49,7 +49,7 @@ public class GlideUtils {
                 manager.getDefaultDisplay().getMetrics(outMetrics);
                 int screenWidth = outMetrics.widthPixels;
                 Log.e("====", bWidth + " " + bHeight + " " + bHeight);
-                int height = (screenWidth - 150) * bHeight / bWidth;
+                int height = (screenWidth) * bHeight / bWidth;
                 ViewGroup.LayoutParams para = imgDetail.getLayoutParams();
                 para.height = height;
                 imgDetail.setLayoutParams(para);

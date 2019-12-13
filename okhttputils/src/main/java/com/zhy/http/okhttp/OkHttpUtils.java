@@ -136,29 +136,19 @@ public class OkHttpUtils {
                     }
                     String mCode = (new JSONObject(json)).getString("code");
                     if ("0".equals(mCode)) {
-                        if (TextUtils.isEmpty((new JSONObject(json)).getString("data"))) {
-                            OkHttpUtils.this.sendFailResultCallback(call, new Exception("数据为空"), finalCallback,
-                                    id);
-                        } else {
-                            try {
-                                String mData = (new JSONObject(json)).getString("data");
-                                Object o = finalCallback.parseNetworkResponse(mData, response, id);
-                                OkHttpUtils.this.sendSuccessResultCallback(o, finalCallback, id);
-                            } catch (Exception e) {
-                                //String s = e.getMessage();
-                                sendFailResultCallback(call, new Exception("服务器错误"), finalCallback, id);
-                            }
+                        try {
+                            String mData = (new JSONObject(json)).getString("data");
+                            Object o = finalCallback.parseNetworkResponse(mData, response, id);
+                            OkHttpUtils.this.sendSuccessResultCallback(o, finalCallback, id);
+                        } catch (Exception e) {
+                            //String s = e.getMessage();
+                            sendFailResultCallback(call, new Exception("服务器错误"), finalCallback, id);
                         }
-                        return;
+
                     } else {
                         String msg = (new JSONObject(json)).getString("msg");
                         sendFailResultCallback(call, new Exception(msg), finalCallback, id);
                     }
-//          }else{
-//            Object o = finalCallback.parseNetworkResponse("",response, id);
-//            sendSuccessResultCallback(o, finalCallback, id);
-//          }
-
 
                 } catch (Exception e) {
                     sendFailResultCallback(call, e, finalCallback, id);

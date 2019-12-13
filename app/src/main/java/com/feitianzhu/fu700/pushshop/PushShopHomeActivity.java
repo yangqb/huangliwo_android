@@ -5,7 +5,9 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.feitianzhu.fu700.R;
+import com.feitianzhu.fu700.common.Constant;
 import com.feitianzhu.fu700.me.base.BaseActivity;
+import com.feitianzhu.fu700.utils.SPUtils;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -44,10 +46,15 @@ public class PushShopHomeActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.push_merchants:
-                intent = new Intent(PushShopHomeActivity.this, PushShopProtocolActivity.class);
-                startActivity(intent);
-                /*intent = new Intent(PushShopHomeActivity.this, PushShopListActivity.class);
-                startActivity(intent);*/
+                boolean isAgreed = SPUtils.getBoolean(this, Constant.SP_PUSH_SHOP_PROTOCOL);
+                if (isAgreed) {
+                    intent = new Intent(PushShopHomeActivity.this, PushShopListActivity.class);
+                    startActivity(intent);
+                } else {
+                    intent = new Intent(PushShopHomeActivity.this, PushShopProtocolActivity.class);
+                    intent.putExtra(PushShopProtocolActivity.PUSH_PROTOCOL, true);
+                    startActivity(intent);
+                }
                 break;
             case R.id.oneself_merchants:
                 intent = new Intent(PushShopHomeActivity.this, MySelfMerchantsActivity.class);

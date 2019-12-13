@@ -2,39 +2,28 @@ package com.feitianzhu.fu700.shop;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.support.v4.app.NavUtils;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
-import com.bumptech.glide.request.transition.Transition;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.fu700.R;
 import com.feitianzhu.fu700.common.Constant;
-import com.feitianzhu.fu700.home.entity.HomeEntity;
 import com.feitianzhu.fu700.me.base.BaseActivity;
 import com.feitianzhu.fu700.model.BaseGoodsListBean;
 import com.feitianzhu.fu700.model.ProductParameters;
@@ -43,17 +32,13 @@ import com.feitianzhu.fu700.utils.GlideUtils;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.utils.Urls;
 import com.google.gson.Gson;
-import com.socks.library.KLog;
-import com.tencent.mm.opensdk.utils.Log;
 import com.zhpan.bannerview.BannerViewPager;
 import com.zhpan.bannerview.enums.IndicatorStyle;
 import com.zhpan.bannerview.holder.ViewHolder;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
-import com.zhy.http.okhttp.https.HttpsUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -76,6 +61,7 @@ public class ShopsDetailActivity extends BaseActivity {
     private BaseGoodsListBean goodsListBean;
     private List<ProductParameters.GoodslistBean.SkuValueListBean> skuValueListBean = new ArrayList<>();
     private ProductParametersAdapter mAdapter;
+    private int valueId = -1; //规格id
     @BindView(R.id.tv_amount)
     TextView tvAmount;
     @BindView(R.id.title_name)
@@ -95,7 +81,7 @@ public class ShopsDetailActivity extends BaseActivity {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_commodity_detail;
+        return R.layout.activity_shops_detail;
     }
 
     @Override
@@ -168,6 +154,7 @@ public class ShopsDetailActivity extends BaseActivity {
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 mAdapter.setSelect(position);
                 mAdapter.notifyDataSetChanged();
+                valueId = skuValueListBean.get(position).getValueId();
             }
         });
     }
@@ -237,7 +224,12 @@ public class ShopsDetailActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.tv_pay:
+                if (skuValueListBean.size() > 0 && valueId == -1) {
+                    ToastUtils.showShortToast("请选择商品规格");
+                    return;
+                }
                 Intent intent = new Intent(ShopsDetailActivity.this, ShopPayActivity.class);
+                intent.putExtra(ShopPayActivity.GOODS_VALUE_ID, valueId);
                 intent.putExtra(ShopPayActivity.IS_SHOW_ADDRESS, true);
                 if (goodsListBean != null) {
                     intent.putExtra(ShopPayActivity.PAY_DATA, goodsListBean);

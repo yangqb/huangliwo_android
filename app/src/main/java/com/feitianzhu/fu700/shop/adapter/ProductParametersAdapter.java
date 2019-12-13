@@ -18,7 +18,7 @@ import java.util.List;
  * email: 694125155@qq.com
  */
 public class ProductParametersAdapter extends BaseQuickAdapter<ProductParameters.GoodslistBean.SkuValueListBean, BaseViewHolder> {
-    private int selectPos;
+    private int selectPos = -1;
 
     public ProductParametersAdapter(@Nullable List<ProductParameters.GoodslistBean.SkuValueListBean> data) {
         super(R.layout.layout_product_parameters, data);

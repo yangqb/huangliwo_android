@@ -129,7 +129,7 @@ public class NetworkDao {
                     @Override
                     public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
                         KLog.i("mData: %s", mData);
-                        return new Gson().fromJson(mData, SmsCodeEntity.class);
+                        return mData;
                     }
 
                     @Override
@@ -141,10 +141,6 @@ public class NetworkDao {
                     @Override
                     public void onResponse(Object response, int id) {
 
-                        if (response == null) {
-                            linstener.onFail(FailCode, "response is null!");
-                            return;
-                        }
                         KLog.i("response:%s", response.toString());
 
                         linstener.onSuccess(0, response);

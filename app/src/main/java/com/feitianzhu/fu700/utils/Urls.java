@@ -6,9 +6,9 @@ package com.feitianzhu.fu700.utils;
 
 public class Urls {
 
-    //正式
+    //测试地址
     //private static final String HOST_URL = "http://39.106.65.35";
-    //测试
+    //本地地址
     private static final String HOST_URL = "http://192.168.0.21";
 
     private static final String HOST_PORT = "8089";
@@ -54,6 +54,11 @@ public class Urls {
      * 商品规格参数
      * */
     public static final String GET_PRODUCT_PARAMETERS = BASE_URL + "fhwl/shop/getskuValue";
+
+    /*
+     * 所有订单列表数据
+     * */
+    public static final String GET_ORDER_INFO = BASE_URL + "fhwl/order/svbill/goodsorder";
 
     /*
      * 添加地址

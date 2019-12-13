@@ -25,6 +25,7 @@ import com.feitianzhu.fu700.utils.PayUtils;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.view.CircleImageView;
 import com.google.gson.Gson;
+import com.socks.library.KLog;
 import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
@@ -46,6 +47,7 @@ import okhttp3.Response;
 
 import static com.feitianzhu.fu700.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.fu700.common.Constant.Common_HEADER;
+import static com.feitianzhu.fu700.common.Constant.FailCode;
 import static com.feitianzhu.fu700.common.Constant.POST_BUY_SERVICE;
 import static com.feitianzhu.fu700.common.Constant.USERID;
 
@@ -61,7 +63,7 @@ public class BuyServiceActivity extends BaseActivity {
     @BindView(R.id.tv_TradePrice)
     TextView mTradePrice;
     @BindView(R.id.tv_TradePreferential) //优惠
-    TextView mTradePreferential;
+            TextView mTradePreferential;
     @BindView(R.id.tv_personName)
     TextView mPersonName;
     @BindView(R.id.tv_personId)
@@ -83,6 +85,7 @@ public class BuyServiceActivity extends BaseActivity {
 
     private List<ImageView> mClick;
     private String nickName = "";
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_buy_service;
@@ -91,7 +94,7 @@ public class BuyServiceActivity extends BaseActivity {
     @Override
     protected void initTitle() {
         defaultNavigationBar = new DefaultNavigationBar
-                .Builder(BuyServiceActivity.this, (ViewGroup)findViewById(R.id.ll_Container))
+                .Builder(BuyServiceActivity.this, (ViewGroup) findViewById(R.id.ll_Container))
                 .setTitle("购买服务")
                 .setStatusHeight(BuyServiceActivity.this)
                 .setLeftIcon(R.drawable.iconfont_fanhuijiantou)
@@ -101,21 +104,21 @@ public class BuyServiceActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        if(Constant.USER_INFO==null){
+        if (Constant.USER_INFO == null) {
             nickName = "";
-        }else{
-            if(Constant.USER_INFO.nickName==null){
+        } else {
+            if (Constant.USER_INFO.nickName == null) {
                 nickName = "";
-            }else {
+            } else {
                 nickName = Constant.USER_INFO.nickName;
             }
         }
         ShopDao.loadUserAuthImpl();
         mClick = new ArrayList<>();
-          Intent mIntent = getIntent();
+        Intent mIntent = getIntent();
         mData = (BuyServiceNeedModel) mIntent.getSerializableExtra("serviceDetailBean");
-        if(mData == null){
-            mData =  (BuyServiceNeedModel) mIntent.getSerializableExtra("hotServiceBean");
+        if (mData == null) {
+            mData = (BuyServiceNeedModel) mIntent.getSerializableExtra("hotServiceBean");
         }
 
     }
@@ -130,10 +133,10 @@ public class BuyServiceActivity extends BaseActivity {
         Glide.with(this).load(mData.headImg).apply(RequestOptions.placeholderOf(R.mipmap.pic_fuwutujiazaishibai).dontAnimate())
                 .into(mCivPic);
         mTradeName.setText(mData.serviceName);
-        mTradePrice.setText(mData.price+"");
-        mTradePreferential.setText("返 "+mData.rebate+"PV");
+        mTradePrice.setText(mData.price + "");
+        mTradePreferential.setText("返 " + mData.rebate + "PV");
         mPersonName.setText(mData.contactPerson);
-        mPersonId.setText("(ID:"+mData.userId+")");
+        mPersonId.setText("(ID:" + mData.userId + ")");
         mBuyner.setText(nickName);
         mBuynerPhone.setText(mData.contactTel);
         initCheckPic();
@@ -141,37 +144,37 @@ public class BuyServiceActivity extends BaseActivity {
         mClick.add(mIvCheck1);
     }
 
-    @OnClick({R.id.iv_check1,R.id.iv_check2,R.id.iv_check3,R.id.bt_ImmediatePay})
-    public void onClick(View v){
-            switch (v.getId()){
-                case R.id.iv_check1:
-                   if(!mClick.contains(mIvCheck1)){
-                       mClick.remove(0).setImageResource(R.drawable.icon_weixuanze);
-                       mIvCheck1.setImageResource(R.drawable.icon_xuanze);
-                       mClick.clear();
-                       mClick.add(mIvCheck1);
+    @OnClick({R.id.iv_check1, R.id.iv_check2, R.id.iv_check3, R.id.bt_ImmediatePay})
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.iv_check1:
+                if (!mClick.contains(mIvCheck1)) {
+                    mClick.remove(0).setImageResource(R.drawable.icon_weixuanze);
+                    mIvCheck1.setImageResource(R.drawable.icon_xuanze);
+                    mClick.clear();
+                    mClick.add(mIvCheck1);
 
-                   }
-                    break;
-                case R.id.iv_check2:
+                }
+                break;
+            case R.id.iv_check2:
 
-                    if(!mClick.contains(mIvCheck2)){
-                        mClick.remove(0).setImageResource(R.drawable.icon_weixuanze);
-                        mIvCheck2.setImageResource(R.drawable.icon_xuanze);
-                        mClick.clear();
-                        mClick.add(mIvCheck2);
+                if (!mClick.contains(mIvCheck2)) {
+                    mClick.remove(0).setImageResource(R.drawable.icon_weixuanze);
+                    mIvCheck2.setImageResource(R.drawable.icon_xuanze);
+                    mClick.clear();
+                    mClick.add(mIvCheck2);
 
-                    }
-                    break;
-                case R.id.iv_check3:
-                    if(!mClick.contains(mIvCheck3)){
-                        mClick.remove(0).setImageResource(R.drawable.icon_weixuanze);
-                        mIvCheck3.setImageResource(R.drawable.icon_xuanze);
-                        mClick.clear();
-                        mClick.add(mIvCheck3);
+                }
+                break;
+            case R.id.iv_check3:
+                if (!mClick.contains(mIvCheck3)) {
+                    mClick.remove(0).setImageResource(R.drawable.icon_weixuanze);
+                    mIvCheck3.setImageResource(R.drawable.icon_xuanze);
+                    mClick.clear();
+                    mClick.add(mIvCheck3);
 
-                    }
-                    break;
+                }
+                break;
              /*   case R.id.iv_check4:  //服务没有线下支付
                     if(!mClick.contains(mIvCheck4)){
                         mClick.remove(0).setImageResource(R.drawable.icon_weixuanze);
@@ -182,71 +185,64 @@ public class BuyServiceActivity extends BaseActivity {
                     }
                     break;*/
 
-                case R.id.bt_ImmediatePay:
-                    String str = "";
-                   String text = (String) mClick.get(0).getTag();
-                    mData.payChannel = text;
-                    sendParamsData();
-                    break;
-            }
+            case R.id.bt_ImmediatePay:
+                String str = "";
+                String text = (String) mClick.get(0).getTag();
+                mData.payChannel = text;
+                sendParamsData();
+                break;
+        }
     }
 
 
     private void sendParamsData() {
-        Log.e("wangyan","打印----->mData "+mData);
+        Log.e("wangyan", "打印----->mData " + mData);
         if (mData == null) {
             return;
         }
         showloadDialog("正在支付...");
            /* Log.e("wangyan","打印-----merchantId>"+mData.merchantId+"---serviceId--"+mData.serviceId+"---price---"+mData.price+"--rebate--"+ mData.rebate+"---contactTel--"+mData.contactTel
                     +"----payChannel---"+);*/
-           final String mPayChanel =  mData.payChannel;
+        final String mPayChanel = mData.payChannel;
         ShopHelp.veriPassword(this, new onConnectionFinishLinstener() {
 
+            @Override
+            public void onSuccess(int code, Object result) {
+                // payMoney(result.toString());
+                String psw = result.toString();
+                NetworkDao.PayBuyService(mData.merchantId + "", mData.serviceId + "", mData.price + "", mData.rebate + "", mData.contactTel, mPayChanel, psw, new onConnectionFinishLinstener() {
                     @Override
                     public void onSuccess(int code, Object result) {
-                       // payMoney(result.toString());
-                        String psw = result.toString();
-                        NetworkDao.PayBuyService(mData.merchantId + "", mData.serviceId + "", mData.price + "", mData.rebate + "", mData.contactTel,mPayChanel, psw, new onConnectionFinishLinstener() {
-                            @Override
-                            public void onSuccess(int code, Object result) {
-                                if(mPayChanel.equals("balance")){
-                                    ToastUtils.showLongToast("支付成功");
+                        if (mPayChanel.equals("balance")) {
+                            ToastUtils.showLongToast("支付成功");
+                            finish();
+                        }
+                        if (mPayChanel.equals("wx")) {
+                            if (result == null) {
+                                ToastUtils.showShortToast("微信支付失败");
+                                return;
+                            }
+                            Constant.PayFlag = PayInfo.BUY_SERVICE;
+                            CallWxPay(result.toString());
+                        }
+                        if (mPayChanel.equals("alipay")) {
+                            final String orderInfo = result.toString();
+                            PayUtils.aliPay(BuyServiceActivity.this, orderInfo, new onConnectionFinishLinstener() {
+                                @Override
+                                public void onSuccess(int code, Object result) {
+                                    ToastUtils.showShortToast("支付成功");
                                     finish();
                                 }
-                                if(mPayChanel.equals("wx")){
-                                    if (result == null) {
-                                        ToastUtils.showShortToast("微信支付失败");
-                                        return;
-                                    }
-                                    Constant.PayFlag = PayInfo.BUY_SERVICE;
-                                    CallWxPay(result.toString());
+
+                                @Override
+                                public void onFail(int code, String result) {
+                                    ToastUtils.showShortToast("支付失败");
+                                    goneloadDialog();
+                                    EventBus.getDefault().post(PayForMeEvent.PAY_FAILURE);
                                 }
-                                if(mPayChanel.equals("alipay")){
-                                    final String orderInfo = result.toString();
-                                    PayUtils.aliPay(BuyServiceActivity.this, orderInfo, new onConnectionFinishLinstener() {
-                                        @Override
-                                        public void onSuccess(int code, Object result) {
-                                            ToastUtils.showShortToast("支付成功");
-                                            finish();
-                                        }
+                            });
+                        }
 
-                                        @Override
-                                        public void onFail(int code, String result) {
-                                            ToastUtils.showShortToast("支付失败");
-                                            goneloadDialog();
-                                            EventBus.getDefault().post(PayForMeEvent.PAY_FAILURE);
-                                        }
-                                    });
-                                }
-
-                            }
-
-                            @Override
-                            public void onFail(int code, String result) {
-                                ToastUtils.showLongToast(result);
-                            }
-                        });
                     }
 
                     @Override
@@ -254,7 +250,13 @@ public class BuyServiceActivity extends BaseActivity {
                         ToastUtils.showLongToast(result);
                     }
                 });
+            }
 
+            @Override
+            public void onFail(int code, String result) {
+                ToastUtils.showLongToast(result);
+            }
+        });
 
 
     }
@@ -284,10 +286,10 @@ public class BuyServiceActivity extends BaseActivity {
         mPost.url(Common_HEADER + POST_BUY_SERVICE)
                 .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
                 .addParams(USERID, Constant.LOGIN_USERID)
-                .addParams("merchantId", mData.merchantId+"")
+                .addParams("merchantId", mData.merchantId + "")
                 .addParams("serviceId", mData.serviceId + "")
                 .addParams("amount", mData.price + "")
-                .addParams("rebatePv", mData.rebate+"")
+                .addParams("rebatePv", mData.rebate + "")
                 .addParams("linkPhone", mData.contactTel)
                 .addParams("payChannel", mData.payChannel)
                 .addParams("payPass", psw)
@@ -302,17 +304,13 @@ public class BuyServiceActivity extends BaseActivity {
 
                     @Override
                     public void onError(Call call, Exception e, int id) {
-                        if ("数据为空".equals(e.getMessage())) {
-                            ToastUtils.showShortToast("支付成功");
-                            finish();
-                        } else {
-                            ToastUtils.showShortToast("支付失败");
-                        }
+                        ToastUtils.showShortToast("支付失败");
                     }
 
                     @Override
                     public void onResponse(Object response, int id) {
-
+                        ToastUtils.showShortToast("支付成功");
+                        finish();
                     }
                 });
     }
@@ -330,10 +328,10 @@ public class BuyServiceActivity extends BaseActivity {
     }
 
 
-    public void initCheckPic(){
-      mIvCheck1.setBackgroundResource(R.drawable.icon_weixuanze);
-      mIvCheck2.setBackgroundResource(R.drawable.icon_weixuanze);
-      mIvCheck3.setBackgroundResource(R.drawable.icon_weixuanze);
-     // mIvCheck4.setBackgroundResource(R.drawable.icon_weixuanze);
+    public void initCheckPic() {
+        mIvCheck1.setBackgroundResource(R.drawable.icon_weixuanze);
+        mIvCheck2.setBackgroundResource(R.drawable.icon_weixuanze);
+        mIvCheck3.setBackgroundResource(R.drawable.icon_weixuanze);
+        // mIvCheck4.setBackgroundResource(R.drawable.icon_weixuanze);
     }
 }

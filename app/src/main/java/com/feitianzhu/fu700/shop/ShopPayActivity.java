@@ -30,6 +30,7 @@ import com.feitianzhu.fu700.me.AddressManagementActivity;
 import com.feitianzhu.fu700.me.base.BaseActivity;
 import com.feitianzhu.fu700.me.ui.ShopRecordDetailActivity;
 import com.feitianzhu.fu700.me.ui.totalScore.TransferVoucherActivity;
+import com.feitianzhu.fu700.model.AddressInfo;
 import com.feitianzhu.fu700.model.BaseGoodsListBean;
 import com.feitianzhu.fu700.model.GoodsOrderModel;
 import com.feitianzhu.fu700.model.PayInfo;
@@ -83,9 +84,12 @@ import static com.feitianzhu.fu700.common.Constant.USERID;
  * 线上和线下订单支付页面
  */
 public class ShopPayActivity extends BaseActivity {
+    public static final String GOODS_VALUE_ID = "goods_value_id";
     public static final String IS_SHOW_ADDRESS = "is_show_address";
     public static final String PAY_DATA = "pay_data";
-
+    public static final String ADDRESS_DATA = "address_data";
+    private static final int REQUEST_CODE = 1000;
+    private AddressInfo.ShopAddressListBean addressBean;
     @BindView(R.id.amount)
     TextView bottomAmount;
     @BindView(R.id.tv_amount)
@@ -116,6 +120,11 @@ public class ShopPayActivity extends BaseActivity {
     TextView tvSummary;
     @BindView(R.id.image)
     ImageView imageView;
+    @BindView(R.id.consignee_name)
+    TextView consigneeName;
+    @BindView(R.id.phone)
+    TextView phone;
+
     private String amount;
     private String totalAmount;
     private GoodsOrderModel goodsOrderModel;
@@ -126,6 +135,8 @@ public class ShopPayActivity extends BaseActivity {
     private boolean isShow;
     private boolean isDefault;
     private BaseGoodsListBean goodsListBean;
+    private int shopCount = 1; //购买数量
+    private int valueId;
 
     @Override
     protected int getLayoutId() {
@@ -141,7 +152,7 @@ public class ShopPayActivity extends BaseActivity {
     @SuppressLint("SetTextI18n")
     @Override
     protected void initView() {
-
+        valueId = getIntent().getIntExtra(GOODS_VALUE_ID, 0);
         goodsListBean = (BaseGoodsListBean) getIntent().getSerializableExtra(PAY_DATA);
         goodsOrderModel = new GoodsOrderModel();
         goodsOrderModel.setChannel("wx");
@@ -188,11 +199,15 @@ public class ShopPayActivity extends BaseActivity {
             if (isDefault) {
                 noAddress.setVisibility(View.GONE);
                 rlAddress.setVisibility(View.VISIBLE);
+                /*
+                 * TODO:添加默认地址信息
+                 * */
             } else {
                 noAddress.setVisibility(View.VISIBLE);
                 rlAddress.setVisibility(View.GONE);
             }
         } else {
+            noAddress.setVisibility(View.GONE);
             rlAddress.setVisibility(View.GONE);
         }
 
@@ -203,6 +218,7 @@ public class ShopPayActivity extends BaseActivity {
             @Override
             public void onAmountChange(View view, int count) {
                 tvCount.setText("×" + count);
+                shopCount = count;
                 float aFloat = Float.parseFloat(amount);
                 totalAmount = String.format(Locale.getDefault(), "%.2f", aFloat * count);
                 setSpannableString(totalAmount);
@@ -214,8 +230,8 @@ public class ShopPayActivity extends BaseActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_pay:
-                if (isShow && TextUtils.isEmpty(tvAddress.getText().toString().trim())) {
-                    ToastUtils.showShortToast("请输入收货地址");
+                if (isShow && !isDefault) {
+                    ToastUtils.showShortToast("请添加收货地址");
                     return;
                 }
 
@@ -257,7 +273,8 @@ public class ShopPayActivity extends BaseActivity {
             case R.id.no_address:
             case R.id.rl_address:
                 Intent intent = new Intent(ShopPayActivity.this, AddressManagementActivity.class);
-                startActivity(intent);
+                intent.putExtra(AddressManagementActivity.IS_SELECT, true);
+                startActivityForResult(intent, REQUEST_CODE);
                 break;
         }
     }
@@ -361,14 +378,16 @@ public class ShopPayActivity extends BaseActivity {
                 .addParams("accessToken", Constant.ACCESS_TOKEN)
                 .addParams("userId", Constant.LOGIN_USERID)
                 //.addParams("goodsOrder", json)
+                .addParams("addressId", addressBean.getAddressId() + "")
                 .addParams("orderNo", orderNo)
+                .addParams("valueId", valueId + "")
+                .addParams("goodsQTY", shopCount + "")
                 .addParams("goodsId", goodsListBean.getGoodsId() + "")
                 .addParams("amount", totalAmount)
                 .addParams("postage", goodsListBean.getPostage() + "")
                 .addParams("rebatePv", goodsListBean.getRebatePv() + "")
                 .addParams("channel", goodsOrderModel.getChannel())
                 .addParams("status", goodsOrderModel.getStatus() + "")
-                .addParams("detailAddr", goodsOrderModel.getDetailAddr())
                 .build()
                 .execute(new Callback() {
                     @Override
@@ -435,6 +454,24 @@ public class ShopPayActivity extends BaseActivity {
         bottomAmount.append(span2);
         bottomAmount.append(span3);
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_CODE) {
+                addressBean = (AddressInfo.ShopAddressListBean) data.getSerializableExtra(ADDRESS_DATA);
+                if (addressBean != null) {
+                    noAddress.setVisibility(View.GONE);
+                    rlAddress.setVisibility(View.VISIBLE);
+                    tvAddress.setText(addressBean.getDetailAddress());
+                    consigneeName.setText(addressBean.getUserName());
+                    phone.setText(addressBean.getPhone());
+                    isDefault = true;
+                }
+            }
+        }
     }
 
     @Override

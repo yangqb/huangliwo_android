@@ -65,11 +65,9 @@ public class Constant {
     public final static int SuccessCode = 200;
     public final static int FailCode = 404;
 
-    //正式环境
-    //public final static String Common_HEADER = "http://39.106.65.35:8089/";
-
     /*URL常量*/
-    public final static String Common_HEADER = "http://192.168.0.21:8089/";
+    public final static String Common_HEADER = "http://192.168.0.21:8089/"; //本地地址
+    //public final static String Common_HEADER = "http://39.106.65.35:8089/"; //测试地址
     public final static String Common_H5_HEADER = "http://118.190.156.13/";
     public final static String LOADER_USERINFO = "fhwl/user/getuserinfo";
     public final static String LOADER_VERI_SHOPS_INFO = "fhwl/user/getmauth";
@@ -213,6 +211,8 @@ public class Constant {
 
     public static final String SP_PHONE = "phone";
     public static final String SP_PASSWORD = "password";
+    public static final String SP_PUSH_SHOP_PROTOCOL = "push_shop_protocol";
+    public static final String SP_PUSH_SHOP_INSTRUCTIONS = "push_shop_instructions";
 
     public static String ACCESS_TOKEN = "";
     public static String LOGIN_USERID = "";

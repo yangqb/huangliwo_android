@@ -240,17 +240,12 @@ public class EditServiceActivity extends BaseTakePhotoActivity {
 
                     @Override
                     public void onError(Call call, Exception e, int id) {
-                        if ("数据为空".equals(e.getMessage())) {
-                            ToastUtils.showShortToast("发布成功");
-                        } else {
-                            ToastUtils.showShortToast("发布失败");
-                        }
-
+                        ToastUtils.showShortToast("发布失败");
                     }
 
                     @Override
                     public void onResponse(Object response, int id) {
-
+                        ToastUtils.showShortToast("发布成功");
                     }
                 });
     }

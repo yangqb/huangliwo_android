@@ -79,7 +79,7 @@ public class EditCardActivity extends BaseActivity implements View.OnClickListen
 
     private String sexTxt;
 
-    private  AlertDialog alertDialog;
+    private AlertDialog alertDialog;
     private String birthday;
 
     private String industryId;
@@ -92,7 +92,7 @@ public class EditCardActivity extends BaseActivity implements View.OnClickListen
     @Override
     protected void initTitle() {
         defaultNavigationBar = new DefaultNavigationBar
-                .Builder(EditCardActivity.this, (ViewGroup)findViewById(R.id.Rl_titleContainer))
+                .Builder(EditCardActivity.this, (ViewGroup) findViewById(R.id.Rl_titleContainer))
                 .setTitle("编辑名片")
                 .setStatusHeight(EditCardActivity.this)
                 .setLeftIcon(R.drawable.iconfont_fanhuijiantou)
@@ -107,38 +107,38 @@ public class EditCardActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void sendSaveRequest() {
-        if(TextUtils.isEmpty(birthday)){
-            Toast.makeText(EditCardActivity.this,"必须要填写生日!",Toast.LENGTH_SHORT).show();
+        if (TextUtils.isEmpty(birthday)) {
+            Toast.makeText(EditCardActivity.this, "必须要填写生日!", Toast.LENGTH_SHORT).show();
             return;
         }
-        if(mCityModel == null){
+        if (mCityModel == null) {
             mCityModel = new CityModel();
         }
-        if(mHomeModel == null){
+        if (mHomeModel == null) {
             mHomeModel = new CityModel();
         }
-        Log.e("Test","打印----sex---->"+sexTxt);
+        Log.e("Test", "打印----sex---->" + sexTxt);
         OkHttpUtils.post()//
 
                 .url(Common_HEADER + EDIT_MINE_INFO)
                 .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
                 .addParams(USERID, Constant.LOGIN_USERID)
-                .addParams("nickName", TextUtils.isEmpty(mNickName.getText().toString())?"":mNickName.getText().toString())
-                .addParams("sex", sexTxt==null?"":sexTxt)
-                .addParams("birthday", birthday==null?"":birthday)
-                .addParams("industry", industryId==null?"":industryId)
-                .addParams("company",mCompanyName.getText().toString()==null?"":mCompanyName.getText().toString())
-                .addParams("job",mJobName.getText().toString()==null?"":mJobName.getText().toString())
-                .addParams("liveProvinceld",mCityModel.getAreaId()==null?"":mCityModel.getAreaId())
-                .addParams("liveProvinceName",mCityModel.getArea()==null?"":mCityModel.getArea())
-                .addParams("liveCityId",mCityModel.getCityId()==null?"":mCityModel.getCityId())
-                .addParams("liveCityName",mCityModel.getCity()==null?"":mCityModel.getCity())
-                .addParams("homeProvinceld",mHomeModel.getAreaId()==null?"":mHomeModel.getAreaId())
-                .addParams("homeProvinceName",mHomeModel.getArea()==null?"":mHomeModel.getArea())
-                .addParams("homeCityId",mHomeModel.getCityId()==null?"":mHomeModel.getCityId())
-                .addParams("homeCityName",mHomeModel.getCity()==null?"":mHomeModel.getCity())
-                .addParams("personSign",signTxt==null?"":signTxt)
-                .addParams("interest",hobbiesTxt==null?"":hobbiesTxt)
+                .addParams("nickName", TextUtils.isEmpty(mNickName.getText().toString()) ? "" : mNickName.getText().toString())
+                .addParams("sex", sexTxt == null ? "" : sexTxt)
+                .addParams("birthday", birthday == null ? "" : birthday)
+                .addParams("industry", industryId == null ? "" : industryId)
+                .addParams("company", mCompanyName.getText().toString() == null ? "" : mCompanyName.getText().toString())
+                .addParams("job", mJobName.getText().toString() == null ? "" : mJobName.getText().toString())
+                .addParams("liveProvinceld", mCityModel.getAreaId() == null ? "" : mCityModel.getAreaId())
+                .addParams("liveProvinceName", mCityModel.getArea() == null ? "" : mCityModel.getArea())
+                .addParams("liveCityId", mCityModel.getCityId() == null ? "" : mCityModel.getCityId())
+                .addParams("liveCityName", mCityModel.getCity() == null ? "" : mCityModel.getCity())
+                .addParams("homeProvinceld", mHomeModel.getAreaId() == null ? "" : mHomeModel.getAreaId())
+                .addParams("homeProvinceName", mHomeModel.getArea() == null ? "" : mHomeModel.getArea())
+                .addParams("homeCityId", mHomeModel.getCityId() == null ? "" : mHomeModel.getCityId())
+                .addParams("homeCityName", mHomeModel.getCity() == null ? "" : mHomeModel.getCity())
+                .addParams("personSign", signTxt == null ? "" : signTxt)
+                .addParams("interest", hobbiesTxt == null ? "" : hobbiesTxt)
                 .build()
                 .execute(new Callback() {
                     @Override
@@ -148,34 +148,31 @@ public class EditCardActivity extends BaseActivity implements View.OnClickListen
 
                     @Override
                     public void onError(Call call, Exception e, int id) {
-                        Log.e("wangyan","onError---->"+e.getMessage());
-                        if ("数据为空".equals(e.getMessage())) {
-                            Toast.makeText(mContext, "修改成功", Toast.LENGTH_SHORT).show();
-                            EventBus.getDefault().post(LoginEvent.EDITORINFO);
-                            finish();
+                        Log.e("wangyan", "onError---->" + e.getMessage());
+                        Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
 
-                        } else {
-                            Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
                     }
 
                     @Override
                     public void onResponse(Object response, int id) {
-                        Log.e("wangyan","onResponse---->"+response);
+                        Log.e("wangyan", "onResponse---->" + response);
+                        Toast.makeText(mContext, "修改成功", Toast.LENGTH_SHORT).show();
+                        EventBus.getDefault().post(LoginEvent.EDITORINFO);
+                        finish();
                     }
                 });
     }
 
     @Override
     protected void initView() {
-       Intent intent =  getIntent();
+        Intent intent = getIntent();
         String parentId = intent.getStringExtra("parentId");
         String phoneNum = intent.getStringExtra("phoneNum");
-        if(parentId != null){
-            tv_tuijianId.setText("("+parentId+")");
+        if (parentId != null) {
+            tv_tuijianId.setText("(" + parentId + ")");
         }
-        if(phoneNum != null){
-            tv_phoneNum.setText("("+phoneNum+")");
+        if (phoneNum != null) {
+            tv_phoneNum.setText("(" + phoneNum + ")");
         }
         requestData();
     }
@@ -190,7 +187,7 @@ public class EditCardActivity extends BaseActivity implements View.OnClickListen
 
                     @Override
                     public void onError(Call call, Exception e, int id) {
-                        Log.e("wangyan","onError---->"+e.getMessage());
+                        Log.e("wangyan", "onError---->" + e.getMessage());
                         ToastUtils.showShortToast(e.getMessage());
                     }
 
@@ -200,43 +197,45 @@ public class EditCardActivity extends BaseActivity implements View.OnClickListen
                     }
                 });
     }
-    private String longToData(long time){
-        Log.e("Test","----------time------>"+time);
+
+    private String longToData(long time) {
+        Log.e("Test", "----------time------>" + time);
         time = Math.abs(time);
-        if(time<=0){
+        if (time <= 0) {
             return "";
         }
-        SimpleDateFormat sdf= new SimpleDateFormat("yyyy/MM/dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
 //前面的lSysTime是秒数，先乘1000得到毫秒数，再转为java.util.Date类型
         java.util.Date dt = new Date(time);
         String sDateTime = sdf.format(dt);  //得到精确到秒的表示：08/31/2006 21:08:00
         return sDateTime;
     }
+
     private void setShowData(MineInfoModel response) {
-        if(response==null){
+        if (response == null) {
             return;
         }
-        if(response.getSex()==0){
+        if (response.getSex() == 0) {
             rb_girl.setChecked(true);
-        }else if(response.getSex()==1){
+        } else if (response.getSex() == 1) {
             rb_boy.setChecked(true);
         }
-        mCompanyName.setText(response.getCompany()==null?"":response.getCompany());
-        mJobName.setText(response.getJob()==null?"":response.getJob());
-        mNickName.setText(response.getNickName()==null?"":response.getNickName());
-        birthday = response.getBirthday()==null?"":response.getBirthday();
+        mCompanyName.setText(response.getCompany() == null ? "" : response.getCompany());
+        mJobName.setText(response.getJob() == null ? "" : response.getJob());
+        mNickName.setText(response.getNickName() == null ? "" : response.getNickName());
+        birthday = response.getBirthday() == null ? "" : response.getBirthday();
         mTimePick1.setText(birthday);
         String label2 = "";
-        if(response.getIndustryLabel() != null && response.getIndustryLabel().size()>0){
+        if (response.getIndustryLabel() != null && response.getIndustryLabel().size() > 0) {
             label2 = response.getIndustryLabel().get(0).toString();
-        }else{
+        } else {
             label2 = "";
         }
         mTimePick2.setText(label2);
-        mCityPick.setText(response.getLiveAdress()==null?"":response.getLiveAdress());
-        mHomeTown.setText(response.getHomeAdress()==null?"":response.getHomeAdress());
-        mSignName.setText(response.getPersonSign()==null?"":response.getPersonSign());
-        mHabitTxt.setText(response.getInterest()==null?"":response.getInterest());
+        mCityPick.setText(response.getLiveAdress() == null ? "" : response.getLiveAdress());
+        mHomeTown.setText(response.getHomeAdress() == null ? "" : response.getHomeAdress());
+        mSignName.setText(response.getPersonSign() == null ? "" : response.getPersonSign());
+        mHabitTxt.setText(response.getInterest() == null ? "" : response.getInterest());
 
     }
 
@@ -257,52 +256,54 @@ public class EditCardActivity extends BaseActivity implements View.OnClickListen
             @Override
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
                 RadioButton radioButton = (RadioButton) findViewById(group.getCheckedRadioButtonId());
-                sexTxt = (radioButton.getText().toString().equals("男")?"1":"0");
+                sexTxt = (radioButton.getText().toString().equals("男") ? "1" : "0");
             }
         });
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.tv_time_pick1:
                 showDialog(v);
                 break;
             case R.id.tv_time_pick2: //选择行业方向
-                Intent intent = new Intent(EditCardActivity.this,ChooseIndustryDirectionActivity.class);
-                startActivityForResult(intent,1003);
+                Intent intent = new Intent(EditCardActivity.this, ChooseIndustryDirectionActivity.class);
+                startActivityForResult(intent, 1003);
                 break;
             case R.id.tv_city_pick:
                 showCityDialog(v);
                 break;
             case R.id.tv_signNameContainer:
-                Intent signItent = new Intent(EditCardActivity.this,EditPersonSignActivity.class);
-                startActivityForResult(signItent,1001);
+                Intent signItent = new Intent(EditCardActivity.this, EditPersonSignActivity.class);
+                startActivityForResult(signItent, 1001);
                 break;
             case R.id.tv_habit_Container:
-                Intent habitItent = new Intent(EditCardActivity.this,InterestHobbiesActivity.class);
-                startActivityForResult(habitItent,1002);
+                Intent habitItent = new Intent(EditCardActivity.this, InterestHobbiesActivity.class);
+                startActivityForResult(habitItent, 1002);
                 break;
             case R.id.tv_homeTown:
                 showCityDialog(v);
                 break;
         }
     }
-    private CityModel mCityModel,mHomeModel;
+
+    private CityModel mCityModel, mHomeModel;
+
     private void showCityDialog(View v) {
         //这个是城市选择器
-      new DialogHelper(EditCardActivity.this).init(DialogHelper.DIALOG_TWO,v).buildDialog(new DialogHelper.OnButtonClickListener<CityModel>() {
+        new DialogHelper(EditCardActivity.this).init(DialogHelper.DIALOG_TWO, v).buildDialog(new DialogHelper.OnButtonClickListener<CityModel>() {
 
             @Override
             public void onButtonClick(View v, CityModel result, View clickView) {
-                switch (clickView.getId()){
+                switch (clickView.getId()) {
                     case R.id.tv_city_pick:
                         mCityModel = result;
-                        mCityPick.setText(result.getCity()+"  "+result.getArea());
+                        mCityPick.setText(result.getCity() + "  " + result.getArea());
                         break;
                     case R.id.tv_homeTown:
                         mHomeModel = result;
-                        mHomeTown.setText(result.getCity()+"  "+result.getArea());
+                        mHomeTown.setText(result.getCity() + "  " + result.getArea());
                         break;
                 }
 
@@ -313,11 +314,11 @@ public class EditCardActivity extends BaseActivity implements View.OnClickListen
 
     private void showDialog(View v) {
         //这个是 时间选择
-        new DialogHelper(EditCardActivity.this).init(DialogHelper.DIALOG_THREE,v).buildDialog(new DialogHelper.OnButtonClickListener<DateModel>() {
+        new DialogHelper(EditCardActivity.this).init(DialogHelper.DIALOG_THREE, v).buildDialog(new DialogHelper.OnButtonClickListener<DateModel>() {
 
             @Override
             public void onButtonClick(View v, DateModel result, View clickView) {
-                birthday = result.year+"/"+result.month+"/"+result.day;
+                birthday = result.year + "/" + result.month + "/" + result.day;
                 mTimePick1.setText(birthday);
 
             }
@@ -327,28 +328,29 @@ public class EditCardActivity extends BaseActivity implements View.OnClickListen
     private String signTxt;
     private String hobbiesTxt;
     private String industryTxt;
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(data == null){
+        if (data == null) {
             return;
         }
-        switch (requestCode){
+        switch (requestCode) {
             case 1001:
-                 signTxt = data.getStringExtra("signTxt");
-                if(!TextUtils.isEmpty(signTxt)){
+                signTxt = data.getStringExtra("signTxt");
+                if (!TextUtils.isEmpty(signTxt)) {
                     mSignName.setText(signTxt);
                 }
                 break;
             case 1002:
                 hobbiesTxt = data.getStringExtra("hobbiesTxt");
-                if(!TextUtils.isEmpty(hobbiesTxt)){
+                if (!TextUtils.isEmpty(hobbiesTxt)) {
                     mHabitTxt.setText(hobbiesTxt);
                 }
                 break;
             case 1003:
-                 industryTxt = data.getStringExtra("industryTxt");
+                industryTxt = data.getStringExtra("industryTxt");
                 industryId = data.getStringExtra("industryId");
-                if(!TextUtils.isEmpty(industryTxt)){
+                if (!TextUtils.isEmpty(industryTxt)) {
                     mTimePick2.setText(industryTxt);
                 }
                 break;

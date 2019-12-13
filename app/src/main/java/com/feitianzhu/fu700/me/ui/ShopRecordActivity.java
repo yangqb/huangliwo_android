@@ -324,16 +324,7 @@ public class ShopRecordActivity extends BaseTakePhotoActivity {
                     @Override
                     public void onError(Call call, Exception e, int id) {
                         goneloadDialog();
-                        if ("数据为空".equals(e.getMessage())) {
-
-                            ToastUtils.showShortToast("提交成功!");
-                            Intent intent = new Intent(ShopRecordActivity.this, ShopRecordDetailActivity.class);
-                            startActivity(intent);
-                            finish();
-
-                        } else {
-                            ToastUtils.showShortToast(e.getMessage());
-                        }
+                        ToastUtils.showShortToast(e.getMessage());
                     }
 
                     @Override
@@ -344,6 +335,9 @@ public class ShopRecordActivity extends BaseTakePhotoActivity {
                             return;
                         }
                         ToastUtils.showShortToast("提交成功!");
+                        Intent intent = new Intent(ShopRecordActivity.this, ShopRecordDetailActivity.class);
+                        startActivity(intent);
+                        finish();
                     }
                 });
 

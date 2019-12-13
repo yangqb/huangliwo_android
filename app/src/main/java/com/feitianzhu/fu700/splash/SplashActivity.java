@@ -91,7 +91,7 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void run() {
                 realLogin();
-                /*Intent intent = new Intent(SplashActivity.this, PushShopHomeActivity.class);
+                /*Intent intent = new Intent(SplashActivity.this, MainActivity.class);
                 startActivity(intent);*/
             }
         }, 3000);

@@ -241,8 +241,8 @@ public class CommodityClassificationFragment extends SFFragment implements View.
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 int type = adapter.getItemViewType(position);
                 if (mParam1 == 1) {
-                    //商家
-                    Intent intent = new Intent(getActivity(), MerchantsDetailActivity.class);
+                    //套餐详情页
+                    Intent intent = new Intent(getActivity(), ShopSetMealActivity.class);
                     startActivity(intent);
                 } else {
                     //商品详情
@@ -252,7 +252,7 @@ public class CommodityClassificationFragment extends SFFragment implements View.
                 }
                 /*if (type == 1) {
                     //商家
-                    Intent intent = new Intent(getActivity(), MerchantsDetailActivity.class);
+                    Intent intent = new Intent(getActivity(), ShopSetMealActivity.class);
                     startActivity(intent);
                 } else {
                     //商品详情

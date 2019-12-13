@@ -170,7 +170,13 @@ public class ShopDao {
 
                     @Override
                     public void onResponse(Object response, int id) {
+                        if (response == null) {
+                            mLinstener.onFail(FailCode, "response is null!");
+                            return;
+                        }
+                        KLog.i("response:%s", response.toString());
 
+                        mLinstener.onSuccess(0, response);
                     }
                 });
     }
@@ -220,7 +226,13 @@ public class ShopDao {
 
                     @Override
                     public void onResponse(Object response, int id) {
+                        if (response == null) {
+                            mLinstener.onFail(FailCode, "response is null!");
+                            return;
+                        }
+                        KLog.i("response:%s", response.toString());
 
+                        mLinstener.onSuccess(0, response);
                     }
                 });
     }
@@ -343,7 +355,13 @@ public class ShopDao {
 
                     @Override
                     public void onResponse(Object response, int id) {
-                        KLog.e(response.toString());
+                        if (response == null) {
+                            mLinstener.onFail(FailCode, "response is null!");
+                            return;
+                        }
+                        KLog.i("response:%s", response.toString());
+
+                        mLinstener.onSuccess(0, response);
                     }
                 });
     }
@@ -402,7 +420,13 @@ public class ShopDao {
 
                     @Override
                     public void onResponse(Object response, int id) {
-                        KLog.e(response.toString());
+                        if (response == null) {
+                            mLinstener.onFail(FailCode, "response is null!");
+                            return;
+                        }
+                        KLog.i("response:%s", response.toString());
+
+                        mLinstener.onSuccess(0, response);
                     }
                 });
     }

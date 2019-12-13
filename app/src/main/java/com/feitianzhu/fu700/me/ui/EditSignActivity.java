@@ -91,18 +91,15 @@ public class EditSignActivity extends BaseActivity {
                          * 不知道这里修改成功为啥要返回错误，之前的人写的
                          * */
                         Log.e("wangyan", "onError---->" + e.getMessage());
-                        if ("数据为空".equals(e.getMessage())) {
-                            Toast.makeText(mContext, "修改成功", Toast.LENGTH_SHORT).show();
-                            EventBus.getDefault().post(LoginEvent.EDITORINFO);
-                            finish();
-                        } else {
-                            Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
+                        Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onResponse(Object response, int id) {
                         Log.e("wangyan", "onResponse---->" + response);
+                        Toast.makeText(mContext, "修改成功", Toast.LENGTH_SHORT).show();
+                        EventBus.getDefault().post(LoginEvent.EDITORINFO);
+                        finish();
                     }
                 });
     }

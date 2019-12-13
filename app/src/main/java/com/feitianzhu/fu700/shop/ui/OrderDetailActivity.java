@@ -14,6 +14,7 @@ import com.feitianzhu.fu700.App;
 import com.feitianzhu.fu700.R;
 import com.feitianzhu.fu700.me.base.BaseActivity;
 import com.feitianzhu.fu700.me.ui.ServiceDetailActivity;
+import com.feitianzhu.fu700.model.GoodsOrderInfo;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
@@ -23,16 +24,35 @@ import com.yanzhenjie.permission.Rationale;
 import com.yanzhenjie.permission.RationaleListener;
 
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
 public class OrderDetailActivity extends BaseActivity {
-
+    public static final String ORDER_DATA = "order_data";
     @BindView(R.id.title_name)
     TextView titleName;
     @BindView(R.id.orderNo)
     TextView tvOrderNo;
+    @BindView(R.id.address)
+    TextView address;
+    @BindView(R.id.createTime)
+    TextView createTime;
+    @BindView(R.id.tv_price)
+    TextView tvPrice;
+    @BindView(R.id.userName)
+    TextView userName;
+    @BindView(R.id.phone)
+    TextView tvPhone;
+    @BindView(R.id.goodsName)
+    TextView goodsName;
+    @BindView(R.id.summary)
+    TextView summary;
+    @BindView(R.id.count)
+    TextView count;
+    @BindView(R.id.tvCount)
+    TextView tvCount;
 
     @Override
     protected int getLayoutId() {
@@ -42,6 +62,19 @@ public class OrderDetailActivity extends BaseActivity {
     @Override
     protected void initView() {
         titleName.setText("订单详情");
+        GoodsOrderInfo.GoodsOrderListBean goodsOrderBean = (GoodsOrderInfo.GoodsOrderListBean) getIntent().getSerializableExtra(ORDER_DATA);
+        if (goodsOrderBean != null) {
+            tvOrderNo.setText(goodsOrderBean.getOrderNo());
+            createTime.setText(goodsOrderBean.getCreateDate());
+            goodsName.setText(goodsOrderBean.getGoodsName());
+            summary.setText(goodsOrderBean.getSummary());
+            count.setText("×" + goodsOrderBean.getGoodsQTY());
+            tvCount.setText("共" + goodsOrderBean.getGoodsQTY() + "件商品");
+            address.setText(goodsOrderBean.getShopAddress().getDetailAddress());
+            userName.setText(goodsOrderBean.getShopAddress().getUserName());
+            tvPhone.setText(goodsOrderBean.getShopAddress().getPhone());
+            tvPrice.setText(String.format(Locale.getDefault(), "%.2f", goodsOrderBean.getPrice()));
+        }
     }
 
     @OnClick({R.id.left_button, R.id.tv_copy, R.id.call_phone})

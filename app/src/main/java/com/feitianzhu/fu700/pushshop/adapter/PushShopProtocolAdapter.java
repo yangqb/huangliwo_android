@@ -36,6 +36,6 @@ public class PushShopProtocolAdapter extends BaseQuickAdapter<Integer, BaseViewH
                         .error(R.drawable.pic_fuwutujiazaishibai)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL))
-                .into(GlideUtils.getImageView2((Activity) mContext, item, helper.getView(R.id.imageView)));
+                .into((ImageView) helper.getView(R.id.imageView));
     }
 }

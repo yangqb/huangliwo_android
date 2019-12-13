@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -48,9 +47,9 @@ import static com.feitianzhu.fu700.common.Constant.USERID;
  * @email QQ:694125155
  * @Date 2019/11/21 0021 下午 5:45
  * <p>
- * 商家详情页
+ * 套餐详情页
  */
-public class MerchantsDetailActivity extends BaseActivity {
+public class ShopSetMealActivity extends BaseActivity {
     public static final String MERCHANT_DATA = "data";
     public static final String SERVICE_RECOMMEND_BEAN = "serviceRecommendBean";
     private ShopDetailAdapter adapter;
@@ -66,7 +65,7 @@ public class MerchantsDetailActivity extends BaseActivity {
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
     @BindView(R.id.viewpager)
-    BannerViewPager<Integer, MerchantsDetailActivity.DataViewHolder> mViewpager;
+    BannerViewPager<Integer, ShopSetMealActivity.DataViewHolder> mViewpager;
     @BindView(R.id.shop_name)
     TextView shopName;
     @BindView(R.id.address)
@@ -75,7 +74,7 @@ public class MerchantsDetailActivity extends BaseActivity {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_shop_detail2;
+        return R.layout.activity_shop_setmeal;
     }
 
     @Override
@@ -219,7 +218,7 @@ public class MerchantsDetailActivity extends BaseActivity {
                 int type = adapter.getItemViewType(position);
                 if (type == 1) {
                     //套餐详情页
-                    Intent intent = new Intent(MerchantsDetailActivity.this, ShopInfoDetailActivity.class);
+                    Intent intent = new Intent(ShopSetMealActivity.this, ShopInfoDetailActivity.class);
                     startActivity(intent);
                 } else {
                     //评论
@@ -244,7 +243,7 @@ public class MerchantsDetailActivity extends BaseActivity {
                 .setRoundCorner(10)
                 .setIndicatorRadius(8)
                 .setIndicatorColor(Color.parseColor("#FFFFFF"), Color.parseColor("#6C6D72"))
-                .setHolderCreator(MerchantsDetailActivity.DataViewHolder::new).setOnPageClickListener(new BannerViewPager.OnPageClickListener() {
+                .setHolderCreator(ShopSetMealActivity.DataViewHolder::new).setOnPageClickListener(new BannerViewPager.OnPageClickListener() {
             @Override
             public void onPageClick(int position) {
                 onClickBanner(position);

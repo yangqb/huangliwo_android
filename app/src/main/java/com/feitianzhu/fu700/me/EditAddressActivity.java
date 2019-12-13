@@ -14,6 +14,7 @@ import com.feitianzhu.fu700.model.AddressInfo;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.utils.Urls;
 import com.feitianzhu.fu700.view.SwitchButton;
+import com.google.gson.Gson;
 import com.lljjcoder.Interface.OnCityItemClickListener;
 import com.lljjcoder.bean.CityBean;
 import com.lljjcoder.bean.DistrictBean;
@@ -34,9 +35,9 @@ public class EditAddressActivity extends BaseActivity {
     public static final String ADDRESS_DATA = "address_data";
     public static final String IS_ADD_ADDRESS = "is_add_address";
     private boolean isAdd;
-    private ProvinceBean mProvince;
-    private CityBean mCity;
-    private DistrictBean mDistrict;
+    private ProvinceBean mProvince = new ProvinceBean();
+    private CityBean mCity = new CityBean();
+    private DistrictBean mDistrict = new DistrictBean();
     private AddressInfo.ShopAddressListBean shopAddressListBean;
     @BindView(R.id.title_name)
     TextView titleName;
@@ -68,10 +69,13 @@ public class EditAddressActivity extends BaseActivity {
             editName.setText(shopAddressListBean.getUserName());
             editPhone.setText(shopAddressListBean.getPhone());
             editAddressDetail.setText(shopAddressListBean.getDetailAddress());
-            tvAddress.setText(shopAddressListBean.getAreaName());
+            tvAddress.setText(shopAddressListBean.getProvinceName() + "\n"
+                    + shopAddressListBean.getCityName() + "\n"
+                    + shopAddressListBean.getAreaName());
             mProvince.setId(shopAddressListBean.getProvinceId());
-            //mProvince.setName(shopAddressListBean.get);
+            mProvince.setName(shopAddressListBean.getProvinceName());
             mCity.setId(shopAddressListBean.getCityId());
+            mCity.setName(shopAddressListBean.getCityName());
             mDistrict.setId(shopAddressListBean.getAreaId());
             mDistrict.setName(shopAddressListBean.getAreaName());
         }
@@ -92,7 +96,7 @@ public class EditAddressActivity extends BaseActivity {
     }
 
 
-    @OnClick({R.id.left_button, R.id.right_button, R.id.delete_address, R.id.add_address})
+    @OnClick({R.id.left_button, R.id.right_button, R.id.delete_address, R.id.select_address})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.left_button:
@@ -116,16 +120,47 @@ public class EditAddressActivity extends BaseActivity {
                         .asConfirm("确定要删除该地址？", "", "关闭", "确定", new OnConfirmListener() {
                             @Override
                             public void onConfirm() {
-                                ToastUtils.showShortToast("删除成功");
+                                deleteAddress(shopAddressListBean.getAddressId());
                             }
                         }, null, false)
                         .bindLayout(R.layout.layout_dialog) //绑定已有布局
                         .show();
                 break;
-            case R.id.add_address:
+            case R.id.select_address:
                 setSelectAddress();
                 break;
         }
+    }
+
+    /*
+     * 删除地址
+     * */
+    public void deleteAddress(int addressId) {
+        OkHttpUtils.post()
+                .url(Urls.DELETE_ADDRESS)
+                .addParams("accessToken", Constant.ACCESS_TOKEN)
+                .addParams("userId", Constant.LOGIN_USERID)
+                .addParams("addressId", addressId + "")
+                .build()
+                .execute(new Callback() {
+                    @Override
+                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
+                        return mData;
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        ToastUtils.showShortToast("删除失败");
+                    }
+
+                    @Override
+                    public void onResponse(Object response, int id) {
+                        setResult(RESULT_OK);
+                        ToastUtils.showShortToast("删除成功");
+                        finish();
+                    }
+                });
+
     }
 
     public void submit() {
@@ -136,18 +171,20 @@ public class EditAddressActivity extends BaseActivity {
                     .addParams("accessToken", Constant.ACCESS_TOKEN)
                     .addParams("userId", Constant.LOGIN_USERID)
                     .addParams("provinceId", mProvince.getId())
+                    .addParams("provinceName", mProvince.getName())
                     .addParams("cityId", mCity.getId())
+                    .addParams("cityName", mCity.getName())
                     .addParams("areaId", mDistrict.getId())
                     .addParams("areaName", mDistrict.getName())
                     .addParams("detailAddress", editAddressDetail.getText().toString())
                     .addParams("userName", editName.getText().toString().trim())
-                    .addParams("phone", editName.getText().toString().trim())
+                    .addParams("phone", editPhone.getText().toString().trim())
                     .build()
                     .execute(new Callback() {
 
                         @Override
                         public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                            return super.parseNetworkResponse(mData, response, id);
+                            return mData;
                         }
 
                         @Override
@@ -157,6 +194,7 @@ public class EditAddressActivity extends BaseActivity {
 
                         @Override
                         public void onResponse(Object response, int id) {
+                            ToastUtils.showShortToast("添加成功");
                             setResult(RESULT_OK);
                             finish();
                         }
@@ -164,11 +202,13 @@ public class EditAddressActivity extends BaseActivity {
         } else {
             //修改地址
             OkHttpUtils.post()
-                    .url(Urls.ADD_ADDRESS)
+                    .url(Urls.UPDATA_ADDRESS)
                     .addParams("accessToken", Constant.ACCESS_TOKEN)
                     .addParams("userId", Constant.LOGIN_USERID)
                     .addParams("provinceId", mProvince.getId())
+                    .addParams("provinceName", mProvince.getName())
                     .addParams("cityId", mCity.getId())
+                    .addParams("cityName", mCity.getName())
                     .addParams("areaId", mDistrict.getId())
                     .addParams("areaName", mDistrict.getName())
                     .addParams("detailAddress", editAddressDetail.getText().toString())
@@ -179,16 +219,17 @@ public class EditAddressActivity extends BaseActivity {
 
                         @Override
                         public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                            return super.parseNetworkResponse(mData, response, id);
+                            return mData;
                         }
 
                         @Override
                         public void onError(Call call, Exception e, int id) {
-                            ToastUtils.showShortToast("添加失败");
+                            ToastUtils.showShortToast("修改失败");
                         }
 
                         @Override
                         public void onResponse(Object response, int id) {
+                            ToastUtils.showShortToast("修改成功");
                             setResult(RESULT_OK);
                             finish();
                         }
@@ -198,6 +239,9 @@ public class EditAddressActivity extends BaseActivity {
 
     }
 
+    /*
+     * 选择区域
+     * */
     public void setSelectAddress() {
         JDCityPicker cityPicker = new JDCityPicker();
         JDCityConfig jdCityConfig = new JDCityConfig.Builder().build();
@@ -208,6 +252,7 @@ public class EditAddressActivity extends BaseActivity {
         cityPicker.setOnCityItemClickListener(new OnCityItemClickListener() {
             @Override
             public void onSelected(ProvinceBean province, CityBean city, DistrictBean district) {
+                tvAddress.setText("");
                 mProvince = province;
                 mCity = city;
                 mDistrict = district;

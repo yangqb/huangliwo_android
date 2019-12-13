@@ -180,15 +180,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                     @Override
                     public void onError(Call call, Exception e, int id) {
                         KLog.e(e);
-                        if ("数据为空".equals(e.getMessage())) {
-                            Toast.makeText(mContext, "注册成功", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-                            finish();
-//                            resetEditText();
-//                            showLoginLayout();
-                        } else {
-                            Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
+                        Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -283,7 +275,6 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
             @Override
             public void onSuccess(int code, Object result) {
-
                 KLog.i("response:%s", result.toString());
             }
 

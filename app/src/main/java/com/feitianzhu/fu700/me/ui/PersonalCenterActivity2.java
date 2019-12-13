@@ -311,19 +311,15 @@ public class PersonalCenterActivity2 extends BaseTakePhotoActivity {
 
                     @Override
                     public void onError(Call call, Exception e, int id) {
-                        if ("数据为空".equals(e.getMessage())) {
-                            ToastUtils.showShortToast("上传成功!");
-                            EventBus.getDefault().post(LoginEvent.TAKEPHOTO);
-                        } else {
-                            ToastUtils.showShortToast(e.getMessage());
-                        }
+
 
                     }
 
                     @Override
                     public void onResponse(Object response, int id) {
                         Log.e("wangyan", "response====" + response);
-
+                        ToastUtils.showShortToast("上传成功!");
+                        EventBus.getDefault().post(LoginEvent.TAKEPHOTO);
                     }
                 });
     }

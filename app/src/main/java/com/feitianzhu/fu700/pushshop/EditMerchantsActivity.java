@@ -29,6 +29,7 @@ import butterknife.OnClick;
  * date: 2019/12/10
  * time: 20:29
  * email: 694125155@qq.com
+ * 编辑商铺
  */
 public class EditMerchantsActivity extends BaseTakePhotoActivity {
     private int imgType;
@@ -41,8 +42,6 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity {
     private String photo7 = "";
     @BindView(R.id.title_name)
     TextView titleName;
-    @BindView(R.id.right_text)
-    TextView rightText;
     @BindView(R.id.imageView1)
     RoundedImageView imageView1;
     @BindView(R.id.imageView2)
@@ -66,8 +65,6 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity {
     @Override
     protected void initView() {
         titleName.setText("新增门店");
-        rightText.setText("确定");
-        rightText.setVisibility(View.VISIBLE);
     }
 
     @Override

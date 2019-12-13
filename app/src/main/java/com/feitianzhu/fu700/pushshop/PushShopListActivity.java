@@ -10,8 +10,10 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.fu700.R;
+import com.feitianzhu.fu700.common.Constant;
 import com.feitianzhu.fu700.me.base.BaseActivity;
 import com.feitianzhu.fu700.pushshop.adapter.PushShopAdapter;
+import com.feitianzhu.fu700.utils.SPUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -127,8 +129,15 @@ public class PushShopListActivity extends BaseActivity {
                 btnNoPass.setSelected(false);
                 break;
             case R.id.right_button:
-                intent = new Intent(PushShopListActivity.this, EditMerchantsActivity.class);
-                startActivity(intent);
+                boolean isAgreed = SPUtils.getBoolean(this, Constant.SP_PUSH_SHOP_INSTRUCTIONS);
+                if (isAgreed) {
+                    intent = new Intent(PushShopListActivity.this, EditMerchantsActivity.class);
+                    startActivity(intent);
+                } else {
+                    intent = new Intent(PushShopListActivity.this, PushShopProtocolActivity.class);
+                    intent.putExtra(PushShopProtocolActivity.PUSH_PROTOCOL, false);
+                    startActivity(intent);
+                }
                 break;
         }
     }

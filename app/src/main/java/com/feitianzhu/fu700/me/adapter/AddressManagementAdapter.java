@@ -26,5 +26,6 @@ public class AddressManagementAdapter extends BaseQuickAdapter<AddressInfo.ShopA
         } else {
             helper.setVisible(R.id.isDefault, false);
         }
+        helper.addOnClickListener(R.id.right_layout);
     }
 }

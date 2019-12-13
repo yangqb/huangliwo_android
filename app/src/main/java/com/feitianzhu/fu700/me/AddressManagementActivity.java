@@ -13,6 +13,7 @@ import com.feitianzhu.fu700.common.Constant;
 import com.feitianzhu.fu700.me.adapter.AddressManagementAdapter;
 import com.feitianzhu.fu700.me.base.BaseActivity;
 import com.feitianzhu.fu700.model.AddressInfo;
+import com.feitianzhu.fu700.shop.ShopPayActivity;
 import com.feitianzhu.fu700.utils.Urls;
 import com.google.gson.Gson;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -30,6 +31,8 @@ public class AddressManagementActivity extends BaseActivity {
     private static final int REQUEST_CODE = 1000;
     private AddressManagementAdapter adapter;
     private List<AddressInfo.ShopAddressListBean> addressInfos = new ArrayList<>();
+    public static final String IS_SELECT = "is_select";
+    private boolean isSelect;//是否选择地址
     @BindView(R.id.title_name)
     TextView titleName;
     @BindView(R.id.right_text)
@@ -54,7 +57,7 @@ public class AddressManagementActivity extends BaseActivity {
         adapter = new AddressManagementAdapter(addressInfos);
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
-
+        isSelect = getIntent().getBooleanExtra(IS_SELECT, false);
         mSwipeLayout.setColorSchemeColors(getResources().getColor(R.color.sf_blue));
 
         initListener();
@@ -65,10 +68,30 @@ public class AddressManagementActivity extends BaseActivity {
         adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                if (isSelect) {
+                    //选择收货地址
+                    Intent intent = new Intent();
+                    intent.putExtra(ShopPayActivity.ADDRESS_DATA, addressInfos.get(position));
+                    setResult(RESULT_OK, intent);
+                    finish();
+                } else {
+                    //修改地址
+                    Intent intent = new Intent(AddressManagementActivity.this, EditAddressActivity.class);
+                    intent.putExtra(EditAddressActivity.IS_ADD_ADDRESS, false);
+                    intent.putExtra(EditAddressActivity.ADDRESS_DATA, addressInfos.get(position));
+                    startActivityForResult(intent, REQUEST_CODE);
+                }
+            }
+        });
+
+        adapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                //修改地址
                 Intent intent = new Intent(AddressManagementActivity.this, EditAddressActivity.class);
                 intent.putExtra(EditAddressActivity.IS_ADD_ADDRESS, false);
                 intent.putExtra(EditAddressActivity.ADDRESS_DATA, addressInfos.get(position));
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_CODE);
             }
         });
 
