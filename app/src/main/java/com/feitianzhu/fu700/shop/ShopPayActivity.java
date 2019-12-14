@@ -4,54 +4,34 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.icu.text.DecimalFormat;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
-import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.feitianzhu.fu700.R;
 import com.feitianzhu.fu700.common.Constant;
 import com.feitianzhu.fu700.common.impl.onConnectionFinishLinstener;
-import com.feitianzhu.fu700.common.impl.onNetFinishLinstenerT;
 import com.feitianzhu.fu700.me.AddressManagementActivity;
 import com.feitianzhu.fu700.me.base.BaseActivity;
-import com.feitianzhu.fu700.me.ui.ShopRecordDetailActivity;
-import com.feitianzhu.fu700.me.ui.totalScore.TransferVoucherActivity;
 import com.feitianzhu.fu700.model.AddressInfo;
 import com.feitianzhu.fu700.model.BaseGoodsListBean;
-import com.feitianzhu.fu700.model.GoodsOrderModel;
+import com.feitianzhu.fu700.model.GoodsOrderInfo;
 import com.feitianzhu.fu700.model.PayInfo;
-import com.feitianzhu.fu700.model.SelectPayNeedModel;
 import com.feitianzhu.fu700.model.WXModel;
-import com.feitianzhu.fu700.payforme.PayForMeEvent;
-import com.feitianzhu.fu700.payforme.PayForMeRecordActivity;
-import com.feitianzhu.fu700.shop.ui.ShopsPayActivity;
+import com.feitianzhu.fu700.shop.ui.OrderDetailActivity;
 import com.feitianzhu.fu700.utils.PayUtils;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.utils.Urls;
 import com.feitianzhu.fu700.view.AmountView;
-import com.feitianzhu.fu700.vip.VipUpgradeActivity;
 import com.google.gson.Gson;
-import com.lljjcoder.Interface.OnCityItemClickListener;
-import com.lljjcoder.bean.CityBean;
-import com.lljjcoder.bean.DistrictBean;
-import com.lljjcoder.bean.ProvinceBean;
-import com.lljjcoder.style.cityjd.JDCityConfig;
-import com.lljjcoder.style.cityjd.JDCityPicker;
-import com.socks.library.KLog;
 import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
@@ -63,10 +43,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.Locale;
-import java.util.Map;
-
 import butterknife.BindView;
 import butterknife.OnClick;
 import okhttp3.Call;
@@ -127,16 +104,17 @@ public class ShopPayActivity extends BaseActivity {
 
     private String amount;
     private String totalAmount;
-    private GoodsOrderModel goodsOrderModel;
     private String orderNo = "";//订单号
     private String orderInfo = "";
     private String str1;
     private String str2;
     private boolean isShow;
     private boolean isDefault;
-    private BaseGoodsListBean goodsListBean;
+    private BaseGoodsListBean goodsListBean = new BaseGoodsListBean();
+    private GoodsOrderInfo.GoodsOrderListBean orderListBean = new GoodsOrderInfo.GoodsOrderListBean();
     private int shopCount = 1; //购买数量
     private int valueId;
+    private String payChannel = "wx";
 
     @Override
     protected int getLayoutId() {
@@ -154,8 +132,6 @@ public class ShopPayActivity extends BaseActivity {
     protected void initView() {
         valueId = getIntent().getIntExtra(GOODS_VALUE_ID, 0);
         goodsListBean = (BaseGoodsListBean) getIntent().getSerializableExtra(PAY_DATA);
-        goodsOrderModel = new GoodsOrderModel();
-        goodsOrderModel.setChannel("wx");
         titleName.setText("确认订单");
         weiXinIcon.setBackgroundResource(R.mipmap.e01_23xuanzhong);
         /**
@@ -253,19 +229,19 @@ public class ShopPayActivity extends BaseActivity {
                 weiXinIcon.setBackgroundResource(R.mipmap.e01_23xuanzhong);
                 alipayIcon.setBackgroundResource(R.mipmap.e01_24weixuanzhong);
                 balancePayIcon.setBackgroundResource(R.mipmap.e01_24weixuanzhong);
-                goodsOrderModel.setChannel("wx");
+                payChannel = "wx";
                 break;
             case R.id.alipay_icon:
                 weiXinIcon.setBackgroundResource(R.mipmap.e01_24weixuanzhong);
                 alipayIcon.setBackgroundResource(R.mipmap.e01_23xuanzhong);
                 balancePayIcon.setBackgroundResource(R.mipmap.e01_24weixuanzhong);
-                goodsOrderModel.setChannel("alipay");
+                payChannel = "alipay";
                 break;
             case R.id.balancePay_icon:
                 weiXinIcon.setBackgroundResource(R.mipmap.e01_24weixuanzhong);
                 alipayIcon.setBackgroundResource(R.mipmap.e01_24weixuanzhong);
                 balancePayIcon.setBackgroundResource(R.mipmap.e01_23xuanzhong);
-                goodsOrderModel.setChannel("balance");
+                payChannel = "balance";
                 break;
             case R.id.left_button:
                 finish();
@@ -280,14 +256,28 @@ public class ShopPayActivity extends BaseActivity {
     }
 
 
+    /*
+     * 生成订单
+     * */
     private void pay2(String password) {
+        orderListBean.setChannel(payChannel); //支付渠道支付渠道（wx：微信，alipay：支付宝，balance：余额
+        orderListBean.setAddressId(addressBean.getAddressId() + "");
+        orderListBean.setAmount(Double.parseDouble(totalAmount));//总价格
+        orderListBean.setUserId(Integer.parseInt(Constant.LOGIN_USERID));
+        orderListBean.setPostage(goodsListBean.getPostage());   //邮费
+        orderListBean.setRebatePv(goodsListBean.getRebatePv());  // 让利
+        orderListBean.setGoodsName(goodsListBean.getGoodsName());  //商品名称
+        orderListBean.setSummary(goodsListBean.getSummary());  //商品说明概述
+        orderListBean.setGoodsQTY(shopCount);   //数量
+        orderListBean.setValueId(valueId);  //规格ID
+        orderListBean.setPrice(goodsListBean.getPrice());  //商品单价
+        String json = new Gson().toJson(orderListBean);
         OkHttpUtils.post()
                 .url(Urls.PAY_SHOPS)
                 .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
-                .addParams(USERID, Constant.LOGIN_USERID)
+                .addParams(USERID, Constant.LOGIN_USERID)//
                 .addParams("payPass", password)
-                .addParams("amount", totalAmount)
-                .addParams("channel", goodsOrderModel.getChannel())
+                .addParams("order", json)
                 .build()
                 .execute(new Callback() {
 
@@ -298,28 +288,22 @@ public class ShopPayActivity extends BaseActivity {
 
                     @Override
                     public void onError(Call call, Exception e, int id) {
-
+                        ToastUtils.showShortToast(e.getMessage());
                     }
 
                     @Override
                     public void onResponse(Object response, int id) {
                         try {
                             JSONObject object = new JSONObject(response.toString());
-
-                            if ("wx".equals(goodsOrderModel.getChannel())) {
+                            if ("wx".equals(payChannel)) {
                                 WXModel wxModel = new Gson().fromJson(object.toString(), WXModel.class);
                                 orderNo = wxModel.orderNo;
                                 wexinPay(wxModel);
-                            } else if ("alipay".equals(goodsOrderModel.getChannel())) {
+                            } else if ("alipay".equals(payChannel)) {
                                 orderInfo = object.getString("payParam");
                                 orderNo = object.getString("orderNo");
                                 aliPay(orderInfo, orderNo);
                             }
-                            goodsOrderModel.setAmount(Double.parseDouble(totalAmount));
-                            goodsOrderModel.setPostage(goodsListBean.getPostage());
-                            goodsOrderModel.setRebatePv(goodsListBean.getRebatePv());
-                            goodsOrderModel.setDetailAddr(tvAddress.getText().toString().trim());
-                            goodsOrderModel.setOrderNo(orderNo);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -351,68 +335,37 @@ public class ShopPayActivity extends BaseActivity {
             @Override
             public void onSuccess(int code, Object result) {
                 ToastUtils.showShortToast("支付成功");
-                goodsOrderModel.setStatus(1);
-                payResult(orderNo);
+                // payResult(orderNo);
+                finish();
             }
 
             @Override
             public void onFail(int code, String result) {
-                goodsOrderModel.setStatus(0);
-                payResult(orderNo);
+                //payResult(orderNo);
                 ToastUtils.showShortToast("支付失败");
+                //跳到订单详情
+                Intent intent = new Intent(ShopPayActivity.this, OrderDetailActivity.class);
+                intent.putExtra(OrderDetailActivity.ORDER_DATA, orderNo);
+                startActivity(intent);
+                finish();
             }
         });
-    }
-
-    /*
-     * 将支付结果反馈给后台
-     * */
-    public void payResult(String orderNo) {
-        /*
-        * int userId,int gradeId,String provinceId,String provinceName,String cityId,String cityName,String areaId,
-           String areaName,String payChannel,String isPay
-        * */
-        OkHttpUtils
-                .post()
-                .url(Urls.SHOPS_PAY_RESULT)
-                .addParams("accessToken", Constant.ACCESS_TOKEN)
-                .addParams("userId", Constant.LOGIN_USERID)
-                //.addParams("goodsOrder", json)
-                .addParams("addressId", addressBean.getAddressId() + "")
-                .addParams("orderNo", orderNo)
-                .addParams("valueId", valueId + "")
-                .addParams("goodsQTY", shopCount + "")
-                .addParams("goodsId", goodsListBean.getGoodsId() + "")
-                .addParams("amount", totalAmount)
-                .addParams("postage", goodsListBean.getPostage() + "")
-                .addParams("rebatePv", goodsListBean.getRebatePv() + "")
-                .addParams("channel", goodsOrderModel.getChannel())
-                .addParams("status", goodsOrderModel.getStatus() + "")
-                .build()
-                .execute(new Callback() {
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-
-                    }
-
-                    @Override
-                    public void onResponse(Object response, int id) {
-                        finish();
-                    }
-                });
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void onPayMessageCall(PayInfo msg) {
         if (msg.getCurrentInfo() == PayInfo.ShopPay) {
             if (msg.getIsSuccess() == PayInfo.SUCCESS) {
-                goodsOrderModel.setStatus(1);
                 ToastUtils.showShortToast("支付成功");
+                finish();
             } else {
-                goodsOrderModel.setStatus(0);
                 ToastUtils.showShortToast("支付失败");
+                //跳到订单详情
+                Intent intent = new Intent(ShopPayActivity.this, OrderDetailActivity.class);
+                intent.putExtra(OrderDetailActivity.ORDER_DATA, orderNo);
+                startActivity(intent);
+                finish();
             }
-            payResult(orderNo);
         }
     }
 

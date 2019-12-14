@@ -11,7 +11,8 @@ import java.util.List;
  * email: 694125155@qq.com
  */
 public class GoodsOrderInfo implements Serializable {
-
+    private String accessToken;
+    private String userId;
     private List<GoodsOrderListBean> goodsOrderList;
 
     public List<GoodsOrderListBean> getGoodsOrderList() {
@@ -71,7 +72,6 @@ public class GoodsOrderInfo implements Serializable {
          * title : null
          * shopName : null
          */
-
         private String orderNo;
         private int userId;
         private double amount;
@@ -79,44 +79,44 @@ public class GoodsOrderInfo implements Serializable {
         private double rebatePv;
         private int type;
         private String channel;
-        private Object thirdOrderNo;
-        private Object payProof;
+        private String thirdOrderNo;
+        private String payProof;
         private String createDate;
         private String payDate;
-        private Object deliveryDate;
-        private Object receiptDate;
-        private Object addressId;
-        private Object remark;
+        private String deliveryDate;
+        private String receiptDate;
+        private String addressId;
+        private String remark;
         private int status;
-        private Object isPoints;
-        private Object isExtend;
-        private Object logisticsNo;
-        private Object logisticsCode;
-        private Object orderDetailList;
+        private String isPoints;
+        private String isExtend;
+        private String logisticsNo;
+        private String logisticsCode;
+        private String orderDetailList;
         private String receiptName;
         private String receiptPhone;
-        private Object regionName;
+        private String regionName;
         private String detailAddr;
-        private Object leaveMsg;
-        private Object statusList;
-        private Object buyerName;
-        private Object buyerPhone;
-        private Object buyerEmail;
+        private String leaveMsg;
+        private String statusList;
+        private String buyerName;
+        private String buyerPhone;
+        private String buyerEmail;
         private int parentId;
         private String parentName;
         private String parentPhone;
-        private Object parentEmail;
-        private Object payAccount;
-        private Object provinceId;
-        private Object provinceName;
-        private Object norms;
+        private String parentEmail;
+        private String payAccount;
+        private String provinceId;
+        private String provinceName;
+        private String norms;
         private String goodsName;
-        private Object goodsImg;
+        private String goodsImg;
         private int valueId;
         private int goodsQTY;
         private String summary;
-        private Object title;
-        private Object shopName;
+        private String title;
+        private String shopName;
         private double price;
         private ShopAddressBean shopAddress;
 
@@ -184,19 +184,19 @@ public class GoodsOrderInfo implements Serializable {
             this.channel = channel;
         }
 
-        public Object getThirdOrderNo() {
+        public String getThirdOrderNo() {
             return thirdOrderNo;
         }
 
-        public void setThirdOrderNo(Object thirdOrderNo) {
+        public void setThirdOrderNo(String thirdOrderNo) {
             this.thirdOrderNo = thirdOrderNo;
         }
 
-        public Object getPayProof() {
+        public String getPayProof() {
             return payProof;
         }
 
-        public void setPayProof(Object payProof) {
+        public void setPayProof(String payProof) {
             this.payProof = payProof;
         }
 
@@ -216,35 +216,35 @@ public class GoodsOrderInfo implements Serializable {
             this.payDate = payDate;
         }
 
-        public Object getDeliveryDate() {
+        public String getDeliveryDate() {
             return deliveryDate;
         }
 
-        public void setDeliveryDate(Object deliveryDate) {
+        public void setDeliveryDate(String deliveryDate) {
             this.deliveryDate = deliveryDate;
         }
 
-        public Object getReceiptDate() {
+        public String getReceiptDate() {
             return receiptDate;
         }
 
-        public void setReceiptDate(Object receiptDate) {
+        public void setReceiptDate(String receiptDate) {
             this.receiptDate = receiptDate;
         }
 
-        public Object getAddressId() {
+        public String getAddressId() {
             return addressId;
         }
 
-        public void setAddressId(Object addressId) {
+        public void setAddressId(String addressId) {
             this.addressId = addressId;
         }
 
-        public Object getRemark() {
+        public String getRemark() {
             return remark;
         }
 
-        public void setRemark(Object remark) {
+        public void setRemark(String remark) {
             this.remark = remark;
         }
 
@@ -256,43 +256,43 @@ public class GoodsOrderInfo implements Serializable {
             this.status = status;
         }
 
-        public Object getIsPoints() {
+        public String getIsPoints() {
             return isPoints;
         }
 
-        public void setIsPoints(Object isPoints) {
+        public void setIsPoints(String isPoints) {
             this.isPoints = isPoints;
         }
 
-        public Object getIsExtend() {
+        public String getIsExtend() {
             return isExtend;
         }
 
-        public void setIsExtend(Object isExtend) {
+        public void setIsExtend(String isExtend) {
             this.isExtend = isExtend;
         }
 
-        public Object getLogisticsNo() {
+        public String getLogisticsNo() {
             return logisticsNo;
         }
 
-        public void setLogisticsNo(Object logisticsNo) {
+        public void setLogisticsNo(String logisticsNo) {
             this.logisticsNo = logisticsNo;
         }
 
-        public Object getLogisticsCode() {
+        public String getLogisticsCode() {
             return logisticsCode;
         }
 
-        public void setLogisticsCode(Object logisticsCode) {
+        public void setLogisticsCode(String logisticsCode) {
             this.logisticsCode = logisticsCode;
         }
 
-        public Object getOrderDetailList() {
+        public String getOrderDetailList() {
             return orderDetailList;
         }
 
-        public void setOrderDetailList(Object orderDetailList) {
+        public void setOrderDetailList(String orderDetailList) {
             this.orderDetailList = orderDetailList;
         }
 
@@ -312,11 +312,11 @@ public class GoodsOrderInfo implements Serializable {
             this.receiptPhone = receiptPhone;
         }
 
-        public Object getRegionName() {
+        public String getRegionName() {
             return regionName;
         }
 
-        public void setRegionName(Object regionName) {
+        public void setRegionName(String regionName) {
             this.regionName = regionName;
         }
 
@@ -328,43 +328,43 @@ public class GoodsOrderInfo implements Serializable {
             this.detailAddr = detailAddr;
         }
 
-        public Object getLeaveMsg() {
+        public String getLeaveMsg() {
             return leaveMsg;
         }
 
-        public void setLeaveMsg(Object leaveMsg) {
+        public void setLeaveMsg(String leaveMsg) {
             this.leaveMsg = leaveMsg;
         }
 
-        public Object getStatusList() {
+        public String getStatusList() {
             return statusList;
         }
 
-        public void setStatusList(Object statusList) {
+        public void setStatusList(String statusList) {
             this.statusList = statusList;
         }
 
-        public Object getBuyerName() {
+        public String getBuyerName() {
             return buyerName;
         }
 
-        public void setBuyerName(Object buyerName) {
+        public void setBuyerName(String buyerName) {
             this.buyerName = buyerName;
         }
 
-        public Object getBuyerPhone() {
+        public String getBuyerPhone() {
             return buyerPhone;
         }
 
-        public void setBuyerPhone(Object buyerPhone) {
+        public void setBuyerPhone(String buyerPhone) {
             this.buyerPhone = buyerPhone;
         }
 
-        public Object getBuyerEmail() {
+        public String getBuyerEmail() {
             return buyerEmail;
         }
 
-        public void setBuyerEmail(Object buyerEmail) {
+        public void setBuyerEmail(String buyerEmail) {
             this.buyerEmail = buyerEmail;
         }
 
@@ -392,43 +392,43 @@ public class GoodsOrderInfo implements Serializable {
             this.parentPhone = parentPhone;
         }
 
-        public Object getParentEmail() {
+        public String getParentEmail() {
             return parentEmail;
         }
 
-        public void setParentEmail(Object parentEmail) {
+        public void setParentEmail(String parentEmail) {
             this.parentEmail = parentEmail;
         }
 
-        public Object getPayAccount() {
+        public String getPayAccount() {
             return payAccount;
         }
 
-        public void setPayAccount(Object payAccount) {
+        public void setPayAccount(String payAccount) {
             this.payAccount = payAccount;
         }
 
-        public Object getProvinceId() {
+        public String getProvinceId() {
             return provinceId;
         }
 
-        public void setProvinceId(Object provinceId) {
+        public void setProvinceId(String provinceId) {
             this.provinceId = provinceId;
         }
 
-        public Object getProvinceName() {
+        public String getProvinceName() {
             return provinceName;
         }
 
-        public void setProvinceName(Object provinceName) {
+        public void setProvinceName(String provinceName) {
             this.provinceName = provinceName;
         }
 
-        public Object getNorms() {
+        public String getNorms() {
             return norms;
         }
 
-        public void setNorms(Object norms) {
+        public void setNorms(String norms) {
             this.norms = norms;
         }
 
@@ -440,11 +440,11 @@ public class GoodsOrderInfo implements Serializable {
             this.goodsName = goodsName;
         }
 
-        public Object getGoodsImg() {
+        public String getGoodsImg() {
             return goodsImg;
         }
 
-        public void setGoodsImg(Object goodsImg) {
+        public void setGoodsImg(String goodsImg) {
             this.goodsImg = goodsImg;
         }
 
@@ -472,19 +472,19 @@ public class GoodsOrderInfo implements Serializable {
             this.summary = summary;
         }
 
-        public Object getTitle() {
+        public String getTitle() {
             return title;
         }
 
-        public void setTitle(Object title) {
+        public void setTitle(String title) {
             this.title = title;
         }
 
-        public Object getShopName() {
+        public String getShopName() {
             return shopName;
         }
 
-        public void setShopName(Object shopName) {
+        public void setShopName(String shopName) {
             this.shopName = shopName;
         }
 

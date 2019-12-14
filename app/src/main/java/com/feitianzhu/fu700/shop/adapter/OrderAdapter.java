@@ -45,6 +45,7 @@ public class OrderAdapter extends BaseQuickAdapter<GoodsOrderInfo.GoodsOrderList
         helper.setText(R.id.summary, item.getSummary());
         helper.setText(R.id.count, "×" + item.getGoodsQTY());
         helper.setText(R.id.tvCount, "共" + item.getGoodsQTY() + "件商品");
+        helper.setText(R.id.merchantsName, item.getShopName());
         Glide.with(mContext).load(item.getGoodsImg()).apply(new RequestOptions()
                 .placeholder(R.drawable.pic_fuwutujiazaishibai)
                 .error(R.drawable.pic_fuwutujiazaishibai)).into((RoundedImageView) helper.getView(R.id.image));
@@ -111,14 +112,14 @@ public class OrderAdapter extends BaseQuickAdapter<GoodsOrderInfo.GoodsOrderList
     public void setSpannableString2(String str3, TextView view) {
         view.setText("");
         SpannableString span4 = new SpannableString(str2);
-        SpannableString span5 = new SpannableString(amount);
+        SpannableString span5 = new SpannableString(str3);
         ForegroundColorSpan colorSpan4 = new ForegroundColorSpan(Color.parseColor("#333333"));
-        span4.setSpan(new AbsoluteSizeSpan(10, true), 0, span4.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-        span4.setSpan(colorSpan4, 0, span4.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        span4.setSpan(new AbsoluteSizeSpan(10, true), 0, str2.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        span4.setSpan(colorSpan4, 0, str2.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 
         ForegroundColorSpan colorSpan5 = new ForegroundColorSpan(Color.parseColor("#333333"));
-        span5.setSpan(new AbsoluteSizeSpan(14, true), 0, amount.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-        span5.setSpan(colorSpan5, 0, amount.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        span5.setSpan(new AbsoluteSizeSpan(14, true), 0, str3.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        span5.setSpan(colorSpan5, 0, str3.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 
         view.append(span4);
         view.append(span5);

@@ -253,59 +253,18 @@ public class VipUpgradeActivity extends BaseActivity {
             public void onSuccess(int code, Object result) {
                 ToastUtils.showShortToast("支付成功");
                 mSelectModel.setIsPay("1");
-                payResult(mSelectModel, orderNO);
                 //弹框
                 showDialog();
-                //finish();
-                //startActivity(new Intent(VipUpgradeActivity.this, UnionApplyRecordActivity.class));
             }
 
             @Override
             public void onFail(int code, String result) {
                 mSelectModel.setIsPay("0");
-                payResult(mSelectModel, orderNO);
                 ToastUtils.showShortToast("支付失败");
                 EventBus.getDefault().post(PayForMeEvent.PAY_FAILURE);
             }
         });
 
-    }
-
-    /*
-     * 将支付结果反馈给后台
-     * */
-    public void payResult(SelectPayNeedModel mSelectModel, String orderNo) {
-        /*
-        * int userId,int gradeId,String provinceId,String provinceName,String cityId,String cityName,String areaId,
-           String areaName,String payChannel,String isPay
-        * */
-        OkHttpUtils
-                .post()
-                .url(Urls.PAY_RESULT)
-                .addParams("accessToken", Constant.ACCESS_TOKEN)
-                .addParams("userId", Constant.LOGIN_USERID)
-                .addParams("gradeId", mSelectModel.gradeId)
-                .addParams("provinceId", "")
-                .addParams("provinceName", "")
-                .addParams("cityId", "")
-                .addParams("cityName", "")
-                .addParams("areaId", "")
-                .addParams("areaName", "")
-                .addParams("payChannel", mSelectModel.getPayChannel())
-                .addParams("isPay", mSelectModel.isPay)
-                .addParams("orderNo", orderNo)
-                .build()
-                .execute(new Callback() {
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-
-                    }
-
-                    @Override
-                    public void onResponse(Object response, int id) {
-
-                    }
-                });
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
@@ -326,10 +285,6 @@ public class VipUpgradeActivity extends BaseActivity {
                     mSelectModel.setIsPay("0");
                     EventBus.getDefault().post(PayForMeEvent.PAY_FAILURE);
                 }
-                payResult(mSelectModel, orderNo);
-                //startActivity(new Intent(VipUpgradeActivity.this, UnionApplyRecordActivity.class));
-                //finish();
-
                 break;
             case PayInfo.PAY_FORME:
                 goneloadDialog();

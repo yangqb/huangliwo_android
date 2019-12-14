@@ -137,7 +137,7 @@ public class Urls {
 
     /*
      *
-     * 线上商品支付
+     * 线上商品支付生成订单
      * */
     public static final String PAY_SHOPS = BASE_URL + "fhwl/order/svbill/create-goods";
 

@@ -31,6 +31,7 @@ import butterknife.OnClick;
 
 public class OrderDetailActivity extends BaseActivity {
     public static final String ORDER_DATA = "order_data";
+    public static final String ORDER_NO = "order_no";
     @BindView(R.id.title_name)
     TextView titleName;
     @BindView(R.id.orderNo)
@@ -53,6 +54,8 @@ public class OrderDetailActivity extends BaseActivity {
     TextView count;
     @BindView(R.id.tvCount)
     TextView tvCount;
+    @BindView(R.id.merchantsName)
+    TextView merchantsName;
 
     @Override
     protected int getLayoutId() {
@@ -74,6 +77,7 @@ public class OrderDetailActivity extends BaseActivity {
             userName.setText(goodsOrderBean.getShopAddress().getUserName());
             tvPhone.setText(goodsOrderBean.getShopAddress().getPhone());
             tvPrice.setText(String.format(Locale.getDefault(), "%.2f", goodsOrderBean.getPrice()));
+            merchantsName.setText(goodsOrderBean.getShopName());
         }
     }
 

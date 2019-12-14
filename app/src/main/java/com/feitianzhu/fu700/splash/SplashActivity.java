@@ -45,6 +45,8 @@ public class SplashActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_PERMISSION = 100;
     @BindView(R.id.btn)
     TextView mBtn;
+    private Handler handler;
+    private Runnable runnable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,15 +88,16 @@ public class SplashActivity extends AppCompatActivity {
         /*
          * 倒计时
          * */
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
+        handler = new Handler();
+        runnable = new Runnable() {
             @Override
             public void run() {
                 realLogin();
                 /*Intent intent = new Intent(SplashActivity.this, MainActivity.class);
                 startActivity(intent);*/
             }
-        }, 3000);
+        };
+        handler.postDelayed(runnable, 3000);
     }
 
     private void realLogin() {
@@ -213,6 +216,9 @@ public class SplashActivity extends AppCompatActivity {
     public void onClick() {
         if (mVideoView != null && mVideoView.isPlaying()) {
             mVideoView.stopPlayback();
+        }
+        if (handler != null && runnable != null) {
+            handler.removeCallbacks(runnable);
         }
         realLogin();
     }

@@ -5,7 +5,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.feitianzhu.fu700.R;
 import com.feitianzhu.fu700.common.Constant;
@@ -14,7 +13,6 @@ import com.feitianzhu.fu700.model.AddressInfo;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.utils.Urls;
 import com.feitianzhu.fu700.view.SwitchButton;
-import com.google.gson.Gson;
 import com.lljjcoder.Interface.OnCityItemClickListener;
 import com.lljjcoder.bean.CityBean;
 import com.lljjcoder.bean.DistrictBean;
@@ -214,6 +212,7 @@ public class EditAddressActivity extends BaseActivity {
                     .addParams("detailAddress", editAddressDetail.getText().toString())
                     .addParams("userName", editName.getText().toString().trim())
                     .addParams("phone", editName.getText().toString().trim())
+                    .addParams("addressId", shopAddressListBean.getAddressId() + "")
                     .build()
                     .execute(new Callback() {
 
