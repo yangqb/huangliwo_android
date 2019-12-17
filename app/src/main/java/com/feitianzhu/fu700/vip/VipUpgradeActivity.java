@@ -33,6 +33,7 @@ import com.feitianzhu.fu700.shop.ShopHelpTwo;
 import com.feitianzhu.fu700.utils.PayUtils;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.utils.Urls;
+import com.feitianzhu.fu700.utils.doubleclick.SingleClick;
 import com.google.gson.Gson;
 import com.lxj.xpopup.XPopup;
 import com.socks.library.KLog;
@@ -147,6 +148,7 @@ public class VipUpgradeActivity extends BaseActivity {
 
     }
 
+    @SingleClick
     @OnClick({R.id.left_button, R.id.weixinPay_icon, R.id.alipay_icon, R.id.balancePay_icon, R.id.tv_pay})
     public void onClick(View view) {
         switch (view.getId()) {

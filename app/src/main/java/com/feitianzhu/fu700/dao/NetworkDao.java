@@ -798,10 +798,12 @@ public class NetworkDao {
             }
 
         }
+
         mPost.addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
                 .addParams(USERID, Constant.LOGIN_USERID)
                 .addParams("gradeId", gradeId)
                 .addParams("payPass", psw)
+                .addParams("appId", Constant.WX_APP_ID)
                 .addParams("payChannel", PayChannel)
                 .build()
                 .execute(new Callback() {

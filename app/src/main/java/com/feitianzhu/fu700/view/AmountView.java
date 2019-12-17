@@ -105,6 +105,14 @@ public class AmountView extends LinearLayout implements View.OnClickListener, Te
         }*/
     }
 
+    public void setEditText(String count) {
+        etAmount.setText(count);
+    }
+
+    public String getEditText() {
+        return etAmount.getText().toString();
+    }
+
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 

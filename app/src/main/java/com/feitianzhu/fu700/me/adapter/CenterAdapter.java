@@ -60,10 +60,10 @@ public class CenterAdapter extends BaseQuickAdapter<Integer, BaseViewHolder> {
                 textView.setText("成为会员");
                 break;
             case 8:
-                textView.setText("联盟");
+                textView.setText("分享");
                 break;
             case 9:
-                textView.setText("分享");
+                textView.setText("购物车");
                 break;
         }
     }

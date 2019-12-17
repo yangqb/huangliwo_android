@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 //apply plugin: 'com.jakewharton.butterknife'
 apply plugin: 'com.mob.sdk'
-
+apply plugin: 'com.hujiang.android-aspectjx'
 
 MobSDK {
     appKey "2cfea20c40b5c"

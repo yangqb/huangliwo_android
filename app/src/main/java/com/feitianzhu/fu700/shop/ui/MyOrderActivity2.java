@@ -13,6 +13,7 @@ import com.feitianzhu.fu700.R;
 import com.feitianzhu.fu700.common.Constant;
 import com.feitianzhu.fu700.me.base.BaseActivity;
 import com.feitianzhu.fu700.model.GoodsOrderInfo;
+import com.feitianzhu.fu700.model.MultiItemGoodsOrder;
 import com.feitianzhu.fu700.shop.ShopPayActivity;
 import com.feitianzhu.fu700.shop.adapter.OrderAdapter;
 import com.feitianzhu.fu700.utils.Urls;
@@ -34,6 +35,9 @@ import static com.feitianzhu.fu700.common.Constant.USERID;
 public class MyOrderActivity2 extends BaseActivity {
     private OrderAdapter adapter;
     private List<GoodsOrderInfo.GoodsOrderListBean> goodsOrderList = new ArrayList<>();
+    private List<GoodsOrderInfo.GoodsOrderListBean> goodsOrderClassList = new ArrayList<>();
+    private List<GoodsOrderInfo.GoodsOrderListBean> goodsOrderCurrentList = new ArrayList<>();
+    private GoodsOrderInfo goodsOrderInfo;
     @BindView(R.id.all_order)
     TextView allOrder;
     @BindView(R.id.wait_pay_order)
@@ -59,9 +63,9 @@ public class MyOrderActivity2 extends BaseActivity {
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     @BindView(R.id.img_collect)
-    ImageView afterSales;
-    @BindView(R.id.right_img)
     ImageView search;
+    @BindView(R.id.right_img)
+    ImageView afterSale;
 
     @Override
     protected int getLayoutId() {
@@ -71,10 +75,10 @@ public class MyOrderActivity2 extends BaseActivity {
     @Override
     protected void initView() {
         titleName.setText("我的订单");
-        search.setBackgroundResource(R.mipmap.a01_03shouhou);
-        afterSales.setBackgroundResource(R.mipmap.a01_03sousuo);
+        afterSale.setBackgroundResource(R.mipmap.a01_03shouhou);
+        search.setBackgroundResource(R.mipmap.a01_03sousuo);
+        afterSale.setVisibility(View.VISIBLE);
         search.setVisibility(View.VISIBLE);
-        afterSales.setVisibility(View.VISIBLE);
         allOrder.setSelected(true);
         waitPayOrder.setSelected(false);
         waitSendingOrder.setSelected(false);
@@ -87,12 +91,19 @@ public class MyOrderActivity2 extends BaseActivity {
         lineWaitEvaluate.setSelected(false);
 
         adapter = new OrderAdapter(goodsOrderList);
+        View mEmptyView = View.inflate(this, R.layout.view_common_nodata, null);
+        ImageView img_empty = (ImageView) mEmptyView.findViewById(R.id.img_empty);
+        img_empty.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        adapter.setEmptyView(mEmptyView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
-
         initListener();
-
     }
 
     public void initListener() {
@@ -100,7 +111,7 @@ public class MyOrderActivity2 extends BaseActivity {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Intent intent = new Intent(MyOrderActivity2.this, OrderDetailActivity.class);
-                intent.putExtra(OrderDetailActivity.ORDER_DATA, goodsOrderList.get(position));
+                intent.putExtra(OrderDetailActivity.ORDER_DATA, goodsOrderCurrentList.get(position));
                 startActivity(intent);
             }
         });
@@ -109,28 +120,51 @@ public class MyOrderActivity2 extends BaseActivity {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                 //根据订单类型来跳转1.交易成功(已收货)2.等待付款(下单成功)3.等待发货(付款成功)4.已发货5.等待收货6.退款中7.退款成功8.订单失效
+                Intent intent;
                 switch (view.getId()) {
-                    case R.id.btn_refund: //退款
+                    case R.id.btn_refund:
+                        //退款
+                        if (goodsOrderCurrentList.get(position).getStatus() == GoodsOrderInfo.TYPE_WAIT_RECEIVING) {
+                            intent = new Intent(MyOrderActivity2.this, EditApplyRefundActivity.class);
+                            startActivity(intent);
+                        }
                         break;
-                    case R.id.btn_logistics: //查看物流
+                    case R.id.btn_logistics:
+                        if (goodsOrderCurrentList.get(position).getStatus() == GoodsOrderInfo.TYPE_COMPLETED) {
+                            //删除订单，
+                        } else if (goodsOrderCurrentList.get(position).getStatus() == GoodsOrderInfo.TYPE_NO_PAY) {
+                            //取消订单，
+                        } else if (goodsOrderCurrentList.get(position).getStatus() == GoodsOrderInfo.TYPE_WAIT_RECEIVING) {
+                            //查看物流
+                            intent = new Intent(MyOrderActivity2.this, LogisticsInfoActivity.class);
+                            startActivity(intent);
+                        } else if (goodsOrderCurrentList.get(position).getStatus() == GoodsOrderInfo.TYPE_WAIT_DELIVERY) {
+                            //退款
+                            intent = new Intent(MyOrderActivity2.this, EditApplyRefundActivity.class);
+                            startActivity(intent);
+                        }
                         break;
-                    case R.id.btn_confirm_goods: //确认收货，
-                        Intent intent;
-                        if (position == 0) {
+                    case R.id.btn_confirm_goods:
+                        if (goodsOrderCurrentList.get(position).getStatus() == GoodsOrderInfo.TYPE_COMPLETED) {
                             //评价
                             intent = new Intent(MyOrderActivity2.this, EditCommentsActivity.class);
                             startActivity(intent);
-                        } else if (position == 1) {
+                        } else if (goodsOrderCurrentList.get(position).getStatus() == GoodsOrderInfo.TYPE_NO_PAY) {
                             //付款
                             intent = new Intent(MyOrderActivity2.this, ShopPayActivity.class);
                             startActivity(intent);
-                        } else if (position == 2) {
-                            //查看物流(已发货)
+                        } else if (goodsOrderCurrentList.get(position).getStatus() == GoodsOrderInfo.TYPE_WAIT_DELIVERY) {
+                            //查看物流
                             intent = new Intent(MyOrderActivity2.this, LogisticsInfoActivity.class);
                             startActivity(intent);
-                        } else if (position == 3) {
-                            //申请退款
-                            intent = new Intent(MyOrderActivity2.this, EditApplyRefundActivity.class);
+                        } else if (goodsOrderCurrentList.get(position).getStatus() == GoodsOrderInfo.TYPE_WAIT_RECEIVING) {
+                            //确认收货
+                        } else if (goodsOrderCurrentList.get(position).getStatus() == GoodsOrderInfo.TYPE_REFUND
+                                || goodsOrderCurrentList.get(position).getStatus() == GoodsOrderInfo.TYPE_REFUNDED
+                                || goodsOrderCurrentList.get(position).getStatus() == GoodsOrderInfo.TYPE_CANCEL) {
+                            //查看详情
+                            intent = new Intent(MyOrderActivity2.this, OrderDetailActivity.class);
+                            intent.putExtra(OrderDetailActivity.ORDER_DATA, goodsOrderCurrentList.get(position));
                             startActivity(intent);
                         }
                         break;
@@ -140,11 +174,17 @@ public class MyOrderActivity2 extends BaseActivity {
     }
 
 
-    @OnClick({R.id.left_button, R.id.all_order, R.id.wait_pay_order, R.id.wait_sending_order, R.id.wait_receive_order, R.id.wait_evaluate_order})
+    @OnClick({R.id.left_button, R.id.all_order, R.id.wait_pay_order, R.id.wait_sending_order, R.id.wait_receive_order, R.id.wait_evaluate_order, R.id.right_button})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.left_button:
                 finish();
+                break;
+            case R.id.right_button:
+                //售后(退款)
+                Intent intent = new Intent(MyOrderActivity2.this, AfterSaleActivity.class);
+                intent.putExtra(AfterSaleActivity.ORDER_LIST_DATA, goodsOrderInfo);
+                startActivity(intent);
                 break;
             case R.id.all_order:
                 setSelect(allOrder, true);
@@ -157,6 +197,9 @@ public class MyOrderActivity2 extends BaseActivity {
                 setSelect(lineWaitSending, false);
                 setSelect(lineWaitReceive, false);
                 setSelect(lineWaitEvaluate, false);
+                goodsOrderCurrentList = goodsOrderList;
+                adapter.setNewData(goodsOrderCurrentList);
+                adapter.notifyDataSetChanged();
                 break;
             case R.id.wait_pay_order:
                 setSelect(allOrder, false);
@@ -169,6 +212,8 @@ public class MyOrderActivity2 extends BaseActivity {
                 setSelect(lineWaitSending, false);
                 setSelect(lineWaitReceive, false);
                 setSelect(lineWaitEvaluate, false);
+                adapter.setNewData(getGoodsOrderClassList(GoodsOrderInfo.TYPE_NO_PAY));
+                adapter.notifyDataSetChanged();
                 break;
             case R.id.wait_sending_order:
                 setSelect(allOrder, false);
@@ -181,6 +226,8 @@ public class MyOrderActivity2 extends BaseActivity {
                 setSelect(lineWaitSending, true);
                 setSelect(lineWaitReceive, false);
                 setSelect(lineWaitEvaluate, false);
+                adapter.setNewData(getGoodsOrderClassList(GoodsOrderInfo.TYPE_WAIT_DELIVERY));
+                adapter.notifyDataSetChanged();
                 break;
             case R.id.wait_receive_order:
                 setSelect(allOrder, false);
@@ -193,6 +240,8 @@ public class MyOrderActivity2 extends BaseActivity {
                 setSelect(lineWaitSending, false);
                 setSelect(lineWaitReceive, true);
                 setSelect(lineWaitEvaluate, false);
+                adapter.setNewData(getGoodsOrderClassList(GoodsOrderInfo.TYPE_WAIT_RECEIVING));
+                adapter.notifyDataSetChanged();
                 break;
             case R.id.wait_evaluate_order:
                 setSelect(allOrder, false);
@@ -205,6 +254,8 @@ public class MyOrderActivity2 extends BaseActivity {
                 setSelect(lineWaitSending, false);
                 setSelect(lineWaitReceive, false);
                 setSelect(lineWaitEvaluate, true);
+                adapter.setNewData(getGoodsOrderClassList(GoodsOrderInfo.TYPE_COMPLETED));
+                adapter.notifyDataSetChanged();
                 break;
         }
 
@@ -235,13 +286,23 @@ public class MyOrderActivity2 extends BaseActivity {
 
                     @Override
                     public void onResponse(Object response, int id) {
-                        GoodsOrderInfo goodsOrderInfo = (GoodsOrderInfo) response;
+                        goodsOrderInfo = (GoodsOrderInfo) response;
                         goodsOrderList = goodsOrderInfo.getGoodsOrderList();
-                        adapter.setNewData(goodsOrderList);
+                        goodsOrderCurrentList = goodsOrderList;
+                        adapter.setNewData(goodsOrderCurrentList);
                         adapter.notifyDataSetChanged();
                     }
                 });
+    }
 
-
+    public List<GoodsOrderInfo.GoodsOrderListBean> getGoodsOrderClassList(int goodsOrderType) {
+        goodsOrderClassList.clear();
+        for (int i = 0; i < goodsOrderList.size(); i++) {
+            if (goodsOrderType == goodsOrderList.get(i).getStatus()) {
+                goodsOrderClassList.add(goodsOrderList.get(i));
+            }
+        }
+        goodsOrderCurrentList = goodsOrderClassList;
+        return goodsOrderCurrentList;
     }
 }

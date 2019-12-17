@@ -7,9 +7,7 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <include
-        layout="@layout/layer_home_head_nav2"
-        tools:visibility="gone" />
+    <include layout="@layout/layer_home_head_nav2" />
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipeLayout"

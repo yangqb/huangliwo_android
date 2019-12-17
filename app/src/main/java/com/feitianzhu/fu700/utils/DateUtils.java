@@ -528,13 +528,21 @@ public class DateUtils {
         if (day > 0) {
             sb.append(day + "天");
         }
-        if (hour > 0) {
+
+        if (hour >= 0 && hour < 10) {
+            sb.append("0" + hour + "小时");
+        } else if (hour >= 10) {
             sb.append(hour + "小时");
         }
-        if (minute > 0) {
+
+        if (minute >= 0 && minute < 10) {
+            sb.append("0" + minute + "分");
+        } else if (minute >= 10) {
             sb.append(minute + "分");
         }
-        if (second > 0) {
+        if (second >= 0 && second < 10) {
+            sb.append("0" + second + "秒");
+        } else if (second >= 10) {
             sb.append(second + "秒");
         }
        /* if (milliSecond > 0) {

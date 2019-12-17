@@ -42,6 +42,10 @@ public class PushShopListActivity extends BaseActivity {
     SwipeRefreshLayout refreshLayout;
     @BindView(R.id.title_name)
     TextView titleName;
+    @BindView(R.id.right_text)
+    TextView rightText;
+    @BindView(R.id.right_img)
+    ImageView imageView;
 
     @Override
     protected int getLayoutId() {
@@ -51,6 +55,10 @@ public class PushShopListActivity extends BaseActivity {
     @Override
     protected void initView() {
         titleName.setText("推店详情");
+        rightText.setText("新增门店");
+        imageView.setBackgroundResource(R.mipmap.g01_07xinzeng);
+        rightText.setVisibility(View.VISIBLE);
+        imageView.setVisibility(View.VISIBLE);
         btnToAudit.setSelected(true);
         btnPass.setSelected(false);
         btnNoPass.setSelected(false);
@@ -91,7 +99,7 @@ public class PushShopListActivity extends BaseActivity {
         refreshLayout.setRefreshing(false);
     }
 
-    @OnClick({R.id.left_button, R.id.btn_toAudit, R.id.btn_pass, R.id.btn_noPass, R.id.right_button})
+    @OnClick({R.id.left_button, R.id.btn_toAudit, R.id.btn_pass, R.id.btn_noPass, R.id.right_text, R.id.right_img})
     public void onClick(View view) {
         Intent intent;
         switch (view.getId()) {
@@ -128,7 +136,8 @@ public class PushShopListActivity extends BaseActivity {
                 btnPass.setSelected(false);
                 btnNoPass.setSelected(false);
                 break;
-            case R.id.right_button:
+            case R.id.right_img:
+            case R.id.right_text:
                 boolean isAgreed = SPUtils.getBoolean(this, Constant.SP_PUSH_SHOP_INSTRUCTIONS);
                 if (isAgreed) {
                     intent = new Intent(PushShopListActivity.this, EditMerchantsActivity.class);

@@ -51,6 +51,7 @@ import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.utils.Urls;
 import com.feitianzhu.fu700.view.CircleImageView;
 import com.google.gson.Gson;
+import com.itheima.roundedimageview.RoundedImageView;
 import com.socks.library.KLog;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
@@ -72,6 +73,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import okhttp3.Call;
+import okhttp3.Request;
 import okhttp3.Response;
 
 import static com.feitianzhu.fu700.common.Constant.ACCESSTOKEN;
@@ -117,8 +119,6 @@ public class HomeFragment2 extends SFFragment implements SwipeRefreshLayout.OnRe
     private HomeRecommendAdapter2 mAdapter;
     private HAdapter hAdapter;
     private HomeEntity mHomeEntity;
-    private String provinceId;
-    private String cityId;
     private PopupWindow popupWindow;
     private View vPopupWindow;
     private List<HomeEntity.BannerListBean> mBanners = new ArrayList<>();
@@ -184,7 +184,8 @@ public class HomeFragment2 extends SFFragment implements SwipeRefreshLayout.OnRe
         mSearchLayout.setOnClickListener(this);
         mSwipeLayout.setOnRefreshListener(this);
         mSwipeLayout.setColorSchemeColors(getActivity().getResources().getColor(R.color.sf_blue));
-
+        getData();
+        requestData();
         initListener();
         return view;
     }
@@ -221,17 +222,6 @@ public class HomeFragment2 extends SFFragment implements SwipeRefreshLayout.OnRe
         });
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        if (!TextUtils.isEmpty(Constant.mCity)) {
-            mTxtLocation.setText(Constant.mCity);
-        }
-        getData();
-        requestData();
-    }
-
-
     @OnClick({R.id.ll_location, R.id.iv_head})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -257,14 +247,21 @@ public class HomeFragment2 extends SFFragment implements SwipeRefreshLayout.OnRe
                 .addParams("userId", Constant.LOGIN_USERID)
                 .build()
                 .execute(new Callback() {
+                    @Override
+                    public void onBefore(Request request, int id) {
+                        super.onBefore(request, id);
+                        showloadDialog("");
+                    }
 
                     @Override
                     public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
+                        goneloadDialog();
                         return new Gson().fromJson(mData, HomeEntity.class);
                     }
 
                     @Override
                     public void onError(Call call, Exception e, int id) {
+                        goneloadDialog();
                         if (mSwipeLayout != null) {
                             mSwipeLayout.setRefreshing(false);
                         }
@@ -274,6 +271,7 @@ public class HomeFragment2 extends SFFragment implements SwipeRefreshLayout.OnRe
 
                     @Override
                     public void onResponse(Object response, int id) {
+                        goneloadDialog();
                         if (mSwipeLayout != null) {
                             mSwipeLayout.setRefreshing(false);
                         }
@@ -363,20 +361,25 @@ public class HomeFragment2 extends SFFragment implements SwipeRefreshLayout.OnRe
     @Override
     public void onResume() {
         super.onResume();
+        if (!TextUtils.isEmpty(Constant.mCity)) {
+            mTxtLocation.setText(Constant.mCity);
+        }
         if (mViewpager != null)
             mViewpager.startLoop();
     }
 
     @Override
     public void onRefresh() {
+        requestData();
         getData();
     }
 
     @Override
     public void onWhellFinish(Province province, Province.CityListBean
             city, Province.AreaListBean mAreaListBean) {
-        Constant.provinceId = provinceId = province.id;
-        Constant.cityId = cityId = city.id;
+        Constant.provinceId = province.id;
+        Constant.cityId = city.id;
+        Constant.mCity = city.name;
         mTxtLocation.setText(city.name);
     }
 
@@ -522,7 +525,7 @@ public class HomeFragment2 extends SFFragment implements SwipeRefreshLayout.OnRe
     };
 
     public class DataViewHolder implements ViewHolder<HomeEntity.BannerListBean> {
-        private ImageView mImageView;
+        private RoundedImageView mImageView;
 
         @Override
         public View createView(ViewGroup viewGroup, Context context, int position) {
@@ -534,7 +537,7 @@ public class HomeFragment2 extends SFFragment implements SwipeRefreshLayout.OnRe
 
         @Override
         public void onBind(final Context context, HomeEntity.BannerListBean data, final int position, final int size) {
-            Glide.with(context).load(R.mipmap.a04_01banner).into(mImageView);
+            Glide.with(context).load(data.imagUrl).apply(new RequestOptions().error(R.drawable.pic_fuwutujiazaishibai).placeholder(R.drawable.pic_fuwutujiazaishibai)).into(mImageView);
         }
     }
 

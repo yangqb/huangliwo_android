@@ -6,6 +6,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.lxj.xpopup.XPopup;
+import com.lxj.xpopup.impl.LoadingPopupView;
 
 /**
  * Created by dicallc on 2017/9/8 0008.

@@ -1,5 +1,6 @@
 package com.feitianzhu.fu700.pushshop;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.text.SpannableString;
@@ -8,6 +9,7 @@ import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.feitianzhu.fu700.R;
@@ -28,6 +30,8 @@ public class MySelfMerchantsActivity extends BaseActivity {
 
     @BindView(R.id.amount)
     TextView tvAmount;
+    @BindView(R.id.myMerchant)
+    LinearLayout myMerchant;
 
     @Override
     protected int getLayoutId() {
@@ -64,13 +68,17 @@ public class MySelfMerchantsActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.left_button, R.id.right_button})
+    @OnClick({R.id.left_button, R.id.right_button, R.id.myMerchant})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.left_button:
                 finish();
                 break;
             case R.id.right_button:
+                break;
+            case R.id.myMerchant:
+                Intent intent = new Intent(MySelfMerchantsActivity.this, MerchantsDetailActivity.class);
+                startActivity(intent);
                 break;
         }
     }

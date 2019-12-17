@@ -105,6 +105,7 @@
         android:background="@color/white">
 
         <LinearLayout
+            android:id="@+id/myMerchant"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"

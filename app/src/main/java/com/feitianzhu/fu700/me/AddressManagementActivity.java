@@ -5,6 +5,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -55,6 +56,15 @@ public class AddressManagementActivity extends BaseActivity {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new AddressManagementAdapter(addressInfos);
+        View mEmptyView = View.inflate(this, R.layout.view_common_nodata, null);
+        ImageView img_empty = (ImageView) mEmptyView.findViewById(R.id.img_empty);
+        img_empty.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        adapter.setEmptyView(mEmptyView);
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
         isSelect = getIntent().getBooleanExtra(IS_SELECT, false);
@@ -104,13 +114,13 @@ public class AddressManagementActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.left_button, R.id.right_button})
+    @OnClick({R.id.left_button, R.id.right_text})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.left_button:
                 finish();
                 break;
-            case R.id.right_button:
+            case R.id.right_text:
                 Intent intent = new Intent(AddressManagementActivity.this, EditAddressActivity.class);
                 intent.putExtra(EditAddressActivity.IS_ADD_ADDRESS, true);
                 startActivityForResult(intent, REQUEST_CODE);

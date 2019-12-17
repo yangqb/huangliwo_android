@@ -3,8 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
-
-
     <LinearLayout
         android:id="@+id/tab_menu"
         android:layout_width="match_parent"
@@ -121,6 +119,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/tab_menu"
+        android:layout_below="@id/head"
         android:background="@color/transparent" />
 
 </RelativeLayout>

@@ -26,14 +26,17 @@
                 android:paddingRight="@dimen/dp_10">
 
                 <LinearLayout
+                    android:id="@+id/ll_status"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp_10"
                     android:background="@mipmap/f02_01beijing"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <TextView
+                        android:id="@+id/tvStatus"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/dp_10"
@@ -44,9 +47,10 @@
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/tvStatusContent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="剩 05:50:68 自动取消订单"
+                        android:text=""
                         android:textColor="@color/white"
                         android:textSize="13sp" />
 
@@ -342,14 +346,17 @@
         </android.support.v4.widget.NestedScrollView>
 
         <LinearLayout
+            android:id="@+id/ll_bottom"
             android:layout_width="match_parent"
             android:layout_height="66dp"
             android:layout_gravity="bottom"
             android:background="@color/white"
             android:gravity="end|center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
+                android:id="@+id/cancel_order"
                 android:layout_width="75dp"
                 android:layout_height="26dp"
                 android:background="@drawable/shape_999999_r13"
@@ -359,6 +366,7 @@
                 android:textSize="14sp" />
 
             <TextView
+                android:id="@+id/shopPay"
                 android:layout_width="75dp"
                 android:layout_height="26dp"
                 android:layout_marginLeft="15dp"

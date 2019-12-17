@@ -53,12 +53,12 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
-        initPermision();
         ImmersionBar.with(this)
                 .fitsSystemWindows(true)
                 .statusBarDarkFont(true, 0.2f)
                 .statusBarColor(R.color.bg_yellow)
                 .init();
+        initPermision();
     }
 
     private void doLogin() {
@@ -214,12 +214,12 @@ public class SplashActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn)
     public void onClick() {
-        if (mVideoView != null && mVideoView.isPlaying()) {
+      /*  if (mVideoView != null && mVideoView.isPlaying()) {
             mVideoView.stopPlayback();
-        }
+        }*/
+        realLogin();
         if (handler != null && runnable != null) {
             handler.removeCallbacks(runnable);
         }
-        realLogin();
     }
 }

@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.feitianzhu.fu700.R;
@@ -30,6 +31,7 @@ import com.feitianzhu.fu700.shop.ui.OrderDetailActivity;
 import com.feitianzhu.fu700.utils.PayUtils;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.utils.Urls;
+import com.feitianzhu.fu700.utils.doubleclick.SingleClick;
 import com.feitianzhu.fu700.view.AmountView;
 import com.google.gson.Gson;
 import com.tencent.mm.opensdk.modelpay.PayReq;
@@ -43,7 +45,9 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.Locale;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 import okhttp3.Call;
@@ -202,6 +206,7 @@ public class ShopPayActivity extends BaseActivity {
         });
     }
 
+    @SingleClick
     @OnClick({R.id.left_button, R.id.tv_pay, R.id.weixinPay_icon, R.id.alipay_icon, R.id.balancePay_icon, R.id.rl_address, R.id.no_address})
     public void onClick(View view) {
         switch (view.getId()) {
@@ -277,6 +282,7 @@ public class ShopPayActivity extends BaseActivity {
                 .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
                 .addParams(USERID, Constant.LOGIN_USERID)//
                 .addParams("payPass", password)
+                .addParams("appId", Constant.WX_APP_ID)
                 .addParams("order", json)
                 .build()
                 .execute(new Callback() {
@@ -314,10 +320,9 @@ public class ShopPayActivity extends BaseActivity {
     private void wexinPay(WXModel result) {
         Constant.PayFlag = PayInfo.ShopPay;
         IWXAPI api = WXAPIFactory.createWXAPI(ShopPayActivity.this, result.appid);
-        api.registerApp(result.appid);
+        api.registerApp(Constant.WX_APP_ID);
         PayReq mPayReq = new PayReq();
-        Constant.WX_APP_ID = result.appid + "";
-        mPayReq.appId = result.appid;
+        mPayReq.appId = Constant.WX_APP_ID;
         mPayReq.partnerId = result.partnerid;
         mPayReq.prepayId = result.prepayid;
         mPayReq.packageValue = "Sign=WXPay";

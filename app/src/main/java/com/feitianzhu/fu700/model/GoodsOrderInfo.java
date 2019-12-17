@@ -11,6 +11,17 @@ import java.util.List;
  * email: 694125155@qq.com
  */
 public class GoodsOrderInfo implements Serializable {
+    /*
+     * 1 未支付，2 待发货，3 待收货(已发货)，4 已完成（已收货），5 退款中，6 已退款，7 订单取消（未支付的）
+     * */
+    public static final int TYPE_NO_PAY = 1;
+    public static final int TYPE_WAIT_DELIVERY = 2;
+    public static final int TYPE_WAIT_RECEIVING = 3;
+    public static final int TYPE_COMPLETED = 4;
+    public static final int TYPE_REFUND = 5;
+    public static final int TYPE_REFUNDED = 6;
+    public static final int TYPE_CANCEL = 7;
+
     private String accessToken;
     private String userId;
     private List<GoodsOrderListBean> goodsOrderList;

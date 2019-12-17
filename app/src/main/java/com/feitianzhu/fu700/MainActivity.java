@@ -176,8 +176,9 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
                     mTransaction.add(R.id.fragment_container, mShopFragment);
                 } else {
                     mTransaction.show(mShopFragment);
-                }*/
-                mShopFragment = CommodityClassificationFragment.newInstance(type, "");
+                }
+                mTransaction.commit();*/
+               mShopFragment = CommodityClassificationFragment.newInstance(type, "");
                 mTransaction.add(R.id.fragment_container, mShopFragment);
                 mTransaction.commit();
                 ShopDao.loadUserAuthImpl();

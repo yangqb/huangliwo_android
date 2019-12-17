@@ -36,6 +36,7 @@ import com.feitianzhu.fu700.shop.ShopDao;
 import com.feitianzhu.fu700.shop.ShopHelp;
 import com.feitianzhu.fu700.shop.ui.MyOrderActivity;
 import com.feitianzhu.fu700.shop.ui.MyOrderActivity2;
+import com.feitianzhu.fu700.shop.ui.ShoppingCartActivity;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.view.CircleImageView;
 import com.feitianzhu.fu700.vip.VipActivity;
@@ -87,7 +88,7 @@ public class MyCenterFragment extends SFFragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     Integer[] integers = {R.mipmap.b08_05yuer, R.mipmap.b08_06zhanghu, R.mipmap.b08_07yinhangka, R.mipmap.b08_08dingdan, R.mipmap.b08_09shangpu,
-            R.mipmap.b08_10shouchang, R.mipmap.b08_11dizhi, R.mipmap.b08_12huiyuan, R.mipmap.b08_13lianmeng, R.mipmap.b08_15fenxiang};
+            R.mipmap.b08_10shouchang, R.mipmap.b08_11dizhi, R.mipmap.b08_12huiyuan, R.mipmap.b08_15fenxiang, R.mipmap.b08_14gouwuche};
 
     public MyCenterFragment() {
     }
@@ -250,18 +251,14 @@ public class MyCenterFragment extends SFFragment {
                         intent = new Intent(getContext(), VipActivity.class);
                         startActivity(intent);
                         break;
-                    case 8: //联盟
-                        //ToastUtils.showShortToast("待开发");
-                       /* intent = new Intent(getContext(), UnionlevelActivity.class);
-                        intent.putExtra("AgentName", agentName);
-                        intent.putExtra("Rate", rate);
+                    case 8: //分享
+                      /*  intent = new Intent(getActivity(), UnionlevelActivity2.class);
                         startActivity(intent);*/
-
-                        intent = new Intent(getActivity(), UnionlevelActivity2.class);
-                        startActivity(intent);
-                        break;
-                    case 9: //分享
                         ToastUtils.showShortToast("待开发");
+                        break;
+                    case 9: //购物车
+                        intent = new Intent(getContext(), ShoppingCartActivity.class);
+                        startActivity(intent);
                         break;
                 }
             }

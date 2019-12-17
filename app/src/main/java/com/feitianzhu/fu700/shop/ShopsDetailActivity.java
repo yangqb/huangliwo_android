@@ -31,6 +31,7 @@ import com.feitianzhu.fu700.shop.adapter.ProductParametersAdapter;
 import com.feitianzhu.fu700.utils.GlideUtils;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.utils.Urls;
+import com.feitianzhu.fu700.utils.doubleclick.SingleClick;
 import com.google.gson.Gson;
 import com.zhpan.bannerview.BannerViewPager;
 import com.zhpan.bannerview.enums.IndicatorStyle;
@@ -217,6 +218,7 @@ public class ShopsDetailActivity extends BaseActivity {
         }
     }
 
+    @SingleClick
     @OnClick({R.id.left_button, R.id.tv_pay, R.id.rl_more_evaluation})
     public void onClick(View view) {
         switch (view.getId()) {

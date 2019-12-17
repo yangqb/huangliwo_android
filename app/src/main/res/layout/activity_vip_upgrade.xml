@@ -278,7 +278,7 @@
                                 android:layout_centerVertical="true"
                                 android:layout_marginEnd="10dp"
                                 android:layout_marginRight="@dimen/dp_10"
-                                android:src="@mipmap/e01_24weixuanzhong" />
+                                android:background="@mipmap/e01_24weixuanzhong" />
 
                         </RelativeLayout>
 
@@ -317,7 +317,7 @@
                                 android:layout_alignParentEnd="true"
                                 android:layout_centerVertical="true"
                                 android:layout_marginRight="@dimen/dp_10"
-                                android:src="@mipmap/e01_24weixuanzhong" />
+                                android:background="@mipmap/e01_24weixuanzhong" />
 
                         </RelativeLayout>
 
@@ -359,7 +359,7 @@
                                 android:layout_alignParentEnd="true"
                                 android:layout_centerVertical="true"
                                 android:layout_marginRight="@dimen/dp_10"
-                                android:src="@mipmap/e01_24weixuanzhong" />
+                                android:background="@mipmap/e01_24weixuanzhong" />
 
                         </RelativeLayout>
                     </LinearLayout>

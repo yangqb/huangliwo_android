@@ -10,6 +10,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,8 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.fu700.App;
 import com.feitianzhu.fu700.R;
@@ -26,6 +29,7 @@ import com.feitianzhu.fu700.common.Constant;
 import com.feitianzhu.fu700.common.base.SFFragment;
 import com.feitianzhu.fu700.me.ui.ScannerActivity;
 import com.feitianzhu.fu700.model.BaseGoodsListBean;
+import com.feitianzhu.fu700.model.MineInfoModel;
 import com.feitianzhu.fu700.model.MultipleItem;
 import com.feitianzhu.fu700.model.Province;
 import com.feitianzhu.fu700.model.ShopClassify;
@@ -37,6 +41,7 @@ import com.feitianzhu.fu700.shop.ui.dialog.ProvinceCallBack;
 import com.feitianzhu.fu700.shop.ui.dialog.ProvincehDialog;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.utils.Urls;
+import com.feitianzhu.fu700.view.CircleImageView;
 import com.google.gson.Gson;
 import com.socks.library.KLog;
 import com.yanzhenjie.permission.AndPermission;
@@ -54,7 +59,13 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import okhttp3.Call;
+import okhttp3.Request;
 import okhttp3.Response;
+
+import static com.feitianzhu.fu700.common.Constant.ACCESSTOKEN;
+import static com.feitianzhu.fu700.common.Constant.Common_HEADER;
+import static com.feitianzhu.fu700.common.Constant.POST_MINE_INFO;
+import static com.feitianzhu.fu700.common.Constant.USERID;
 
 /**
  * @class name：com.feitianzhu.fu700.shop
@@ -83,14 +94,13 @@ public class CommodityClassificationFragment extends SFFragment implements View.
     RecyclerView leftRecyclerView;
     @BindView(R.id.right_recyclerView)
     RecyclerView rightRecyclerView;
-
+    @BindView(R.id.iv_head)
+    CircleImageView ivHead;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private int mParam1 = 1;
     private String mParam2;
     Unbinder unbinder;
-    private String provinceId;
-    private String cityId;
     private PopupWindow popupWindow;
     private View vPopupWindow;
     private LeftAdapter leftAdapter;
@@ -119,7 +129,6 @@ public class CommodityClassificationFragment extends SFFragment implements View.
             mParam1 = getArguments().getInt(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        initData();
     }
 
     @Override
@@ -161,23 +170,26 @@ public class CommodityClassificationFragment extends SFFragment implements View.
         leftAdapter.notifyDataSetChanged();
 
         rightAdapter = new RightAdapter(multipleItemList);
+        View mEmptyView = View.inflate(getActivity(), R.layout.view_common_nodata, null);
+        ImageView img_empty = (ImageView) mEmptyView.findViewById(R.id.img_empty);
+        img_empty.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        rightAdapter.setEmptyView(mEmptyView);
         rightRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         rightRecyclerView.setAdapter(rightAdapter);
         rightAdapter.notifyDataSetChanged();
 
         mSwipeLayout.setOnRefreshListener(this);
         mSwipeLayout.setColorSchemeColors(getActivity().getResources().getColor(R.color.sf_blue));
-
-
+        requestData();
+        initData();
         initListener();
 
         return view;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        if (!TextUtils.isEmpty(Constant.mCity)) mTxtLocation.setText(Constant.mCity);
     }
 
     public void initData() {
@@ -188,6 +200,12 @@ public class CommodityClassificationFragment extends SFFragment implements View.
                 .url(Urls.GET_SHOP_CLASS)
                 .build()
                 .execute(new Callback() {
+                    @Override
+                    public void onBefore(Request request, int id) {
+                        super.onBefore(request, id);
+                        showloadDialog("");
+                    }
+
                     @Override
                     public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
                         return new Gson().fromJson(mData, ShopClassify.class);
@@ -206,19 +224,10 @@ public class CommodityClassificationFragment extends SFFragment implements View.
                     public void onResponse(Object response, int id) {
                         ShopClassify shopClassify = (ShopClassify) response;
                         shopClassifyLsit = shopClassify.getGGoodsClsList();
-                        leftAdapter.setSelect(-1);
+                        leftAdapter.setSelect(0);
                         leftAdapter.setNewData(shopClassifyLsit);
                         leftAdapter.notifyDataSetChanged();
-                        multipleItemList.clear();
-                        goodsListBeans.clear();
-                        goodsListBeans = shopClassify.getGoodsList();
-                        for (int i = 0; i < goodsListBeans.size(); i++) {
-                            MultipleItem multipleItem = new MultipleItem(MultipleItem.IMG);
-                            multipleItem.setGoodsListBean(goodsListBeans.get(i));
-                            multipleItemList.add(multipleItem);
-                        }
-                        rightAdapter.setNewData(multipleItemList);
-                        rightAdapter.notifyDataSetChanged();
+                        getShops(shopClassifyLsit.get(0).getClsId());
                     }
                 });
 
@@ -275,16 +284,19 @@ public class CommodityClassificationFragment extends SFFragment implements View.
                 .execute(new Callback() {
                     @Override
                     public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
+                        goneloadDialog();
                         return new Gson().fromJson(mData, Shops.class);
                     }
 
                     @Override
                     public void onError(Call call, Exception e, int id) {
                         ToastUtils.showShortToast(e.getMessage());
+                        goneloadDialog();
                     }
 
                     @Override
                     public void onResponse(Object response, int id) {
+                        goneloadDialog();
                         Shops shops = (Shops) response;
                         multipleItemList.clear();
                         goodsListBeans.clear();
@@ -320,7 +332,9 @@ public class CommodityClassificationFragment extends SFFragment implements View.
     public void onResume() {
         super.onResume();
         KLog.e("onResume");
-
+        if (!TextUtils.isEmpty(Constant.mCity)) {
+            mTxtLocation.setText(Constant.mCity);
+        }
     }
 
     @Override
@@ -428,6 +442,32 @@ public class CommodityClassificationFragment extends SFFragment implements View.
         }
     };
 
+    /*
+     * 获取头像
+     * */
+    private void requestData() {
+        OkHttpUtils.post()//
+                .url(Common_HEADER + POST_MINE_INFO)
+                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
+                .addParams(USERID, Constant.LOGIN_USERID)
+                .build()
+                .execute(new Callback<MineInfoModel>() {
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        Log.e("wangyan", "onError---->" + e.getMessage());
+                        ToastUtils.showShortToast(e.getMessage());
+                    }
+
+                    @Override
+                    public void onResponse(MineInfoModel response, int id) {
+                        String headImg = response.getHeadImg();
+                        Glide.with(mContext).load(headImg).apply(RequestOptions.placeholderOf(R.mipmap.b08_01touxiang).dontAnimate())
+                                .into(ivHead);
+                    }
+                });
+    }
+
     private void JumpActivity(Context context, Class clazz) {
         Intent intent = new Intent(context, clazz);
         context.startActivity(intent);
@@ -435,8 +475,9 @@ public class CommodityClassificationFragment extends SFFragment implements View.
 
     @Override
     public void onWhellFinish(Province province, Province.CityListBean city, Province.AreaListBean mAreaListBean) {
-        Constant.provinceId = provinceId = province.id;
-        Constant.cityId = cityId = city.id;
+        Constant.provinceId = province.id;
+        Constant.cityId = city.id;
+        Constant.mCity = city.name;
         mTxtLocation.setText(city.name);
     }
 

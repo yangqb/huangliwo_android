@@ -1,6 +1,7 @@
 package com.feitianzhu.fu700.pushshop;
 
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -56,6 +57,8 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity {
     RoundedImageView imageView6;
     @BindView(R.id.imageView7)
     RoundedImageView imageView7;
+    @BindView(R.id.edit_merchants_name)
+    EditText editMerchantsName;
 
     @Override
     protected int getLayoutId() {
@@ -72,7 +75,7 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity {
 
     }
 
-    @OnClick({R.id.left_button, R.id.imageView1, R.id.imageView2, R.id.imageView3, R.id.imageView4, R.id.imageView5, R.id.imageView6, R.id.imageView7, R.id.tag8})
+    @OnClick({R.id.left_button, R.id.imageView1, R.id.imageView2, R.id.imageView3, R.id.imageView4, R.id.imageView5, R.id.imageView6, R.id.imageView7, R.id.tag8, R.id.submit})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tag8:
@@ -113,6 +116,8 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity {
             case R.id.imageView7:
                 imgType = 7;
                 showDialog();
+                break;
+            case R.id.submit:
                 break;
         }
     }
