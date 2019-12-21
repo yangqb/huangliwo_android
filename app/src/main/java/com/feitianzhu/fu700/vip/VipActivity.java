@@ -65,8 +65,6 @@ import static com.feitianzhu.fu700.common.Constant.USERID;
  * @Date 2019/11/22 0022 下午 6:53
  */
 public class VipActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener {
-    private List<UnionLevelModel> mList = new ArrayList<>();
-    private SelectPayNeedModel model;
     @BindView(R.id.title_name)
     TextView titleName;
     @BindView(R.id.parent_view)
@@ -105,6 +103,7 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
 
     @OnClick({R.id.left_button, R.id.moreVip, R.id.btn_submit, R.id.tv_protocol})
     public void onClick(View view) {
+        Intent intent;
         switch (view.getId()) {
             case R.id.left_button:
                 finish();
@@ -122,17 +121,11 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
                 ismore = !ismore;
                 break;
             case R.id.btn_submit:
-                if (model.gradeId != null && !TextUtils.isEmpty(model.gradeId)) {
-                    Intent intent = new Intent(VipActivity.this, VipUpgradeActivity.class);
-                    intent.putExtra(Constant.INTENT_SELECTET_PAY_MODEL, model);
-                    startActivity(intent);
-                } else {
-                    ToastUtils.showShortToast("无会员级别数据");
-                }
+                intent = new Intent(VipActivity.this, VipUpgradeActivity.class);
+                startActivity(intent);
                 break;
-
             case R.id.tv_protocol:
-                Intent intent = new Intent(VipActivity.this, ProtocolActivity.class);
+                intent = new Intent(VipActivity.this, ProtocolActivity.class);
                 startActivity(intent);
                 break;
         }
@@ -142,41 +135,6 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
     @Override
     protected void initData() {
         EventBus.getDefault().register(this);
-        OkHttpUtils.post()//会员等级数据
-                .url(Common_HEADER + POST_UNION_LEVEL)
-                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
-                .addParams(USERID, Constant.LOGIN_USERID)
-                .build().execute(new Callback<List<UnionLevelModel>>() {
-            @Override
-            public List<UnionLevelModel> parseNetworkResponse(String mData, Response response, int id)
-                    throws Exception {
-                Type type = new TypeToken<List<UnionLevelModel>>() {
-                }.getType();
-                List<UnionLevelModel> bean = new Gson().fromJson(mData, type);
-                return bean;
-            }
-
-            @Override
-            public void onError(Call call, Exception e, int id) {
-                Log.e("wangyan", "onError---->" + e.getMessage());
-            }
-
-            @Override
-            public void onResponse(List<UnionLevelModel> response, int id) {
-                //setShowData(response);
-                mList.addAll(response);
-                //现在只返回399的会员级别
-                model = new SelectPayNeedModel();
-                model.setType(SelectPayNeedModel.TYPE_UNION_LEVEL);
-                if (mList.size() > 0) {
-                    model.gradeId = mList.get(0).getGradeId() + "";
-                    model.setHandleFee(mList.get(0).getPoints());
-                    model.agentName = mList.get(0).getName();
-                    model.agentType = mList.get(0).getAgentType();
-                }
-            }
-        });
-
     }
 
     @Override
@@ -189,13 +147,18 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
     public void onPayEvent(PayForMeEvent event) {
         switch (event) {
             case PAY_FINISH:
+                btnSumbit.setText("恭喜您已成为会员");
+                btnSumbit.setBackgroundResource(R.drawable.shape_e6e5e5_r5);
+                btnSumbit.setEnabled(false);
+                mCheckBox.setButtonDrawable(getResources().getDrawable(R.mipmap.f01_06xuanzhong5));
+                mCheckBox.setEnabled(false);
                 requestData();
                 break;
         }
     }
 
     private void requestData() {
-        OkHttpUtils.post()//
+        OkHttpUtils.get()//
                 .url(Common_HEADER + POST_MINE_INFO)
                 .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
                 .addParams(USERID, Constant.LOGIN_USERID)
@@ -209,10 +172,7 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
 
             @Override
             public void onResponse(MineInfoModel response, int id) {
-                if (response == null) {
-                    return;
-                }
-                if (response.getGradeId() >= 1) {
+                if (response != null && response.getAccountType() != 0) {
                     btnSumbit.setText("恭喜您已成为会员");
                     btnSumbit.setBackgroundResource(R.drawable.shape_e6e5e5_r5);
                     btnSumbit.setEnabled(false);

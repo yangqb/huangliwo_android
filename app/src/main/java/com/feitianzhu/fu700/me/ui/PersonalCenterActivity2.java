@@ -111,6 +111,7 @@ public class PersonalCenterActivity2 extends BaseTakePhotoActivity {
         switch (event) {
             case TAKEPHOTO:
             case EDITORINFO:
+            case LOGIN_SUCCESS:
                 requestData();
                 break;
         }
@@ -144,7 +145,7 @@ public class PersonalCenterActivity2 extends BaseTakePhotoActivity {
     }
 
     private void requestData() {
-        OkHttpUtils.post()//
+        OkHttpUtils.get()//
                 .url(Common_HEADER + POST_MINE_INFO)
                 .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
                 .addParams(USERID, Constant.LOGIN_USERID)
@@ -177,7 +178,7 @@ public class PersonalCenterActivity2 extends BaseTakePhotoActivity {
                     .into(ivHead);
         }
 
-        tvNick.setText(response.getNickName() == null ? "" : response.getNickName().toString());
+        tvNick.setText(response.getNickName() == null ? "小黄鹂" : response.getNickName().toString());
         tvSign.setText(response.getPersonSign() == null ? "" : response.getPersonSign().toString());
         tvPersonId.setText(String.valueOf(response.getUserId()));
         tvVip.setText(response.getGradeName() == null ? "" : response.getGradeName());
@@ -319,7 +320,7 @@ public class PersonalCenterActivity2 extends BaseTakePhotoActivity {
                     public void onResponse(Object response, int id) {
                         Log.e("wangyan", "response====" + response);
                         ToastUtils.showShortToast("上传成功!");
-                        EventBus.getDefault().post(LoginEvent.TAKEPHOTO);
+                        requestData();
                     }
                 });
     }

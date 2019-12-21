@@ -34,6 +34,7 @@ import com.feitianzhu.fu700.pushshop.PushShopHomeActivity;
 import com.feitianzhu.fu700.settings.SettingsActivity;
 import com.feitianzhu.fu700.shop.ShopDao;
 import com.feitianzhu.fu700.shop.ShopHelp;
+import com.feitianzhu.fu700.shop.ui.LogisticsInfoActivity;
 import com.feitianzhu.fu700.shop.ui.MyOrderActivity;
 import com.feitianzhu.fu700.shop.ui.MyOrderActivity2;
 import com.feitianzhu.fu700.shop.ui.ShoppingCartActivity;
@@ -80,8 +81,6 @@ public class MyCenterFragment extends SFFragment {
 
     private String mParam1;
     private String mParam2;
-    private String agentName;
-    private String rate;
     private CenterAdapter adapter;
     Unbinder unbinder;
     private MineInfoModel mTempData = null;
@@ -100,15 +99,6 @@ public class MyCenterFragment extends SFFragment {
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
-    }
-
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        if (mTempData == null) {
-            Log.e("Test", "onHiddenChanged---->");
-            requestData();
-        }
     }
 
     @Override
@@ -140,7 +130,7 @@ public class MyCenterFragment extends SFFragment {
     }
 
     public void requestData() {
-        OkHttpUtils.post()//
+        OkHttpUtils.get()//
                 .url(Common_HEADER + POST_MINE_INFO)
                 .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
                 .addParams(USERID, Constant.LOGIN_USERID)
@@ -158,16 +148,6 @@ public class MyCenterFragment extends SFFragment {
                     return;
                 }
                 mTempData = response;
-                if (response.getAgentName() == null) {
-                    agentName = "";
-                } else {
-                    agentName = response.getAgentName().toString();
-                }
-                if (response.getRate() <= 0) {
-                    rate = "0%";
-                } else {
-                    rate = response.getRate() + "%";
-                }
                 setShowData(response);
             }
         });
@@ -184,8 +164,20 @@ public class MyCenterFragment extends SFFragment {
                 .load(response.getHeadImg())
                 .apply(RequestOptions.placeholderOf(R.mipmap.b08_01touxiang).dontAnimate())
                 .into(civHead);
-        nickName.setText(response.getNickName() == null ? "" : response.getNickName());
-        gradeName.setText(response.getGradeName() == null ? "" : response.getGradeName());
+        nickName.setText(response.getNickName() == null ? "小黄鹂" : response.getNickName());
+        if (response.getAccountType() == 0) {
+            gradeName.setText("无");
+        } else if (response.getAccountType() == 1) {
+            gradeName.setText("市代理");
+        } else if (response.getAccountType() == 2) {
+            gradeName.setText("区代理");
+        } else if (response.getAccountType() == 3) {
+            gradeName.setText("合伙人");
+        } else if (response.getAccountType() == 4) {
+            gradeName.setText("超级会员");
+        } else if (response.getAccountType() == 5) {
+            gradeName.setText("普通会员");
+        }
     }
 
 

@@ -30,6 +30,8 @@ public class CommentsDetailAdapter extends BaseQuickAdapter<Integer, BaseViewHol
     @Override
     protected void convert(@NonNull BaseViewHolder helper, Integer item) {
 //helper.setImageUrl(R.id.iv, item.getContent());
+        /* Glide.with(mContext).load(item.getGoodsListBean().getGoodsImg())
+                .apply(new RequestOptions().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai)).into((RoundedImageView) helper.getView(R.id.image));*/
         List<Integer> integers = new ArrayList<>();
         RecyclerView recyclerView = helper.getView(R.id.recyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(mContext, 3));

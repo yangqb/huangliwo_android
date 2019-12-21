@@ -22,8 +22,6 @@ public class GoodsOrderInfo implements Serializable {
     public static final int TYPE_REFUNDED = 6;
     public static final int TYPE_CANCEL = 7;
 
-    private String accessToken;
-    private String userId;
     private List<GoodsOrderListBean> goodsOrderList;
 
     public List<GoodsOrderListBean> getGoodsOrderList() {
@@ -35,101 +33,113 @@ public class GoodsOrderInfo implements Serializable {
     }
 
     public static class GoodsOrderListBean implements Serializable {
-        /**
-         * orderNo : BSB20191213190034166524
-         * userId : 14
-         * amount : 0.01
-         * postage : 0.1
-         * rebatePv : 0.01
-         * type : 1
-         * channel : alipay
-         * thirdOrderNo : null
-         * payProof : null
-         * createDate : 2019-12-13 19:01:53
-         * payDate : 2019-12-13 19:01:53
-         * deliveryDate : null
-         * receiptDate : null
-         * addressId : null
-         * remark : null
-         * status : 0 //1 未支付，2 待发货，3 待收货，4 已完成（已收货），5 退款中，6 已退款，7 订单取消（未支付的）
-         * isPoints : null
-         * isExtend : null
-         * logisticsNo : null
-         * logisticsCode : null
-         * orderDetailList : null
-         * shopAddress : [{"addressId":null,"userId":14,"provinceId":null,"cityId":null,"areaId":null,"areaName":null,"detailAddress":null,"userName":null,"phone":null,"isDefalt":null}]
-         * receiptName : 我摸
-         * receiptPhone : 1310060321
-         * regionName : null
-         * detailAddr : 就去莫莫莫
-         * leaveMsg : null
-         * statusList : null
-         * buyerName : null
-         * buyerPhone : null
-         * buyerEmail : null
-         * parentId : 4
-         * parentName : HLW0321
-         * parentPhone : 13100680321
-         * parentEmail : null
-         * payAccount : null
-         * provinceId : null
-         * provinceName : null
-         * norms : null
-         * goodsName : 66666
-         * goodsImg : null
-         * valueId : 2
-         * goodsQTY : 1
-         * summary : 66
-         * title : null
-         * shopName : null
-         */
+     /*
+     *      amount (number, optional): 总价格 ,
+attributeVal (string, optional): 商品属性 ,
+count (integer, optional): 数量 ,
+createDate (string, optional): 下单时间 ,
+expiresDate (integer, optional): 过期时间 ,
+goodName (string, optional): 商品名称 ,
+goodsImg (string, optional): 商品图片 ,
+nowTimeStamp (integer, optional): 当前时间戳 ,
+orderNo (string, optional): 订单编号 ,
+price (number, optional): 单价 ,
+shopAddress (收货地址, optional): 订单收货地址 ,
+shopName (string, optional): 店铺名称 ,
+status (integer, optional): 订单状态 1 未支付，2 待发货，3 待收货(已发货)，4 已完成（已收货），5 退款中，6 已退款，7 订单取消（未支付的） ,
+valueId (integer, optional): 商品属性id
+}收货地址 {
+addressId (integer, optional): addressId ,
+areaId (string, optional): 区id ,
+areaName (string, optional): 区名称 ,
+cityId (string, optional): 市id ,
+cityName (string, optional): 市名称 ,
+detailAddress (string, optional): 详细地址 ,
+isDefalt (integer, optional): 是否是默认地址 0否 1是 ,
+phone (string, optional): 电话号码 ,
+provinceId (string, optional): 省id ,
+provinceName (string, optional): 省名称 ,
+userId (integer, optional): 用户id ,
+userName (string, optional): 用户名
+     * */
+
+        private String attributeVal;
         private String orderNo;
         private int userId;
         private double amount;
         private double postage;
         private double rebatePv;
-        private int type;
         private String channel;
-        private String thirdOrderNo;
-        private String payProof;
         private String createDate;
-        private String payDate;
-        private String deliveryDate;
-        private String receiptDate;
+        private long expiresDate;
+        private long nowTimeStamp;
         private String addressId;
-        private String remark;
         private int status;
-        private String isPoints;
-        private String isExtend;
-        private String logisticsNo;
-        private String logisticsCode;
-        private String orderDetailList;
-        private String receiptName;
-        private String receiptPhone;
-        private String regionName;
-        private String detailAddr;
-        private String leaveMsg;
-        private String statusList;
-        private String buyerName;
-        private String buyerPhone;
-        private String buyerEmail;
-        private int parentId;
-        private String parentName;
-        private String parentPhone;
-        private String parentEmail;
-        private String payAccount;
-        private String provinceId;
-        private String provinceName;
-        private String norms;
-        private String goodsName;
+        private String goodName;
         private String goodsImg;
-        private int valueId;
-        private int goodsQTY;
-        private String summary;
-        private String title;
+        private String valueId;
+        private int count;
         private String shopName;
         private double price;
-        private ShopAddressBean shopAddress;
+        private ShopAddressBean address;
+        private int goodId;
+        private int goodsQty;
+
+        public int getGoodsQty() {
+            return goodsQty;
+        }
+
+        public void setGoodsQty(int goodsQty) {
+            this.goodsQty = goodsQty;
+        }
+
+        public long getExpiresDate() {
+            return expiresDate;
+        }
+
+        public void setExpiresDate(long expiresDate) {
+            this.expiresDate = expiresDate;
+        }
+
+        public long getNowTimeStamp() {
+            return nowTimeStamp;
+        }
+
+        public void setNowTimeStamp(long nowTimeStamp) {
+            this.nowTimeStamp = nowTimeStamp;
+        }
+
+        public String getAttributeVal() {
+            return attributeVal;
+        }
+
+        public void setAttributeVal(String attributeVal) {
+            this.attributeVal = attributeVal;
+        }
+
+        public String getGoodName() {
+            return goodName;
+        }
+
+        public void setGoodName(String goodName) {
+            this.goodName = goodName;
+        }
+
+        public int getCount() {
+            return count;
+        }
+
+        public void setCount(int count) {
+            this.count = count;
+        }
+
+        public int getGoodId() {
+            return goodId;
+        }
+
+        public void setGoodId(int goodId) {
+            this.goodId = goodId;
+        }
 
         public double getPrice() {
             return price;
@@ -179,36 +189,12 @@ public class GoodsOrderInfo implements Serializable {
             this.rebatePv = rebatePv;
         }
 
-        public int getType() {
-            return type;
-        }
-
-        public void setType(int type) {
-            this.type = type;
-        }
-
         public String getChannel() {
             return channel;
         }
 
         public void setChannel(String channel) {
             this.channel = channel;
-        }
-
-        public String getThirdOrderNo() {
-            return thirdOrderNo;
-        }
-
-        public void setThirdOrderNo(String thirdOrderNo) {
-            this.thirdOrderNo = thirdOrderNo;
-        }
-
-        public String getPayProof() {
-            return payProof;
-        }
-
-        public void setPayProof(String payProof) {
-            this.payProof = payProof;
         }
 
         public String getCreateDate() {
@@ -219,44 +205,12 @@ public class GoodsOrderInfo implements Serializable {
             this.createDate = createDate;
         }
 
-        public String getPayDate() {
-            return payDate;
-        }
-
-        public void setPayDate(String payDate) {
-            this.payDate = payDate;
-        }
-
-        public String getDeliveryDate() {
-            return deliveryDate;
-        }
-
-        public void setDeliveryDate(String deliveryDate) {
-            this.deliveryDate = deliveryDate;
-        }
-
-        public String getReceiptDate() {
-            return receiptDate;
-        }
-
-        public void setReceiptDate(String receiptDate) {
-            this.receiptDate = receiptDate;
-        }
-
         public String getAddressId() {
             return addressId;
         }
 
         public void setAddressId(String addressId) {
             this.addressId = addressId;
-        }
-
-        public String getRemark() {
-            return remark;
-        }
-
-        public void setRemark(String remark) {
-            this.remark = remark;
         }
 
         public int getStatus() {
@@ -267,190 +221,6 @@ public class GoodsOrderInfo implements Serializable {
             this.status = status;
         }
 
-        public String getIsPoints() {
-            return isPoints;
-        }
-
-        public void setIsPoints(String isPoints) {
-            this.isPoints = isPoints;
-        }
-
-        public String getIsExtend() {
-            return isExtend;
-        }
-
-        public void setIsExtend(String isExtend) {
-            this.isExtend = isExtend;
-        }
-
-        public String getLogisticsNo() {
-            return logisticsNo;
-        }
-
-        public void setLogisticsNo(String logisticsNo) {
-            this.logisticsNo = logisticsNo;
-        }
-
-        public String getLogisticsCode() {
-            return logisticsCode;
-        }
-
-        public void setLogisticsCode(String logisticsCode) {
-            this.logisticsCode = logisticsCode;
-        }
-
-        public String getOrderDetailList() {
-            return orderDetailList;
-        }
-
-        public void setOrderDetailList(String orderDetailList) {
-            this.orderDetailList = orderDetailList;
-        }
-
-        public String getReceiptName() {
-            return receiptName;
-        }
-
-        public void setReceiptName(String receiptName) {
-            this.receiptName = receiptName;
-        }
-
-        public String getReceiptPhone() {
-            return receiptPhone;
-        }
-
-        public void setReceiptPhone(String receiptPhone) {
-            this.receiptPhone = receiptPhone;
-        }
-
-        public String getRegionName() {
-            return regionName;
-        }
-
-        public void setRegionName(String regionName) {
-            this.regionName = regionName;
-        }
-
-        public String getDetailAddr() {
-            return detailAddr;
-        }
-
-        public void setDetailAddr(String detailAddr) {
-            this.detailAddr = detailAddr;
-        }
-
-        public String getLeaveMsg() {
-            return leaveMsg;
-        }
-
-        public void setLeaveMsg(String leaveMsg) {
-            this.leaveMsg = leaveMsg;
-        }
-
-        public String getStatusList() {
-            return statusList;
-        }
-
-        public void setStatusList(String statusList) {
-            this.statusList = statusList;
-        }
-
-        public String getBuyerName() {
-            return buyerName;
-        }
-
-        public void setBuyerName(String buyerName) {
-            this.buyerName = buyerName;
-        }
-
-        public String getBuyerPhone() {
-            return buyerPhone;
-        }
-
-        public void setBuyerPhone(String buyerPhone) {
-            this.buyerPhone = buyerPhone;
-        }
-
-        public String getBuyerEmail() {
-            return buyerEmail;
-        }
-
-        public void setBuyerEmail(String buyerEmail) {
-            this.buyerEmail = buyerEmail;
-        }
-
-        public int getParentId() {
-            return parentId;
-        }
-
-        public void setParentId(int parentId) {
-            this.parentId = parentId;
-        }
-
-        public String getParentName() {
-            return parentName;
-        }
-
-        public void setParentName(String parentName) {
-            this.parentName = parentName;
-        }
-
-        public String getParentPhone() {
-            return parentPhone;
-        }
-
-        public void setParentPhone(String parentPhone) {
-            this.parentPhone = parentPhone;
-        }
-
-        public String getParentEmail() {
-            return parentEmail;
-        }
-
-        public void setParentEmail(String parentEmail) {
-            this.parentEmail = parentEmail;
-        }
-
-        public String getPayAccount() {
-            return payAccount;
-        }
-
-        public void setPayAccount(String payAccount) {
-            this.payAccount = payAccount;
-        }
-
-        public String getProvinceId() {
-            return provinceId;
-        }
-
-        public void setProvinceId(String provinceId) {
-            this.provinceId = provinceId;
-        }
-
-        public String getProvinceName() {
-            return provinceName;
-        }
-
-        public void setProvinceName(String provinceName) {
-            this.provinceName = provinceName;
-        }
-
-        public String getNorms() {
-            return norms;
-        }
-
-        public void setNorms(String norms) {
-            this.norms = norms;
-        }
-
-        public String getGoodsName() {
-            return goodsName;
-        }
-
-        public void setGoodsName(String goodsName) {
-            this.goodsName = goodsName;
-        }
-
         public String getGoodsImg() {
             return goodsImg;
         }
@@ -459,36 +229,12 @@ public class GoodsOrderInfo implements Serializable {
             this.goodsImg = goodsImg;
         }
 
-        public int getValueId() {
+        public String getValueId() {
             return valueId;
         }
 
-        public void setValueId(int valueId) {
+        public void setValueId(String valueId) {
             this.valueId = valueId;
-        }
-
-        public int getGoodsQTY() {
-            return goodsQTY;
-        }
-
-        public void setGoodsQTY(int goodsQTY) {
-            this.goodsQTY = goodsQTY;
-        }
-
-        public String getSummary() {
-            return summary;
-        }
-
-        public void setSummary(String summary) {
-            this.summary = summary;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public void setTitle(String title) {
-            this.title = title;
         }
 
         public String getShopName() {
@@ -499,12 +245,12 @@ public class GoodsOrderInfo implements Serializable {
             this.shopName = shopName;
         }
 
-        public ShopAddressBean getShopAddress() {
-            return shopAddress;
+        public ShopAddressBean getAddress() {
+            return address;
         }
 
-        public void setShopAddress(ShopAddressBean shopAddress) {
-            this.shopAddress = shopAddress;
+        public void setAddress(ShopAddressBean address) {
+            this.address = address;
         }
 
         public static class ShopAddressBean implements Serializable {
@@ -524,6 +270,7 @@ public class GoodsOrderInfo implements Serializable {
             private String addressId;
             private int userId;
             private String provinceId;
+            private String provinceName;
             private String cityId;
             private String areaId;
             private String areaName;
@@ -531,6 +278,23 @@ public class GoodsOrderInfo implements Serializable {
             private String userName;
             private String phone;
             private int isDefalt;
+            private String cityName;
+
+            public String getProvinceName() {
+                return provinceName;
+            }
+
+            public void setProvinceName(String provinceName) {
+                this.provinceName = provinceName;
+            }
+
+            public String getCityName() {
+                return cityName;
+            }
+
+            public void setCityName(String cityName) {
+                this.cityName = cityName;
+            }
 
             public String getAddressId() {
                 return addressId;

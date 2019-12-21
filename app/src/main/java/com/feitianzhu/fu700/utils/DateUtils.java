@@ -1,5 +1,6 @@
 package com.feitianzhu.fu700.utils;
 
+import android.annotation.SuppressLint;
 import android.net.ParseException;
 
 import java.text.DateFormat;
@@ -419,6 +420,7 @@ public class DateUtils {
      * @param str2 时间参数 2 格式：2009-01-01 12:00:00
      * @return long[] 返回值为：{天, 时, 分, 秒}
      */
+    @SuppressLint("SimpleDateFormat")
     public static long[] getDistanceTimes(String str1, String str2) {
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date one;
@@ -458,6 +460,7 @@ public class DateUtils {
      * @param str2 时间参数 2 格式：2009-01-01 12:00:00
      * @return String 返回值为：xx天xx小时xx分xx秒
      */
+    @SuppressLint("SimpleDateFormat")
     public static String getDistanceTime(String str1, String str2) {
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date one;
@@ -549,5 +552,24 @@ public class DateUtils {
             sb.append(milliSecond + "毫秒");
         }*/
         return sb.toString();
+    }
+
+    /**
+     * 将短时间格式字符串转换为时间 MM-dd HH:mm
+     *
+     * @param strDate
+     * @return
+     */
+    @SuppressLint("SimpleDateFormat")
+    public static String strToString(String strDate) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = null;
+        try {
+            date = sdf.parse(strDate);
+        } catch (java.text.ParseException e) {
+            e.printStackTrace();
+        }
+        SimpleDateFormat formatter = new SimpleDateFormat("MM-dd HH:mm");
+        return formatter.format(date.getTime());
     }
 }

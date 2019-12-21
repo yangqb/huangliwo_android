@@ -24,11 +24,12 @@
             android:paddingBottom="@dimen/dp_20">
 
             <EditText
+                android:id="@+id/edit_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"
                 android:gravity="top"
-                android:hint="宝贝有哪里让您满意或者不足的地方都可以写出 来哦!"
+                android:hint="宝贝有哪里让您满意或者不足的地方都可以写出 来哦!(最多输入500个文字)"
                 android:textColor="@color/color_333333"
                 android:textColorHint="@color/color_999999"
                 android:textSize="15sp" />

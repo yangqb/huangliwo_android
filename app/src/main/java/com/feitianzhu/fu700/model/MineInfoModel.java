@@ -74,7 +74,16 @@ public class MineInfoModel implements Serializable {
     private List<?> interestLabel;
     private List<?> industryLabel;
     private int gradeId;
+    private Integer accountType; //会员级别(账号类型0消费者，1市代理，2区代理，3合伙人，4超级会员，5普通会员，6商户")
 
+
+    public Integer getAccountType() {
+        return accountType;
+    }
+
+    public void setAccountType(Integer accountType) {
+        this.accountType = accountType;
+    }
 
     public int getGradeId() {
         return gradeId;

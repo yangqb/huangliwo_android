@@ -27,6 +27,7 @@ import com.feitianzhu.fu700.App;
 import com.feitianzhu.fu700.R;
 import com.feitianzhu.fu700.common.Constant;
 import com.feitianzhu.fu700.common.base.SFFragment;
+import com.feitianzhu.fu700.login.LoginEvent;
 import com.feitianzhu.fu700.me.ui.ScannerActivity;
 import com.feitianzhu.fu700.model.BaseGoodsListBean;
 import com.feitianzhu.fu700.model.MineInfoModel;
@@ -43,6 +44,9 @@ import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.utils.Urls;
 import com.feitianzhu.fu700.view.CircleImageView;
 import com.google.gson.Gson;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.socks.library.KLog;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
@@ -50,6 +54,10 @@ import com.yanzhenjie.permission.Rationale;
 import com.yanzhenjie.permission.RationaleListener;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,9 +85,9 @@ import static com.feitianzhu.fu700.common.Constant.USERID;
  */
 
 
-public class CommodityClassificationFragment extends SFFragment implements View.OnClickListener, ProvinceCallBack, SwipeRefreshLayout.OnRefreshListener {
+public class CommodityClassificationFragment extends SFFragment implements View.OnClickListener, ProvinceCallBack {
     @BindView(R.id.swipeLayout)
-    SwipeRefreshLayout mSwipeLayout;
+    SmartRefreshLayout mSwipeLayout;
     @BindView(R.id.search)
     LinearLayout mSearchLayout;
     @BindView(R.id.txt_location)
@@ -108,6 +116,7 @@ public class CommodityClassificationFragment extends SFFragment implements View.
     private List<ShopClassify.GGoodsClsListBean> shopClassifyLsit = new ArrayList<>();
     private List<BaseGoodsListBean> goodsListBeans = new ArrayList<>();
     private List<MultipleItem> multipleItemList = new ArrayList<>();
+    private int clsId;
 
     public CommodityClassificationFragment() {
 
@@ -129,6 +138,7 @@ public class CommodityClassificationFragment extends SFFragment implements View.
             mParam1 = getArguments().getInt(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -182,9 +192,7 @@ public class CommodityClassificationFragment extends SFFragment implements View.
         rightRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         rightRecyclerView.setAdapter(rightAdapter);
         rightAdapter.notifyDataSetChanged();
-
-        mSwipeLayout.setOnRefreshListener(this);
-        mSwipeLayout.setColorSchemeColors(getActivity().getResources().getColor(R.color.sf_blue));
+        mSwipeLayout.setEnableLoadMore(false);
         requestData();
         initData();
         initListener();
@@ -193,11 +201,10 @@ public class CommodityClassificationFragment extends SFFragment implements View.
     }
 
     public void initData() {
-        if (mSwipeLayout != null) {
-            mSwipeLayout.setRefreshing(false);
-        }
         OkHttpUtils.post()
                 .url(Urls.GET_SHOP_CLASS)
+                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)
+                .addParams(USERID, Constant.LOGIN_USERID)
                 .build()
                 .execute(new Callback() {
                     @Override
@@ -213,9 +220,6 @@ public class CommodityClassificationFragment extends SFFragment implements View.
 
                     @Override
                     public void onError(Call call, Exception e, int id) {
-                        if (mSwipeLayout != null) {
-                            mSwipeLayout.setRefreshing(false);
-                        }
                         Toast.makeText(getActivity(), TextUtils.isEmpty(e.getMessage()) ? "加载失败，请重试" : e.getMessage(), Toast.LENGTH_SHORT).show();
                         KLog.e(e);
                     }
@@ -227,7 +231,8 @@ public class CommodityClassificationFragment extends SFFragment implements View.
                         leftAdapter.setSelect(0);
                         leftAdapter.setNewData(shopClassifyLsit);
                         leftAdapter.notifyDataSetChanged();
-                        getShops(shopClassifyLsit.get(0).getClsId());
+                        clsId = shopClassifyLsit.get(0).getClsId();
+                        getShops(clsId);
                     }
                 });
 
@@ -241,7 +246,8 @@ public class CommodityClassificationFragment extends SFFragment implements View.
                 leftAdapter.setSelect(position);
                 leftAdapter.notifyDataSetChanged();
                 //获取当前分类的商品
-                getShops(shopClassifyLsit.get(position).getClsId());
+                clsId = shopClassifyLsit.get(position).getClsId();
+                getShops(clsId);
             }
         });
 
@@ -273,12 +279,20 @@ public class CommodityClassificationFragment extends SFFragment implements View.
             }
         });
 
+        mSwipeLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                getShops(clsId);
+            }
+        });
     }
 
 
     public void getShops(int clsId) {
         OkHttpUtils.post()
                 .url(Urls.GET_SHOP)
+                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)
+                .addParams(USERID, Constant.LOGIN_USERID)
                 .addParams("cls_id", clsId + "")
                 .build()
                 .execute(new Callback() {
@@ -290,12 +304,14 @@ public class CommodityClassificationFragment extends SFFragment implements View.
 
                     @Override
                     public void onError(Call call, Exception e, int id) {
+                        mSwipeLayout.finishRefresh(false);
                         ToastUtils.showShortToast(e.getMessage());
                         goneloadDialog();
                     }
 
                     @Override
                     public void onResponse(Object response, int id) {
+                        mSwipeLayout.finishRefresh();
                         goneloadDialog();
                         Shops shops = (Shops) response;
                         multipleItemList.clear();
@@ -381,14 +397,12 @@ public class CommodityClassificationFragment extends SFFragment implements View.
                 mParam1 = 1;
                 button1.setSelected(true);
                 button2.setSelected(false);
-
                 initData();
                 break;
             case R.id.button2:
                 mParam1 = 2;
                 button1.setSelected(false);
                 button2.setSelected(true);
-
                 initData();
                 break;
         }
@@ -446,7 +460,7 @@ public class CommodityClassificationFragment extends SFFragment implements View.
      * 获取头像
      * */
     private void requestData() {
-        OkHttpUtils.post()//
+        OkHttpUtils.get()//
                 .url(Common_HEADER + POST_MINE_INFO)
                 .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
                 .addParams(USERID, Constant.LOGIN_USERID)
@@ -482,7 +496,17 @@ public class CommodityClassificationFragment extends SFFragment implements View.
     }
 
     @Override
-    public void onRefresh() {
-        initData();
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void onMessageEvent(LoginEvent event) {
+        switch (event) {
+            case LOGIN_SUCCESS:
+                requestData();
+                break;
+        }
     }
 }

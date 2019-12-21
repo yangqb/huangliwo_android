@@ -4,10 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
@@ -21,17 +20,16 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.fu700.R;
 import com.feitianzhu.fu700.common.Constant;
 import com.feitianzhu.fu700.me.base.BaseActivity;
 import com.feitianzhu.fu700.model.BaseGoodsListBean;
 import com.feitianzhu.fu700.model.ProductParameters;
-import com.feitianzhu.fu700.shop.adapter.ProductParametersAdapter;
+import com.feitianzhu.fu700.shop.ui.ShoppingCartActivity;
 import com.feitianzhu.fu700.utils.GlideUtils;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.utils.Urls;
-import com.feitianzhu.fu700.utils.doubleclick.SingleClick;
+import com.feitianzhu.fu700.view.CustomSpecificationDialog;
 import com.google.gson.Gson;
 import com.zhpan.bannerview.BannerViewPager;
 import com.zhpan.bannerview.enums.IndicatorStyle;
@@ -58,11 +56,13 @@ import okhttp3.Response;
  */
 public class ShopsDetailActivity extends BaseActivity {
     public static final String GOODS_DETAIL_DATA = "goods_detail_data";
+    private StringBuffer sb;
+    private StringBuffer valueId;
     private String str3 = "0.00";
     private BaseGoodsListBean goodsListBean;
-    private List<ProductParameters.GoodslistBean.SkuValueListBean> skuValueListBean = new ArrayList<>();
-    private ProductParametersAdapter mAdapter;
-    private int valueId = -1; //规格id
+    private ProductParameters productParameters;
+    private List<ProductParameters.GoodsSpecifications.SkuValueListBean> skuValueListBean = new ArrayList<>();
+    private List<ProductParameters.GoodsSpecifications> specifications = new ArrayList<>();
     @BindView(R.id.tv_amount)
     TextView tvAmount;
     @BindView(R.id.title_name)
@@ -75,9 +75,7 @@ public class ShopsDetailActivity extends BaseActivity {
     TextView goodsSummary;
     @BindView(R.id.detail_img)
     ImageView imgDetail;
-    @BindView(R.id.recyclerView)
-    RecyclerView recyclerView;
-    @BindView(R.id.specifications_name)
+    @BindView(R.id.select_specifications)
     TextView specificationsName;
 
     @Override
@@ -96,6 +94,12 @@ public class ShopsDetailActivity extends BaseActivity {
             str3 = String.format(Locale.getDefault(), "%.2f", goodsListBean.getPrice());
             goodsName.setText(goodsListBean.getGoodsName());
             goodsSummary.setText(goodsListBean.getSummary());
+
+            List<BaseGoodsListBean.GoodsEvaluateMode> evalList = goodsListBean.getEvalList();
+            if (evalList != null && evalList.size() > 0) {
+
+            }
+
 
             Glide.with(this).load(goodsListBean.getGoodsIntroduceImg())
                     .apply(new RequestOptions()
@@ -122,12 +126,6 @@ public class ShopsDetailActivity extends BaseActivity {
         tvAmount.append(span2);
         tvAmount.append(span3);
 
-
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
-        mAdapter = new ProductParametersAdapter(skuValueListBean);
-        recyclerView.setAdapter(mAdapter);
-        mAdapter.notifyDataSetChanged();
-
         if (goodsListBean != null && goodsListBean.getGoodsImgsList() != null) {
             List<BaseGoodsListBean.GoodsImgsListBean> bannerList = goodsListBean.getGoodsImgsList();
             mViewpager.setCanLoop(true)
@@ -144,20 +142,10 @@ public class ShopsDetailActivity extends BaseActivity {
             }).create(bannerList);
             mViewpager.startLoop();
         }
-
-
         initListener();
     }
 
     public void initListener() {
-        mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                mAdapter.setSelect(position);
-                mAdapter.notifyDataSetChanged();
-                valueId = skuValueListBean.get(position).getValueId();
-            }
-        });
     }
 
 
@@ -183,12 +171,12 @@ public class ShopsDetailActivity extends BaseActivity {
 
                     @Override
                     public void onResponse(Object response, int id) {
-                        ProductParameters productParameters = (ProductParameters) response;
-                        if (productParameters != null && productParameters.getGoodslist() != null && productParameters.getGoodslist().size() > 0) {
-                            specificationsName.setText(productParameters.getGoodslist().get(0).getAttributeName());
-                            skuValueListBean = productParameters.getGoodslist().get(0).getSkuValueList();
-                            mAdapter.setNewData(skuValueListBean);
-                            mAdapter.notifyDataSetChanged();
+                        productParameters = (ProductParameters) response;
+                        /*
+                         * 数据处理
+                         * */
+                        if (productParameters != null) {
+                            specifications = productParameters.getGoodslist();
                         }
                     }
                 });
@@ -214,24 +202,23 @@ public class ShopsDetailActivity extends BaseActivity {
 
         @Override
         public void onBind(final Context context, BaseGoodsListBean.GoodsImgsListBean data, final int position, final int size) {
-            Glide.with(context).load(data.getGoodsImg()).apply(new RequestOptions().placeholder(R.drawable.pic_fuwutujiazaishibai).error(R.drawable.pic_fuwutujiazaishibai)).into(mImageView);
+            Glide.with(context).load(data.getGoodsImg()).apply(new RequestOptions().placeholder(R.mipmap.g10_03weijiazai).error(R.mipmap.g10_03weijiazai)).into(mImageView);
         }
     }
 
-    @SingleClick
-    @OnClick({R.id.left_button, R.id.tv_pay, R.id.rl_more_evaluation})
+    @OnClick({R.id.left_button, R.id.tv_pay, R.id.rl_more_evaluation, R.id.add_shopping_cart, R.id.shopping_cart, R.id.share, R.id.collect, R.id.select_specifications})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.left_button:
                 finish();
                 break;
             case R.id.tv_pay:
-                if (skuValueListBean.size() > 0 && valueId == -1) {
+                if (sb == null || TextUtils.isEmpty(sb.toString())) {
                     ToastUtils.showShortToast("请选择商品规格");
                     return;
                 }
                 Intent intent = new Intent(ShopsDetailActivity.this, ShopPayActivity.class);
-                intent.putExtra(ShopPayActivity.GOODS_VALUE_ID, valueId);
+                intent.putExtra(ShopPayActivity.GOODS_VALUE_ID, valueId.toString());
                 intent.putExtra(ShopPayActivity.IS_SHOW_ADDRESS, true);
                 if (goodsListBean != null) {
                     intent.putExtra(ShopPayActivity.PAY_DATA, goodsListBean);
@@ -241,6 +228,51 @@ public class ShopsDetailActivity extends BaseActivity {
             case R.id.rl_more_evaluation: //更多评论
                 intent = new Intent(ShopsDetailActivity.this, CommentsDetailActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.add_shopping_cart:
+                //TODO:添加到购物车
+                ToastUtils.showShortToast("待开发");
+                break;
+            case R.id.shopping_cart:
+                intent = new Intent(ShopsDetailActivity.this, ShoppingCartActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.share:
+                ToastUtils.showShortToast("待开发");
+                break;
+            case R.id.collect:
+                ToastUtils.showShortToast("待开发");
+                break;
+            case R.id.select_specifications:
+                /* //商品规格
+                 */
+                new CustomSpecificationDialog(this).setData(specifications)
+                        .setNegativeButton(new CustomSpecificationDialog.OnOkClickListener() {
+                            @Override
+                            public void onOkClick(List<ProductParameters.GoodsSpecifications> data) {
+                                sb = new StringBuffer();
+                                valueId = new StringBuffer();
+                                List<Integer> ids = new ArrayList<>();
+                                for (int i = 0; i < data.size(); i++) {
+                                    for (int j = 0; j < data.get(i).getSkuValueList().size(); j++) {
+                                        if (data.get(i).getSkuValueList().get(j).isSelect()) {
+                                            sb.append("\"" + data.get(i).getSkuValueList().get(j).getAttributeVal() + "\" ");
+                                            ids.add(data.get(i).getSkuValueList().get(j).getValueId());
+                                        }
+                                    }
+                                }
+                                if (ids.size() > 0) {
+                                    for (int i = 0; i < ids.size(); i++) {
+                                        if (i == ids.size() - 1) {
+                                            valueId.append(ids.get(i));
+                                        } else {
+                                            valueId.append(ids.get(i) + ",");
+                                        }
+                                    }
+                                }
+                                specificationsName.setText("选择了：" + sb.toString());
+                            }
+                        }).show();
                 break;
         }
 

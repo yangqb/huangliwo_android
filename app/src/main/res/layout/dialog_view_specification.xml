@@ -2,13 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
+    android:gravity="bottom"
     android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:background="@color/white">
+        android:layout_height="600dp"
+        android:background="@drawable/shape_ffffff_r5">
 
         <RelativeLayout
             android:id="@+id/btn_cancel"
@@ -29,6 +29,7 @@
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="65dp"
             android:layout_marginTop="50dp">
 
         </android.support.v7.widget.RecyclerView>
@@ -37,9 +38,9 @@
             android:id="@+id/btn_ok"
             android:layout_width="106dp"
             android:layout_height="35dp"
-            android:layout_marginBottom="@dimen/dp_20"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
+            android:layout_marginBottom="15dp"
             android:background="@drawable/shape_fed428_r5"
             android:gravity="center"
             android:text="确定"

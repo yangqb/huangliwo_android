@@ -124,8 +124,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         NetworkDao.login(this, mAccount, base64Ps, new onConnectionFinishLinstener() {
             @Override
             public void onSuccess(int code, Object result) {
-
-                NetworkDao.getUserInfo(new onConnectionFinishLinstener() {
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(intent);
+                LoginActivity.this.finish();
+               /* NetworkDao.getUserInfo(new onConnectionFinishLinstener() {
                     @Override
                     public void onSuccess(int code, Object result) {
 //                        startMainActivity();
@@ -140,7 +142,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         ToastUtils.showShortToast(result);
                         startMainActivity();
                     }
-                });
+                });*/
             }
 
             @Override

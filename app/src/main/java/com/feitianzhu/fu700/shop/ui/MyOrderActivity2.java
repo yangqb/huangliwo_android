@@ -1,6 +1,8 @@
 package com.feitianzhu.fu700.shop.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -12,32 +14,48 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.fu700.R;
 import com.feitianzhu.fu700.common.Constant;
 import com.feitianzhu.fu700.me.base.BaseActivity;
+import com.feitianzhu.fu700.model.AddressInfo;
+import com.feitianzhu.fu700.model.GoodOrderCountMode;
 import com.feitianzhu.fu700.model.GoodsOrderInfo;
 import com.feitianzhu.fu700.model.MultiItemGoodsOrder;
+import com.feitianzhu.fu700.shop.SelectPayActivity;
 import com.feitianzhu.fu700.shop.ShopPayActivity;
 import com.feitianzhu.fu700.shop.adapter.OrderAdapter;
+import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.utils.Urls;
 import com.google.gson.Gson;
+import com.lxj.xpopup.XPopup;
+import com.lxj.xpopup.interfaces.OnConfirmListener;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import okhttp3.Call;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import static com.feitianzhu.fu700.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.fu700.common.Constant.USERID;
 
 public class MyOrderActivity2 extends BaseActivity {
+    private static final int PAY_REQUEST_CODE = 1001;
     private OrderAdapter adapter;
     private List<GoodsOrderInfo.GoodsOrderListBean> goodsOrderList = new ArrayList<>();
     private List<GoodsOrderInfo.GoodsOrderListBean> goodsOrderClassList = new ArrayList<>();
     private List<GoodsOrderInfo.GoodsOrderListBean> goodsOrderCurrentList = new ArrayList<>();
     private GoodsOrderInfo goodsOrderInfo;
+    private static final int REQUEST_CODE = 1000;
     @BindView(R.id.all_order)
     TextView allOrder;
     @BindView(R.id.wait_pay_order)
@@ -66,6 +84,8 @@ public class MyOrderActivity2 extends BaseActivity {
     ImageView search;
     @BindView(R.id.right_img)
     ImageView afterSale;
+    @BindView(R.id.refreshLayout)
+    SmartRefreshLayout refreshLayout;
 
     @Override
     protected int getLayoutId() {
@@ -99,10 +119,11 @@ public class MyOrderActivity2 extends BaseActivity {
 
             }
         });
+        refreshLayout.setEnableLoadMore(false);
         adapter.setEmptyView(mEmptyView);
+        adapter.notifyDataSetChanged();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
         initListener();
     }
 
@@ -111,7 +132,7 @@ public class MyOrderActivity2 extends BaseActivity {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Intent intent = new Intent(MyOrderActivity2.this, OrderDetailActivity.class);
-                intent.putExtra(OrderDetailActivity.ORDER_DATA, goodsOrderCurrentList.get(position));
+                intent.putExtra(OrderDetailActivity.ORDER_NO, goodsOrderCurrentList.get(position).getOrderNo());
                 startActivity(intent);
             }
         });
@@ -132,8 +153,18 @@ public class MyOrderActivity2 extends BaseActivity {
                     case R.id.btn_logistics:
                         if (goodsOrderCurrentList.get(position).getStatus() == GoodsOrderInfo.TYPE_COMPLETED) {
                             //删除订单，
+                            delete(goodsOrderCurrentList.get(position).getOrderNo());
                         } else if (goodsOrderCurrentList.get(position).getStatus() == GoodsOrderInfo.TYPE_NO_PAY) {
                             //取消订单，
+                            new XPopup.Builder(MyOrderActivity2.this)
+                                    .asConfirm("确定要取消该订单？", "", "关闭", "确定", new OnConfirmListener() {
+                                        @Override
+                                        public void onConfirm() {
+                                            cancel(goodsOrderCurrentList.get(position).getOrderNo());
+                                        }
+                                    }, null, false)
+                                    .bindLayout(R.layout.layout_dialog) //绑定已有布局
+                                    .show();
                         } else if (goodsOrderCurrentList.get(position).getStatus() == GoodsOrderInfo.TYPE_WAIT_RECEIVING) {
                             //查看物流
                             intent = new Intent(MyOrderActivity2.this, LogisticsInfoActivity.class);
@@ -141,34 +172,45 @@ public class MyOrderActivity2 extends BaseActivity {
                         } else if (goodsOrderCurrentList.get(position).getStatus() == GoodsOrderInfo.TYPE_WAIT_DELIVERY) {
                             //退款
                             intent = new Intent(MyOrderActivity2.this, EditApplyRefundActivity.class);
-                            startActivity(intent);
+                            intent.putExtra(EditApplyRefundActivity.ORDER_DATA, goodsOrderCurrentList.get(position));
+                            startActivityForResult(intent, REQUEST_CODE);
                         }
                         break;
                     case R.id.btn_confirm_goods:
                         if (goodsOrderCurrentList.get(position).getStatus() == GoodsOrderInfo.TYPE_COMPLETED) {
                             //评价
                             intent = new Intent(MyOrderActivity2.this, EditCommentsActivity.class);
+                            intent.putExtra(EditCommentsActivity.ORDER_DATA, goodsOrderCurrentList.get(position));
                             startActivity(intent);
                         } else if (goodsOrderCurrentList.get(position).getStatus() == GoodsOrderInfo.TYPE_NO_PAY) {
                             //付款
-                            intent = new Intent(MyOrderActivity2.this, ShopPayActivity.class);
-                            startActivity(intent);
+                            intent = new Intent(MyOrderActivity2.this, SelectPayActivity.class);
+                            intent.putExtra(SelectPayActivity.ORDER_DATA, goodsOrderCurrentList.get(position));
+                            startActivityForResult(intent, PAY_REQUEST_CODE);
                         } else if (goodsOrderCurrentList.get(position).getStatus() == GoodsOrderInfo.TYPE_WAIT_DELIVERY) {
                             //查看物流
                             intent = new Intent(MyOrderActivity2.this, LogisticsInfoActivity.class);
                             startActivity(intent);
                         } else if (goodsOrderCurrentList.get(position).getStatus() == GoodsOrderInfo.TYPE_WAIT_RECEIVING) {
                             //确认收货
+                            confirm(goodsOrderCurrentList.get(position).getOrderNo());
                         } else if (goodsOrderCurrentList.get(position).getStatus() == GoodsOrderInfo.TYPE_REFUND
                                 || goodsOrderCurrentList.get(position).getStatus() == GoodsOrderInfo.TYPE_REFUNDED
                                 || goodsOrderCurrentList.get(position).getStatus() == GoodsOrderInfo.TYPE_CANCEL) {
                             //查看详情
                             intent = new Intent(MyOrderActivity2.this, OrderDetailActivity.class);
-                            intent.putExtra(OrderDetailActivity.ORDER_DATA, goodsOrderCurrentList.get(position));
+                            intent.putExtra(OrderDetailActivity.ORDER_NO, goodsOrderCurrentList.get(position).getOrderNo());
                             startActivity(intent);
                         }
                         break;
                 }
+            }
+        });
+
+        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                initData();
             }
         });
     }
@@ -267,6 +309,35 @@ public class MyOrderActivity2 extends BaseActivity {
 
     @Override
     protected void initData() {
+        OkHttpUtils.get()
+                .url(Urls.GTE_ORDER_COUNT)
+                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)
+                .addParams(USERID, Constant.LOGIN_USERID)
+                .build()
+                .execute(new Callback() {
+                    @Override
+                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
+                        return new Gson().fromJson(mData, GoodOrderCountMode.class);
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        ToastUtils.showShortToast(e.getMessage());
+                    }
+
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void onResponse(Object response, int id) {
+                        GoodOrderCountMode orderCountMode = (GoodOrderCountMode) response;
+                        if (orderCountMode != null) {
+                            waitPayOrder.setText("待付款(" + orderCountMode.getWaitPay() + ")");
+                            waitSendingOrder.setText("待发货(" + orderCountMode.getWaitDeliver() + ")");
+                            waitReceiveOrder.setText("待收货(" + orderCountMode.getWaitReceiving() + ")");
+                            waitEvaluateOrder.setText("待评价(" + orderCountMode.getWaitEval() + ")");
+                        }
+                    }
+                });
+
         OkHttpUtils.post()
                 .url(Urls.GET_ORDER_INFO)
                 .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)
@@ -281,16 +352,96 @@ public class MyOrderActivity2 extends BaseActivity {
 
                     @Override
                     public void onError(Call call, Exception e, int id) {
-
+                        refreshLayout.finishRefresh(false);
                     }
 
                     @Override
                     public void onResponse(Object response, int id) {
+                        refreshLayout.finishRefresh();
                         goodsOrderInfo = (GoodsOrderInfo) response;
                         goodsOrderList = goodsOrderInfo.getGoodsOrderList();
                         goodsOrderCurrentList = goodsOrderList;
                         adapter.setNewData(goodsOrderCurrentList);
                         adapter.notifyDataSetChanged();
+                    }
+                });
+    }
+
+    public void delete(String orderNo) {
+        OkHttpUtils.get()
+                .url(Urls.DELETE_ORDER)
+                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)
+                .addParams(USERID, Constant.LOGIN_USERID)
+                .addParams("orderNo", orderNo)
+                .build()
+                .execute(new Callback() {
+                    @Override
+                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
+                        return mData;
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        ToastUtils.showShortToast(e.getMessage());
+                    }
+
+                    @Override
+                    public void onResponse(Object response, int id) {
+                        ToastUtils.showShortToast("删除成功");
+                        initData();
+                    }
+                });
+    }
+
+    public void cancel(String orderNo) {
+        OkHttpUtils.get()
+                .url(Urls.CANCEL_ORDER)
+                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)
+                .addParams(USERID, Constant.LOGIN_USERID)
+                .addParams("orderNo", orderNo)
+                .build()
+                .execute(new Callback() {
+                    @Override
+                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
+                        return mData;
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        ToastUtils.showShortToast(e.getMessage());
+                    }
+
+                    @Override
+                    public void onResponse(Object response, int id) {
+                        ToastUtils.showShortToast("取消成功");
+                        initData();
+                    }
+                });
+
+    }
+
+    public void confirm(String orderNo) {
+        OkHttpUtils.get()
+                .url(Urls.CONFIRM_ORDER)
+                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)
+                .addParams(USERID, Constant.LOGIN_USERID)
+                .addParams("orderNo", orderNo)
+                .build()
+                .execute(new Callback() {
+                    @Override
+                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
+                        return mData;
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        ToastUtils.showShortToast(e.getMessage());
+                    }
+
+                    @Override
+                    public void onResponse(Object response, int id) {
+                        ToastUtils.showShortToast("确认收货");
+                        initData();
                     }
                 });
     }
@@ -304,5 +455,15 @@ public class MyOrderActivity2 extends BaseActivity {
         }
         goodsOrderCurrentList = goodsOrderClassList;
         return goodsOrderCurrentList;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_CODE || requestCode == PAY_REQUEST_CODE) {
+                initData();
+            }
+        }
     }
 }

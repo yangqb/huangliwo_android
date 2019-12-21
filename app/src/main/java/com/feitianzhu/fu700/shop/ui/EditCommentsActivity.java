@@ -2,49 +2,69 @@ package com.feitianzhu.fu700.shop.ui;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.net.Uri;
-import android.os.Environment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.fu700.R;
+import com.feitianzhu.fu700.common.Constant;
 import com.feitianzhu.fu700.me.base.BaseActivity;
+import com.feitianzhu.fu700.model.EvaluateMode;
+import com.feitianzhu.fu700.model.GoodsOrderInfo;
 import com.feitianzhu.fu700.model.MultiItemComment;
 import com.feitianzhu.fu700.shop.adapter.EditCommentAdapter;
 import com.feitianzhu.fu700.utils.Glide4Engine;
+import com.feitianzhu.fu700.utils.ToastUtils;
+import com.feitianzhu.fu700.utils.Urls;
+import com.google.gson.Gson;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
-import com.zhihu.matisse.engine.impl.GlideEngine;
-import com.zhihu.matisse.engine.impl.PicassoEngine;
-import com.zhihu.matisse.internal.entity.CaptureStrategy;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.Callback;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import cc.shinichi.library.ImagePreview;
+import okhttp3.Call;
+import okhttp3.Response;
+
+import static com.feitianzhu.fu700.common.Constant.ACCESSTOKEN;
+import static com.feitianzhu.fu700.common.Constant.USERID;
 
 /*
  * 评价
  * */
 public class EditCommentsActivity extends BaseActivity {
     private static final int REQUEST_CODE_CHOOSE = 1000;
+    public static final String ORDER_DATA = "order_data";
+    private int maxSize = 3;
+    private boolean isAdd = true; //是否还可以添加图片
     private EditCommentAdapter mAdapter;
     private List<MultiItemComment> multiItemCommentList = new ArrayList<>();
     private List<String> mSelected = new ArrayList<>();
+    private EvaluateMode evaluateMode;
+    private GoodsOrderInfo.GoodsOrderListBean goodsOrderListBean;
     @BindView(R.id.title_name)
     TextView titleName;
     @BindView(R.id.right_text)
     TextView rightText;
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
+    @BindView(R.id.edit_content)
+    EditText editContent;
 
     @Override
     protected int getLayoutId() {
@@ -56,8 +76,7 @@ public class EditCommentsActivity extends BaseActivity {
         titleName.setText("评价");
         rightText.setText("发布");
         rightText.setVisibility(View.VISIBLE);
-
-
+        goodsOrderListBean = (GoodsOrderInfo.GoodsOrderListBean) getIntent().getSerializableExtra(ORDER_DATA);
         MultiItemComment comment = new MultiItemComment(MultiItemComment.upImg);
         comment.setId(R.mipmap.g01_01shangchuan);
         multiItemCommentList.add(comment);
@@ -75,7 +94,6 @@ public class EditCommentsActivity extends BaseActivity {
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-
                 if (adapter.getItemViewType(position) == MultiItemComment.upImg) {
                     selectPhoto();
                 } else {
@@ -119,6 +137,13 @@ public class EditCommentsActivity extends BaseActivity {
                 mAdapter.setNewData(multiItemCommentList);
                 mAdapter.notifyDataSetChanged();
                 allSelect.remove(position);
+                maxSize = 3 - allSelect.size();
+                if (isAdd) {
+                    MultiItemComment comment = new MultiItemComment(MultiItemComment.upImg);
+                    comment.setId(R.mipmap.g01_01shangchuan);
+                    multiItemCommentList.add(comment);
+                }
+                isAdd = false;
             }
         });
     }
@@ -135,7 +160,7 @@ public class EditCommentsActivity extends BaseActivity {
                 //有序选择图片 123456...
                 .countable(true)
                 //最大选择数量为6
-                .maxSelectable(6)
+                .maxSelectable(maxSize)
                 //选择方向
                 .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
                 //图片过滤
@@ -164,17 +189,72 @@ public class EditCommentsActivity extends BaseActivity {
         return cachePath;
     }*/
 
-    @OnClick(R.id.left_button)
-    public void onClick() {
-        new XPopup.Builder(this)
-                .asConfirm("确定要退出评价？", "", "关闭", "确定", new OnConfirmListener() {
-                    @Override
-                    public void onConfirm() {
-                        finish();
+    @OnClick({R.id.left_button, R.id.right_text})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.left_button:
+                new XPopup.Builder(this)
+                        .asConfirm("确定要退出评价？", "", "关闭", "确定", new OnConfirmListener() {
+                            @Override
+                            public void onConfirm() {
+                                finish();
+                            }
+                        }, null, false)
+                        .bindLayout(R.layout.layout_dialog) //绑定已有布局
+                        .show();
+                break;
+            case R.id.right_text:
+                if (TextUtils.isEmpty(editContent.getText().toString().trim())) {
+                    ToastUtils.showShortToast("您还没有填写评价内容");
+                    return;
+                }
+                if (editContent.getText().toString().trim().length() > 500) {
+                    ToastUtils.showShortToast("最多可以输入500个字哦");
+                    return;
+                }
+
+                evaluateMode = new EvaluateMode();
+                evaluateMode.setGoodId(goodsOrderListBean.getGoodId());
+                evaluateMode.setOrderNo(goodsOrderListBean.getOrderNo());
+                evaluateMode.setUserId(Integer.valueOf(Constant.LOGIN_USERID));
+                evaluateMode.setContent(editContent.getText().toString());
+                String json = new Gson().toJson(evaluateMode);
+
+                Map<String, File> files = new HashMap<>();
+
+                if (allSelect.size() > 0) {
+                    for (int i = 0; i < allSelect.size(); i++) {
+                        String name = i + ".png";
+                        files.put(name, new File(allSelect.get(i)));
                     }
-                }, null, false)
-                .bindLayout(R.layout.layout_dialog) //绑定已有布局
-                .show();
+                }
+
+                OkHttpUtils.post()
+                        .addFiles("files", files)
+                        .url(Urls.EVALUATE_ORDER)
+                        .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)
+                        .addParams(USERID, Constant.LOGIN_USERID)
+                        .addParams("evaluateBody", json)
+                        .build()
+                        .execute(new Callback() {
+                            @Override
+                            public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
+                                return super.parseNetworkResponse(mData, response, id);
+                            }
+
+                            @Override
+                            public void onError(Call call, Exception e, int id) {
+
+                            }
+
+                            @Override
+                            public void onResponse(Object response, int id) {
+
+                            }
+                        });
+
+                break;
+        }
     }
 
     @Override
@@ -194,6 +274,11 @@ public class EditCommentsActivity extends BaseActivity {
                 MultiItemComment comment = new MultiItemComment(MultiItemComment.LookImg);
                 comment.setPath(mSelected.get(i));
                 multiItemCommentList.add(multiItemCommentList.size() - 1, comment);
+            }
+            maxSize = 3 - allSelect.size();
+            if (maxSize <= 0) {
+                multiItemCommentList.remove(multiItemCommentList.size() - 1);
+                isAdd = true;
             }
             mAdapter.setNewData(multiItemCommentList);
             mAdapter.notifyDataSetChanged();

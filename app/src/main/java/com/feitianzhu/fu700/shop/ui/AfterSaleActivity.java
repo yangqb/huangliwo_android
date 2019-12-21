@@ -74,7 +74,7 @@ public class AfterSaleActivity extends BaseActivity {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Intent intent = new Intent(AfterSaleActivity.this, OrderDetailActivity.class);
-                intent.putExtra(OrderDetailActivity.ORDER_DATA, goodsOrderCurrentList.get(position));
+                intent.putExtra(OrderDetailActivity.ORDER_NO, goodsOrderCurrentList.get(position).getOrderNo());
                 startActivity(intent);
             }
         });
@@ -95,7 +95,7 @@ public class AfterSaleActivity extends BaseActivity {
                                 || goodsOrderCurrentList.get(position).getStatus() == GoodsOrderInfo.TYPE_CANCEL) {
                             //查看详情
                             intent = new Intent(AfterSaleActivity.this, OrderDetailActivity.class);
-                            intent.putExtra(OrderDetailActivity.ORDER_DATA, goodsOrderCurrentList.get(position));
+                            intent.putExtra(OrderDetailActivity.ORDER_NO, goodsOrderCurrentList.get(position).getOrderNo());
                             startActivity(intent);
                         }
                         break;

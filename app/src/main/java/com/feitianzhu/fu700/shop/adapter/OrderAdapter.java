@@ -41,14 +41,14 @@ public class OrderAdapter extends BaseQuickAdapter<GoodsOrderInfo.GoodsOrderList
         price = String.format(Locale.getDefault(), "%.2f", item.getPrice());
         setSpannableString(amount, helper.getView(R.id.amount));
         setSpannableString2(price, helper.getView(R.id.tv_amount));
-        helper.setText(R.id.goodsName, item.getGoodsName());
-        helper.setText(R.id.summary, item.getSummary());
-        helper.setText(R.id.count, "×" + item.getGoodsQTY());
-        helper.setText(R.id.tvCount, "共" + item.getGoodsQTY() + "件商品");
+        helper.setText(R.id.specifications, item.getAttributeVal());
+        helper.setText(R.id.summary, item.getGoodName());
+        helper.setText(R.id.count, "×" + item.getCount());
+        helper.setText(R.id.tvCount, "共" + item.getCount() + "件商品");
         helper.setText(R.id.merchantsName, item.getShopName());
         Glide.with(mContext).load(item.getGoodsImg()).apply(new RequestOptions()
-                .placeholder(R.drawable.pic_fuwutujiazaishibai)
-                .error(R.drawable.pic_fuwutujiazaishibai)).into((RoundedImageView) helper.getView(R.id.image));
+                .placeholder(R.mipmap.g10_04weijiazai)
+                .error(R.mipmap.g10_04weijiazai)).into((RoundedImageView) helper.getView(R.id.image));
 
         helper.addOnClickListener(R.id.btn_refund);
         helper.addOnClickListener(R.id.btn_logistics);
@@ -61,21 +61,21 @@ public class OrderAdapter extends BaseQuickAdapter<GoodsOrderInfo.GoodsOrderList
             helper.setVisible(R.id.btn_logistics, true);
             helper.setVisible(R.id.btn_refund, false);
         } else if (item.getStatus() == GoodsOrderInfo.TYPE_NO_PAY) {
-            helper.setText(R.id.tvStatus, "等待付款");
+            helper.setText(R.id.tvStatus, "待付款");
             helper.setText(R.id.btn_confirm_goods, "付款");
             helper.setText(R.id.btn_logistics, " 取消订单");
             helper.setVisible(R.id.btn_confirm_goods, true);
             helper.setVisible(R.id.btn_logistics, true);
             helper.setVisible(R.id.btn_refund, false);
         } else if (item.getStatus() == GoodsOrderInfo.TYPE_WAIT_DELIVERY) {
-            helper.setText(R.id.tvStatus, "等待发货");
+            helper.setText(R.id.tvStatus, "待发货");
             helper.setText(R.id.btn_confirm_goods, "查看物流");
             helper.setText(R.id.btn_logistics, "退款 ");
             helper.setVisible(R.id.btn_confirm_goods, true);
             helper.setVisible(R.id.btn_logistics, true);
             helper.setVisible(R.id.btn_refund, false);
         } else if (item.getStatus() == GoodsOrderInfo.TYPE_WAIT_RECEIVING) {
-            helper.setText(R.id.tvStatus, "等待收货");
+            helper.setText(R.id.tvStatus, "待收货");
             helper.setText(R.id.btn_confirm_goods, "确认收货");
             helper.setText(R.id.btn_logistics, " 查看物流");
             helper.setText(R.id.btn_refund, "退款");

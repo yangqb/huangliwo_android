@@ -52,6 +52,11 @@ import com.feitianzhu.fu700.utils.Urls;
 import com.feitianzhu.fu700.view.CircleImageView;
 import com.google.gson.Gson;
 import com.itheima.roundedimageview.RoundedImageView;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 import com.socks.library.KLog;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
@@ -82,6 +87,7 @@ import static com.feitianzhu.fu700.common.Constant.ISADMIN;
 import static com.feitianzhu.fu700.common.Constant.MERCHANTID;
 import static com.feitianzhu.fu700.common.Constant.POST_MINE_INFO;
 import static com.feitianzhu.fu700.common.Constant.USERID;
+import static com.scwang.smartrefresh.layout.constant.RefreshState.Refreshing;
 
 /**
  * @class name：com.feitianzhu.fu700.home
@@ -89,12 +95,12 @@ import static com.feitianzhu.fu700.common.Constant.USERID;
  * @email QQ:694125155
  * @Date 2019/11/16 0016 下午 4:35
  */
-public class HomeFragment2 extends SFFragment implements SwipeRefreshLayout.OnRefreshListener, ProvinceCallBack, View.OnClickListener {
+public class HomeFragment2 extends SFFragment implements ProvinceCallBack, View.OnClickListener {
     Unbinder unbinder;
     @BindView(R.id.recyclerview)
     RecyclerView mRecyclerview;
     @BindView(R.id.swipeLayout)
-    SwipeRefreshLayout mSwipeLayout;
+    SmartRefreshLayout mSwipeLayout;
     @BindView(R.id.search)
     LinearLayout mSearchLayout;
     @BindView(R.id.txt_location)
@@ -122,6 +128,7 @@ public class HomeFragment2 extends SFFragment implements SwipeRefreshLayout.OnRe
     private PopupWindow popupWindow;
     private View vPopupWindow;
     private List<HomeEntity.BannerListBean> mBanners = new ArrayList<>();
+    private boolean isLoadMore;
 
     public HomeFragment2() {
 
@@ -182,8 +189,7 @@ public class HomeFragment2 extends SFFragment implements SwipeRefreshLayout.OnRe
 
         ivRight.setOnClickListener(this);
         mSearchLayout.setOnClickListener(this);
-        mSwipeLayout.setOnRefreshListener(this);
-        mSwipeLayout.setColorSchemeColors(getActivity().getResources().getColor(R.color.sf_blue));
+       mSwipeLayout.setEnableLoadMore(false);
         getData();
         requestData();
         initListener();
@@ -218,6 +224,20 @@ public class HomeFragment2 extends SFFragment implements SwipeRefreshLayout.OnRe
                     intent.putExtra(ShopSetMealActivity.SERVICE_RECOMMEND_BEAN, serviceRecommendBean);
                     startActivity(intent);
                 }
+            }
+        });
+
+        mSwipeLayout.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
+            @Override
+            public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+                isLoadMore = true;
+            }
+
+            @Override
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                isLoadMore = false;
+                requestData();
+                getData();
             }
         });
     }
@@ -262,8 +282,10 @@ public class HomeFragment2 extends SFFragment implements SwipeRefreshLayout.OnRe
                     @Override
                     public void onError(Call call, Exception e, int id) {
                         goneloadDialog();
-                        if (mSwipeLayout != null) {
-                            mSwipeLayout.setRefreshing(false);
+                        if (!isLoadMore) {
+                            mSwipeLayout.finishRefresh(false);
+                        } else {
+                            mSwipeLayout.finishLoadMore(false);
                         }
                         Toast.makeText(getActivity(), TextUtils.isEmpty(e.getMessage()) ? "加载失败，请重试" : e.getMessage(), Toast.LENGTH_SHORT).show();
                         KLog.e(e);
@@ -272,9 +294,12 @@ public class HomeFragment2 extends SFFragment implements SwipeRefreshLayout.OnRe
                     @Override
                     public void onResponse(Object response, int id) {
                         goneloadDialog();
-                        if (mSwipeLayout != null) {
-                            mSwipeLayout.setRefreshing(false);
+                        if (!isLoadMore) {
+                            mSwipeLayout.finishRefresh();
+                        } else {
+                            mSwipeLayout.finishLoadMore();
                         }
+
                         mHomeEntity = (HomeEntity) response;
 
                         //1.set banner
@@ -366,12 +391,6 @@ public class HomeFragment2 extends SFFragment implements SwipeRefreshLayout.OnRe
         }
         if (mViewpager != null)
             mViewpager.startLoop();
-    }
-
-    @Override
-    public void onRefresh() {
-        requestData();
-        getData();
     }
 
     @Override
@@ -537,7 +556,7 @@ public class HomeFragment2 extends SFFragment implements SwipeRefreshLayout.OnRe
 
         @Override
         public void onBind(final Context context, HomeEntity.BannerListBean data, final int position, final int size) {
-            Glide.with(context).load(data.imagUrl).apply(new RequestOptions().error(R.drawable.pic_fuwutujiazaishibai).placeholder(R.drawable.pic_fuwutujiazaishibai)).into(mImageView);
+            Glide.with(context).load(data.imagUrl).apply(new RequestOptions().error(R.mipmap.g10_01weijiazai).placeholder(R.mipmap.g10_01weijiazai)).into(mImageView);
         }
     }
 
@@ -545,7 +564,7 @@ public class HomeFragment2 extends SFFragment implements SwipeRefreshLayout.OnRe
      * 获取头像
      * */
     private void requestData() {
-        OkHttpUtils.post()//
+        OkHttpUtils.get()//
                 .url(Common_HEADER + POST_MINE_INFO)
                 .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
                 .addParams(USERID, Constant.LOGIN_USERID)

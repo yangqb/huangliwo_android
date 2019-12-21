@@ -30,6 +30,15 @@ public class BaseGoodsListBean implements Serializable {
     private String connectPhone;
     private String isPoints;
     private List<GoodsImgsListBean> goodsImgsList;
+    private List<GoodsEvaluateMode> evalList;
+
+    public List<GoodsEvaluateMode> getEvalList() {
+        return evalList;
+    }
+
+    public void setEvalList(List<GoodsEvaluateMode> evalList) {
+        this.evalList = evalList;
+    }
 
     public String getGoodsIntroduceImg() {
         return goodsIntroduceImg;
@@ -151,7 +160,7 @@ public class BaseGoodsListBean implements Serializable {
         this.rebatePv = rebatePv;
     }
 
-    public static class GoodsImgsListBean implements Serializable{
+    public static class GoodsImgsListBean implements Serializable {
         /**
          * imgId : 1
          * goodsId : 2
@@ -184,6 +193,73 @@ public class BaseGoodsListBean implements Serializable {
 
         public void setGoodsImg(String goodsImg) {
             this.goodsImg = goodsImg;
+        }
+    }
+
+    public static class GoodsEvaluateMode implements Serializable {
+
+        /**
+         * evalId : 1
+         * content : 嗯www
+         * evalDate : Dec 21, 2019 7:26:34 PM
+         * nickName : HLW0321
+         * headImg : http://39.106.65.35:8089/user/headImg/2019/12/13/ffc06cf20697433d88131ee1114d4baa.jpg
+         * evalImgs : http://127.0.0.1:8089/good/evaluate/2019/12/21/3e4c783f7753431586089acefc8e259b.png,http://127.0.0.1:8089/good/evaluate/2019/12/21/8152c02fabb94217a052171f1872e77f.png
+         */
+
+        private int evalId;
+        private String content;
+        private String evalDate;
+        private String nickName;
+        private String headImg;
+        private String evalImgs;
+
+        public int getEvalId() {
+            return evalId;
+        }
+
+        public void setEvalId(int evalId) {
+            this.evalId = evalId;
+        }
+
+        public String getContent() {
+            return content;
+        }
+
+        public void setContent(String content) {
+            this.content = content;
+        }
+
+        public String getEvalDate() {
+            return evalDate;
+        }
+
+        public void setEvalDate(String evalDate) {
+            this.evalDate = evalDate;
+        }
+
+        public String getNickName() {
+            return nickName;
+        }
+
+        public void setNickName(String nickName) {
+            this.nickName = nickName;
+        }
+
+        public String getHeadImg() {
+            return headImg;
+        }
+
+        public void setHeadImg(String headImg) {
+            this.headImg = headImg;
+        }
+
+        public String getEvalImgs() {
+            return evalImgs;
+        }
+
+        public void setEvalImgs(String evalImgs) {
+            this.evalImgs = evalImgs;
         }
     }
 }

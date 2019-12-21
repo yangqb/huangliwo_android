@@ -103,7 +103,6 @@ public class ShopSetMealActivity extends BaseActivity {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
-        mRecyclerView.setNestedScrollingEnabled(false);
 
         if (serviceRecommendBean != null) {
             requestShowData(2 + "");
@@ -272,7 +271,7 @@ public class ShopSetMealActivity extends BaseActivity {
 
         @Override
         public void onBind(final Context context, Integer data, final int position, final int size) {
-            Glide.with(context).load(R.mipmap.e01_12shangpu).into(mImageView);
+            Glide.with(context).load(R.mipmap.g10_02weijiazai).into(mImageView);
         }
     }
 

@@ -10,7 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_marginLeft="@dimen/dp_10"
-        android:layout_marginTop="@dimen/dp_10"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"
         android:background="@drawable/bg_ffffff_r5"
         android:orientation="vertical"
         android:paddingLeft="@dimen/dp_10"
@@ -41,17 +42,16 @@
                 android:layout_height="wrap_content"
                 android:text="店家（深圳店）"
                 android:textColor="@color/color_333333"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textSize="16sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginBottom="8dp"
                 android:ellipsize="end"
                 android:maxLines="2"
-                android:text="会员首选推荐 会员首选推荐 会员首选推荐会员首选推荐会员首选推荐会员首选推荐会员首选推荐会员首选推荐会员首选推荐会员首选推荐会员首选推荐"
+                android:text=""
                 android:textColor="@color/color_666666"
                 android:textSize="12sp" />
 

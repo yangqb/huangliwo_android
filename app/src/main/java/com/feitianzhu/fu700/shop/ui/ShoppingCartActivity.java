@@ -20,12 +20,11 @@ import com.feitianzhu.fu700.me.base.BaseActivity;
 import com.feitianzhu.fu700.model.ProductParameters;
 import com.feitianzhu.fu700.model.ShoppingCartMode;
 import com.feitianzhu.fu700.shop.adapter.ShoppingCartAdapter;
-import com.feitianzhu.fu700.utils.ToastUtils;
-import com.feitianzhu.fu700.view.CustomSpecificationView;
+import com.feitianzhu.fu700.view.CustomSpecificationDialog;
 import com.lxj.xpopup.XPopup;
+import com.lxj.xpopup.interfaces.OnConfirmListener;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -45,7 +44,6 @@ public class ShoppingCartActivity extends BaseActivity {
     private double p = 0.00;
     private ShoppingCartAdapter mAdapter;
     private List<ShoppingCartMode> shoppingCartModes;
-    private List<ProductParameters.GoodslistBean.SkuValueListBean> data = new ArrayList<>();
     private String str1;
     private String str2;
     @BindView(R.id.title_name)
@@ -74,13 +72,6 @@ public class ShoppingCartActivity extends BaseActivity {
             cartMode.setAttributeVal("规格");
             shoppingCartModes.add(cartMode);
         }
-
-        for (int i = 0; i < 10; i++) {
-            ProductParameters.GoodslistBean.SkuValueListBean listBean = new ProductParameters.GoodslistBean.SkuValueListBean();
-            listBean.setAttributeVal("阿拉啦啦" + i);
-            data.add(listBean);
-        }
-
 
         mAdapter = new ShoppingCartAdapter(shoppingCartModes);
         View mEmptyView = View.inflate(this, R.layout.view_common_nodata, null);
@@ -121,12 +112,20 @@ public class ShoppingCartActivity extends BaseActivity {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                 switch (view.getId()) {
-                    case R.id.delete:
-                        shoppingCartModes.remove(position);
-                        mAdapter.setNewData(shoppingCartModes);
-                        mAdapter.notifyDataSetChanged();
+                    case R.id.delete: //删除购物车商品
+                        new XPopup.Builder(ShoppingCartActivity.this)
+                                .asConfirm("确定要删除该订单？", "", "取消", "确定", new OnConfirmListener() {
+                                    @Override
+                                    public void onConfirm() {
+                                        shoppingCartModes.remove(position);
+                                        mAdapter.setNewData(shoppingCartModes);
+                                        mAdapter.notifyDataSetChanged();
+                                    }
+                                }, null, false)
+                                .bindLayout(R.layout.layout_dialog) //绑定已有布局
+                                .show();
                         break;
-                    case R.id.select_goods:
+                    case R.id.select_goods: //选择支付的商品
                         shoppingCartModes.get(position).setSelect(!shoppingCartModes.get(position).isSelect());
                         mAdapter.setNewData(shoppingCartModes);
                         mAdapter.notifyItemChanged(position);
@@ -142,19 +141,24 @@ public class ShoppingCartActivity extends BaseActivity {
                         totalAmount = String.format(Locale.getDefault(), "%.2f", p);
                         setSpannableString(totalAmount);
                         break;
-                    case R.id.summary:
-                        new XPopup.Builder(ShoppingCartActivity.this)
-                                .asCustom(new CustomSpecificationView(ShoppingCartActivity.this)
-                                        .setData(data)
-                                        .setOnItemClickListener(new CustomSpecificationView.OnItemClickListener() {
-                                            @Override
-                                            public void onItemClick(int pos) {
-                                                ToastUtils.showShortToast("选择了" + data.get(pos).getAttributeVal());
-                                                shoppingCartModes.get(position).setAttributeVal(data.get(pos).getAttributeVal());
-                                                mAdapter.notifyItemChanged(position);
+                    case R.id.summary: //选择规格
+                        /* //商品规格
+                         */
+                        /*new CustomSpecificationDialog(this).setData(specifications)
+                                .setNegativeButton(new CustomSpecificationDialog.OnOkClickListener() {
+                                    @Override
+                                    public void onOkClick(List<ProductParameters.GoodsSpecifications> data) {
+                                        StringBuffer sb = new StringBuffer();
+                                        for (int i = 0; i < data.size(); i++) {
+                                            for (int j = 0; j < data.get(i).getSkuValueList().size(); j++) {
+                                                if (data.get(i).getSkuValueList().get(j).isSelect()) {
+                                                    sb.append("\"" + data.get(i).getSkuValueList().get(j).getAttributeVal() + "\" ");
+                                                }
                                             }
-                                        }))
-                                .show();
+                                        }
+                                        specificationsName.setText("选着了：" + sb.toString());
+                                    }
+                                }).show();*/
                         break;
                 }
             }

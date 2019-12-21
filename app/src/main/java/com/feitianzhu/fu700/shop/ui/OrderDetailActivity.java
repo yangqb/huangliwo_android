@@ -8,11 +8,15 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.feitianzhu.fu700.App;
 import com.feitianzhu.fu700.R;
 import com.feitianzhu.fu700.common.Constant;
@@ -20,10 +24,16 @@ import com.feitianzhu.fu700.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.fu700.me.base.BaseActivity;
 import com.feitianzhu.fu700.model.GoodsOrderInfo;
 import com.feitianzhu.fu700.model.PayInfo;
+import com.feitianzhu.fu700.model.PayResult;
 import com.feitianzhu.fu700.model.WXModel;
+import com.feitianzhu.fu700.shop.SelectPayActivity;
+import com.feitianzhu.fu700.shop.ShopPayActivity;
 import com.feitianzhu.fu700.utils.DateUtils;
 import com.feitianzhu.fu700.utils.PayUtils;
 import com.feitianzhu.fu700.utils.ToastUtils;
+import com.feitianzhu.fu700.utils.Urls;
+import com.google.gson.Gson;
+import com.itheima.roundedimageview.RoundedImageView;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.tencent.mm.opensdk.modelpay.PayReq;
@@ -33,22 +43,33 @@ import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
 import com.yanzhenjie.permission.Rationale;
 import com.yanzhenjie.permission.RationaleListener;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.Callback;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import okhttp3.Call;
+import okhttp3.Response;
+
+import static com.feitianzhu.fu700.common.Constant.ACCESSTOKEN;
+import static com.feitianzhu.fu700.common.Constant.FailCode;
+import static com.feitianzhu.fu700.common.Constant.SuccessCode;
+import static com.feitianzhu.fu700.common.Constant.USERID;
 
 public class OrderDetailActivity extends BaseActivity {
-    private GoodsOrderInfo.GoodsOrderListBean goodsOrderBean;
-    public static final String ORDER_DATA = "order_data";
     public static final String ORDER_NO = "order_no";
-    private long time = 60;
+    private static final int PAY_REQUEST_CODE = 1000;
+    private long time;
+    private GoodsOrderInfo.GoodsOrderListBean goodsOrderBean;
+    private String orderNo;
     @BindView(R.id.title_name)
     TextView titleName;
     @BindView(R.id.orderNo)
@@ -65,8 +86,8 @@ public class OrderDetailActivity extends BaseActivity {
     TextView tvPhone;
     @BindView(R.id.goodsName)
     TextView goodsName;
-    @BindView(R.id.summary)
-    TextView summary;
+    @BindView(R.id.specifications)
+    TextView specifications;
     @BindView(R.id.count)
     TextView count;
     @BindView(R.id.tvCount)
@@ -81,6 +102,10 @@ public class OrderDetailActivity extends BaseActivity {
     LinearLayout llStatus;
     @BindView(R.id.ll_bottom)
     LinearLayout llBottom;
+    @BindView(R.id.image)
+    RoundedImageView imageView;
+    @BindView(R.id.rl_address)
+    RelativeLayout rlAddress;
 
     @Override
     protected int getLayoutId() {
@@ -90,48 +115,15 @@ public class OrderDetailActivity extends BaseActivity {
     @Override
     protected void initView() {
         titleName.setText("订单详情");
-        goodsOrderBean = (GoodsOrderInfo.GoodsOrderListBean) getIntent().getSerializableExtra(ORDER_DATA);
-        if (goodsOrderBean != null) {
-            tvOrderNo.setText(goodsOrderBean.getOrderNo());
-            createTime.setText(goodsOrderBean.getCreateDate());
-            goodsName.setText(goodsOrderBean.getGoodsName());
-            summary.setText(goodsOrderBean.getSummary());
-            count.setText("×" + goodsOrderBean.getGoodsQTY());
-            tvCount.setText("共" + goodsOrderBean.getGoodsQTY() + "件商品");
-            address.setText(goodsOrderBean.getShopAddress().getDetailAddress());
-            userName.setText(goodsOrderBean.getShopAddress().getUserName());
-            tvPhone.setText(goodsOrderBean.getShopAddress().getPhone());
-            tvPrice.setText(String.format(Locale.getDefault(), "%.2f", goodsOrderBean.getPrice()));
-            merchantsName.setText(goodsOrderBean.getShopName());
-
-            if (1 == GoodsOrderInfo.TYPE_NO_PAY) {
-                llStatus.setVisibility(View.VISIBLE);
-                llBottom.setVisibility(View.VISIBLE);
-                tvStatus.setText("等待付款");
-                handler.post(runnable);
-            } else if (goodsOrderBean.getStatus() == GoodsOrderInfo.TYPE_REFUND) {
-                llStatus.setVisibility(View.VISIBLE);
-                llBottom.setVisibility(View.GONE);
-                tvStatus.setText("退款中");
-                tvStatusContent.setText("等待商家处理");
-            } else if (goodsOrderBean.getStatus() == GoodsOrderInfo.TYPE_REFUNDED) {
-                llStatus.setVisibility(View.VISIBLE);
-                llBottom.setVisibility(View.GONE);
-                tvStatus.setText("退款成功");
-                tvStatusContent.setText("");
-            } else {
-                llStatus.setVisibility(View.GONE);
-                llBottom.setVisibility(View.GONE);
-            }
-        }
+        orderNo = getIntent().getStringExtra(ORDER_NO);
     }
 
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == 0) {
-                String formatLongToTimeStr = DateUtils.formatTime(time*1000);
-                tvStatusContent.setText(formatLongToTimeStr);
+                String formatLongToTimeStr = DateUtils.formatTime(time * 1000);
+                tvStatusContent.setText("剩" + formatLongToTimeStr + "自动取消订单");
             }
             super.handleMessage(msg);
         }
@@ -146,7 +138,6 @@ public class OrderDetailActivity extends BaseActivity {
             time--;
         }
     };
-
 
     @OnClick({R.id.left_button, R.id.tv_copy, R.id.call_phone, R.id.cancel_order, R.id.shopPay})
     public void onClick(View view) {
@@ -177,65 +168,130 @@ public class OrderDetailActivity extends BaseActivity {
                         .show();
                 break;
             case R.id.cancel_order: //取消订单
+                if (time <= 0) {
+                    ToastUtils.showShortToast("订单已失效");
+                } else {
+                    //取消订单，
+                    new XPopup.Builder(OrderDetailActivity.this)
+                            .asConfirm("确定要取消该订单？", "", "关闭", "确定", new OnConfirmListener() {
+                                @Override
+                                public void onConfirm() {
+                                    cancel(goodsOrderBean.getOrderNo());
+                                }
+                            }, null, false)
+                            .bindLayout(R.layout.layout_dialog) //绑定已有布局
+                            .show();
+                }
                 break;
             case R.id.shopPay: //支付
-                if ("wx".equals(goodsOrderBean.getChannel())) {
-                    //aliPay();
-                } else if ("alipay".equals(goodsOrderBean.getChannel())) {
-                    //wexinPay();
+                if (time <= 0) {
+                    ToastUtils.showShortToast("订单已失效");
+                } else {
+                    Intent intent = new Intent(OrderDetailActivity.this, SelectPayActivity.class);
+                    intent.putExtra(SelectPayActivity.ORDER_DATA, goodsOrderBean);
+                    startActivityForResult(intent, PAY_REQUEST_CODE);
                 }
                 break;
         }
     }
 
 
+    public void cancel(String orderNo) {
+        OkHttpUtils.get()
+                .url(Urls.CANCEL_ORDER)
+                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)
+                .addParams(USERID, Constant.LOGIN_USERID)
+                .addParams("orderNo", orderNo)
+                .build()
+                .execute(new Callback() {
+                    @Override
+                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
+                        return mData;
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        ToastUtils.showShortToast(e.getMessage());
+                    }
+
+                    @Override
+                    public void onResponse(Object response, int id) {
+                        ToastUtils.showShortToast("取消成功");
+                        initData();
+                    }
+                });
+
+    }
+
+
     @Override
     protected void initData() {
-        EventBus.getDefault().register(this);
+        OkHttpUtils.get()
+                .url(Urls.GET_ORDER_DETAIL)
+                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)
+                .addParams(USERID, Constant.LOGIN_USERID)
+                .addParams("orderNo", orderNo)
+                .build()
+                .execute(new Callback() {
+                    @Override
+                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
+                        return new Gson().fromJson(mData, GoodsOrderInfo.GoodsOrderListBean.class);
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+
+                    }
+
+                    @Override
+                    public void onResponse(Object response, int id) {
+                        goodsOrderBean = (GoodsOrderInfo.GoodsOrderListBean) response;
+                        time = (goodsOrderBean.getExpiresDate() - goodsOrderBean.getNowTimeStamp()) / 1000;
+                        showView();
+                    }
+                });
     }
 
-    private void wexinPay(WXModel result) {
-        Constant.PayFlag = PayInfo.ShopPay;
-        IWXAPI api = WXAPIFactory.createWXAPI(OrderDetailActivity.this, result.appid);
-        api.registerApp(result.appid);
-        PayReq mPayReq = new PayReq();
-        Constant.WX_APP_ID = result.appid + "";
-        mPayReq.appId = result.appid;
-        mPayReq.partnerId = result.partnerid;
-        mPayReq.prepayId = result.prepayid;
-        mPayReq.packageValue = "Sign=WXPay";
-        mPayReq.nonceStr = result.noncestr;
-        mPayReq.timeStamp = result.timestamp + "";
-        mPayReq.sign = result.sign;
-        api.sendReq(mPayReq);
-        ToastUtils.showShortToast("正在打开微信中");
-    }
-
-    private void aliPay(String orderInfo, String orderNo) {
-
-        PayUtils.aliPay(OrderDetailActivity.this, orderInfo, new onConnectionFinishLinstener() {
-            @Override
-            public void onSuccess(int code, Object result) {
-                ToastUtils.showShortToast("支付成功");
-                finish();
-            }
-
-            @Override
-            public void onFail(int code, String result) {
-                ToastUtils.showShortToast("支付失败");
-            }
-        });
-    }
-
-
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    public void onPayMessageCall(PayInfo msg) {
-        if (msg.getCurrentInfo() == PayInfo.ShopPay) {
-            if (msg.getIsSuccess() == PayInfo.SUCCESS) {
-                ToastUtils.showShortToast("支付成功");
-                finish();
+    public void showView() {
+        if (goodsOrderBean != null) {
+            tvOrderNo.setText(goodsOrderBean.getOrderNo());
+            createTime.setText(goodsOrderBean.getCreateDate());
+            merchantsName.setText(goodsOrderBean.getShopName());
+            goodsName.setText(goodsOrderBean.getGoodName());
+            specifications.setText(goodsOrderBean.getAttributeVal());
+            count.setText("×" + goodsOrderBean.getCount());
+            tvCount.setText("共" + goodsOrderBean.getCount() + "件商品");
+            if (goodsOrderBean.getAddress() != null) {
+                rlAddress.setVisibility(View.VISIBLE);
+                address.setText(goodsOrderBean.getAddress().getProvinceName() + goodsOrderBean.getAddress().getCityName() + goodsOrderBean.getAddress().getAreaName() + goodsOrderBean.getAddress().getDetailAddress());
             } else {
-                ToastUtils.showShortToast("支付失败");
+                rlAddress.setVisibility(View.GONE);
+            }
+            userName.setText(goodsOrderBean.getAddress().getUserName());
+            tvPhone.setText(goodsOrderBean.getAddress().getPhone());
+            tvPrice.setText(String.format(Locale.getDefault(), "%.2f", goodsOrderBean.getPrice()));
+            merchantsName.setText(goodsOrderBean.getShopName());
+            Glide.with(mContext).load(goodsOrderBean.getGoodsImg())
+                    .apply(new RequestOptions().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai)).into(imageView);
+
+            if (goodsOrderBean.getStatus() == GoodsOrderInfo.TYPE_NO_PAY) {
+                llStatus.setVisibility(View.VISIBLE);
+                llBottom.setVisibility(View.VISIBLE);
+                tvStatus.setText("等待付款");
+                handler.post(runnable);
+            } else if (goodsOrderBean.getStatus() == GoodsOrderInfo.TYPE_REFUND) {
+                llStatus.setVisibility(View.VISIBLE);
+                llBottom.setVisibility(View.GONE);
+                tvStatus.setText("退款中");
+                tvStatusContent.setText("等待商家处理");
+            } else if (goodsOrderBean.getStatus() == GoodsOrderInfo.TYPE_REFUNDED) {
+                llStatus.setVisibility(View.VISIBLE);
+                llBottom.setVisibility(View.GONE);
+                tvStatus.setText("退款成功");
+                tvStatusContent.setText("");
+            } else {
+                llStatus.setVisibility(View.GONE);
+                llBottom.setVisibility(View.GONE);
             }
         }
     }
@@ -288,8 +344,17 @@ public class OrderDetailActivity extends BaseActivity {
     };
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == PAY_REQUEST_CODE) {
+                finish();
+            }
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
     }
 }

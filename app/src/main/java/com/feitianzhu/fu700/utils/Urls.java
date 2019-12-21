@@ -8,9 +8,10 @@ public class Urls {
 
     //测试地址
     //private static final String HOST_URL = "http://39.106.65.35";
-    //本地地址
-    private static final String HOST_URL = "http://192.168.0.21";
-
+    //钟工本地地址
+    //private static final String HOST_URL = "http://192.168.0.21";
+    //周工本地地址
+    private static final String HOST_URL = "http://192.168.0.15";
     private static final String HOST_PORT = "8089";
 
     private static final String BASE_URL = HOST_URL + ":" + HOST_PORT + "/";
@@ -56,10 +57,43 @@ public class Urls {
     public static final String GET_PRODUCT_PARAMETERS = BASE_URL + "fhwl/shop/getskuValue";
 
     /*
+     * 订单分类的数量
+     * */
+    public static final String GTE_ORDER_COUNT = BASE_URL + "fhwl/order/getBuyInfo";
+    /*
      * 所有订单列表数据
      * */
     public static final String GET_ORDER_INFO = BASE_URL + "fhwl/order/svbill/goodsorder";
+    /*
+     *订单详情页
+     * */
+    public static final String GET_ORDER_DETAIL = BASE_URL + "fhwl/order/svbill/orderDetail";
+    /*
+     * 删除订单
+     * */
+    public static final String DELETE_ORDER = BASE_URL + "fhwl/order/delete";
 
+    /*
+     * 取消订单
+     * */
+    public static final String CANCEL_ORDER = BASE_URL + "fhwl/order/cancelOrder";
+    /*
+     * 退款
+     * */
+    public static final String REFUND_ORDER = BASE_URL + "fhwl/order/refundOrder";
+   /*
+   * 确认收货
+   * */
+   public static final String CONFIRM_ORDER = BASE_URL + "fhwl/order/confirmReceipt";
+    /*
+     * 查看物流
+     * */
+    public static final String GET_LOGISTICS_INFO = BASE_URL + "fhwl/express/getExpressByNo";
+
+    /*
+    * 订单评价POST
+    * */
+    public static final String EVALUATE_ORDER= BASE_URL + "fhwl/order/evaluate";
     /*
      * 添加地址
      * */

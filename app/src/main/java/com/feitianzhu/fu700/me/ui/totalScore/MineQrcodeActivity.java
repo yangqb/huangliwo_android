@@ -174,8 +174,7 @@ public class MineQrcodeActivity extends BaseActivity {
                 saveBitmapToLocal(bitmap);
                 break;
             case R.id.bt_shared:
-                //showShare();
-                ToastUtils.showShortToast("待开发");
+                showShare();
                 break;
         }
     }
@@ -259,7 +258,7 @@ public class MineQrcodeActivity extends BaseActivity {
             ToastUtils.showShortToast("分享的资料信息未完善，请先完善资料");
             return;
         }
-        if (TextUtils.isEmpty(mSharedInfo.getNickName()) || TextUtils.isEmpty(mSharedInfo.getLink()) || TextUtils.isEmpty(mSharedInfo.getCompany())) {
+        if (TextUtils.isEmpty(mSharedInfo.getNickName()) || TextUtils.isEmpty(mSharedInfo.getLink()) ) {
             ToastUtils.showShortToast("分享的资料信息未完善，请先完善资料");
             return;
         }
@@ -274,7 +273,7 @@ public class MineQrcodeActivity extends BaseActivity {
         // titleUrl是标题的网络链接，仅在人人网和QQ空间使用
         oks.setTitleUrl(mSharedInfo.getLink());
         // text是分享文本，所有平台都需要这个字段
-        oks.setText(mSharedInfo.getCompany());  //第二行的小文字
+       // oks.setText(mSharedInfo.getCompany());  //第二行的小文字
         // imagePath是图片地址，Linked-In以外的平台都支持此参数
         // 如果不用本地图片，千万不要调用这个方法！！！
 //        oks.setImagePath("http://f1.sharesdk.cn/imgs/2014/02/26/owWpLZo_638x960.jpg");

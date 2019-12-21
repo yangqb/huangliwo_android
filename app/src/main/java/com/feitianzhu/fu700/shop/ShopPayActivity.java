@@ -46,6 +46,8 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindView;
@@ -68,13 +70,13 @@ public class ShopPayActivity extends BaseActivity {
     public static final String GOODS_VALUE_ID = "goods_value_id";
     public static final String IS_SHOW_ADDRESS = "is_show_address";
     public static final String PAY_DATA = "pay_data";
-    public static final String ADDRESS_DATA = "address_data";
     private static final int REQUEST_CODE = 1000;
     private AddressInfo.ShopAddressListBean addressBean;
-    @BindView(R.id.amount)
-    TextView bottomAmount;
-    @BindView(R.id.tv_amount)
-    TextView topAmount;
+    private List<AddressInfo.ShopAddressListBean> addressInfos = new ArrayList<>();
+    @BindView(R.id.pay_amount)
+    TextView payAmount;
+    @BindView(R.id.tv_price)
+    TextView tvPrice;
     @BindView(R.id.title_name)
     TextView titleName;
     @BindView(R.id.weixinPay_icon)
@@ -93,8 +95,6 @@ public class ShopPayActivity extends BaseActivity {
     TextView tvAddress;
     @BindView(R.id.amount_view)
     AmountView mAmountView;
-    @BindView(R.id.count)
-    TextView tvCount;
     @BindView(R.id.name)
     TextView tvName;
     @BindView(R.id.summary)
@@ -105,20 +105,25 @@ public class ShopPayActivity extends BaseActivity {
     TextView consigneeName;
     @BindView(R.id.phone)
     TextView phone;
+    @BindView(R.id.count)
+    TextView tvCount;
+    @BindView(R.id.postage)
+    TextView postage;
 
-    private String amount;
+    private String price;
     private String totalAmount;
     private String orderNo = "";//订单号
     private String orderInfo = "";
-    private String str1;
-    private String str2;
+    private String str1 = "合计：";
+    private String str2 = "¥ ";
     private boolean isShow;
-    private boolean isDefault;
+    private boolean isAddress;
     private BaseGoodsListBean goodsListBean = new BaseGoodsListBean();
     private GoodsOrderInfo.GoodsOrderListBean orderListBean = new GoodsOrderInfo.GoodsOrderListBean();
     private int shopCount = 1; //购买数量
-    private int valueId;
+    private String valueId;
     private String payChannel = "wx";
+    private String appId = "";
 
     @Override
     protected int getLayoutId() {
@@ -134,9 +139,10 @@ public class ShopPayActivity extends BaseActivity {
     @SuppressLint("SetTextI18n")
     @Override
     protected void initView() {
-        valueId = getIntent().getIntExtra(GOODS_VALUE_ID, 0);
+        valueId = getIntent().getStringExtra(GOODS_VALUE_ID);
         goodsListBean = (BaseGoodsListBean) getIntent().getSerializableExtra(PAY_DATA);
         titleName.setText("确认订单");
+        tvPrice.setText("");
         weiXinIcon.setBackgroundResource(R.mipmap.e01_23xuanzhong);
         /**
          * Spanned.SPAN_INCLUSIVE_EXCLUSIVE 从起始下标到终了下标，包括起始下标
@@ -144,48 +150,37 @@ public class ShopPayActivity extends BaseActivity {
          * Spanned.SPAN_EXCLUSIVE_EXCLUSIVE 从起始下标到终了下标，但都不包括起始下标和终了下标
          * Spanned.SPAN_EXCLUSIVE_INCLUSIVE 从起始下标到终了下标，包括终了下标
          */
-        str1 = "合计：";
-        str2 = "¥ ";
         if (goodsListBean != null) {
-            amount = String.format(Locale.getDefault(), "%.2f", goodsListBean.getPrice());
+            price = String.format(Locale.getDefault(), "%.2f", goodsListBean.getPrice());
             tvName.setText(goodsListBean.getGoodsName());
             tvSummary.setText(goodsListBean.getSummary());
+            postage.setText("¥" + String.format(Locale.getDefault(), "%.2f", goodsListBean.getPostage()));
             Glide.with(this).load(goodsListBean.getGoodsImg())
-                    .apply(new RequestOptions().placeholder(R.drawable.pic_fuwutujiazaishibai).error(R.drawable.pic_fuwutujiazaishibai)).into(imageView);
+                    .apply(new RequestOptions().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai)).into(imageView);
+            setSpannableString(String.format(Locale.getDefault(), "%.2f", goodsListBean.getPrice() + goodsListBean.getPostage()));
         } else {
-            amount = String.format(Locale.getDefault(), "%.2f", 0.00);
+            price = String.format(Locale.getDefault(), "%.2f", 0.00);
+            setSpannableString(price);
         }
 
-        totalAmount = amount;
-        tvCount.setText("×1");
-        topAmount.setText("");
+        totalAmount = price;
         SpannableString span4 = new SpannableString(str2);
-        SpannableString span5 = new SpannableString(amount);
+        SpannableString span5 = new SpannableString(price);
         ForegroundColorSpan colorSpan4 = new ForegroundColorSpan(Color.parseColor("#333333"));
         span4.setSpan(new AbsoluteSizeSpan(11, true), 0, span4.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         span4.setSpan(colorSpan4, 0, span4.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 
         ForegroundColorSpan colorSpan5 = new ForegroundColorSpan(Color.parseColor("#333333"));
-        span5.setSpan(new AbsoluteSizeSpan(18, true), 0, amount.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-        span5.setSpan(colorSpan5, 0, amount.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        span5.setSpan(new AbsoluteSizeSpan(18, true), 0, span5.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        span5.setSpan(colorSpan5, 0, span5.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 
-        topAmount.append(span4);
-        topAmount.append(span5);
-        setSpannableString(amount);
+        tvPrice.append(span4);
+        tvPrice.append(span5);
 
         isShow = getIntent().getBooleanExtra(IS_SHOW_ADDRESS, false);
         if (isShow) {
             //是否有默认地址
-            if (isDefault) {
-                noAddress.setVisibility(View.GONE);
-                rlAddress.setVisibility(View.VISIBLE);
-                /*
-                 * TODO:添加默认地址信息
-                 * */
-            } else {
-                noAddress.setVisibility(View.VISIBLE);
-                rlAddress.setVisibility(View.GONE);
-            }
+            getAddress();
         } else {
             noAddress.setVisibility(View.GONE);
             rlAddress.setVisibility(View.GONE);
@@ -197,10 +192,10 @@ public class ShopPayActivity extends BaseActivity {
             @SuppressLint("SetTextI18n")
             @Override
             public void onAmountChange(View view, int count) {
-                tvCount.setText("×" + count);
                 shopCount = count;
-                float aFloat = Float.parseFloat(amount);
-                totalAmount = String.format(Locale.getDefault(), "%.2f", aFloat * count);
+                tvCount.setText("×" + count);
+                float aFloat = Float.parseFloat(price);
+                totalAmount = String.format(Locale.getDefault(), "%.2f", aFloat * count + goodsListBean.getPostage());
                 setSpannableString(totalAmount);
             }
         });
@@ -211,24 +206,11 @@ public class ShopPayActivity extends BaseActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_pay:
-                if (isShow && !isDefault) {
+                if (isShow && !isAddress) {
                     ToastUtils.showShortToast("请添加收货地址");
                     return;
                 }
-
-                ShopHelp.veriPassword(this, new onConnectionFinishLinstener() {
-                    @Override
-                    public void onSuccess(int code, Object result) {
-                        String password = (String) result;
-                        //pay(password);
-                        pay2(password);
-                    }
-
-                    @Override
-                    public void onFail(int code, String result) {
-                        ToastUtils.showShortToast(result);
-                    }
-                });
+                pay2();
                 break;
             case R.id.weixinPay_icon:
                 weiXinIcon.setBackgroundResource(R.mipmap.e01_23xuanzhong);
@@ -264,25 +246,25 @@ public class ShopPayActivity extends BaseActivity {
     /*
      * 生成订单
      * */
-    private void pay2(String password) {
+    private void pay2() {
+        if (payChannel.equals("wx")) {
+            appId = Constant.WX_APP_ID;
+        } else {
+            appId = "";
+        }
         orderListBean.setChannel(payChannel); //支付渠道支付渠道（wx：微信，alipay：支付宝，balance：余额
         orderListBean.setAddressId(addressBean.getAddressId() + "");
-        orderListBean.setAmount(Double.parseDouble(totalAmount));//总价格
-        orderListBean.setUserId(Integer.parseInt(Constant.LOGIN_USERID));
-        orderListBean.setPostage(goodsListBean.getPostage());   //邮费
-        orderListBean.setRebatePv(goodsListBean.getRebatePv());  // 让利
-        orderListBean.setGoodsName(goodsListBean.getGoodsName());  //商品名称
-        orderListBean.setSummary(goodsListBean.getSummary());  //商品说明概述
-        orderListBean.setGoodsQTY(shopCount);   //数量
+        orderListBean.setGoodId(goodsListBean.getGoodsId());
+        orderListBean.setUserId(Integer.valueOf(Constant.LOGIN_USERID));
+        orderListBean.setGoodsQty(shopCount);   //数量
         orderListBean.setValueId(valueId);  //规格ID
-        orderListBean.setPrice(goodsListBean.getPrice());  //商品单价
+        orderListBean.setOrderNo(""); //详情页的无orderNo
         String json = new Gson().toJson(orderListBean);
         OkHttpUtils.post()
                 .url(Urls.PAY_SHOPS)
                 .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
                 .addParams(USERID, Constant.LOGIN_USERID)//
-                .addParams("payPass", password)
-                .addParams("appId", Constant.WX_APP_ID)
+                .addParams("appId", appId)  //这个是微信才需要的，
                 .addParams("order", json)
                 .build()
                 .execute(new Callback() {
@@ -294,7 +276,7 @@ public class ShopPayActivity extends BaseActivity {
 
                     @Override
                     public void onError(Call call, Exception e, int id) {
-                        ToastUtils.showShortToast(e.getMessage());
+                        ToastUtils.showShortToast("提交订单失败");
                     }
 
                     @Override
@@ -334,23 +316,21 @@ public class ShopPayActivity extends BaseActivity {
     }
 
 
-    private void aliPay(String orderInfo, String orderNo) {
+    private void aliPay(String payProof, String orderNo) {
 
-        PayUtils.aliPay(ShopPayActivity.this, orderInfo, new onConnectionFinishLinstener() {
+        PayUtils.aliPay(ShopPayActivity.this, payProof, new onConnectionFinishLinstener() {
             @Override
             public void onSuccess(int code, Object result) {
                 ToastUtils.showShortToast("支付成功");
-                // payResult(orderNo);
                 finish();
             }
 
             @Override
             public void onFail(int code, String result) {
-                //payResult(orderNo);
                 ToastUtils.showShortToast("支付失败");
                 //跳到订单详情
                 Intent intent = new Intent(ShopPayActivity.this, OrderDetailActivity.class);
-                intent.putExtra(OrderDetailActivity.ORDER_DATA, orderNo);
+                intent.putExtra(OrderDetailActivity.ORDER_NO, orderNo);
                 startActivity(intent);
                 finish();
             }
@@ -367,7 +347,7 @@ public class ShopPayActivity extends BaseActivity {
                 ToastUtils.showShortToast("支付失败");
                 //跳到订单详情
                 Intent intent = new Intent(ShopPayActivity.this, OrderDetailActivity.class);
-                intent.putExtra(OrderDetailActivity.ORDER_DATA, orderNo);
+                intent.putExtra(OrderDetailActivity.ORDER_NO, orderNo);
                 startActivity(intent);
                 finish();
             }
@@ -384,13 +364,56 @@ public class ShopPayActivity extends BaseActivity {
      * 获取默认收货地址
      * */
     public void getAddress() {
+        OkHttpUtils.post()
+                .url(Urls.GET_ADDRESS)
+                .addParams("accessToken", Constant.ACCESS_TOKEN)
+                .addParams("userId", Constant.LOGIN_USERID)
+                .build()
+                .execute(new Callback() {
+                    @Override
+                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
+                        return new Gson().fromJson(mData, AddressInfo.class);
+                    }
 
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+
+                    }
+
+                    @Override
+                    public void onResponse(Object response, int id) {
+                        AddressInfo addressInfo = (AddressInfo) response;
+                        addressInfos = addressInfo.getShopAddressList();
+                        if (addressInfos.size() > 0) {
+                            for (AddressInfo.ShopAddressListBean address : addressInfos
+                            ) {
+                                if (address.getIsDefalt() == 1) {
+                                    noAddress.setVisibility(View.GONE);
+                                    rlAddress.setVisibility(View.VISIBLE);
+                                    addressBean = address;
+                                    tvAddress.setText(addressBean.getProvinceName() + addressBean.getCityName() + addressBean.getAreaName() + addressBean.getDetailAddress());
+                                    consigneeName.setText(addressBean.getUserName());
+                                    phone.setText(addressBean.getPhone());
+                                    isAddress = true;
+                                    break;
+                                } else {
+                                    noAddress.setVisibility(View.VISIBLE);
+                                    rlAddress.setVisibility(View.GONE);
+                                }
+                            }
+                        } else {
+                            noAddress.setVisibility(View.VISIBLE);
+                            rlAddress.setVisibility(View.GONE);
+                        }
+
+                    }
+                });
     }
 
     @SuppressLint("SetTextI18n")
     public void setSpannableString(String str3) {
-        tvTotalAmount.setText("￥" + str3);
-        bottomAmount.setText("");
+        tvTotalAmount.setText("¥" + str3);
+        payAmount.setText("");
         SpannableString span1 = new SpannableString(str1);
         SpannableString span2 = new SpannableString(str2);
         SpannableString span3 = new SpannableString(str3);
@@ -408,9 +431,9 @@ public class ShopPayActivity extends BaseActivity {
         span3.setSpan(new StyleSpan(Typeface.BOLD), 0, str3.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         span3.setSpan(colorSpan3, 0, str3.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 
-        bottomAmount.append(span1);
-        bottomAmount.append(span2);
-        bottomAmount.append(span3);
+        payAmount.append(span1);
+        payAmount.append(span2);
+        payAmount.append(span3);
 
     }
 
@@ -419,14 +442,14 @@ public class ShopPayActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_CODE) {
-                addressBean = (AddressInfo.ShopAddressListBean) data.getSerializableExtra(ADDRESS_DATA);
+                addressBean = (AddressInfo.ShopAddressListBean) data.getSerializableExtra(AddressManagementActivity.ADDRESS_DATA);
                 if (addressBean != null) {
                     noAddress.setVisibility(View.GONE);
                     rlAddress.setVisibility(View.VISIBLE);
-                    tvAddress.setText(addressBean.getDetailAddress());
+                    tvAddress.setText(addressBean.getProvinceName() + addressBean.getCityName() + addressBean.getAreaName() + addressBean.getDetailAddress());
                     consigneeName.setText(addressBean.getUserName());
                     phone.setText(addressBean.getPhone());
-                    isDefault = true;
+                    isAddress = true;
                 }
             }
         }

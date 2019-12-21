@@ -24,6 +24,7 @@
                     android:id="@+id/rl_address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     android:layout_margin="10dp"
                     android:background="@drawable/bg_ffffff_r5"
                     android:paddingLeft="15dp"
@@ -52,26 +53,29 @@
                             android:orientation="horizontal">
 
                             <TextView
+                                android:id="@+id/name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginRight="@dimen/dp_10"
-                                android:text="小黄鹂"
+                                android:text=""
                                 android:textColor="@color/color_333333"
                                 android:textSize="16sp" />
 
                             <TextView
+                                android:id="@+id/phone"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="18866668888"
+                                android:text=""
                                 android:textColor="@color/color_666666"
                                 android:textSize="12sp" />
                         </LinearLayout>
 
                         <TextView
+                            android:id="@+id/address"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
-                            android:text="深圳市泰华梧桐岛 6A 栋 502 室"
+                            android:text=" "
                             android:textColor="@color/color_333333"
                             android:textSize="13sp" />
 
@@ -85,6 +89,33 @@
                         android:src="@mipmap/b08_04jinru" />
 
                 </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/no_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/bg_ffffff_r5"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:paddingTop="15dp"
+                    android:paddingBottom="15dp"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:layout_width="17dp"
+                        android:layout_height="17dp"
+                        android:src="@mipmap/e01_33dizhi" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="暂无收货地址 点击添加"
+                        android:textColor="@color/color_333333"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"

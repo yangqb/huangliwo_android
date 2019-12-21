@@ -2,6 +2,7 @@ package com.feitianzhu.fu700.shop.adapter;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.view.View;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -35,8 +36,8 @@ public class EditCommentAdapter extends BaseMultiItemQuickAdapter<MultiItemComme
             helper.setVisible(R.id.btn_cancel, false);
         } else {
             Glide.with(mContext).load(item.getPath()).apply(new RequestOptions()
-                    .placeholder(R.drawable.pic_fuwutujiazaishibai)
-                    .error(R.drawable.pic_fuwutujiazaishibai))
+                    .placeholder(R.mipmap.g10_04weijiazai)
+                    .error(R.mipmap.g10_04weijiazai))
                     .into((RoundedImageView) helper.getView(R.id.roundImage));
             helper.setVisible(R.id.btn_cancel, true);
         }

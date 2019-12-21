@@ -13,11 +13,14 @@ import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.feitianzhu.fu700.R;
 import com.feitianzhu.fu700.model.ShoppingCartMode;
 import com.feitianzhu.fu700.view.AmountView;
+import com.itheima.roundedimageview.RoundedImageView;
 
 import java.util.List;
 import java.util.Locale;
@@ -74,6 +77,8 @@ public class ShoppingCartAdapter extends BaseQuickAdapter<ShoppingCartMode, Base
         helper.addOnClickListener(R.id.delete)
                 .addOnClickListener(R.id.summary)
                 .addOnClickListener(R.id.select_goods);
+       /* Glide.with(mContext).load(item.getGoodsListBean().getGoodsImg())
+                .apply(new RequestOptions().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai)).into((RoundedImageView) helper.getView(R.id.image));*/
 
         String price = String.format(Locale.getDefault(), "%.2f", item.getPrice());
         setSpannableString(price, helper.getView(R.id.goods_price));

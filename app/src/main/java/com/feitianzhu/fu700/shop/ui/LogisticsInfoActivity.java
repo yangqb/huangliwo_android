@@ -9,21 +9,30 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.feitianzhu.fu700.R;
+import com.feitianzhu.fu700.common.Constant;
 import com.feitianzhu.fu700.me.base.BaseActivity;
+import com.feitianzhu.fu700.model.LogisticsModel;
 import com.feitianzhu.fu700.shop.adapter.LogisticsAdapter;
 import com.feitianzhu.fu700.utils.ToastUtils;
+import com.feitianzhu.fu700.utils.Urls;
+import com.google.gson.Gson;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.Callback;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import okhttp3.Call;
+import okhttp3.Response;
 
 /*
  * 物流详情
  * */
 public class LogisticsInfoActivity extends BaseActivity {
-
+    private List<LogisticsModel.DataBean> logisticsModes = new ArrayList<>();
+    private LogisticsAdapter adapter;
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     @BindView(R.id.title_name)
@@ -39,20 +48,44 @@ public class LogisticsInfoActivity extends BaseActivity {
     @Override
     protected void initView() {
         titleName.setText("物流信息");
-        List<Integer> list = new ArrayList<>();
-        for (int i = 0; i < 15; i++) {
-            list.add(i);
-        }
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setNestedScrollingEnabled(false);
-        LogisticsAdapter adapter = new LogisticsAdapter(list);
+        adapter = new LogisticsAdapter(logisticsModes);
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
 
     @Override
     protected void initData() {
+        OkHttpUtils.get()
+                .url(Urls.GET_LOGISTICS_INFO)
+                .addParams(Constant.ACCESSTOKEN, Constant.ACCESS_TOKEN)
+                .addParams(Constant.USERID, Constant.LOGIN_USERID)
+                .addParams("expressNo", "75320050643223")
+                .build()
+                .execute(new Callback() {
+                    @Override
+                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
+                        return new Gson().fromJson(mData, LogisticsModel.class);
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        ToastUtils.showShortToast(e.getMessage());
+                    }
+
+                    @Override
+                    public void onResponse(Object response, int id) {
+                        LogisticsModel logisticsModel = (LogisticsModel) response;
+                        if (logisticsModel != null) {
+                            logisticsModes.clear();
+                            logisticsModes.addAll(logisticsModel.getData());
+                            adapter.setNewData(logisticsModes);
+                            adapter.notifyDataSetChanged();
+                        }
+                    }
+                });
 
     }
 

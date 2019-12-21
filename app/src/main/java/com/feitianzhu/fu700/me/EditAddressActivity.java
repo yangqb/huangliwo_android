@@ -32,6 +32,7 @@ import okhttp3.Response;
 public class EditAddressActivity extends BaseActivity {
     public static final String ADDRESS_DATA = "address_data";
     public static final String IS_ADD_ADDRESS = "is_add_address";
+    private int isDefalt;
     private boolean isAdd;
     private ProvinceBean mProvince = new ProvinceBean();
     private CityBean mCity = new CityBean();
@@ -76,6 +77,9 @@ public class EditAddressActivity extends BaseActivity {
             mCity.setName(shopAddressListBean.getCityName());
             mDistrict.setId(shopAddressListBean.getAreaId());
             mDistrict.setName(shopAddressListBean.getAreaName());
+            if (shopAddressListBean.getIsDefalt() == 1) {
+                switchButton.setChecked(true);
+            }
         }
         if (isAdd) {
             titleName.setText("新建地址");
@@ -162,6 +166,12 @@ public class EditAddressActivity extends BaseActivity {
     }
 
     public void submit() {
+        if (switchButton.isChecked()) {
+            isDefalt = 1;
+        } else {
+            isDefalt = 0;
+        }
+
         if (isAdd) {
             //新增地址
             OkHttpUtils.post()
@@ -177,6 +187,7 @@ public class EditAddressActivity extends BaseActivity {
                     .addParams("detailAddress", editAddressDetail.getText().toString())
                     .addParams("userName", editName.getText().toString().trim())
                     .addParams("phone", editPhone.getText().toString().trim())
+                    .addParams("isDefalt", isDefalt + "")
                     .build()
                     .execute(new Callback() {
 
@@ -213,6 +224,7 @@ public class EditAddressActivity extends BaseActivity {
                     .addParams("userName", editName.getText().toString().trim())
                     .addParams("phone", editName.getText().toString().trim())
                     .addParams("addressId", shopAddressListBean.getAddressId() + "")
+                    .addParams("isDefalt", isDefalt + "")
                     .build()
                     .execute(new Callback() {
 

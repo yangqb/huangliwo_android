@@ -12,27 +12,25 @@ import java.util.List;
  */
 public class ProductParameters implements Serializable {
 
+    private List<GoodsSpecifications> goodslist;
 
-    private List<GoodslistBean> goodslist;
-
-    public List<GoodslistBean> getGoodslist() {
+    public List<GoodsSpecifications> getGoodslist() {
         return goodslist;
     }
 
-    public void setGoodslist(List<GoodslistBean> goodslist) {
+    public void setGoodslist(List<GoodsSpecifications> goodslist) {
         this.goodslist = goodslist;
     }
 
-    public static class GoodslistBean {
+    public static class GoodsSpecifications implements Serializable {
         /**
          * attributeId : 3
          * attributeName : 颜色
          * skuValueList : [{"valueId":5,"goodsId":10,"attributeVal":"黑色"},{"valueId":6,"goodsId":10,"attributeVal":"白色"},{"valueId":7,"goodsId":10,"attributeVal":"红色"},{"valueId":8,"goodsId":10,"attributeVal":"蓝色"},{"valueId":9,"goodsId":10,"attributeVal":"紫色"}]
          */
-
         private int attributeId;
         private String attributeName;
-        private List<SkuValueListBean> skuValueList;
+        private List<GoodsSpecifications.SkuValueListBean> skuValueList;
 
         public int getAttributeId() {
             return attributeId;
@@ -58,16 +56,25 @@ public class ProductParameters implements Serializable {
             this.skuValueList = skuValueList;
         }
 
-        public static class SkuValueListBean {
+        public static class SkuValueListBean implements Serializable {
             /**
              * valueId : 5
              * goodsId : 10
              * attributeVal : 黑色
              */
 
+            private boolean isSelect;
             private int valueId;
             private int goodsId;
             private String attributeVal;
+
+            public boolean isSelect() {
+                return isSelect;
+            }
+
+            public void setSelect(boolean select) {
+                isSelect = select;
+            }
 
             public int getValueId() {
                 return valueId;
@@ -93,5 +100,6 @@ public class ProductParameters implements Serializable {
                 this.attributeVal = attributeVal;
             }
         }
+
     }
 }

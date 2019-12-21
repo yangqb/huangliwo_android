@@ -9,7 +9,7 @@
 
     <include layout="@layout/layer_home_head_nav2" />
 
-    <android.support.v4.widget.SwipeRefreshLayout
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/swipeLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -18,6 +18,7 @@
         <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/color_f7f7f7"
             android:focusableInTouchMode="true">
 
             <LinearLayout
@@ -221,6 +222,6 @@
         </android.support.v4.widget.NestedScrollView>
 
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
 </LinearLayout>

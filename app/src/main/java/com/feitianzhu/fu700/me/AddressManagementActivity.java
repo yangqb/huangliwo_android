@@ -30,6 +30,7 @@ import okhttp3.Response;
 
 public class AddressManagementActivity extends BaseActivity {
     private static final int REQUEST_CODE = 1000;
+    public static final String ADDRESS_DATA = "address_data";
     private AddressManagementAdapter adapter;
     private List<AddressInfo.ShopAddressListBean> addressInfos = new ArrayList<>();
     public static final String IS_SELECT = "is_select";
@@ -56,7 +57,7 @@ public class AddressManagementActivity extends BaseActivity {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new AddressManagementAdapter(addressInfos);
-        View mEmptyView = View.inflate(this, R.layout.view_common_nodata, null);
+      View mEmptyView = View.inflate(this, R.layout.view_common_nodata, null);
         ImageView img_empty = (ImageView) mEmptyView.findViewById(R.id.img_empty);
         img_empty.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,7 +82,7 @@ public class AddressManagementActivity extends BaseActivity {
                 if (isSelect) {
                     //选择收货地址
                     Intent intent = new Intent();
-                    intent.putExtra(ShopPayActivity.ADDRESS_DATA, addressInfos.get(position));
+                    intent.putExtra(ADDRESS_DATA, addressInfos.get(position));
                     setResult(RESULT_OK, intent);
                     finish();
                 } else {

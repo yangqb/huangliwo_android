@@ -128,7 +128,7 @@ public class ShopDetailActivity extends BaseActivity {
     }
 
     private void requestData(String otherUserId) {
-        OkHttpUtils.post()//
+        OkHttpUtils.get()//
                 .url(Common_HEADER + POST_MINE_INFO)
                 .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
                 .addParams(USERID, Constant.LOGIN_USERID)

@@ -40,7 +40,6 @@ public class SelectPayNeedModel implements Serializable {
     public String areaName;
     public String agentName;//代理名
     public String agentType; //市代 还是区代
-    public String isPay;//支付结果1：成功0：失败（取消支付，待支付，支付失败）
 
     // end
 
@@ -240,13 +239,5 @@ public class SelectPayNeedModel implements Serializable {
     public SelectPayNeedModel setGoodsName(String goodsName) {
         this.goodsName = goodsName;
         return this;
-    }
-
-    public String getIsPay() {
-        return isPay;
-    }
-
-    public void setIsPay(String isPay) {
-        this.isPay = isPay;
     }
 }

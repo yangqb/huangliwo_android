@@ -54,7 +54,7 @@
                 android:layout_height="match_parent"
                 android:gravity="bottom"
                 android:paddingBottom="5dp"
-                android:text="待付款(0)"
+                android:text="待付款"
                 android:textColor="@drawable/select_order_color"
                 android:textSize="13sp" />
 
@@ -79,7 +79,7 @@
                 android:layout_height="match_parent"
                 android:gravity="bottom"
                 android:paddingBottom="5dp"
-                android:text="待发货(0)"
+                android:text="待发货"
                 android:textColor="@drawable/select_order_color"
                 android:textSize="13sp" />
 
@@ -104,7 +104,7 @@
                 android:layout_height="match_parent"
                 android:gravity="bottom"
                 android:paddingBottom="5dp"
-                android:text="待收货(0)"
+                android:text="待收货"
                 android:textColor="@drawable/select_order_color"
                 android:textSize="13sp" />
 
@@ -128,7 +128,7 @@
                 android:layout_height="match_parent"
                 android:gravity="bottom"
                 android:paddingBottom="5dp"
-                android:text="待评价(0)"
+                android:text="待评价"
                 android:textColor="@drawable/select_order_color"
                 android:textSize="13sp" />
 
@@ -140,11 +140,16 @@
         </LinearLayout>
     </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
-    </android.support.v7.widget.RecyclerView>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
+        </android.support.v7.widget.RecyclerView>
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 </LinearLayout>
