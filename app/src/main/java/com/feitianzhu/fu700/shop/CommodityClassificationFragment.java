@@ -194,9 +194,7 @@ public class CommodityClassificationFragment extends SFFragment implements View.
         rightAdapter.notifyDataSetChanged();
         mSwipeLayout.setEnableLoadMore(false);
         requestData();
-        initData();
         initListener();
-
         return view;
     }
 
@@ -220,6 +218,7 @@ public class CommodityClassificationFragment extends SFFragment implements View.
 
                     @Override
                     public void onError(Call call, Exception e, int id) {
+                        goneloadDialog();
                         Toast.makeText(getActivity(), TextUtils.isEmpty(e.getMessage()) ? "加载失败，请重试" : e.getMessage(), Toast.LENGTH_SHORT).show();
                         KLog.e(e);
                     }
@@ -397,7 +396,11 @@ public class CommodityClassificationFragment extends SFFragment implements View.
                 mParam1 = 1;
                 button1.setSelected(true);
                 button2.setSelected(false);
-                initData();
+                shopClassifyLsit.clear();
+                multipleItemList.clear();
+                rightAdapter.notifyDataSetChanged();
+                leftAdapter.notifyDataSetChanged();
+                //initData();
                 break;
             case R.id.button2:
                 mParam1 = 2;

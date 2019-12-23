@@ -21,6 +21,7 @@ import com.feitianzhu.fu700.shop.adapter.EditCommentAdapter;
 import com.feitianzhu.fu700.utils.Glide4Engine;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.utils.Urls;
+import com.feitianzhu.fu700.utils.doubleclick.SingleClick;
 import com.google.gson.Gson;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
@@ -110,6 +111,7 @@ public class EditCommentsActivity extends BaseActivity {
                             // 上下文，必须是activity，不需要担心内存泄漏，本框架已经处理好；
                             .setContext(mContext)
                             .setEnableDragClose(true) //下拉图片关闭
+                            .setShowDownButton(false)
                             // 设置从第几张开始看（索引从0开始）
                             .setIndex(position)
                             .setShowErrorToast(true)//加载失败提示
@@ -189,6 +191,7 @@ public class EditCommentsActivity extends BaseActivity {
         return cachePath;
     }*/
 
+    @SingleClick
     @OnClick({R.id.left_button, R.id.right_text})
     public void onClick(View view) {
         switch (view.getId()) {
@@ -230,8 +233,8 @@ public class EditCommentsActivity extends BaseActivity {
                 }
 
                 OkHttpUtils.post()
-                        .addFiles("files", files)
                         .url(Urls.EVALUATE_ORDER)
+                        .addFiles("files", files)
                         .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)
                         .addParams(USERID, Constant.LOGIN_USERID)
                         .addParams("evaluateBody", json)
@@ -239,17 +242,19 @@ public class EditCommentsActivity extends BaseActivity {
                         .execute(new Callback() {
                             @Override
                             public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                                return super.parseNetworkResponse(mData, response, id);
+                                return mData;
                             }
 
                             @Override
                             public void onError(Call call, Exception e, int id) {
-
+                                ToastUtils.showShortToast(e.getMessage());
                             }
 
                             @Override
                             public void onResponse(Object response, int id) {
-
+                                ToastUtils.showShortToast("发布成功");
+                                setResult(RESULT_OK);
+                                finish();
                             }
                         });
 

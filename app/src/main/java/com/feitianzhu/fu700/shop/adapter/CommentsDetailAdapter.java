@@ -5,12 +5,18 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.feitianzhu.fu700.R;
+import com.feitianzhu.fu700.model.BaseGoodsListBean;
+import com.itheima.roundedimageview.RoundedImageView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import cc.shinichi.library.ImagePreview;
@@ -22,34 +28,34 @@ import cc.shinichi.library.ImagePreview;
  * time: 15:20
  * email: 694125155@qq.com
  */
-public class CommentsDetailAdapter extends BaseQuickAdapter<Integer, BaseViewHolder> {
-    public CommentsDetailAdapter(@Nullable List<Integer> data) {
+public class CommentsDetailAdapter extends BaseQuickAdapter<BaseGoodsListBean.GoodsEvaluateMode, BaseViewHolder> {
+    private CommentImgAdapter adapter;
+    private List<String> imgs = new ArrayList<>();
+
+    public CommentsDetailAdapter(@Nullable List<BaseGoodsListBean.GoodsEvaluateMode> data) {
         super(R.layout.commodity_valuate_item, data);
     }
 
     @Override
-    protected void convert(@NonNull BaseViewHolder helper, Integer item) {
-//helper.setImageUrl(R.id.iv, item.getContent());
-        /* Glide.with(mContext).load(item.getGoodsListBean().getGoodsImg())
-                .apply(new RequestOptions().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai)).into((RoundedImageView) helper.getView(R.id.image));*/
-        List<Integer> integers = new ArrayList<>();
+    protected void convert(@NonNull BaseViewHolder helper, BaseGoodsListBean.GoodsEvaluateMode item) {
+        helper.setText(R.id.userName, item.getNickName());
+        helper.setText(R.id.tvContent, item.getContent());
+        helper.setText(R.id.tvDate, item.getEvalDate());
+        helper.setText(R.id.specifications, item.getNorms() + "/" + item.getGoodsName());
+        Glide.with(mContext).load(item.getHeadImg())
+                .apply(new RequestOptions().placeholder(R.mipmap.b08_01touxiang).error(R.mipmap.b08_01touxiang)).into((RoundedImageView) helper.getView(R.id.iv_head));
         RecyclerView recyclerView = helper.getView(R.id.recyclerView);
+
+
         recyclerView.setLayoutManager(new GridLayoutManager(mContext, 3));
-        for (int i = 0; i < 6; i++) {
-            integers.add(i);
-        }
-        List<String> imageList = new ArrayList<>();
-        imageList.add("http://g.hiphotos.baidu.com/image/pic/item/6d81800a19d8bc3e770bd00d868ba61ea9d345f2.jpg");
-        imageList.add("http://a.hiphotos.baidu.com/image/pic/item/8d5494eef01f3a292d2472199d25bc315d607c7c.jpg");
-        imageList.add("http://h.hiphotos.baidu.com/image/pic/item/902397dda144ad340668b847d4a20cf430ad851e.jpg");
-        imageList.add("http://d.hiphotos.baidu.com/image/pic/item/b58f8c5494eef01f119945cbe2fe9925bc317d2a.jpg");
-        imageList.add("http://a.hiphotos.baidu.com/image/pic/item/e824b899a9014c087eb617650e7b02087af4f464.jpg");
-        imageList.add("http://b.hiphotos.baidu.com/image/pic/item/e824b899a9014c08878b2c4c0e7b02087af4f4a3.jpg");
         recyclerView.setNestedScrollingEnabled(false);
-        CommentImgAdapter adapter = new CommentImgAdapter(integers);
+        if (item.getEvalImgs() != null) {
+            String[] strings = item.getEvalImgs().split(",");
+            imgs = Arrays.asList(strings);
+        }
+        adapter = new CommentImgAdapter(imgs);
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
-
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
@@ -75,7 +81,7 @@ public class CommentsDetailAdapter extends BaseQuickAdapter<Integer, BaseViewHol
                         //.setImageInfoList(imageInfoList)
 
                         // 2：直接传url List
-                        .setImageList(imageList)
+                        .setImageList(imgs)
 
                         // 3：只有一张图片的情况，可以直接传入这张图片的url
                         //.setImage(String image)

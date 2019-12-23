@@ -14,6 +14,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -31,6 +33,7 @@ import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.utils.Urls;
 import com.feitianzhu.fu700.view.CustomSpecificationDialog;
 import com.google.gson.Gson;
+import com.itheima.roundedimageview.RoundedImageView;
 import com.zhpan.bannerview.BannerViewPager;
 import com.zhpan.bannerview.enums.IndicatorStyle;
 import com.zhpan.bannerview.holder.ViewHolder;
@@ -61,7 +64,7 @@ public class ShopsDetailActivity extends BaseActivity {
     private String str3 = "0.00";
     private BaseGoodsListBean goodsListBean;
     private ProductParameters productParameters;
-    private List<ProductParameters.GoodsSpecifications.SkuValueListBean> skuValueListBean = new ArrayList<>();
+    private List<BaseGoodsListBean.GoodsEvaluateMode> evalList = new ArrayList<>();
     private List<ProductParameters.GoodsSpecifications> specifications = new ArrayList<>();
     @BindView(R.id.tv_amount)
     TextView tvAmount;
@@ -77,6 +80,23 @@ public class ShopsDetailActivity extends BaseActivity {
     ImageView imgDetail;
     @BindView(R.id.select_specifications)
     TextView specificationsName;
+    @BindView(R.id.tv_count)
+    TextView tvCount;
+    @BindView(R.id.iv_head)
+    RoundedImageView ivHead;
+    @BindView(R.id.user_name)
+    TextView userName;
+    @BindView(R.id.tv_date)
+    TextView tvDate;
+    @BindView(R.id.tvContent)
+    TextView tvContent;
+    @BindView(R.id.ll_evaluate)
+    LinearLayout llEvaluate;
+    @BindView(R.id.ll_specifications)
+    LinearLayout llSpecifications;
+    @BindView(R.id.specifications)
+    TextView evaSpecifications;
+
 
     @Override
     protected int getLayoutId() {
@@ -95,9 +115,18 @@ public class ShopsDetailActivity extends BaseActivity {
             goodsName.setText(goodsListBean.getGoodsName());
             goodsSummary.setText(goodsListBean.getSummary());
 
-            List<BaseGoodsListBean.GoodsEvaluateMode> evalList = goodsListBean.getEvalList();
+            evalList = goodsListBean.getEvalList();
             if (evalList != null && evalList.size() > 0) {
-
+                llEvaluate.setVisibility(View.VISIBLE);
+                tvCount.setText("评价(" + evalList.size() + ")");
+                Glide.with(this).load(evalList.get(0).getHeadImg()).apply(new RequestOptions().error(R.mipmap.b08_01touxiang).placeholder(R.mipmap.b08_01touxiang)).into(ivHead);
+                userName.setText(evalList.get(0).getNickName());
+                tvDate.setText(evalList.get(0).getEvalDate());
+                tvContent.setText(evalList.get(0).getContent());
+                evaSpecifications.setText(evalList.get(0).getNorms() + "/" + goodsListBean.getGoodsName());
+            } else {
+                llEvaluate.setVisibility(View.GONE);
+                tvCount.setText("评价(0)");
             }
 
 
@@ -175,8 +204,11 @@ public class ShopsDetailActivity extends BaseActivity {
                         /*
                          * 数据处理
                          * */
-                        if (productParameters != null) {
+                        if (productParameters != null && productParameters.getGoodslist() != null && productParameters.getGoodslist().size() > 0) {
+                            llSpecifications.setVisibility(View.VISIBLE);
                             specifications = productParameters.getGoodslist();
+                        } else {
+                            llSpecifications.setVisibility(View.GONE);
                         }
                     }
                 });
@@ -213,7 +245,7 @@ public class ShopsDetailActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.tv_pay:
-                if (sb == null || TextUtils.isEmpty(sb.toString())) {
+                if (specifications.size() > 0 && (sb == null || TextUtils.isEmpty(sb.toString()))) {
                     ToastUtils.showShortToast("请选择商品规格");
                     return;
                 }
@@ -227,6 +259,9 @@ public class ShopsDetailActivity extends BaseActivity {
                 break;
             case R.id.rl_more_evaluation: //更多评论
                 intent = new Intent(ShopsDetailActivity.this, CommentsDetailActivity.class);
+                if (goodsListBean != null) {
+                    intent.putExtra(CommentsDetailActivity.COMMENTS_DATA, goodsListBean);
+                }
                 startActivity(intent);
                 break;
             case R.id.add_shopping_cart:

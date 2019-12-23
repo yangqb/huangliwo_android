@@ -61,7 +61,7 @@ public class Urls {
      * */
     public static final String GTE_ORDER_COUNT = BASE_URL + "fhwl/order/getBuyInfo";
     /*
-     * 所有订单列表数据
+     * 所有订单列表数据status --- -1代表全部,0代表待评价-2代表售后的单子（退款中和已退款） 其他的按照订单的状态传值
      * */
     public static final String GET_ORDER_INFO = BASE_URL + "fhwl/order/svbill/goodsorder";
     /*

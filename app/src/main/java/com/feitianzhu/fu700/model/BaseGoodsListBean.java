@@ -213,6 +213,24 @@ public class BaseGoodsListBean implements Serializable {
         private String nickName;
         private String headImg;
         private String evalImgs;
+        private String norms;
+        private String goodsName;
+
+        public String getNorms() {
+            return norms;
+        }
+
+        public void setNorms(String norms) {
+            this.norms = norms;
+        }
+
+        public String getGoodsName() {
+            return goodsName;
+        }
+
+        public void setGoodsName(String goodsName) {
+            this.goodsName = goodsName;
+        }
 
         public int getEvalId() {
             return evalId;

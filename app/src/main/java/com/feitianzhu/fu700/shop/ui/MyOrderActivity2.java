@@ -50,10 +50,10 @@ import static com.feitianzhu.fu700.common.Constant.USERID;
 
 public class MyOrderActivity2 extends BaseActivity {
     private static final int PAY_REQUEST_CODE = 1001;
+    private static final int COMMENTS_REQUEST_CODE = 1002;
     private OrderAdapter adapter;
+    private int status = -1;
     private List<GoodsOrderInfo.GoodsOrderListBean> goodsOrderList = new ArrayList<>();
-    private List<GoodsOrderInfo.GoodsOrderListBean> goodsOrderClassList = new ArrayList<>();
-    private List<GoodsOrderInfo.GoodsOrderListBean> goodsOrderCurrentList = new ArrayList<>();
     private GoodsOrderInfo goodsOrderInfo;
     private static final int REQUEST_CODE = 1000;
     @BindView(R.id.all_order)
@@ -132,7 +132,7 @@ public class MyOrderActivity2 extends BaseActivity {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Intent intent = new Intent(MyOrderActivity2.this, OrderDetailActivity.class);
-                intent.putExtra(OrderDetailActivity.ORDER_NO, goodsOrderCurrentList.get(position).getOrderNo());
+                intent.putExtra(OrderDetailActivity.ORDER_NO, goodsOrderList.get(position).getOrderNo());
                 startActivity(intent);
             }
         });
@@ -145,61 +145,63 @@ public class MyOrderActivity2 extends BaseActivity {
                 switch (view.getId()) {
                     case R.id.btn_refund:
                         //退款
-                        if (goodsOrderCurrentList.get(position).getStatus() == GoodsOrderInfo.TYPE_WAIT_RECEIVING) {
+                        if (goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_WAIT_RECEIVING) {
                             intent = new Intent(MyOrderActivity2.this, EditApplyRefundActivity.class);
                             startActivity(intent);
                         }
                         break;
                     case R.id.btn_logistics:
-                        if (goodsOrderCurrentList.get(position).getStatus() == GoodsOrderInfo.TYPE_COMPLETED) {
+                        if (goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_COMPLETED) {
                             //删除订单，
-                            delete(goodsOrderCurrentList.get(position).getOrderNo());
-                        } else if (goodsOrderCurrentList.get(position).getStatus() == GoodsOrderInfo.TYPE_NO_PAY) {
+                            delete(goodsOrderList.get(position).getOrderNo());
+                        } else if (goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_NO_PAY) {
                             //取消订单，
                             new XPopup.Builder(MyOrderActivity2.this)
                                     .asConfirm("确定要取消该订单？", "", "关闭", "确定", new OnConfirmListener() {
                                         @Override
                                         public void onConfirm() {
-                                            cancel(goodsOrderCurrentList.get(position).getOrderNo());
+                                            cancel(goodsOrderList.get(position).getOrderNo());
                                         }
                                     }, null, false)
                                     .bindLayout(R.layout.layout_dialog) //绑定已有布局
                                     .show();
-                        } else if (goodsOrderCurrentList.get(position).getStatus() == GoodsOrderInfo.TYPE_WAIT_RECEIVING) {
+                        } else if (goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_WAIT_RECEIVING) {
                             //查看物流
                             intent = new Intent(MyOrderActivity2.this, LogisticsInfoActivity.class);
+                            intent.putExtra(LogisticsInfoActivity.LOGISTICS_COMPANY, goodsOrderList.get(position).getLogisticCpName());
+                            intent.putExtra(LogisticsInfoActivity.LOGISTICS_NO, goodsOrderList.get(position).getExpressNo());
                             startActivity(intent);
-                        } else if (goodsOrderCurrentList.get(position).getStatus() == GoodsOrderInfo.TYPE_WAIT_DELIVERY) {
+                        } else if (goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_WAIT_DELIVERY) {
                             //退款
                             intent = new Intent(MyOrderActivity2.this, EditApplyRefundActivity.class);
-                            intent.putExtra(EditApplyRefundActivity.ORDER_DATA, goodsOrderCurrentList.get(position));
+                            intent.putExtra(EditApplyRefundActivity.ORDER_DATA, goodsOrderList.get(position));
                             startActivityForResult(intent, REQUEST_CODE);
                         }
                         break;
                     case R.id.btn_confirm_goods:
-                        if (goodsOrderCurrentList.get(position).getStatus() == GoodsOrderInfo.TYPE_COMPLETED) {
+                        if (goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_COMPLETED) {
                             //评价
                             intent = new Intent(MyOrderActivity2.this, EditCommentsActivity.class);
-                            intent.putExtra(EditCommentsActivity.ORDER_DATA, goodsOrderCurrentList.get(position));
-                            startActivity(intent);
-                        } else if (goodsOrderCurrentList.get(position).getStatus() == GoodsOrderInfo.TYPE_NO_PAY) {
+                            intent.putExtra(EditCommentsActivity.ORDER_DATA, goodsOrderList.get(position));
+                            startActivityForResult(intent, COMMENTS_REQUEST_CODE);
+                        } else if (goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_NO_PAY) {
                             //付款
                             intent = new Intent(MyOrderActivity2.this, SelectPayActivity.class);
-                            intent.putExtra(SelectPayActivity.ORDER_DATA, goodsOrderCurrentList.get(position));
+                            intent.putExtra(SelectPayActivity.ORDER_DATA, goodsOrderList.get(position));
                             startActivityForResult(intent, PAY_REQUEST_CODE);
-                        } else if (goodsOrderCurrentList.get(position).getStatus() == GoodsOrderInfo.TYPE_WAIT_DELIVERY) {
+                        } else if (goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_WAIT_DELIVERY) {
                             //查看物流
                             intent = new Intent(MyOrderActivity2.this, LogisticsInfoActivity.class);
                             startActivity(intent);
-                        } else if (goodsOrderCurrentList.get(position).getStatus() == GoodsOrderInfo.TYPE_WAIT_RECEIVING) {
+                        } else if (goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_WAIT_RECEIVING) {
                             //确认收货
-                            confirm(goodsOrderCurrentList.get(position).getOrderNo());
-                        } else if (goodsOrderCurrentList.get(position).getStatus() == GoodsOrderInfo.TYPE_REFUND
-                                || goodsOrderCurrentList.get(position).getStatus() == GoodsOrderInfo.TYPE_REFUNDED
-                                || goodsOrderCurrentList.get(position).getStatus() == GoodsOrderInfo.TYPE_CANCEL) {
+                            confirm(goodsOrderList.get(position).getOrderNo());
+                        } else if (goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_REFUND
+                                || goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_REFUNDED
+                                || goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_CANCEL) {
                             //查看详情
                             intent = new Intent(MyOrderActivity2.this, OrderDetailActivity.class);
-                            intent.putExtra(OrderDetailActivity.ORDER_NO, goodsOrderCurrentList.get(position).getOrderNo());
+                            intent.putExtra(OrderDetailActivity.ORDER_NO, goodsOrderList.get(position).getOrderNo());
                             startActivity(intent);
                         }
                         break;
@@ -225,7 +227,6 @@ public class MyOrderActivity2 extends BaseActivity {
             case R.id.right_button:
                 //售后(退款)
                 Intent intent = new Intent(MyOrderActivity2.this, AfterSaleActivity.class);
-                intent.putExtra(AfterSaleActivity.ORDER_LIST_DATA, goodsOrderInfo);
                 startActivity(intent);
                 break;
             case R.id.all_order:
@@ -239,9 +240,7 @@ public class MyOrderActivity2 extends BaseActivity {
                 setSelect(lineWaitSending, false);
                 setSelect(lineWaitReceive, false);
                 setSelect(lineWaitEvaluate, false);
-                goodsOrderCurrentList = goodsOrderList;
-                adapter.setNewData(goodsOrderCurrentList);
-                adapter.notifyDataSetChanged();
+                getOrderList(-1);
                 break;
             case R.id.wait_pay_order:
                 setSelect(allOrder, false);
@@ -254,8 +253,8 @@ public class MyOrderActivity2 extends BaseActivity {
                 setSelect(lineWaitSending, false);
                 setSelect(lineWaitReceive, false);
                 setSelect(lineWaitEvaluate, false);
-                adapter.setNewData(getGoodsOrderClassList(GoodsOrderInfo.TYPE_NO_PAY));
-                adapter.notifyDataSetChanged();
+                status = GoodsOrderInfo.TYPE_NO_PAY;
+                getOrderList(status);
                 break;
             case R.id.wait_sending_order:
                 setSelect(allOrder, false);
@@ -268,8 +267,8 @@ public class MyOrderActivity2 extends BaseActivity {
                 setSelect(lineWaitSending, true);
                 setSelect(lineWaitReceive, false);
                 setSelect(lineWaitEvaluate, false);
-                adapter.setNewData(getGoodsOrderClassList(GoodsOrderInfo.TYPE_WAIT_DELIVERY));
-                adapter.notifyDataSetChanged();
+                status = GoodsOrderInfo.TYPE_WAIT_DELIVERY;
+                getOrderList(status);
                 break;
             case R.id.wait_receive_order:
                 setSelect(allOrder, false);
@@ -282,8 +281,8 @@ public class MyOrderActivity2 extends BaseActivity {
                 setSelect(lineWaitSending, false);
                 setSelect(lineWaitReceive, true);
                 setSelect(lineWaitEvaluate, false);
-                adapter.setNewData(getGoodsOrderClassList(GoodsOrderInfo.TYPE_WAIT_RECEIVING));
-                adapter.notifyDataSetChanged();
+                status = GoodsOrderInfo.TYPE_WAIT_RECEIVING;
+                getOrderList(status);
                 break;
             case R.id.wait_evaluate_order:
                 setSelect(allOrder, false);
@@ -296,8 +295,8 @@ public class MyOrderActivity2 extends BaseActivity {
                 setSelect(lineWaitSending, false);
                 setSelect(lineWaitReceive, false);
                 setSelect(lineWaitEvaluate, true);
-                adapter.setNewData(getGoodsOrderClassList(GoodsOrderInfo.TYPE_COMPLETED));
-                adapter.notifyDataSetChanged();
+                status = 0;
+                getOrderList(status);
                 break;
         }
 
@@ -337,11 +336,18 @@ public class MyOrderActivity2 extends BaseActivity {
                         }
                     }
                 });
+        getOrderList(status);
+    }
 
+    public void getOrderList(int status) {
+        /*
+        status --- -1代表全部,0代表待评价-2代表售后的单子（退款中和已退款） 其他的按照订单的状态传值
+        * */
         OkHttpUtils.post()
                 .url(Urls.GET_ORDER_INFO)
                 .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)
                 .addParams(USERID, Constant.LOGIN_USERID)
+                .addParams("status", status + "")
                 .build()
                 .execute(new Callback() {
 
@@ -359,9 +365,11 @@ public class MyOrderActivity2 extends BaseActivity {
                     public void onResponse(Object response, int id) {
                         refreshLayout.finishRefresh();
                         goodsOrderInfo = (GoodsOrderInfo) response;
-                        goodsOrderList = goodsOrderInfo.getGoodsOrderList();
-                        goodsOrderCurrentList = goodsOrderList;
-                        adapter.setNewData(goodsOrderCurrentList);
+                        goodsOrderList.clear();
+                        if (goodsOrderInfo != null && goodsOrderInfo.getGoodsOrderList() != null) {
+                            goodsOrderList = goodsOrderInfo.getGoodsOrderList();
+                        }
+                        adapter.setNewData(goodsOrderList);
                         adapter.notifyDataSetChanged();
                     }
                 });
@@ -446,22 +454,11 @@ public class MyOrderActivity2 extends BaseActivity {
                 });
     }
 
-    public List<GoodsOrderInfo.GoodsOrderListBean> getGoodsOrderClassList(int goodsOrderType) {
-        goodsOrderClassList.clear();
-        for (int i = 0; i < goodsOrderList.size(); i++) {
-            if (goodsOrderType == goodsOrderList.get(i).getStatus()) {
-                goodsOrderClassList.add(goodsOrderList.get(i));
-            }
-        }
-        goodsOrderCurrentList = goodsOrderClassList;
-        return goodsOrderCurrentList;
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            if (requestCode == REQUEST_CODE || requestCode == PAY_REQUEST_CODE) {
+            if (requestCode == REQUEST_CODE || requestCode == PAY_REQUEST_CODE || requestCode == COMMENTS_REQUEST_CODE) {
                 initData();
             }
         }

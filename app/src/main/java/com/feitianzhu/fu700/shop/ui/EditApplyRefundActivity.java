@@ -93,20 +93,19 @@ public class EditApplyRefundActivity extends BaseActivity {
             case R.id.left_button:
                 finish();
                 break;
-            case R.id.right_button:
+            case R.id.right_text:
                 if (TextUtils.isEmpty(tvReason.getText().toString())) {
                     ToastUtils.showShortToast("请选择退款原因");
                 } else {
                     refund(orderListBean.getOrderNo(), tvReason.getText().toString());
                 }
-
                 break;
         }
 
     }
 
     public void refund(String orderNo, String reason) {
-        OkHttpUtils.get()
+        OkHttpUtils.post()
                 .url(Urls.REFUND_ORDER)
                 .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)
                 .addParams(USERID, Constant.LOGIN_USERID)

@@ -31,6 +31,7 @@
                 app:riv_oval="true" />
 
             <TextView
+                android:id="@+id/userName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="7dp"
@@ -40,6 +41,7 @@
                 android:textSize="13sp" />
 
             <TextView
+                android:id="@+id/tvDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -59,19 +61,21 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/specifications"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="环境：个人觉得这个店的装修挺不错的，也很高大尚，主要是卫生做的好！"
-                android:textColor="@color/color_666666"
-                android:textSize="12sp" />
+                android:text=""
+                android:textColor="@color/color_999999"
+                android:textSize="11sp" />
 
             <TextView
+                android:id="@+id/tvContent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:text="服务：个人觉得这个店的装修挺不错的，也很高大尚，主要是卫生做的好！"
-                android:textColor="@color/color_666666"
-                android:textSize="12sp" />
+                android:textColor="@color/color_333333"
+                android:textSize="14sp" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerView"

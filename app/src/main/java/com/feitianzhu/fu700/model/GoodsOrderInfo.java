@@ -84,6 +84,24 @@ userName (string, optional): 用户名
         private ShopAddressBean address;
         private int goodId;
         private int goodsQty;
+        private String logisticCpName; //快递公司
+        private String expressNo;//快递单号
+
+        public String getLogisticCpName() {
+            return logisticCpName;
+        }
+
+        public void setLogisticCpName(String logisticCpName) {
+            this.logisticCpName = logisticCpName;
+        }
+
+        public String getExpressNo() {
+            return expressNo;
+        }
+
+        public void setExpressNo(String expressNo) {
+            this.expressNo = expressNo;
+        }
 
         public int getGoodsQty() {
             return goodsQty;

@@ -19,6 +19,9 @@ import com.feitianzhu.fu700.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.fu700.me.base.BaseActivity;
 import com.feitianzhu.fu700.shop.ShopHelp;
 import com.feitianzhu.fu700.utils.ToastUtils;
+import com.feitianzhu.fu700.view.BalanceInputView;
+import com.lxj.xpopup.XPopup;
+import com.lxj.xpopup.interfaces.OnInputConfirmListener;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -94,8 +97,14 @@ public class BalanceActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.btn_withdrawal://提现
-                //VeriPassword(1, wallet.balance);
-                ToastUtils.showShortToast("待开发");
+                new XPopup.Builder(this).asCustom(new BalanceInputView(this).setOnConfirmClickListener(new BalanceInputView.OnConfirmClickListener() {
+                    @Override
+                    public void onConfirm(String account) {
+                        if (TextUtils.isEmpty(account)) {
+                            ToastUtils.showShortToast("账号不能为空");
+                        }
+                    }
+                })).show();
                 break;
             case R.id.detailed_rules: //细则
                 Intent intent = new Intent(BalanceActivity.this, DetailedRulesActivity.class);

@@ -1,6 +1,7 @@
 package com.feitianzhu.fu700.shop.ui;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -9,15 +10,28 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.fu700.R;
+import com.feitianzhu.fu700.common.Constant;
 import com.feitianzhu.fu700.me.base.BaseActivity;
 import com.feitianzhu.fu700.model.GoodsOrderInfo;
 import com.feitianzhu.fu700.shop.adapter.OrderAdapter;
+import com.feitianzhu.fu700.utils.Urls;
+import com.google.gson.Gson;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.Callback;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import okhttp3.Call;
+import okhttp3.Response;
+
+import static com.feitianzhu.fu700.common.Constant.ACCESSTOKEN;
+import static com.feitianzhu.fu700.common.Constant.USERID;
 
 /**
  * package name: com.feitianzhu.fu700.shop.ui
@@ -28,11 +42,9 @@ import butterknife.OnClick;
  */
 public class AfterSaleActivity extends BaseActivity {
     private OrderAdapter adapter;
-    public static final String ORDER_LIST_DATA = "order_data";
     private List<GoodsOrderInfo.GoodsOrderListBean> goodsOrderList = new ArrayList<>();
-    private List<GoodsOrderInfo.GoodsOrderListBean> goodsOrderClassList = new ArrayList<>();
-    private List<GoodsOrderInfo.GoodsOrderListBean> goodsOrderCurrentList = new ArrayList<>();
-
+    @BindView(R.id.refreshLayout)
+    SmartRefreshLayout refreshLayout;
     @BindView(R.id.title_name)
     TextView titleName;
     @BindView(R.id.recyclerView)
@@ -46,14 +58,7 @@ public class AfterSaleActivity extends BaseActivity {
     @Override
     protected void initView() {
         titleName.setText("售后订单");
-        GoodsOrderInfo goodsOrderInfo = (GoodsOrderInfo) getIntent().getSerializableExtra(ORDER_LIST_DATA);
-        if (goodsOrderInfo != null) {
-            goodsOrderList = goodsOrderInfo.getGoodsOrderList();
-            goodsOrderCurrentList.addAll(getGoodsOrderClassList(GoodsOrderInfo.TYPE_REFUND));
-            goodsOrderCurrentList.addAll(getGoodsOrderClassList(GoodsOrderInfo.TYPE_REFUNDED));
-            goodsOrderCurrentList.addAll(getGoodsOrderClassList(GoodsOrderInfo.TYPE_CANCEL));
-        }
-        adapter = new OrderAdapter(goodsOrderCurrentList);
+        adapter = new OrderAdapter(goodsOrderList);
         View mEmptyView = View.inflate(this, R.layout.view_common_nodata, null);
         ImageView img_empty = (ImageView) mEmptyView.findViewById(R.id.img_empty);
         img_empty.setOnClickListener(new View.OnClickListener() {
@@ -62,6 +67,7 @@ public class AfterSaleActivity extends BaseActivity {
 
             }
         });
+        refreshLayout.setEnableLoadMore(false);
         adapter.setEmptyView(mEmptyView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
@@ -74,7 +80,7 @@ public class AfterSaleActivity extends BaseActivity {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Intent intent = new Intent(AfterSaleActivity.this, OrderDetailActivity.class);
-                intent.putExtra(OrderDetailActivity.ORDER_NO, goodsOrderCurrentList.get(position).getOrderNo());
+                intent.putExtra(OrderDetailActivity.ORDER_NO, goodsOrderList.get(position).getOrderNo());
                 startActivity(intent);
             }
         });
@@ -90,33 +96,58 @@ public class AfterSaleActivity extends BaseActivity {
                     case R.id.btn_logistics:
                         break;
                     case R.id.btn_confirm_goods:
-                        if (goodsOrderCurrentList.get(position).getStatus() == GoodsOrderInfo.TYPE_REFUND
-                                || goodsOrderCurrentList.get(position).getStatus() == GoodsOrderInfo.TYPE_REFUNDED
-                                || goodsOrderCurrentList.get(position).getStatus() == GoodsOrderInfo.TYPE_CANCEL) {
+                        if (goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_REFUND
+                                || goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_REFUNDED) {
                             //查看详情
                             intent = new Intent(AfterSaleActivity.this, OrderDetailActivity.class);
-                            intent.putExtra(OrderDetailActivity.ORDER_NO, goodsOrderCurrentList.get(position).getOrderNo());
+                            intent.putExtra(OrderDetailActivity.ORDER_NO, goodsOrderList.get(position).getOrderNo());
                             startActivity(intent);
                         }
                         break;
                 }
             }
         });
+        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                initData();
+            }
+        });
     }
 
     @Override
     protected void initData() {
+        /*
+        status --- -1代表全部,0代表待评价-2代表售后的单子（退款中和已退款） 其他的按照订单的状态传值
+        * */
+        OkHttpUtils.post()
+                .url(Urls.GET_ORDER_INFO)
+                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)
+                .addParams(USERID, Constant.LOGIN_USERID)
+                .addParams("status", "-2")
+                .build()
+                .execute(new Callback() {
 
-    }
+                    @Override
+                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
+                        return new Gson().fromJson(mData, GoodsOrderInfo.class);
+                    }
 
-    public List<GoodsOrderInfo.GoodsOrderListBean> getGoodsOrderClassList(int goodsOrderType) {
-        goodsOrderClassList.clear();
-        for (int i = 0; i < goodsOrderList.size(); i++) {
-            if (goodsOrderType == goodsOrderList.get(i).getStatus()) {
-                goodsOrderClassList.add(goodsOrderList.get(i));
-            }
-        }
-        return goodsOrderClassList;
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        refreshLayout.finishRefresh(false);
+                    }
+
+                    @Override
+                    public void onResponse(Object response, int id) {
+                        refreshLayout.finishRefresh();
+                        GoodsOrderInfo goodsOrderInfo = (GoodsOrderInfo) response;
+                        goodsOrderList = goodsOrderInfo.getGoodsOrderList();
+                        adapter.setNewData(goodsOrderList);
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+
     }
 
     @OnClick(R.id.left_button)

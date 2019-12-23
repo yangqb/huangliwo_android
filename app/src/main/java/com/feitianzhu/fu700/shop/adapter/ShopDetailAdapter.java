@@ -36,11 +36,11 @@ public class ShopDetailAdapter extends BaseMultiItemQuickAdapter<MultipleItem, B
                 break;
             case MultipleItem.IMG:
                 //helper.setImageUrl(R.id.iv, item.getContent());
-                List<Integer> integers = new ArrayList<>();
+                List<String> integers = new ArrayList<>();
                 RecyclerView recyclerView = helper.getView(R.id.recyclerView);
                 recyclerView.setLayoutManager(new GridLayoutManager(mContext, 3));
                 for (int i = 0; i < 6; i++) {
-                    integers.add(i);
+                    integers.add(i + "");
                 }
                 List<String> imageList = new ArrayList<>();
                 imageList.add("http://g.hiphotos.baidu.com/image/pic/item/6d81800a19d8bc3e770bd00d868ba61ea9d345f2.jpg");

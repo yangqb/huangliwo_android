@@ -118,7 +118,7 @@ public class ShopPayActivity extends BaseActivity {
     private String str2 = "¥ ";
     private boolean isShow;
     private boolean isAddress;
-    private BaseGoodsListBean goodsListBean = new BaseGoodsListBean();
+    private BaseGoodsListBean goodsListBean;
     private GoodsOrderInfo.GoodsOrderListBean orderListBean = new GoodsOrderInfo.GoodsOrderListBean();
     private int shopCount = 1; //购买数量
     private String valueId;
