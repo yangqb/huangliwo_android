@@ -212,11 +212,13 @@ public class Constant {
 
     public static final String SP_PHONE = "phone";
     public static final String SP_PASSWORD = "password";
+    public static final String SP_ACCESS_TOKEN = "access_token";
+    public static final String SP_LOGIN_USERID = "login_user_id";
     public static final String SP_PUSH_SHOP_PROTOCOL = "push_shop_protocol";
     public static final String SP_PUSH_SHOP_INSTRUCTIONS = "push_shop_instructions";
 
-    public static String ACCESS_TOKEN = "";
-    public static String LOGIN_USERID = "";
+     public static String ACCESS_TOKEN = "";
+     public static String LOGIN_USERID = "";
     public static String DeviceToken_Value = "";
     public static String PHONE = "";
 

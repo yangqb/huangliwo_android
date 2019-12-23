@@ -1,6 +1,5 @@
 package com.feitianzhu.fu700.me.ui;
 
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.View;
@@ -10,7 +9,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -26,13 +24,13 @@ import com.feitianzhu.fu700.shop.ui.dialog.ProvinceCallBack;
 import com.feitianzhu.fu700.shop.ui.dialog.ProvincehDialog;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.view.CustomSelectPhotoView;
-import com.gyf.immersionbar.ImmersionBar;
 import com.lxj.xpopup.XPopup;
 import com.socks.library.KLog;
 
 import org.devio.takephoto.model.TResult;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * description: 认证界面
@@ -159,7 +157,7 @@ public class VerificationActivity extends BaseTakePhotoActivity {
     }
 
     @Override
-    protected void onWheelSelect(int num, ArrayList<String> mList) {
+    protected void onWheelSelect(int num, List<String> mList) {
         try {
             if (mVeri_shops) {
                 txtShopsType.setText(mList.get(num - 1));
@@ -405,7 +403,7 @@ public class VerificationActivity extends BaseTakePhotoActivity {
         }
 
         showloadDialog("提交中");
-        ShopDao.PostDataToVeriUser(photo_file_one, photo_file_two, photo_file_three, name, id_num,
+        ShopDao.PostDataToVeriUser(photo_file_one, photo_file_two, name, id_num,
                 selectIndex, mOnSelectProvince, new onConnectionFinishLinstener() {
                     @Override
                     public void onSuccess(int code, Object result) {

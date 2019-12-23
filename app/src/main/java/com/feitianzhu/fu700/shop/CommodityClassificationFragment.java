@@ -340,7 +340,6 @@ public class CommodityClassificationFragment extends SFFragment implements View.
     public void onStart() {
         super.onStart();
         KLog.e("onStart");
-        ShopDao.loadUserAuthImpl();
     }
 
     @Override

@@ -65,6 +65,8 @@ import static com.feitianzhu.fu700.common.Constant.USERID;
  * @Date 2019/11/22 0022 下午 6:53
  */
 public class VipActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener {
+    public static final String MINE_INFO = "mine_info";
+    private static final int REQUEST_CODE = 1000;
     @BindView(R.id.title_name)
     TextView titleName;
     @BindView(R.id.parent_view)
@@ -85,21 +87,28 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
 
     @Override
     protected void initView() {
-
         ImmersionBar.with(this)
                 .fitsSystemWindows(false)
                 .statusBarDarkFont(true, 0.2f)
                 .statusBarColor(R.color.transparent)
                 .init();
 
+        MineInfoModel mTempData = (MineInfoModel) getIntent().getSerializableExtra(MINE_INFO);
+        if (mTempData != null && mTempData.getAccountType() != 0) {
+            btnSumbit.setText("恭喜您已成为会员");
+            btnSumbit.setBackgroundResource(R.drawable.shape_e6e5e5_r5);
+            btnSumbit.setEnabled(false);
+            mCheckBox.setButtonDrawable(getResources().getDrawable(R.mipmap.f01_06xuanzhong5));
+            mCheckBox.setEnabled(false);
+        }
         titleName.setText("成为会员");
-        requestData();
         mCheckBox.setChecked(true);
         mCheckBox.setOnCheckedChangeListener(this);
         mCheckBox.setButtonDrawable(getResources().getDrawable(R.mipmap.f01_06xuanzhong5));
+
     }
 
-    boolean ismore = true;
+    boolean isMore = true;
 
     @OnClick({R.id.left_button, R.id.moreVip, R.id.btn_submit, R.id.tv_protocol})
     public void onClick(View view) {
@@ -109,7 +118,7 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
                 finish();
                 break;
             case R.id.moreVip:
-                if (ismore) {
+                if (isMore) {
                     moreVip.setText("收起会员权益");
                     parentView.setVisibility(View.VISIBLE);
                     imageView.setVisibility(View.GONE);
@@ -118,11 +127,11 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
                     parentView.setVisibility(View.GONE);
                     imageView.setVisibility(View.VISIBLE);
                 }
-                ismore = !ismore;
+                isMore = !isMore;
                 break;
             case R.id.btn_submit:
                 intent = new Intent(VipActivity.this, VipUpgradeActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_CODE);
                 break;
             case R.id.tv_protocol:
                 intent = new Intent(VipActivity.this, ProtocolActivity.class);
@@ -134,53 +143,26 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
 
     @Override
     protected void initData() {
-        EventBus.getDefault().register(this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onPayEvent(PayForMeEvent event) {
-        switch (event) {
-            case PAY_FINISH:
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_CODE) {
                 btnSumbit.setText("恭喜您已成为会员");
                 btnSumbit.setBackgroundResource(R.drawable.shape_e6e5e5_r5);
                 btnSumbit.setEnabled(false);
                 mCheckBox.setButtonDrawable(getResources().getDrawable(R.mipmap.f01_06xuanzhong5));
                 mCheckBox.setEnabled(false);
-                requestData();
-                break;
+            }
         }
-    }
-
-    private void requestData() {
-        OkHttpUtils.get()//
-                .url(Common_HEADER + POST_MINE_INFO)
-                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
-                .addParams(USERID, Constant.LOGIN_USERID)
-                .build().execute(new Callback<MineInfoModel>() {
-
-            @Override
-            public void onError(Call call, Exception e, int id) {
-                Log.e("wangyan", "onError---->" + e.getMessage());
-                ToastUtils.showShortToast(e.getMessage());
-            }
-
-            @Override
-            public void onResponse(MineInfoModel response, int id) {
-                if (response != null && response.getAccountType() != 0) {
-                    btnSumbit.setText("恭喜您已成为会员");
-                    btnSumbit.setBackgroundResource(R.drawable.shape_e6e5e5_r5);
-                    btnSumbit.setEnabled(false);
-                    mCheckBox.setButtonDrawable(getResources().getDrawable(R.mipmap.f01_06xuanzhong5));
-                    mCheckBox.setEnabled(false);
-                }
-            }
-        });
     }
 
     @Override

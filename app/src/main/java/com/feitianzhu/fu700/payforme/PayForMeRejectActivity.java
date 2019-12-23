@@ -28,6 +28,7 @@ import com.socks.library.KLog;
 import org.devio.takephoto.model.TResult;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -239,7 +240,7 @@ public class PayForMeRejectActivity extends BaseTakePhotoActivity {
     }
 
     @Override
-    protected void onWheelSelect(int num, ArrayList<String> mList) {
+    protected void onWheelSelect(int num, List<String> mList) {
 
     }
 }

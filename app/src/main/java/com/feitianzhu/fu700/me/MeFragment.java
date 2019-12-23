@@ -19,10 +19,10 @@ import com.feitianzhu.fu700.common.Constant;
 import com.feitianzhu.fu700.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.fu700.login.LoginEvent;
 import com.feitianzhu.fu700.me.ui.MyFriendActivity;
-import com.feitianzhu.fu700.me.ui.MyVerificationActivity;
 import com.feitianzhu.fu700.me.ui.MyWalletActivity;
 import com.feitianzhu.fu700.me.ui.PersonalCenterActivity;
 import com.feitianzhu.fu700.me.ui.TotalScoreActivity;
+import com.feitianzhu.fu700.me.ui.VerificationActivity;
 import com.feitianzhu.fu700.me.ui.consumeralliance.UnionlevelActivity;
 import com.feitianzhu.fu700.me.ui.totalScore.MineCollectionActivity;
 import com.feitianzhu.fu700.me.ui.totalScore.MineQrcodeActivity;
@@ -234,7 +234,7 @@ public class MeFragment extends Fragment {
                 }
                 break;
             case R.id.tv_zhanghu: //账户
-                startActivity(new Intent(getActivity(), MyVerificationActivity.class));
+                startActivity(new Intent(getActivity(), VerificationActivity.class));
                 break;
             case R.id.tv_totalScore: //总积分
                 JumpActivity(getContext(), TotalScoreActivity.class);
@@ -293,8 +293,8 @@ public class MeFragment extends Fragment {
                 KLog.i("登出");
                 ClearData();
                 break;
-            case TAKEPHOTO:
-            case EDITORINFO:
+            case TAKE_PHOTO:
+            case EDITOR_INFO:
                 requestData();
                 break;
         }

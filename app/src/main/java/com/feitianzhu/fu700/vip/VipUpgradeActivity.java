@@ -19,32 +19,27 @@ import android.widget.TextView;
 import com.feitianzhu.fu700.R;
 import com.feitianzhu.fu700.common.Constant;
 import com.feitianzhu.fu700.common.impl.onConnectionFinishLinstener;
-import com.feitianzhu.fu700.dao.NetworkDao;
+import com.feitianzhu.fu700.login.LoginEvent;
 import com.feitianzhu.fu700.me.AddressManagementActivity;
 import com.feitianzhu.fu700.me.base.BaseActivity;
 import com.feitianzhu.fu700.me.helper.CityModel;
 import com.feitianzhu.fu700.me.ui.ShopRecordDetailActivity;
-import com.feitianzhu.fu700.me.ui.UnionApplyRecordActivity;
 import com.feitianzhu.fu700.model.AddressInfo;
 import com.feitianzhu.fu700.model.PayInfo;
-import com.feitianzhu.fu700.model.SelectPayNeedModel;
 import com.feitianzhu.fu700.model.ShopRecordWxModel;
 import com.feitianzhu.fu700.payforme.PayForMeEvent;
 import com.feitianzhu.fu700.payforme.PayForMeRecordActivity;
 import com.feitianzhu.fu700.shop.ShopDao;
-import com.feitianzhu.fu700.shop.ShopHelpTwo;
 import com.feitianzhu.fu700.utils.PayUtils;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.utils.Urls;
 import com.feitianzhu.fu700.utils.doubleclick.SingleClick;
 import com.google.gson.Gson;
 import com.lxj.xpopup.XPopup;
-import com.socks.library.KLog;
 import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.builder.PostFormBuilder;
 import com.zhy.http.okhttp.callback.Callback;
 
 import org.greenrobot.eventbus.EventBus;
@@ -52,6 +47,9 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -73,6 +71,7 @@ public class VipUpgradeActivity extends BaseActivity {
     private String appId = "";
     private static final int REQUEST_CODE = 1000;
     private AddressInfo.ShopAddressListBean addressBean;
+    private List<AddressInfo.ShopAddressListBean> addressInfos = new ArrayList<>();
     @BindView(R.id.amount)
     TextView bottomAmount;
     @BindView(R.id.tv_amount)
@@ -91,13 +90,12 @@ public class VipUpgradeActivity extends BaseActivity {
     LinearLayout noAddress;
     private String payType = "wx"; //支付方式
     private CityModel mCityModel;
-    private boolean isDefault;
     @BindView(R.id.name)
     TextView name;
     @BindView(R.id.phone)
     TextView phone;
-    @BindView(R.id.address)
-    TextView address;
+    @BindView(R.id.tv_address)
+    TextView tvAddress;
 
     @Override
     protected int getLayoutId() {
@@ -112,20 +110,8 @@ public class VipUpgradeActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        Intent intent = getIntent();
         titleName.setText("确认升级");
         weiXinIcon.setBackgroundResource(R.mipmap.e01_23xuanzhong);
-        //是否有默认地址
-        if (isDefault) {
-            noAddress.setVisibility(View.GONE);
-            rlAddress.setVisibility(View.VISIBLE);
-            /*
-             * TODO:添加默认地址信息
-             * */
-        } else {
-            noAddress.setVisibility(View.VISIBLE);
-            rlAddress.setVisibility(View.GONE);
-        }
         /**
          * Spanned.SPAN_INCLUSIVE_EXCLUSIVE 从起始下标到终了下标，包括起始下标
          * Spanned.SPAN_INCLUSIVE_INCLUSIVE 从起始下标到终了下标，同时包括起始下标和终了下标
@@ -201,7 +187,7 @@ public class VipUpgradeActivity extends BaseActivity {
                 payType = "";
                 break;
             case R.id.tv_pay:
-                if (TextUtils.isEmpty(address.getText().toString().trim())) {
+                if (TextUtils.isEmpty(tvAddress.getText().toString().trim())) {
                     ToastUtils.showShortToast("请选择收货地址");
                 } else {
                     pay();
@@ -211,15 +197,15 @@ public class VipUpgradeActivity extends BaseActivity {
             case R.id.rl_address:
                 Intent intent = new Intent(this, AddressManagementActivity.class);
                 intent.putExtra(AddressManagementActivity.IS_SELECT, true);
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_CODE);
                 break;
         }
     }
 
     public void pay() {
-        if(payType.equals("wx")) {
-           appId = Constant.WX_APP_ID;
-        }else {
+        if (payType.equals("wx")) {
+            appId = Constant.WX_APP_ID;
+        } else {
             appId = "";
         }
         OkHttpUtils.post().url(Common_HEADER + Constant.POST_UNION_LEVEL_PAY)
@@ -265,7 +251,9 @@ public class VipUpgradeActivity extends BaseActivity {
         PayUtils.aliPay(VipUpgradeActivity.this, orderInfo, new onConnectionFinishLinstener() {
             @Override
             public void onSuccess(int code, Object result) {
+                setResult(RESULT_OK);
                 ToastUtils.showShortToast("支付成功");
+                EventBus.getDefault().post(LoginEvent.EDITOR_INFO);
                 //弹框
                 showDialog();
             }
@@ -273,7 +261,6 @@ public class VipUpgradeActivity extends BaseActivity {
             @Override
             public void onFail(int code, String result) {
                 ToastUtils.showShortToast("支付失败");
-                EventBus.getDefault().post(PayForMeEvent.PAY_FAILURE);
             }
         });
 
@@ -282,22 +269,12 @@ public class VipUpgradeActivity extends BaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void onPayMessageCall(PayInfo msg) {
         switch (msg.getCurrentInfo()) {
-            case PayInfo.SHOPRECORDER:
-                Log.e("Test", "msg.getCurrentInfo()---------" + msg.getCurrentInfo());
-                startActivity(new Intent(VipUpgradeActivity.this, ShopRecordDetailActivity.class));
-                finish();
-                break;
             case PayInfo.UNIONLEVEL:
                 if (msg.getIsSuccess() == PayInfo.SUCCESS) {
+                    setResult(RESULT_OK);
+                    EventBus.getDefault().post(LoginEvent.EDITOR_INFO);
                     showDialog();
-                } else {
-                    EventBus.getDefault().post(PayForMeEvent.PAY_FAILURE);
                 }
-                break;
-            case PayInfo.PAY_FORME:
-                finish();
-                startActivity(new Intent(VipUpgradeActivity.this, PayForMeRecordActivity.class));
-                EventBus.getDefault().post(PayForMeEvent.PAY_SUCCESS);
                 break;
         }
     }
@@ -308,7 +285,6 @@ public class VipUpgradeActivity extends BaseActivity {
                 .asCustom(new CustomPopup(this).onClose(new Runnable() {
                     @Override
                     public void run() {
-                        EventBus.getDefault().post(PayForMeEvent.PAY_FINISH);
                         finish();
                     }
                 }))
@@ -336,6 +312,52 @@ public class VipUpgradeActivity extends BaseActivity {
     @Override
     protected void initData() {
         EventBus.getDefault().register(this);
+        /*
+         * 获取默认收货地址
+         * */
+        OkHttpUtils.post()
+                .url(Urls.GET_ADDRESS)
+                .addParams("accessToken", Constant.ACCESS_TOKEN)
+                .addParams("userId", Constant.LOGIN_USERID)
+                .build()
+                .execute(new Callback() {
+                    @Override
+                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
+                        return new Gson().fromJson(mData, AddressInfo.class);
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+
+                    }
+
+                    @Override
+                    public void onResponse(Object response, int id) {
+                        AddressInfo addressInfo = (AddressInfo) response;
+                        addressInfos = addressInfo.getShopAddressList();
+                        if (addressInfos.size() > 0) {
+                            for (AddressInfo.ShopAddressListBean address : addressInfos
+                            ) {
+                                if (address.getIsDefalt() == 1) {
+                                    noAddress.setVisibility(View.GONE);
+                                    rlAddress.setVisibility(View.VISIBLE);
+                                    addressBean = address;
+                                    tvAddress.setText(addressBean.getProvinceName() + addressBean.getCityName() + addressBean.getAreaName() + addressBean.getDetailAddress());
+                                    name.setText(addressBean.getUserName());
+                                    phone.setText(addressBean.getPhone());
+                                    break;
+                                } else {
+                                    noAddress.setVisibility(View.VISIBLE);
+                                    rlAddress.setVisibility(View.GONE);
+                                }
+                            }
+                        } else {
+                            noAddress.setVisibility(View.VISIBLE);
+                            rlAddress.setVisibility(View.GONE);
+                        }
+
+                    }
+                });
     }
 
     @Override
@@ -347,7 +369,7 @@ public class VipUpgradeActivity extends BaseActivity {
                 if (addressBean != null) {
                     noAddress.setVisibility(View.GONE);
                     rlAddress.setVisibility(View.VISIBLE);
-                    address.setText(addressBean.getProvinceName() + addressBean.getCityName() + addressBean.getAreaName() + addressBean.getDetailAddress());
+                    tvAddress.setText(addressBean.getProvinceName() + addressBean.getCityName() + addressBean.getAreaName() + addressBean.getDetailAddress());
                     name.setText(addressBean.getUserName());
                     phone.setText(addressBean.getPhone());
                 }

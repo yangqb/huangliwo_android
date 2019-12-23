@@ -15,18 +15,12 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.fu700.R;
-import com.feitianzhu.fu700.bankcard.MyBankCardActivity;
 import com.feitianzhu.fu700.common.Constant;
 import com.feitianzhu.fu700.common.base.SFFragment;
-import com.feitianzhu.fu700.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.fu700.login.LoginEvent;
 import com.feitianzhu.fu700.me.adapter.CenterAdapter;
-import com.feitianzhu.fu700.me.ui.BalanceRechargeActivity;
-import com.feitianzhu.fu700.me.ui.MyVerificationActivity;
-import com.feitianzhu.fu700.me.ui.MyWalletActivity;
-import com.feitianzhu.fu700.me.ui.PersonalCenterActivity;
 import com.feitianzhu.fu700.me.ui.PersonalCenterActivity2;
-import com.feitianzhu.fu700.me.ui.consumeralliance.UnionlevelActivity;
+import com.feitianzhu.fu700.me.ui.VerificationActivity2;
 import com.feitianzhu.fu700.me.ui.totalScore.MineCollectionActivity;
 import com.feitianzhu.fu700.me.ui.totalScore.MineQrcodeActivity;
 import com.feitianzhu.fu700.model.MineInfoModel;
@@ -34,8 +28,6 @@ import com.feitianzhu.fu700.pushshop.PushShopHomeActivity;
 import com.feitianzhu.fu700.settings.SettingsActivity;
 import com.feitianzhu.fu700.shop.ShopDao;
 import com.feitianzhu.fu700.shop.ShopHelp;
-import com.feitianzhu.fu700.shop.ui.LogisticsInfoActivity;
-import com.feitianzhu.fu700.shop.ui.MyOrderActivity;
 import com.feitianzhu.fu700.shop.ui.MyOrderActivity2;
 import com.feitianzhu.fu700.shop.ui.ShoppingCartActivity;
 import com.feitianzhu.fu700.utils.ToastUtils;
@@ -192,8 +184,9 @@ public class MyCenterFragment extends SFFragment {
                         intent = new Intent(getActivity(), BalanceActivity.class);
                         startActivity(intent);
                         break;
-                    case 1: //账户认证
-                        startActivity(new Intent(getActivity(), MyVerificationActivity.class));
+                    case 1: //实名认证
+                        intent = new Intent(getActivity(), VerificationActivity2.class);
+                        startActivity(intent);
                         break;
                     case 2:
                         //银行卡 //暂不提供银行卡功能
@@ -222,15 +215,9 @@ public class MyCenterFragment extends SFFragment {
                         startActivity(intent);
                         break;
                     case 4: //推店
-                        if (!Constant.loadUserAuth) {
-                            ToastUtils.showShortToast("正在获取授权信息，稍候进入");
-                            ShopDao.loadUserAuthImpl();
-                            return;
-                        } else {
-                            //ShopHelp.veriJumpActivity(getActivity());
-                            intent = new Intent(getActivity(), PushShopHomeActivity.class);
-                            startActivity(intent);
-                        }
+                        //ShopHelp.veriJumpActivity(getActivity());
+                        intent = new Intent(getActivity(), PushShopHomeActivity.class);
+                        startActivity(intent);
                         break;
                     case 5://我的收藏
                         JumpActivity(getContext(), MineCollectionActivity.class);
@@ -241,6 +228,7 @@ public class MyCenterFragment extends SFFragment {
                         break;
                     case 7://成为会员
                         intent = new Intent(getContext(), VipActivity.class);
+                        intent.putExtra(VipActivity.MINE_INFO, mTempData);
                         startActivity(intent);
                         break;
                     case 8: //分享
@@ -295,8 +283,8 @@ public class MyCenterFragment extends SFFragment {
                 KLog.i("登出");
                 ClearData();
                 break;
-            case TAKEPHOTO:
-            case EDITORINFO:
+            case TAKE_PHOTO:
+            case EDITOR_INFO:
                 requestData();
                 break;
         }

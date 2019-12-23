@@ -26,7 +26,7 @@ import com.feitianzhu.fu700.model.ShopRecordWxModel;
 import com.feitianzhu.fu700.payforme.PayForMeEvent;
 import com.feitianzhu.fu700.payforme.PayForMeRecordActivity;
 import com.feitianzhu.fu700.shop.ShopDao;
-import com.feitianzhu.fu700.shop.ShopHelpTwo;
+import com.feitianzhu.fu700.shop.ShopHelp;
 import com.feitianzhu.fu700.utils.PayUtils;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.google.gson.Gson;
@@ -306,7 +306,7 @@ public class SelectPayActivity extends BaseActivity {
             return;
         }
 
-        ShopHelpTwo.veriPassword(this, new onConnectionFinishLinstener() {
+        ShopHelp.veriPassword(this, new onConnectionFinishLinstener() {
             @Override
             public void onSuccess(int code, Object result) {
 

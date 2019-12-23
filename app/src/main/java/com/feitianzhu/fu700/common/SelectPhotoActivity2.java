@@ -31,6 +31,7 @@ import org.devio.takephoto.permission.TakePhotoInvocationHandler;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * package name: com.feitianzhu.fu700.common
@@ -162,9 +163,9 @@ public abstract class SelectPhotoActivity2 extends AppCompatActivity implements 
     protected int selectIndex = 0;
     protected AlertDialog alertDialog;
 
-    protected abstract void onWheelSelect(int num, ArrayList<String> mList);
+    protected abstract void onWheelSelect(int num, List<String> mList);
 
-    protected void showTypeDialog(final ArrayList<String> list) {
+    protected void showTypeDialog(List<String> list) {
         selectIndex = 0;
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();

@@ -223,7 +223,8 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 //                startActivity(new Intent(this, ForgetPasswordActivity.class));
 //                break;
             case R.id.tv_protocol:
-                WebViewActivity.startActivity(this, Urls.H5_REGISTER_PROTOCOL, "黄鹂窝优选用户协议");
+                Intent intent = new Intent(RegisterActivity.this, RegistererProtocolActivity.class);
+                startActivity(intent);
                 break;
 
             case R.id.back:

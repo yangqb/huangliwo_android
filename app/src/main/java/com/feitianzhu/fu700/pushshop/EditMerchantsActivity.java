@@ -2,24 +2,20 @@ package com.feitianzhu.fu700.pushshop;
 
 import android.view.View;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.feitianzhu.fu700.R;
-import com.feitianzhu.fu700.me.base.BaseActivity;
 import com.feitianzhu.fu700.me.base.BaseTakePhotoActivity;
-import com.feitianzhu.fu700.me.ui.MyVerificationActivity;
-import com.feitianzhu.fu700.me.ui.PersonalCenterActivity2;
 import com.feitianzhu.fu700.view.CustomSelectPhotoView;
 import com.itheima.roundedimageview.RoundedImageView;
 import com.lxj.xpopup.XPopup;
-import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.socks.library.KLog;
 
 import org.devio.takephoto.model.TResult;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -141,7 +137,7 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity {
     }
 
     @Override
-    protected void onWheelSelect(int num, ArrayList<String> mList) {
+    protected void onWheelSelect(int num, List<String> mList) {
 
     }
 

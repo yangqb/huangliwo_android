@@ -184,7 +184,7 @@ public class ShopDao {
     /**
      * 提交个人验证
      */
-    public static void PostDataToVeriUser(String mPhoto_file_one, String mPhoto_file_two, String file,
+    public static void PostDataToVeriUser(String mPhoto_file_one, String mPhoto_file_two,
                                           String mName, String mId_num, int mSelectIndex, Province mOnSelectProvince,
                                           final onConnectionFinishLinstener mLinstener) {
         String BUSINATUREs;
@@ -196,7 +196,6 @@ public class ShopDao {
         OkHttpUtils.post()//
                 .addFile("certifFile", "01.png", new File(mPhoto_file_one))//
                 .addFile("certifFile", "02.png", new File(mPhoto_file_two))//
-                .addFile("certifFile", "03.png", new File(file))//
                 .url(Common_HEADER + POST_REALAUTH).addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
                 .addParams(USERID, Constant.LOGIN_USERID)//
                 .addParams(REALNAME, mName)//
@@ -631,9 +630,13 @@ public class ShopDao {
         });
     }
 
+    /**
+     * 获取用户授权信息
+     */
     public static void loadUserAuth(final onNetFinishLinstenerT<UserAuth> mLinstener) {
         OkHttpUtils.post()//
-                .url(Common_HEADER + LOAD_USER_AUTH).addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
+                .url(Common_HEADER + LOAD_USER_AUTH)
+                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
                 .addParams(USERID, Constant.LOGIN_USERID)//
                 .build().execute(new BaseCallBackObject(mLinstener, UserAuth.class) {
         });

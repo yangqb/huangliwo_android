@@ -27,6 +27,7 @@ import org.devio.takephoto.model.TResult;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -322,7 +323,7 @@ public class EditServiceActivity extends BaseTakePhotoActivity {
     }
 
     @Override
-    protected void onWheelSelect(int num, ArrayList<String> mList) {
+    protected void onWheelSelect(int num, List<String> mList) {
 
     }
 }

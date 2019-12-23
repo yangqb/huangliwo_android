@@ -35,6 +35,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -159,8 +160,8 @@ public class PersonalCenterActivity extends BaseTakePhotoActivity implements Swi
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void onMessageEvent(LoginEvent event) {
         switch (event) {
-            case TAKEPHOTO:
-            case EDITORINFO:
+            case TAKE_PHOTO:
+            case EDITOR_INFO:
                 requestData();
                 break;
         }
@@ -329,7 +330,7 @@ public class PersonalCenterActivity extends BaseTakePhotoActivity implements Swi
                     public void onResponse(Object response, int id) {
                         Log.e("wangyan", "response====" + response);
                         ToastUtils.showShortToast("上传成功!");
-                        EventBus.getDefault().post(LoginEvent.TAKEPHOTO);
+                        EventBus.getDefault().post(LoginEvent.TAKE_PHOTO);
                     }
                 });
     }
@@ -456,7 +457,7 @@ public class PersonalCenterActivity extends BaseTakePhotoActivity implements Swi
     }
 
     @Override
-    protected void onWheelSelect(int num, ArrayList<String> mList) {
+    protected void onWheelSelect(int num, List<String> mList) {
 
     }
 }

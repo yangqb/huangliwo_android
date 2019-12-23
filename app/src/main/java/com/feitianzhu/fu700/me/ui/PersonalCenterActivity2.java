@@ -36,6 +36,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -109,8 +110,8 @@ public class PersonalCenterActivity2 extends BaseTakePhotoActivity {
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void onMessageEvent(LoginEvent event) {
         switch (event) {
-            case TAKEPHOTO:
-            case EDITORINFO:
+            case TAKE_PHOTO:
+            case EDITOR_INFO:
             case LOGIN_SUCCESS:
                 requestData();
                 break;
@@ -181,8 +182,19 @@ public class PersonalCenterActivity2 extends BaseTakePhotoActivity {
         tvNick.setText(response.getNickName() == null ? "小黄鹂" : response.getNickName().toString());
         tvSign.setText(response.getPersonSign() == null ? "" : response.getPersonSign().toString());
         tvPersonId.setText(String.valueOf(response.getUserId()));
-        tvVip.setText(response.getGradeName() == null ? "" : response.getGradeName());
-
+        if (response.getAccountType() == 0) {
+            tvVip.setText("无");
+        } else if (response.getAccountType() == 1) {
+            tvVip.setText("市代理");
+        } else if (response.getAccountType() == 2) {
+            tvVip.setText("区代理");
+        } else if (response.getAccountType() == 3) {
+            tvVip.setText("合伙人");
+        } else if (response.getAccountType() == 4) {
+            tvVip.setText("超级会员");
+        } else if (response.getAccountType() == 5) {
+            tvVip.setText("普通会员");
+        }
     }
 
     public void showDialog() {
@@ -334,7 +346,7 @@ public class PersonalCenterActivity2 extends BaseTakePhotoActivity {
     }
 
     @Override
-    protected void onWheelSelect(int num, ArrayList<String> mList) {
+    protected void onWheelSelect(int num, List<String> mList) {
 
     }
 }

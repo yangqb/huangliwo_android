@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.View;
+
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.feitianzhu.fu700.R;
@@ -15,6 +16,7 @@ import com.feitianzhu.fu700.common.impl.onNetFinishLinstenerT;
 import com.feitianzhu.fu700.dao.NetworkDao;
 import com.feitianzhu.fu700.me.ui.ShopShowNoCreateActivity;
 import com.feitianzhu.fu700.me.ui.VerificationActivity;
+import com.feitianzhu.fu700.me.ui.VerificationActivity2;
 import com.feitianzhu.fu700.model.PayInfo;
 import com.feitianzhu.fu700.model.UserAuth;
 import com.feitianzhu.fu700.model.WXModel;
@@ -26,6 +28,7 @@ import com.jungly.gridpasswordview.GridPasswordView;
 import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
+
 import java.lang.ref.WeakReference;
 
 import static com.feitianzhu.fu700.common.Constant.FailCode;
@@ -48,11 +51,11 @@ public class ShopHelp {
      * todo 调用此方法之前必须调用一次获取授权接口     ShopDao.loadUserAuthImpl();
      *
      * @param sContext 调用方法activity
-     * @param intent   如果实名和商铺都通过了跳转的activity
+     * @param intent   如果实名了跳转的activity
      */
     public static void veriUserJumpActivity(Context sContext, Intent intent) {
         UserAuth mAuth = Constant.mUserAuth;
-        if (null==mAuth||0 == mAuth.isRnAuth) {
+        if (null == mAuth || 0 == mAuth.isRnAuth) {
             //未实名 审核被拒
             NoUserVeri(sContext, "你还没有进行实名认证，请先进行实名认证再进行该操作");
         } else if (-1 == mAuth.isRnAuth) {
@@ -61,8 +64,9 @@ public class ShopHelp {
             showVeringDialog(sContext, "你的实名认证正在审核中，请等审核通过后再进行该操作");
         } else {
             //验证用户审核通过
-            //商铺审核通过
-            sContext.startActivity(intent);
+            if(intent != null) {
+                sContext.startActivity(intent);
+            }
         }
     }
 
@@ -70,12 +74,12 @@ public class ShopHelp {
      * 验证用户是否实名通过+是否设置二次密码
      * todo 调用此方法之前必须调用一次获取授权接口     ShopDao.loadUserAuthImpl();
      *
-     * @param activity 调用方法activity
+     * @param activity  调用方法activity
      * @param linstener
      */
     public static void veriUserAndPayPwdJumpActivity(Activity activity, final onConnectionFinishLinstener linstener) {
         UserAuth mAuth = Constant.mUserAuth;
-        if (null==mAuth||0 == mAuth.isRnAuth) {
+        if (null == mAuth || 0 == mAuth.isRnAuth) {
             //未实名 审核被拒
             NoUserVeri(activity, "你还没有进行实名认证，请先进行实名认证再进行该操作");
         } else if (-1 == mAuth.isRnAuth) {
@@ -88,7 +92,7 @@ public class ShopHelp {
     }
 
     /**
-     * 验证用户是否实名和商铺
+     * 验证用户是否实名认证和商户认证
      * todo 调用此方法之前必须调用一次获取授权接口     ShopDao.loadUserAuthImpl();
      *
      * @param sContext 调用方法activity
@@ -96,7 +100,7 @@ public class ShopHelp {
      */
     public static void veriUserShopJumpActivity(Context sContext, Intent intent) {
         UserAuth mAuth = Constant.mUserAuth;
-        if (null==mAuth||0 == mAuth.isRnAuth) {
+        if (null == mAuth || 0 == mAuth.isRnAuth) {
             //未实名 审核被拒
             NoUserVeri(sContext, "你还没有进行实名认证，请先进行实名认证再进行该操作");
         } else if (-1 == mAuth.isRnAuth) {
@@ -121,9 +125,12 @@ public class ShopHelp {
         }
     }
 
+    /*
+     * 实名认证和商户认证都通过了，是否创建过商铺
+     * */
     public static void veriJumpActivity(Context sContext) {
         UserAuth mAuth = Constant.mUserAuth;
-        if (null==mAuth||0 == mAuth.isRnAuth) {
+        if (null == mAuth || 0 == mAuth.isRnAuth) {
             //未实名 审核被拒
             NoUserVeri(sContext, "你还没有进行实名认证，请先进行实名认证再进行该操作");
         } else if (-1 == mAuth.isRnAuth) {
@@ -164,6 +171,9 @@ public class ShopHelp {
         }
     }
 
+    /*
+     * 没有创建商铺弹框
+     * */
     private static void NoCreateShops(final Context sContext, String result) {
         if (TextUtils.isEmpty(result)) result = "";
         new MaterialDialog.Builder(sContext).title("温馨提示")
@@ -188,6 +198,9 @@ public class ShopHelp {
                 .show();
     }
 
+    /*
+     * 没有商户认证弹框
+     * */
     private static void NoVeriShop(final Context sContext, String result) {
         if (TextUtils.isEmpty(result)) result = "";
         new MaterialDialog.Builder(sContext).title("温馨提示")
@@ -213,6 +226,9 @@ public class ShopHelp {
                 .show();
     }
 
+    /*
+     * 没有和审核失败实名认证弹框
+     * */
     private static void NoUserVeri(final Context sContext, String result) {
         if (TextUtils.isEmpty(result)) result = "";
         new MaterialDialog.Builder(sContext).title("温馨提示")
@@ -222,8 +238,7 @@ public class ShopHelp {
                     @Override
                     public void onClick(@NonNull MaterialDialog mMaterialDialog,
                                         @NonNull DialogAction mDialogAction) {
-                        Intent mIntent = new Intent(sContext, VerificationActivity.class);
-                        mIntent.putExtra(Constant.VERI_SHOPS, false);
+                        Intent mIntent = new Intent(sContext, VerificationActivity2.class);
                         sContext.startActivity(mIntent);
                         mMaterialDialog.dismiss();
                     }
@@ -239,6 +254,9 @@ public class ShopHelp {
                 .show();
     }
 
+    /*
+     * 实名认证和商户认证审核中弹框
+     * */
     private static void showVeringDialog(final Context sContext, String content) {
         new MaterialDialog.Builder(sContext).title("温馨提示")
                 .content(content)
@@ -253,19 +271,22 @@ public class ShopHelp {
                 .show();
     }
 
+    /*
+     * 设置充值提现支付密码
+     * */
     public static void showVeringPassword(Activity mWActivity,
                                           final onConnectionFinishLinstener mLinstener) {
         View mView = View.inflate(mWActivity, R.layout.common_password_dialog, null);
         final GridPasswordView mGridPasswordView =
                 (GridPasswordView) mView.findViewById(R.id.gpv_normal);
-        new MaterialDialog.Builder(mWActivity).title("输入二级密码")
+        new MaterialDialog.Builder(mWActivity).title("输入支付密码")
                 .customView(mView, false)
                 .positiveText("确认")
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull final MaterialDialog mMaterialDialog,
                                         @NonNull DialogAction mDialogAction) {
-                        if (TextUtils.isEmpty(mGridPasswordView.getPassWord())){
+                        if (TextUtils.isEmpty(mGridPasswordView.getPassWord())) {
                             mLinstener.onFail(FailCode, "密码不能为空");
                             return;
                         }
@@ -313,29 +334,32 @@ public class ShopHelp {
         } else {
             if (Constant.mUserAuth.isPaypass == 0) {
                 //没有设置二级密码
-                ToastUtils.showShortToast("当前没有设置二级密码，请设置后再进行操作");
+                ToastUtils.showShortToast("当前没有设置支付密码，请设置后再进行操作");
                 GetPasswordActivity.startActivity(mActivity, GetPasswordActivity.TYPE_SET_PAY_PASSWORD_PWD);
             } else {
                 showVeringPassword(wActivity, mLinstener);
             }
         }
     }
+
     protected static void showloadDialog(String title, Context mContext) {
-        mDialog= new MaterialDialog.Builder(mContext)
-            .content("加载中,请稍等")
-            .progress(true, 0)
-            .progressIndeterminateStyle(false)
-            .show();
+        mDialog = new MaterialDialog.Builder(mContext)
+                .content("加载中,请稍等")
+                .progress(true, 0)
+                .progressIndeterminateStyle(false)
+                .show();
     }
+
     protected static void goneloadDialog() {
-        if (null != mDialog&&mDialog.isShowing()) if (mDialog.isShowing()) mDialog.dismiss();
+        if (null != mDialog && mDialog.isShowing()) if (mDialog.isShowing()) mDialog.dismiss();
     }
 
     public static void WxPay(String mMoney, final Context mContext) {
-        showloadDialog("",mContext);
-        ShopDao.postWxPay(mMoney,"wx", new onNetFinishLinstenerT<WXModel>() {
-            @Override public void onSuccess(int code, WXModel result) {
-                Constant.PayFlag= PayInfo.MyMoneyPay;
+        showloadDialog("", mContext);
+        ShopDao.postWxPay(mMoney, "wx", new onNetFinishLinstenerT<WXModel>() {
+            @Override
+            public void onSuccess(int code, WXModel result) {
+                Constant.PayFlag = PayInfo.MyMoneyPay;
                 IWXAPI api = WXAPIFactory.createWXAPI(mContext, result.appid);
                 api.registerApp(result.appid);
                 PayReq mPayReq = new PayReq();
@@ -351,7 +375,8 @@ public class ShopHelp {
                 ToastUtils.showShortToast("正在打开微信中");
             }
 
-            @Override public void onFail(int code, String result) {
+            @Override
+            public void onFail(int code, String result) {
                 goneloadDialog();
                 ToastUtils.showShortToast(result);
             }

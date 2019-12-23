@@ -35,11 +35,8 @@ import com.feitianzhu.fu700.model.UpdateAppModel;
 import com.feitianzhu.fu700.payforme.PayForMeActivity;
 import com.feitianzhu.fu700.shop.CommodityClassificationFragment;
 import com.feitianzhu.fu700.shop.ShopDao;
-import com.feitianzhu.fu700.shop.ShopFragment;
 import com.feitianzhu.fu700.shop.ShopHelp;
-import com.feitianzhu.fu700.shop.ShopHelpTwo;
 import com.feitianzhu.fu700.splash.SplashDao;
-import com.feitianzhu.fu700.utils.AnimationUtils;
 import com.feitianzhu.fu700.utils.LocationUtils;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.utils.UpdateAppHttpUtil;
@@ -128,6 +125,7 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
     }
 
     private void initData() {
+        ShopDao.loadUserAuthImpl();
         updateDiy();
     }
 
@@ -181,7 +179,6 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
                mShopFragment = CommodityClassificationFragment.newInstance(type, "");
                 mTransaction.add(R.id.fragment_container, mShopFragment);
                 mTransaction.commit();
-                ShopDao.loadUserAuthImpl();
                 break;
 
             case R.id.ly_jiaoliu:
@@ -332,7 +329,7 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
             public void onClick(View v) {
                 // TODO: 2017/9/25 第二步 
                 Intent intent = new Intent(MainActivity.this, ShopRecordActivity.class);
-                ShopHelpTwo.veriUserShopJumpActivity(MainActivity.this, intent);
+                ShopHelp.veriUserShopJumpActivity(MainActivity.this, intent);
 //                startActivity(intent);
             }
         });

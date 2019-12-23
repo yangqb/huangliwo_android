@@ -222,7 +222,7 @@ public class EditAddressActivity extends BaseActivity {
                     .addParams("areaName", mDistrict.getName())
                     .addParams("detailAddress", editAddressDetail.getText().toString())
                     .addParams("userName", editName.getText().toString().trim())
-                    .addParams("phone", editName.getText().toString().trim())
+                    .addParams("phone", editPhone.getText().toString().trim())
                     .addParams("addressId", shopAddressListBean.getAddressId() + "")
                     .addParams("isDefalt", isDefalt + "")
                     .build()

@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
@@ -13,15 +12,9 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.feitianzhu.fu700.R;
-import com.feitianzhu.fu700.bankcard.WithdrawActivity;
-import com.feitianzhu.fu700.common.Constant;
-import com.feitianzhu.fu700.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.fu700.me.base.BaseActivity;
+import com.feitianzhu.fu700.shop.ShopDao;
 import com.feitianzhu.fu700.shop.ShopHelp;
-import com.feitianzhu.fu700.utils.ToastUtils;
-import com.feitianzhu.fu700.view.BalanceInputView;
-import com.lxj.xpopup.XPopup;
-import com.lxj.xpopup.interfaces.OnInputConfirmListener;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -50,7 +43,7 @@ public class BalanceActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        titleName.setText("提现");
+        titleName.setText("余额");
 
         toBeReleasedAmount.setText("");
         tvProfit.setText("");
@@ -92,50 +85,25 @@ public class BalanceActivity extends BaseActivity {
 
     @OnClick({R.id.left_button, R.id.btn_withdrawal, R.id.detailed_rules})
     public void onClick(View view) {
+        Intent intent;
         switch (view.getId()) {
             case R.id.left_button:
                 finish();
                 break;
             case R.id.btn_withdrawal://提现
-                new XPopup.Builder(this).asCustom(new BalanceInputView(this).setOnConfirmClickListener(new BalanceInputView.OnConfirmClickListener() {
-                    @Override
-                    public void onConfirm(String account) {
-                        if (TextUtils.isEmpty(account)) {
-                            ToastUtils.showShortToast("账号不能为空");
-                        }
-                    }
-                })).show();
+                intent = new Intent(this, WithdrawActivity.class);
+                intent.putExtra(WithdrawActivity.BALANCE, 555.00);
+                ShopHelp.veriUserJumpActivity(this, intent);  //是否实名认证
                 break;
             case R.id.detailed_rules: //细则
-                Intent intent = new Intent(BalanceActivity.this, DetailedRulesActivity.class);
+                intent = new Intent(BalanceActivity.this, DetailedRulesActivity.class);
                 startActivity(intent);
                 break;
         }
-    }
-
-    private void VeriPassword(final int type, final String mBalance) {
-        if (TextUtils.isEmpty(mBalance)) {
-            ToastUtils.showShortToast("当前金额不足");
-            return;
-        }
-        ShopHelp.veriPassword(this, new onConnectionFinishLinstener() {
-            @Override
-            public void onSuccess(int code, Object result) {
-                Intent intent = new Intent(BalanceActivity.this, WithdrawActivity.class);
-                intent.putExtra(Constant.INTENT_BALANCE, Double.parseDouble(mBalance));
-                intent.putExtra(Constant.INTENT_WITHDRAW_TYPE, type);
-                startActivity(intent);
-            }
-
-            @Override
-            public void onFail(int code, String result) {
-                ToastUtils.showShortToast(result);
-            }
-        });
     }
 
     @Override
     protected void initData() {
-
+        ShopDao.loadUserAuthImpl();
     }
 }

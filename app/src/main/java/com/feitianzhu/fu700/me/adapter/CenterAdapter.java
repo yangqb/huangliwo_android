@@ -39,7 +39,7 @@ public class CenterAdapter extends BaseQuickAdapter<Integer, BaseViewHolder> {
                 textView.setText("余额");
                 break;
             case 1:
-                textView.setText("账户认证");
+                textView.setText("实名认证");
                 break;
             case 2:
                 textView.setText("银行卡");

@@ -83,7 +83,7 @@ public class ShopsEditActivity extends BaseTakePhotoActivity {
     }
 
     @Override
-    protected void onWheelSelect(int num, ArrayList<String> mList) {
+    protected void onWheelSelect(int num, List<String> mList) {
         mTxtShopTypes.setText(mShopsTypes.get(num - 1));
     }
 

@@ -7,30 +7,27 @@
 
     <include layout="@layout/layout_head" />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="185dp"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/dp_10"
         android:layout_marginTop="@dimen/dp_10"
-        android:layout_marginRight="@dimen/dp_10"
-        android:background="@mipmap/f01_01beijing"
-        android:orientation="vertical"
-        android:paddingLeft="@dimen/dp_20"
-        android:paddingTop="25dp"
-        android:paddingRight="@dimen/dp_20"
-        android:paddingBottom="25dp">
+        android:layout_marginRight="@dimen/dp_10">
 
         <LinearLayout
-            android:id="@+id/detailed_rules"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_width="match_parent"
+            android:layout_height="185dp"
+            android:background="@mipmap/f01_01beijing"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/dp_20"
+            android:paddingTop="25dp"
+            android:paddingRight="@dimen/dp_20"
+            android:paddingBottom="25dp">
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -41,83 +38,86 @@
                     android:textSize="13sp" />
 
                 <TextView
-                    android:layout_width="30dp"
-                    android:layout_height="15dp"
-                    android:background="@drawable/shape_fea811_r3"
-                    android:gravity="center"
-                    android:text="细则"
-                    android:textColor="@color/white"
-                    android:textSize="10sp" />
-
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/toBeReleased_Amount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="¥0.00"
-                android:textColor="@color/color_333333"
-                android:textSize="24sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:orientation="horizontal">
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="共盈利"
-                    android:textColor="@color/color_333333"
-                    android:textSize="13sp" />
-
-
-                <TextView
-                    android:id="@+id/tv_profit"
+                    android:id="@+id/toBeReleased_Amount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="¥0.00"
                     android:textColor="@color/color_333333"
-                    android:textSize="18sp"
+                    android:textSize="24sp"
                     android:textStyle="bold" />
-
-
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:layout_marginTop="30dp"
+                android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="可提现"
-                    android:textColor="@color/color_333333"
-                    android:textSize="13sp" />
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/tv_withdrawal"
-                    android:layout_width="wrap_content"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="共盈利"
+                        android:textColor="@color/color_333333"
+                        android:textSize="13sp" />
+
+
+                    <TextView
+                        android:id="@+id/tv_profit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="¥0.00"
+                        android:textColor="@color/color_333333"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="¥0.00"
-                    android:textColor="@color/color_333333"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="可提现"
+                        android:textColor="@color/color_333333"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/tv_withdrawal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="¥0.00"
+                        android:textColor="@color/color_333333"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+
+        <TextView
+            android:id="@+id/detailed_rules"
+            android:layout_width="40dp"
+            android:layout_height="20dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/bg_ffffff_r3"
+            android:gravity="center"
+            android:text="细则"
+            android:textColor="@color/color_333333"
+            android:textSize="12sp" />
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/btn_withdrawal"

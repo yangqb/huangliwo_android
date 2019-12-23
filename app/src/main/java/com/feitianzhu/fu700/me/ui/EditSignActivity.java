@@ -98,7 +98,7 @@ public class EditSignActivity extends BaseActivity {
                     public void onResponse(Object response, int id) {
                         Log.e("wangyan", "onResponse---->" + response);
                         Toast.makeText(mContext, "修改成功", Toast.LENGTH_SHORT).show();
-                        EventBus.getDefault().post(LoginEvent.EDITORINFO);
+                        EventBus.getDefault().post(LoginEvent.EDITOR_INFO);
                         finish();
                     }
                 });

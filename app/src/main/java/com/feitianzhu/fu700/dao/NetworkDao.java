@@ -103,7 +103,6 @@ public class NetworkDao {
                         Constant.PHONE = phone;
 
                         EventBus.getDefault().post(LoginEvent.LOGIN_SUCCESS);
-
                         SPUtils.putString(context, Constant.SP_PHONE, phone);
                         SPUtils.putString(context, Constant.SP_PASSWORD, password);
 
