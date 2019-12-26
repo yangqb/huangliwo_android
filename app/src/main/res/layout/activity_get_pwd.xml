@@ -83,7 +83,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginTop="-1dp"
                     android:layout_weight="1.5"
-                    android:background="@color/sf_red">
+                    android:background="@drawable/button_shape_blue">
 
                     <TextView
                         android:id="@+id/tv_code"
@@ -181,7 +181,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="10dp"
-                android:text="为了账号安全请记好二级密码"
+                android:text="为了账号安全请记好支付密码"
                 android:textColor="@color/txt_hint"
                 android:textSize="16sp" />
 

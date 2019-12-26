@@ -18,6 +18,7 @@ import com.feitianzhu.fu700.me.base.BaseTakePhotoActivity;
 import com.feitianzhu.fu700.model.MineInfoModel;
 import com.feitianzhu.fu700.model.SharedInfoModel;
 import com.feitianzhu.fu700.shop.ui.EditApplyRefundActivity;
+import com.feitianzhu.fu700.utils.SPUtils;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.view.CircleImageView;
 import com.feitianzhu.fu700.view.CustomRefundView;
@@ -85,6 +86,8 @@ public class PersonalCenterActivity2 extends BaseTakePhotoActivity {
     TextView titleName;
     @BindView(R.id.tv_personId)
     TextView tvPersonId;
+    private String userId;
+    private String token;
 
     @Override
     protected int getLayoutId() {
@@ -96,6 +99,8 @@ public class PersonalCenterActivity2 extends BaseTakePhotoActivity {
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
+        token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
+        userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         rightImg.setVisibility(View.VISIBLE);
         titleName.setText("个人信息");
         getSharedInfo();
@@ -137,7 +142,7 @@ public class PersonalCenterActivity2 extends BaseTakePhotoActivity {
                 break;
             case R.id.right_button: //分享名片
                 // showShare();
-                ToastUtils.showShortToast("待开发");
+                ToastUtils.showShortToast("敬请期待");
                 break;
             case R.id.left_button:
                 finish();
@@ -148,8 +153,8 @@ public class PersonalCenterActivity2 extends BaseTakePhotoActivity {
     private void requestData() {
         OkHttpUtils.get()//
                 .url(Common_HEADER + POST_MINE_INFO)
-                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
-                .addParams(USERID, Constant.LOGIN_USERID)
+                .addParams(ACCESSTOKEN, token)//
+                .addParams(USERID, userId)
                 .build()
                 .execute(new Callback<MineInfoModel>() {
 
@@ -221,8 +226,8 @@ public class PersonalCenterActivity2 extends BaseTakePhotoActivity {
     private void getSharedInfo() {
         OkHttpUtils.post()//
                 .url(Common_HEADER + Constant.GET_SHARED_INFO)
-                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
-                .addParams(USERID, Constant.LOGIN_USERID)
+                .addParams(ACCESSTOKEN, token)//
+                .addParams(USERID, userId)
                 .build()
                 .execute(new Callback<SharedInfoModel>() {
 
@@ -312,8 +317,8 @@ public class PersonalCenterActivity2 extends BaseTakePhotoActivity {
     private void uploadPic(String compressPath) {
         OkHttpUtils.post()//
                 .url(Common_HEADER + POST_UPLOAD_PIC)
-                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
-                .addParams(USERID, Constant.LOGIN_USERID)
+                .addParams(ACCESSTOKEN, token)//
+                .addParams(USERID,userId)
                 .addFile("avatar", "touxiang.png", new File(compressPath))
                 .build()
                 .execute(new Callback() {
@@ -332,6 +337,7 @@ public class PersonalCenterActivity2 extends BaseTakePhotoActivity {
                     public void onResponse(Object response, int id) {
                         Log.e("wangyan", "response====" + response);
                         ToastUtils.showShortToast("上传成功!");
+                        EventBus.getDefault().postSticky(LoginEvent.EDITOR_INFO);
                         requestData();
                     }
                 });

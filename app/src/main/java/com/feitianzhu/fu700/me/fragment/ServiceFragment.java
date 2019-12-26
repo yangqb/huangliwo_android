@@ -12,7 +12,6 @@ import com.feitianzhu.fu700.common.Constant;
 import com.feitianzhu.fu700.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.fu700.me.adapter.ServiceAdapter;
 import com.feitianzhu.fu700.me.base.BaseFragment;
-import com.feitianzhu.fu700.me.ui.ServiceDetailActivity;
 import com.feitianzhu.fu700.model.MineCollectionServiceModel;
 import com.feitianzhu.fu700.shop.ShopDao;
 import com.feitianzhu.fu700.utils.ToastUtils;
@@ -181,7 +180,7 @@ public class ServiceFragment extends BaseFragment implements SwipeMenuItemClickL
     }
 
     private void deleteShops(int collectId, final int position) {
-        ShopDao.DeleteCollect(collectId + "", new onConnectionFinishLinstener() {
+        ShopDao.DeleteCollect(getActivity(),collectId + "", new onConnectionFinishLinstener() {
             @Override
             public void onSuccess(int code, Object result) {
                 ToastUtils.showShortToast("取消收藏成功!");
@@ -198,10 +197,7 @@ public class ServiceFragment extends BaseFragment implements SwipeMenuItemClickL
 
     @Override
     public void onItemClick(View view, int position) {
-        Intent intent = new Intent(getContext(), ServiceDetailActivity.class);
-        Log.e("wangyan", "--mTemp.get(position).getId()-->" + mTemp.get(position).getId());
-        intent.putExtra("serviceid", mTemp.get(position).getId() + "");
-        startActivity(intent);
+
     }
 
     @Override

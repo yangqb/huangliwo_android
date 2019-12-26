@@ -37,9 +37,10 @@ import com.feitianzhu.fu700.model.ShopClassify;
 import com.feitianzhu.fu700.model.Shops;
 import com.feitianzhu.fu700.shop.adapter.LeftAdapter;
 import com.feitianzhu.fu700.shop.adapter.RightAdapter;
-import com.feitianzhu.fu700.shop.ui.ShopSearchActivity;
+import com.feitianzhu.fu700.shop.ui.SearchShopActivity;
 import com.feitianzhu.fu700.shop.ui.dialog.ProvinceCallBack;
 import com.feitianzhu.fu700.shop.ui.dialog.ProvincehDialog;
+import com.feitianzhu.fu700.utils.SPUtils;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.utils.Urls;
 import com.feitianzhu.fu700.view.CircleImageView;
@@ -117,6 +118,8 @@ public class CommodityClassificationFragment extends SFFragment implements View.
     private List<BaseGoodsListBean> goodsListBeans = new ArrayList<>();
     private List<MultipleItem> multipleItemList = new ArrayList<>();
     private int clsId;
+    private String token;
+    private String userId;
 
     public CommodityClassificationFragment() {
 
@@ -146,7 +149,9 @@ public class CommodityClassificationFragment extends SFFragment implements View.
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_commodity_classification, container, false);
         unbinder = ButterKnife.bind(this, view);
-
+        if (!TextUtils.isEmpty(Constant.mCity)) {
+            mTxtLocation.setText(Constant.mCity);
+        }
         vPopupWindow = getLayoutInflater().inflate(R.layout.layout_popupwindow, null);
         // View vPopupWindow = View.inflate(getActivity(), R.layout.layout_popupwindow, null);//引入弹窗布局
         popupWindow = new PopupWindow(vPopupWindow, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -193,6 +198,9 @@ public class CommodityClassificationFragment extends SFFragment implements View.
         rightRecyclerView.setAdapter(rightAdapter);
         rightAdapter.notifyDataSetChanged();
         mSwipeLayout.setEnableLoadMore(false);
+        token = SPUtils.getString(getActivity(), Constant.SP_ACCESS_TOKEN);
+        userId = SPUtils.getString(getActivity(), Constant.SP_LOGIN_USERID);
+        initData();
         requestData();
         initListener();
         return view;
@@ -201,8 +209,8 @@ public class CommodityClassificationFragment extends SFFragment implements View.
     public void initData() {
         OkHttpUtils.post()
                 .url(Urls.GET_SHOP_CLASS)
-                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)
-                .addParams(USERID, Constant.LOGIN_USERID)
+                .addParams(ACCESSTOKEN, token)
+                .addParams(USERID, userId)
                 .build()
                 .execute(new Callback() {
                     @Override
@@ -261,17 +269,17 @@ public class CommodityClassificationFragment extends SFFragment implements View.
                 } else {
                     //商品详情
                     Intent intent = new Intent(getActivity(), ShopsDetailActivity.class);
-                    intent.putExtra(ShopsDetailActivity.GOODS_DETAIL_DATA, goodsListBeans.get(position));
+                    intent.putExtra(ShopsDetailActivity.GOODS_DETAIL_DATA, goodsListBeans.get(position).getGoodsId());
                     startActivity(intent);
                 }
                 /*if (type == 1) {
-                    //商家
-                    Intent intent = new Intent(getActivity(), ShopSetMealActivity.class);
-                    startActivity(intent);
-                } else {
-                    //商品详情
+                 //商品详情
                     Intent intent = new Intent(getActivity(), ShopsDetailActivity.class);
                     intent.putExtra(ShopsDetailActivity.GOODS_DETAIL_DATA, goodsListBeans.get(position));
+                    startActivity(intent);
+                } else {
+                    //商家
+                    Intent intent = new Intent(getActivity(), ShopSetMealActivity.class);
                     startActivity(intent);
                 }*/
 
@@ -290,8 +298,8 @@ public class CommodityClassificationFragment extends SFFragment implements View.
     public void getShops(int clsId) {
         OkHttpUtils.post()
                 .url(Urls.GET_SHOP)
-                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)
-                .addParams(USERID, Constant.LOGIN_USERID)
+                .addParams(ACCESSTOKEN, token)
+                .addParams(USERID, userId)
                 .addParams("cls_id", clsId + "")
                 .build()
                 .execute(new Callback() {
@@ -337,21 +345,6 @@ public class CommodityClassificationFragment extends SFFragment implements View.
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        KLog.e("onStart");
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        KLog.e("onResume");
-        if (!TextUtils.isEmpty(Constant.mCity)) {
-            mTxtLocation.setText(Constant.mCity);
-        }
-    }
-
-    @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
@@ -361,7 +354,7 @@ public class CommodityClassificationFragment extends SFFragment implements View.
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.search:
-                JumpActivity(getActivity(), ShopSearchActivity.class);
+                JumpActivity(getActivity(), SearchShopActivity.class);
                 break;
             case R.id.iv_home_nv_right:
                 // popupWindow.showAtLocation(ivRight, Gravity.BOTTOM, 0, 0);
@@ -375,19 +368,19 @@ public class CommodityClassificationFragment extends SFFragment implements View.
                 break;
             case R.id.iv_shoukuan:
                 popupWindow.dismiss();
-                ToastUtils.showShortToast("待开发");
+                ToastUtils.showShortToast("敬请期待");
                 /*Intent collIntent = new Intent(getActivity(), CollectMoneyActivity.class);
                 ShopHelp.veriUserShopJumpActivity(getActivity(), collIntent);*/
                 break;
             case R.id.iv_ludan:
                 popupWindow.dismiss();
-                ToastUtils.showShortToast("待开发");
+                ToastUtils.showShortToast("敬请期待");
                /* Intent intent = new Intent(getActivity(), ShopRecordActivity.class);
                 ShopHelpTwo.veriUserShopJumpActivity(getActivity(), intent);*/
                 break;
             case R.id.iv_fabufuwu:
                 popupWindow.dismiss();
-                ToastUtils.showShortToast("待开发");
+                ToastUtils.showShortToast("敬请期待");
                 /*Intent pushIntent = new Intent(getActivity(), PushServiceActivity.class);
                 ShopHelp.veriUserShopJumpActivity(getActivity(), pushIntent);*/
                 break;
@@ -464,8 +457,8 @@ public class CommodityClassificationFragment extends SFFragment implements View.
     private void requestData() {
         OkHttpUtils.get()//
                 .url(Common_HEADER + POST_MINE_INFO)
-                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
-                .addParams(USERID, Constant.LOGIN_USERID)
+                .addParams(ACCESSTOKEN, token)//
+                .addParams(USERID, userId)
                 .build()
                 .execute(new Callback<MineInfoModel>() {
 

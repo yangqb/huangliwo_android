@@ -14,10 +14,11 @@
         android:src="@mipmap/fail" />
 
     <TextView
+        android:id="@+id/no_data"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_20"
-        android:text="没有数据"
+        android:text="暂无数据"
         android:textColor="@color/txt_middle" />
 
 </LinearLayout>

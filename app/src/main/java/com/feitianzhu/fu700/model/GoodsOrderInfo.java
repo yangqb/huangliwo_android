@@ -78,14 +78,49 @@ userName (string, optional): 用户名
         private String goodName;
         private String goodsImg;
         private String valueId;
-        private int count;
+        private int count;//订单详情页和列表页的商品数量
         private String shopName;
         private double price;
-        private ShopAddressBean address;
         private int goodId;
-        private int goodsQty;
+        private int goodsQty; //下单时候传给后台的商品数量
         private String logisticCpName; //快递公司
         private String expressNo;//快递单号
+        private String detailAddress;//":"内蒙古自治区包头市白云鄂博矿区啊图形我要呀我在真学在真学在真",
+        private String buyerName;//":"HLW0321",
+        private String buyerPhone;//":"13100680321",
+        private int isEval;//是否评价 1.已评价
+
+        public int getIsEval() {
+            return isEval;
+        }
+
+        public void setIsEval(int isEval) {
+            this.isEval = isEval;
+        }
+
+        public String getDetailAddress() {
+            return detailAddress;
+        }
+
+        public void setDetailAddress(String detailAddress) {
+            this.detailAddress = detailAddress;
+        }
+
+        public String getBuyerName() {
+            return buyerName;
+        }
+
+        public void setBuyerName(String buyerName) {
+            this.buyerName = buyerName;
+        }
+
+        public String getBuyerPhone() {
+            return buyerPhone;
+        }
+
+        public void setBuyerPhone(String buyerPhone) {
+            this.buyerPhone = buyerPhone;
+        }
 
         public String getLogisticCpName() {
             return logisticCpName;
@@ -263,136 +298,5 @@ userName (string, optional): 用户名
             this.shopName = shopName;
         }
 
-        public ShopAddressBean getAddress() {
-            return address;
-        }
-
-        public void setAddress(ShopAddressBean address) {
-            this.address = address;
-        }
-
-        public static class ShopAddressBean implements Serializable {
-            /**
-             * addressId : null
-             * userId : 14
-             * provinceId : null
-             * cityId : null
-             * areaId : null
-             * areaName : null
-             * detailAddress : null
-             * userName : null
-             * phone : null
-             * isDefalt : null
-             */
-
-            private String addressId;
-            private int userId;
-            private String provinceId;
-            private String provinceName;
-            private String cityId;
-            private String areaId;
-            private String areaName;
-            private String detailAddress;
-            private String userName;
-            private String phone;
-            private int isDefalt;
-            private String cityName;
-
-            public String getProvinceName() {
-                return provinceName;
-            }
-
-            public void setProvinceName(String provinceName) {
-                this.provinceName = provinceName;
-            }
-
-            public String getCityName() {
-                return cityName;
-            }
-
-            public void setCityName(String cityName) {
-                this.cityName = cityName;
-            }
-
-            public String getAddressId() {
-                return addressId;
-            }
-
-            public void setAddressId(String addressId) {
-                this.addressId = addressId;
-            }
-
-            public int getUserId() {
-                return userId;
-            }
-
-            public void setUserId(int userId) {
-                this.userId = userId;
-            }
-
-            public String getProvinceId() {
-                return provinceId;
-            }
-
-            public void setProvinceId(String provinceId) {
-                this.provinceId = provinceId;
-            }
-
-            public String getCityId() {
-                return cityId;
-            }
-
-            public void setCityId(String cityId) {
-                this.cityId = cityId;
-            }
-
-            public String getAreaId() {
-                return areaId;
-            }
-
-            public void setAreaId(String areaId) {
-                this.areaId = areaId;
-            }
-
-            public String getAreaName() {
-                return areaName;
-            }
-
-            public void setAreaName(String areaName) {
-                this.areaName = areaName;
-            }
-
-            public String getDetailAddress() {
-                return detailAddress;
-            }
-
-            public void setDetailAddress(String detailAddress) {
-                this.detailAddress = detailAddress;
-            }
-
-            public String getUserName() {
-                return userName;
-            }
-
-            public void setUserName(String userName) {
-                this.userName = userName;
-            }
-
-            public String getPhone() {
-                return phone;
-            }
-
-            public void setPhone(String phone) {
-                this.phone = phone;
-            }
-
-            public int getIsDefalt() {
-                return isDefalt;
-            }
-
-            public void setIsDefalt(int isDefalt) {
-                this.isDefalt = isDefalt;
-            }
-        }
     }
 }

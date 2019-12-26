@@ -63,11 +63,11 @@ public class GetPasswordActivity extends BaseActivity implements View.OnClickLis
      */
     public static final int TYPE_GET_LOGIN_PWD = 0;
     /**
-     * 找回二级密码密码
+     * 找回支付密码密码
      */
     public static final int TYPE_GET_PAY_PASSWORD_PWD = 1;
     /**
-     * 设置二级密码
+     * 设置支付密码
      */
     public static final int TYPE_SET_PAY_PASSWORD_PWD = 2;
 
@@ -100,29 +100,29 @@ public class GetPasswordActivity extends BaseActivity implements View.OnClickLis
     protected void initView() {
         mLayoutCode.setOnClickListener(this);
         mSignInButton.setOnClickListener(this);
-        titleName.setText("找回登录密码");
     }
 
     @Override
     protected void initData() {
-
-        mTvCurrentPhone.setText(String.format(getString(R.string.current_phone), Constant.PHONE));
+        String phone = SPUtils.getString(this, Constant.SP_PHONE);
+        mTvCurrentPhone.setText(String.format(getString(R.string.current_phone), phone));
         Intent intent = getIntent();
         if (intent != null) {
             mType = intent.getIntExtra(Constant.INTENT_GET_SET_PSW_TYPE, 0);
         }
         KLog.i("mType: %d", mType);
         if (mType == TYPE_GET_LOGIN_PWD) { //找回登录密码
+            titleName.setText("找回登录密码");
             mPasswordEditText1.setHint(R.string.hint_input_login_pwd);
             mTvSecondPwdTips.setVisibility(View.GONE);
         } else if (mType == TYPE_GET_PAY_PASSWORD_PWD) { //找回二级密码
             mPasswordEditText1.setHint(R.string.hint_input_second_pwd);
             mTvSecondPwdTips.setVisibility(View.GONE);
-            titleName.setText("找回二级密码");
+            titleName.setText("找回支付密码");
         } else if (mType == TYPE_SET_PAY_PASSWORD_PWD) {//设置二级密码
             mPasswordEditText1.setHint(R.string.hint_input_second_pwd);
             mTvSecondPwdTips.setVisibility(View.VISIBLE);
-            titleName.setText("设置二级密码");
+            titleName.setText("设置支付密码");
         }
 
     }
@@ -160,15 +160,15 @@ public class GetPasswordActivity extends BaseActivity implements View.OnClickLis
                 }
                 final String encryptPssword1 = EncryptUtils.encodePassword(newPassword1);
                 String encryptPssword2 = EncryptUtils.encodePassword(newPassword2);
-
+                String phone = SPUtils.getString(this, Constant.SP_PHONE, "");
                 if (mType == TYPE_GET_LOGIN_PWD) { //找回登录密码
 
-                    NetworkDao.getLoginPwd(Constant.PHONE, smsCode, encryptPssword1, encryptPssword2, new onConnectionFinishLinstener() {
+                    NetworkDao.getLoginPwd(phone, smsCode, encryptPssword1, encryptPssword2, new onConnectionFinishLinstener() {
                         @Override
                         public void onSuccess(int code, Object result) {
 
                             ToastUtils.showShortToast(mContext, R.string.change_ok);
-                            SPUtils.putString(mContext, Constant.SP_PHONE, Constant.PHONE);
+                            SPUtils.putString(mContext, Constant.SP_PHONE, phone);
                             SPUtils.putString(mContext, Constant.SP_PASSWORD, encryptPssword1);
 
                             startActivity(new Intent(mContext, MainActivity.class));
@@ -181,8 +181,7 @@ public class GetPasswordActivity extends BaseActivity implements View.OnClickLis
                         }
                     });
                 } else if (mType == TYPE_GET_PAY_PASSWORD_PWD) { //找回二级密码
-
-                    NetworkDao.getPayPwd(Constant.PHONE, smsCode, encryptPssword1, encryptPssword2, new onConnectionFinishLinstener() {
+                    NetworkDao.getPayPwd(this, phone, smsCode, encryptPssword1, encryptPssword2, new onConnectionFinishLinstener() {
                         @Override
                         public void onSuccess(int code, Object result) {
                             if (Constant.mUserAuth != null) {
@@ -199,7 +198,7 @@ public class GetPasswordActivity extends BaseActivity implements View.OnClickLis
 
                 } else if (mType == TYPE_SET_PAY_PASSWORD_PWD) {//设置二级密码
 
-                    NetworkDao.setPayPassword(Constant.PHONE, smsCode, encryptPssword1, encryptPssword2, new onConnectionFinishLinstener() {
+                    NetworkDao.setPayPassword(this, phone, smsCode, encryptPssword1, encryptPssword2, new onConnectionFinishLinstener() {
                         @Override
                         public void onSuccess(int code, Object result) {
                             if (Constant.mUserAuth != null) {
@@ -217,15 +216,15 @@ public class GetPasswordActivity extends BaseActivity implements View.OnClickLis
 
                 break;
             case R.id.rl_code:
-                String phone = SPUtils.getString(this, Constant.SP_PHONE, "");
-                if (TextUtils.isEmpty(phone)) {
+                String phoneNum = SPUtils.getString(this, Constant.SP_PHONE, "");
+                if (TextUtils.isEmpty(phoneNum)) {
                     Toast.makeText(this, "手机号为空", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 mLayoutCode.setEnabled(false);
                 mTimer.start();
-                getValicationCode(phone);
+                getValicationCode(phoneNum);
                 break;
 
         }
@@ -263,7 +262,7 @@ public class GetPasswordActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void getSmsCode(String phone, String type) {
-        NetworkDao.getSmsCode(phone, type, new onConnectionFinishLinstener() {
+        NetworkDao.getSmsCode(this, phone, type, new onConnectionFinishLinstener() {
             @Override
             public void onSuccess(int code, Object result) {
 

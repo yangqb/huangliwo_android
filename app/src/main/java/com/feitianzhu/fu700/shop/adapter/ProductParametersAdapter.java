@@ -13,6 +13,10 @@ import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.feitianzhu.fu700.R;
 import com.feitianzhu.fu700.model.ProductParameters;
 import com.feitianzhu.fu700.utils.ToastUtils;
+import com.google.android.flexbox.FlexDirection;
+import com.google.android.flexbox.FlexWrap;
+import com.google.android.flexbox.FlexboxLayoutManager;
+import com.google.android.flexbox.JustifyContent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +59,12 @@ public class ProductParametersAdapter extends BaseQuickAdapter<ProductParameters
         helper.setText(R.id.name, item.getAttributeName());
         RecyclerView recyclerView = helper.getView(R.id.recyclerView);
         mAdapter = new SpecificationAdapter(item.getSkuValueList());
-        recyclerView.setLayoutManager(new GridLayoutManager(mContext, 3));
+        FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(mContext);
+        layoutManager.setFlexWrap(FlexWrap.WRAP);
+        layoutManager.setFlexDirection(FlexDirection.ROW);
+        layoutManager.setJustifyContent(JustifyContent.FLEX_START);
+        //recyclerView.setLayoutManager(new GridLayoutManager(mContext, 3));
+        recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
         mAdapter.setOnItemClickListener(new OnItemClickListener() {

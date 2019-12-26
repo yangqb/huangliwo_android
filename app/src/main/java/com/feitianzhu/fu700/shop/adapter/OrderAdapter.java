@@ -54,10 +54,13 @@ public class OrderAdapter extends BaseQuickAdapter<GoodsOrderInfo.GoodsOrderList
         helper.addOnClickListener(R.id.btn_logistics);
         helper.addOnClickListener(R.id.btn_confirm_goods);
         if (item.getStatus() == GoodsOrderInfo.TYPE_COMPLETED) {
+            if (item.getIsEval() == 1) { //是否评价
+                helper.setText(R.id.btn_confirm_goods, "查看详情");
+            } else {
+                helper.setText(R.id.btn_confirm_goods, "评价");
+            }
             helper.setText(R.id.tvStatus, "交易成功");
-            helper.setText(R.id.btn_confirm_goods, "评价");
             helper.setText(R.id.btn_logistics, "删除订单");
-            helper.setVisible(R.id.btn_confirm_goods, true);
             helper.setVisible(R.id.btn_logistics, true);
             helper.setVisible(R.id.btn_refund, false);
         } else if (item.getStatus() == GoodsOrderInfo.TYPE_NO_PAY) {

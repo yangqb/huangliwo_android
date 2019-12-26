@@ -78,13 +78,6 @@ public class SelectBankCardActivity extends BaseActivity implements SwipeItemCli
             }
         });
 
-        defaultNavigationBar = new DefaultNavigationBar
-                .Builder(this, (ViewGroup) findViewById(R.id.Rl_titleContainer))
-                .setTitle("选择银行卡")
-                .setStatusHeight(SelectBankCardActivity.this)
-                .setLeftIcon(R.drawable.iconfont_fanhuijiantou)
-                .builder();
-        defaultNavigationBar.setImmersion(R.color.status_bar);
     }
 
     @Override

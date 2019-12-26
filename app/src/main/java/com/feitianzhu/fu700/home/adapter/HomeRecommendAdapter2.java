@@ -37,20 +37,20 @@ public class HomeRecommendAdapter2 extends BaseMultiItemQuickAdapter<ShopAndMerc
 
     public HomeRecommendAdapter2(List<ShopAndMerchants> data) {
         super(data);
-        addItemType(ShopAndMerchants.TYPE_SERIES, R.layout.home_categoty_item);
-        addItemType(ShopAndMerchants.TYPE_PESALE, R.layout.home_categoty_item);
+        addItemType(ShopAndMerchants.TYPE_GOODS, R.layout.home_categoty_item);
+        addItemType(ShopAndMerchants.TYPE_MERCHANTS, R.layout.home_categoty_item);
     }
 
     @Override
     public void convert(@NonNull BaseViewHolder holder, ShopAndMerchants item) {
         switch (item.getItemType()) {
-            case ShopAndMerchants.TYPE_SERIES:
+            case ShopAndMerchants.TYPE_GOODS:
                 BaseGoodsListBean shopsList = item.getShopsList();
                 holder.setText(R.id.tv_category, shopsList.getGoodsName());
                 holder.setText(R.id.summary, shopsList.getSummary());
                 setSpannableString(String.format(Locale.getDefault(), "%.2f", shopsList.getPrice()), holder.getView(R.id.price));
                 holder.setVisible(R.id.ll_price, true);
-                holder.setText(R.id.tv_benefit, "让利" + shopsList.getRebatePv() + "元");
+                holder.setText(R.id.tv_benefit, "会员让利" + shopsList.getRebatePv() + "元");
                 holder.setVisible(R.id.address, false);
                 if (shopsList.getGoodsImg() != null) {
                     Glide.with(mContext).load(shopsList.getGoodsImg()).apply(RequestOptions.errorOf(R.mipmap.g10_04weijiazai).placeholder(R.mipmap.g10_04weijiazai)).into((RoundedImageView) holder.getView(R.id.image));
@@ -58,17 +58,7 @@ public class HomeRecommendAdapter2 extends BaseMultiItemQuickAdapter<ShopAndMerc
                     Glide.with(mContext).load(R.mipmap.g10_04weijiazai).into((RoundedImageView) holder.getView(R.id.image));
                 }
                 break;
-            case ShopAndMerchants.TYPE_PESALE:
-                HomeEntity.RecommendListBean recommendListBean = item.getRecommendListBean();
-                holder.setText(R.id.tv_category, recommendListBean.merchantName);
-                holder.setText(R.id.address, "");
-                holder.setVisible(R.id.ll_price, false);
-                holder.setVisible(R.id.address, true);
-                if (recommendListBean.merchantHeadImg != null) {
-                    Glide.with(mContext).load(recommendListBean.merchantHeadImg).apply(RequestOptions.errorOf(R.mipmap.g10_04weijiazai).placeholder(R.mipmap.g10_04weijiazai)).into((RoundedImageView) holder.getView(R.id.image));
-                } else {
-                    Glide.with(mContext).load(R.mipmap.g10_04weijiazai).into((RoundedImageView) holder.getView(R.id.image));
-                }
+            case ShopAndMerchants.TYPE_MERCHANTS:
                 break;
         }
     }

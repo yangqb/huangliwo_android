@@ -15,6 +15,7 @@ import com.feitianzhu.fu700.common.Constant;
 import com.feitianzhu.fu700.me.base.BaseActivity;
 import com.feitianzhu.fu700.model.LogisticsModel;
 import com.feitianzhu.fu700.shop.adapter.LogisticsAdapter;
+import com.feitianzhu.fu700.utils.SPUtils;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.utils.Urls;
 import com.google.gson.Gson;
@@ -51,6 +52,8 @@ public class LogisticsInfoActivity extends BaseActivity {
     TextView tvCopy;
     @BindView(R.id.line)
     View line;
+    private String token;
+    private String userId;
 
     @Override
     protected int getLayoutId() {
@@ -60,6 +63,8 @@ public class LogisticsInfoActivity extends BaseActivity {
     @SuppressLint("SetTextI18n")
     @Override
     protected void initView() {
+        token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
+        userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         logisticsNo = getIntent().getStringExtra(LOGISTICS_NO);
         logisticsCompany = getIntent().getStringExtra(LOGISTICS_COMPANY);
         titleName.setText("物流信息");
@@ -87,8 +92,8 @@ public class LogisticsInfoActivity extends BaseActivity {
         if (logisticsNo != null) {
             OkHttpUtils.get()
                     .url(Urls.GET_LOGISTICS_INFO)
-                    .addParams(Constant.ACCESSTOKEN, Constant.ACCESS_TOKEN)
-                    .addParams(Constant.USERID, Constant.LOGIN_USERID)
+                    .addParams(Constant.ACCESSTOKEN, token)
+                    .addParams(Constant.USERID,userId)
                     .addParams("expressNo", logisticsNo)
                     .build()
                     .execute(new Callback() {

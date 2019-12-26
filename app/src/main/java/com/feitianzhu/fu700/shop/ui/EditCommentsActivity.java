@@ -19,6 +19,7 @@ import com.feitianzhu.fu700.model.GoodsOrderInfo;
 import com.feitianzhu.fu700.model.MultiItemComment;
 import com.feitianzhu.fu700.shop.adapter.EditCommentAdapter;
 import com.feitianzhu.fu700.utils.Glide4Engine;
+import com.feitianzhu.fu700.utils.SPUtils;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.utils.Urls;
 import com.feitianzhu.fu700.utils.doubleclick.SingleClick;
@@ -66,6 +67,8 @@ public class EditCommentsActivity extends BaseActivity {
     RecyclerView recyclerView;
     @BindView(R.id.edit_content)
     EditText editContent;
+    private String token;
+    private String userId;
 
     @Override
     protected int getLayoutId() {
@@ -74,6 +77,8 @@ public class EditCommentsActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+        token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
+        userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         titleName.setText("评价");
         rightText.setText("发布");
         rightText.setVisibility(View.VISIBLE);
@@ -235,8 +240,8 @@ public class EditCommentsActivity extends BaseActivity {
                 OkHttpUtils.post()
                         .url(Urls.EVALUATE_ORDER)
                         .addFiles("files", files)
-                        .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)
-                        .addParams(USERID, Constant.LOGIN_USERID)
+                        .addParams(ACCESSTOKEN, token)
+                        .addParams(USERID, userId)
                         .addParams("evaluateBody", json)
                         .build()
                         .execute(new Callback() {

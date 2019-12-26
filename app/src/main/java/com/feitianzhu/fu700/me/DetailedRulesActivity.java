@@ -1,20 +1,34 @@
 package com.feitianzhu.fu700.me;
 
+import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.feitianzhu.fu700.R;
+import com.feitianzhu.fu700.common.Constant;
 import com.feitianzhu.fu700.me.adapter.DetailedRulesAdapter;
 import com.feitianzhu.fu700.me.base.BaseActivity;
+import com.feitianzhu.fu700.model.UserGoodVo;
+import com.feitianzhu.fu700.utils.SPUtils;
+import com.feitianzhu.fu700.utils.Urls;
+import com.google.gson.Gson;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.Callback;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * @class name：com.feitianzhu.fu700.me
@@ -24,6 +38,7 @@ import butterknife.OnClick;
  */
 public class DetailedRulesActivity extends BaseActivity {
     private DetailedRulesAdapter adapter;
+    private List<UserGoodVo.ReslutBean> resultBeans = new ArrayList<>();
     @BindView(R.id.title_name)
     TextView titleName;
     @BindView(R.id.recyclerView)
@@ -35,7 +50,10 @@ public class DetailedRulesActivity extends BaseActivity {
     @BindView(R.id.btn_earnings)
     TextView btnEarnings;
     @BindView(R.id.swipeLayout)
-    SwipeRefreshLayout refreshLayout;
+    SmartRefreshLayout refreshLayout;
+    private String token;
+    private String userId;
+    private int type = 1;
 
     @Override
     protected int getLayoutId() {
@@ -44,28 +62,34 @@ public class DetailedRulesActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+        token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
+        userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         titleName.setText("细则");
         btnBonus.setSelected(true);
         btnDiscount.setSelected(false);
         btnEarnings.setSelected(false);
-        List<Integer> integers = new ArrayList<>();
-        for (int i = 0; i < 15; i++) {
-            integers.add(i);
-        }
-        adapter = new DetailedRulesAdapter(integers);
+        View mEmptyView = View.inflate(this, R.layout.view_common_nodata, null);
+        ImageView img_empty = (ImageView) mEmptyView.findViewById(R.id.img_empty);
+        img_empty.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        adapter = new DetailedRulesAdapter(resultBeans);
+        adapter.setEmptyView(mEmptyView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
-
+        refreshLayout.setEnableLoadMore(false);
         initListener();
     }
 
     public void initListener() {
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
-            public void onRefresh() {
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                 initData();
-                refreshLayout.setRefreshing(false);
             }
         });
     }
@@ -77,25 +101,65 @@ public class DetailedRulesActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.btn_bonus:
+                type = 1;
                 btnBonus.setSelected(true);
                 btnDiscount.setSelected(false);
                 btnEarnings.setSelected(false);
+                initData();
                 break;
             case R.id.btn_discount:
+                type = 2;
                 btnBonus.setSelected(false);
                 btnDiscount.setSelected(true);
                 btnEarnings.setSelected(false);
+                initData();
                 break;
             case R.id.btn_earnings:
                 btnBonus.setSelected(false);
                 btnDiscount.setSelected(false);
                 btnEarnings.setSelected(true);
+                type = 3;
+                resultBeans.clear();
+                adapter.notifyDataSetChanged();
                 break;
         }
     }
 
     @Override
     protected void initData() {
+        if (type == 3) {
+            resultBeans.clear();
+            adapter.notifyDataSetChanged();
+            refreshLayout.finishRefresh();
+        } else {
+            OkHttpUtils.get()
+                    .url(Urls.GET_DETAIL_RULES)
+                    .addParams(Constant.ACCESSTOKEN, token)
+                    .addParams(Constant.USERID, userId)
+                    .addParams("type", type + "")
+                    .build()
+                    .execute(new Callback() {
+                        @Override
+                        public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
+                            return new Gson().fromJson(mData, UserGoodVo.class);
+                        }
 
+                        @Override
+                        public void onError(Call call, Exception e, int id) {
+                            refreshLayout.finishRefresh(false);
+                        }
+
+                        @Override
+                        public void onResponse(Object response, int id) {
+                            refreshLayout.finishRefresh();
+                            UserGoodVo userGoodVo = (UserGoodVo) response;
+                            if (userGoodVo.getReslut() != null) {
+                                resultBeans = userGoodVo.getReslut();
+                                adapter.setNewData(resultBeans);
+                                adapter.notifyDataSetChanged();
+                            }
+                        }
+                    });
+        }
     }
 }

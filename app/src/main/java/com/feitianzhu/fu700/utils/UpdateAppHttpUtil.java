@@ -1,7 +1,9 @@
 package com.feitianzhu.fu700.utils;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.feitianzhu.fu700.common.Constant;
 import com.vector.update_app.HttpManager;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.OkHttpUtilsForDown;
@@ -23,6 +25,14 @@ import static com.feitianzhu.fu700.common.Constant.TYPE;
 import static com.feitianzhu.fu700.common.Constant.USERID;
 
 public class UpdateAppHttpUtil implements HttpManager {
+    private String token;
+    private String userId;
+
+    public UpdateAppHttpUtil(Context context) {
+        token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN);
+        userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID);
+    }
+
     /**
      * 异步get
      *
@@ -34,8 +44,8 @@ public class UpdateAppHttpUtil implements HttpManager {
     public void asyncGet(@NonNull String url, @NonNull Map<String, String> params, @NonNull final Callback callBack) {
         OkHttpUtils.get()
                 .url(url)
-                .addParams(ACCESSTOKEN, ACCESS_TOKEN)//
-                .addParams(USERID, LOGIN_USERID)//
+                .addParams(ACCESSTOKEN, token)//
+                .addParams(USERID, userId)//
                 .addParams(TYPE, "1")//
                 .build()
                 .execute(new StringCallback() {
@@ -46,7 +56,7 @@ public class UpdateAppHttpUtil implements HttpManager {
 
                     @Override
                     public void onError(Call call, Exception e, int id) {
-                        if(null!=callBack){
+                        if (null != callBack) {
                             callBack.onError(e.getMessage());
                         }
 
@@ -54,7 +64,7 @@ public class UpdateAppHttpUtil implements HttpManager {
 
                     @Override
                     public void onResponse(String response, int id) {
-                        if(null!=callBack){
+                        if (null != callBack) {
                             callBack.onResponse(response);
                         }
                     }
@@ -72,14 +82,14 @@ public class UpdateAppHttpUtil implements HttpManager {
     public void asyncPost(@NonNull String url, @NonNull Map<String, String> params, @NonNull final Callback callBack) {
         OkHttpUtils.post()
                 .url(url)
-                .addParams(ACCESSTOKEN, ACCESS_TOKEN)//
-                .addParams(USERID, LOGIN_USERID)//
+                .addParams(ACCESSTOKEN, token)//
+                .addParams(USERID, userId)//
                 .addParams(TYPE, "1")//
                 .build()
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e, int id) {
-                        if(null != callBack){
+                        if (null != callBack) {
                             callBack.onError(e.getMessage());
                         }
 
@@ -88,7 +98,7 @@ public class UpdateAppHttpUtil implements HttpManager {
                     @Override
                     public void onResponse(String response, int id) {
 
-                        if(null != callBack){
+                        if (null != callBack) {
                             callBack.onResponse(response);
                         }
                     }
@@ -114,14 +124,14 @@ public class UpdateAppHttpUtil implements HttpManager {
                     @Override
                     public void inProgress(float progress, long total, int id) {
 
-                        if(null != callback){
+                        if (null != callback) {
                             callback.onProgress(progress, total);
                         }
                     }
 
                     @Override
                     public void onError(Call call, Exception e, int id) {
-                        if(null != callback){
+                        if (null != callback) {
                             callback.onError(e.getMessage());
                         }
 
@@ -129,7 +139,7 @@ public class UpdateAppHttpUtil implements HttpManager {
 
                     @Override
                     public void onResponse(File response, int id) {
-                        if(null != callback){
+                        if (null != callback) {
                             callback.onResponse(response);
                         }
 
@@ -139,7 +149,7 @@ public class UpdateAppHttpUtil implements HttpManager {
                     @Override
                     public void onBefore(Request request, int id) {
                         super.onBefore(request, id);
-                        if(null != callback){
+                        if (null != callback) {
                             callback.onBefore();
                         }
 

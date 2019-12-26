@@ -83,13 +83,6 @@ public class MyBankCardActivity extends BaseActivity implements SwipeItemClickLi
         mRecyclerView.setSwipeMenuItemClickListener(mMenuItemClickListener); // Item的Menu点击。
         mRecyclerView.setSwipeMenuCreator(mSwipeMenuCreator); //设置侧滑菜单
 
-        defaultNavigationBar = new DefaultNavigationBar
-                .Builder(this, (ViewGroup) findViewById(R.id.Rl_titleContainer))
-                .setTitle("我的银行卡")
-                .setStatusHeight(MyBankCardActivity.this)
-                .setLeftIcon(R.drawable.iconfont_fanhuijiantou)
-                .builder();
-        defaultNavigationBar.setImmersion(R.color.status_bar);
     }
 
     @OnClick({R.id.button})
@@ -105,7 +98,7 @@ public class MyBankCardActivity extends BaseActivity implements SwipeItemClickLi
         mAdapter = new BankCardAdapter(mDatas);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setSwipeItemClickListener(this);
-        ShopDao.loadUserAuthImpl();
+        ShopDao.loadUserAuthImpl(this);
 
         View footerView = LayoutInflater.from(this).inflate(R.layout.footer_button, null);
         footerView.findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {

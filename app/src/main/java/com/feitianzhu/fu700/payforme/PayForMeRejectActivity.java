@@ -73,13 +73,6 @@ public class PayForMeRejectActivity extends BaseTakePhotoActivity {
 
     @Override
     protected void initTitle() {
-        defaultNavigationBar = new DefaultNavigationBar
-                .Builder(PayForMeRejectActivity.this, (ViewGroup) findViewById(R.id.Rl_titleContainer))
-                .setTitle("为我买单")
-                .setStatusHeight(PayForMeRejectActivity.this)
-                .setLeftIcon(R.drawable.iconfont_fanhuijiantou)
-                .builder();
-        defaultNavigationBar.setImmersion(R.color.status_bar);
     }
 
     @Override
@@ -130,7 +123,7 @@ public class PayForMeRejectActivity extends BaseTakePhotoActivity {
                     return;
                 }
                 showloadDialog("正在提交...");
-                NetworkDao.updateOrder(mEntity.orderNo, mEtBusinessmenName.getText().toString().trim(), mEtBusinessmenAddress.getText().toString().trim(), mEtGoodsName.getText().toString().trim(),
+                NetworkDao.updateOrder(PayForMeRejectActivity.this, mEntity.orderNo, mEtBusinessmenName.getText().toString().trim(), mEtBusinessmenAddress.getText().toString().trim(), mEtGoodsName.getText().toString().trim(),
                         mSparseArray.get(0), mSparseArray.get(1), mSparseArray.get(2), new onConnectionFinishLinstener() {
                             @Override
                             public void onSuccess(int code, Object result) {

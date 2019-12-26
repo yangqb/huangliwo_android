@@ -21,10 +21,11 @@ import com.feitianzhu.fu700.model.PayInfo;
 import com.feitianzhu.fu700.model.UserAuth;
 import com.feitianzhu.fu700.model.WXModel;
 import com.feitianzhu.fu700.settings.GetPasswordActivity;
-import com.feitianzhu.fu700.shop.ui.ShopsActivity;
 import com.feitianzhu.fu700.utils.EncryptUtils;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.jungly.gridpasswordview.GridPasswordView;
+import com.lxj.xpopup.XPopup;
+import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
@@ -64,7 +65,7 @@ public class ShopHelp {
             showVeringDialog(sContext, "你的实名认证正在审核中，请等审核通过后再进行该操作");
         } else {
             //验证用户审核通过
-            if(intent != null) {
+            if (intent != null) {
                 sContext.startActivity(intent);
             }
         }
@@ -159,9 +160,9 @@ public class ShopHelp {
                         showVeringDialog(sContext, "你的创建的商铺正在审核中，请等审核通过后再进行该操作");
                     } else if (1 == mAuth.isMerchantStatus) {
                         //有商铺
-                        Intent mIntent = new Intent(sContext, ShopsActivity.class);
+                        /*Intent mIntent = new Intent(sContext, ShopsActivity.class);
                         mIntent.putExtra(ISADMIN, true);
-                        sContext.startActivity(mIntent);
+                        sContext.startActivity(mIntent);*/
                     } else {
                         //拒绝了
                         NoCreateShops(sContext, "审核被拒：" + mAuth.merchantStatusRefuseReason + ",是否继续创建店铺");
@@ -176,25 +177,15 @@ public class ShopHelp {
      * */
     private static void NoCreateShops(final Context sContext, String result) {
         if (TextUtils.isEmpty(result)) result = "";
-        new MaterialDialog.Builder(sContext).title("温馨提示")
-                .content(result)
-                .positiveText("确认")
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
+        new XPopup.Builder(sContext)
+                .asConfirm("温馨提示", result, "取消", "确定", new OnConfirmListener() {
                     @Override
-                    public void onClick(@NonNull MaterialDialog mMaterialDialog,
-                                        @NonNull DialogAction mDialogAction) {
+                    public void onConfirm() {
                         Intent mIntent = new Intent(sContext, ShopShowNoCreateActivity.class);
                         sContext.startActivity(mIntent);
                     }
-                })
-                .onNegative(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog mMaterialDialog,
-                                        @NonNull DialogAction mDialogAction) {
-                        mMaterialDialog.dismiss();
-                    }
-                })
-                .negativeText("取消")
+                }, null, false)
+                .bindLayout(R.layout.layout_dialog) //绑定已有布局
                 .show();
     }
 
@@ -203,26 +194,16 @@ public class ShopHelp {
      * */
     private static void NoVeriShop(final Context sContext, String result) {
         if (TextUtils.isEmpty(result)) result = "";
-        new MaterialDialog.Builder(sContext).title("温馨提示")
-                .content(result)
-                .positiveText("确认")
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
+        new XPopup.Builder(sContext)
+                .asConfirm("温馨提示", result, "取消", "确定", new OnConfirmListener() {
                     @Override
-                    public void onClick(@NonNull MaterialDialog mMaterialDialog,
-                                        @NonNull DialogAction mDialogAction) {
+                    public void onConfirm() {
                         Intent mIntent = new Intent(sContext, VerificationActivity.class);
                         mIntent.putExtra(Constant.VERI_SHOPS, true);
                         sContext.startActivity(mIntent);
                     }
-                })
-                .onNegative(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog mMaterialDialog,
-                                        @NonNull DialogAction mDialogAction) {
-                        mMaterialDialog.dismiss();
-                    }
-                })
-                .negativeText("取消")
+                }, null, false)
+                .bindLayout(R.layout.layout_dialog) //绑定已有布局
                 .show();
     }
 
@@ -231,26 +212,15 @@ public class ShopHelp {
      * */
     private static void NoUserVeri(final Context sContext, String result) {
         if (TextUtils.isEmpty(result)) result = "";
-        new MaterialDialog.Builder(sContext).title("温馨提示")
-                .content(result)
-                .positiveText("确认")
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
+        new XPopup.Builder(sContext)
+                .asConfirm("温馨提示", result, "取消", "确定", new OnConfirmListener() {
                     @Override
-                    public void onClick(@NonNull MaterialDialog mMaterialDialog,
-                                        @NonNull DialogAction mDialogAction) {
+                    public void onConfirm() {
                         Intent mIntent = new Intent(sContext, VerificationActivity2.class);
                         sContext.startActivity(mIntent);
-                        mMaterialDialog.dismiss();
                     }
-                })
-                .onNegative(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog mMaterialDialog,
-                                        @NonNull DialogAction mDialogAction) {
-                        mMaterialDialog.dismiss();
-                    }
-                })
-                .negativeText("取消")
+                }, null, false)
+                .bindLayout(R.layout.layout_dialog) //绑定已有布局
                 .show();
     }
 
@@ -258,16 +228,9 @@ public class ShopHelp {
      * 实名认证和商户认证审核中弹框
      * */
     private static void showVeringDialog(final Context sContext, String content) {
-        new MaterialDialog.Builder(sContext).title("温馨提示")
-                .content(content)
-                .positiveText("确认")
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog mMaterialDialog,
-                                        @NonNull DialogAction mDialogAction) {
-                        mMaterialDialog.dismiss();
-                    }
-                })
+        new XPopup.Builder(sContext)
+                .asConfirm("温馨提示", content, "取消", "确定", null, null, false)
+                .bindLayout(R.layout.layout_dialog) //绑定已有布局
                 .show();
     }
 
@@ -291,7 +254,7 @@ public class ShopHelp {
                             return;
                         }
                         final String mPassword = EncryptUtils.encodePassword(mGridPasswordView.getPassWord());
-                        NetworkDao.checkPayPwd(mPassword, new onConnectionFinishLinstener() {
+                        NetworkDao.checkPayPwd(mWActivity, mPassword, new onConnectionFinishLinstener() {
                             @Override
                             public void onSuccess(int code, Object result) {
                                 mLinstener.onSuccess(SuccessCode, mPassword);
@@ -328,7 +291,7 @@ public class ShopHelp {
         WeakReference<Activity> mReference = new WeakReference<Activity>(mActivity);
         Activity wActivity = mReference.get();
         if (!Constant.loadUserAuth) {
-            ShopDao.loadUserAuthImpl();
+            ShopDao.loadUserAuthImpl(mActivity);
             ToastUtils.showShortToast("正在获取你的信息，请稍候点击");
             return;
         } else {

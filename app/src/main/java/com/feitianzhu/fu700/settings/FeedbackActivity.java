@@ -60,7 +60,7 @@ public class FeedbackActivity extends BaseActivity {
                     ToastUtils.showShortToast(mContext, R.string.content_must_not_be_null);
                     return;
                 }
-                NetworkDao.feedback(content, new onConnectionFinishLinstener() {
+                NetworkDao.feedback(FeedbackActivity.this, content, new onConnectionFinishLinstener() {
                     @Override
                     public void onSuccess(int code, Object result) {
                         ToastUtils.showShortToast("反馈成功");

@@ -6,7 +6,6 @@
     android:background="@color/white"
     >
     <RelativeLayout
-        android:id="@+id/rl_defaultTopContainer"
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:visibility="gone"
@@ -48,7 +47,6 @@
         >
 
         <TextView
-            android:layout_below="@+id/tv_title1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dp_10"

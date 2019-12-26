@@ -58,11 +58,11 @@ public class ShopTypeActivity extends SFActivity implements BaseQuickAdapter.Req
     mAdapter.setEmptyView(mEmptyView);
     mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
       @Override public void onItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
-        ShopsIndex.NearByMerchantListBean mListBean = mTypeModels.get(i);
+        /*ShopsIndex.NearByMerchantListBean mListBean = mTypeModels.get(i);
         Intent mIntent = new Intent(ShopTypeActivity.this, ShopsActivity.class);
         mIntent.putExtra(Constant.ISADMIN,false);
         mIntent.putExtra(Constant.MERCHANTID,mListBean.merchantId+"");
-        startActivity(mIntent);
+        startActivity(mIntent);*/
       }
     });
     mAdapter.setOnLoadMoreListener(this,mList);
@@ -105,8 +105,6 @@ public class ShopTypeActivity extends SFActivity implements BaseQuickAdapter.Req
   }
 
   @OnClick(R.id.img_sousuo) public void onViewClicked() {
-    Intent mIntent=new Intent(this,ShopSearchActivity.class);
-    startActivity(mIntent);
   }
 
   @Override

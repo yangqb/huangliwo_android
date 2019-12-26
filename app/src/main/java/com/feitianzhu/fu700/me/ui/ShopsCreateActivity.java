@@ -101,7 +101,7 @@ public class ShopsCreateActivity extends BaseTakePhotoActivity {
     private void loadShopsType(final boolean mB) {
         if (mB) showloadDialog("");
 
-        ShopDao.loadShopsType(new onConnectionFinishLinstener() {
+        ShopDao.loadShopsType(this, new onConnectionFinishLinstener() {
             @Override
             public void onSuccess(int code, Object result) {
                 mList = (List<ShopsType>) result;
@@ -232,7 +232,7 @@ public class ShopsCreateActivity extends BaseTakePhotoActivity {
                     return;
                 }
                 showloadDialog("");
-                ShopDao.postShopsInfo(new onConnectionFinishLinstener() {
+                ShopDao.postShopsInfo(this, new onConnectionFinishLinstener() {
                                           @Override
                                           public void onSuccess(int code, Object result) {
                                               goneloadDialog();

@@ -22,19 +22,6 @@ public class OrderActivity extends BaseActivity {
 
     @Override
     protected void initTitle() {
-        defaultNavigationBar = new DefaultNavigationBar
-                .Builder(OrderActivity.this, (ViewGroup)findViewById(R.id.Rl_titleContainer))
-                .setTitle("订单二维码")
-                .setStatusHeight(OrderActivity.this)
-                .setLeftIcon(R.drawable.iconfont_fanhuijiantou)
-                .setRightText("保存", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(OrderActivity.this,"点击保存",Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .builder();
-        defaultNavigationBar.setImmersion(R.color.status_bar);
     }
 
     @Override

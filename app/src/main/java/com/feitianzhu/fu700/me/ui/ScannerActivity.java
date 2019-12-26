@@ -16,7 +16,6 @@ import com.feitianzhu.fu700.common.base.LazyWebActivity;
 import com.feitianzhu.fu700.me.base.BaseActivity;
 import com.feitianzhu.fu700.me.helper.ImageUtil;
 import com.feitianzhu.fu700.me.ui.totalScore.MineQrcodeActivity;
-import com.feitianzhu.fu700.shop.ui.ShopsPayActivity;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.gyf.immersionbar.ImmersionBar;
 import com.uuzuche.lib_zxing.activity.CaptureFragment;
@@ -127,20 +126,20 @@ public class ScannerActivity extends BaseActivity {
         Intent intent = null;
         if (result.contains(Constant.CHECK_URL_HEAD)) {  //.判断是否是当前服务器地址的前缀
             if (result.contains("type=1")) { //商户
-                intent = new Intent(ScannerActivity.this, ShopsPayActivity.class);
+               /* intent = new Intent(ScannerActivity.this, ShopsPayActivity.class);
                 String merchantId = getStringByUrl(result, "merchantId");
                 intent.putExtra("merchantId", merchantId);
                 startActivity(intent);
-                finish();
+                finish();*/
             } else if (result.contains("type=2")) { //跳转进入到商户详情页
-                intent = new Intent(ScannerActivity.this, ShopDetailActivity.class);
+              /*  intent = new Intent(ScannerActivity.this, ShopDetailActivity.class);
                 String otherId = getStringByUrl(result, "userId");
                 intent.putExtra("otherId", otherId);
                 startActivity(intent);
-                finish();
+                finish();*/
             }
         } else {
-            if (isURL(result)) {
+            if (isUrl(result)) {
                 //跳转到webViewnull
                 intent = new Intent(ScannerActivity.this, LazyWebActivity.class);
                 intent.putExtra(Constant.URL, result);
@@ -151,6 +150,13 @@ public class ScannerActivity extends BaseActivity {
                 ToastUtils.showShortToast("无法识别此二维码!!");
             }
         }
+    }
+
+    public boolean isUrl(String result) {
+        if (result.startsWith("http://") || result.startsWith("https://")) {
+            return true;
+        }
+        return false;
     }
 
     private boolean isURL(String result) {

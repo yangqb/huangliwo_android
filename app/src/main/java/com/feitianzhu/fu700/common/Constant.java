@@ -67,8 +67,8 @@ public class Constant {
 
     /*URL常量*/
     //public final static String Common_HEADER = "http://192.168.0.21:8089/"; //钟工本地地址
-    //public final static String Common_HEADER = "http://39.106.65.35:8089/"; //测试地址
-    public final static String Common_HEADER = "http://192.168.0.15:8089/";//周工本地地址
+    public final static String Common_HEADER = "http://39.106.65.35:8089/"; //测试地址
+    //public final static String Common_HEADER = "http://192.168.0.15:8089/";//周工本地地址
     public final static String Common_H5_HEADER = "http://118.190.156.13/";
     public final static String LOADER_USERINFO = "fhwl/user/getuserinfo";
     public final static String LOADER_VERI_SHOPS_INFO = "fhwl/user/getmauth";
@@ -217,8 +217,8 @@ public class Constant {
     public static final String SP_PUSH_SHOP_PROTOCOL = "push_shop_protocol";
     public static final String SP_PUSH_SHOP_INSTRUCTIONS = "push_shop_instructions";
 
-     public static String ACCESS_TOKEN = "";
-     public static String LOGIN_USERID = "";
+    public static String ACCESS_TOKEN = "";
+    public static String LOGIN_USERID = "";
     public static String DeviceToken_Value = "";
     public static String PHONE = "";
 
@@ -246,8 +246,11 @@ public class Constant {
     public static final int PAY_FOR_ME_STATUS_REJ = -1;
 
     public static final String PAY_FOR_ME_START_PAGE = "1";
-    public static final String PAY_FOR_ME_PAGE_SIZE = "20";
-    public static String WX_APP_ID = "wxc0ddc8f9cd49d83b";
+    public static final String PAY_FOR_ME_PAGE_SIZE = "10";
+    public static final String PAGE_SIZE = "10";
+    public static final String WX_APP_ID = "wxc0ddc8f9cd49d83b";
+    //客服电话
+    public static final String CUSTOMER_SERVICE_TELEPHONE = "0755-27080621";
 
     public static int PayFlag = PayInfo.NoPay;
 }

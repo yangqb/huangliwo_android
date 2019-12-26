@@ -10,6 +10,7 @@ import com.feitianzhu.fu700.R;
 import com.feitianzhu.fu700.common.Constant;
 import com.feitianzhu.fu700.me.base.BaseActivity;
 import com.feitianzhu.fu700.model.AddressInfo;
+import com.feitianzhu.fu700.utils.SPUtils;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.utils.Urls;
 import com.feitianzhu.fu700.view.SwitchButton;
@@ -54,6 +55,8 @@ public class EditAddressActivity extends BaseActivity {
     EditText editPhone;
     @BindView(R.id.editAddressDetail)
     EditText editAddressDetail;
+    private String token;
+    private String userId;
 
     @Override
     protected int getLayoutId() {
@@ -62,6 +65,8 @@ public class EditAddressActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+        token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
+        userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         isAdd = getIntent().getBooleanExtra(IS_ADD_ADDRESS, false);
         shopAddressListBean = (AddressInfo.ShopAddressListBean) getIntent().getSerializableExtra(ADDRESS_DATA);
         if (shopAddressListBean != null) {
@@ -140,8 +145,8 @@ public class EditAddressActivity extends BaseActivity {
     public void deleteAddress(int addressId) {
         OkHttpUtils.post()
                 .url(Urls.DELETE_ADDRESS)
-                .addParams("accessToken", Constant.ACCESS_TOKEN)
-                .addParams("userId", Constant.LOGIN_USERID)
+                .addParams("accessToken", token)
+                .addParams("userId", userId)
                 .addParams("addressId", addressId + "")
                 .build()
                 .execute(new Callback() {
@@ -176,8 +181,8 @@ public class EditAddressActivity extends BaseActivity {
             //新增地址
             OkHttpUtils.post()
                     .url(Urls.ADD_ADDRESS)
-                    .addParams("accessToken", Constant.ACCESS_TOKEN)
-                    .addParams("userId", Constant.LOGIN_USERID)
+                    .addParams("accessToken", token)
+                    .addParams("userId", userId)
                     .addParams("provinceId", mProvince.getId())
                     .addParams("provinceName", mProvince.getName())
                     .addParams("cityId", mCity.getId())
@@ -212,8 +217,8 @@ public class EditAddressActivity extends BaseActivity {
             //修改地址
             OkHttpUtils.post()
                     .url(Urls.UPDATA_ADDRESS)
-                    .addParams("accessToken", Constant.ACCESS_TOKEN)
-                    .addParams("userId", Constant.LOGIN_USERID)
+                    .addParams("accessToken", token)
+                    .addParams("userId", userId)
                     .addParams("provinceId", mProvince.getId())
                     .addParams("provinceName", mProvince.getName())
                     .addParams("cityId", mCity.getId())

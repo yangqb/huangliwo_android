@@ -18,13 +18,7 @@ public class BalanceActivity extends BaseActivity {
 
     @Override
     protected void initTitle() {
-        defaultNavigationBar = new DefaultNavigationBar
-                .Builder(BalanceActivity.this, (ViewGroup)findViewById(R.id.ll_Container))
-                .setTitle("转入余额")
-                .setStatusHeight(BalanceActivity.this)
-                .setLeftIcon(R.drawable.iconfont_fanhuijiantou)
-                .builder();
-        defaultNavigationBar.setImmersion(R.color.status_bar);
+
     }
 
     @Override

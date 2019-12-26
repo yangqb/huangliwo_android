@@ -17,17 +17,8 @@ public class HomeEntity {
     public List<BannerListBean> bannerList;
     public List<RecommendListBean> recommendList;
     public List<ServiceRecommendListBean> serviceRecommendList;
-    public List<BaseGoodsListBean> goodsList;
 
-    public List<BaseGoodsListBean> getGoodsList() {
-        return goodsList;
-    }
-
-    public void setGoodsList(List<BaseGoodsListBean> goodsList) {
-        this.goodsList = goodsList;
-    }
-
-    public static class BannerListBean {
+    public static class BannerListBean implements Serializable {
         /**
          * linkType : 2
          * idValue : 5
@@ -38,16 +29,6 @@ public class HomeEntity {
         public int idValue;   //链接ID，根据链接类型关联不同类型的内容(如果是商户则是商户id)
         public String outUrl;    //外部链接地址
         public String imagUrl;
-
-        @Override
-        public String toString() {
-            return "BannerListBean{" +
-                    "linkType=" + linkType +
-                    ", idValue=" + idValue +
-                    ", imagUrl='" + imagUrl + '\'' +
-                    ", outUrl='" + outUrl + '\'' +
-                    '}';
-        }
     }
 
     public static class RecommendListBean implements Serializable {

@@ -18,8 +18,6 @@ import com.feitianzhu.fu700.home.WebViewActivity;
 import com.feitianzhu.fu700.me.base.BaseActivity;
 import com.feitianzhu.fu700.me.helper.CityModel;
 import com.feitianzhu.fu700.me.helper.DialogHelper;
-import com.feitianzhu.fu700.me.ui.ShopRecordDetailActivity;
-import com.feitianzhu.fu700.me.ui.UnionApplyRecordActivity;
 import com.feitianzhu.fu700.model.PayInfo;
 import com.feitianzhu.fu700.model.SelectPayNeedModel;
 import com.feitianzhu.fu700.model.ShopRecordWxModel;
@@ -96,7 +94,7 @@ public class SelectPayActivity extends BaseActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        ShopDao.loadUserAuthImpl();
+        ShopDao.loadUserAuthImpl(this);
     }
 
     @Override
@@ -317,15 +315,14 @@ public class SelectPayActivity extends BaseActivity {
                         ToastUtils.showLongToast("您未上传图片信息，请上传后重试");
                         return;
                     }
-                    NetworkDao.PayShopRecord(mSelectModel.getMemberId(), mSelectModel.getConsumeAmount() + "", mSelectModel.getHandleFee() + ""
+                    NetworkDao.PayShopRecord(SelectPayActivity.this, mSelectModel.getMemberId(), mSelectModel.getConsumeAmount() + "", mSelectModel.getHandleFee() + ""
                             , mSelectModel.getFeeId(), result.toString(), mPayChanel, mSelectModel.getPlaceImgFile(), mSelectModel.getObjImgFile(),
                             mSelectModel.getRcptImgFile(), new onConnectionFinishLinstener() {
                                 @Override
                                 public void onSuccess(int code, Object result) {
                                     goneloadDialog();
                                     if (mPayChanel.equals("balance")) {
-                                        startActivity(new Intent(SelectPayActivity.this, ShopRecordDetailActivity.class));
-                                        ToastUtils.showLongToast("支付成功");
+                                                                               ToastUtils.showLongToast("支付成功");
                                         finish();
                                     }
 
@@ -346,7 +343,6 @@ public class SelectPayActivity extends BaseActivity {
                                             public void onSuccess(int code, Object result) {
                                                 ToastUtils.showShortToast("支付成功");
                                                 finish();
-                                                startActivity(new Intent(SelectPayActivity.this, ShopRecordDetailActivity.class));
 
                                             }
 
@@ -369,7 +365,7 @@ public class SelectPayActivity extends BaseActivity {
 
                 } else if (mSelectModel.getType() == SelectPayNeedModel.TYPE_PAY_FOR_ME) {
 
-                    NetworkDao.payForMe(result.toString(), mSelectModel.getMerchantName(), mSelectModel.getMerchantAddr(), mSelectModel.getGoodsName()
+                    NetworkDao.payForMe(SelectPayActivity.this, result.toString(), mSelectModel.getMerchantName(), mSelectModel.getMerchantAddr(), mSelectModel.getGoodsName()
                             , mSelectModel.getConsumeAmount() + "", mSelectModel.getHandleFee() + "", mSelectModel.getPayChannel(),
                             mSelectModel.getPlaceImgFile(), mSelectModel.getObjImgFile(), mSelectModel.getRcptImgFile(), "", new onConnectionFinishLinstener() {
                                 @Override
@@ -431,7 +427,7 @@ public class SelectPayActivity extends BaseActivity {
                         ToastUtils.showShortToast("必须要选择省份");
                         return;
                     }
-                    NetworkDao.PayUnionLevel(gradeid, result.toString(), mSelectModel.getPayChannel(), mCityModel, new onConnectionFinishLinstener() {
+                    NetworkDao.PayUnionLevel(SelectPayActivity.this, gradeid, result.toString(), mSelectModel.getPayChannel(), mCityModel, new onConnectionFinishLinstener() {
                         @Override
                         public void onSuccess(int code, Object result) {
                             goneloadDialog();
@@ -444,8 +440,7 @@ public class SelectPayActivity extends BaseActivity {
                                         ToastUtils.showShortToast("支付成功");
                                         EventBus.getDefault().post(PayForMeEvent.PAY_SUCCESS);
                                         finish();
-                                        startActivity(new Intent(SelectPayActivity.this, UnionApplyRecordActivity.class));
-                                    }
+                                                                         }
 
                                     @Override
                                     public void onFail(int code, String result) {
@@ -465,8 +460,7 @@ public class SelectPayActivity extends BaseActivity {
                                 KLog.e(result);
                                 EventBus.getDefault().post(PayForMeEvent.PAY_SUCCESS);
                                 finish();
-                                startActivity(new Intent(SelectPayActivity.this, UnionApplyRecordActivity.class));
-                            }
+                                                           }
                         }
 
                         @Override
@@ -494,12 +488,11 @@ public class SelectPayActivity extends BaseActivity {
             case PayInfo.SHOPRECORDER:
                 Log.e("Test", "msg.getCurrentInfo()---------" + msg.getCurrentInfo());
                 goneloadDialog();
-                startActivity(new Intent(SelectPayActivity.this, ShopRecordDetailActivity.class));
+
                 finish();
                 break;
             case PayInfo.UNIONLEVEL:
                 goneloadDialog();
-                startActivity(new Intent(SelectPayActivity.this, UnionApplyRecordActivity.class));
                 finish();
                 break;
             case PayInfo.PAY_FORME:
@@ -519,7 +512,6 @@ public class SelectPayActivity extends BaseActivity {
         IWXAPI api = WXAPIFactory.createWXAPI(SelectPayActivity.this, mResult.getAppid());
         api.registerApp(mResult.getAppid());
         PayReq mPayReq = new PayReq();
-        Constant.WX_APP_ID = mResult.getAppid() + "";
         mPayReq.appId = mResult.getAppid();
         mPayReq.partnerId = mResult.getPartnerid();
         mPayReq.prepayId = mResult.getPrepayid();

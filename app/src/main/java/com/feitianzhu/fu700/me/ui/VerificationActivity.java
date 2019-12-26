@@ -348,7 +348,7 @@ public class VerificationActivity extends BaseTakePhotoActivity {
             return;
         }
         showloadDialog("提交中");
-        ShopDao.PostDataToVeriShop(photo_file_four, YinyeCard, RegisterNum, Faren, selectIndex,
+        ShopDao.PostDataToVeriShop(this, photo_file_four, YinyeCard, RegisterNum, Faren, selectIndex,
                 new onConnectionFinishLinstener() {
                     @Override
                     public void onSuccess(int code, Object result) {
@@ -403,7 +403,7 @@ public class VerificationActivity extends BaseTakePhotoActivity {
         }
 
         showloadDialog("提交中");
-        ShopDao.PostDataToVeriUser(photo_file_one, photo_file_two, name, id_num,
+        ShopDao.PostDataToVeriUser(this, photo_file_one, photo_file_two, name, id_num,
                 selectIndex, mOnSelectProvince, new onConnectionFinishLinstener() {
                     @Override
                     public void onSuccess(int code, Object result) {

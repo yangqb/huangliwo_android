@@ -1,5 +1,6 @@
 package com.feitianzhu.fu700.shop;
 
+import android.content.Context;
 import android.text.TextUtils;
 
 import com.feitianzhu.fu700.common.Constant;
@@ -30,6 +31,7 @@ import com.feitianzhu.fu700.model.UserInformation;
 import com.feitianzhu.fu700.model.UserVeriModel;
 import com.feitianzhu.fu700.model.WXModel;
 import com.feitianzhu.fu700.model.WalletModel;
+import com.feitianzhu.fu700.utils.SPUtils;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -132,9 +134,11 @@ public class ShopDao {
     /**
      * 提交商户验证数据
      */
-    public static void PostDataToVeriShop(String mPhoto_file_four, String mYinyeCard,
+    public static void PostDataToVeriShop(Context context, String mPhoto_file_four, String mYinyeCard,
                                           String mRegisterNum, String Faren, int mSelectIndex,
                                           final onConnectionFinishLinstener mLinstener) {
+        String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN);
+        String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID);
         String BUSINATUREs;
         if (mSelectIndex > 5) {
             BUSINATUREs = "10";
@@ -143,8 +147,8 @@ public class ShopDao {
         }
         OkHttpUtils.post()//
                 .addFile("certifFile", "01.png", new File(mPhoto_file_four))//
-                .url(Common_HEADER + POST_SHOPS_VERI).addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
-                .addParams(USERID, Constant.LOGIN_USERID)//
+                .url(Common_HEADER + POST_SHOPS_VERI).addParams(ACCESSTOKEN, token)//
+                .addParams(USERID, userId)//
                 .addParams(BUSILICENSENAME, mYinyeCard)//
                 .addParams(REGISTENO, mRegisterNum)//
                 .addParams(LEGALPERSON, Faren)//
@@ -184,9 +188,11 @@ public class ShopDao {
     /**
      * 提交个人验证
      */
-    public static void PostDataToVeriUser(String mPhoto_file_one, String mPhoto_file_two,
+    public static void PostDataToVeriUser(Context context, String mPhoto_file_one, String mPhoto_file_two,
                                           String mName, String mId_num, int mSelectIndex, Province mOnSelectProvince,
                                           final onConnectionFinishLinstener mLinstener) {
+        String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN);
+        String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID);
         String BUSINATUREs;
         if (mSelectIndex > 2) {
             BUSINATUREs = "10";
@@ -196,8 +202,8 @@ public class ShopDao {
         OkHttpUtils.post()//
                 .addFile("certifFile", "01.png", new File(mPhoto_file_one))//
                 .addFile("certifFile", "02.png", new File(mPhoto_file_two))//
-                .url(Common_HEADER + POST_REALAUTH).addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
-                .addParams(USERID, Constant.LOGIN_USERID)//
+                .url(Common_HEADER + POST_REALAUTH).addParams(ACCESSTOKEN, token)//
+                .addParams(USERID, userId)//
                 .addParams(REALNAME, mName)//
                 .addParams(CERTIFTYPE, BUSINATUREs)//
                 .addParams(CERTIFNO, mId_num)//
@@ -258,12 +264,12 @@ public class ShopDao {
                 });
     }
 
-    public static void loadUserVeriInfo(final onConnectionFinishLinstener mLinstener) {
-        //UserVeriModel mUserVeriModel = new UserVeriModel(-1);
-        //mLinstener.onSuccess(SuccessCode, mUserVeriModel);
+    public static void loadUserVeriInfo(Context context, final onConnectionFinishLinstener mLinstener) {
+        String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN);
+        String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID);
         OkHttpUtils.get()
-                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)
-                .addParams(USERID, Constant.LOGIN_USERID)
+                .addParams(ACCESSTOKEN, token)
+                .addParams(USERID, userId)
                 .url(Common_HEADER + LOADER_VERI_USER_INFO)
                 .build()
                 .execute(new Callback() {
@@ -314,14 +320,16 @@ public class ShopDao {
                 });
     }
 
-    public static void postShopsInfo(final onConnectionFinishLinstener mLinstener, String avatar,
+    public static void postShopsInfo(Context context, final onConnectionFinishLinstener mLinstener, String avatar,
                                      String files, String merchantname, String dtladdr, String servicephone,
                                      Province mOnSelectProvince, String clsid, String introduce, MyPoint mPoint) {
+        String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN);
+        String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID);
         OkHttpUtils.post()//
                 .addFile(AVATAR, "01.png", new File(avatar))//
                 .addFile(FILES, "02.png", new File(files))//
-                .url(Common_HEADER + POST_SHOPS_INFO).addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
-                .addParams(USERID, Constant.LOGIN_USERID)//
+                .url(Common_HEADER + POST_SHOPS_INFO).addParams(ACCESSTOKEN, token)//
+                .addParams(USERID, userId)//
                 .addParams(MERCHANTNAME, merchantname)//
                 .addParams(DTLADDR, dtladdr)//
                 .addParams(SERVICEPHONE, servicephone)//
@@ -368,10 +376,12 @@ public class ShopDao {
     /**
      * 编辑商铺信息
      */
-    public static void updateShopsInfo(final onConnectionFinishLinstener mLinstener, String avatar,
+    public static void updateShopsInfo(Context context, final onConnectionFinishLinstener mLinstener, String avatar,
                                        String files, String merchantname, String dtladdr, String servicephone,
                                        Province mOnSelectProvince, int clsid, String introduce, List<ShopsType> mList,
                                        int mMerchantId) {
+        String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN);
+        String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID);
         PostFormBuilder mPost = OkHttpUtils.post();
         if (!TextUtils.isEmpty(avatar)) {
             mPost.addFile(AVATAR, "01.png", new File(avatar));
@@ -392,8 +402,8 @@ public class ShopDao {
         }
         mPost.setMultipart(true)
                 .url(Common_HEADER + EDIT_SHOPS_INFO)
-                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
-                .addParams(USERID, Constant.LOGIN_USERID)//
+                .addParams(ACCESSTOKEN, token)//
+                .addParams(USERID, userId)//
                 .addParams(MERCHANTNAME, merchantname)//
                 .addParams(MERCHANTID, mMerchantId + "")//
                 .addParams(DTLADDR, dtladdr)//
@@ -430,10 +440,12 @@ public class ShopDao {
                 });
     }
 
-    public static void loadShopsType(final onConnectionFinishLinstener mLinstener) {
+    public static void loadShopsType(Context context, final onConnectionFinishLinstener mLinstener) {
+        String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN);
+        String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID);
         OkHttpUtils.get()
-                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)
-                .addParams(USERID, Constant.LOGIN_USERID)
+                .addParams(ACCESSTOKEN, token)
+                .addParams(USERID, userId)
                 .url(Common_HEADER + POST_SHOPS_TYPE)
                 .build()
                 .execute(new Callback() {
@@ -459,15 +471,17 @@ public class ShopDao {
                 });
     }
 
-    public static void loadShopsInfo(String merchantid,
+    public static void loadShopsInfo(Context context, String merchantid,
                                      final onConnectionFinishLinstener mLinstener) {
+        String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN);
+        String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID);
         PostFormBuilder builder = OkHttpUtils.post()//
                 .url(Common_HEADER + LOAD_SHOPS_INFO);
         if (!TextUtils.isEmpty(merchantid)) {
             builder.addParams(MERCHANTID, merchantid);
         }
-        builder.addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
-                .addParams(USERID, Constant.LOGIN_USERID)//
+        builder.addParams(ACCESSTOKEN, token)//
+                .addParams(USERID, userId)//
                 .build().execute(new Callback() {
             @Override
             public Object parseNetworkResponse(String mData, Response response, int id)
@@ -488,10 +502,12 @@ public class ShopDao {
         });//
     }
 
-    public static void PostCollect(int type, int id, final onNetFinishLinstenerT mLinstener) {
+    public static void PostCollect(Context context, int type, int id, final onNetFinishLinstenerT mLinstener) {
+        String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN);
+        String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID);
         OkHttpUtils.post()//
-                .url(Common_HEADER + POST_COLLECT).addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
-                .addParams(USERID, Constant.LOGIN_USERID)//
+                .url(Common_HEADER + POST_COLLECT).addParams(ACCESSTOKEN, token)//
+                .addParams(USERID, userId)//
                 .addParams(TYPE, type + "")//
                 .addParams(IDVALUE, id + "")//
                 .build().execute(new BaseCallBackT(mLinstener) {
@@ -502,10 +518,12 @@ public class ShopDao {
         });
     }
 
-    public static void DeleteCollect(String id, final onConnectionFinishLinstener mLinstener) {
+    public static void DeleteCollect(Context context, String id, final onConnectionFinishLinstener mLinstener) {
+        String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN);
+        String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID);
         OkHttpUtils.get()//
-                .url(Common_HEADER + DELETE_COLLECT).addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
-                .addParams(USERID, Constant.LOGIN_USERID)//
+                .url(Common_HEADER + DELETE_COLLECT).addParams(ACCESSTOKEN, token)//
+                .addParams(USERID, userId)//
                 .addParams(COLLECTID, id + "")//
                 .build().execute(new NoDataCallBack(mLinstener));
     }
@@ -633,22 +651,24 @@ public class ShopDao {
     /**
      * 获取用户授权信息
      */
-    public static void loadUserAuth(final onNetFinishLinstenerT<UserAuth> mLinstener) {
+    public static void loadUserAuth(Context context, final onNetFinishLinstenerT<UserAuth> mLinstener) {
+        String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN);
+        String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID);
         OkHttpUtils.post()//
                 .url(Common_HEADER + LOAD_USER_AUTH)
-                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
-                .addParams(USERID, Constant.LOGIN_USERID)//
+                .addParams(ACCESSTOKEN, token)//
+                .addParams(USERID, userId)//
                 .build().execute(new BaseCallBackObject(mLinstener, UserAuth.class) {
         });
     }
 
     /**
-     * 获取用户授权信息
+     * 获取用户认证信息
      */
-    public static void loadUserAuthImpl() {
+    public static void loadUserAuthImpl(Context context) {
         Constant.loadUserAuth = false;
         Constant.mUserAuth = null;
-        loadUserAuth(new onNetFinishLinstenerT<UserAuth>() {
+        loadUserAuth(context, new onNetFinishLinstenerT<UserAuth>() {
             @Override
             public void onSuccess(int code, UserAuth result) {
                 Constant.mUserAuth = result;

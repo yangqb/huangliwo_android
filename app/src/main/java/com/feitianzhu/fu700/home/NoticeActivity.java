@@ -50,13 +50,6 @@ public class NoticeActivity extends BaseActivity implements SwipeRefreshLayout.O
 
     @Override
     protected void initTitle() {
-        defaultNavigationBar = new DefaultNavigationBar
-                .Builder(NoticeActivity.this, (ViewGroup)findViewById(R.id.Rl_titleContainer))
-                .setTitle("通知")
-                .setStatusHeight(NoticeActivity.this)
-                .setLeftIcon(R.drawable.iconfont_fanhuijiantou)
-                .builder();
-        defaultNavigationBar.setImmersion(R.color.status_bar);
     }
 
     @Override
@@ -86,7 +79,7 @@ public class NoticeActivity extends BaseActivity implements SwipeRefreshLayout.O
 
         mRefreshlayout.setEnabled(false);
 
-        NetworkDao.getNotices(mCurPage + "", PAGE_SIZE + "", new onConnectionFinishLinstener() {
+        NetworkDao.getNotices(NoticeActivity.this, mCurPage + "", PAGE_SIZE + "", new onConnectionFinishLinstener() {
             @Override
             public void onSuccess(int code, Object result) {
                 mRefreshlayout.setRefreshing(false);
@@ -95,7 +88,7 @@ public class NoticeActivity extends BaseActivity implements SwipeRefreshLayout.O
                 NoticeEntity entity = (NoticeEntity) result;
                 mHasNextPage = entity.pager.hasNextPage;
 
-                if ( null == entity.list || 0 == entity.list.size()) {
+                if (null == entity.list || 0 == entity.list.size()) {
                     mAdapter.setEmptyView(mEmptyView);
                     mAdapter.getEmptyView().setVisibility(View.VISIBLE);
                     return;

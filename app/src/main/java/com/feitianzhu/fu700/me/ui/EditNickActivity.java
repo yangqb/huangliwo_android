@@ -12,6 +12,7 @@ import com.feitianzhu.fu700.common.Constant;
 import com.feitianzhu.fu700.login.LoginEvent;
 import com.feitianzhu.fu700.me.base.BaseActivity;
 import com.feitianzhu.fu700.me.helper.CityModel;
+import com.feitianzhu.fu700.utils.SPUtils;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
@@ -43,7 +44,8 @@ public class EditNickActivity extends BaseActivity {
     TextView rightText;
     @BindView(R.id.edit_nick)
     EditText editText;
-
+    private String token;
+    private String userId;
     @Override
     protected int getLayoutId() {
         return R.layout.layout_edit_nick;
@@ -51,19 +53,21 @@ public class EditNickActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+        token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
+        userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         titleName.setText("修改昵称");
         rightText.setText("确定");
         rightText.setVisibility(View.VISIBLE);
         editText.setText(getIntent().getStringExtra(nick_name));
     }
 
-    @OnClick({R.id.left_button, R.id.right_button})
+    @OnClick({R.id.left_button, R.id.right_text})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.left_button:
                 finish();
                 break;
-            case R.id.right_button:
+            case R.id.right_text:
                 if (TextUtils.isEmpty(editText.getText().toString())) {
                     ToastUtils.showShortToast("请输入新的昵称");
                     return;
@@ -77,8 +81,8 @@ public class EditNickActivity extends BaseActivity {
     private void sendSaveRequest() {
         OkHttpUtils.post()//
                 .url(Common_HEADER + EDIT_MINE_INFO)
-                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
-                .addParams(USERID, Constant.LOGIN_USERID)
+                .addParams(ACCESSTOKEN, token)//
+                .addParams(USERID, userId)
                 .addParams("nickName", TextUtils.isEmpty(editText.getText().toString()) ? "" : editText.getText().toString())
                 .build()
                 .execute(new Callback() {
@@ -100,7 +104,7 @@ public class EditNickActivity extends BaseActivity {
                     public void onResponse(Object response, int id) {
                         Log.e("wangyan", "onResponse---->" + response);
                         Toast.makeText(mContext, "修改成功", Toast.LENGTH_SHORT).show();
-                        EventBus.getDefault().post(LoginEvent.EDITOR_INFO);
+                        EventBus.getDefault().postSticky(LoginEvent.EDITOR_INFO);
                         finish();
                     }
                 });

@@ -51,13 +51,7 @@ public class GetMoneyActivity extends BaseActivity {
 
     @Override
     protected void initTitle() {
-        defaultNavigationBar = new DefaultNavigationBar
-                .Builder(GetMoneyActivity.this, (ViewGroup) findViewById(R.id.Rl_titleContainer))
-                .setTitle("转入余额")
-                .setStatusHeight(GetMoneyActivity.this)
-                .setLeftIcon(R.drawable.iconfont_fanhuijiantou)
-                .builder();
-        defaultNavigationBar.setImmersion(R.color.status_bar);
+
     }
 
     @Override

@@ -45,31 +45,7 @@ public class NewBecomeVolunteerActivity extends BaseActivity {
 
     @Override
     protected void initTitle() {
-        defaultNavigationBar = new DefaultNavigationBar
-                .Builder(NewBecomeVolunteerActivity.this, (ViewGroup)findViewById(R.id.Rl_titleContainer))
-                //.setTitle("成为志愿者")
-                .setMiddleButton(titles, new OnTabSelectListener() {
-                    @Override
-                    public void onTabSelect(int position) {
-                       // Toast.makeText(NewBecomeVolunteerActivity.this,"AAAA",Toast.LENGTH_SHORT).show();
-                        mViewPager.setCurrentItem(position);
-                    }
 
-                    @Override
-                    public void onTabReselect(int position) {
-
-                    }
-                })
-                .setStatusHeight(NewBecomeVolunteerActivity.this)
-                .setLeftIcon(R.drawable.iconfont_fanhuijiantou)
-                .setRightText("记录", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(NewBecomeVolunteerActivity.this,"点击保存",Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .builder();
-        defaultNavigationBar.setImmersion(R.color.status_bar);
     }
 
     private List<String> getTestData(){

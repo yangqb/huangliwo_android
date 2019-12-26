@@ -29,6 +29,7 @@ import com.feitianzhu.fu700.model.PayInfo;
 import com.feitianzhu.fu700.model.WXModel;
 import com.feitianzhu.fu700.shop.ui.OrderDetailActivity;
 import com.feitianzhu.fu700.utils.PayUtils;
+import com.feitianzhu.fu700.utils.SPUtils;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.utils.Urls;
 import com.feitianzhu.fu700.utils.doubleclick.SingleClick;
@@ -124,6 +125,8 @@ public class ShopPayActivity extends BaseActivity {
     private String valueId;
     private String payChannel = "wx";
     private String appId = "";
+    private String token;
+    private String userId;
 
     @Override
     protected int getLayoutId() {
@@ -133,12 +136,13 @@ public class ShopPayActivity extends BaseActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        ShopDao.loadUserAuthImpl();
     }
 
     @SuppressLint("SetTextI18n")
     @Override
     protected void initView() {
+        token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
+        userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         valueId = getIntent().getStringExtra(GOODS_VALUE_ID);
         goodsListBean = (BaseGoodsListBean) getIntent().getSerializableExtra(PAY_DATA);
         titleName.setText("确认订单");
@@ -255,15 +259,17 @@ public class ShopPayActivity extends BaseActivity {
         orderListBean.setChannel(payChannel); //支付渠道支付渠道（wx：微信，alipay：支付宝，balance：余额
         orderListBean.setAddressId(addressBean.getAddressId() + "");
         orderListBean.setGoodId(goodsListBean.getGoodsId());
-        orderListBean.setUserId(Integer.valueOf(Constant.LOGIN_USERID));
+        orderListBean.setUserId(Integer.valueOf(userId));
         orderListBean.setGoodsQty(shopCount);   //数量
-        orderListBean.setValueId(valueId);  //规格ID
+        if (valueId != null) {
+            orderListBean.setValueId(valueId);  //规格ID
+        }
         orderListBean.setOrderNo(""); //详情页的无orderNo
         String json = new Gson().toJson(orderListBean);
         OkHttpUtils.post()
                 .url(Urls.PAY_SHOPS)
-                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
-                .addParams(USERID, Constant.LOGIN_USERID)//
+                .addParams(ACCESSTOKEN, token)//
+                .addParams(USERID, userId)//
                 .addParams("appId", appId)  //这个是微信才需要的，
                 .addParams("order", json)
                 .build()
@@ -366,8 +372,8 @@ public class ShopPayActivity extends BaseActivity {
     public void getAddress() {
         OkHttpUtils.post()
                 .url(Urls.GET_ADDRESS)
-                .addParams("accessToken", Constant.ACCESS_TOKEN)
-                .addParams("userId", Constant.LOGIN_USERID)
+                .addParams("accessToken", token)
+                .addParams("userId", userId)
                 .build()
                 .execute(new Callback() {
                     @Override

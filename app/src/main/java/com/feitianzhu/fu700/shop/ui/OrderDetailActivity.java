@@ -30,6 +30,7 @@ import com.feitianzhu.fu700.shop.SelectPayActivity;
 import com.feitianzhu.fu700.shop.ShopPayActivity;
 import com.feitianzhu.fu700.utils.DateUtils;
 import com.feitianzhu.fu700.utils.PayUtils;
+import com.feitianzhu.fu700.utils.SPUtils;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.utils.Urls;
 import com.google.gson.Gson;
@@ -106,6 +107,8 @@ public class OrderDetailActivity extends BaseActivity {
     RoundedImageView imageView;
     @BindView(R.id.rl_address)
     RelativeLayout rlAddress;
+    private String token;
+    private String userId;
 
     @Override
     protected int getLayoutId() {
@@ -114,6 +117,8 @@ public class OrderDetailActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+        token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
+        userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         titleName.setText("订单详情");
         orderNo = getIntent().getStringExtra(ORDER_NO);
     }
@@ -158,7 +163,7 @@ public class OrderDetailActivity extends BaseActivity {
                 break;
             case R.id.call_phone:
                 new XPopup.Builder(this)
-                        .asConfirm("拨打商家电话", "18866668888", "关闭", "确定", new OnConfirmListener() {
+                        .asConfirm("拨打商家电话", Constant.CUSTOMER_SERVICE_TELEPHONE, "关闭", "确定", new OnConfirmListener() {
                             @Override
                             public void onConfirm() {
                                 requestPermission();
@@ -199,8 +204,8 @@ public class OrderDetailActivity extends BaseActivity {
     public void cancel(String orderNo) {
         OkHttpUtils.get()
                 .url(Urls.CANCEL_ORDER)
-                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)
-                .addParams(USERID, Constant.LOGIN_USERID)
+                .addParams(ACCESSTOKEN, token)
+                .addParams(USERID, userId)
                 .addParams("orderNo", orderNo)
                 .build()
                 .execute(new Callback() {
@@ -228,8 +233,8 @@ public class OrderDetailActivity extends BaseActivity {
     protected void initData() {
         OkHttpUtils.get()
                 .url(Urls.GET_ORDER_DETAIL)
-                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)
-                .addParams(USERID, Constant.LOGIN_USERID)
+                .addParams(ACCESSTOKEN, token)
+                .addParams(USERID, userId)
                 .addParams("orderNo", orderNo)
                 .build()
                 .execute(new Callback() {
@@ -261,14 +266,14 @@ public class OrderDetailActivity extends BaseActivity {
             specifications.setText(goodsOrderBean.getAttributeVal());
             count.setText("×" + goodsOrderBean.getCount());
             tvCount.setText("共" + goodsOrderBean.getCount() + "件商品");
-            if (goodsOrderBean.getAddress() != null) {
+            if (goodsOrderBean.getDetailAddress() != null && !TextUtils.isEmpty(goodsOrderBean.getDetailAddress())) {
                 rlAddress.setVisibility(View.VISIBLE);
-                address.setText(goodsOrderBean.getAddress().getProvinceName() + goodsOrderBean.getAddress().getCityName() + goodsOrderBean.getAddress().getAreaName() + goodsOrderBean.getAddress().getDetailAddress());
+                address.setText(goodsOrderBean.getDetailAddress());
             } else {
                 rlAddress.setVisibility(View.GONE);
             }
-            userName.setText(goodsOrderBean.getAddress().getUserName());
-            tvPhone.setText(goodsOrderBean.getAddress().getPhone());
+            userName.setText(goodsOrderBean.getBuyerName());
+            tvPhone.setText(goodsOrderBean.getBuyerPhone());
             tvPrice.setText(String.format(Locale.getDefault(), "%.2f", goodsOrderBean.getPrice()));
             merchantsName.setText(goodsOrderBean.getShopName());
             Glide.with(mContext).load(goodsOrderBean.getGoodsImg())
@@ -295,8 +300,6 @@ public class OrderDetailActivity extends BaseActivity {
             }
         }
     }
-
-    String telNum = "18866668888";
 
     private void requestPermission() {
         AndPermission.with(this)
@@ -329,7 +332,7 @@ public class OrderDetailActivity extends BaseActivity {
             if (requestCode == 200) {
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_CALL);
-                intent.setData(Uri.parse("tel:" + telNum));
+                intent.setData(Uri.parse("tel:" + Constant.CUSTOMER_SERVICE_TELEPHONE));
                 startActivity(intent);
             }
         }

@@ -10,8 +10,8 @@ import com.feitianzhu.fu700.model.BaseGoodsListBean;
  * @Date 2019/11/29 0029 下午 1:48
  */
 public class ShopAndMerchants implements MultiItemEntity {
-    public static final int TYPE_SERIES = 1;
-    public static final int TYPE_PESALE = 2;
+    public static final int TYPE_GOODS = 1;
+    public static final int TYPE_MERCHANTS = 2;
     private int itemType;
 
     public ShopAndMerchants(int itemType) {
@@ -23,16 +23,7 @@ public class ShopAndMerchants implements MultiItemEntity {
         return itemType;
     }
 
-    public HomeEntity.RecommendListBean recommendListBean;
-    public BaseGoodsListBean shopsList;
-
-    public HomeEntity.RecommendListBean getRecommendListBean() {
-        return recommendListBean;
-    }
-
-    public void setRecommendListBean(HomeEntity.RecommendListBean recommendListBean) {
-        this.recommendListBean = recommendListBean;
-    }
+    private BaseGoodsListBean shopsList;
 
     public BaseGoodsListBean getShopsList() {
         return shopsList;

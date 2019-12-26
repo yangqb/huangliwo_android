@@ -114,7 +114,7 @@ public class ShopsSellerFragment extends Fragment {
     }
 
     private void initData() {
-        ShopDao.loadShopsInfo(merchantid, new onConnectionFinishLinstener() {
+        ShopDao.loadShopsInfo(getActivity(), merchantid, new onConnectionFinishLinstener() {
             @Override
             public void onSuccess(int code, Object result) {
                 if (null == result) {

@@ -66,7 +66,6 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/right_button_collect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"

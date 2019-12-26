@@ -21,10 +21,10 @@
         android:paddingRight="18dp">
 
         <EditText
+            android:id="@+id/alipayNo"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:background="@null"
-            android:inputType="number"
             android:hint="请输入支付宝账号"
             android:textColor="@color/color_333333"
             android:textColorHint="@color/color_999999"

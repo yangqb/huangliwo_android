@@ -55,20 +55,13 @@ public class AddBankCardActivity extends BaseActivity {
     @Override
     protected void initView() {
 
-        defaultNavigationBar = new DefaultNavigationBar
-                .Builder(this, (ViewGroup) findViewById(R.id.Rl_titleContainer))
-                .setTitle("添加银行卡")
-                .setStatusHeight(AddBankCardActivity.this)
-                .setLeftIcon(R.drawable.iconfont_fanhuijiantou)
-                .builder();
-        defaultNavigationBar.setImmersion(R.color.status_bar);
     }
 
     @Override
     protected void initData() {
         mBankNames = new ArrayList<>();
         mBankList = new ArrayList<>();
-        ShopDao.loadUserAuthImpl();
+        ShopDao.loadUserAuthImpl(this);
     }
 
     @OnClick({R.id.button, R.id.tv_bankname})

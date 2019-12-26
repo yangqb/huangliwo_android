@@ -90,7 +90,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/dp_10"
-                android:text="设置二级密码"
+                android:text="设置支付密码"
                 android:textColor="@color/txt_big"
                 android:textSize="@dimen/text_size_body" />
 
@@ -115,6 +115,7 @@
             android:layout_height="42dp"
             android:layout_marginTop="@dimen/dp_20"
             android:background="@android:color/white"
+            android:visibility="gone"
             android:foreground="?attr/selectableItemBackground">
 
             <TextView
@@ -176,6 +177,7 @@
             android:id="@+id/rl_help"
             android:layout_width="match_parent"
             android:layout_height="42dp"
+            android:visibility="gone"
             android:background="@android:color/white"
             android:foreground="?attr/selectableItemBackground">
 

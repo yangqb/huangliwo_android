@@ -40,7 +40,7 @@ public class CommentsDetailAdapter extends BaseQuickAdapter<BaseGoodsListBean.Go
     protected void convert(@NonNull BaseViewHolder helper, BaseGoodsListBean.GoodsEvaluateMode item) {
         helper.setText(R.id.userName, item.getNickName());
         helper.setText(R.id.tvContent, item.getContent());
-        helper.setText(R.id.tvDate, item.getEvalDate());
+        helper.setText(R.id.tvDate, item.getEvalDateStr());
         helper.setText(R.id.specifications, item.getNorms() + "/" + item.getGoodsName());
         Glide.with(mContext).load(item.getHeadImg())
                 .apply(new RequestOptions().placeholder(R.mipmap.b08_01touxiang).error(R.mipmap.b08_01touxiang)).into((RoundedImageView) helper.getView(R.id.iv_head));

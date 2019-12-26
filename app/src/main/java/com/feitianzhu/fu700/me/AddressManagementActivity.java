@@ -15,6 +15,7 @@ import com.feitianzhu.fu700.me.adapter.AddressManagementAdapter;
 import com.feitianzhu.fu700.me.base.BaseActivity;
 import com.feitianzhu.fu700.model.AddressInfo;
 import com.feitianzhu.fu700.shop.ShopPayActivity;
+import com.feitianzhu.fu700.utils.SPUtils;
 import com.feitianzhu.fu700.utils.Urls;
 import com.google.gson.Gson;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -43,6 +44,8 @@ public class AddressManagementActivity extends BaseActivity {
     RecyclerView recyclerView;
     @BindView(R.id.swipeLayout)
     SwipeRefreshLayout mSwipeLayout;
+    private String token;
+    private String userId;
 
     @Override
     protected int getLayoutId() {
@@ -51,6 +54,8 @@ public class AddressManagementActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+        token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
+        userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         titleName.setText("收货地址");
         rightText.setText("新增");
         rightText.setVisibility(View.VISIBLE);
@@ -134,8 +139,8 @@ public class AddressManagementActivity extends BaseActivity {
     protected void initData() {
         OkHttpUtils.post()
                 .url(Urls.GET_ADDRESS)
-                .addParams("accessToken", Constant.ACCESS_TOKEN)
-                .addParams("userId", Constant.LOGIN_USERID)
+                .addParams("accessToken", token)
+                .addParams("userId", userId)
                 .build()
                 .execute(new Callback() {
                     @Override

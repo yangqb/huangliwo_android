@@ -21,6 +21,7 @@ import com.feitianzhu.fu700.model.MultiItemGoodsOrder;
 import com.feitianzhu.fu700.shop.SelectPayActivity;
 import com.feitianzhu.fu700.shop.ShopPayActivity;
 import com.feitianzhu.fu700.shop.adapter.OrderAdapter;
+import com.feitianzhu.fu700.utils.SPUtils;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.utils.Urls;
 import com.google.gson.Gson;
@@ -42,6 +43,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import okhttp3.Call;
 import okhttp3.MediaType;
+import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
@@ -86,6 +88,8 @@ public class MyOrderActivity2 extends BaseActivity {
     ImageView afterSale;
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
+    private String token;
+    private String userId;
 
     @Override
     protected int getLayoutId() {
@@ -94,6 +98,8 @@ public class MyOrderActivity2 extends BaseActivity {
 
     @Override
     protected void initView() {
+        token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
+        userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         titleName.setText("我的订单");
         afterSale.setBackgroundResource(R.mipmap.a01_03shouhou);
         search.setBackgroundResource(R.mipmap.a01_03sousuo);
@@ -140,14 +146,15 @@ public class MyOrderActivity2 extends BaseActivity {
         adapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                //根据订单类型来跳转1.交易成功(已收货)2.等待付款(下单成功)3.等待发货(付款成功)4.已发货5.等待收货6.退款中7.退款成功8.订单失效
+                //根据订单类型来跳转1.等待付款(下单成功未支付)2.等待发货(付款成功)3.等待收货(已发货)4.交易成功(已收货,已评价,未评价)5.退款中6.退款成功7.订单失效(支付超时)
                 Intent intent;
                 switch (view.getId()) {
                     case R.id.btn_refund:
                         //退款
                         if (goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_WAIT_RECEIVING) {
                             intent = new Intent(MyOrderActivity2.this, EditApplyRefundActivity.class);
-                            startActivity(intent);
+                            intent.putExtra(EditApplyRefundActivity.ORDER_DATA, goodsOrderList.get(position));
+                            startActivityForResult(intent, REQUEST_CODE);
                         }
                         break;
                     case R.id.btn_logistics:
@@ -180,10 +187,17 @@ public class MyOrderActivity2 extends BaseActivity {
                         break;
                     case R.id.btn_confirm_goods:
                         if (goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_COMPLETED) {
-                            //评价
-                            intent = new Intent(MyOrderActivity2.this, EditCommentsActivity.class);
-                            intent.putExtra(EditCommentsActivity.ORDER_DATA, goodsOrderList.get(position));
-                            startActivityForResult(intent, COMMENTS_REQUEST_CODE);
+                            if (goodsOrderList.get(position).getIsEval() == 1) {
+                                //查看详情(已评价)
+                                intent = new Intent(MyOrderActivity2.this, OrderDetailActivity.class);
+                                intent.putExtra(OrderDetailActivity.ORDER_NO, goodsOrderList.get(position).getOrderNo());
+                                startActivity(intent);
+                            } else {
+                                //评价
+                                intent = new Intent(MyOrderActivity2.this, EditCommentsActivity.class);
+                                intent.putExtra(EditCommentsActivity.ORDER_DATA, goodsOrderList.get(position));
+                                startActivityForResult(intent, COMMENTS_REQUEST_CODE);
+                            }
                         } else if (goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_NO_PAY) {
                             //付款
                             intent = new Intent(MyOrderActivity2.this, SelectPayActivity.class);
@@ -192,6 +206,8 @@ public class MyOrderActivity2 extends BaseActivity {
                         } else if (goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_WAIT_DELIVERY) {
                             //查看物流
                             intent = new Intent(MyOrderActivity2.this, LogisticsInfoActivity.class);
+                            intent.putExtra(LogisticsInfoActivity.LOGISTICS_COMPANY, goodsOrderList.get(position).getLogisticCpName());
+                            intent.putExtra(LogisticsInfoActivity.LOGISTICS_NO, goodsOrderList.get(position).getExpressNo());
                             startActivity(intent);
                         } else if (goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_WAIT_RECEIVING) {
                             //确认收货
@@ -310,8 +326,8 @@ public class MyOrderActivity2 extends BaseActivity {
     protected void initData() {
         OkHttpUtils.get()
                 .url(Urls.GTE_ORDER_COUNT)
-                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)
-                .addParams(USERID, Constant.LOGIN_USERID)
+                .addParams(ACCESSTOKEN, token)
+                .addParams(USERID, userId)
                 .build()
                 .execute(new Callback() {
                     @Override
@@ -345,11 +361,17 @@ public class MyOrderActivity2 extends BaseActivity {
         * */
         OkHttpUtils.post()
                 .url(Urls.GET_ORDER_INFO)
-                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)
-                .addParams(USERID, Constant.LOGIN_USERID)
+                .addParams(ACCESSTOKEN, token)
+                .addParams(USERID, userId)
                 .addParams("status", status + "")
                 .build()
                 .execute(new Callback() {
+
+                    @Override
+                    public void onBefore(Request request, int id) {
+                        super.onBefore(request, id);
+                        showloadDialog("");
+                    }
 
                     @Override
                     public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
@@ -358,11 +380,13 @@ public class MyOrderActivity2 extends BaseActivity {
 
                     @Override
                     public void onError(Call call, Exception e, int id) {
+                        goneloadDialog();
                         refreshLayout.finishRefresh(false);
                     }
 
                     @Override
                     public void onResponse(Object response, int id) {
+                        goneloadDialog();
                         refreshLayout.finishRefresh();
                         goodsOrderInfo = (GoodsOrderInfo) response;
                         goodsOrderList.clear();
@@ -378,8 +402,8 @@ public class MyOrderActivity2 extends BaseActivity {
     public void delete(String orderNo) {
         OkHttpUtils.get()
                 .url(Urls.DELETE_ORDER)
-                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)
-                .addParams(USERID, Constant.LOGIN_USERID)
+                .addParams(ACCESSTOKEN, token)
+                .addParams(USERID, userId)
                 .addParams("orderNo", orderNo)
                 .build()
                 .execute(new Callback() {
@@ -404,8 +428,8 @@ public class MyOrderActivity2 extends BaseActivity {
     public void cancel(String orderNo) {
         OkHttpUtils.get()
                 .url(Urls.CANCEL_ORDER)
-                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)
-                .addParams(USERID, Constant.LOGIN_USERID)
+                .addParams(ACCESSTOKEN, token)
+                .addParams(USERID, userId)
                 .addParams("orderNo", orderNo)
                 .build()
                 .execute(new Callback() {
@@ -431,8 +455,8 @@ public class MyOrderActivity2 extends BaseActivity {
     public void confirm(String orderNo) {
         OkHttpUtils.get()
                 .url(Urls.CONFIRM_ORDER)
-                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)
-                .addParams(USERID, Constant.LOGIN_USERID)
+                .addParams(ACCESSTOKEN, token)
+                .addParams(USERID, userId)
                 .addParams("orderNo", orderNo)
                 .build()
                 .execute(new Callback() {

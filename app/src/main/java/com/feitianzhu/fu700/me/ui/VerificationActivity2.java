@@ -20,6 +20,7 @@ import com.feitianzhu.fu700.model.UserVeriModel;
 import com.feitianzhu.fu700.shop.ShopDao;
 import com.feitianzhu.fu700.shop.ui.dialog.ProvinceCallBack;
 import com.feitianzhu.fu700.shop.ui.dialog.ProvincehDialog;
+import com.feitianzhu.fu700.utils.SPUtils;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.view.CustomSelectPhotoView;
 import com.google.gson.Gson;
@@ -29,6 +30,7 @@ import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
 
 import org.devio.takephoto.model.TResult;
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.util.Arrays;
@@ -92,6 +94,8 @@ public class VerificationActivity2 extends BaseTakePhotoActivity {
     TextView realName;
     @BindView(R.id.txt_person_idnum)
     TextView idNum;
+    private String token;
+    private String userId;
 
     @Override
     protected int getLayoutId() {
@@ -101,14 +105,16 @@ public class VerificationActivity2 extends BaseTakePhotoActivity {
     @Override
     protected void initView() {
         titleName.setText("实名认证");
+        token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
+        userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
     }
 
     @Override
     protected void initData() {
         OkHttpUtils.post()//
                 .url(Common_HEADER + LOAD_USER_AUTH)
-                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
-                .addParams(USERID, Constant.LOGIN_USERID)//
+                .addParams(ACCESSTOKEN, token)//
+                .addParams(USERID, userId)//
                 .build().execute(new Callback() {
             @Override
             public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
@@ -149,7 +155,7 @@ public class VerificationActivity2 extends BaseTakePhotoActivity {
     }
 
     public void getAuthInfo() {
-        ShopDao.loadUserVeriInfo(new onConnectionFinishLinstener() {
+        ShopDao.loadUserVeriInfo(this, new onConnectionFinishLinstener() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onSuccess(int code, Object result) {
@@ -251,8 +257,8 @@ public class VerificationActivity2 extends BaseTakePhotoActivity {
                 .addFile("certifFile", "01.png", new File(photo_file_one))//
                 .addFile("certifFile", "02.png", new File(photo_file_two))//
                 .url(Common_HEADER + POST_REALAUTH)
-                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
-                .addParams(USERID, Constant.LOGIN_USERID)//
+                .addParams(ACCESSTOKEN, token)//
+                .addParams(USERID, userId)//
                 .addParams(REALNAME, name)//
                 .addParams(CERTIFTYPE, businatures)//
                 .addParams(CERTIFNO, id_num)//
@@ -283,6 +289,7 @@ public class VerificationActivity2 extends BaseTakePhotoActivity {
                     public void onResponse(Object response, int id) {
                         goneloadDialog();
                         ToastUtils.showShortToast("提交成功，请等待验证");
+                        EventBus.getDefault().postSticky(AuthEvent.SUCCESS);
                         finish();
                     }
                 });

@@ -7,16 +7,22 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.feitianzhu.fu700.R;
+import com.feitianzhu.fu700.model.UserGoodVo;
+import com.itheima.roundedimageview.RoundedImageView;
 
 import java.util.List;
+import java.util.Locale;
 
 /**
  * package name: com.feitianzhu.fu700.me.adapter
@@ -25,18 +31,28 @@ import java.util.List;
  * time: 18:50
  * email: 694125155@qq.com
  */
-public class DetailedRulesAdapter extends BaseQuickAdapter<Integer, BaseViewHolder> {
+public class DetailedRulesAdapter extends BaseQuickAdapter<UserGoodVo.ReslutBean, BaseViewHolder> {
     private String str2;
     private String amount;
 
-    public DetailedRulesAdapter(@Nullable List<Integer> data) {
+    public DetailedRulesAdapter(@Nullable List<UserGoodVo.ReslutBean> data) {
         super(R.layout.layout_detailed_rules, data);
     }
 
     @Override
-    protected void convert(@NonNull BaseViewHolder helper, Integer item) {
+    protected void convert(@NonNull BaseViewHolder helper, UserGoodVo.ReslutBean item) {
+
+        Glide.with(mContext).load(item.getIcon()).apply(new RequestOptions().error(R.mipmap.b08_01touxiang).placeholder(R.mipmap.b08_01touxiang)).into((RoundedImageView) helper.getView(R.id.iv_head));
+        if (item.getPhone() != null && item.getPhone().length() == 11) {
+            String str1 = item.getPhone().substring(0, 3);
+            String str3 = item.getPhone().substring(8, 11);
+            helper.setText(R.id.phone, str1 + "*****" + str3);
+        }
+
+        helper.setText(R.id.date, item.getBuyDate());
+        helper.setText(R.id.name, item.getNickname());
         str2 = "¥ ";
-        setSpannableString("333.00", helper.getView(R.id.amount));
+        setSpannableString(String.format(Locale.getDefault(), "%.2f", item.getAmount()), helper.getView(R.id.amount));
     }
 
     @SuppressLint("SetTextI18n")

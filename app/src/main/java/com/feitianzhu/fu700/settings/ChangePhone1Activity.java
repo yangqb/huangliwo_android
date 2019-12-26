@@ -18,6 +18,7 @@ import com.feitianzhu.fu700.dao.NetworkDao;
 import com.feitianzhu.fu700.login.entity.SmsCodeEntity;
 import com.feitianzhu.fu700.me.base.BaseActivity;
 import com.feitianzhu.fu700.me.navigationbar.DefaultNavigationBar;
+import com.feitianzhu.fu700.utils.SPUtils;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.socks.library.KLog;
 
@@ -80,8 +81,8 @@ public class ChangePhone1Activity extends BaseActivity {
 
     @Override
     protected void initData() {
-
-        mTvCurrentPhone.setText(String.format(getString(R.string.current_phone), Constant.PHONE));
+        String phone = SPUtils.getString(this, Constant.SP_PHONE);
+        mTvCurrentPhone.setText(String.format(getString(R.string.current_phone), phone));
 
     }
 
@@ -121,7 +122,7 @@ public class ChangePhone1Activity extends BaseActivity {
      */
     private void getSmsCode(String phone) {
 
-        NetworkDao.getSmsCode(phone, "2", new onConnectionFinishLinstener() {
+        NetworkDao.getSmsCode(this, phone, "2", new onConnectionFinishLinstener() {
 
             @Override
             public void onSuccess(int code, Object result) {

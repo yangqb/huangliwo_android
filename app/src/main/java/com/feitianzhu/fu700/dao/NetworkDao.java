@@ -10,11 +10,8 @@ import com.feitianzhu.fu700.common.Constant;
 import com.feitianzhu.fu700.common.entity.DefaultRate;
 import com.feitianzhu.fu700.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.fu700.home.entity.NoticeEntity;
-import com.feitianzhu.fu700.huanghuali.entity.HuangHuaLiHMLEntity;
-import com.feitianzhu.fu700.huanghuali.entity.HuangHuaLiRecordEntity;
 import com.feitianzhu.fu700.login.LoginEvent;
 import com.feitianzhu.fu700.login.entity.LoginEntity;
-import com.feitianzhu.fu700.login.entity.SmsCodeEntity;
 import com.feitianzhu.fu700.login.entity.UserInfoEntity;
 import com.feitianzhu.fu700.me.helper.CityModel;
 import com.feitianzhu.fu700.model.OfflineModel;
@@ -81,6 +78,8 @@ public class NetworkDao {
 
                         SPUtils.putString(context, Constant.SP_PHONE, "");
                         SPUtils.putString(context, Constant.SP_PASSWORD, "");
+                        SPUtils.putString(context, Constant.SP_LOGIN_USERID, "");
+                        SPUtils.putString(context, Constant.SP_ACCESS_TOKEN, "");
                         linstener.onFail(FailCode, e.getMessage());
                         KLog.e(e);
                     }
@@ -105,7 +104,8 @@ public class NetworkDao {
                         EventBus.getDefault().post(LoginEvent.LOGIN_SUCCESS);
                         SPUtils.putString(context, Constant.SP_PHONE, phone);
                         SPUtils.putString(context, Constant.SP_PASSWORD, password);
-
+                        SPUtils.putString(context, Constant.SP_LOGIN_USERID, loginEntity.userId);
+                        SPUtils.putString(context, Constant.SP_ACCESS_TOKEN, loginEntity.accessToken);
                         linstener.onSuccess(0, loginEntity);
                     }
                 });
@@ -115,14 +115,15 @@ public class NetworkDao {
     /**
      * 获取验证码
      */
-    public static void getSmsCode(String phone, String type, final onConnectionFinishLinstener linstener) {
-
+    public static void getSmsCode(Context context, String phone, String type, final onConnectionFinishLinstener linstener) {
+        String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN, "");
+        String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID, "");
         OkHttpUtils
                 .get()
                 .url(Urls.GET_SMSCODE)
                 .addParams("phone", phone)
                 .addParams("type", type)
-                .addParams("accessToken", Constant.ACCESS_TOKEN)
+                .addParams("accessToken", token)
                 .build()
                 .execute(new Callback() {
                     @Override
@@ -151,8 +152,9 @@ public class NetworkDao {
     /**
      * 更换手机号
      */
-    public static void updatePhone(String oldPhone, String oldSmsCode, String newPhone, String newSmsCode, final onConnectionFinishLinstener linstener) {
-
+    public static void updatePhone(Context context, String oldPhone, String oldSmsCode, String newPhone, String newSmsCode, final onConnectionFinishLinstener linstener) {
+        String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN);
+        String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID);
         OkHttpUtils
                 .post()
                 .url(Urls.UPDATE_PHONE)
@@ -160,8 +162,8 @@ public class NetworkDao {
                 .addParams("oldSmsCode", oldSmsCode)
                 .addParams("newPhone", newPhone)
                 .addParams("newSmsCode", newSmsCode)
-                .addParams("accessToken", Constant.ACCESS_TOKEN)
-                .addParams("userId", Constant.LOGIN_USERID)
+                .addParams("accessToken", token)
+                .addParams("userId", userId)
                 .build()
                 .execute(new Callback() {
                     @Override
@@ -238,16 +240,17 @@ public class NetworkDao {
     /**
      * 修改密码
      */
-    public static void changePassword(String oldPassword, String newPassword, String confirmPassword, final onConnectionFinishLinstener linstener) {
-
+    public static void changePassword(Context context, String oldPassword, String newPassword, String confirmPassword, final onConnectionFinishLinstener linstener) {
+        String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN);
+        String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID);
         OkHttpUtils
                 .post()
                 .url(Urls.UPDATE_ULPASS)
                 .addParams("oldPassword", oldPassword)
                 .addParams("newPassword", newPassword)
                 .addParams("confirmPassword", confirmPassword)
-                .addParams("accessToken", Constant.ACCESS_TOKEN)
-                .addParams("userId", Constant.LOGIN_USERID)
+                .addParams("accessToken", token)
+                .addParams("userId", userId)
                 .build()
                 .execute(new Callback() {
                     @Override
@@ -284,8 +287,9 @@ public class NetworkDao {
     /**
      * 设置二级密码
      */
-    public static void setPayPassword(String phone, String smsCode, String paypass, String confirmPaypass, final onConnectionFinishLinstener linstener) {
-
+    public static void setPayPassword(Context context, String phone, String smsCode, String paypass, String confirmPaypass, final onConnectionFinishLinstener linstener) {
+        String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN);
+        String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID);
         OkHttpUtils
                 .post()
                 .url(Urls.SET_PAYPASS)
@@ -293,8 +297,8 @@ public class NetworkDao {
                 .addParams("smsCode", smsCode)
                 .addParams("paypass", paypass)
                 .addParams("confirmPaypass", confirmPaypass)
-                .addParams("accessToken", Constant.ACCESS_TOKEN)
-                .addParams("userId", Constant.LOGIN_USERID)
+                .addParams("accessToken", token)
+                .addParams("userId", userId)
                 .build()
                 .execute(new Callback() {
                     @Override
@@ -330,16 +334,17 @@ public class NetworkDao {
     /**
      * 重置二级密码
      */
-    public static void updatePayPassword(String oldPassword, String newPassword, String confirmPassword, final onConnectionFinishLinstener linstener) {
-
+    public static void updatePayPassword(Context context, String oldPassword, String newPassword, String confirmPassword, final onConnectionFinishLinstener linstener) {
+        String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN);
+        String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID);
         OkHttpUtils
                 .post()
                 .url(Urls.UPDATE_UPAYPASS)
                 .addParams("oldPassword", oldPassword)
                 .addParams("newPassword", newPassword)
                 .addParams("confirmPassword", confirmPassword)
-                .addParams("accessToken", Constant.ACCESS_TOKEN)
-                .addParams("userId", Constant.LOGIN_USERID)
+                .addParams("accessToken", token)
+                .addParams("userId", userId)
                 .build()
                 .execute(new Callback() {
                     @Override
@@ -421,8 +426,9 @@ public class NetworkDao {
     /**
      * 重置二级密码
      */
-    public static void getPayPwd(String phone, String smsCode, String newPassword, String confirmPassword, final onConnectionFinishLinstener linstener) {
-
+    public static void getPayPwd(Context context, String phone, String smsCode, String newPassword, String confirmPassword, final onConnectionFinishLinstener linstener) {
+        String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN);
+        String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID);
         OkHttpUtils
                 .post()
                 .url(Urls.GET_UPAYPASS)
@@ -430,8 +436,8 @@ public class NetworkDao {
                 .addParams("smsCode", smsCode)
                 .addParams("newPassword", newPassword)
                 .addParams("confirmPassword", confirmPassword)
-                .addParams("accessToken", Constant.ACCESS_TOKEN)
-                .addParams("userId", Constant.LOGIN_USERID)
+                .addParams("accessToken", token)
+                .addParams("userId", userId)
                 .build()
                 .execute(new Callback() {
                     @Override
@@ -468,13 +474,14 @@ public class NetworkDao {
     /**
      * 二级密码校验
      */
-    public static void checkPayPwd(String paypass, final onConnectionFinishLinstener linstener) {
-
+    public static void checkPayPwd(Context context, String paypass, final onConnectionFinishLinstener linstener) {
+        String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN);
+        String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID);
         OkHttpUtils
                 .post()
                 .url(Urls.CHECK_PAYPASS)
-                .addParams(ACCESSTOKEN, ACCESS_TOKEN)//
-                .addParams(USERID, LOGIN_USERID)//
+                .addParams(ACCESSTOKEN, token)//
+                .addParams(USERID, userId)//
                 .addParams("paypass", paypass)
                 .build()
                 .execute(new Callback() {
@@ -512,14 +519,15 @@ public class NetworkDao {
     /**
      * 意见反馈
      */
-    public static void feedback(String content, final onConnectionFinishLinstener linstener) {
-
+    public static void feedback(Context context, String content, final onConnectionFinishLinstener linstener) {
+        String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN);
+        String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID);
         OkHttpUtils
                 .post()
                 .url(Urls.USER_FEEDBACK)
                 .addParams("content", content)
-                .addParams("accessToken", Constant.ACCESS_TOKEN)
-                .addParams("userId", Constant.LOGIN_USERID)
+                .addParams("accessToken", token)
+                .addParams("userId", userId)
                 .build()
                 .execute(new Callback() {
                     @Override
@@ -769,7 +777,9 @@ public class NetworkDao {
                 });
     }
 
-    public static void PayUnionLevel(String gradeId, String psw, final String PayChannel, CityModel model, final onConnectionFinishLinstener linstener) {
+    public static void PayUnionLevel(Context context, String gradeId, String psw, final String PayChannel, CityModel model, final onConnectionFinishLinstener linstener) {
+        String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN);
+        String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID);
         PostFormBuilder mPost = OkHttpUtils.post();
         mPost.setMultipart(true);
         mPost.url(Common_HEADER + Constant.POST_UNION_LEVEL_PAY);
@@ -798,8 +808,8 @@ public class NetworkDao {
 
         }
 
-        mPost.addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
-                .addParams(USERID, Constant.LOGIN_USERID)
+        mPost.addParams(ACCESSTOKEN, token)//
+                .addParams(USERID, userId)
                 .addParams("gradeId", gradeId)
                 .addParams("payPass", psw)
                 .addParams("appId", Constant.WX_APP_ID)
@@ -850,11 +860,13 @@ public class NetworkDao {
      * @param psw
      * @param linstener
      */
-    public static void PayBuyService(String merchantId, String serviceId, String price, String rebate, String contactTel, final String PayChannel, String psw, final onConnectionFinishLinstener linstener) {
+    public static void PayBuyService(Context context, String merchantId, String serviceId, String price, String rebate, String contactTel, final String PayChannel, String psw, final onConnectionFinishLinstener linstener) {
+        String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN);
+        String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID);
         PostFormBuilder mPost = OkHttpUtils.post();
         mPost.url(Common_HEADER + POST_BUY_SERVICE)
-                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
-                .addParams(USERID, Constant.LOGIN_USERID)
+                .addParams(ACCESSTOKEN, token)//
+                .addParams(USERID, userId)
                 .addParams("merchantId", merchantId)
                 .addParams("serviceId", serviceId)
                 .addParams("amount", price)
@@ -911,12 +923,13 @@ public class NetworkDao {
      * @param RcptImgFile
      * @param linstener
      */
-    public static void PayShopRecord(String MemberId, String ConsumeAmount, String HandleFee, String FeeId, String payPass, final String PayChannel, String PlaceImgFile, String ObjImgFile, String RcptImgFile, final onConnectionFinishLinstener linstener) {
-
+    public static void PayShopRecord(Context context, String MemberId, String ConsumeAmount, String HandleFee, String FeeId, String payPass, final String PayChannel, String PlaceImgFile, String ObjImgFile, String RcptImgFile, final onConnectionFinishLinstener linstener) {
+        String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN);
+        String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID);
         PostFormBuilder mPost = OkHttpUtils.post();
         mPost.url(Common_HEADER + POST_SHOP_RECORD_SEND)
-                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
-                .addParams(USERID, Constant.LOGIN_USERID)
+                .addParams(ACCESSTOKEN, token)//
+                .addParams(USERID, userId)
                 .addParams("memberId", MemberId)
                 .addParams("consumeAmount", ConsumeAmount)
                 .addParams("handleFee", HandleFee)
@@ -980,9 +993,10 @@ public class NetworkDao {
      * @param payProofFile  转账凭证（线下支付时必传）
      * @param linstener
      */
-    public static void payForMe(String payPass, String merchantName, String merchantAddr, String goodsName, String consumeAmount, String handleFee, final String payChannel,
+    public static void payForMe(Context context,String payPass, String merchantName, String merchantAddr, String goodsName, String consumeAmount, String handleFee, final String payChannel,
                                 String placeImgFile, String objImgFile, String rcptImgFile, String payProofFile, final onConnectionFinishLinstener linstener) {
-
+        String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN);
+        String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID);
         PostFormBuilder post = OkHttpUtils.post();
         if (!TextUtils.isEmpty(payProofFile)) {
             post.addFile("payProofFile", "payProofFile.png", new File(payProofFile));// 转账凭证（线下支付时必传）
@@ -999,8 +1013,8 @@ public class NetworkDao {
                 .addFile("placeImgFile", "placeImgFile.png", new File(placeImgFile))// 消费场所
                 .addFile("objImgFile", "objImgFile.png", new File(objImgFile))// 消费实物
                 .addFile("rcptImgFile", "rcptImgFile.png", new File(rcptImgFile))// 消费发票
-                .addParams("accessToken", Constant.ACCESS_TOKEN)
-                .addParams("userId", Constant.LOGIN_USERID)
+                .addParams("accessToken", token)
+                .addParams("userId", userId)
                 .build()
                 .execute(new Callback() {
                     @Override
@@ -1049,8 +1063,10 @@ public class NetworkDao {
      * @param rcptImgFile  消费发票图
      * @param linstener
      */
-    public static void updateOrder(String orderNo, String merchantName, String merchantAddr, String goodsName,
+    public static void updateOrder(Context context, String orderNo, String merchantName, String merchantAddr, String goodsName,
                                    String placeImgFile, String objImgFile, String rcptImgFile, final onConnectionFinishLinstener linstener) {
+        String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN);
+        String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID);
         OkHttpUtils
                 .post()
                 .url(Urls.UPDATE_ORDER)
@@ -1061,8 +1077,8 @@ public class NetworkDao {
                 .addFile("placeImgFile", "placeImgFile.png", new File(placeImgFile))// 消费场所
                 .addFile("objImgFile", "objImgFile.png", new File(objImgFile))// 消费实物
                 .addFile("rcptImgFile", "rcptImgFile.png", new File(rcptImgFile))// 消费发票
-                .addParams("accessToken", Constant.ACCESS_TOKEN)
-                .addParams("userId", Constant.LOGIN_USERID)
+                .addParams("accessToken", token)
+                .addParams("userId", userId)
                 .build()
                 .execute(new Callback() {
                     @Override
@@ -1105,16 +1121,17 @@ public class NetworkDao {
      * @param pageRows  每页行数
      * @param linstener
      */
-    public static void payForMeRecord(String status, String pageIndex, String pageRows, final onConnectionFinishLinstener linstener) {
-
+    public static void payForMeRecord(Context context, String status, String pageIndex, String pageRows, final onConnectionFinishLinstener linstener) {
+        String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN);
+        String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID);
         OkHttpUtils
                 .post()
                 .url(Urls.PAY_FOR_ME_RECORD)
                 .addParams("status", status)
                 .addParams("pageIndex", pageIndex)
                 .addParams("pageRows", pageRows)
-                .addParams("accessToken", Constant.ACCESS_TOKEN)
-                .addParams("userId", Constant.LOGIN_USERID)
+                .addParams("accessToken", token)
+                .addParams("userId", userId)
                 .build()
                 .execute(new Callback() {
                     @Override
@@ -1150,13 +1167,14 @@ public class NetworkDao {
     /**
      * 查询默认策划推广比例
      */
-    public static void getDefaultProportion(final onConnectionFinishLinstener linstener) {
-
+    public static void getDefaultProportion(Context context, final onConnectionFinishLinstener linstener) {
+        String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN);
+        String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID);
         OkHttpUtils
                 .post()
                 .url(Urls.DEFAULT_PROPORTION)
-                .addParams("accessToken", Constant.ACCESS_TOKEN)
-                .addParams("userId", Constant.LOGIN_USERID)
+                .addParams("accessToken", token)
+                .addParams("userId", userId)
                 .build()
                 .execute(new Callback() {
                     @Override
@@ -1197,8 +1215,9 @@ public class NetworkDao {
      * @param type       类型（1：余额提现，2：商户钱包提现）
      * @param linstener
      */
-    public static void withdraw(String payPass, String amount, String bankCardId, String type, final onConnectionFinishLinstener linstener) {
-
+    public static void withdraw(Context context, String payPass, String amount, String bankCardId, String type, final onConnectionFinishLinstener linstener) {
+        String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN);
+        String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID);
         OkHttpUtils
                 .post()
                 .url(Urls.WITHDRAW)
@@ -1206,8 +1225,8 @@ public class NetworkDao {
                 .addParams("amount", amount)
                 .addParams("bankCardId", bankCardId)
                 .addParams("type", type)
-                .addParams("accessToken", Constant.ACCESS_TOKEN)
-                .addParams("userId", Constant.LOGIN_USERID)
+                .addParams("accessToken", token)
+                .addParams("userId", userId)
                 .build()
                 .execute(new Callback() {
                     @Override
@@ -1246,14 +1265,15 @@ public class NetworkDao {
      * @param type      type=1表示余额，type=2表示钱包
      * @param linstener {"code":0,"data":{"rate":10}}
      */
-    public static void withdrawFeeRate(String type, final onConnectionFinishLinstener linstener) {
-
+    public static void withdrawFeeRate(Context context, String type, final onConnectionFinishLinstener linstener) {
+        String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN);
+        String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID);
         OkHttpUtils
                 .post()
                 .url(Urls.WITHDRAW_FEE_RATE)
                 .addParams("type", type)
-                .addParams("accessToken", Constant.ACCESS_TOKEN)
-                .addParams("userId", Constant.LOGIN_USERID)
+                .addParams("accessToken", token)
+                .addParams("userId", userId)
                 .build()
                 .execute(new Callback() {
                     @Override
@@ -1285,148 +1305,17 @@ public class NetworkDao {
                 });
     }
 
-    /**
-     * 获取黄花梨详情
-     *
-     * @param linstener
-     */
-    public static void getHuanghualiInfo(final onConnectionFinishLinstener linstener) {
 
-        OkHttpUtils
-                .post()
-                .url(Urls.HUANGHUALI_WEBVIEW)
-                .addParams("accessToken", Constant.ACCESS_TOKEN)
-                .addParams("userId", Constant.LOGIN_USERID)
-                .build()
-                .execute(new Callback() {
-                    @Override
-                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                        return new Gson().fromJson(mData, HuangHuaLiHMLEntity.class);
-                    }
-
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-                        KLog.e(e);
-                        if ("数据为空".equals(e.getMessage())) {
-                            linstener.onSuccess(0, e.getMessage());
-                        } else {
-                            linstener.onFail(FailCode, e.getMessage());
-                        }
-                    }
-
-                    @Override
-                    public void onResponse(Object response, int id) {
-
-                        if (response == null) {
-                            linstener.onFail(FailCode, "response is null!");
-                            return;
-                        }
-                        KLog.i("response:%s", response.toString());
-
-                        linstener.onSuccess(0, response);
-                    }
-                });
-    }
-
-    /**
-     * 购买黄花梨
-     *
-     * @param linstener
-     */
-    public static void buyHuangHuaLi(String payProofFile, final onConnectionFinishLinstener linstener) {
-
-        OkHttpUtils
-                .post()
-                .url(Urls.HUANGHUALI_BUY)
-                .addParams("accessToken", Constant.ACCESS_TOKEN)
-                .addParams("userId", Constant.LOGIN_USERID)
-                .addFile("payProofFile", "payProofFile.png", new File(payProofFile))// 转账凭证（线下支付时必传）
-                .build()
-                .execute(new Callback() {
-                    @Override
-                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                        return mData;
-                    }
-
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-                        KLog.e(e);
-                        if ("数据为空".equals(e.getMessage())) {
-                            linstener.onSuccess(0, e.getMessage());
-                        } else {
-                            linstener.onFail(FailCode, e.getMessage());
-                        }
-                    }
-
-                    @Override
-                    public void onResponse(Object response, int id) {
-
-                        if (response == null) {
-                            linstener.onFail(FailCode, "response is null!");
-                            return;
-                        }
-                        KLog.i("response:%s", response.toString());
-
-                        linstener.onSuccess(0, response);
-                    }
-                });
-    }
-
-    /**
-     * 黄花梨购买记录
-     *
-     * @param linstener
-     */
-    public static void getHuangHuaLiRecord(final onConnectionFinishLinstener linstener) {
-
-        OkHttpUtils
-                .post()
-                .url(Urls.HUANGHUALI_LIST)
-                .addParams("accessToken", Constant.ACCESS_TOKEN)
-                .addParams("userId", Constant.LOGIN_USERID)
-                .build()
-                .execute(new Callback() {
-                    @Override
-                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                        Type listType = new TypeToken<ArrayList<HuangHuaLiRecordEntity>>() {
-                        }.getType();
-                        return new Gson().fromJson(mData, listType);
-                    }
-
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-                        KLog.e(e);
-                        if ("数据为空".equals(e.getMessage())) {
-                            linstener.onSuccess(0, e.getMessage());
-                        } else {
-                            linstener.onFail(FailCode, e.getMessage());
-                        }
-                    }
-
-                    @Override
-                    public void onResponse(Object response, int id) {
-
-                        if (response == null) {
-                            linstener.onFail(FailCode, "response is null!");
-                            return;
-                        }
-                        KLog.i("response:%s", response.toString());
-
-                        linstener.onSuccess(0, response);
-                    }
-                });
-    }
-
-
-    public static void getNotices(String pageIndex, String pageRows, final onConnectionFinishLinstener linstener) {
-
+    public static void getNotices(Context context, String pageIndex, String pageRows, final onConnectionFinishLinstener linstener) {
+        String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN);
+        String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID);
         OkHttpUtils
                 .post()
                 .url(Urls.NOTICE_LIST)
                 .addParams("pageIndex", pageIndex)
                 .addParams("pageRows", pageRows)
-                .addParams("accessToken", Constant.ACCESS_TOKEN)
-                .addParams("userId", Constant.LOGIN_USERID)
+                .addParams("accessToken", token)
+                .addParams("userId", userId)
                 .build()
                 .execute(new Callback() {
                     @Override

@@ -2,7 +2,6 @@ package com.feitianzhu.fu700;
 
 import android.Manifest;
 import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,12 +21,9 @@ import android.widget.Toast;
 import com.feitianzhu.fu700.common.Constant;
 import com.feitianzhu.fu700.common.base.SFActivity;
 import com.feitianzhu.fu700.home.HomeFragment2;
-import com.feitianzhu.fu700.me.MeFragment;
 import com.feitianzhu.fu700.me.MyCenterFragment;
 import com.feitianzhu.fu700.me.ui.CollectMoneyActivity;
-import com.feitianzhu.fu700.me.ui.PushServiceActivity;
 import com.feitianzhu.fu700.me.ui.ScannerActivity;
-import com.feitianzhu.fu700.me.ui.ShopRecordActivity;
 import com.feitianzhu.fu700.message.MessageFragment;
 import com.feitianzhu.fu700.model.LocationPost;
 import com.feitianzhu.fu700.model.MyPoint;
@@ -125,7 +121,6 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
     }
 
     private void initData() {
-        ShopDao.loadUserAuthImpl();
         updateDiy();
     }
 
@@ -164,7 +159,9 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
                 break;
 
             case R.id.ly_shop:
+                type = 1;
             case R.id.rl_merchants:
+                type = 2;
             case R.id.rl_mall:
                 selected();
                 mTxtShop.setSelected(true);
@@ -176,7 +173,7 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
                     mTransaction.show(mShopFragment);
                 }
                 mTransaction.commit();*/
-               mShopFragment = CommodityClassificationFragment.newInstance(type, "");
+                mShopFragment = CommodityClassificationFragment.newInstance(type, "");
                 mTransaction.add(R.id.fragment_container, mShopFragment);
                 mTransaction.commit();
                 break;
@@ -192,7 +189,7 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
                     mTransaction.show(mMessageFragment);
                 }
                 mTransaction.commit();
-                ToastUtils.showShortToast("待开发");
+                ToastUtils.showShortToast("敬请期待");
                 break;
 
             case R.id.ly_me:
@@ -283,7 +280,7 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
     private void setDialog() {
         // TODO: 2017/9/25 获取授权信息
         stopAnimation();
-        ShopDao.loadUserAuthImpl();
+        ShopDao.loadUserAuthImpl(this);
         final Dialog mCameraDialog = new Dialog(this, R.style.BottomDialog);
         LinearLayout root = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.fu_dialog, null);
         ImageView mView = (ImageView) root.findViewById(R.id.cancel);
@@ -327,10 +324,6 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
         iv_shangjialudan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: 2017/9/25 第二步 
-                Intent intent = new Intent(MainActivity.this, ShopRecordActivity.class);
-                ShopHelp.veriUserShopJumpActivity(MainActivity.this, intent);
-//                startActivity(intent);
             }
         });
         /**
@@ -339,8 +332,7 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
         iv_fabufuwu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent pushIntent = new Intent(MainActivity.this, PushServiceActivity.class);
-                ShopHelp.veriUserShopJumpActivity(MainActivity.this, pushIntent);
+
             }
         });
 
@@ -419,10 +411,9 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
         new UpdateAppManager
                 .Builder()
                 .setActivity(this)
-                .setHttpManager(new UpdateAppHttpUtil())
+                .setHttpManager(new UpdateAppHttpUtil(this))
                 .setUpdateUrl(Common_HEADER + UAPDATE)
                 .setPost(false)
-                .hideDialogOnDownloading(false)
                 .setThemeColor(0xffffac5d)
                 .build()
                 .checkNewApp(new UpdateCallback() {
@@ -440,14 +431,15 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
                         String update = "No";
                         if (VersionManagementUtil.VersionComparison(updateAppModel.versionName + "", versionName) == 1) {
                             update = "Yes";
+                            if ("1".equals(updateAppModel.isForceUpdate)) {
+                                constraint = true;
+                            } else {
+                                constraint = false;
+                            }
                         } else {
                             update = "No";
                         }
-                        if ("1".equals(updateAppModel.isForceUpdate)) {
-                            constraint = true;
-                        } else {
-                            constraint = false;
-                        }
+
                         updateAppBean
                                 //（必须）是否更新Yes,No
                                 .setUpdate(update)
@@ -492,10 +484,10 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
                      * 没有新版本
                      */
                     @Override
-                    public void noNewApp() {
-                        KLog.e("没有新版本");
-//                        ToastUtils.showShortToast("没有新版本");
+                    protected void noNewApp(String error) {
+                        super.noNewApp(error);
                     }
+
                 });
 
     }

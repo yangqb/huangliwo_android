@@ -23,17 +23,17 @@ import com.feitianzhu.fu700.login.LoginEvent;
 import com.feitianzhu.fu700.me.AddressManagementActivity;
 import com.feitianzhu.fu700.me.base.BaseActivity;
 import com.feitianzhu.fu700.me.helper.CityModel;
-import com.feitianzhu.fu700.me.ui.ShopRecordDetailActivity;
 import com.feitianzhu.fu700.model.AddressInfo;
 import com.feitianzhu.fu700.model.PayInfo;
 import com.feitianzhu.fu700.model.ShopRecordWxModel;
 import com.feitianzhu.fu700.payforme.PayForMeEvent;
-import com.feitianzhu.fu700.payforme.PayForMeRecordActivity;
 import com.feitianzhu.fu700.shop.ShopDao;
 import com.feitianzhu.fu700.utils.PayUtils;
+import com.feitianzhu.fu700.utils.SPUtils;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.utils.Urls;
 import com.feitianzhu.fu700.utils.doubleclick.SingleClick;
+import com.feitianzhu.fu700.view.CustomInputView;
 import com.google.gson.Gson;
 import com.lxj.xpopup.XPopup;
 import com.tencent.mm.opensdk.modelpay.PayReq;
@@ -58,7 +58,6 @@ import okhttp3.Response;
 
 import static com.feitianzhu.fu700.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.fu700.common.Constant.Common_HEADER;
-import static com.feitianzhu.fu700.common.Constant.FailCode;
 import static com.feitianzhu.fu700.common.Constant.USERID;
 
 /**
@@ -72,6 +71,7 @@ public class VipUpgradeActivity extends BaseActivity {
     private static final int REQUEST_CODE = 1000;
     private AddressInfo.ShopAddressListBean addressBean;
     private List<AddressInfo.ShopAddressListBean> addressInfos = new ArrayList<>();
+    public static final String PARENT_ID = "parent_id";
     @BindView(R.id.amount)
     TextView bottomAmount;
     @BindView(R.id.tv_amount)
@@ -96,6 +96,9 @@ public class VipUpgradeActivity extends BaseActivity {
     TextView phone;
     @BindView(R.id.tv_address)
     TextView tvAddress;
+    private String token;
+    private String userId;
+    private int parentId;
 
     @Override
     protected int getLayoutId() {
@@ -105,11 +108,14 @@ public class VipUpgradeActivity extends BaseActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        ShopDao.loadUserAuthImpl();
+        ShopDao.loadUserAuthImpl(this);
     }
 
     @Override
     protected void initView() {
+        token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
+        userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
+        parentId = getIntent().getIntExtra(PARENT_ID, 0);
         titleName.setText("确认升级");
         weiXinIcon.setBackgroundResource(R.mipmap.e01_23xuanzhong);
         /**
@@ -190,7 +196,7 @@ public class VipUpgradeActivity extends BaseActivity {
                 if (TextUtils.isEmpty(tvAddress.getText().toString().trim())) {
                     ToastUtils.showShortToast("请选择收货地址");
                 } else {
-                    pay();
+                    showInputDialog();
                 }
                 break;
             case R.id.no_address:
@@ -202,18 +208,40 @@ public class VipUpgradeActivity extends BaseActivity {
         }
     }
 
-    public void pay() {
+    /*
+     * 输入邀请人id
+     * */
+    public void showInputDialog() {
+        new XPopup.Builder(VipUpgradeActivity.this)
+                .asCustom(new CustomInputView(VipUpgradeActivity.this)
+                        .setEditHintText("请输入邀请人ID")
+                        .setText(parentId)
+                        .setOnConfirmClickListener(new CustomInputView.OnConfirmClickListener() {
+                            @Override
+                            public void onConfirm(String account) {
+                                if (TextUtils.isEmpty(account)) {
+                                    ToastUtils.showShortToast("请输入邀请人ID");
+                                    return;
+                                }
+                                pay(account);
+                            }
+                        }))
+                .show();
+    }
+
+    public void pay(String account) {
         if (payType.equals("wx")) {
             appId = Constant.WX_APP_ID;
         } else {
             appId = "";
         }
         OkHttpUtils.post().url(Common_HEADER + Constant.POST_UNION_LEVEL_PAY)
-                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
-                .addParams(USERID, Constant.LOGIN_USERID)
+                .addParams(ACCESSTOKEN, token)//
+                .addParams(USERID, userId)
                 .addParams("addressId", addressBean.getAddressId() + "")
                 .addParams("appId", appId)//这个是微信才需要的，
                 .addParams("payChannel", payType)
+                .addParams("parentId", account)
                 .build()
                 .execute(new Callback() {
                     @Override
@@ -317,8 +345,8 @@ public class VipUpgradeActivity extends BaseActivity {
          * */
         OkHttpUtils.post()
                 .url(Urls.GET_ADDRESS)
-                .addParams("accessToken", Constant.ACCESS_TOKEN)
-                .addParams("userId", Constant.LOGIN_USERID)
+                .addParams("accessToken", token)
+                .addParams("userId", userId)
                 .build()
                 .execute(new Callback() {
                     @Override

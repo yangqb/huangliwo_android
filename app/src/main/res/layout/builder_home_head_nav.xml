@@ -39,7 +39,7 @@
                     android:layout_height="20dp"
                     android:background="@color/transparent"
                     android:scaleType="centerInside"
-                    android:src="@drawable/iconfont_fanhuijiantou"
+                    android:src="@mipmap/e01_01fanhui"
                     android:textColor="@color/txt_big" />
             </FrameLayout>
 

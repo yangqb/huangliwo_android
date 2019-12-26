@@ -40,6 +40,8 @@
                 android:id="@+id/tv_category"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:text="店家（深圳店）"
                 android:textColor="@color/color_333333"
                 android:textSize="16sp" />

@@ -15,19 +15,14 @@ import android.widget.TextView;
 import com.feitianzhu.fu700.R;
 import com.feitianzhu.fu700.common.Constant;
 import com.feitianzhu.fu700.me.base.BaseActivity;
-import com.feitianzhu.fu700.me.ui.TotalScoreActivity;
 import com.feitianzhu.fu700.model.GoodsOrderInfo;
-import com.feitianzhu.fu700.payforme.PayForMeEvent;
+import com.feitianzhu.fu700.utils.SPUtils;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.utils.Urls;
 import com.feitianzhu.fu700.view.CustomRefundView;
-import com.feitianzhu.fu700.vip.CustomPopup;
 import com.lxj.xpopup.XPopup;
-import com.lxj.xpopup.interfaces.OnSelectListener;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.Arrays;
 import java.util.Locale;
@@ -54,6 +49,8 @@ public class EditApplyRefundActivity extends BaseActivity {
     TextView tvPrice;
     private String str3;
     private String str2;
+    private String token;
+    private String userId;
 
     @Override
     protected int getLayoutId() {
@@ -62,6 +59,8 @@ public class EditApplyRefundActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+        token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
+        userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         titleName.setText("申请退款");
         rightText.setText("提交");
         rightText.setVisibility(View.VISIBLE);
@@ -107,8 +106,8 @@ public class EditApplyRefundActivity extends BaseActivity {
     public void refund(String orderNo, String reason) {
         OkHttpUtils.post()
                 .url(Urls.REFUND_ORDER)
-                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)
-                .addParams(USERID, Constant.LOGIN_USERID)
+                .addParams(ACCESSTOKEN, token)
+                .addParams(USERID, userId)
                 .addParams("orderNo", orderNo)
                 .addParams("reason", reason)
                 .addParams("status", "5")

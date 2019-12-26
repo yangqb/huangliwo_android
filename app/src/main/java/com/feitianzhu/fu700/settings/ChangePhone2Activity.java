@@ -19,6 +19,7 @@ import com.feitianzhu.fu700.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.fu700.dao.NetworkDao;
 import com.feitianzhu.fu700.me.base.BaseActivity;
 import com.feitianzhu.fu700.me.navigationbar.DefaultNavigationBar;
+import com.feitianzhu.fu700.utils.SPUtils;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.socks.library.KLog;
 
@@ -103,11 +104,12 @@ public class ChangePhone2Activity extends BaseActivity {
                     return;
                 }
 
-                NetworkDao.updatePhone(mOldPhone, mOldSmsCode, newPhone, newSmsCode, new onConnectionFinishLinstener() {
+                NetworkDao.updatePhone(this, mOldPhone, mOldSmsCode, newPhone, newSmsCode, new onConnectionFinishLinstener() {
                     @Override
                     public void onSuccess(int code, Object result) {
                         ToastUtils.showShortToast("修改成功");
                         Constant.PHONE = newPhone;
+                        SPUtils.putString(ChangePhone2Activity.this, Constant.SP_PHONE, newPhone);
                         KLog.i("new Constant.PHONE : " + Constant.PHONE);
                         finish();
                         startActivity(new Intent(mContext, MainActivity.class));
@@ -144,7 +146,7 @@ public class ChangePhone2Activity extends BaseActivity {
      */
     private void getSmsCode(String phone) {
 
-        NetworkDao.getSmsCode(phone, "3", new onConnectionFinishLinstener() {
+        NetworkDao.getSmsCode(this, phone, "3", new onConnectionFinishLinstener() {
 
             @Override
             public void onSuccess(int code, Object result) {

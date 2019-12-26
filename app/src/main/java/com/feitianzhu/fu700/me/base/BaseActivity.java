@@ -126,7 +126,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
 
     protected void showloadDialog(String title) {
-        mDialog = new MaterialDialog.Builder(this).title(title)
+        mDialog = new MaterialDialog.Builder(this)
                 .content("加载中,请稍候...")
                 .progress(true, 0)
                 .progressIndeterminateStyle(false)
@@ -135,9 +135,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected void goneloadDialog() {
         if (null != mDialog && mDialog.isShowing()) {
-            if (mDialog.isShowing()) {
                 mDialog.dismiss();
-            }
         }
 
     }

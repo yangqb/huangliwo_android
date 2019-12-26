@@ -51,7 +51,7 @@
                             android:textSize="17sp" />
 
                         <RelativeLayout
-                            android:id="@+id/share"
+                            android:id="@+id/call_phone"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
@@ -61,7 +61,7 @@
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@mipmap/e01_02fenxiang" />
+                                android:src="@mipmap/g12_01dianhua" />
                         </RelativeLayout>
                     </RelativeLayout>
 
@@ -103,7 +103,6 @@
                         android:layout_height="match_parent">
 
                         <TextView
-                            android:id="@+id/specifications_tag"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"

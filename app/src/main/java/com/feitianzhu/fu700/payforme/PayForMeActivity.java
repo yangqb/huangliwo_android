@@ -90,19 +90,7 @@ public class PayForMeActivity extends BaseTakePhotoActivity {
 
     @Override
     protected void initTitle() {
-        defaultNavigationBar = new DefaultNavigationBar
-                .Builder(PayForMeActivity.this, (ViewGroup) findViewById(R.id.Rl_titleContainer))
-                .setTitle("为我买单")
-                .setStatusHeight(PayForMeActivity.this)
-                .setRightText("记录", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        startActivity(new Intent(PayForMeActivity.this, PayForMeRecordActivity.class));
-                    }
-                })
-                .setLeftIcon(R.drawable.iconfont_fanhuijiantou)
-                .builder();
-        defaultNavigationBar.setImmersion(R.color.status_bar);
+
     }
 
     @Override
@@ -119,7 +107,7 @@ public class PayForMeActivity extends BaseTakePhotoActivity {
         EventBus.getDefault().register(this);
         mSparseArray = new SparseArray<>();
 
-        NetworkDao.getDefaultProportion(new onConnectionFinishLinstener() {
+        NetworkDao.getDefaultProportion(this, new onConnectionFinishLinstener() {
             @Override
             public void onSuccess(int code, Object result) {
                 DefaultRate defaultRate = (DefaultRate) result;

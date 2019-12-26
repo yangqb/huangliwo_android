@@ -5,7 +5,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -13,21 +12,17 @@ import android.widget.Toast;
 
 import com.feitianzhu.fu700.R;
 import com.feitianzhu.fu700.common.Constant;
-import com.feitianzhu.fu700.common.base.LazyWebActivity;
 import com.feitianzhu.fu700.common.impl.onNetFinishLinstenerT;
 import com.feitianzhu.fu700.login.LoginActivity;
 import com.feitianzhu.fu700.login.LoginEvent;
 import com.feitianzhu.fu700.me.base.BaseActivity;
-import com.feitianzhu.fu700.me.navigationbar.DefaultNavigationBar;
 import com.feitianzhu.fu700.model.UpdateAppModel;
 import com.feitianzhu.fu700.model.UserAuth;
 import com.feitianzhu.fu700.shop.ShopDao;
-import com.feitianzhu.fu700.splash.SplashActivity2;
 import com.feitianzhu.fu700.utils.DataCleanUtils;
 import com.feitianzhu.fu700.utils.SPUtils;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.utils.UpdateAppHttpUtil;
-import com.feitianzhu.fu700.utils.Urls;
 import com.feitianzhu.fu700.utils.VersionManagementUtil;
 import com.google.gson.Gson;
 import com.vector.update_app.UpdateAppBean;
@@ -96,35 +91,6 @@ public class SettingsActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-
-//        long cacheSize = getCacheDir().length();
-//        File externalCacheDir = getExternalCacheDir();
-//        if (externalCacheDir != null) {
-//            cacheSize = +externalCacheDir.length();
-//        }
-//        mTvClearCache.setText("清除缓存" + "(" + cacheSize / 1024 + "MB)");
-
-        ShopDao.loadUserAuth(new onNetFinishLinstenerT<UserAuth>() {
-            @Override
-            public void onSuccess(int code, UserAuth result) {
-
-                if (result != null && result.isPaypass == 1) {
-                    isPayPassword = true;
-                    mTvPayPassword.setText("重设二级密码");
-                } else {
-                    isPayPassword = false;
-                    mTvPayPassword.setText("设置二级密码");
-                }
-
-            }
-
-            @Override
-            public void onFail(int code, String result) {
-                isPayPassword = false;
-                mTvPayPassword.setText("设置二级密码");
-            }
-        });
-
         PackageInfo pInfo = null;
         try {
             pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
@@ -133,7 +99,26 @@ public class SettingsActivity extends BaseActivity {
             e.printStackTrace();
         }
 
+        ShopDao.loadUserAuth(this, new onNetFinishLinstenerT<UserAuth>() {
+            @Override
+            public void onSuccess(int code, UserAuth result) {
 
+                if (result != null && result.isPaypass == 1) {
+                    isPayPassword = true;
+                    mTvPayPassword.setText("重设支付密码");
+                } else {
+                    isPayPassword = false;
+                    mTvPayPassword.setText("设置支付密码");
+                }
+
+            }
+
+            @Override
+            public void onFail(int code, String result) {
+                isPayPassword = false;
+                mTvPayPassword.setText("设置支付密码");
+            }
+        });
     }
 
 
@@ -150,14 +135,14 @@ public class SettingsActivity extends BaseActivity {
                 intent.putExtra(Constant.URL, Urls.H5_ABOUT_ME);
                 intent.putExtra(Constant.H5_TITLE, "关于我们");
                 startActivity(intent);*/
-                ToastUtils.showShortToast("待开发");
+                ToastUtils.showShortToast("敬请期待");
                 break;
             case R.id.rl_help:
                 /*intent = new Intent(this, LazyWebActivity.class);
                 intent.putExtra(Constant.URL, Urls.H5_HELPER);
                 intent.putExtra(Constant.H5_TITLE, "帮助");
                 startActivity(intent);*/
-                ToastUtils.showShortToast("待开发");
+                ToastUtils.showShortToast("敬请期待");
                 break;
             case R.id.rl_update:
                 updateDiy();
@@ -186,6 +171,8 @@ public class SettingsActivity extends BaseActivity {
                 break;
             case R.id.button:
                 SPUtils.putString(this, Constant.SP_PASSWORD, "");
+                SPUtils.putString(this, Constant.SP_LOGIN_USERID, "");
+                SPUtils.putString(this, Constant.SP_ACCESS_TOKEN, "");
                 Constant.ACCESS_TOKEN = "";
                 Constant.LOGIN_USERID = "";
                 Constant.PHONE = "";
@@ -203,10 +190,9 @@ public class SettingsActivity extends BaseActivity {
         new UpdateAppManager
                 .Builder()
                 .setActivity(this)
-                .setHttpManager(new UpdateAppHttpUtil())
+                .setHttpManager(new UpdateAppHttpUtil(this))
                 .setUpdateUrl(Common_HEADER + UAPDATE)
                 .setPost(false)
-                .hideDialogOnDownloading(false)
                 .setThemeColor(0xffffac5d)
                 .build()
                 .checkNewApp(new UpdateCallback() {
@@ -224,13 +210,13 @@ public class SettingsActivity extends BaseActivity {
                         String update = "No";
                         if (VersionManagementUtil.VersionComparison(updateAppModel.versionName + "", versionName) == 1) {
                             update = "Yes";
+                            if ("1".equals(updateAppModel.isForceUpdate)) {
+                                constraint = true;
+                            } else {
+                                constraint = false;
+                            }
                         } else {
                             update = "No";
-                        }
-                        if ("1".equals(updateAppModel.isForceUpdate)) {
-                            constraint = true;
-                        } else {
-                            constraint = false;
                         }
                         updateAppBean
                                 //（必须）是否更新Yes,No
@@ -260,7 +246,7 @@ public class SettingsActivity extends BaseActivity {
                      */
                     @Override
                     public void onBefore() {
-                        showloadDialog("");
+                       // showloadDialog("");
 //                CProgressDialogUtils.showProgressDialog(JavaActivity.this);
                     }
 
@@ -269,7 +255,7 @@ public class SettingsActivity extends BaseActivity {
                      */
                     @Override
                     public void onAfter() {
-                        goneloadDialog();
+                     //   goneloadDialog();
 //                CProgressDialogUtils.cancelProgressDialog(JavaActivity.this);
                     }
 
@@ -277,8 +263,9 @@ public class SettingsActivity extends BaseActivity {
                      * 没有新版本
                      */
                     @Override
-                    public void noNewApp() {
-                        goneloadDialog();
+                    protected void noNewApp(String error) {
+                        super.noNewApp(error);
+                       // goneloadDialog();
                         ToastUtils.showShortToast("没有新版本");
                     }
                 });

@@ -50,13 +50,6 @@ public class PayForMeRecordActivity extends BaseActivity {
     @Override
     protected void initView() {
 
-        defaultNavigationBar = new DefaultNavigationBar
-                .Builder(this, (ViewGroup) findViewById(R.id.Rl_titleContainer))
-                .setTitle("为我买单")
-                .setStatusHeight(PayForMeRecordActivity.this)
-                .setLeftIcon(R.drawable.iconfont_fanhuijiantou)
-                .builder();
-        defaultNavigationBar.setImmersion(R.color.status_bar);
 
     }
 
@@ -73,7 +66,7 @@ public class PayForMeRecordActivity extends BaseActivity {
 
     private void getIngData() {
 
-        NetworkDao.payForMeRecord(PAY_FOR_ME_STATUS_ING + "", PAY_FOR_ME_START_PAGE, PAY_FOR_ME_PAGE_SIZE, new onConnectionFinishLinstener() {
+        NetworkDao.payForMeRecord(PayForMeRecordActivity.this, PAY_FOR_ME_STATUS_ING + "", PAY_FOR_ME_START_PAGE, PAY_FOR_ME_PAGE_SIZE, new onConnectionFinishLinstener() {
             @Override
             public void onSuccess(int code, Object result) {
 
@@ -86,11 +79,9 @@ public class PayForMeRecordActivity extends BaseActivity {
                 for (PayForMeEntity.StatusCntsBean countBean : statusList) {
                     if (countBean.status == PAY_FOR_ME_STATUS_ING) {
                         mSparseArray.put(countBean.status, String.format(getString(R.string.pay_for_me_ing), countBean.cnt + ""));
-                    }
-                    else if (countBean.status == PAY_FOR_ME_STATUS_COM) {
+                    } else if (countBean.status == PAY_FOR_ME_STATUS_COM) {
                         mSparseArray.put(countBean.status, String.format(getString(R.string.pay_for_me_com), countBean.cnt + ""));
-                    }
-                    else if (countBean.status == PAY_FOR_ME_STATUS_REJ) {
+                    } else if (countBean.status == PAY_FOR_ME_STATUS_REJ) {
                         mSparseArray.put(countBean.status, String.format(getString(R.string.pay_for_me_rej), countBean.cnt + ""));
                     }
                 }

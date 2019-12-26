@@ -11,7 +11,6 @@
             android:layout_above="@+id/ll_bottom_container"
         >
         <LinearLayout
-            android:id="@+id/ll_container_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_10"
@@ -35,7 +34,6 @@
                     />
 
                 <TextView
-                    android:id="@+id/textView6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -114,7 +112,6 @@
                     android:textSize="11dp"
                     />
                 <TextView
-                    android:id="@+id/tv_userAge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/person_info_text_gray"
@@ -201,7 +198,6 @@
 
         </LinearLayout>
         <LinearLayout
-            android:id="@+id/ll_container_2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_10"
@@ -225,7 +221,6 @@
                     />
 
                 <TextView
-                    android:id="@+id/textView5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -334,7 +329,6 @@
 
         </LinearLayout>
         <LinearLayout
-            android:id="@+id/ll_container_3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_10"
@@ -389,7 +383,6 @@
 
         </LinearLayout>
         <LinearLayout
-            android:id="@+id/ll_container_4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_10"

@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
@@ -23,6 +24,7 @@ import com.feitianzhu.fu700.model.GoodsOrderInfo;
 import com.feitianzhu.fu700.model.PayInfo;
 import com.feitianzhu.fu700.model.WXModel;
 import com.feitianzhu.fu700.utils.PayUtils;
+import com.feitianzhu.fu700.utils.SPUtils;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.utils.Urls;
 import com.google.gson.Gson;
@@ -94,6 +96,8 @@ public class SelectPayActivity extends BaseActivity {
     private String appId = "";
     @BindView(R.id.rl_address)
     RelativeLayout rlAddress;
+    private String token;
+    private String userId;
 
     @Override
     protected int getLayoutId() {
@@ -102,6 +106,8 @@ public class SelectPayActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+        token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
+        userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         titleName.setText("确认支付");
         tvPrice.setText("");
         goodsOrderBean = (GoodsOrderInfo.GoodsOrderListBean) getIntent().getSerializableExtra(ORDER_DATA);
@@ -114,15 +120,15 @@ public class SelectPayActivity extends BaseActivity {
             postage.setText("¥" + String.format(Locale.getDefault(), "%.2f", goodsOrderBean.getPostage()));
             Glide.with(this).load(goodsOrderBean.getGoodsImg())
                     .apply(new RequestOptions().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai)).into(imageView);
-            if (goodsOrderBean.getAddress() != null) {
+            if (goodsOrderBean.getDetailAddress() != null && !TextUtils.isEmpty(goodsOrderBean.getDetailAddress())) {
                 rlAddress.setVisibility(View.VISIBLE);
-                tvAddress.setText(goodsOrderBean.getAddress().getProvinceName() + goodsOrderBean.getAddress().getCityName() + goodsOrderBean.getAddress().getAreaName() + goodsOrderBean.getAddress().getDetailAddress());
+                tvAddress.setText(goodsOrderBean.getDetailAddress());
             } else {
                 rlAddress.setVisibility(View.GONE);
             }
 
-            consigneeName.setText(goodsOrderBean.getAddress().getUserName());
-            phone.setText(goodsOrderBean.getAddress().getPhone());
+            consigneeName.setText(goodsOrderBean.getBuyerName());
+            phone.setText(goodsOrderBean.getBuyerPhone());
         } else {
             setSpannableString(String.format(Locale.getDefault(), "%.2f", 0.00));
         }
@@ -188,8 +194,8 @@ public class SelectPayActivity extends BaseActivity {
         String json = new Gson().toJson(goodsOrderBean);
         OkHttpUtils.post()
                 .url(Urls.PAY_SHOPS)
-                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
-                .addParams(USERID, Constant.LOGIN_USERID)//
+                .addParams(ACCESSTOKEN, token)//
+                .addParams(USERID, userId)//
                 .addParams("appId", appId)  //这个是微信才需要的，
                 .addParams("order", json)
                 .build()

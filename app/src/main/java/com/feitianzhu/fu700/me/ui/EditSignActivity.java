@@ -11,6 +11,7 @@ import com.feitianzhu.fu700.R;
 import com.feitianzhu.fu700.common.Constant;
 import com.feitianzhu.fu700.login.LoginEvent;
 import com.feitianzhu.fu700.me.base.BaseActivity;
+import com.feitianzhu.fu700.utils.SPUtils;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
@@ -41,6 +42,8 @@ public class EditSignActivity extends BaseActivity {
     TextView rightText;
     @BindView(R.id.edit_sign)
     EditText editText;
+    private String token;
+    private String userId;
 
     @Override
     protected int getLayoutId() {
@@ -49,19 +52,21 @@ public class EditSignActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+        token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
+        userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         titleName.setText("修改个性签名");
         rightText.setText("确定");
         rightText.setVisibility(View.VISIBLE);
         editText.setText(getIntent().getStringExtra(sign));
     }
 
-    @OnClick({R.id.left_button, R.id.right_button})
+    @OnClick({R.id.left_button, R.id.right_text})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.left_button:
                 finish();
                 break;
-            case R.id.right_button:
+            case R.id.right_text:
                 if (TextUtils.isEmpty(editText.getText().toString())) {
                     ToastUtils.showShortToast("请输入新的个性签名");
                     return;
@@ -75,8 +80,8 @@ public class EditSignActivity extends BaseActivity {
     private void sendSaveRequest() {
         OkHttpUtils.post()//
                 .url(Common_HEADER + EDIT_MINE_INFO)
-                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
-                .addParams(USERID, Constant.LOGIN_USERID)
+                .addParams(ACCESSTOKEN, token)//
+                .addParams(USERID, userId)
                 .addParams("personSign", TextUtils.isEmpty(editText.getText().toString()) ? "" : editText.getText().toString())
                 .build()
                 .execute(new Callback() {

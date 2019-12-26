@@ -15,8 +15,6 @@ import com.feitianzhu.fu700.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.fu700.dao.NetworkDao;
 import com.feitianzhu.fu700.me.base.BaseTakePhotoActivity;
 import com.feitianzhu.fu700.me.navigationbar.DefaultNavigationBar;
-import com.feitianzhu.fu700.me.ui.PersonalCenterActivity2;
-import com.feitianzhu.fu700.me.ui.ShopRecordDetailActivity;
 import com.feitianzhu.fu700.model.OfflineModel;
 import com.feitianzhu.fu700.model.SelectPayNeedModel;
 import com.feitianzhu.fu700.shop.ShopDao;
@@ -31,7 +29,6 @@ import com.zhy.http.okhttp.callback.Callback;
 import org.devio.takephoto.model.TResult;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -70,18 +67,11 @@ public class TransferVoucherActivity extends BaseTakePhotoActivity {
 
     @Override
     protected void initTitle() {
-        defaultNavigationBar = new DefaultNavigationBar
-                .Builder(TransferVoucherActivity.this, (ViewGroup) findViewById(R.id.Rl_titleContainer))
-                .setTitle("转账并上传凭证")
-                .setStatusHeight(TransferVoucherActivity.this)
-                .setLeftIcon(R.drawable.iconfont_fanhuijiantou)
-                .builder();
-        defaultNavigationBar.setImmersion(R.color.status_bar);
     }
 
     @Override
     protected void initView() {
-        ShopDao.loadUserAuthImpl();
+        ShopDao.loadUserAuthImpl(this);
         Intent intent = getIntent();
         mModel = (SelectPayNeedModel) intent.getSerializableExtra("transferNeedModel");
     }
@@ -198,14 +188,12 @@ public class TransferVoucherActivity extends BaseTakePhotoActivity {
                                 public void onResponse(Object response, int id) {
                                     goneloadDialog();
                                     ToastUtils.showShortToast("支付成功");
-                                    Intent Recordintent = new Intent(TransferVoucherActivity.this, ShopRecordDetailActivity.class);
-                                    startActivity(Recordintent);
                                     finish();
                                 }
                             });
                 } else if (mModel.getType() == SelectPayNeedModel.TYPE_PAY_FOR_ME) {
 
-                    NetworkDao.payForMe(result.toString(), mModel.getMerchantName(), mModel.getMerchantAddr(), mModel.getGoodsName()
+                    NetworkDao.payForMe(TransferVoucherActivity.this, result.toString(), mModel.getMerchantName(), mModel.getMerchantAddr(), mModel.getGoodsName()
                             , mModel.getConsumeAmount() + "", mModel.getHandleFee() + "", mModel.getPayChannel(),
                             mModel.getPlaceImgFile(), mModel.getObjImgFile(), mModel.getRcptImgFile(), mModel.getPayProofFile(), new onConnectionFinishLinstener() {
                                 @Override
@@ -259,20 +247,6 @@ public class TransferVoucherActivity extends BaseTakePhotoActivity {
                             });
                 } else if (mModel.getType() == SelectPayNeedModel.TYPE_HUANGHUALI) {
 
-                    NetworkDao.buyHuangHuaLi(mModel.getPayProofFile(), new onConnectionFinishLinstener() {
-                        @Override
-                        public void onSuccess(int code, Object result) {
-                            goneloadDialog();
-                            ToastUtils.showShortToast("支付成功");
-                            finish();
-                        }
-
-                        @Override
-                        public void onFail(int code, String result) {
-                            goneloadDialog();
-                            ToastUtils.showShortToast(result);
-                        }
-                    });
                 }
             }
 

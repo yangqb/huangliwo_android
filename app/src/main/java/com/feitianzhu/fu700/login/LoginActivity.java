@@ -19,6 +19,7 @@ import com.feitianzhu.fu700.dao.NetworkDao;
 import com.feitianzhu.fu700.me.base.BaseActivity;
 import com.feitianzhu.fu700.utils.EncryptUtils;
 import com.feitianzhu.fu700.utils.SPUtils;
+import com.feitianzhu.fu700.utils.StringUtils;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.gyf.immersionbar.ImmersionBar;
 import com.socks.library.KLog;
@@ -112,6 +113,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
         if (TextUtils.isEmpty(mAccount)) {
             Toast.makeText(this, R.string.please_input_phone, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (!StringUtils.isPhone(mAccount)) {
+            Toast.makeText(this, "请输入正确的手机号码", Toast.LENGTH_SHORT).show();
             return;
         }
         if (TextUtils.isEmpty(mPassword)) {

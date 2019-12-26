@@ -7,11 +7,11 @@ package com.feitianzhu.fu700.utils;
 public class Urls {
 
     //测试地址
-    //private static final String HOST_URL = "http://39.106.65.35";
+    private static final String HOST_URL = "http://39.106.65.35";
     //钟工本地地址
     //private static final String HOST_URL = "http://192.168.0.21";
     //周工本地地址
-    private static final String HOST_URL = "http://192.168.0.15";
+    //private static final String HOST_URL = "http://192.168.0.15";
     private static final String HOST_PORT = "8089";
 
     private static final String BASE_URL = HOST_URL + ":" + HOST_PORT + "/";
@@ -37,6 +37,17 @@ public class Urls {
     public static final String GET_INDEX = BASE_URL + "fhwl/index/getindex";
 
     /*
+     * 首页商品数据
+     * */
+    public static final String GET_HOME_GOODS_LIST = BASE_URL + "fhwl/index/pageGoods";
+
+    /*
+    * 商品搜索
+    * */
+
+    public static final String GET_SEARCH_LIST = BASE_URL + "fhwl/index/search";
+
+    /*
      * 获取商城分类
      * */
     public static final String GET_SHOP_CLASS = BASE_URL + "fhwl/shop/getshop";
@@ -49,7 +60,7 @@ public class Urls {
     /*
      * 商品详情数据
      * */
-    public static final String GET_SHOP_DETAIL = BASE_URL + "fhwl/shop/getGoodsId";
+    public static final String GET_SHOP_DETAIL = BASE_URL + "fhwl/index/getGoodsDetail";
 
     /*
      * 商品规格参数
@@ -81,19 +92,19 @@ public class Urls {
      * 退款
      * */
     public static final String REFUND_ORDER = BASE_URL + "fhwl/order/refundOrder";
-   /*
-   * 确认收货
-   * */
-   public static final String CONFIRM_ORDER = BASE_URL + "fhwl/order/confirmReceipt";
+    /*
+     * 确认收货
+     * */
+    public static final String CONFIRM_ORDER = BASE_URL + "fhwl/order/confirmReceipt";
     /*
      * 查看物流
      * */
     public static final String GET_LOGISTICS_INFO = BASE_URL + "fhwl/express/getExpressByNo";
 
     /*
-    * 订单评价POST
-    * */
-    public static final String EVALUATE_ORDER= BASE_URL + "fhwl/order/evaluate";
+     * 订单评价POST
+     * */
+    public static final String EVALUATE_ORDER = BASE_URL + "fhwl/order/evaluate";
     /*
      * 添加地址
      * */
@@ -113,6 +124,19 @@ public class Urls {
      * 地址列表
      * */
     public static final String GET_ADDRESS = BASE_URL + "fhwl/shop/selectUserAddr";
+
+    /*
+     * 获取余额信息
+     * */
+    public static final String GET_USER_MONEY_INFO = BASE_URL + "fhwl/user/getUserMoneyInfo";
+    /*
+     * 余额细则,细则类型 1推广返利 2消费折扣
+     * */
+    public static final String GET_DETAIL_RULES = BASE_URL + "fhwl/order/detailRules";
+    /*
+     * 余额提现
+     * */
+    public static final String WITHDRAWAL = BASE_URL + "fhwl/withdrawal/create";
 
     /**
      * 更换手机号

@@ -57,21 +57,24 @@ public class ChangePasswordActivity extends BaseActivity implements View.OnClick
 
     @Override
     protected void initView() {
-        titleName.setText("修改登录密码");
-    }
-
-    @Override
-    protected void initData() {
-
         Intent intent = getIntent();
         if (intent != null) {
             mIsChangeLoginPwd = intent.getBooleanExtra(Constant.INTENT_IS_CHANGE_LOGIN_PWD, true);
         }
+        if (mIsChangeLoginPwd) {
+            titleName.setText("修改登录密码");
+        } else {
+            titleName.setText("修改支付密码");
+        }
+
+    }
+
+    @Override
+    protected void initData() {
         if (mIsChangeLoginPwd) { //修改登录密码
             mPassword1.setHint(R.string.hint_input_login_pwd);
         } else { //修改二级密码
             mPassword1.setHint(R.string.hint_input_second_pwd);
-            defaultNavigationBar.changeTitleText(getString(R.string.reset_second_pwd));
         }
 
     }
@@ -115,7 +118,7 @@ public class ChangePasswordActivity extends BaseActivity implements View.OnClick
 
                 if (mIsChangeLoginPwd) {
 
-                    NetworkDao.changePassword(oldPassWord, newPassword1, newPassword2, new onConnectionFinishLinstener() {
+                    NetworkDao.changePassword(this, oldPassWord, newPassword1, newPassword2, new onConnectionFinishLinstener() {
                         @Override
                         public void onSuccess(int code, Object result) {
 
@@ -134,7 +137,7 @@ public class ChangePasswordActivity extends BaseActivity implements View.OnClick
                     });
                 } else {
 
-                    NetworkDao.updatePayPassword(oldPassWord, newPassword1, newPassword2, new onConnectionFinishLinstener() {
+                    NetworkDao.updatePayPassword(ChangePasswordActivity.this, oldPassWord, newPassword1, newPassword2, new onConnectionFinishLinstener() {
                         @Override
                         public void onSuccess(int code, Object result) {
 

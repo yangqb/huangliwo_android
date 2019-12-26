@@ -95,7 +95,7 @@ public class AuditRejFragment extends LazyFragment implements SwipeRefreshLayout
 
         mRefreshlayout.setEnabled(false);
 
-        NetworkDao.payForMeRecord(STATUS_REJ, mCurPage + "", PAGE_SIZE, new onConnectionFinishLinstener() {
+        NetworkDao.payForMeRecord(getActivity(), STATUS_REJ, mCurPage + "", PAGE_SIZE, new onConnectionFinishLinstener() {
             @Override
             public void onSuccess(int code, Object result) {
 

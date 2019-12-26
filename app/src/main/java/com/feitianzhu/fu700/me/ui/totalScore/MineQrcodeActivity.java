@@ -19,8 +19,10 @@ import com.feitianzhu.fu700.R;
 import com.feitianzhu.fu700.common.Constant;
 import com.feitianzhu.fu700.me.base.BaseActivity;
 import com.feitianzhu.fu700.me.navigationbar.DefaultNavigationBar;
+import com.feitianzhu.fu700.model.MineInfoModel;
 import com.feitianzhu.fu700.model.MineQRcodeModel;
 import com.feitianzhu.fu700.model.SharedInfoModel;
+import com.feitianzhu.fu700.utils.SPUtils;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.view.CircleImageView;
 import com.socks.library.KLog;
@@ -43,6 +45,7 @@ import okhttp3.Call;
 
 import static com.feitianzhu.fu700.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.fu700.common.Constant.Common_HEADER;
+import static com.feitianzhu.fu700.common.Constant.POST_MINE_INFO;
 import static com.feitianzhu.fu700.common.Constant.USERID;
 
 /**
@@ -61,7 +64,8 @@ public class MineQrcodeActivity extends BaseActivity {
     private Bitmap bitmap;
     private MineQRcodeModel mData;
     private SharedInfoModel mSharedInfo;
-    private String nickName;
+    private String token;
+    private String userId;
 
     @Override
     protected int getLayoutId() {
@@ -75,15 +79,8 @@ public class MineQrcodeActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        if (Constant.USER_INFO == null) {
-            nickName = "";
-        } else {
-            if (Constant.USER_INFO.nickName == null) {
-                nickName = "";
-            } else {
-                nickName = Constant.USER_INFO.nickName;
-            }
-        }
+        token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
+        userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         getSharedInfo();
     }
 
@@ -93,8 +90,8 @@ public class MineQrcodeActivity extends BaseActivity {
     private void getSharedInfo() {
         OkHttpUtils.post()//
                 .url(Common_HEADER + Constant.GET_SHARED_INFO)
-                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
-                .addParams(USERID, Constant.LOGIN_USERID)
+                .addParams(ACCESSTOKEN, token)//
+                .addParams(USERID, userId)
                 .build()
                 .execute(new Callback<SharedInfoModel>() {
 
@@ -108,6 +105,7 @@ public class MineQrcodeActivity extends BaseActivity {
                     public void onResponse(SharedInfoModel response, int id) {
                         mSharedInfo = response;
                         if (mSharedInfo != null) {
+                            mTvName.setText(mSharedInfo.getNickName());
                             requestData();
                         } else {
                             // ToastUtils.showShortToast("获取分享信息失败，请稍后重试!");
@@ -119,14 +117,13 @@ public class MineQrcodeActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-
     }
 
     private void requestData() {
-        OkHttpUtils.post()//
+        OkHttpUtils.get()//
                 .url(Common_HEADER + Constant.POST_MINE_QRCODE)
-                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
-                .addParams(USERID, Constant.LOGIN_USERID)
+                .addParams(ACCESSTOKEN, token)//
+                .addParams(USERID, userId)
                 .build()
                 .execute(new Callback<MineQRcodeModel>() {
 
@@ -140,7 +137,6 @@ public class MineQrcodeActivity extends BaseActivity {
                         mData = response;
                         setShowData(response);
                     }
-
                 });
     }
 
@@ -156,11 +152,10 @@ public class MineQrcodeActivity extends BaseActivity {
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
         byte[] bytes = baos.toByteArray();
         if (bytes != null && bytes.length > 0) {
-            Glide.with(mContext).load(bytes).apply(RequestOptions.placeholderOf(R.mipmap.pic_fuwutujiazaishibai)).into(mQRcode);
+            Glide.with(mContext).load(bytes).apply(RequestOptions.placeholderOf(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai)).into(mQRcode);
         }
-        Glide.with(mContext).load(response.getHeadImg()).apply(RequestOptions.placeholderOf(R.mipmap.pic_fuwutujiazaishibai).dontAnimate())
+        Glide.with(mContext).load(response.getHeadImg()).apply(RequestOptions.placeholderOf(R.mipmap.b08_01touxiang).error(R.mipmap.b08_01touxiang).dontAnimate())
                 .into(mCivPic);
-        mTvName.setText(nickName);
 
     }
 
@@ -258,7 +253,7 @@ public class MineQrcodeActivity extends BaseActivity {
             ToastUtils.showShortToast("分享的资料信息未完善，请先完善资料");
             return;
         }
-        if (TextUtils.isEmpty(mSharedInfo.getNickName()) || TextUtils.isEmpty(mSharedInfo.getLink()) ) {
+        if (TextUtils.isEmpty(mSharedInfo.getNickName()) || TextUtils.isEmpty(mSharedInfo.getLink())) {
             ToastUtils.showShortToast("分享的资料信息未完善，请先完善资料");
             return;
         }
@@ -273,7 +268,7 @@ public class MineQrcodeActivity extends BaseActivity {
         // titleUrl是标题的网络链接，仅在人人网和QQ空间使用
         oks.setTitleUrl(mSharedInfo.getLink());
         // text是分享文本，所有平台都需要这个字段
-       // oks.setText(mSharedInfo.getCompany());  //第二行的小文字
+        // oks.setText(mSharedInfo.getCompany());  //第二行的小文字
         // imagePath是图片地址，Linked-In以外的平台都支持此参数
         // 如果不用本地图片，千万不要调用这个方法！！！
 //        oks.setImagePath("http://f1.sharesdk.cn/imgs/2014/02/26/owWpLZo_638x960.jpg");
@@ -284,7 +279,7 @@ public class MineQrcodeActivity extends BaseActivity {
         // comment是我对这条分享的评论，仅在人人网和QQ空间使用
         oks.setComment(mSharedInfo.getNickName());
         // site是分享此内容的网站名称，仅在QQ空间使用
-        oks.setSite("福700");
+        oks.setSite("黄鹂窝优选");
         // siteUrl是分享此内容的网站地址，仅在QQ空间使用
         oks.setSiteUrl(mSharedInfo.getLink());
         oks.setCallback(new PlatformActionListener() {

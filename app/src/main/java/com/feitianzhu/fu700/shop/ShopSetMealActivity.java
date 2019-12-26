@@ -180,7 +180,7 @@ public class ShopSetMealActivity extends BaseActivity {
     }
 
     private void deleteShops() {
-        ShopDao.DeleteCollect(model.getCollectId() + "", new onConnectionFinishLinstener() {
+        ShopDao.DeleteCollect(this,model.getCollectId() + "", new onConnectionFinishLinstener() {
             @Override
             public void onSuccess(int code, Object result) {
                 ToastUtils.showShortToast("取消收藏");
@@ -195,7 +195,7 @@ public class ShopSetMealActivity extends BaseActivity {
     }
 
     private void doCelectShops() {
-        ShopDao.PostCollect(2, model.getServiceId(), new onNetFinishLinstenerT() {
+        ShopDao.PostCollect(this, 2, model.getServiceId(), new onNetFinishLinstenerT() {
             @Override
             public void onSuccess(int code, Object result) {
                 model.setCollectId(Integer.parseInt(result.toString()));

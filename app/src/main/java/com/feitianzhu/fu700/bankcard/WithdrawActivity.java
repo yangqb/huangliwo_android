@@ -75,13 +75,6 @@ public class WithdrawActivity extends BaseActivity {
     @Override
     protected void initView() {
 
-        defaultNavigationBar = new DefaultNavigationBar
-                .Builder(this, (ViewGroup) findViewById(R.id.Rl_titleContainer))
-                .setTitle("提现")
-                .setStatusHeight(WithdrawActivity.this)
-                .setLeftIcon(R.drawable.iconfont_fanhuijiantou)
-                .builder();
-        defaultNavigationBar.setImmersion(R.color.status_bar);
 
         mEtMoney.addTextChangedListener(mTextWatcher);
     }
@@ -89,7 +82,7 @@ public class WithdrawActivity extends BaseActivity {
     @Override
     protected void initData() {
 
-        ShopDao.loadUserAuthImpl();
+        ShopDao.loadUserAuthImpl(this);
         mFormatter = new DecimalFormat();
         Intent intent = getIntent();
         if (intent != null) {
@@ -118,7 +111,7 @@ public class WithdrawActivity extends BaseActivity {
         });
 
 
-        NetworkDao.withdrawFeeRate(mType + "", new onConnectionFinishLinstener() {
+        NetworkDao.withdrawFeeRate(WithdrawActivity.this, mType + "", new onConnectionFinishLinstener() {
             @Override
             public void onSuccess(int code, Object result) {
                 WithdrawFeeRateEntity entity = (WithdrawFeeRateEntity) result;
@@ -155,7 +148,7 @@ public class WithdrawActivity extends BaseActivity {
                     @Override
                     public void onSuccess(int code, Object result) {
 
-                        NetworkDao.withdraw(result.toString(), mInputMoney + "", mUserBankCardEntity.bankCardId + "", mType + "", new onConnectionFinishLinstener() {
+                        NetworkDao.withdraw(WithdrawActivity.this, result.toString(), mInputMoney + "", mUserBankCardEntity.bankCardId + "", mType + "", new onConnectionFinishLinstener() {
                             @Override
                             public void onSuccess(int code, Object result) {
                                 ToastUtils.showShortToast("提现成功");

@@ -14,7 +14,6 @@ import com.feitianzhu.fu700.me.adapter.MerchantsAdapter;
 import com.feitianzhu.fu700.me.base.BaseFragment;
 import com.feitianzhu.fu700.model.MineCollectionMerchantsModel;
 import com.feitianzhu.fu700.shop.ShopDao;
-import com.feitianzhu.fu700.shop.ui.ShopsActivity;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.yanzhenjie.recyclerview.swipe.SwipeItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
@@ -194,7 +193,7 @@ public class MerchantsFragment extends BaseFragment implements SwipeMenuItemClic
     }
 
     private void deleteShops(int collectId, final int position) {
-        ShopDao.DeleteCollect(collectId+"", new onConnectionFinishLinstener() {
+        ShopDao.DeleteCollect(getActivity(),collectId+"", new onConnectionFinishLinstener() {
             @Override
             public void onSuccess(int code, Object result) {
                 ToastUtils.showShortToast("取消收藏成功!");
@@ -211,10 +210,7 @@ public class MerchantsFragment extends BaseFragment implements SwipeMenuItemClic
 
     @Override
     public void onItemClick(View view, int position) {
-        Intent intent = new Intent(getContext(), ShopsActivity.class);
-        intent.putExtra(ISADMIN,false);
-        intent.putExtra(MERCHANTID,mTemp.get(position).getId()+"");
-        startActivity(intent);
+
     }
 
     @Override

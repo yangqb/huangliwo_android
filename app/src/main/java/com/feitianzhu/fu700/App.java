@@ -20,6 +20,7 @@ import com.scwang.smartrefresh.layout.footer.BallPulseFooter;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.footer.FalsifyFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
+import com.tencent.bugly.crashreport.CrashReport;
 import com.uuzuche.lib_zxing.activity.ZXingLibrary;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.log.LoggerInterceptor;
@@ -56,7 +57,7 @@ public class App extends MobApplication {
             @Override
             public RefreshFooter createRefreshFooter(@NonNull Context context, @NonNull RefreshLayout layout) {
                 //开始设置全局的基本参数（这里设置的属性只跟下面的MaterialHeader绑定，其他Header不会生效，能覆盖DefaultRefreshInitializer的属性和Xml设置的属性）
-                layout.setEnableFooterTranslationContent(false);
+                layout.setEnableFooterTranslationContent(true);
                 return new BallPulseFooter(context).setAnimatingColor(context.getResources().getColor(R.color.bg_yellow)).setNormalColor(context.getResources().getColor(R.color.bg_yellow));
             }
         });
@@ -82,6 +83,7 @@ public class App extends MobApplication {
         //SDKInitializer.initialize(getApplicationContext());
         initPush();
         AutoSizeConfig.getInstance().setCustomFragment(true);
+        CrashReport.initCrashReport(getApplicationContext(), "ad4dea9550", true);
     }
 
     private void initPush() {

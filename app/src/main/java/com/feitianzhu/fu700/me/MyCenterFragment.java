@@ -30,6 +30,7 @@ import com.feitianzhu.fu700.shop.ShopDao;
 import com.feitianzhu.fu700.shop.ShopHelp;
 import com.feitianzhu.fu700.shop.ui.MyOrderActivity2;
 import com.feitianzhu.fu700.shop.ui.ShoppingCartActivity;
+import com.feitianzhu.fu700.utils.SPUtils;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.view.CircleImageView;
 import com.feitianzhu.fu700.vip.VipActivity;
@@ -70,12 +71,13 @@ public class MyCenterFragment extends SFFragment {
     TextView nickName;
     @BindView(R.id.gradeName)
     TextView gradeName;
-
     private String mParam1;
     private String mParam2;
     private CenterAdapter adapter;
+    private String userId;
+    private String token;
     Unbinder unbinder;
-    private MineInfoModel mTempData = null;
+    private MineInfoModel mTempData = new MineInfoModel();
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     Integer[] integers = {R.mipmap.b08_05yuer, R.mipmap.b08_06zhanghu, R.mipmap.b08_07yinhangka, R.mipmap.b08_08dingdan, R.mipmap.b08_09shangpu,
@@ -115,6 +117,8 @@ public class MyCenterFragment extends SFFragment {
         mRecyclerView.setLayoutManager(manager);
         mRecyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
+        token = SPUtils.getString(getActivity(), Constant.SP_ACCESS_TOKEN);
+        userId = SPUtils.getString(getActivity(), Constant.SP_LOGIN_USERID);
 
         initListener();
         requestData();
@@ -124,8 +128,8 @@ public class MyCenterFragment extends SFFragment {
     public void requestData() {
         OkHttpUtils.get()//
                 .url(Common_HEADER + POST_MINE_INFO)
-                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
-                .addParams(USERID, Constant.LOGIN_USERID)
+                .addParams(ACCESSTOKEN, token)//
+                .addParams(USERID, userId)
                 .build().execute(new Callback<MineInfoModel>() {
 
             @Override
@@ -136,19 +140,15 @@ public class MyCenterFragment extends SFFragment {
 
             @Override
             public void onResponse(MineInfoModel response, int id) {
-                if (response == null) {
-                    return;
+                if (response != null) {
+                    mTempData = response;
+                    setShowData(response);
                 }
-                mTempData = response;
-                setShowData(response);
             }
         });
     }
 
     private void setShowData(MineInfoModel response) {
-        if (response == null) {
-            return;
-        }
         if (getActivity() == null) {
             return;
         }
@@ -190,7 +190,7 @@ public class MyCenterFragment extends SFFragment {
                         break;
                     case 2:
                         //银行卡 //暂不提供银行卡功能
-                        ToastUtils.showShortToast("待开发");
+                        ToastUtils.showShortToast("敬请期待");
                         /*if (!Constant.loadUserAuth) {
                             ToastUtils.showShortToast("正在获取授权信息，稍候进入");
                             ShopDao.loadUserAuthImpl();
@@ -215,12 +215,14 @@ public class MyCenterFragment extends SFFragment {
                         startActivity(intent);
                         break;
                     case 4: //推店
+                        ToastUtils.showShortToast("敬请期待");
                         //ShopHelp.veriJumpActivity(getActivity());
-                        intent = new Intent(getActivity(), PushShopHomeActivity.class);
-                        startActivity(intent);
+                       /* intent = new Intent(getActivity(), PushShopHomeActivity.class);
+                        startActivity(intent);*/
                         break;
                     case 5://我的收藏
-                        JumpActivity(getContext(), MineCollectionActivity.class);
+                        ToastUtils.showShortToast("敬请期待");
+                        //JumpActivity(getContext(), MineCollectionActivity.class);
                         break;
                     case 6://地址管理
                         intent = new Intent(getActivity(), AddressManagementActivity.class);
@@ -234,11 +236,12 @@ public class MyCenterFragment extends SFFragment {
                     case 8: //分享
                       /*  intent = new Intent(getActivity(), UnionlevelActivity2.class);
                         startActivity(intent);*/
-                        ToastUtils.showShortToast("待开发");
+                        ToastUtils.showShortToast("敬请期待");
                         break;
                     case 9: //购物车
-                        intent = new Intent(getContext(), ShoppingCartActivity.class);
-                        startActivity(intent);
+                        ToastUtils.showShortToast("敬请期待");
+                       /* intent = new Intent(getContext(), ShoppingCartActivity.class);
+                        startActivity(intent);*/
                         break;
                 }
             }
@@ -247,11 +250,10 @@ public class MyCenterFragment extends SFFragment {
     }
 
 
-    @OnClick({R.id.civ_head, R.id.iv_setting, R.id.iv_qrcode, R.id.iv_info})
+    @OnClick({R.id.civ_head, R.id.iv_setting, R.id.iv_qrcode})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.civ_head:
-            case R.id.iv_info:
                 JumpActivity(getContext(), PersonalCenterActivity2.class);
                 break;
             case R.id.iv_setting:
@@ -301,7 +303,7 @@ public class MyCenterFragment extends SFFragment {
     @Override
     public void onStart() {
         super.onStart();
-        ShopDao.loadUserAuthImpl();
+        ShopDao.loadUserAuthImpl(getActivity());
     }
 
     @Override

@@ -34,7 +34,7 @@ public class SFFragment extends Fragment {
     }
 
     protected void goneloadDialog() {
-        if (null != mDialog && mDialog.isShowing()) if (mDialog.isShowing()) mDialog.dismiss();
+        if (null != mDialog && mDialog.isShowing()) mDialog.dismiss();
     }
 
     @Override

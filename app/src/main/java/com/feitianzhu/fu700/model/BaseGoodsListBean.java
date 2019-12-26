@@ -209,12 +209,20 @@ public class BaseGoodsListBean implements Serializable {
 
         private int evalId;
         private String content;
-        private String evalDate;
+        private String evalDateStr;
         private String nickName;
         private String headImg;
         private String evalImgs;
         private String norms;
         private String goodsName;
+
+        public String getEvalDateStr() {
+            return evalDateStr;
+        }
+
+        public void setEvalDateStr(String evalDateStr) {
+            this.evalDateStr = evalDateStr;
+        }
 
         public String getNorms() {
             return norms;
@@ -246,14 +254,6 @@ public class BaseGoodsListBean implements Serializable {
 
         public void setContent(String content) {
             this.content = content;
-        }
-
-        public String getEvalDate() {
-            return evalDate;
-        }
-
-        public void setEvalDate(String evalDate) {
-            this.evalDate = evalDate;
         }
 
         public String getNickName() {

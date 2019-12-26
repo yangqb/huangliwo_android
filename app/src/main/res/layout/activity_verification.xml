@@ -30,7 +30,6 @@
                 android:src="@mipmap/xuxianlanse" />
 
             <TextView
-                android:id="@+id/ly_user_veri"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawableTop="@mipmap/icon_shimingrenzhengi_h"

@@ -58,13 +58,6 @@ public class ReleaseTotalScoreActivity extends BaseActivity implements BaseQuick
 
     @Override
     protected void initTitle() {
-        defaultNavigationBar = new DefaultNavigationBar
-                .Builder(ReleaseTotalScoreActivity.this, (ViewGroup) findViewById(R.id.Rl_titleContainer))
-                .setTitle("释放积分明细")
-                .setStatusHeight(ReleaseTotalScoreActivity.this)
-                .setLeftIcon(R.drawable.iconfont_fanhuijiantou)
-                .builder();
-        defaultNavigationBar.setImmersion(R.color.status_bar);
     }
 
     @Override

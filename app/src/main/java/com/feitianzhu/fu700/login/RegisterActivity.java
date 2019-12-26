@@ -23,6 +23,7 @@ import com.feitianzhu.fu700.home.WebViewActivity;
 import com.feitianzhu.fu700.me.base.BaseActivity;
 import com.feitianzhu.fu700.me.navigationbar.DefaultNavigationBar;
 import com.feitianzhu.fu700.utils.EncryptUtils;
+import com.feitianzhu.fu700.utils.StringUtils;
 import com.feitianzhu.fu700.utils.Urls;
 import com.gyf.immersionbar.ImmersionBar;
 import com.socks.library.KLog;
@@ -169,7 +170,6 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 .addParams("password", password)
                 .addParams("parentId", parentId)
                 .addParams("smsCode", code)
-                .addParams("nickName", "")
                 .build()
                 .execute(new Callback() {
                     @Override
@@ -247,6 +247,10 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             Toast.makeText(this, R.string.please_input_phone, Toast.LENGTH_SHORT).show();
             return;
         }
+        if (!StringUtils.isPhone(mAccount)) {
+            Toast.makeText(this, "请输入正确的手机号码", Toast.LENGTH_SHORT).show();
+            return;
+        }
         if (TextUtils.isEmpty(code)) {
             Toast.makeText(this, R.string.please_input_code, Toast.LENGTH_SHORT).show();
             return;
@@ -272,7 +276,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
      */
     private void getValicationCode(String phone) {
 
-        NetworkDao.getSmsCode(phone, "1", new onConnectionFinishLinstener() {
+        NetworkDao.getSmsCode(this, phone, "1", new onConnectionFinishLinstener() {
 
             @Override
             public void onSuccess(int code, Object result) {

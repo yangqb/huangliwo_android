@@ -40,7 +40,6 @@
                 android:padding="@dimen/dp_10">
 
                 <ImageView
-                    android:id="@+id/img_qCode"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"

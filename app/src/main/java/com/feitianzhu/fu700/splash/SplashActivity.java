@@ -93,50 +93,17 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void run() {
                 realLogin();
-                /*Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-                startActivity(intent);*/
             }
         };
         handler.postDelayed(runnable, 3000);
     }
 
     private void realLogin() {
-        final String phone = SPUtils.getString(SplashActivity.this, Constant.SP_PHONE);
-        final String password = SPUtils.getString(SplashActivity.this, Constant.SP_PASSWORD);
+        final String token = SPUtils.getString(SplashActivity.this, Constant.SP_ACCESS_TOKEN);
+        final String userId = SPUtils.getString(SplashActivity.this, Constant.SP_LOGIN_USERID);
 
-        KLog.i("phone: " + phone);
-
-        if (!TextUtils.isEmpty(phone) && !TextUtils.isEmpty(password)) {
-
-            NetworkDao.login(SplashActivity.this, phone, password, new onConnectionFinishLinstener() {
-                @Override
-                public void onSuccess(int code, Object result) {
-
-                    NetworkDao.getUserInfo(new onConnectionFinishLinstener() {
-                        @Override
-                        public void onSuccess(int code, Object result) {
-
-                            startMainActivity();
-
-                        }
-
-                        @Override
-                        public void onFail(int code, String result) {
-                            startMainActivity();
-
-                        }
-                    });
-
-                }
-
-                @Override
-                public void onFail(int code, String result) {
-                    Toast.makeText(SplashActivity.this, result, Toast.LENGTH_SHORT).show();
-                    KLog.e(result);
-                    startActivity(new Intent(SplashActivity.this, LoginActivity.class));
-                    finish();
-                }
-            });
+        if (!TextUtils.isEmpty(token) && !TextUtils.isEmpty(userId)) {
+            startMainActivity();
         } else {
             startActivity(new Intent(SplashActivity.this, LoginActivity.class));
             finish();
@@ -158,8 +125,6 @@ public class SplashActivity extends AppCompatActivity {
                 // 你也可以不设置。
                 .rationale(rationaleListener)
                 .start();
-        CrashReport.initCrashReport(getApplicationContext(), "dab3904ceb", false);
-
     }
 
     private void doSomeThing() {
@@ -214,12 +179,12 @@ public class SplashActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn)
     public void onClick() {
+        if (handler != null && runnable != null) {
+            handler.removeCallbacks(runnable);
+        }
       /*  if (mVideoView != null && mVideoView.isPlaying()) {
             mVideoView.stopPlayback();
         }*/
         realLogin();
-        if (handler != null && runnable != null) {
-            handler.removeCallbacks(runnable);
-        }
     }
 }

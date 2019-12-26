@@ -16,7 +16,6 @@
         android:paddingBottom="10dp">
 
         <LinearLayout
-            android:id="@+id/ll_all_order"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginRight="@dimen/dp_20"
@@ -41,7 +40,6 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/ll_wait_pay_order"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginRight="20dp"
@@ -66,7 +64,6 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/ll_wait_sending_order"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginRight="@dimen/dp_20"
@@ -91,7 +88,6 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/ll_wait_receive_order"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginRight="@dimen/dp_20"
@@ -116,7 +112,6 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/ll_wait_evaluate_order"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="bottom|center_horizontal"

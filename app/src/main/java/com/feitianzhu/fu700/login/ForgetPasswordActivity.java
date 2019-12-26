@@ -173,7 +173,7 @@ public class ForgetPasswordActivity extends BaseActivity implements View.OnClick
      */
     private void getValicationCode(String phone) {
 
-        NetworkDao.getSmsCode(phone, "4", new onConnectionFinishLinstener() {
+        NetworkDao.getSmsCode(this, phone, "4", new onConnectionFinishLinstener() {
             @Override
             public void onSuccess(int code, Object result) {
 

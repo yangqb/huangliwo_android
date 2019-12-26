@@ -90,7 +90,7 @@ public class ShopsEditActivity extends BaseTakePhotoActivity {
     @Override
     protected void initData() {
         loadShopsType(false);
-        ShopDao.loadShopsInfo("", new onConnectionFinishLinstener() {
+        ShopDao.loadShopsInfo(this, "", new onConnectionFinishLinstener() {
             @Override
             public void onSuccess(int code, Object result) {
                 mShopsInfo = (ShopsInfo) result;
@@ -185,17 +185,17 @@ public class ShopsEditActivity extends BaseTakePhotoActivity {
                     ToastUtils.showShortToast("还没有选择商铺类型");
                     return;
                 }
-                ShopDao.updateShopsInfo(new onConnectionFinishLinstener() {
-                                            @Override
-                                            public void onSuccess(int code, Object result) {
-                                                finish();
-                                            }
+                ShopDao.updateShopsInfo(this, new onConnectionFinishLinstener() {
+                            @Override
+                            public void onSuccess(int code, Object result) {
+                                finish();
+                            }
 
-                                            @Override
-                                            public void onFail(int code, String result) {
-                                                ToastUtils.showShortToast(result);
-                                            }
-                                        }, photo_file_one, photo_file_two, shopname, shopaddress, shopPhone, mOnSelectProvince,
+                            @Override
+                            public void onFail(int code, String result) {
+                                ToastUtils.showShortToast(result);
+                            }
+                        }, photo_file_one, photo_file_two, shopname, shopaddress, shopPhone, mOnSelectProvince,
                         selectIndex, shopIntro, mList, mShopsInfo.merchantId);
                 break;
         }
@@ -222,7 +222,7 @@ public class ShopsEditActivity extends BaseTakePhotoActivity {
     private void loadShopsType(final boolean mB) {
         if (mB) showloadDialog("");
 
-        ShopDao.loadShopsType(new onConnectionFinishLinstener() {
+        ShopDao.loadShopsType(this, new onConnectionFinishLinstener() {
             @Override
             public void onSuccess(int code, Object result) {
                 mList = (List<ShopsType>) result;

@@ -22,13 +22,6 @@ public class WithdrawResultActivity extends BaseActivity {
     @Override
     protected void initView() {
 
-        defaultNavigationBar = new DefaultNavigationBar
-                .Builder(this, (ViewGroup) findViewById(R.id.Rl_titleContainer))
-                .setTitle("提现结果")
-                .setStatusHeight(WithdrawResultActivity.this)
-                .setLeftIcon(R.drawable.iconfont_fanhuijiantou)
-                .builder();
-        defaultNavigationBar.setImmersion(R.color.status_bar);
     }
 
     @Override

@@ -11,7 +11,6 @@
         android:orientation="vertical">
 
         <View
-            android:id="@+id/div_tab_bar"
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:background="@color/color_cccccc" />
@@ -119,7 +118,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/tab_menu"
-        android:layout_below="@id/head"
         android:background="@color/transparent" />
 
 </RelativeLayout>
