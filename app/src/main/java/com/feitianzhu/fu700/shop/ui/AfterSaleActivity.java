@@ -14,6 +14,7 @@ import com.feitianzhu.fu700.common.Constant;
 import com.feitianzhu.fu700.me.base.BaseActivity;
 import com.feitianzhu.fu700.model.GoodsOrderInfo;
 import com.feitianzhu.fu700.shop.adapter.OrderAdapter;
+import com.feitianzhu.fu700.utils.SPUtils;
 import com.feitianzhu.fu700.utils.Urls;
 import com.google.gson.Gson;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -49,6 +50,8 @@ public class AfterSaleActivity extends BaseActivity {
     TextView titleName;
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
+    private String token;
+    private String userId;
 
     @Override
     protected int getLayoutId() {
@@ -58,6 +61,8 @@ public class AfterSaleActivity extends BaseActivity {
     @Override
     protected void initView() {
         titleName.setText("售后订单");
+        token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
+        userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         adapter = new OrderAdapter(goodsOrderList);
         View mEmptyView = View.inflate(this, R.layout.view_common_nodata, null);
         ImageView img_empty = (ImageView) mEmptyView.findViewById(R.id.img_empty);
@@ -122,8 +127,8 @@ public class AfterSaleActivity extends BaseActivity {
         * */
         OkHttpUtils.post()
                 .url(Urls.GET_ORDER_INFO)
-                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)
-                .addParams(USERID, Constant.LOGIN_USERID)
+                .addParams(ACCESSTOKEN, token)
+                .addParams(USERID, userId)
                 .addParams("status", "-2")
                 .build()
                 .execute(new Callback() {

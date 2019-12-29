@@ -28,6 +28,7 @@ import com.feitianzhu.fu700.R;
 import com.feitianzhu.fu700.common.Constant;
 import com.feitianzhu.fu700.common.base.SFFragment;
 import com.feitianzhu.fu700.login.LoginEvent;
+import com.feitianzhu.fu700.me.ui.PersonalCenterActivity2;
 import com.feitianzhu.fu700.me.ui.ScannerActivity;
 import com.feitianzhu.fu700.model.BaseGoodsListBean;
 import com.feitianzhu.fu700.model.MineInfoModel;
@@ -44,6 +45,7 @@ import com.feitianzhu.fu700.utils.SPUtils;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.utils.Urls;
 import com.feitianzhu.fu700.view.CircleImageView;
+import com.feitianzhu.fu700.vip.VipUpgradeActivity;
 import com.google.gson.Gson;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -75,6 +77,7 @@ import static com.feitianzhu.fu700.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.fu700.common.Constant.Common_HEADER;
 import static com.feitianzhu.fu700.common.Constant.POST_MINE_INFO;
 import static com.feitianzhu.fu700.common.Constant.USERID;
+import static com.feitianzhu.fu700.login.LoginEvent.EDITOR_INFO;
 
 /**
  * @class name：com.feitianzhu.fu700.shop
@@ -107,7 +110,7 @@ public class CommodityClassificationFragment extends SFFragment implements View.
     CircleImageView ivHead;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private int mParam1 = 1;
+    private int mParam1 = 2;
     private String mParam2;
     Unbinder unbinder;
     private PopupWindow popupWindow;
@@ -152,6 +155,9 @@ public class CommodityClassificationFragment extends SFFragment implements View.
         if (!TextUtils.isEmpty(Constant.mCity)) {
             mTxtLocation.setText(Constant.mCity);
         }
+        token = SPUtils.getString(getActivity(), Constant.SP_ACCESS_TOKEN);
+        userId = SPUtils.getString(getActivity(), Constant.SP_LOGIN_USERID);
+
         vPopupWindow = getLayoutInflater().inflate(R.layout.layout_popupwindow, null);
         // View vPopupWindow = View.inflate(getActivity(), R.layout.layout_popupwindow, null);//引入弹窗布局
         popupWindow = new PopupWindow(vPopupWindow, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -163,21 +169,6 @@ public class CommodityClassificationFragment extends SFFragment implements View.
         vPopupWindow.findViewById(R.id.iv_shoukuan).setOnClickListener(this);
         vPopupWindow.findViewById(R.id.iv_ludan).setOnClickListener(this);
         vPopupWindow.findViewById(R.id.iv_fabufuwu).setOnClickListener(this);
-
-        ivRight.setOnClickListener(this);
-        mSearchLayout.setOnClickListener(this);
-
-        if (mParam1 == 1) { //商家
-            button1.setSelected(true);
-            button2.setSelected(false);
-        } else {//商城
-            button1.setSelected(false);
-            button2.setSelected(true);
-        }
-
-        button1.setOnClickListener(this);
-        button2.setOnClickListener(this);
-
 
         leftAdapter = new LeftAdapter(shopClassifyLsit);
         leftRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -198,9 +189,16 @@ public class CommodityClassificationFragment extends SFFragment implements View.
         rightRecyclerView.setAdapter(rightAdapter);
         rightAdapter.notifyDataSetChanged();
         mSwipeLayout.setEnableLoadMore(false);
-        token = SPUtils.getString(getActivity(), Constant.SP_ACCESS_TOKEN);
-        userId = SPUtils.getString(getActivity(), Constant.SP_LOGIN_USERID);
-        initData();
+
+        if (mParam1 == 1) { //商家
+            button1.setSelected(true);
+            button2.setSelected(false);
+        } else {//商城
+            button1.setSelected(false);
+            button2.setSelected(true);
+            initData();
+        }
+
         requestData();
         initListener();
         return view;
@@ -242,8 +240,6 @@ public class CommodityClassificationFragment extends SFFragment implements View.
                         getShops(clsId);
                     }
                 });
-
-
     }
 
     public void initListener() {
@@ -261,7 +257,7 @@ public class CommodityClassificationFragment extends SFFragment implements View.
         rightAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                int type = adapter.getItemViewType(position);
+                int type = rightAdapter.getItemViewType(position);
                 if (mParam1 == 1) {
                     //套餐详情页
                     Intent intent = new Intent(getActivity(), ShopSetMealActivity.class);
@@ -336,12 +332,47 @@ public class CommodityClassificationFragment extends SFFragment implements View.
 
     }
 
-    @OnClick(R.id.ll_location)
-    public void onViewClicked() {
-        ProvincehDialog branchDialog = ProvincehDialog.newInstance(getActivity());
-        branchDialog.setAddress("北京市", "北京市");
-        branchDialog.setSelectOnListener(this);
-        branchDialog.show(getChildFragmentManager());
+    @OnClick({R.id.ll_location, R.id.iv_head, R.id.search, R.id.button1, R.id.button2, R.id.iv_home_nv_right})
+    public void onViewClicked(View view) {
+        Intent intent;
+        switch (view.getId()) {
+            case R.id.ll_location:
+                ProvincehDialog branchDialog = ProvincehDialog.newInstance(getActivity());
+                branchDialog.setAddress("北京市", "北京市");
+                branchDialog.setSelectOnListener(this);
+                branchDialog.show(getChildFragmentManager());
+                break;
+            case R.id.iv_head: //
+                intent = new Intent(getActivity(), PersonalCenterActivity2.class);
+                startActivity(intent);
+                break;
+            case R.id.search:
+                intent = new Intent(getActivity(), SearchShopActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.button1:
+                mParam1 = 1;
+                button1.setSelected(true);
+                button2.setSelected(false);
+                shopClassifyLsit.clear();
+                multipleItemList.clear();
+                rightAdapter.notifyDataSetChanged();
+                leftAdapter.notifyDataSetChanged();
+                //initData();
+                break;
+            case R.id.button2:
+                mParam1 = 2;
+                button1.setSelected(false);
+                button2.setSelected(true);
+                initData();
+                break;
+            case R.id.iv_home_nv_right:
+                // popupWindow.showAtLocation(ivRight, Gravity.BOTTOM, 0, 0);
+                vPopupWindow.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+                popupWindow.showAsDropDown(ivRight, -vPopupWindow.getMeasuredWidth() + ivRight.getWidth() - 3, 0);
+                break;
+        }
+
     }
 
     @Override
@@ -353,15 +384,6 @@ public class CommodityClassificationFragment extends SFFragment implements View.
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.search:
-                JumpActivity(getActivity(), SearchShopActivity.class);
-                break;
-            case R.id.iv_home_nv_right:
-                // popupWindow.showAtLocation(ivRight, Gravity.BOTTOM, 0, 0);
-                vPopupWindow.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-                popupWindow.showAsDropDown(ivRight, -vPopupWindow.getMeasuredWidth() + ivRight.getWidth() - 3, 0);
-                break;
-
             case R.id.iv_saoyisao:
                 requestPermission();
                 popupWindow.dismiss();
@@ -383,22 +405,6 @@ public class CommodityClassificationFragment extends SFFragment implements View.
                 ToastUtils.showShortToast("敬请期待");
                 /*Intent pushIntent = new Intent(getActivity(), PushServiceActivity.class);
                 ShopHelp.veriUserShopJumpActivity(getActivity(), pushIntent);*/
-                break;
-            case R.id.button1:
-                mParam1 = 1;
-                button1.setSelected(true);
-                button2.setSelected(false);
-                shopClassifyLsit.clear();
-                multipleItemList.clear();
-                rightAdapter.notifyDataSetChanged();
-                leftAdapter.notifyDataSetChanged();
-                //initData();
-                break;
-            case R.id.button2:
-                mParam1 = 2;
-                button1.setSelected(false);
-                button2.setSelected(true);
-                initData();
                 break;
         }
 
@@ -455,6 +461,8 @@ public class CommodityClassificationFragment extends SFFragment implements View.
      * 获取头像
      * */
     private void requestData() {
+        token = SPUtils.getString(getActivity(), Constant.SP_ACCESS_TOKEN);
+        userId = SPUtils.getString(getActivity(), Constant.SP_LOGIN_USERID);
         OkHttpUtils.get()//
                 .url(Common_HEADER + POST_MINE_INFO)
                 .addParams(ACCESSTOKEN, token)//
@@ -477,11 +485,6 @@ public class CommodityClassificationFragment extends SFFragment implements View.
                 });
     }
 
-    private void JumpActivity(Context context, Class clazz) {
-        Intent intent = new Intent(context, clazz);
-        context.startActivity(intent);
-    }
-
     @Override
     public void onWhellFinish(Province province, Province.CityListBean city, Province.AreaListBean mAreaListBean) {
         Constant.provinceId = province.id;
@@ -498,10 +501,11 @@ public class CommodityClassificationFragment extends SFFragment implements View.
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void onMessageEvent(LoginEvent event) {
-        switch (event) {
-            case LOGIN_SUCCESS:
-                requestData();
-                break;
+        if (event == EDITOR_INFO) {
+            /*
+              启动App就去个人中心编辑个人信息，这里会收到信息，需要先获取userID，token不然会报错
+            * */
+            requestData();
         }
     }
 }

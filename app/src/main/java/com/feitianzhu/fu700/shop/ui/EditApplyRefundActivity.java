@@ -74,7 +74,7 @@ public class EditApplyRefundActivity extends BaseActivity {
         setSpannableString();
     }
 
-    @OnClick({R.id.left_button, R.id.rl_reason, R.id.right_text})
+    @OnClick({R.id.left_button, R.id.rl_reason, R.id.right_button})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rl_reason:
@@ -92,7 +92,7 @@ public class EditApplyRefundActivity extends BaseActivity {
             case R.id.left_button:
                 finish();
                 break;
-            case R.id.right_text:
+            case R.id.right_button:
                 if (TextUtils.isEmpty(tvReason.getText().toString())) {
                     ToastUtils.showShortToast("请选择退款原因");
                 } else {

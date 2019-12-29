@@ -129,7 +129,7 @@ public class WithdrawActivity extends BaseActivity {
 
                     @Override
                     public void onError(Call call, Exception e, int id) {
-                        ToastUtils.showShortToast(e.getMessage());
+                        ToastUtils.showLongToast(e.getMessage());
                     }
 
                     @Override

@@ -99,7 +99,7 @@ public class PushShopListActivity extends BaseActivity {
         refreshLayout.setRefreshing(false);
     }
 
-    @OnClick({R.id.left_button, R.id.btn_toAudit, R.id.btn_pass, R.id.btn_noPass, R.id.right_text, R.id.right_img})
+    @OnClick({R.id.left_button, R.id.btn_toAudit, R.id.btn_pass, R.id.btn_noPass, R.id.right_button})
     public void onClick(View view) {
         Intent intent;
         switch (view.getId()) {
@@ -136,8 +136,7 @@ public class PushShopListActivity extends BaseActivity {
                 btnPass.setSelected(false);
                 btnNoPass.setSelected(false);
                 break;
-            case R.id.right_img:
-            case R.id.right_text:
+            case R.id.right_button:
                 boolean isAgreed = SPUtils.getBoolean(this, Constant.SP_PUSH_SHOP_INSTRUCTIONS);
                 if (isAgreed) {
                     intent = new Intent(PushShopListActivity.this, EditMerchantsActivity.class);

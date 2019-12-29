@@ -50,7 +50,13 @@ public class HomeRecommendAdapter2 extends BaseMultiItemQuickAdapter<ShopAndMerc
                 holder.setText(R.id.summary, shopsList.getSummary());
                 setSpannableString(String.format(Locale.getDefault(), "%.2f", shopsList.getPrice()), holder.getView(R.id.price));
                 holder.setVisible(R.id.ll_price, true);
-                holder.setText(R.id.tv_benefit, "会员让利" + shopsList.getRebatePv() + "元");
+                String rebatePv = String.format(Locale.getDefault(), "%.2f", shopsList.getRebatePv());
+                holder.setText(R.id.tv_rebate, "省¥" + rebatePv);
+                if (shopsList.getRebatePv() == 0) {
+                    holder.setVisible(R.id.ll_rebate, false);
+                } else {
+                    holder.setVisible(R.id.ll_rebate, true);
+                }
                 holder.setVisible(R.id.address, false);
                 if (shopsList.getGoodsImg() != null) {
                     Glide.with(mContext).load(shopsList.getGoodsImg()).apply(RequestOptions.errorOf(R.mipmap.g10_04weijiazai).placeholder(R.mipmap.g10_04weijiazai)).into((RoundedImageView) holder.getView(R.id.image));

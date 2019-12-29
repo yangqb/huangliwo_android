@@ -95,7 +95,7 @@ public class CollectMoneyActivity extends BaseActivity {
         if (TextUtils.isEmpty(qrUrl)) {
             qrUrl = "http://www.fu700.cn/?id=7";
         }
-        Bitmap bitmap = CodeUtils.createImage(qrUrl, 400, 400, BitmapFactory.decodeResource(getResources(), R.mipmap.icon_fu));
+        Bitmap bitmap = CodeUtils.createImage(qrUrl, 400, 400, BitmapFactory.decodeResource(getResources(), R.mipmap.logo));
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
         byte[] bytes = baos.toByteArray();

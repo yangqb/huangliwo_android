@@ -14,7 +14,6 @@ import com.feitianzhu.fu700.R;
 import com.feitianzhu.fu700.common.Constant;
 import com.feitianzhu.fu700.common.impl.onNetFinishLinstenerT;
 import com.feitianzhu.fu700.login.LoginActivity;
-import com.feitianzhu.fu700.login.LoginEvent;
 import com.feitianzhu.fu700.me.base.BaseActivity;
 import com.feitianzhu.fu700.model.UpdateAppModel;
 import com.feitianzhu.fu700.model.UserAuth;
@@ -176,7 +175,6 @@ public class SettingsActivity extends BaseActivity {
                 Constant.ACCESS_TOKEN = "";
                 Constant.LOGIN_USERID = "";
                 Constant.PHONE = "";
-                EventBus.getDefault().post(LoginEvent.LOGOUT);
                 intent = new Intent(this, LoginActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
@@ -193,7 +191,7 @@ public class SettingsActivity extends BaseActivity {
                 .setHttpManager(new UpdateAppHttpUtil(this))
                 .setUpdateUrl(Common_HEADER + UAPDATE)
                 .setPost(false)
-                .setThemeColor(0xffffac5d)
+                .setThemeColor(0xfffed428)
                 .build()
                 .checkNewApp(new UpdateCallback() {
                     /**

@@ -215,6 +215,15 @@ public class BaseGoodsListBean implements Serializable {
         private String evalImgs;
         private String norms;
         private String goodsName;
+        private String evalDate;
+
+        public String getEvalDate() {
+            return evalDate;
+        }
+
+        public void setEvalDate(String evalDate) {
+            this.evalDate = evalDate;
+        }
 
         public String getEvalDateStr() {
             return evalDateStr;

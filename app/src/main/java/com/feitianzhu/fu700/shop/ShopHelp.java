@@ -287,20 +287,19 @@ public class ShopHelp {
      * * @param mActivity
      */
     public static void veriPassword(Activity mActivity,
-                                    final onConnectionFinishLinstener mLinstener) {
+                                    final onConnectionFinishLinstener mListener) {
         WeakReference<Activity> mReference = new WeakReference<Activity>(mActivity);
         Activity wActivity = mReference.get();
         if (!Constant.loadUserAuth) {
             ShopDao.loadUserAuthImpl(mActivity);
             ToastUtils.showShortToast("正在获取你的信息，请稍候点击");
-            return;
         } else {
             if (Constant.mUserAuth.isPaypass == 0) {
                 //没有设置二级密码
                 ToastUtils.showShortToast("当前没有设置支付密码，请设置后再进行操作");
                 GetPasswordActivity.startActivity(mActivity, GetPasswordActivity.TYPE_SET_PAY_PASSWORD_PWD);
             } else {
-                showVeringPassword(wActivity, mLinstener);
+                showVeringPassword(wActivity, mListener);
             }
         }
     }

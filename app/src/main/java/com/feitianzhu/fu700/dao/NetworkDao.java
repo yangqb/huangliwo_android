@@ -74,7 +74,6 @@ public class NetworkDao {
                         Constant.ACCESS_TOKEN = "";
                         Constant.LOGIN_USERID = "";
                         Constant.PHONE = "";
-                        EventBus.getDefault().post(LoginEvent.LOGIN_FAILURE);
 
                         SPUtils.putString(context, Constant.SP_PHONE, "");
                         SPUtils.putString(context, Constant.SP_PASSWORD, "");
@@ -101,7 +100,6 @@ public class NetworkDao {
                         Constant.LOGIN_USERID = loginEntity.userId;
                         Constant.PHONE = phone;
 
-                        EventBus.getDefault().post(LoginEvent.LOGIN_SUCCESS);
                         SPUtils.putString(context, Constant.SP_PHONE, phone);
                         SPUtils.putString(context, Constant.SP_PASSWORD, password);
                         SPUtils.putString(context, Constant.SP_LOGIN_USERID, loginEntity.userId);

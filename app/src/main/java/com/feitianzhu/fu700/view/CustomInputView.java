@@ -23,6 +23,10 @@ public class CustomInputView extends CenterPopupView {
     private EditText editContent;
     private TextView tvCancel;
     private TextView tvConfirm;
+    private TextView tvTitle;
+    private int text;
+    private String hintText;
+    private String titleText;
 
     private OnConfirmClickListener onConfirmClickListener;
 
@@ -37,9 +41,6 @@ public class CustomInputView extends CenterPopupView {
 
     public CustomInputView(@NonNull Context context) {
         super(context);
-        editContent = findViewById(R.id.edit_content);
-        tvCancel = findViewById(R.id.tv_cancel);
-        tvConfirm = findViewById(R.id.tv_confirm);
     }
 
     // 返回自定义弹窗的布局
@@ -51,42 +52,44 @@ public class CustomInputView extends CenterPopupView {
     @Override
     protected void onCreate() {
         super.onCreate();
+        editContent = findViewById(R.id.edit_content);
+        tvCancel = findViewById(R.id.tv_cancel);
+        tvConfirm = findViewById(R.id.tv_confirm);
+        tvTitle = findViewById(R.id.tvTitle);
+        if (text != 0) {
+            editContent.setText(String.valueOf(text));
+        } else {
+            if (hintText != null) {
+                editContent.setHint(hintText);
+            }
+        }
+        if (titleText == null) {
+            tvTitle.setVisibility(GONE);
+            findViewById(R.id.line).setVisibility(GONE);
+        } else {
+            tvTitle.setVisibility(VISIBLE);
+            findViewById(R.id.line).setVisibility(VISIBLE);
+            tvTitle.setText(titleText);
+        }
         initListener();
     }
 
-    public CustomInputView setEditHintText(String text) {
-        if (editContent != null) {
-            editContent.setHint(text);
-        }
+    public CustomInputView setEditHintText(String hintText) {
+        this.hintText = hintText;
         return this;
     }
 
     public CustomInputView setText(int text) {
-        if (text != 0) {
-            if (editContent != null) {
-                editContent.setText(String.valueOf(text));
-            }
-        }
+        this.text = text;
+        return this;
+    }
+
+    public CustomInputView setTitle(String titleText) {
+        this.titleText = titleText;
         return this;
     }
 
     public void initListener() {
-        editContent.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
 
         tvCancel.setOnClickListener(new OnClickListener() {
             @Override

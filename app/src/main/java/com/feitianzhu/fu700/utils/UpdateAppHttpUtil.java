@@ -19,8 +19,6 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 import static com.feitianzhu.fu700.common.Constant.ACCESSTOKEN;
-import static com.feitianzhu.fu700.common.Constant.ACCESS_TOKEN;
-import static com.feitianzhu.fu700.common.Constant.LOGIN_USERID;
 import static com.feitianzhu.fu700.common.Constant.TYPE;
 import static com.feitianzhu.fu700.common.Constant.USERID;
 

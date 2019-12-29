@@ -60,6 +60,8 @@ import static com.feitianzhu.fu700.common.Constant.USERID;
  * @Date 2019/11/21 0021 上午 10:13
  */
 public class PersonalCenterActivity2 extends BaseTakePhotoActivity {
+    private static final int NICK_REQUEST_CODE = 1000;
+    private static final int SIGN_REQUEST_CODE = 1001;
     private SharedInfoModel mSharedInfo;
     private MineInfoModel mData;
     @BindView(R.id.rl_head)
@@ -78,8 +80,6 @@ public class PersonalCenterActivity2 extends BaseTakePhotoActivity {
     TextView tvVip;
     @BindView(R.id.tv_sign)
     TextView tvSign;
-    @BindView(R.id.right_button)
-    RelativeLayout rlShare;
     @BindView(R.id.right_img)
     ImageView rightImg;
     @BindView(R.id.title_name)
@@ -96,9 +96,6 @@ public class PersonalCenterActivity2 extends BaseTakePhotoActivity {
 
     @Override
     protected void initView() {
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this);
-        }
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         rightImg.setVisibility(View.VISIBLE);
@@ -112,17 +109,6 @@ public class PersonalCenterActivity2 extends BaseTakePhotoActivity {
 
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    public void onMessageEvent(LoginEvent event) {
-        switch (event) {
-            case TAKE_PHOTO:
-            case EDITOR_INFO:
-            case LOGIN_SUCCESS:
-                requestData();
-                break;
-        }
-    }
-
     @OnClick({R.id.rl_head, R.id.rl_nick, R.id.rl_vip, R.id.rl_sign, R.id.right_button, R.id.left_button})
     public void onClick(View view) {
         Intent intent;
@@ -132,13 +118,13 @@ public class PersonalCenterActivity2 extends BaseTakePhotoActivity {
                 break;
             case R.id.rl_nick:  //修改昵称
                 intent = new Intent(PersonalCenterActivity2.this, EditNickActivity.class);
-                intent.putExtra(EditNickActivity.nick_name, tvNick.getText().toString());
-                startActivity(intent);
+                intent.putExtra(EditNickActivity.NICE_NAME, tvNick.getText().toString());
+                startActivityForResult(intent, NICK_REQUEST_CODE);
                 break;
             case R.id.rl_sign: //修改个性签名
                 intent = new Intent(PersonalCenterActivity2.this, EditSignActivity.class);
-                intent.putExtra(EditSignActivity.sign, tvSign.getText().toString());
-                startActivity(intent);
+                intent.putExtra(EditSignActivity.SIGN, tvSign.getText().toString());
+                startActivityForResult(intent, SIGN_REQUEST_CODE);
                 break;
             case R.id.right_button: //分享名片
                 // showShare();
@@ -188,7 +174,7 @@ public class PersonalCenterActivity2 extends BaseTakePhotoActivity {
         tvSign.setText(response.getPersonSign() == null ? "" : response.getPersonSign().toString());
         tvPersonId.setText(String.valueOf(response.getUserId()));
         if (response.getAccountType() == 0) {
-            tvVip.setText("无");
+            tvVip.setText("普通用户");
         } else if (response.getAccountType() == 1) {
             tvVip.setText("市代理");
         } else if (response.getAccountType() == 2) {
@@ -318,7 +304,7 @@ public class PersonalCenterActivity2 extends BaseTakePhotoActivity {
         OkHttpUtils.post()//
                 .url(Common_HEADER + POST_UPLOAD_PIC)
                 .addParams(ACCESSTOKEN, token)//
-                .addParams(USERID,userId)
+                .addParams(USERID, userId)
                 .addFile("avatar", "touxiang.png", new File(compressPath))
                 .build()
                 .execute(new Callback() {
@@ -338,17 +324,30 @@ public class PersonalCenterActivity2 extends BaseTakePhotoActivity {
                         Log.e("wangyan", "response====" + response);
                         ToastUtils.showShortToast("上传成功!");
                         EventBus.getDefault().postSticky(LoginEvent.EDITOR_INFO);
-                        requestData();
                     }
                 });
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case NICK_REQUEST_CODE:
+                    String nick = data.getStringExtra(EditNickActivity.NICE_NAME);
+                    tvNick.setText(nick);
+                    break;
+                case SIGN_REQUEST_CODE:
+                    String sign = data.getStringExtra(EditSignActivity.SIGN);
+                    tvSign.setText(sign);
+                    break;
+            }
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().unregister(this);
-        }
     }
 
     @Override

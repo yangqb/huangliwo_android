@@ -1,6 +1,5 @@
 package com.feitianzhu.fu700.me;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -21,20 +20,15 @@ import com.feitianzhu.fu700.login.LoginEvent;
 import com.feitianzhu.fu700.me.adapter.CenterAdapter;
 import com.feitianzhu.fu700.me.ui.PersonalCenterActivity2;
 import com.feitianzhu.fu700.me.ui.VerificationActivity2;
-import com.feitianzhu.fu700.me.ui.totalScore.MineCollectionActivity;
 import com.feitianzhu.fu700.me.ui.totalScore.MineQrcodeActivity;
 import com.feitianzhu.fu700.model.MineInfoModel;
-import com.feitianzhu.fu700.pushshop.PushShopHomeActivity;
 import com.feitianzhu.fu700.settings.SettingsActivity;
 import com.feitianzhu.fu700.shop.ShopDao;
-import com.feitianzhu.fu700.shop.ShopHelp;
 import com.feitianzhu.fu700.shop.ui.MyOrderActivity2;
-import com.feitianzhu.fu700.shop.ui.ShoppingCartActivity;
 import com.feitianzhu.fu700.utils.SPUtils;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.view.CircleImageView;
 import com.feitianzhu.fu700.vip.VipActivity;
-import com.socks.library.KLog;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
 
@@ -149,16 +143,13 @@ public class MyCenterFragment extends SFFragment {
     }
 
     private void setShowData(MineInfoModel response) {
-        if (getActivity() == null) {
-            return;
-        }
-        Glide.with(getActivity())
+        Glide.with(mContext)
                 .load(response.getHeadImg())
                 .apply(RequestOptions.placeholderOf(R.mipmap.b08_01touxiang).dontAnimate())
                 .into(civHead);
         nickName.setText(response.getNickName() == null ? "小黄鹂" : response.getNickName());
         if (response.getAccountType() == 0) {
-            gradeName.setText("无");
+            gradeName.setText("普通用户");
         } else if (response.getAccountType() == 1) {
             gradeName.setText("市代理");
         } else if (response.getAccountType() == 2) {
@@ -234,9 +225,9 @@ public class MyCenterFragment extends SFFragment {
                         startActivity(intent);
                         break;
                     case 8: //分享
-                      /*  intent = new Intent(getActivity(), UnionlevelActivity2.class);
-                        startActivity(intent);*/
-                        ToastUtils.showShortToast("敬请期待");
+                        intent = new Intent(getActivity(), MineQrcodeActivity.class);
+                        intent.putExtra(MineQrcodeActivity.MINE_DATA, mTempData);
+                        startActivity(intent);
                         break;
                     case 9: //购物车
                         ToastUtils.showShortToast("敬请期待");
@@ -250,54 +241,31 @@ public class MyCenterFragment extends SFFragment {
     }
 
 
-    @OnClick({R.id.civ_head, R.id.iv_setting, R.id.iv_qrcode})
+    @OnClick({R.id.ll_userInfo, R.id.iv_setting, R.id.iv_qrcode})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.civ_head:
-                JumpActivity(getContext(), PersonalCenterActivity2.class);
+            case R.id.ll_userInfo:
+                startActivity(new Intent(getActivity(), PersonalCenterActivity2.class));
                 break;
             case R.id.iv_setting:
                 startActivity(new Intent(getActivity(), SettingsActivity.class));
                 break;
             case R.id.iv_qrcode:
-                JumpActivity(getContext(), MineQrcodeActivity.class);
+                Intent intent = new Intent(getActivity(), MineQrcodeActivity.class);
+                intent.putExtra(MineQrcodeActivity.MINE_DATA, mTempData);
+                startActivity(intent);
                 break;
         }
     }
-
-    private void JumpActivity(Context context, Class clazz) {
-        Intent intent = new Intent(context, clazz);
-        context.startActivity(intent);
-    }
-
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void onMessageEvent(LoginEvent event) {
         switch (event) {
-            case LOGIN_SUCCESS:
-                KLog.i("登录成功");
-                requestData();
-                break;
-            case LOGIN_FAILURE:
-                KLog.i("登录失败");
-                break;
-            case LOGOUT:
-                KLog.i("登出");
-                ClearData();
-                break;
-            case TAKE_PHOTO:
             case EDITOR_INFO:
+            case BUY_VIP:
                 requestData();
                 break;
         }
-    }
-
-    private void ClearData() {
-        Glide.with(this)
-                .load("")
-                .apply(RequestOptions.placeholderOf(R.mipmap.b08_01touxiang).dontAnimate())
-                .into(civHead);
-        nickName.setText("");
     }
 
     @Override
@@ -309,12 +277,7 @@ public class MyCenterFragment extends SFFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
         unbinder.unbind();
+        EventBus.getDefault().unregister(this);
     }
 }

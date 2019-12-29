@@ -187,7 +187,8 @@ public class GetPasswordActivity extends BaseActivity implements View.OnClickLis
                             if (Constant.mUserAuth != null) {
                                 Constant.mUserAuth.isPaypass = 1;
                             }
-                            startMainActivity();
+                            ToastUtils.showShortToast(mContext, R.string.change_ok);
+                            finish();
                         }
 
                         @Override
@@ -204,7 +205,8 @@ public class GetPasswordActivity extends BaseActivity implements View.OnClickLis
                             if (Constant.mUserAuth != null) {
                                 Constant.mUserAuth.isPaypass = 1;
                             }
-                            startMainActivity();
+                            ToastUtils.showShortToast(mContext, R.string.change_ok);
+                            finish();
                         }
 
                         @Override
@@ -232,12 +234,6 @@ public class GetPasswordActivity extends BaseActivity implements View.OnClickLis
 
     @OnClick(R.id.left_button)
     public void onClick() {
-        finish();
-    }
-
-    private void startMainActivity() {
-        ToastUtils.showShortToast(mContext, R.string.change_ok);
-//        startActivity(new Intent(mContext, MainActivity.class));
         finish();
     }
 

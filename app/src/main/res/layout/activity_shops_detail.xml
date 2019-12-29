@@ -50,6 +50,43 @@
                             android:textColor="@color/color_FEA811"
                             android:textSize="17sp" />
 
+                        <LinearLayout
+                            android:id="@+id/ll_rebate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="@dimen/dp_10"
+                            android:layout_toRightOf="@id/tv_amount"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="30dp"
+                                android:background="@drawable/shape_rebate_left_vip"
+                                android:gravity="end|center_vertical"
+                                android:paddingLeft="15dp"
+                                android:paddingRight="5dp"
+                                android:text="成为会员"
+                                android:textColor="@color/color_333333"
+                                android:textSize="12sp" />
+
+                            <TextView
+                                android:id="@+id/tv_rebate"
+                                android:layout_width="wrap_content"
+                                android:layout_height="30dp"
+                                android:background="@drawable/shape_rebate_vip"
+                                android:ellipsize="end"
+                                android:gravity="center_vertical"
+                                android:maxLines="1"
+                                android:paddingLeft="5dp"
+                                android:paddingRight="15dp"
+                                android:text="省¥0.00"
+                                android:textColor="@color/color_333333"
+                                android:textSize="12sp" />
+
+                        </LinearLayout>
+
                         <RelativeLayout
                             android:id="@+id/call_phone"
                             android:layout_width="wrap_content"
@@ -196,7 +233,7 @@
                                 android:id="@+id/user_name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="7dp"
+                               android:layout_centerVertical="true"
                                 android:layout_toRightOf="@id/iv_head"
                                 android:text="jsond"
                                 android:textColor="@color/color_666666"
@@ -207,7 +244,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentEnd="true"
-                                android:layout_marginTop="7dp"
+                               android:layout_centerVertical="true"
                                 android:text="2019.10.11"
                                 android:textColor="@color/color_666666"
                                 android:textSize="13sp" />
@@ -240,22 +277,30 @@
                     </LinearLayout>
                 </LinearLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/dp_10"
-                    android:text="商品详情"
-                    android:textColor="@color/color_333333"
-                    android:textSize="17sp" />
-
-
-                <ImageView
-                    android:id="@+id/detail_img"
+                <LinearLayout
+                    android:id="@+id/ll_goods_detail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="100dp"
-                    android:background="@drawable/pic_fuwutujiazaishibai"
-                    android:scaleType="fitCenter" />
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/dp_10"
+                        android:text="商品详情"
+                        android:textColor="@color/color_333333"
+                        android:textSize="17sp" />
+
+
+                    <ImageView
+                        android:id="@+id/detail_img"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="100dp"
+                        android:background="@mipmap/g10_03weijiazai"
+                        android:scaleType="fitCenter" />
+                </LinearLayout>
+
             </LinearLayout>
 
         </android.support.v4.widget.NestedScrollView>

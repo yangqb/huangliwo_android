@@ -23,6 +23,8 @@ import com.feitianzhu.fu700.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.fu700.dao.NetworkDao;
 import com.feitianzhu.fu700.home.WebViewActivity;
 import com.feitianzhu.fu700.login.LoginActivity;
+import com.feitianzhu.fu700.login.LoginEvent;
+import com.feitianzhu.fu700.login.entity.LoginEntity;
 import com.feitianzhu.fu700.me.WithdrawActivity;
 import com.feitianzhu.fu700.me.adapter.CenterAdapter;
 import com.feitianzhu.fu700.me.base.BaseActivity;
@@ -113,13 +115,12 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
             btnSumbit.setText("恭喜您已成为会员");
             btnSumbit.setBackgroundResource(R.drawable.shape_e6e5e5_r5);
             btnSumbit.setEnabled(false);
-            mCheckBox.setButtonDrawable(getResources().getDrawable(R.mipmap.f01_06xuanzhong5));
             mCheckBox.setEnabled(false);
         }
         titleName.setText("成为会员");
         mCheckBox.setChecked(true);
         mCheckBox.setOnCheckedChangeListener(this);
-        mCheckBox.setButtonDrawable(getResources().getDrawable(R.mipmap.f01_06xuanzhong5));
+        mCheckBox.setBackgroundResource(R.mipmap.f01_06xuanzhong5);
 
     }
 
@@ -156,7 +157,7 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
                 } else {
                     //验证用户审核通过
                     intent = new Intent(VipActivity.this, VipUpgradeActivity.class);
-                    intent.putExtra(VipUpgradeActivity.PARENT_ID, mTempData.getGradeId());
+                    intent.putExtra(VipUpgradeActivity.PARENT_ID, mTempData.getParentId());
                     startActivityForResult(intent, REQUEST_CODE);
                 }
                 break;
@@ -215,7 +216,7 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
                 btnSumbit.setText("恭喜您已成为会员");
                 btnSumbit.setBackgroundResource(R.drawable.shape_e6e5e5_r5);
                 btnSumbit.setEnabled(false);
-                mCheckBox.setButtonDrawable(getResources().getDrawable(R.mipmap.f01_06xuanzhong5));
+                mCheckBox.setBackgroundResource(R.mipmap.f01_06xuanzhong5);
                 mCheckBox.setEnabled(false);
             }
         }
@@ -231,11 +232,11 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
         if (buttonView.getId() == R.id.cb_protocol) {
             if (!isChecked) {
                 btnSumbit.setEnabled(false);
-                mCheckBox.setButtonDrawable(getResources().getDrawable(R.mipmap.f01_06weixuanzhong4));
+                mCheckBox.setBackgroundResource(R.mipmap.f01_06weixuanzhong4);
                 btnSumbit.setBackgroundResource(R.drawable.shape_e6e5e5_r5);
             } else {
                 btnSumbit.setEnabled(true);
-                mCheckBox.setButtonDrawable(getResources().getDrawable(R.mipmap.f01_06xuanzhong5));
+                mCheckBox.setBackgroundResource(R.mipmap.f01_06xuanzhong5);
                 btnSumbit.setBackgroundResource(R.drawable.shape_fed428_r5);
             }
         }

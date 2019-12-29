@@ -91,17 +91,39 @@
                         android:textColor="@color/color_F7AF25"
                         android:textSize="16sp" />
 
-                    <TextView
-                        android:id="@+id/tv_benefit"
+                    <LinearLayout
+                        android:id="@+id/ll_rebate"
                         android:layout_width="wrap_content"
-                        android:layout_height="20dp"
-                        android:paddingLeft="5dp"
-                        android:paddingRight="5dp"
-                        android:background="@drawable/shape_fed428_r3"
-                        android:gravity="center"
-                        android:text="让利20元"
-                        android:textColor="@color/color_333333"
-                        android:textSize="12sp" />
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dp"
+                            android:background="@drawable/shape_rebate_left_vip"
+                            android:gravity="end|center_vertical"
+                            android:paddingLeft="15dp"
+                            android:paddingRight="5dp"
+                            android:text="成为会员"
+                            android:textColor="@color/color_333333"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/tv_rebate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dp"
+                            android:background="@drawable/shape_rebate_vip"
+                            android:ellipsize="end"
+                            android:gravity="center_vertical"
+                            android:maxLines="1"
+                            android:paddingLeft="5dp"
+                            android:paddingRight="15dp"
+                            android:text="省¥0.00"
+                            android:textColor="@color/color_333333"
+                            android:textSize="12sp" />
+
+                    </LinearLayout>
                 </LinearLayout>
 
             </RelativeLayout>

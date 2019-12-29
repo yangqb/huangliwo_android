@@ -10,7 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="fitXY"
-        app:riv_corner_radius="5dp"
-        android:src="@drawable/pic_fuwutujiazaishibai" />
+        app:riv_corner_radius="5dp" />
 
 </LinearLayout>

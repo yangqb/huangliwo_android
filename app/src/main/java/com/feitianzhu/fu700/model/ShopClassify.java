@@ -1,5 +1,6 @@
 package com.feitianzhu.fu700.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class ShopClassify {
@@ -23,7 +24,7 @@ public class ShopClassify {
         this.gGoodsClsList = gGoodsClsList;
     }
 
-    public static class GGoodsClsListBean {
+    public static class GGoodsClsListBean implements Serializable {
         /**
          * clsId : 1
          * clsName : 美食

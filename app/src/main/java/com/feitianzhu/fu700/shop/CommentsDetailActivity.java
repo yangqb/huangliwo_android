@@ -14,10 +14,12 @@ import com.feitianzhu.fu700.shop.adapter.CommentsDetailAdapter;
 import com.feitianzhu.fu700.shop.adapter.ShopDetailAdapter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import cc.shinichi.library.ImagePreview;
 
 /**
  * package name: com.feitianzhu.fu700.shop
@@ -47,7 +49,7 @@ public class CommentsDetailActivity extends BaseActivity {
         goodsListBean = (BaseGoodsListBean) getIntent().getSerializableExtra(COMMENTS_DATA);
         if (goodsListBean != null && goodsListBean.getEvalList() != null) {
             evaluateModeList.addAll(goodsListBean.getEvalList());
-            if(evaluateModeList.size() >0) { //服务端没法把商品名字放在列表
+            if (evaluateModeList.size() > 0) { //服务端没法把商品名字放在列表
                 for (BaseGoodsListBean.GoodsEvaluateMode evaluateMode : evaluateModeList
                 ) {
                     evaluateMode.setGoodsName(goodsListBean.getGoodsName());
@@ -68,6 +70,49 @@ public class CommentsDetailActivity extends BaseActivity {
         mRecyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 
+        initListener();
+
+    }
+
+    public void initListener() {
+        adapter.setOnChildPositionListener(new CommentsDetailAdapter.OnChildClickListener() {
+            @Override
+            public void success(int index, int pos) {
+                if (evaluateModeList.get(pos).getEvalImgs() != null) {
+                    String[] strings = evaluateModeList.get(pos).getEvalImgs().split(",");
+                    // 仅需一行代码,默认配置为：
+                    //      显示顶部进度指示器、
+                    //      显示右侧下载按钮、
+                    //      隐藏左侧关闭按钮、
+                    //      开启点击图片关闭、
+                    //      关闭下拉图片关闭、
+                    //      加载方式为手动模式
+                    //      加载原图的百分比在底部
+                    ImagePreview
+                            .getInstance()
+                            // 上下文，必须是activity，不需要担心内存泄漏，本框架已经处理好；
+                            .setContext(mContext)
+                            .setEnableDragClose(true) //下拉图片关闭
+                            // 设置从第几张开始看（索引从0开始）
+                            .setIndex(index)
+                            .setShowErrorToast(true)//加载失败提示
+                            //=================================================================================================
+                            // 有三种设置数据集合的方式，根据自己的需求进行三选一：
+                            // 1：第一步生成的imageInfo List
+                            //.setImageInfoList(imageInfoList)
+
+                            // 2：直接传url List
+                            .setImageList(Arrays.asList(strings))
+
+                            // 3：只有一张图片的情况，可以直接传入这张图片的url
+                            //.setImage(String image)
+                            //=================================================================================================
+
+                            // 开启预览
+                            .start();
+                }
+            }
+        });
     }
 
     @OnClick(R.id.left_button)

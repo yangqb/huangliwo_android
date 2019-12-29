@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -103,6 +105,10 @@ public class SearchShopActivity extends BaseActivity {
     }
 
     public void searchData(String searchText) {
+        if (TextUtils.isEmpty(searchText)) {
+            ToastUtils.showShortToast("请输入关键字进行搜索");
+            return;
+        }
         OkHttpUtils.post()
                 .url(Urls.GET_SEARCH_LIST)
                 .addParams("accessToken", token)
@@ -188,6 +194,26 @@ public class SearchShopActivity extends BaseActivity {
             }
         });
 
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (TextUtils.isEmpty(s)) {
+                    shopAndMerchants.clear();
+                    mAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -218,6 +244,8 @@ public class SearchShopActivity extends BaseActivity {
             case R.id.btn_search:
                 searchText = editText.getText().toString().trim();
                 searchData(searchText);
+                //  这里记得一定要将键盘隐藏了
+                KeyboardUtils.hideSoftInput(editText);
                 break;
         }
     }

@@ -84,6 +84,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="3"
+               android:paddingBottom="@dimen/dp_10"
                 android:background="@drawable/shape_f7f7f7_r15"
                 android:paddingRight="@dimen/dp_10">
 

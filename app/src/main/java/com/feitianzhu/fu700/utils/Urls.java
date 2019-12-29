@@ -7,15 +7,12 @@ package com.feitianzhu.fu700.utils;
 public class Urls {
 
     //测试地址
-    private static final String HOST_URL = "http://39.106.65.35";
+    private static final String BASE_URL = "http://39.106.65.35:8089/";
     //钟工本地地址
-    //private static final String HOST_URL = "http://192.168.0.21";
+    //private static final String BASE_URL = "http://192.168.0.21:8089/";
     //周工本地地址
-    //private static final String HOST_URL = "http://192.168.0.15";
-    private static final String HOST_PORT = "8089";
-
-    private static final String BASE_URL = HOST_URL + ":" + HOST_PORT + "/";
-
+    //private static final String BASE_URL = "http://192.168.0.15:8089/";
+    //private static final String HOST_PORT = "8089";
     /**
      * 注册
      */
@@ -42,8 +39,8 @@ public class Urls {
     public static final String GET_HOME_GOODS_LIST = BASE_URL + "fhwl/index/pageGoods";
 
     /*
-    * 商品搜索
-    * */
+     * 商品搜索
+     * */
 
     public static final String GET_SEARCH_LIST = BASE_URL + "fhwl/index/search";
 
@@ -280,15 +277,15 @@ public class Urls {
     /**
      * 注册协议
      */
-    public static final String H5_REGISTER_PROTOCOL = HOST_URL + "/static/protocol.html";
+    public static final String H5_REGISTER_PROTOCOL = "/static/protocol.html";
     /**
      * 帮助
      */
-    public static final String H5_HELPER = HOST_URL + "/static/help.html";
+    public static final String H5_HELPER = "/static/help.html";
 
     /**
      * 关于
      */
-    public static final String H5_ABOUT_ME = HOST_URL + "/static/about.html";
+    public static final String H5_ABOUT_ME = "/static/about.html";
 
 }

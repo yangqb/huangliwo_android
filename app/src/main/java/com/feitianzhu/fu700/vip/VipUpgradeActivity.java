@@ -212,9 +212,16 @@ public class VipUpgradeActivity extends BaseActivity {
      * 输入邀请人id
      * */
     public void showInputDialog() {
+        String titleText;
+        if (parentId == 0) {
+            titleText = "请输入邀请人ID";
+        } else {
+            titleText = "请确认邀请人ID";
+        }
         new XPopup.Builder(VipUpgradeActivity.this)
                 .asCustom(new CustomInputView(VipUpgradeActivity.this)
-                        .setEditHintText("请输入邀请人ID")
+                        .setTitle(titleText)
+                        .setEditHintText("请输入")
                         .setText(parentId)
                         .setOnConfirmClickListener(new CustomInputView.OnConfirmClickListener() {
                             @Override
@@ -252,8 +259,7 @@ public class VipUpgradeActivity extends BaseActivity {
 
                     @Override
                     public void onError(Call call, Exception e, int id) {
-                        EventBus.getDefault().post(PayForMeEvent.PAY_FAILURE);
-                        ToastUtils.showShortToast("提交订单失败");
+                        ToastUtils.showShortToast(e.getMessage());
                     }
 
                     @Override
@@ -281,7 +287,7 @@ public class VipUpgradeActivity extends BaseActivity {
             public void onSuccess(int code, Object result) {
                 setResult(RESULT_OK);
                 ToastUtils.showShortToast("支付成功");
-                EventBus.getDefault().post(LoginEvent.EDITOR_INFO);
+                EventBus.getDefault().postSticky(LoginEvent.BUY_VIP);
                 //弹框
                 showDialog();
             }
@@ -300,7 +306,7 @@ public class VipUpgradeActivity extends BaseActivity {
             case PayInfo.UNIONLEVEL:
                 if (msg.getIsSuccess() == PayInfo.SUCCESS) {
                     setResult(RESULT_OK);
-                    EventBus.getDefault().post(LoginEvent.EDITOR_INFO);
+                    EventBus.getDefault().postSticky(LoginEvent.BUY_VIP);
                     showDialog();
                 }
                 break;

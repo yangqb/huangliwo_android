@@ -114,6 +114,12 @@ public class ShopsDetailActivity extends BaseActivity {
     TextView evaSpecifications;
     @BindView(R.id.right_img)
     ImageView rightImg;
+    @BindView(R.id.tv_rebate)
+    TextView tvRebate;
+    @BindView(R.id.ll_rebate)
+    LinearLayout llRebate;
+    @BindView(R.id.ll_goods_detail)
+    LinearLayout llGoodsDetail;
 
 
     @Override
@@ -210,14 +216,18 @@ public class ShopsDetailActivity extends BaseActivity {
             str3 = String.format(Locale.getDefault(), "%.2f", goodsListBean.getPrice());
             goodsName.setText(goodsListBean.getGoodsName());
             goodsSummary.setText(goodsListBean.getSummary());
-
+            String rebatePv = String.format(Locale.getDefault(), "%.2f", goodsListBean.getRebatePv());
+            if (goodsListBean.getRebatePv() == 0) {
+                llRebate.setVisibility(View.GONE);
+            }
+            tvRebate.setText("省¥" + rebatePv);
             evalList = goodsListBean.getEvalList();
             if (evalList != null && evalList.size() > 0) {
                 llEvaluate.setVisibility(View.VISIBLE);
                 tvCount.setText("评价(" + evalList.size() + ")");
                 Glide.with(this).load(evalList.get(0).getHeadImg()).apply(new RequestOptions().error(R.mipmap.b08_01touxiang).placeholder(R.mipmap.b08_01touxiang)).into(ivHead);
                 userName.setText(evalList.get(0).getNickName());
-                tvDate.setText(evalList.get(0).getEvalDateStr());
+                tvDate.setText(evalList.get(0).getEvalDate());
                 tvContent.setText(evalList.get(0).getContent());
                 evaSpecifications.setText(evalList.get(0).getNorms() + "/" + goodsListBean.getGoodsName());
             } else {
@@ -241,14 +251,17 @@ public class ShopsDetailActivity extends BaseActivity {
             tvAmount.append(span2);
             tvAmount.append(span3);
 
-            Glide.with(this).load(goodsListBean.getGoodsIntroduceImg())
-                    .apply(new RequestOptions()
-                            .placeholder(R.mipmap.g10_03weijiazai)
-                            .error(R.mipmap.g10_03weijiazai)
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
-                            .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL))
-                    .into(GlideUtils.getImageView(this, goodsListBean.getGoodsIntroduceImg(), imgDetail));
-
+            if (goodsListBean.getGoodsIntroduceImg() == null || TextUtils.isEmpty(goodsListBean.getGoodsIntroduceImg())) {
+                llGoodsDetail.setVisibility(View.GONE);
+            } else {
+                Glide.with(this).load(goodsListBean.getGoodsIntroduceImg())
+                        .apply(new RequestOptions()
+                                .placeholder(R.mipmap.g10_03weijiazai)
+                                .error(R.mipmap.g10_03weijiazai)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL))
+                        .into(GlideUtils.getImageView(this, goodsListBean.getGoodsIntroduceImg(), imgDetail));
+            }
             if (goodsListBean.getGoodsImgsList() != null) {
                 List<BaseGoodsListBean.GoodsImgsListBean> bannerList = goodsListBean.getGoodsImgsList();
                 mViewpager.setCanLoop(true)
@@ -256,7 +269,7 @@ public class ShopsDetailActivity extends BaseActivity {
                         .setIndicatorStyle(IndicatorStyle.CIRCLE)
                         //.setIndicatorSlideMode(IndicatorSlideMode.SMOOTH)
                         .setIndicatorRadius(8)
-                        .setIndicatorColor(Color.parseColor("#FFFFFF"), Color.parseColor("#6C6D72"))
+                        .setIndicatorColor(Color.parseColor("#CCCCCC"), Color.parseColor("#6C6D72"))
                         .setHolderCreator(ShopsDetailActivity.DataViewHolder::new).setOnPageClickListener(new BannerViewPager.OnPageClickListener() {
                     @Override
                     public void onPageClick(int position) {
@@ -281,14 +294,18 @@ public class ShopsDetailActivity extends BaseActivity {
         @Override
         public View createView(ViewGroup viewGroup, Context context, int position) {
             // 返回页面布局文件
-            View view = LayoutInflater.from(context).inflate(R.layout.banner_item, viewGroup, false);
+            View view = LayoutInflater.from(context).inflate(R.layout.detail_banner_item, viewGroup, false);
             mImageView = view.findViewById(R.id.banner_image);
             return view;
         }
 
         @Override
         public void onBind(final Context context, BaseGoodsListBean.GoodsImgsListBean data, final int position, final int size) {
-            Glide.with(context).load(data.getGoodsImg()).apply(new RequestOptions().placeholder(R.mipmap.g10_03weijiazai).error(R.mipmap.g10_03weijiazai)).into(mImageView);
+            Glide.with(context).load(data.getGoodsImg())
+                    .apply(new RequestOptions()
+                            .placeholder(R.mipmap.g10_03weijiazai)
+                            .error(R.mipmap.g10_03weijiazai))
+                    .into(mImageView);
         }
     }
 
@@ -325,8 +342,9 @@ public class ShopsDetailActivity extends BaseActivity {
                 ToastUtils.showShortToast("敬请期待");
                 break;
             case R.id.shopping_cart:
-                intent = new Intent(ShopsDetailActivity.this, ShoppingCartActivity.class);
-                startActivity(intent);
+                ToastUtils.showShortToast("敬请期待");
+               /* intent = new Intent(ShopsDetailActivity.this, ShoppingCartActivity.class);
+                startActivity(intent);*/
                 break;
             case R.id.call_phone:
                 new XPopup.Builder(this)

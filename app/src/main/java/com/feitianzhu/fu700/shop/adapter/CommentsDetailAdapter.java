@@ -30,8 +30,16 @@ import cc.shinichi.library.ImagePreview;
  */
 public class CommentsDetailAdapter extends BaseQuickAdapter<BaseGoodsListBean.GoodsEvaluateMode, BaseViewHolder> {
     private CommentImgAdapter adapter;
-    private List<String> imgs = new ArrayList<>();
+    private CommentsDetailAdapter.OnChildClickListener onItemClickListener;
 
+    public interface OnChildClickListener {
+        //成功的方法传 int 的索引
+        void success(int index, int pos);
+    }
+
+    public void setOnChildPositionListener(CommentsDetailAdapter.OnChildClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
     public CommentsDetailAdapter(@Nullable List<BaseGoodsListBean.GoodsEvaluateMode> data) {
         super(R.layout.commodity_valuate_item, data);
     }
@@ -40,13 +48,13 @@ public class CommentsDetailAdapter extends BaseQuickAdapter<BaseGoodsListBean.Go
     protected void convert(@NonNull BaseViewHolder helper, BaseGoodsListBean.GoodsEvaluateMode item) {
         helper.setText(R.id.userName, item.getNickName());
         helper.setText(R.id.tvContent, item.getContent());
-        helper.setText(R.id.tvDate, item.getEvalDateStr());
+        helper.setText(R.id.tvDate, item.getEvalDate());
         helper.setText(R.id.specifications, item.getNorms() + "/" + item.getGoodsName());
         Glide.with(mContext).load(item.getHeadImg())
                 .apply(new RequestOptions().placeholder(R.mipmap.b08_01touxiang).error(R.mipmap.b08_01touxiang)).into((RoundedImageView) helper.getView(R.id.iv_head));
         RecyclerView recyclerView = helper.getView(R.id.recyclerView);
 
-
+        List<String> imgs = new ArrayList<>();
         recyclerView.setLayoutManager(new GridLayoutManager(mContext, 3));
         recyclerView.setNestedScrollingEnabled(false);
         if (item.getEvalImgs() != null) {
@@ -59,36 +67,7 @@ public class CommentsDetailAdapter extends BaseQuickAdapter<BaseGoodsListBean.Go
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                // 仅需一行代码,默认配置为：
-                //      显示顶部进度指示器、
-                //      显示右侧下载按钮、
-                //      隐藏左侧关闭按钮、
-                //      开启点击图片关闭、
-                //      关闭下拉图片关闭、
-                //      加载方式为手动模式
-                //      加载原图的百分比在底部
-                ImagePreview
-                        .getInstance()
-                        // 上下文，必须是activity，不需要担心内存泄漏，本框架已经处理好；
-                        .setContext(mContext)
-                        .setEnableDragClose(true) //下拉图片关闭
-                        // 设置从第几张开始看（索引从0开始）
-                        .setIndex(position)
-                        .setShowErrorToast(true)//加载失败提示
-                        //=================================================================================================
-                        // 有三种设置数据集合的方式，根据自己的需求进行三选一：
-                        // 1：第一步生成的imageInfo List
-                        //.setImageInfoList(imageInfoList)
-
-                        // 2：直接传url List
-                        .setImageList(imgs)
-
-                        // 3：只有一张图片的情况，可以直接传入这张图片的url
-                        //.setImage(String image)
-                        //=================================================================================================
-
-                        // 开启预览
-                        .start();
+                onItemClickListener.success(position, helper.getAdapterPosition());
             }
         });
     }

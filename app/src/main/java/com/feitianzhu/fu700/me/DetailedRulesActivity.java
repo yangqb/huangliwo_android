@@ -14,6 +14,7 @@ import com.feitianzhu.fu700.me.adapter.DetailedRulesAdapter;
 import com.feitianzhu.fu700.me.base.BaseActivity;
 import com.feitianzhu.fu700.model.UserGoodVo;
 import com.feitianzhu.fu700.utils.SPUtils;
+import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.utils.Urls;
 import com.google.gson.Gson;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -115,6 +116,7 @@ public class DetailedRulesActivity extends BaseActivity {
                 initData();
                 break;
             case R.id.btn_earnings:
+                ToastUtils.showShortToast("敬请期待");
                 btnBonus.setSelected(false);
                 btnDiscount.setSelected(false);
                 btnEarnings.setSelected(true);

@@ -120,13 +120,13 @@ public class AddressManagementActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.left_button, R.id.right_text})
+    @OnClick({R.id.left_button, R.id.right_button})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.left_button:
                 finish();
                 break;
-            case R.id.right_text:
+            case R.id.right_button:
                 Intent intent = new Intent(AddressManagementActivity.this, EditAddressActivity.class);
                 intent.putExtra(EditAddressActivity.IS_ADD_ADDRESS, true);
                 startActivityForResult(intent, REQUEST_CODE);

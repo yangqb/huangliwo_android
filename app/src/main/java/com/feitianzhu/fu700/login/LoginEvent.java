@@ -7,6 +7,5 @@ package com.feitianzhu.fu700.login;
  */
 
 public enum LoginEvent {
-
-    LOGIN_SUCCESS, LOGIN_FAILURE, LOGOUT,EDITOR_INFO,TAKE_PHOTO
+    EDITOR_INFO,BUY_VIP
 }

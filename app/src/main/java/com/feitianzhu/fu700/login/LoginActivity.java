@@ -132,22 +132,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);
                 LoginActivity.this.finish();
-               /* NetworkDao.getUserInfo(new onConnectionFinishLinstener() {
-                    @Override
-                    public void onSuccess(int code, Object result) {
-//                        startMainActivity();
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        startActivity(intent);
-                        LoginActivity.this.finish();
-                    }
-
-                    @Override
-                    public void onFail(int code, String result) {
-                        Log.e("Test", "--------------result------------->" + result);
-                        ToastUtils.showShortToast(result);
-                        startMainActivity();
-                    }
-                });*/
             }
 
             @Override
@@ -156,11 +140,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 KLog.e(result);
             }
         });
-    }
-
-    private void startMainActivity() {
-        startActivity(new Intent(mContext, MainActivity.class));
-        LoginActivity.this.finish();
     }
 
     private String stringTrim(EditText editText) {

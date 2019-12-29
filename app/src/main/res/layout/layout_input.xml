@@ -11,6 +11,25 @@
         android:background="@drawable/bg_ffffff_r5"
         android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:layout_marginRight="@dimen/dp_10"
+            android:gravity="center"
+            android:text=""
+            android:textColor="@color/color_333333"
+            android:textSize="18sp" />
+
+        <View
+            android:id="@+id/line"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:layout_marginRight="@dimen/dp_10"
+            android:background="@color/color_eeeeee" />
+
         <EditText
             android:id="@+id/edit_content"
             android:layout_width="match_parent"
@@ -23,7 +42,7 @@
             android:inputType="number"
             android:text=""
             android:textColor="@color/color_333333"
-            android:textColorHint="@color/color_666666"
+            android:textColorHint="@color/color_cccccc"
             android:textSize="18sp" />
 
 

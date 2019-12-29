@@ -98,7 +98,7 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
     private MyCenterFragment mMeFragment;
     private FragmentTransaction mTransaction;
     private ObjectAnimator animator;
-    private int type = 1;
+    private int type = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,7 +117,6 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
                 .statusBarDarkFont(true, 0.2f)
                 .statusBarColor(R.color.bg_yellow)
                 .init();
-        SplashDao.postTokie();
     }
 
     private void initData() {
@@ -159,25 +158,35 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
                 break;
 
             case R.id.ly_shop:
-                type = 1;
-            case R.id.rl_merchants:
-                type = 2;
-            case R.id.rl_mall:
                 selected();
                 mTxtShop.setSelected(true);
                 mImgShop.setSelected(true);
-                /*if (mShopFragment == null) {
+                if (mShopFragment == null) {
                     mShopFragment = CommodityClassificationFragment.newInstance(type, "");
                     mTransaction.add(R.id.fragment_container, mShopFragment);
                 } else {
                     mTransaction.show(mShopFragment);
                 }
-                mTransaction.commit();*/
+                mTransaction.commit();
+                break;
+            case R.id.rl_merchants:
+                type = 1;
+                selected();
+                mTxtShop.setSelected(true);
+                mImgShop.setSelected(true);
                 mShopFragment = CommodityClassificationFragment.newInstance(type, "");
                 mTransaction.add(R.id.fragment_container, mShopFragment);
                 mTransaction.commit();
                 break;
-
+            case R.id.rl_mall:
+                type = 2;
+                selected();
+                mTxtShop.setSelected(true);
+                mImgShop.setSelected(true);
+                mShopFragment = CommodityClassificationFragment.newInstance(type, "");
+                mTransaction.add(R.id.fragment_container, mShopFragment);
+                mTransaction.commit();
+                break;
             case R.id.ly_jiaoliu:
                 selected();
                 mTxtJiaoliu.setSelected(true);
@@ -414,7 +423,7 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
                 .setHttpManager(new UpdateAppHttpUtil(this))
                 .setUpdateUrl(Common_HEADER + UAPDATE)
                 .setPost(false)
-                .setThemeColor(0xffffac5d)
+                .setThemeColor(0xfffed428)
                 .build()
                 .checkNewApp(new UpdateCallback() {
                     /**
@@ -450,8 +459,7 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
                                 .setApkFileUrl(updateAppModel.downloadUrl)
 //                                    .setUpdateLog("测试")
                                 .setUpdateLog(updateAppModel.updateDesc)
-//                                    .setUpdateLog("今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说\r\n")
-                                //大小，不设置不显示大小，可以不设置
+//                                    .setUpdateLog("")
                                 .setTargetSize(updateAppModel.packSize + "Mb")
                                 //是否强制更新，可以不设置
                                 .setConstraint(constraint);

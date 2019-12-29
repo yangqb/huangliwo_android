@@ -241,7 +241,7 @@ public class ShopSetMealActivity extends BaseActivity {
                 //.setIndicatorSlideMode(IndicatorSlideMode.SMOOTH)
                 .setRoundCorner(10)
                 .setIndicatorRadius(8)
-                .setIndicatorColor(Color.parseColor("#FFFFFF"), Color.parseColor("#6C6D72"))
+                .setIndicatorColor(Color.parseColor("#CCCCCC"), Color.parseColor("#6C6D72"))
                 .setHolderCreator(ShopSetMealActivity.DataViewHolder::new).setOnPageClickListener(new BannerViewPager.OnPageClickListener() {
             @Override
             public void onPageClick(int position) {

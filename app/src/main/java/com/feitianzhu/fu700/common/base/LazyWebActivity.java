@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.feitianzhu.fu700.R;
 import com.feitianzhu.fu700.common.Constant;
+import com.feitianzhu.fu700.utils.SPUtils;
 import com.gyf.immersionbar.ImmersionBar;
 import com.just.agentweb.AgentWeb;
 import com.just.agentweb.DefaultWebClient;
@@ -36,6 +37,7 @@ public class LazyWebActivity extends AppCompatActivity {
     TextView titleName;
     @BindView(R.id.head)
     LinearLayout head;
+    private String token;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,8 +49,9 @@ public class LazyWebActivity extends AppCompatActivity {
                 .statusBarDarkFont(true, 0.2f)
                 .statusBarColor(R.color.white)
                 .init();
+        token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         String url = getIntent().getStringExtra(Constant.URL);
-        url = url + "?accessToken=" + Constant.ACCESS_TOKEN;
+        url = url + "?accessToken=" + token;
         //url = "https://www.baidu.com/";
         String title = getIntent().getStringExtra(Constant.H5_TITLE);
         if (TextUtils.isEmpty(title)) {

@@ -17,12 +17,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.feitianzhu.fu700.R;
+import com.feitianzhu.fu700.common.Constant;
 import com.feitianzhu.fu700.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.fu700.dao.NetworkDao;
 import com.feitianzhu.fu700.home.WebViewActivity;
 import com.feitianzhu.fu700.me.base.BaseActivity;
 import com.feitianzhu.fu700.me.navigationbar.DefaultNavigationBar;
 import com.feitianzhu.fu700.utils.EncryptUtils;
+import com.feitianzhu.fu700.utils.SPUtils;
 import com.feitianzhu.fu700.utils.StringUtils;
 import com.feitianzhu.fu700.utils.Urls;
 import com.gyf.immersionbar.ImmersionBar;
@@ -117,7 +119,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         mForgetLayout.setOnClickListener(this);
         mTvProtocol.setOnClickListener(this);
         mCheckBox.setOnCheckedChangeListener(this);
-        mCheckBox.setButtonDrawable(getResources().getDrawable(R.mipmap.f01_06xuanzhong5));
+        mCheckBox.setBackgroundResource(R.mipmap.f01_06xuanzhong5);
         mRegister.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
         mForgetLayout.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
     }
@@ -187,6 +189,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                     public void onResponse(Object response, int id) {
                         KLog.i("response:%s", response);
                         Toast.makeText(mContext, "注册成功", Toast.LENGTH_SHORT).show();
+                        SPUtils.putString(RegisterActivity.this, Constant.SP_PHONE, mAccount);
                         LoginActivity.startActivity(mContext);
                         finish();
                     }
@@ -303,11 +306,11 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         if (buttonView.getId() == R.id.cb_protocol) {
             if (!isChecked) {
                 mSignInButton.setEnabled(false);
-                mCheckBox.setButtonDrawable(getResources().getDrawable(R.mipmap.f01_06weixuanzhong4));
+                mCheckBox.setBackgroundResource(R.mipmap.f01_06weixuanzhong4);
                 mSignInButton.setBackgroundResource(R.drawable.button_shape_gray);
             } else {
                 mSignInButton.setEnabled(true);
-                mCheckBox.setButtonDrawable(getResources().getDrawable(R.mipmap.f01_06xuanzhong5));
+                mCheckBox.setBackgroundResource(R.mipmap.f01_06xuanzhong5);
                 mSignInButton.setBackgroundResource(R.drawable.button_shape_blue);
             }
         }

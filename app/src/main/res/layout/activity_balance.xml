@@ -59,13 +59,29 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="共盈利"
-                        android:textColor="@color/color_333333"
-                        android:textSize="13sp" />
+                        android:orientation="horizontal">
 
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="共盈利"
+                            android:textColor="@color/color_333333"
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:id="@+id/detailed_rules"
+                            android:layout_marginLeft="@dimen/dp_10"
+                            android:layout_width="40dp"
+                            android:layout_height="20dp"
+                            android:background="@drawable/bg_b3ffffff_r3"
+                            android:gravity="center"
+                            android:text="细则"
+                            android:textColor="@color/color_333333"
+                            android:textSize="12sp" />
+                    </LinearLayout>
 
                     <TextView
                         android:id="@+id/tv_profit"
@@ -75,7 +91,6 @@
                         android:textColor="@color/color_333333"
                         android:textSize="18sp"
                         android:textStyle="bold" />
-
 
                 </LinearLayout>
 
@@ -104,19 +119,6 @@
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/detailed_rules"
-            android:layout_width="40dp"
-            android:layout_height="20dp"
-            android:layout_marginEnd="15dp"
-            android:layout_marginTop="15dp"
-            android:layout_alignParentEnd="true"
-            android:background="@drawable/bg_ffffff_r3"
-            android:gravity="center"
-            android:text="细则"
-            android:textColor="@color/color_333333"
-            android:textSize="12sp" />
     </RelativeLayout>
 
     <TextView

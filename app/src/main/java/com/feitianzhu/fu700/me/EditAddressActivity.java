@@ -103,13 +103,13 @@ public class EditAddressActivity extends BaseActivity {
     }
 
 
-    @OnClick({R.id.left_button, R.id.right_text, R.id.delete_address, R.id.select_address})
+    @OnClick({R.id.left_button, R.id.right_button, R.id.delete_address, R.id.select_address})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.left_button:
                 finish();
                 break;
-            case R.id.right_text: //保存地址
+            case R.id.right_button: //保存地址
                 if (checkText(editName.getText().toString().trim())) {
                     ToastUtils.showShortToast("请填写收货人姓名");
                 } else if (checkText(editPhone.getText().toString().trim())) {

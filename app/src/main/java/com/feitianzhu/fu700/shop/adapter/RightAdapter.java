@@ -45,7 +45,13 @@ public class RightAdapter extends BaseMultiItemQuickAdapter<MultipleItem, BaseVi
                 helper.setText(R.id.tv_category, item.getGoodsListBean().getGoodsName());
                 setSpannableString(String.format(Locale.getDefault(), "%.2f", item.getGoodsListBean().getPrice()), helper.getView(R.id.price));
                 helper.setText(R.id.tvContent, item.getGoodsListBean().getSummary());
-                helper.setText(R.id.tv_benefit, "会员让利" + item.getGoodsListBean().getRebatePv()  + "元");
+                String rebatePv = String.format(Locale.getDefault(), "%.2f", item.getGoodsListBean().getRebatePv());
+                helper.setText(R.id.tv_rebate, "省¥" + rebatePv);
+                if (item.getGoodsListBean().getRebatePv() == 0) {
+                    helper.setVisible(R.id.ll_rebate, false);
+                } else {
+                    helper.setVisible(R.id.ll_rebate, true);
+                }
                 Glide.with(mContext).load(item.getGoodsListBean().getGoodsImg())
                         .apply(new RequestOptions().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai)).into((RoundedImageView) helper.getView(R.id.image));
                 break;

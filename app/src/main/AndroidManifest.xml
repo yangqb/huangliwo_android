@@ -141,14 +141,6 @@
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".me.ui.OrderActivity"
-            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".me.ui.totalScore.BalanceActivity"
-            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".me.ui.consumeralliance.NewBecomeVolunteerActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
@@ -443,6 +435,10 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".shop.ui.SearchShopActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".shop.ShopsActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
 

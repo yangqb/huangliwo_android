@@ -41,7 +41,8 @@
         <EditText
             android:id="@+id/edt_phone"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="45dp"
+            android:gravity="bottom"
             android:background="@null"
             android:hint="请输入绑定的手机号码"
             android:inputType="phone"
@@ -53,7 +54,6 @@
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:layout_marginTop="5dp"
-            android:layout_marginBottom="@dimen/dp_10"
             android:background="@color/color_cccccc" />
 
         <LinearLayout
@@ -65,7 +65,9 @@
             <EditText
                 android:id="@+id/edt_code"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
+                android:gravity="bottom"
+                android:paddingBottom="5dp"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="3"
                 android:background="@null"
@@ -103,16 +105,15 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:layout_marginBottom="@dimen/dp_10"
             android:background="@color/color_cccccc" />
 
         <EditText
             android:id="@+id/password1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_height="45dp"
             android:background="@null"
             android:hint="新密码"
+            android:gravity="bottom"
             android:imeOptions="actionUnspecified"
             android:inputType="textPassword"
             android:maxLines="1"
@@ -123,17 +124,17 @@
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:layout_marginTop="5dp"
-            android:layout_marginBottom="@dimen/dp_10"
             android:background="@color/color_cccccc" />
 
         <EditText
             android:id="@+id/password2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_height="45dp"
             android:background="@null"
             android:hint="确定新密码"
+            android:gravity="bottom"
             android:imeOptions="actionUnspecified"
+            android:inputType="textPassword"
             android:maxLines="1"
             android:textColorHint="@color/color_999999"
             android:textSize="@dimen/sp_16" />
@@ -142,7 +143,6 @@
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:layout_marginTop="5dp"
-            android:layout_marginBottom="@dimen/dp_10"
             android:background="@color/color_cccccc" />
 
         <Button

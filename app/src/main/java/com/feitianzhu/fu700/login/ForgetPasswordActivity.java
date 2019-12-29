@@ -15,11 +15,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.feitianzhu.fu700.R;
+import com.feitianzhu.fu700.common.Constant;
 import com.feitianzhu.fu700.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.fu700.dao.NetworkDao;
 import com.feitianzhu.fu700.me.base.BaseActivity;
 import com.feitianzhu.fu700.me.navigationbar.DefaultNavigationBar;
 import com.feitianzhu.fu700.utils.EncryptUtils;
+import com.feitianzhu.fu700.utils.SPUtils;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.gyf.immersionbar.ImmersionBar;
 import com.socks.library.KLog;
@@ -133,7 +135,7 @@ public class ForgetPasswordActivity extends BaseActivity implements View.OnClick
                     public void onSuccess(int code, Object result) {
 
                         ToastUtils.showShortToast(mContext, R.string.change_ok);
-
+                        SPUtils.putString(ForgetPasswordActivity.this, Constant.SP_PHONE, phone);
                         startActivity(new Intent(mContext, LoginActivity.class));
                         finish();
                     }

@@ -1,5 +1,6 @@
 package com.feitianzhu.fu700.me.ui;
 
+import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -35,7 +36,7 @@ import static com.feitianzhu.fu700.common.Constant.USERID;
  * @Date 2019/11/21 0021 下午 4:58
  */
 public class EditSignActivity extends BaseActivity {
-    public static final String sign = "SIGN";
+    public static final String SIGN = "sign";
     @BindView(R.id.title_name)
     TextView titleName;
     @BindView(R.id.right_text)
@@ -57,16 +58,16 @@ public class EditSignActivity extends BaseActivity {
         titleName.setText("修改个性签名");
         rightText.setText("确定");
         rightText.setVisibility(View.VISIBLE);
-        editText.setText(getIntent().getStringExtra(sign));
+        editText.setText(getIntent().getStringExtra(SIGN));
     }
 
-    @OnClick({R.id.left_button, R.id.right_text})
+    @OnClick({R.id.left_button, R.id.right_button})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.left_button:
                 finish();
                 break;
-            case R.id.right_text:
+            case R.id.right_button:
                 if (TextUtils.isEmpty(editText.getText().toString())) {
                     ToastUtils.showShortToast("请输入新的个性签名");
                     return;
@@ -92,9 +93,6 @@ public class EditSignActivity extends BaseActivity {
 
                     @Override
                     public void onError(Call call, Exception e, int id) {
-                        /*
-                         * 不知道这里修改成功为啥要返回错误，之前的人写的
-                         * */
                         Log.e("wangyan", "onError---->" + e.getMessage());
                         Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
@@ -103,7 +101,10 @@ public class EditSignActivity extends BaseActivity {
                     public void onResponse(Object response, int id) {
                         Log.e("wangyan", "onResponse---->" + response);
                         Toast.makeText(mContext, "修改成功", Toast.LENGTH_SHORT).show();
-                        EventBus.getDefault().post(LoginEvent.EDITOR_INFO);
+                        EventBus.getDefault().postSticky(LoginEvent.EDITOR_INFO);
+                        Intent intent = new Intent();
+                        intent.putExtra(SIGN, editText.getText().toString().trim());
+                        setResult(RESULT_OK, intent);
                         finish();
                     }
                 });

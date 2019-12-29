@@ -31,13 +31,16 @@ import com.feitianzhu.fu700.home.adapter.HAdapter;
 import com.feitianzhu.fu700.home.adapter.HomeRecommendAdapter2;
 import com.feitianzhu.fu700.home.entity.HomeEntity;
 import com.feitianzhu.fu700.home.entity.ShopAndMerchants;
+import com.feitianzhu.fu700.login.LoginEvent;
 import com.feitianzhu.fu700.me.ui.PersonalCenterActivity2;
 import com.feitianzhu.fu700.me.ui.ScannerActivity;
 import com.feitianzhu.fu700.model.BaseGoodsListBean;
 import com.feitianzhu.fu700.model.HomeShops;
 import com.feitianzhu.fu700.model.MineInfoModel;
 import com.feitianzhu.fu700.model.Province;
+import com.feitianzhu.fu700.model.ShopClassify;
 import com.feitianzhu.fu700.shop.ShopSetMealActivity;
+import com.feitianzhu.fu700.shop.ShopsActivity;
 import com.feitianzhu.fu700.shop.ShopsDetailActivity;
 import com.feitianzhu.fu700.shop.ui.SearchShopActivity;
 import com.feitianzhu.fu700.shop.ui.dialog.ProvinceCallBack;
@@ -64,6 +67,8 @@ import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,6 +87,7 @@ import static com.feitianzhu.fu700.common.Constant.ISADMIN;
 import static com.feitianzhu.fu700.common.Constant.MERCHANTID;
 import static com.feitianzhu.fu700.common.Constant.POST_MINE_INFO;
 import static com.feitianzhu.fu700.common.Constant.USERID;
+import static com.feitianzhu.fu700.login.LoginEvent.EDITOR_INFO;
 
 /**
  * @class name：com.feitianzhu.fu700.home
@@ -108,8 +114,7 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, View.
     @BindView(R.id.iv_head)
     CircleImageView ivHead;
     private List<ShopAndMerchants> shopAndMerchants = new ArrayList<>();
-    private List<HomeEntity.RecommendListBean> recommendListBeanList = new ArrayList<>();
-    private List<HomeEntity.ServiceRecommendListBean> serviceRecommendList = new ArrayList<>();
+    private List<ShopClassify.GGoodsClsListBean> shopClassifyLsit = new ArrayList<>();
     private List<BaseGoodsListBean> shopsLists = new ArrayList<>();
     private HomeRecommendAdapter2 mAdapter;
     private HAdapter hAdapter;
@@ -146,6 +151,7 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, View.
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
     }
 
     @Nullable
@@ -169,7 +175,7 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, View.
         vPopupWindow.findViewById(R.id.iv_fabufuwu).setOnClickListener(this);
 
         mRecyclerview.setLayoutManager(new LinearLayoutManager(getActivity()));
-        hAdapter = new HAdapter(serviceRecommendList);
+        hAdapter = new HAdapter(shopClassifyLsit);
         hList.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
         hList.setAdapter(hAdapter);
         hAdapter.notifyDataSetChanged();
@@ -188,6 +194,7 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, View.
         getData();
         requestData();
         getGoodsData();
+        getClasses(); //商品类别
         initListener();
         return view;
     }
@@ -214,12 +221,10 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, View.
         hAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                if (mHomeEntity != null && mHomeEntity.serviceRecommendList != null && position < mHomeEntity.serviceRecommendList.size()) {
-                    HomeEntity.ServiceRecommendListBean serviceRecommendBean = mHomeEntity.serviceRecommendList.get(position);
-                    Intent intent = new Intent(getActivity(), ShopSetMealActivity.class);
-                    intent.putExtra(ShopSetMealActivity.SERVICE_RECOMMEND_BEAN, serviceRecommendBean);
-                    startActivity(intent);
-                }
+                ShopClassify.GGoodsClsListBean goodsClsListBean = shopClassifyLsit.get(position);
+                Intent intent = new Intent(getActivity(), ShopsActivity.class);
+                intent.putExtra(ShopsActivity.CLASSES_DATA, goodsClsListBean);
+                startActivity(intent);
             }
         });
 
@@ -235,9 +240,10 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, View.
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                 isLoadMore = false;
                 pageNo = 1;
-                requestData();
                 getData();
+                requestData();
                 getGoodsData();
+                getClasses();
             }
         });
     }
@@ -327,23 +333,14 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, View.
                                     //.setIndicatorSlideMode(IndicatorSlideMode.SMOOTH)
                                     .setRoundCorner(20)
                                     .setIndicatorRadius(8)
-                                    .setIndicatorColor(Color.parseColor("#FFFFFF"), Color.parseColor("#6C6D72"))
+                                    .setIndicatorColor(Color.parseColor("#CCCCCC"), Color.parseColor("#6C6D72"))
                                     .setHolderCreator(DataViewHolder::new).setOnPageClickListener(new BannerViewPager.OnPageClickListener() {
                                 @Override
                                 public void onPageClick(int position) {
                                     onClickBanner(position);
                                 }
                             }).create(mBanners);
-
                             mViewpager.startLoop();
-
-                        }
-
-                        //热门服务
-                        if (mHomeEntity.serviceRecommendList != null && !mHomeEntity.serviceRecommendList.isEmpty()) {
-                            serviceRecommendList.clear();
-                            serviceRecommendList.addAll(mHomeEntity.serviceRecommendList);
-                            hAdapter.notifyDataSetChanged();
                         }
                     }
                 });
@@ -399,9 +396,48 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, View.
                 });
     }
 
+    public void getClasses() {
+        OkHttpUtils.post()
+                .url(Urls.GET_SHOP_CLASS)
+                .addParams(ACCESSTOKEN, token)
+                .addParams(USERID, userId)
+                .build()
+                .execute(new Callback() {
+
+                    @Override
+                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
+                        return new Gson().fromJson(mData, ShopClassify.class);
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        Toast.makeText(getActivity(), TextUtils.isEmpty(e.getMessage()) ? "加载失败，请重试" : e.getMessage(), Toast.LENGTH_SHORT).show();
+                        KLog.e(e);
+                    }
+
+                    @Override
+                    public void onResponse(Object response, int id) {
+                        ShopClassify shopClassify = (ShopClassify) response;
+                        if (shopClassify.getGGoodsClsList().size() > 6) {
+                            shopClassifyLsit.clear();
+                            for (int i = 0; i < shopClassify.getGGoodsClsList().size(); i++) {
+                                if (i <= 5) {
+                                    shopClassifyLsit.add(shopClassify.getGGoodsClsList().get(i));
+                                }
+                            }
+                        } else {
+                            shopClassifyLsit = shopClassify.getGGoodsClsList();
+                        }
+                        hAdapter.setNewData(shopClassifyLsit);
+                        hAdapter.notifyDataSetChanged();
+                    }
+                });
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        EventBus.getDefault().unregister(this);
         unbinder.unbind();
     }
 
@@ -423,13 +459,18 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, View.
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (mViewpager != null)
+            mViewpager.startLoop();
+    }
+
+    @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if (!TextUtils.isEmpty(Constant.mCity)) {
             mTxtLocation.setText(Constant.mCity);
         }
-        if (mViewpager != null)
-            mViewpager.startLoop();
     }
 
     @Override
@@ -460,11 +501,11 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, View.
                 startActivity(intent);
                 break;
             case 3:
-                ToastUtils.showShortToast("敬请期待");
+                // ToastUtils.showShortToast("敬请期待");
                 //WebViewActivity.startActivity(getActivity(), mHomeEntity.bannerList.get(i).outUrl, "");
                 break;
             case 4:
-                ToastUtils.showShortToast("敬请期待");
+                //ToastUtils.showShortToast("敬请期待");
                 // WebViewActivity.startActivity(getActivity(), mHomeEntity.bannerList.get(i).outUrl, "");
                 break;
 
@@ -602,6 +643,13 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, View.
                         }
                     }
                 });
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void onMessageEvent(LoginEvent event) {
+        if (event == EDITOR_INFO) {
+            requestData();
+        }
     }
 
     @Override

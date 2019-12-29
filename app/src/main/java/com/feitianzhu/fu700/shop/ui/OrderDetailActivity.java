@@ -28,6 +28,7 @@ import com.feitianzhu.fu700.model.PayResult;
 import com.feitianzhu.fu700.model.WXModel;
 import com.feitianzhu.fu700.shop.SelectPayActivity;
 import com.feitianzhu.fu700.shop.ShopPayActivity;
+import com.feitianzhu.fu700.shop.ShopsDetailActivity;
 import com.feitianzhu.fu700.utils.DateUtils;
 import com.feitianzhu.fu700.utils.PayUtils;
 import com.feitianzhu.fu700.utils.SPUtils;
@@ -144,7 +145,7 @@ public class OrderDetailActivity extends BaseActivity {
         }
     };
 
-    @OnClick({R.id.left_button, R.id.tv_copy, R.id.call_phone, R.id.cancel_order, R.id.shopPay})
+    @OnClick({R.id.left_button, R.id.tv_copy, R.id.call_phone, R.id.cancel_order, R.id.shopPay, R.id.ll_order_detail})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.left_button:
@@ -196,6 +197,13 @@ public class OrderDetailActivity extends BaseActivity {
                     intent.putExtra(SelectPayActivity.ORDER_DATA, goodsOrderBean);
                     startActivityForResult(intent, PAY_REQUEST_CODE);
                 }
+                break;
+            case R.id.ll_order_detail:
+                //TODO:后面需要根据类型跳转
+                //商品详情
+                Intent intent = new Intent(OrderDetailActivity.this, ShopsDetailActivity.class);
+                intent.putExtra(ShopsDetailActivity.GOODS_DETAIL_DATA, goodsOrderBean.getGoodId());
+                startActivity(intent);
                 break;
         }
     }

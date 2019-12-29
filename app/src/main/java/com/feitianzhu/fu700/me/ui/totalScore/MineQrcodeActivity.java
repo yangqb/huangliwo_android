@@ -53,6 +53,7 @@ import static com.feitianzhu.fu700.common.Constant.USERID;
  */
 
 public class MineQrcodeActivity extends BaseActivity {
+    public static final String MINE_DATA = "mine_data";
     @BindView(R.id.iv_QRCode)
     ImageView mQRcode;
     @BindView(R.id.civ_pic)
@@ -63,9 +64,9 @@ public class MineQrcodeActivity extends BaseActivity {
     TextView titleName;
     private Bitmap bitmap;
     private MineQRcodeModel mData;
-    private SharedInfoModel mSharedInfo;
     private String token;
     private String userId;
+    private MineInfoModel mineInfoModel;
 
     @Override
     protected int getLayoutId() {
@@ -81,45 +82,14 @@ public class MineQrcodeActivity extends BaseActivity {
     protected void initView() {
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
-        getSharedInfo();
-    }
-
-    /**
-     * 获取分享的信息
-     */
-    private void getSharedInfo() {
-        OkHttpUtils.post()//
-                .url(Common_HEADER + Constant.GET_SHARED_INFO)
-                .addParams(ACCESSTOKEN, token)//
-                .addParams(USERID, userId)
-                .build()
-                .execute(new Callback<SharedInfoModel>() {
-
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-                        Log.e("wangyan", "onError---->" + e.getMessage());
-                        ToastUtils.showShortToast(e.getMessage());
-                    }
-
-                    @Override
-                    public void onResponse(SharedInfoModel response, int id) {
-                        mSharedInfo = response;
-                        if (mSharedInfo != null) {
-                            mTvName.setText(mSharedInfo.getNickName());
-                            requestData();
-                        } else {
-                            // ToastUtils.showShortToast("获取分享信息失败，请稍后重试!");
-                        }
-                    }
-
-                });
+        mineInfoModel = (MineInfoModel) getIntent().getSerializableExtra(MINE_DATA);
+        mTvName.setText(mineInfoModel.getNickName());
+        Glide.with(mContext).load(mineInfoModel.getHeadImg()).apply(RequestOptions.placeholderOf(R.mipmap.b08_01touxiang).error(R.mipmap.b08_01touxiang).dontAnimate())
+                .into(mCivPic);
     }
 
     @Override
     protected void initData() {
-    }
-
-    private void requestData() {
         OkHttpUtils.get()//
                 .url(Common_HEADER + Constant.POST_MINE_QRCODE)
                 .addParams(ACCESSTOKEN, token)//
@@ -140,6 +110,7 @@ public class MineQrcodeActivity extends BaseActivity {
                 });
     }
 
+
     private void setShowData(MineQRcodeModel response) {
 
         String qrUrl = response.getLink();
@@ -154,9 +125,6 @@ public class MineQrcodeActivity extends BaseActivity {
         if (bytes != null && bytes.length > 0) {
             Glide.with(mContext).load(bytes).apply(RequestOptions.placeholderOf(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai)).into(mQRcode);
         }
-        Glide.with(mContext).load(response.getHeadImg()).apply(RequestOptions.placeholderOf(R.mipmap.b08_01touxiang).error(R.mipmap.b08_01touxiang).dontAnimate())
-                .into(mCivPic);
-
     }
 
     @OnClick({R.id.bt_save, R.id.bt_shared, R.id.left_button})
@@ -249,11 +217,7 @@ public class MineQrcodeActivity extends BaseActivity {
 
     private void showShare() {
         saveBitmapToLocal();
-        if (mSharedInfo == null) {
-            ToastUtils.showShortToast("分享的资料信息未完善，请先完善资料");
-            return;
-        }
-        if (TextUtils.isEmpty(mSharedInfo.getNickName()) || TextUtils.isEmpty(mSharedInfo.getLink())) {
+        if (mData == null) {
             ToastUtils.showShortToast("分享的资料信息未完善，请先完善资料");
             return;
         }
@@ -264,9 +228,9 @@ public class MineQrcodeActivity extends BaseActivity {
         // 分享时Notification的图标和文字  2.5.9以后的版本不     调用此方法
         //oks.setNotification(R.drawable.ic_launcher, getString(R.string.app_name));
         // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间使用
-        oks.setTitle(mSharedInfo.getNickName());  //最顶部的Title
+        oks.setTitle("黄鹂窝优选");  //最顶部的Title
         // titleUrl是标题的网络链接，仅在人人网和QQ空间使用
-        oks.setTitleUrl(mSharedInfo.getLink());
+        oks.setTitleUrl(mData.getLink());
         // text是分享文本，所有平台都需要这个字段
         // oks.setText(mSharedInfo.getCompany());  //第二行的小文字
         // imagePath是图片地址，Linked-In以外的平台都支持此参数
@@ -275,13 +239,13 @@ public class MineQrcodeActivity extends BaseActivity {
         oks.setImagePath(Environment.getExternalStorageDirectory() + "/zxing_image/" + "mqrcode.png");
         // oks.setImageUrl(mSharedInfo.getHeadImg());
         // url仅在微信（包括好友和朋友圈）中使用
-        oks.setUrl(mSharedInfo.getLink());
+        oks.setUrl(mData.getLink());
         // comment是我对这条分享的评论，仅在人人网和QQ空间使用
-        oks.setComment(mSharedInfo.getNickName());
+        oks.setComment("黄鹂窝优选");
         // site是分享此内容的网站名称，仅在QQ空间使用
         oks.setSite("黄鹂窝优选");
         // siteUrl是分享此内容的网站地址，仅在QQ空间使用
-        oks.setSiteUrl(mSharedInfo.getLink());
+        oks.setSiteUrl(mData.getLink());
         oks.setCallback(new PlatformActionListener() {
             @Override
             public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {

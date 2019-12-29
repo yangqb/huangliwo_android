@@ -197,7 +197,7 @@ public class EditCommentsActivity extends BaseActivity {
     }*/
 
     @SingleClick
-    @OnClick({R.id.left_button, R.id.right_text})
+    @OnClick({R.id.left_button, R.id.right_button})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.left_button:
@@ -211,7 +211,7 @@ public class EditCommentsActivity extends BaseActivity {
                         .bindLayout(R.layout.layout_dialog) //绑定已有布局
                         .show();
                 break;
-            case R.id.right_text:
+            case R.id.right_button:
                 if (TextUtils.isEmpty(editContent.getText().toString().trim())) {
                     ToastUtils.showShortToast("您还没有填写评价内容");
                     return;
@@ -224,7 +224,7 @@ public class EditCommentsActivity extends BaseActivity {
                 evaluateMode = new EvaluateMode();
                 evaluateMode.setGoodId(goodsOrderListBean.getGoodId());
                 evaluateMode.setOrderNo(goodsOrderListBean.getOrderNo());
-                evaluateMode.setUserId(Integer.valueOf(Constant.LOGIN_USERID));
+                evaluateMode.setUserId(Integer.valueOf(userId));
                 evaluateMode.setContent(editContent.getText().toString());
                 String json = new Gson().toJson(evaluateMode);
 
