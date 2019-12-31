@@ -309,6 +309,9 @@ public class CommodityClassificationFragment extends SFFragment implements View.
                     public void onError(Call call, Exception e, int id) {
                         mSwipeLayout.finishRefresh(false);
                         ToastUtils.showShortToast(e.getMessage());
+                        multipleItemList.clear();
+                        goodsListBeans.clear();
+                        rightAdapter.notifyDataSetChanged();
                         goneloadDialog();
                     }
 
@@ -358,6 +361,7 @@ public class CommodityClassificationFragment extends SFFragment implements View.
                 multipleItemList.clear();
                 rightAdapter.notifyDataSetChanged();
                 leftAdapter.notifyDataSetChanged();
+                ToastUtils.showShortToast("敬请期待");
                 //initData();
                 break;
             case R.id.button2:
@@ -479,7 +483,7 @@ public class CommodityClassificationFragment extends SFFragment implements View.
                     @Override
                     public void onResponse(MineInfoModel response, int id) {
                         String headImg = response.getHeadImg();
-                        Glide.with(mContext).load(headImg).apply(RequestOptions.placeholderOf(R.mipmap.b08_01touxiang).dontAnimate())
+                        Glide.with(mContext).load(headImg).apply(RequestOptions.placeholderOf(R.mipmap.b08_01touxiang).error(R.mipmap.b08_01touxiang).dontAnimate())
                                 .into(ivHead);
                     }
                 });

@@ -39,9 +39,7 @@ public class ChangePhone1Activity extends BaseActivity {
     Button mButton;
     @BindView(R.id.title_name)
     TextView titleName;
-
-    private String mSmsCode;
-
+    private String phone;
 
     private CountDownTimer mTimer = new CountDownTimer(6000 * 10, 1000) {
 
@@ -67,6 +65,7 @@ public class ChangePhone1Activity extends BaseActivity {
     @Override
     protected void initTitle() {
         titleName.setText("更换手机号码");
+        phone = SPUtils.getString(this, Constant.SP_PHONE);
     }
 
     @Override
@@ -81,7 +80,6 @@ public class ChangePhone1Activity extends BaseActivity {
 
     @Override
     protected void initData() {
-        String phone = SPUtils.getString(this, Constant.SP_PHONE);
         mTvCurrentPhone.setText(String.format(getString(R.string.current_phone), phone));
 
     }
@@ -91,17 +89,17 @@ public class ChangePhone1Activity extends BaseActivity {
         switch (view.getId()) {
             case R.id.button:
 
-                if (TextUtils.isEmpty(Constant.PHONE)) {
+                if (TextUtils.isEmpty(phone)) {
                     ToastUtils.showShortToast("手机号不能为空");
                     return;
                 }
 
-                if (TextUtils.isEmpty(mSmsCode)) {
+                if (TextUtils.isEmpty(mEdtCode.getText().toString().trim())) {
                     ToastUtils.showShortToast("验证码不能为空");
                     return;
                 }
 
-                ChangePhone2Activity.startActivity(this, Constant.PHONE, mSmsCode);
+                ChangePhone2Activity.startActivity(this, phone, mEdtCode.getText().toString().trim());
 
                 break;
             case R.id.rl_code:
@@ -109,7 +107,7 @@ public class ChangePhone1Activity extends BaseActivity {
                 mRlCode.setEnabled(false);
                 mTimer.start();
 
-                getSmsCode(Constant.PHONE);
+                getSmsCode(phone);
                 break;
             case R.id.left_button:
                 finish();
@@ -126,10 +124,7 @@ public class ChangePhone1Activity extends BaseActivity {
 
             @Override
             public void onSuccess(int code, Object result) {
-
-                mSmsCode = ((SmsCodeEntity) result).smsCode;
-
-                KLog.i("mSmsCode:%s", mSmsCode);
+                KLog.i("mSmsCode:%s", result);
             }
 
             @Override

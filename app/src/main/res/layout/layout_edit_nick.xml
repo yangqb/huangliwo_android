@@ -19,7 +19,8 @@
         android:layout_marginLeft="18dp"
         android:layout_marginRight="18dp"
         android:background="@null"
-        android:hint="请输入新的昵称"
+        android:maxLength="15"
+        android:hint="请输入新的昵称(最多15个字符)"
         android:maxLines="15"
         android:textColor="@color/color_333333"
         android:textSize="14sp" />

@@ -83,7 +83,7 @@ public class App extends MobApplication {
         //SDKInitializer.initialize(getApplicationContext());
         initPush();
         AutoSizeConfig.getInstance().setCustomFragment(true);
-        CrashReport.initCrashReport(getApplicationContext(), "ad4dea9550", true);
+        CrashReport.initCrashReport(getApplicationContext(), "ad4dea9550", false);
     }
 
     private void initPush() {

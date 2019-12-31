@@ -418,27 +418,11 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, View.
                     @Override
                     public void onResponse(Object response, int id) {
                         ShopClassify shopClassify = (ShopClassify) response;
-                        if (shopClassify.getGGoodsClsList().size() > 6) {
-                            shopClassifyLsit.clear();
-                            for (int i = 0; i < shopClassify.getGGoodsClsList().size(); i++) {
-                                if (i <= 5) {
-                                    shopClassifyLsit.add(shopClassify.getGGoodsClsList().get(i));
-                                }
-                            }
-                        } else {
-                            shopClassifyLsit = shopClassify.getGGoodsClsList();
-                        }
+                        shopClassifyLsit = shopClassify.getGGoodsClsList();
                         hAdapter.setNewData(shopClassifyLsit);
                         hAdapter.notifyDataSetChanged();
                     }
                 });
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        EventBus.getDefault().unregister(this);
-        unbinder.unbind();
     }
 
     @Override
@@ -448,6 +432,7 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, View.
         if (mViewpager != null) {
             mViewpager.stopLoop();
         }
+        unbinder.unbind();
     }
 
     @Override
@@ -638,7 +623,7 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, View.
                         if (response != null) {
                             mineInfoModel = response;
                             String headImg = mineInfoModel.getHeadImg();
-                            Glide.with(mContext).load(headImg).apply(RequestOptions.placeholderOf(R.mipmap.b08_01touxiang).dontAnimate())
+                            Glide.with(mContext).load(headImg).apply(RequestOptions.placeholderOf(R.mipmap.b08_01touxiang).error(R.mipmap.b08_01touxiang).dontAnimate())
                                     .into(ivHead);
                         }
                     }

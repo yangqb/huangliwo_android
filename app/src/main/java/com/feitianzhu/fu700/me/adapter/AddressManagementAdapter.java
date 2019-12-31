@@ -20,7 +20,7 @@ public class AddressManagementAdapter extends BaseQuickAdapter<AddressInfo.ShopA
     protected void convert(@NonNull BaseViewHolder helper, AddressInfo.ShopAddressListBean item) {
         helper.setText(R.id.name, item.getUserName());
         helper.setText(R.id.phone, item.getPhone());
-        helper.setText(R.id.address, item.getProvinceName() + item.getCityName() + item.getCityName() + item.getDetailAddress());
+        helper.setText(R.id.address, item.getProvinceName() + item.getCityName() + item.getAreaName() + item.getDetailAddress());
         if (item.getIsDefalt() == 1) {
             helper.setVisible(R.id.isDefault, true);
         } else {

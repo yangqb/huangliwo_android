@@ -1,6 +1,5 @@
 package com.feitianzhu.fu700.me;
 
-import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -10,13 +9,16 @@ import com.feitianzhu.fu700.R;
 import com.feitianzhu.fu700.common.Constant;
 import com.feitianzhu.fu700.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.fu700.me.base.BaseActivity;
-import com.feitianzhu.fu700.shop.ShopDao;
+import com.feitianzhu.fu700.model.WithdrawModel;
 import com.feitianzhu.fu700.shop.ShopHelp;
 import com.feitianzhu.fu700.utils.EditTextUtils;
 import com.feitianzhu.fu700.utils.SPUtils;
 import com.feitianzhu.fu700.utils.StringUtils;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.utils.Urls;
+import com.google.gson.Gson;
+import com.lxj.xpopup.XPopup;
+import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
 
@@ -124,7 +126,7 @@ public class WithdrawActivity extends BaseActivity {
                 .execute(new Callback() {
                     @Override
                     public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                        return mData;
+                        return new Gson().fromJson(mData, WithdrawModel.class);
                     }
 
                     @Override
@@ -134,8 +136,15 @@ public class WithdrawActivity extends BaseActivity {
 
                     @Override
                     public void onResponse(Object response, int id) {
-                        ToastUtils.showShortToast(response.toString());
-                        finish();
+                        new XPopup.Builder(WithdrawActivity.this)
+                                .asConfirm("提示", ((WithdrawModel) response).getMsg(), "关闭", "确定", new OnConfirmListener() {
+                                    @Override
+                                    public void onConfirm() {
+                                        finish();
+                                    }
+                                }, null, false)
+                                .bindLayout(R.layout.layout_dialog) //绑定已有布局
+                                .show();
                     }
                 });
     }

@@ -17,8 +17,7 @@
           android:id="@+id/item_icon"
           android:layout_width="120dp"
           android:layout_height="82dp"
-          android:scaleType="fitXY"
-          android:src="@drawable/pic_shanghutu" />
+          android:scaleType="fitXY" />
       <LinearLayout
           android:layout_width="0dp"
           android:layout_height="100dp"

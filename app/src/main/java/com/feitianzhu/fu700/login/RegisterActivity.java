@@ -148,21 +148,6 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         mEditTextParentId.setText("");
     }
 
-    private void showLoginLayout() {
-
-        resetEditText();
-        mForgetLayout.setVisibility(View.VISIBLE);
-        mRegister.setVisibility(View.VISIBLE);
-        mCodeLayout.setVisibility(View.GONE);
-        mEditTextParentId.setVisibility(View.GONE);
-        mRegister.setText(R.string.no_account);
-        mSignInButton.setText(R.string.sign_in);
-        defaultNavigationBar.changeTitleText(getString(R.string.sign_in));
-        mProtocolLayout.setVisibility(View.GONE);
-        mAccountLayout.setText(mAccount);
-    }
-
-
     private void register(final String account, final String password, String code, String parentId) {
 
         OkHttpUtils
@@ -204,8 +189,8 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         switch (v.getId()) {
             case R.id.rl_code:
                 String phone = mAccountLayout.getText().toString().trim();
-                if (TextUtils.isEmpty(phone)) {
-                    Toast.makeText(this, R.string.please_input_phone, Toast.LENGTH_SHORT).show();
+                if (!StringUtils.isPhone(phone)) {
+                    Toast.makeText(this, "请输入正确手机号", Toast.LENGTH_SHORT).show();
                     return;
                 }
 //                if (!RegexUtils.isChinaPhoneLegal(phone)) {

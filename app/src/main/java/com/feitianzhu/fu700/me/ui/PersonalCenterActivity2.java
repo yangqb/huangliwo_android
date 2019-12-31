@@ -61,9 +61,8 @@ import static com.feitianzhu.fu700.common.Constant.USERID;
  */
 public class PersonalCenterActivity2 extends BaseTakePhotoActivity {
     private static final int NICK_REQUEST_CODE = 1000;
-    private static final int SIGN_REQUEST_CODE = 1001;
+    private static final int SIGN_REQUEST_CODE = 999;
     private SharedInfoModel mSharedInfo;
-    private MineInfoModel mData;
     @BindView(R.id.rl_head)
     RelativeLayout rlHead;
     @BindView(R.id.rl_nick)
@@ -152,7 +151,6 @@ public class PersonalCenterActivity2 extends BaseTakePhotoActivity {
 
                     @Override
                     public void onResponse(MineInfoModel response, int id) {
-                        mData = response;
                         setShowData(response);
                     }
                 });
@@ -330,7 +328,7 @@ public class PersonalCenterActivity2 extends BaseTakePhotoActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+       super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case NICK_REQUEST_CODE:

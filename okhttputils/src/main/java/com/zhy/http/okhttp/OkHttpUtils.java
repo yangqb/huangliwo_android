@@ -11,6 +11,7 @@ import com.zhy.http.okhttp.builder.PostFormBuilder;
 import com.zhy.http.okhttp.builder.PostStringBuilder;
 import com.zhy.http.okhttp.callback.Callback;
 import com.zhy.http.okhttp.request.RequestCall;
+import com.zhy.http.okhttp.utils.Exceptions;
 import com.zhy.http.okhttp.utils.Platform;
 
 import java.io.IOException;

@@ -111,8 +111,8 @@ public class ChangePhone2Activity extends BaseActivity {
                         Constant.PHONE = newPhone;
                         SPUtils.putString(ChangePhone2Activity.this, Constant.SP_PHONE, newPhone);
                         KLog.i("new Constant.PHONE : " + Constant.PHONE);
-                        finish();
                         startActivity(new Intent(mContext, MainActivity.class));
+                        finish();
                     }
 
                     @Override

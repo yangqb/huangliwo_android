@@ -20,15 +20,14 @@
             android:layout_height="wrap_content"
             android:background="@color/white">
 
-            <com.itheima.roundedimageview.RoundedImageView
+            <com.feitianzhu.fu700.view.CircleImageView
                 android:id="@+id/iv_head"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_marginRight="10dp"
                 android:src="@mipmap/b08_01touxiang"
-                app:riv_border_color="@color/color_cccccc"
-                app:riv_border_width="0.5dp"
-                app:riv_oval="true" />
+                app:civ_border_color="@color/color_cccccc"
+                app:civ_border_width="1dp" />
 
             <TextView
                 android:id="@+id/userName"

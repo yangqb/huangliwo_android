@@ -22,9 +22,11 @@ import com.feitianzhu.fu700.me.ui.PersonalCenterActivity2;
 import com.feitianzhu.fu700.me.ui.VerificationActivity2;
 import com.feitianzhu.fu700.me.ui.totalScore.MineQrcodeActivity;
 import com.feitianzhu.fu700.model.MineInfoModel;
+import com.feitianzhu.fu700.pushshop.PushShopHomeActivity;
 import com.feitianzhu.fu700.settings.SettingsActivity;
 import com.feitianzhu.fu700.shop.ShopDao;
 import com.feitianzhu.fu700.shop.ui.MyOrderActivity2;
+import com.feitianzhu.fu700.shop.ui.ShoppingCartActivity;
 import com.feitianzhu.fu700.utils.SPUtils;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.view.CircleImageView;
@@ -68,8 +70,6 @@ public class MyCenterFragment extends SFFragment {
     private String mParam1;
     private String mParam2;
     private CenterAdapter adapter;
-    private String userId;
-    private String token;
     Unbinder unbinder;
     private MineInfoModel mTempData = new MineInfoModel();
     private static final String ARG_PARAM1 = "param1";
@@ -111,15 +111,14 @@ public class MyCenterFragment extends SFFragment {
         mRecyclerView.setLayoutManager(manager);
         mRecyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
-        token = SPUtils.getString(getActivity(), Constant.SP_ACCESS_TOKEN);
-        userId = SPUtils.getString(getActivity(), Constant.SP_LOGIN_USERID);
-
         initListener();
         requestData();
         return view;
     }
 
     public void requestData() {
+        String token = SPUtils.getString(getActivity(), Constant.SP_ACCESS_TOKEN);
+        String userId = SPUtils.getString(getActivity(), Constant.SP_LOGIN_USERID);
         OkHttpUtils.get()//
                 .url(Common_HEADER + POST_MINE_INFO)
                 .addParams(ACCESSTOKEN, token)//
@@ -145,7 +144,7 @@ public class MyCenterFragment extends SFFragment {
     private void setShowData(MineInfoModel response) {
         Glide.with(mContext)
                 .load(response.getHeadImg())
-                .apply(RequestOptions.placeholderOf(R.mipmap.b08_01touxiang).dontAnimate())
+                .apply(RequestOptions.placeholderOf(R.mipmap.b08_01touxiang).error(R.mipmap.b08_01touxiang).dontAnimate())
                 .into(civHead);
         nickName.setText(response.getNickName() == null ? "小黄鹂" : response.getNickName());
         if (response.getAccountType() == 0) {
@@ -208,7 +207,7 @@ public class MyCenterFragment extends SFFragment {
                     case 4: //推店
                         ToastUtils.showShortToast("敬请期待");
                         //ShopHelp.veriJumpActivity(getActivity());
-                       /* intent = new Intent(getActivity(), PushShopHomeActivity.class);
+                     /*  intent = new Intent(getActivity(), PushShopHomeActivity.class);
                         startActivity(intent);*/
                         break;
                     case 5://我的收藏

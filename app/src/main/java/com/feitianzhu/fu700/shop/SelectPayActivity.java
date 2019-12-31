@@ -98,6 +98,7 @@ public class SelectPayActivity extends BaseActivity {
     RelativeLayout rlAddress;
     private String token;
     private String userId;
+    private GoodsOrderInfo.GoodsOrderListBean orderInfo = new GoodsOrderInfo.GoodsOrderListBean();
 
     @Override
     protected int getLayoutId() {
@@ -190,8 +191,9 @@ public class SelectPayActivity extends BaseActivity {
         } else {
             appId = "";
         }
-        goodsOrderBean.setChannel(payChannel); //支付渠道支付渠道（wx：微信，alipay：支付宝，balance：余额
-        String json = new Gson().toJson(goodsOrderBean);
+        orderInfo.setChannel(payChannel);
+        orderInfo.setOrderNo(goodsOrderBean.getOrderNo());
+        String json = new Gson().toJson(orderInfo);
         OkHttpUtils.post()
                 .url(Urls.PAY_SHOPS)
                 .addParams(ACCESSTOKEN, token)//

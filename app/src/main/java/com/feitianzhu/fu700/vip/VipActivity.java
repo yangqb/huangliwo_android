@@ -3,6 +3,7 @@ package com.feitianzhu.fu700.vip;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
@@ -34,12 +35,14 @@ import com.feitianzhu.fu700.me.ui.totalScore.SelectPayActivity;
 import com.feitianzhu.fu700.model.LocationPost;
 import com.feitianzhu.fu700.model.MineInfoModel;
 import com.feitianzhu.fu700.model.MyPoint;
+import com.feitianzhu.fu700.model.PresentsModel;
 import com.feitianzhu.fu700.model.SelectPayNeedModel;
 import com.feitianzhu.fu700.model.UnionLevelModel;
 import com.feitianzhu.fu700.model.UserAuth;
 import com.feitianzhu.fu700.payforme.PayForMeEvent;
 import com.feitianzhu.fu700.shop.ShopDao;
 import com.feitianzhu.fu700.shop.ShopHelp;
+import com.feitianzhu.fu700.utils.SPUtils;
 import com.feitianzhu.fu700.utils.ToastUtils;
 import com.feitianzhu.fu700.utils.Urls;
 import com.feitianzhu.fu700.view.CustomInputView;
@@ -84,6 +87,8 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
     public static final String MINE_INFO = "mine_info";
     private static final int REQUEST_CODE = 1000;
     private MineInfoModel mTempData = new MineInfoModel();
+    private List<PresentsModel.ShopGiftListBean> shopGiftList = new ArrayList<>();
+    private VipPresentsAdapter adapter;
     @BindView(R.id.title_name)
     TextView titleName;
     @BindView(R.id.parent_view)
@@ -96,6 +101,12 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
     TextView btnSumbit;
     @BindView(R.id.cb_protocol)
     CheckBox mCheckBox;
+    @BindView(R.id.recyclerView)
+    RecyclerView recyclerView;
+    @BindView(R.id.ll_presents)
+    LinearLayout llPresents;
+    private String token;
+    private String userId;
 
     @Override
     protected int getLayoutId() {
@@ -109,7 +120,8 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
                 .statusBarDarkFont(true, 0.2f)
                 .statusBarColor(R.color.transparent)
                 .init();
-
+        token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
+        userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         mTempData = (MineInfoModel) getIntent().getSerializableExtra(MINE_INFO);
         if (mTempData != null && mTempData.getAccountType() != 0) {
             btnSumbit.setText("恭喜您已成为会员");
@@ -121,7 +133,10 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
         mCheckBox.setChecked(true);
         mCheckBox.setOnCheckedChangeListener(this);
         mCheckBox.setBackgroundResource(R.mipmap.f01_06xuanzhong5);
-
+        adapter = new VipPresentsAdapter(shopGiftList);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        recyclerView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
 
     boolean isMore = true;
@@ -146,7 +161,7 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
                 isMore = !isMore;
                 break;
             case R.id.btn_submit:
-                UserAuth mAuth = Constant.mUserAuth;
+               /* UserAuth mAuth = Constant.mUserAuth;
                 if (null == mAuth || 0 == mAuth.isRnAuth) {
                     //未实名 审核被拒
                     showDialog("你还没有进行实名认证，请先进行实名认证再进行该操作", true);
@@ -159,7 +174,10 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
                     intent = new Intent(VipActivity.this, VipUpgradeActivity.class);
                     intent.putExtra(VipUpgradeActivity.PARENT_ID, mTempData.getParentId());
                     startActivityForResult(intent, REQUEST_CODE);
-                }
+                }*/
+                intent = new Intent(VipActivity.this, VipUpgradeActivity.class);
+                intent.putExtra(VipUpgradeActivity.PARENT_ID, mTempData.getParentId());
+                startActivityForResult(intent, REQUEST_CODE);
                 break;
             case R.id.tv_protocol:
                 intent = new Intent(VipActivity.this, ProtocolActivity.class);
@@ -184,27 +202,41 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
                 .show();
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    public void onAuthEvent(AuthEvent mAuth) {
-        if (mAuth == AuthEvent.SUCCESS) {
-            initData();
-        }
-    }
-
     @Override
     protected void initData() {
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this);
-        }
-        ShopDao.loadUserAuthImpl(this);
+        OkHttpUtils.get()
+                .url(Urls.GET_VIP_PRESENT)
+                .addParams("accessToken", token)
+                .addParams("userId", userId)
+                .build()
+                .execute(new Callback() {
+                    @Override
+                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
+                        return new Gson().fromJson(mData, PresentsModel.class);
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        ToastUtils.showShortToast(e.getMessage());
+                    }
+
+                    @Override
+                    public void onResponse(Object response, int id) {
+                        PresentsModel presentsModel = (PresentsModel) response;
+                        if (presentsModel.getShopGiftList() == null || presentsModel.getShopGiftList().size() <= 0) {
+                            llPresents.setVisibility(View.GONE);
+                        } else {
+                            shopGiftList = presentsModel.getShopGiftList();
+                            adapter.setNewData(shopGiftList);
+                            adapter.notifyDataSetChanged();
+                        }
+                    }
+                });
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().unregister(this);
-        }
     }
 
 

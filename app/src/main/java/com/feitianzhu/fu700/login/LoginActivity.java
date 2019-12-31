@@ -68,8 +68,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     @Override
     protected void initData() {
-
-        mAccount = SPUtils.getString(this, Constant.SP_PHONE);
+        mAccount = SPUtils.getString(this, Constant.SP_PHONE,"");
         showLoginLayout();
     }
 

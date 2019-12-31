@@ -25,7 +25,11 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.transition.Transition;
+import com.davemorrissey.labs.subscaleview.ImageSource;
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.feitianzhu.fu700.App;
 import com.feitianzhu.fu700.R;
 import com.feitianzhu.fu700.common.Constant;
@@ -53,6 +57,11 @@ import com.zhpan.bannerview.holder.ViewHolder;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
 
+import org.devio.takephoto.compress.CompressConfig;
+import org.devio.takephoto.compress.CompressImageUtil;
+import org.devio.takephoto.model.LubanOptions;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -93,7 +102,7 @@ public class ShopsDetailActivity extends BaseActivity {
     @BindView(R.id.goodsSummary)
     TextView goodsSummary;
     @BindView(R.id.detail_img)
-    ImageView imgDetail;
+    SubsamplingScaleImageView imgDetail;
     @BindView(R.id.select_specifications)
     TextView specificationsName;
     @BindView(R.id.tv_count)
@@ -254,13 +263,15 @@ public class ShopsDetailActivity extends BaseActivity {
             if (goodsListBean.getGoodsIntroduceImg() == null || TextUtils.isEmpty(goodsListBean.getGoodsIntroduceImg())) {
                 llGoodsDetail.setVisibility(View.GONE);
             } else {
-                Glide.with(this).load(goodsListBean.getGoodsIntroduceImg())
-                        .apply(new RequestOptions()
-                                .placeholder(R.mipmap.g10_03weijiazai)
-                                .error(R.mipmap.g10_03weijiazai)
-                                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL))
-                        .into(GlideUtils.getImageView(this, goodsListBean.getGoodsIntroduceImg(), imgDetail));
+                Glide.with(this).load(goodsListBean.getGoodsIntroduceImg()).downloadOnly(new SimpleTarget<File>() {
+                    @Override
+                    public void onResourceReady(File resource, Transition<? super File> transition) {
+                        Uri uri = Uri.fromFile(resource);
+                        imgDetail.setImage(ImageSource.uri(uri));
+                        imgDetail.setZoomEnabled(false);
+                        imgDetail.setPanEnabled(false);
+                    }
+                });
             }
             if (goodsListBean.getGoodsImgsList() != null) {
                 List<BaseGoodsListBean.GoodsImgsListBean> bannerList = goodsListBean.getGoodsImgsList();

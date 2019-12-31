@@ -205,7 +205,7 @@ public class GetPasswordActivity extends BaseActivity implements View.OnClickLis
                             if (Constant.mUserAuth != null) {
                                 Constant.mUserAuth.isPaypass = 1;
                             }
-                            ToastUtils.showShortToast(mContext, R.string.change_ok);
+                            ToastUtils.showShortToast("设置成功");
                             finish();
                         }
 
