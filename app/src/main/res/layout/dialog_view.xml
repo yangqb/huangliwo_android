@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
-    <com.feitianzhu.fu700.view.pickview.LoopView
+    <com.feitianzhu.huangliwo.view.pickview.LoopView
         android:layout_marginTop="50dp"
         android:id="@+id/loopView"
         android:layout_width="match_parent"

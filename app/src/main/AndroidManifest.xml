@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.feitianzhu.fu700">
+    package="com.feitianzhu.huangliwo">
 
     <!-- 这个权限用于进行网络定位 -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -46,7 +46,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application xmlns:tools="http://schemas.android.com/tools"
-        android:name=".App"
+        android:name="com.feitianzhu.huangliwo.App"
         android:allowBackup="true"
         android:icon="@mipmap/logo"
         android:label="@string/app_name"
@@ -59,7 +59,7 @@
         <!--添加provider-->
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.feitianzhu.fu700.fileprovider"
+            android:authorities="com.feitianzhu.huangliwo.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -79,37 +79,37 @@
             android:value="sj7Duk6sDsVFhabLZKKP04lb4bka9hPh" />
 
         <activity
-            android:name=".MainActivity"
+            android:name="com.feitianzhu.huangliwo.MainActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".me.ui.ShopsCreateActivity"
+            android:name="com.feitianzhu.huangliwo.me.ui.ShopsCreateActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".login.LoginActivity"
+            android:name="com.feitianzhu.huangliwo.login.LoginActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|adjustPan" />
         <activity
-            android:name=".login.RegisterActivity"
+            android:name="com.feitianzhu.huangliwo.login.RegisterActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".settings.ChangePasswordActivity"
+            android:name="com.feitianzhu.huangliwo.settings.ChangePasswordActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".me.ui.VerificationActivity"
+            android:name="com.feitianzhu.huangliwo.me.ui.VerificationActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".splash.SplashActivity"
+            android:name="com.feitianzhu.huangliwo.splash.SplashActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait"
             android:theme="@style/SplashTheme">
@@ -120,53 +120,53 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".splash.SplashActivity2"
+            android:name="com.feitianzhu.huangliwo.splash.SplashActivity2"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
         <activity
-            android:name=".payforme.PayForMeActivity"
+            android:name="com.feitianzhu.huangliwo.payforme.PayForMeActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".payforme.PayForMeRejectActivity"
+            android:name="com.feitianzhu.huangliwo.payforme.PayForMeRejectActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".me.ui.ScannerActivity"
+            android:name="com.feitianzhu.huangliwo.me.ui.ScannerActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".shop.ui.ShopTypeActivity"
+            android:name="com.feitianzhu.huangliwo.shop.ui.ShopTypeActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".me.ui.consumeralliance.NewBecomeVolunteerActivity"
+            android:name="com.feitianzhu.huangliwo.me.ui.consumeralliance.NewBecomeVolunteerActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".home.NoticeActivity"
+            android:name="com.feitianzhu.huangliwo.home.NoticeActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".me.ui.totalScore.SelectPayActivity"
+            android:name="com.feitianzhu.huangliwo.me.ui.totalScore.SelectPayActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".me.ui.totalScore.TransferVoucherActivity"
+            android:name="com.feitianzhu.huangliwo.me.ui.totalScore.TransferVoucherActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".me.ui.totalScore.MineQrcodeActivity"
+            android:name="com.feitianzhu.huangliwo.me.ui.totalScore.MineQrcodeActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".me.ui.totalScore.MineCollectionActivity"
+            android:name="com.feitianzhu.huangliwo.me.ui.totalScore.MineCollectionActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".login.ForgetPasswordActivity"
+            android:name="com.feitianzhu.huangliwo.login.ForgetPasswordActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
@@ -177,71 +177,71 @@
             android:process=":remote" />
 
         <activity
-            android:name=".settings.SettingsActivity"
+            android:name="com.feitianzhu.huangliwo.settings.SettingsActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".settings.ChangePhone1Activity"
+            android:name="com.feitianzhu.huangliwo.settings.ChangePhone1Activity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".settings.ChangePhone2Activity"
+            android:name="com.feitianzhu.huangliwo.settings.ChangePhone2Activity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".settings.GetPasswordActivity"
+            android:name="com.feitianzhu.huangliwo.settings.GetPasswordActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".settings.FeedbackActivity"
+            android:name="com.feitianzhu.huangliwo.settings.FeedbackActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".me.ui.ShopsEditActivity"
+            android:name="com.feitianzhu.huangliwo.me.ui.ShopsEditActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".bankcard.MyBankCardActivity"
+            android:name="com.feitianzhu.huangliwo.bankcard.MyBankCardActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".bankcard.WithdrawResultActivity"
+            android:name="com.feitianzhu.huangliwo.bankcard.WithdrawResultActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".bankcard.AddBankCardActivity"
+            android:name="com.feitianzhu.huangliwo.bankcard.AddBankCardActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".bankcard.SelectBankCardActivity"
+            android:name="com.feitianzhu.huangliwo.bankcard.SelectBankCardActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".bankcard.WithdrawActivity"
+            android:name="com.feitianzhu.huangliwo.bankcard.WithdrawActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".me.ui.CollectMoneyActivity"
+            android:name="com.feitianzhu.huangliwo.me.ui.CollectMoneyActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".payforme.PayForMeRecordActivity"
+            android:name="com.feitianzhu.huangliwo.payforme.PayForMeRecordActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".me.ui.ShopShowNoCreateActivity"
+            android:name="com.feitianzhu.huangliwo.me.ui.ShopShowNoCreateActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".me.ui.WalletPayActivity"
+            android:name="com.feitianzhu.huangliwo.me.ui.WalletPayActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".home.WebViewActivity"
+            android:name="com.feitianzhu.huangliwo.home.WebViewActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".common.base.LazyWebActivity"
+            android:name="com.feitianzhu.huangliwo.common.base.LazyWebActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
 
@@ -254,7 +254,7 @@
 
         <!-- 微信分享回调 -->
         <activity
-            android:name=".wxapi.WXEntryActivity"
+            android:name="com.feitianzhu.huangliwo.wxapi.WXEntryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
             android:screenOrientation="portrait"
@@ -274,173 +274,173 @@
         </activity>
         <!-- ShareSdk  end -->
         <activity
-            android:name=".shop.ui.ShopReportActivity"
+            android:name="com.feitianzhu.huangliwo.shop.ui.ShopReportActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".me.ui.GetMoneyActivity"
+            android:name="com.feitianzhu.huangliwo.me.ui.GetMoneyActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".me.ui.totalScore.ReleaseTotalScoreActivity"
+            android:name="com.feitianzhu.huangliwo.me.ui.totalScore.ReleaseTotalScoreActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".wxapi.WXPayEntryActivity"
+            android:name="com.feitianzhu.huangliwo.wxapi.WXPayEntryActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".me.ui.OrdeRevaluateActivity"
+            android:name="com.feitianzhu.huangliwo.me.ui.OrdeRevaluateActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".me.ui.PersonalCenterActivity2"
+            android:name="com.feitianzhu.huangliwo.me.ui.PersonalCenterActivity2"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".me.ui.EditNickActivity"
+            android:name="com.feitianzhu.huangliwo.me.ui.EditNickActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".me.ui.EditSignActivity"
+            android:name="com.feitianzhu.huangliwo.me.ui.EditSignActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".shop.ShopSetMealActivity"
+            android:name="com.feitianzhu.huangliwo.shop.ShopSetMealActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".vip.VipActivity"
+            android:name="com.feitianzhu.huangliwo.vip.VipActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".vip.VipUpgradeActivity"
+            android:name="com.feitianzhu.huangliwo.vip.VipUpgradeActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".shop.ShopsDetailActivity"
+            android:name="com.feitianzhu.huangliwo.shop.ShopsDetailActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:largeHeap="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".shop.ShopInfoDetailActivity"
+            android:name="com.feitianzhu.huangliwo.shop.ShopInfoDetailActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".shop.ShopPayActivity"
+            android:name="com.feitianzhu.huangliwo.shop.ShopPayActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".me.BalanceActivity"
+            android:name="com.feitianzhu.huangliwo.me.BalanceActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".me.DetailedRulesActivity"
+            android:name="com.feitianzhu.huangliwo.me.DetailedRulesActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".me.UnionlevelActivity2"
+            android:name="com.feitianzhu.huangliwo.me.UnionlevelActivity2"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".vip.ProtocolActivity"
+            android:name="com.feitianzhu.huangliwo.vip.ProtocolActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".me.AddressManagementActivity"
+            android:name="com.feitianzhu.huangliwo.me.AddressManagementActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".me.EditAddressActivity"
+            android:name="com.feitianzhu.huangliwo.me.EditAddressActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".shop.ui.MyOrderActivity2"
+            android:name="com.feitianzhu.huangliwo.shop.ui.MyOrderActivity2"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".shop.ui.OrderDetailActivity"
+            android:name="com.feitianzhu.huangliwo.shop.ui.OrderDetailActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".shop.ui.EditCommentsActivity"
+            android:name="com.feitianzhu.huangliwo.shop.ui.EditCommentsActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".shop.ui.EditApplyRefundActivity"
+            android:name="com.feitianzhu.huangliwo.shop.ui.EditApplyRefundActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".shop.ui.LogisticsInfoActivity"
+            android:name="com.feitianzhu.huangliwo.shop.ui.LogisticsInfoActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".shop.CommentsDetailActivity"
+            android:name="com.feitianzhu.huangliwo.shop.CommentsDetailActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".pushshop.PushShopHomeActivity"
+            android:name="com.feitianzhu.huangliwo.pushshop.PushShopHomeActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".pushshop.EditMerchantsActivity"
+            android:name="com.feitianzhu.huangliwo.pushshop.EditMerchantsActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".pushshop.PushShopListActivity"
+            android:name="com.feitianzhu.huangliwo.pushshop.PushShopListActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".pushshop.MySelfMerchantsActivity"
+            android:name="com.feitianzhu.huangliwo.pushshop.MySelfMerchantsActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".pushshop.NoPassReasonActivity"
+            android:name="com.feitianzhu.huangliwo.pushshop.NoPassReasonActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".pushshop.ProblemFeedbackActivity"
+            android:name="com.feitianzhu.huangliwo.pushshop.ProblemFeedbackActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".pushshop.PushShopProtocolActivity"
+            android:name="com.feitianzhu.huangliwo.pushshop.PushShopProtocolActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".pushshop.MerchantsDetailActivity"
+            android:name="com.feitianzhu.huangliwo.pushshop.MerchantsDetailActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".shop.ui.AfterSaleActivity"
+            android:name="com.feitianzhu.huangliwo.shop.ui.AfterSaleActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".shop.ui.ShoppingCartActivity"
+            android:name="com.feitianzhu.huangliwo.shop.ui.ShoppingCartActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".shop.SelectPayActivity"
+            android:name="com.feitianzhu.huangliwo.shop.SelectPayActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".me.WithdrawActivity"
+            android:name="com.feitianzhu.huangliwo.me.WithdrawActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".me.ui.VerificationActivity2"
+            android:name="com.feitianzhu.huangliwo.me.ui.VerificationActivity2"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".login.RegistererProtocolActivity"
+            android:name="com.feitianzhu.huangliwo.login.RegistererProtocolActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".shop.ui.SearchShopActivity"
+            android:name="com.feitianzhu.huangliwo.shop.ui.SearchShopActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".shop.ShopsActivity"
+            android:name="com.feitianzhu.huangliwo.shop.ShopsActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
 

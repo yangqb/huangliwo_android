@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.feitianzhu.fu700.me.ui.ShopShowNoCreateActivity"
+    tools:context="com.feitianzhu.huangliwo.me.ui.ShopShowNoCreateActivity"
     >
   <android.support.v7.widget.Toolbar
       android:id="@+id/toolbar"

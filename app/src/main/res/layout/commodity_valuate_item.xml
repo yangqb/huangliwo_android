@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:background="@color/white">
 
-            <com.feitianzhu.fu700.view.CircleImageView
+            <com.feitianzhu.huangliwo.view.CircleImageView
                 android:id="@+id/iv_head"
                 android:layout_width="35dp"
                 android:layout_height="35dp"

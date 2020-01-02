@@ -54,7 +54,7 @@
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
                     android:layout_height="match_parent">
-              <com.feitianzhu.fu700.view.CircleImageView
+              <com.feitianzhu.huangliwo.view.CircleImageView
                   android:id="@+id/item_icon"
                   android:layout_width="30dp"
                   android:layout_height="30dp"

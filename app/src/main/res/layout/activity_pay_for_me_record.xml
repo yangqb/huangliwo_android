@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.feitianzhu.fu700.payforme.PayForMeRecordActivity">
+    tools:context="com.feitianzhu.huangliwo.payforme.PayForMeRecordActivity">
 
     <com.flyco.tablayout.SlidingTabLayout
         android:id="@+id/tablayout"

@@ -43,7 +43,7 @@
                 android:src="@mipmap/b08_04jinru"
                 android:visibility="invisible" />
 
-            <com.feitianzhu.fu700.view.CircleImageView
+            <com.feitianzhu.huangliwo.view.CircleImageView
                 android:id="@+id/iv_head"
                 android:layout_width="35dp"
                 android:layout_height="35dp"

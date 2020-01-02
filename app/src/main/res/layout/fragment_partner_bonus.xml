@@ -10,7 +10,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:background="#F5F5F5"
         android:orientation="vertical"
-        tools:context="com.feitianzhu.fu700.me.ui.MyMoneyFragment"
+        tools:context="com.feitianzhu.huangliwo.me.ui.MyMoneyFragment"
         android:layout_above="@+id/rl_bottom_container"
         >
         <RelativeLayout

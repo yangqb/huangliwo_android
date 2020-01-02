@@ -3,10 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.feitianzhu.fu700.splash.SplashActivity">
+    tools:context="com.feitianzhu.huangliwo.splash.SplashActivity">
 
 
-    <com.feitianzhu.fu700.view.CustomVideoView
+    <com.feitianzhu.huangliwo.view.CustomVideoView
         android:id="@+id/videoview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

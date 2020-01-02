@@ -1,0 +1,1346 @@
+package com.feitianzhu.huangliwo.dao;
+
+import android.content.Context;
+import android.text.TextUtils;
+
+import com.feitianzhu.huangliwo.bankcard.entity.BankCardEntity;
+import com.feitianzhu.huangliwo.bankcard.entity.UserBankCardEntity;
+import com.feitianzhu.huangliwo.bankcard.entity.WithdrawFeeRateEntity;
+import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.common.entity.DefaultRate;
+import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
+import com.feitianzhu.huangliwo.home.entity.NoticeEntity;
+import com.feitianzhu.huangliwo.login.entity.LoginEntity;
+import com.feitianzhu.huangliwo.login.entity.UserInfoEntity;
+import com.feitianzhu.huangliwo.me.helper.CityModel;
+import com.feitianzhu.huangliwo.model.OfflineModel;
+import com.feitianzhu.huangliwo.payforme.entity.PayForMeEntity;
+import com.feitianzhu.huangliwo.utils.SPUtils;
+import com.feitianzhu.huangliwo.utils.Urls;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.socks.library.KLog;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.builder.PostFormBuilder;
+import com.zhy.http.okhttp.callback.Callback;
+
+import org.json.JSONObject;
+
+import java.io.File;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+
+import okhttp3.Call;
+import okhttp3.Response;
+
+import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
+import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
+import static com.feitianzhu.huangliwo.common.Constant.FailCode;
+import static com.feitianzhu.huangliwo.common.Constant.POST_BUY_SERVICE;
+import static com.feitianzhu.huangliwo.common.Constant.POST_SHOP_RECORD_SEND;
+import static com.feitianzhu.huangliwo.common.Constant.USERID;
+
+/**
+ * Created by lijia on 2017/9/4 0004.
+ */
+
+public class NetworkDao {
+
+
+    private NetworkDao() {
+    }
+
+    public static void login(final Context context, final String phone, final String password, final onConnectionFinishLinstener linstener) {
+
+        OkHttpUtils
+                .post()
+                .url(Urls.LOGIN)
+                .addParams("phone", phone)
+                .addParams("password", password)
+                .build()
+                .execute(new Callback() {
+                    @Override
+                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
+                        return new Gson().fromJson(mData, LoginEntity.class);
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+
+                        Constant.ACCESS_TOKEN = "";
+                        Constant.LOGIN_USERID = "";
+                        Constant.PHONE = "";
+
+                        SPUtils.putString(context, Constant.SP_PHONE, "");
+                        SPUtils.putString(context, Constant.SP_PASSWORD, "");
+                        SPUtils.putString(context, Constant.SP_LOGIN_USERID, "");
+                        SPUtils.putString(context, Constant.SP_ACCESS_TOKEN, "");
+                        linstener.onFail(FailCode, e.getMessage());
+                        KLog.e(e);
+                    }
+
+                    @Override
+                    public void onResponse(Object response, int id) {
+
+                        if (response == null) {
+                            linstener.onFail(FailCode, "response is null!");
+                            return;
+                        }
+
+                        KLog.i("response:%s", response.toString());
+
+                        LoginEntity loginEntity = (LoginEntity) response;
+//                        Constant.CommonACCESSTOKEN = Constant.ACCESS_TOKEN = loginEntity.accessToken;
+//                        Constant.CommonUSERID = Constant.LOGIN_USERID = loginEntity.userId;
+                        Constant.ACCESS_TOKEN = loginEntity.accessToken;
+                        Constant.LOGIN_USERID = loginEntity.userId;
+                        Constant.PHONE = phone;
+
+                        SPUtils.putString(context, Constant.SP_PHONE, phone);
+                        SPUtils.putString(context, Constant.SP_PASSWORD, password);
+                        SPUtils.putString(context, Constant.SP_LOGIN_USERID, loginEntity.userId);
+                        SPUtils.putString(context, Constant.SP_ACCESS_TOKEN, loginEntity.accessToken);
+                        linstener.onSuccess(0, loginEntity);
+                    }
+                });
+
+    }
+
+    /**
+     * 获取验证码
+     */
+    public static void getSmsCode(Context context, String phone, String type, final onConnectionFinishLinstener linstener) {
+        String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN, "");
+        String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID, "");
+        OkHttpUtils
+                .get()
+                .url(Urls.GET_SMSCODE)
+                .addParams("phone", phone)
+                .addParams("type", type)
+                .addParams("accessToken", token)
+                .build()
+                .execute(new Callback() {
+                    @Override
+                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
+                        KLog.i("mData: %s", mData);
+                        return mData;
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        linstener.onFail(FailCode, e.getMessage());
+                        KLog.e(e);
+                    }
+
+                    @Override
+                    public void onResponse(Object response, int id) {
+
+                        KLog.i("response:%s", response.toString());
+
+                        linstener.onSuccess(0, response);
+                    }
+                });
+    }
+
+
+    /**
+     * 更换手机号
+     */
+    public static void updatePhone(Context context, String oldPhone, String oldSmsCode, String newPhone, String newSmsCode, final onConnectionFinishLinstener linstener) {
+        String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN);
+        String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID);
+        OkHttpUtils
+                .post()
+                .url(Urls.UPDATE_PHONE)
+                .addParams("oldPhone", oldPhone)
+                .addParams("oldSmsCode", oldSmsCode)
+                .addParams("newPhone", newPhone)
+                .addParams("newSmsCode", newSmsCode)
+                .addParams("accessToken", token)
+                .addParams("userId", userId)
+                .build()
+                .execute(new Callback() {
+                    @Override
+                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
+                        return mData;
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        KLog.e(e);
+                        if ("数据为空".equals(e.getMessage())) {
+
+                            linstener.onSuccess(0, e.getMessage());
+                        } else {
+                            linstener.onFail(FailCode, e.getMessage());
+                        }
+                    }
+
+                    @Override
+                    public void onResponse(Object response, int id) {
+
+                        if (response == null) {
+                            linstener.onFail(FailCode, "response is null!");
+                            return;
+                        }
+                        KLog.i("response:%s", response.toString());
+
+                        linstener.onSuccess(0, response);
+                    }
+                });
+    }
+
+
+    /**
+     * 查询个人信息
+     */
+    public static void getUserInfo(final onConnectionFinishLinstener linstener) {
+
+        OkHttpUtils
+                .get()
+                .url(Urls.GET_USERINFO)
+                .addParams("accessToken", Constant.ACCESS_TOKEN)
+                .addParams("userId", Constant.LOGIN_USERID)
+                .build()
+                .execute(new Callback() {
+                    @Override
+                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
+                        return new Gson().fromJson(mData, UserInfoEntity.class);
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        KLog.e(e);
+                        linstener.onFail(FailCode, e.getMessage());
+                    }
+
+                    @Override
+                    public void onResponse(Object response, int id) {
+
+                        if (response == null) {
+                            linstener.onFail(FailCode, "response is null!");
+                            return;
+                        }
+                        Constant.USER_INFO = ((UserInfoEntity) response);
+                        if (Constant.USER_INFO.getNickName() == null) {
+                            Constant.USER_INFO.setNickName("");
+                        }
+                        KLog.i("Constant.USER_INFO:%s", Constant.USER_INFO.toString());
+                        linstener.onSuccess(0, response);
+                    }
+                });
+    }
+
+    /**
+     * 修改密码
+     */
+    public static void changePassword(Context context, String oldPassword, String newPassword, String confirmPassword, final onConnectionFinishLinstener linstener) {
+        String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN);
+        String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID);
+        OkHttpUtils
+                .post()
+                .url(Urls.UPDATE_ULPASS)
+                .addParams("oldPassword", oldPassword)
+                .addParams("newPassword", newPassword)
+                .addParams("confirmPassword", confirmPassword)
+                .addParams("accessToken", token)
+                .addParams("userId", userId)
+                .build()
+                .execute(new Callback() {
+                    @Override
+                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
+                        return mData;
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        KLog.e(e);
+
+                        if ("数据为空".equals(e.getMessage())) {
+                            linstener.onSuccess(0, e.getMessage());
+                        } else {
+                            linstener.onFail(FailCode, e.getMessage());
+                        }
+                    }
+
+                    @Override
+                    public void onResponse(Object response, int id) {
+
+                        if (response == null) {
+                            linstener.onFail(FailCode, "response is null!");
+                            return;
+                        }
+                        KLog.i("response:%s", response.toString());
+
+                        linstener.onSuccess(0, response);
+                    }
+                });
+    }
+
+
+    /**
+     * 设置二级密码
+     */
+    public static void setPayPassword(Context context, String phone, String smsCode, String paypass, String confirmPaypass, final onConnectionFinishLinstener linstener) {
+        String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN);
+        String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID);
+        OkHttpUtils
+                .post()
+                .url(Urls.SET_PAYPASS)
+                .addParams("phone", phone)
+                .addParams("smsCode", smsCode)
+                .addParams("paypass", paypass)
+                .addParams("confirmPaypass", confirmPaypass)
+                .addParams("accessToken", token)
+                .addParams("userId", userId)
+                .build()
+                .execute(new Callback() {
+                    @Override
+                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
+                        return mData;
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        KLog.e(e);
+                        if ("数据为空".equals(e.getMessage())) {
+                            linstener.onSuccess(0, e.getMessage());
+                        } else {
+                            linstener.onFail(FailCode, e.getMessage());
+                        }
+                    }
+
+                    @Override
+                    public void onResponse(Object response, int id) {
+
+                        if (response == null) {
+                            linstener.onFail(FailCode, "response is null!");
+                            return;
+                        }
+                        KLog.i("response:%s", response.toString());
+
+                        linstener.onSuccess(0, response);
+                    }
+                });
+    }
+
+
+    /**
+     * 重置二级密码
+     */
+    public static void updatePayPassword(Context context, String oldPassword, String newPassword, String confirmPassword, final onConnectionFinishLinstener linstener) {
+        String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN);
+        String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID);
+        OkHttpUtils
+                .post()
+                .url(Urls.UPDATE_UPAYPASS)
+                .addParams("oldPassword", oldPassword)
+                .addParams("newPassword", newPassword)
+                .addParams("confirmPassword", confirmPassword)
+                .addParams("accessToken", token)
+                .addParams("userId", userId)
+                .build()
+                .execute(new Callback() {
+                    @Override
+                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
+                        return mData;
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        KLog.e(e);
+
+                        if ("数据为空".equals(e.getMessage())) {
+                            linstener.onSuccess(0, e.getMessage());
+                        } else {
+                            linstener.onFail(FailCode, e.getMessage());
+                        }
+                    }
+
+                    @Override
+                    public void onResponse(Object response, int id) {
+
+                        if (response == null) {
+                            linstener.onFail(FailCode, "response is null!");
+                            return;
+                        }
+                        KLog.i("response:%s", response.toString());
+
+                        linstener.onSuccess(0, response);
+                    }
+                });
+    }
+
+
+    /**
+     * 找回登录密码
+     */
+    public static void getLoginPwd(String phone, String smsCode, String newPassword, String confirmPassword, final onConnectionFinishLinstener linstener) {
+
+        OkHttpUtils
+                .post()
+                .url(Urls.GET_MYPASSWORD)
+                .addParams("phone", phone)
+                .addParams("smsCode", smsCode)
+                .addParams("newPassword", newPassword)
+                .addParams("confirmPassword", confirmPassword)
+                .build()
+                .execute(new Callback() {
+                    @Override
+                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
+                        return mData;
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        KLog.e(e);
+                        if ("数据为空".equals(e.getMessage())) {
+
+                            linstener.onSuccess(0, e.getMessage());
+                        } else {
+                            linstener.onFail(FailCode, e.getMessage());
+                        }
+                    }
+
+                    @Override
+                    public void onResponse(Object response, int id) {
+
+                        if (response == null) {
+                            linstener.onFail(FailCode, "response is null!");
+                            return;
+                        }
+                        KLog.i("response:%s", response.toString());
+
+                        linstener.onSuccess(0, response);
+                    }
+                });
+    }
+
+
+    /**
+     * 重置二级密码
+     */
+    public static void getPayPwd(Context context, String phone, String smsCode, String newPassword, String confirmPassword, final onConnectionFinishLinstener linstener) {
+        String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN);
+        String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID);
+        OkHttpUtils
+                .post()
+                .url(Urls.GET_UPAYPASS)
+                .addParams("phone", phone)
+                .addParams("smsCode", smsCode)
+                .addParams("newPassword", newPassword)
+                .addParams("confirmPassword", confirmPassword)
+                .addParams("accessToken", token)
+                .addParams("userId", userId)
+                .build()
+                .execute(new Callback() {
+                    @Override
+                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
+                        return mData;
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        KLog.e(e);
+                        if ("数据为空".equals(e.getMessage())) {
+
+                            linstener.onSuccess(0, e.getMessage());
+                        } else {
+                            linstener.onFail(FailCode, e.getMessage());
+                        }
+                    }
+
+                    @Override
+                    public void onResponse(Object response, int id) {
+
+                        if (response == null) {
+                            linstener.onFail(FailCode, "response is null!");
+                            return;
+                        }
+                        KLog.i("response:%s", response.toString());
+
+                        linstener.onSuccess(0, response);
+                    }
+                });
+    }
+
+
+    /**
+     * 二级密码校验
+     */
+    public static void checkPayPwd(Context context, String paypass, final onConnectionFinishLinstener linstener) {
+        String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN);
+        String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID);
+        OkHttpUtils
+                .post()
+                .url(Urls.CHECK_PAYPASS)
+                .addParams(ACCESSTOKEN, token)//
+                .addParams(USERID, userId)//
+                .addParams("paypass", paypass)
+                .build()
+                .execute(new Callback() {
+                    @Override
+                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
+                        return mData;
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        KLog.e(e);
+                        if ("数据为空".equals(e.getMessage())) {
+
+                            linstener.onSuccess(0, e.getMessage());
+                        } else {
+                            linstener.onFail(FailCode, e.getMessage());
+                        }
+                    }
+
+                    @Override
+                    public void onResponse(Object response, int id) {
+
+                        if (response == null) {
+                            linstener.onFail(FailCode, "response is null!");
+                            return;
+                        }
+                        KLog.i("response:%s", response.toString());
+
+                        linstener.onSuccess(0, response);
+                    }
+                });
+    }
+
+
+    /**
+     * 意见反馈
+     */
+    public static void feedback(Context context, String content, final onConnectionFinishLinstener linstener) {
+        String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN);
+        String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID);
+        OkHttpUtils
+                .post()
+                .url(Urls.USER_FEEDBACK)
+                .addParams("content", content)
+                .addParams("accessToken", token)
+                .addParams("userId", userId)
+                .build()
+                .execute(new Callback() {
+                    @Override
+                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
+                        return mData;
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        KLog.e(e);
+                        if ("数据为空".equals(e.getMessage())) {
+
+                            linstener.onSuccess(0, e.getMessage());
+                        } else {
+                            linstener.onFail(FailCode, e.getMessage());
+                        }
+                    }
+
+                    @Override
+                    public void onResponse(Object response, int id) {
+
+                        if (response == null) {
+                            linstener.onFail(FailCode, "response is null!");
+                            return;
+                        }
+                        KLog.i("response:%s", response.toString());
+
+                        linstener.onSuccess(0, response);
+                    }
+                });
+    }
+
+
+    /**
+     * 删除银行卡
+     */
+    public static void deleteBankCard(String bankCardId, final onConnectionFinishLinstener linstener) {
+
+        OkHttpUtils
+                .post()
+                .url(Urls.DELETE_UBC)
+                .addParams("bankCardId", bankCardId)
+                .addParams("accessToken", Constant.ACCESS_TOKEN)
+                .addParams("userId", Constant.LOGIN_USERID)
+                .build()
+                .execute(new Callback() {
+                    @Override
+                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
+                        return mData;
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        KLog.e(e);
+                        if ("数据为空".equals(e.getMessage())) {
+                            linstener.onSuccess(0, e.getMessage());
+                        } else {
+                            linstener.onFail(FailCode, e.getMessage());
+                        }
+                    }
+
+                    @Override
+                    public void onResponse(Object response, int id) {
+
+                        if (response == null) {
+                            linstener.onFail(FailCode, "response is null!");
+                            return;
+                        }
+                        KLog.i("response:%s", response.toString());
+
+                        linstener.onSuccess(0, response);
+                    }
+                });
+    }
+
+    /**
+     * 新增银行卡信息
+     *
+     * @param bankId
+     * @param openSubbranch 开户支行
+     * @param bankCardNo    银行卡账号
+     * @param paypass
+     * @param linstener
+     */
+    public static void addBankCard(String realName, String bankId, String openSubbranch, String bankCardNo, String paypass, final onConnectionFinishLinstener linstener) {
+
+        OkHttpUtils
+                .post()
+                .url(Urls.ADD_UBC)
+                .addParams("realName", realName)
+                .addParams("bankId", bankId)
+                .addParams("openSubbranch", openSubbranch)
+                .addParams("bankCardNo", bankCardNo)
+                .addParams("paypass", paypass)
+                .addParams("accessToken", Constant.ACCESS_TOKEN)
+                .addParams("userId", Constant.LOGIN_USERID)
+                .build()
+                .execute(new Callback() {
+                    @Override
+                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
+                        return mData;
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        KLog.e(e);
+                        if ("数据为空".equals(e.getMessage())) {
+                            linstener.onSuccess(0, e.getMessage());
+                        } else {
+                            linstener.onFail(FailCode, e.getMessage());
+                        }
+                    }
+
+                    @Override
+                    public void onResponse(Object response, int id) {
+
+                        if (response == null) {
+                            linstener.onFail(FailCode, "response is null!");
+                            return;
+                        }
+                        KLog.i("response:%s", response.toString());
+
+                        linstener.onSuccess(0, response);
+                    }
+                });
+    }
+
+    /**
+     * 获取线下支付信息
+     */
+    public static void getOfflineInfo(final onConnectionFinishLinstener linstener) {
+
+        OkHttpUtils
+                .post()
+                .url(Urls.GET_OFFLINE)
+                .addParams("accessToken", Constant.ACCESS_TOKEN)
+                .addParams("userId", Constant.LOGIN_USERID)
+                .build()
+                .execute(new Callback<OfflineModel>() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        KLog.e(e);
+                        if ("数据为空".equals(e.getMessage())) {
+                            linstener.onSuccess(0, e.getMessage());
+                        } else {
+                            linstener.onFail(FailCode, e.getMessage());
+                        }
+                    }
+
+                    @Override
+                    public void onResponse(OfflineModel response, int id) {
+
+                        if (response == null) {
+                            linstener.onFail(FailCode, "response is null!");
+                            return;
+                        }
+                        KLog.i("response:%s", response.toString());
+
+                        linstener.onSuccess(0, response);
+                    }
+                });
+    }
+
+    /**
+     * 获取用户银行卡列表
+     */
+    public static void getUserBankCardList(final onConnectionFinishLinstener linstener) {
+
+        OkHttpUtils
+                .post()
+                .url(Urls.GET_USER_BCLIST)
+                .addParams("accessToken", Constant.ACCESS_TOKEN)
+                .addParams("userId", Constant.LOGIN_USERID)
+                .build()
+                .execute(new Callback() {
+                    @Override
+                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
+                        Type listType = new TypeToken<ArrayList<UserBankCardEntity>>() {
+                        }.getType();
+                        return new Gson().fromJson(mData, listType);
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        KLog.e(e);
+                        if ("数据为空".equals(e.getMessage())) {
+                            linstener.onSuccess(0, e.getMessage());
+                        } else {
+                            linstener.onFail(FailCode, e.getMessage());
+                        }
+                    }
+
+                    @Override
+                    public void onResponse(Object response, int id) {
+
+                        if (response == null) {
+                            linstener.onFail(FailCode, "response is null!");
+                            return;
+                        }
+                        KLog.i("response:%s", response.toString());
+
+                        linstener.onSuccess(0, response);
+                    }
+                });
+    }
+
+    /**
+     * 获取银行卡列表
+     */
+    public static void getBankCardList(final onConnectionFinishLinstener linstener) {
+
+        OkHttpUtils
+                .post()
+                .url(Urls.GET_BANKLIST)
+                .addParams("accessToken", Constant.ACCESS_TOKEN)
+                .addParams("userId", Constant.LOGIN_USERID)
+                .build()
+                .execute(new Callback() {
+                    @Override
+                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
+                        Type listType = new TypeToken<ArrayList<BankCardEntity>>() {
+                        }.getType();
+                        return new Gson().fromJson(mData, listType);
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        KLog.e(e);
+                        if ("数据为空".equals(e.getMessage())) {
+                            linstener.onSuccess(0, e.getMessage());
+                        } else {
+                            linstener.onFail(FailCode, e.getMessage());
+                        }
+                    }
+
+                    @Override
+                    public void onResponse(Object response, int id) {
+
+                        if (response == null) {
+                            linstener.onFail(FailCode, "response is null!");
+                            return;
+                        }
+                        KLog.i("response:%s", response.toString());
+
+                        linstener.onSuccess(0, response);
+                    }
+                });
+    }
+
+    public static void PayUnionLevel(Context context, String gradeId, String psw, final String PayChannel, CityModel model, final onConnectionFinishLinstener linstener) {
+        String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN);
+        String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID);
+        PostFormBuilder mPost = OkHttpUtils.post();
+        mPost.setMultipart(true);
+        mPost.url(Common_HEADER + Constant.POST_UNION_LEVEL_PAY);
+        if (model != null) {
+            if ("4".equals(model.agentType)) {//市代3  区代4
+                mPost.addParams("provinceId", model.cityId)
+                        .addParams("provinceName", model.city)
+                        .addParams("cityId", model.areaId)
+                        .addParams("cityName", model.area)
+                        .addParams("areaId", model.localId)
+                        .addParams("areaName", model.local);
+            }
+            if ("3".equals(model.agentType)) {
+                mPost.addParams("provinceId", model.cityId)
+                        .addParams("provinceName", model.city)
+                        .addParams("cityId", model.areaId)
+                        .addParams("cityName", model.area);
+
+            }
+            if ("2".equals(model.agentType)) {
+                mPost.addParams("provinceId", model.cityId)
+                        .addParams("provinceName", model.city);
+
+
+            }
+
+        }
+
+        mPost.addParams(ACCESSTOKEN, token)//
+                .addParams(USERID, userId)
+                .addParams("gradeId", gradeId)
+                .addParams("payPass", psw)
+                .addParams("appId", Constant.WX_APP_ID)
+                .addParams("payChannel", PayChannel)
+                .build()
+                .execute(new Callback() {
+                    @Override
+                    public Object parseNetworkResponse(String mData, Response response, int id)
+                            throws Exception {
+                        /*if (PayChannel.equals("alipay")) {
+                            JSONObject object = new JSONObject(mData);
+                            return object.getString("payParam");
+                        }*/
+                        return mData;
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        if ("数据为空".equals(e.getMessage())) {
+                            linstener.onSuccess(0, e.getMessage());
+                        } else {
+                            linstener.onFail(FailCode, e.getMessage());
+                        }
+                    }
+
+                    @Override
+                    public void onResponse(Object response, int id) {
+                        if (response == null) {
+                            linstener.onFail(FailCode, "response is null!");
+                            return;
+                        }
+                        KLog.i("response:%s", response.toString());
+
+                        linstener.onSuccess(0, response);
+                    }
+                });
+    }
+
+    /**
+     * 购买服务
+     *
+     * @param merchantId
+     * @param serviceId
+     * @param price
+     * @param rebate
+     * @param contactTel
+     * @param PayChannel
+     * @param psw
+     * @param linstener
+     */
+    public static void PayBuyService(Context context, String merchantId, String serviceId, String price, String rebate, String contactTel, final String PayChannel, String psw, final onConnectionFinishLinstener linstener) {
+        String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN);
+        String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID);
+        PostFormBuilder mPost = OkHttpUtils.post();
+        mPost.url(Common_HEADER + POST_BUY_SERVICE)
+                .addParams(ACCESSTOKEN, token)//
+                .addParams(USERID, userId)
+                .addParams("merchantId", merchantId)
+                .addParams("serviceId", serviceId)
+                .addParams("amount", price)
+                .addParams("rebatePv", rebate)
+                .addParams("linkPhone", contactTel)
+                .addParams("payChannel", PayChannel)
+                .addParams("payPass", psw)
+
+                .build()
+                .execute(new Callback() {
+                    @Override
+                    public Object parseNetworkResponse(String mData, Response response, int id)
+                            throws Exception {
+                        if (PayChannel.equals("alipay")) {
+                            JSONObject object = new JSONObject(mData);
+                            return object.getString("payParam");
+                        }
+                        return mData;
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        if ("数据为空".equals(e.getMessage())) {
+                            linstener.onSuccess(0, e.getMessage());
+                        } else {
+                            linstener.onFail(FailCode, e.getMessage());
+                        }
+                    }
+
+                    @Override
+                    public void onResponse(Object response, int id) {
+                        if (response == null) {
+                            linstener.onFail(FailCode, "response is null!");
+                            return;
+                        }
+                        KLog.i("response:%s", response.toString());
+
+                        linstener.onSuccess(0, response);
+                    }
+                });
+    }
+
+    /**
+     * 商家录单付款
+     *
+     * @param MemberId
+     * @param ConsumeAmount
+     * @param HandleFee
+     * @param FeeId
+     * @param payPass
+     * @param PayChannel
+     * @param PlaceImgFile
+     * @param ObjImgFile
+     * @param RcptImgFile
+     * @param linstener
+     */
+    public static void PayShopRecord(Context context, String MemberId, String ConsumeAmount, String HandleFee, String FeeId, String payPass, final String PayChannel, String PlaceImgFile, String ObjImgFile, String RcptImgFile, final onConnectionFinishLinstener linstener) {
+        String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN);
+        String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID);
+        PostFormBuilder mPost = OkHttpUtils.post();
+        mPost.url(Common_HEADER + POST_SHOP_RECORD_SEND)
+                .addParams(ACCESSTOKEN, token)//
+                .addParams(USERID, userId)
+                .addParams("memberId", MemberId)
+                .addParams("consumeAmount", ConsumeAmount)
+                .addParams("handleFee", HandleFee)
+                .addParams("feeId", FeeId)
+                .addParams("payPass", payPass)
+                .addParams("payChannel", PayChannel)
+                .addFile("placeImgFile", "placeImgFile.png", new File(PlaceImgFile))// 消费场所
+                .addFile("objImgFile", "objImgFile.png", new File(ObjImgFile))// 消费实物
+                .addFile("rcptImgFile", "rcptImgFile.png", new File(RcptImgFile))// 消费发票
+                .build()
+                .execute(new Callback() {
+                    @Override
+                    public Object parseNetworkResponse(String mData, Response response, int id)
+                            throws Exception {
+                        if (PayChannel.equals("alipay")) {
+                            JSONObject object = new JSONObject(mData);
+                            return object.getString("payParam");
+                        }
+                        return mData;
+                    }
+
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        if ("数据为空".equals(e.getMessage())) {
+                            linstener.onSuccess(0, e.getMessage());
+                        } else {
+                            linstener.onFail(FailCode, e.getMessage());
+                        }
+                    }
+
+
+                    @Override
+                    public void onResponse(Object response, int id) {
+                        if (response == null) {
+                            linstener.onFail(FailCode, "response is null!");
+                            return;
+                        }
+                        KLog.i("response:%s", response.toString());
+
+                        linstener.onSuccess(0, response);
+                    }
+                });
+
+    }
+
+
+    /**
+     * 为我买单
+     *
+     * @param payPass       支付密码
+     * @param merchantName  商户名称
+     * @param merchantAddr  商户地址
+     * @param goodsName     商品名称
+     * @param consumeAmount 消费金额
+     * @param handleFee     手续费（系统参数--策划推广比例接口返回的比例*消费金额）
+     * @param payChannel    支付渠道（wx：微信，alipay：支付宝，balance：余额，offline：线下转账）
+     * @param placeImgFile  消费场所图
+     * @param objImgFile    消费实物图
+     * @param rcptImgFile   消费发票图
+     * @param payProofFile  转账凭证（线下支付时必传）
+     * @param linstener
+     */
+    public static void payForMe(Context context,String payPass, String merchantName, String merchantAddr, String goodsName, String consumeAmount, String handleFee, final String payChannel,
+                                String placeImgFile, String objImgFile, String rcptImgFile, String payProofFile, final onConnectionFinishLinstener linstener) {
+        String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN);
+        String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID);
+        PostFormBuilder post = OkHttpUtils.post();
+        if (!TextUtils.isEmpty(payProofFile)) {
+            post.addFile("payProofFile", "payProofFile.png", new File(payProofFile));// 转账凭证（线下支付时必传）
+        }
+        post
+                .url(Urls.PAY_FOR_ME)
+                .addParams("payPass", payPass)
+                .addParams("merchantName", merchantName)
+                .addParams("merchantAddr", merchantAddr)
+                .addParams("goodsName", goodsName)
+                .addParams("consumeAmount", consumeAmount)
+                .addParams("handleFee", handleFee)
+                .addParams("payChannel", payChannel)
+                .addFile("placeImgFile", "placeImgFile.png", new File(placeImgFile))// 消费场所
+                .addFile("objImgFile", "objImgFile.png", new File(objImgFile))// 消费实物
+                .addFile("rcptImgFile", "rcptImgFile.png", new File(rcptImgFile))// 消费发票
+                .addParams("accessToken", token)
+                .addParams("userId", userId)
+                .build()
+                .execute(new Callback() {
+                    @Override
+                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
+                        if (payChannel.equals("alipay")) {
+                            JSONObject object = new JSONObject(mData);
+                            return object.getString("payParam");
+                        } else if (payChannel.equals("wx")) {
+
+                        }
+                        return mData;
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        KLog.e(e);
+                        if ("数据为空".equals(e.getMessage())) {
+                            linstener.onSuccess(0, e.getMessage());
+                        } else {
+                            linstener.onFail(FailCode, e.getMessage());
+                        }
+                    }
+
+                    @Override
+                    public void onResponse(Object response, int id) {
+
+                        if (response == null) {
+                            linstener.onFail(FailCode, "response is null!");
+                            return;
+                        }
+                        KLog.i("response:%s", response.toString());
+
+                        linstener.onSuccess(0, response);
+                    }
+                });
+    }
+
+    /**
+     * 修改已驳回订单（为我买单）
+     *
+     * @param merchantName 商户名称
+     * @param merchantAddr 商户地址
+     * @param goodsName    商品名称
+     * @param placeImgFile 消费场所图
+     * @param objImgFile   消费实物图
+     * @param rcptImgFile  消费发票图
+     * @param linstener
+     */
+    public static void updateOrder(Context context, String orderNo, String merchantName, String merchantAddr, String goodsName,
+                                   String placeImgFile, String objImgFile, String rcptImgFile, final onConnectionFinishLinstener linstener) {
+        String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN);
+        String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID);
+        OkHttpUtils
+                .post()
+                .url(Urls.UPDATE_ORDER)
+                .addParams("orderNo", orderNo)
+                .addParams("merchantName", merchantName)
+                .addParams("merchantAddr", merchantAddr)
+                .addParams("goodsName", goodsName)
+                .addFile("placeImgFile", "placeImgFile.png", new File(placeImgFile))// 消费场所
+                .addFile("objImgFile", "objImgFile.png", new File(objImgFile))// 消费实物
+                .addFile("rcptImgFile", "rcptImgFile.png", new File(rcptImgFile))// 消费发票
+                .addParams("accessToken", token)
+                .addParams("userId", userId)
+                .build()
+                .execute(new Callback() {
+                    @Override
+                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
+                        Type listType = new TypeToken<ArrayList<BankCardEntity>>() {
+                        }.getType();
+                        return new Gson().fromJson(mData, listType);
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        KLog.e(e);
+                        if ("数据为空".equals(e.getMessage())) {
+                            linstener.onSuccess(0, e.getMessage());
+                        } else {
+                            linstener.onFail(FailCode, e.getMessage());
+                        }
+                    }
+
+                    @Override
+                    public void onResponse(Object response, int id) {
+
+                        if (response == null) {
+                            linstener.onFail(FailCode, "response is null!");
+                            return;
+                        }
+                        KLog.i("response:%s", response.toString());
+
+                        linstener.onSuccess(0, response);
+                    }
+                });
+    }
+
+
+    /**
+     * 为我买单记录
+     *
+     * @param status    审核状态（0：审核中，1：审核通过，-1：拒绝）
+     * @param pageIndex 页数
+     * @param pageRows  每页行数
+     * @param linstener
+     */
+    public static void payForMeRecord(Context context, String status, String pageIndex, String pageRows, final onConnectionFinishLinstener linstener) {
+        String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN);
+        String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID);
+        OkHttpUtils
+                .post()
+                .url(Urls.PAY_FOR_ME_RECORD)
+                .addParams("status", status)
+                .addParams("pageIndex", pageIndex)
+                .addParams("pageRows", pageRows)
+                .addParams("accessToken", token)
+                .addParams("userId", userId)
+                .build()
+                .execute(new Callback() {
+                    @Override
+                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
+
+                        return new Gson().fromJson(mData, PayForMeEntity.class);
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        KLog.e(e);
+                        if ("数据为空".equals(e.getMessage())) {
+                            linstener.onSuccess(0, e.getMessage());
+                        } else {
+                            linstener.onFail(FailCode, e.getMessage());
+                        }
+                    }
+
+                    @Override
+                    public void onResponse(Object response, int id) {
+
+                        if (response == null) {
+                            linstener.onFail(FailCode, "response is null!");
+                            return;
+                        }
+                        KLog.i("response:%s", response.toString());
+
+                        linstener.onSuccess(0, response);
+                    }
+                });
+    }
+
+    /**
+     * 查询默认策划推广比例
+     */
+    public static void getDefaultProportion(Context context, final onConnectionFinishLinstener linstener) {
+        String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN);
+        String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID);
+        OkHttpUtils
+                .post()
+                .url(Urls.DEFAULT_PROPORTION)
+                .addParams("accessToken", token)
+                .addParams("userId", userId)
+                .build()
+                .execute(new Callback() {
+                    @Override
+                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
+                        return new Gson().fromJson(mData, DefaultRate.class);
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        KLog.e(e);
+                        if ("数据为空".equals(e.getMessage())) {
+                            linstener.onSuccess(0, e.getMessage());
+                        } else {
+                            linstener.onFail(FailCode, e.getMessage());
+                        }
+                    }
+
+                    @Override
+                    public void onResponse(Object response, int id) {
+
+                        if (response == null) {
+                            linstener.onFail(FailCode, "response is null!");
+                            return;
+                        }
+                        KLog.i("response:%s", response.toString());
+
+                        linstener.onSuccess(0, response);
+                    }
+                });
+    }
+
+    /**
+     * 提现
+     *
+     * @param payPass
+     * @param amount
+     * @param bankCardId 银行卡id
+     * @param type       类型（1：余额提现，2：商户钱包提现）
+     * @param linstener
+     */
+    public static void withdraw(Context context, String payPass, String amount, String bankCardId, String type, final onConnectionFinishLinstener linstener) {
+        String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN);
+        String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID);
+        OkHttpUtils
+                .post()
+                .url(Urls.WITHDRAW)
+                .addParams("payPass", payPass)
+                .addParams("amount", amount)
+                .addParams("bankCardId", bankCardId)
+                .addParams("type", type)
+                .addParams("accessToken", token)
+                .addParams("userId", userId)
+                .build()
+                .execute(new Callback() {
+                    @Override
+                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
+                        return new Gson().fromJson(mData, DefaultRate.class);
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        KLog.e(e);
+                        if ("数据为空".equals(e.getMessage())) {
+                            linstener.onSuccess(0, e.getMessage());
+                        } else {
+                            linstener.onFail(FailCode, e.getMessage());
+                        }
+                    }
+
+                    @Override
+                    public void onResponse(Object response, int id) {
+
+                        if (response == null) {
+                            linstener.onFail(FailCode, "response is null!");
+                            return;
+                        }
+                        KLog.i("response:%s", response.toString());
+
+                        linstener.onSuccess(0, response);
+                    }
+                });
+    }
+
+
+    /**
+     * 提现手续费
+     *
+     * @param type      type=1表示余额，type=2表示钱包
+     * @param linstener {"code":0,"data":{"rate":10}}
+     */
+    public static void withdrawFeeRate(Context context, String type, final onConnectionFinishLinstener linstener) {
+        String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN);
+        String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID);
+        OkHttpUtils
+                .post()
+                .url(Urls.WITHDRAW_FEE_RATE)
+                .addParams("type", type)
+                .addParams("accessToken", token)
+                .addParams("userId", userId)
+                .build()
+                .execute(new Callback() {
+                    @Override
+                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
+                        return new Gson().fromJson(mData, WithdrawFeeRateEntity.class);
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        KLog.e(e);
+                        if ("数据为空".equals(e.getMessage())) {
+                            linstener.onSuccess(0, e.getMessage());
+                        } else {
+                            linstener.onFail(FailCode, e.getMessage());
+                        }
+                    }
+
+                    @Override
+                    public void onResponse(Object response, int id) {
+
+                        if (response == null) {
+                            linstener.onFail(FailCode, "response is null!");
+                            return;
+                        }
+                        KLog.i("response:%s", response.toString());
+
+                        linstener.onSuccess(0, response);
+                    }
+                });
+    }
+
+
+    public static void getNotices(Context context, String pageIndex, String pageRows, final onConnectionFinishLinstener linstener) {
+        String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN);
+        String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID);
+        OkHttpUtils
+                .post()
+                .url(Urls.NOTICE_LIST)
+                .addParams("pageIndex", pageIndex)
+                .addParams("pageRows", pageRows)
+                .addParams("accessToken", token)
+                .addParams("userId", userId)
+                .build()
+                .execute(new Callback() {
+                    @Override
+                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
+
+                        return new Gson().fromJson(mData, NoticeEntity.class);
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        KLog.e(e);
+                        if ("数据为空".equals(e.getMessage())) {
+                            linstener.onSuccess(0, e.getMessage());
+                        } else {
+                            linstener.onFail(FailCode, e.getMessage());
+                        }
+                    }
+
+                    @Override
+                    public void onResponse(Object response, int id) {
+
+                        if (response == null) {
+                            linstener.onFail(FailCode, "response is null!");
+                            return;
+                        }
+                        KLog.i("response:%s", response.toString());
+
+                        linstener.onSuccess(0, response);
+                    }
+                });
+    }
+
+
+}

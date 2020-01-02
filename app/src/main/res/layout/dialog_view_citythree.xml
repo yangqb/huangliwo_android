@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         >
-        <com.feitianzhu.fu700.view.pickview.LoopView
+        <com.feitianzhu.huangliwo.view.pickview.LoopView
         android:layout_marginTop="50dp"
         android:id="@+id/loopView1"
         android:layout_width="0dp"
@@ -19,7 +19,7 @@
         android:layout_marginLeft="@dimen/dp_16"
         app:awv_textsize="18"
         />
-        <com.feitianzhu.fu700.view.pickview.LoopView
+        <com.feitianzhu.huangliwo.view.pickview.LoopView
             android:layout_marginTop="50dp"
             android:id="@+id/loopView2"
             android:layout_width="0dp"
@@ -27,7 +27,7 @@
             android:layout_height="150dp"
             app:awv_textsize="18"
             />
-        <com.feitianzhu.fu700.view.pickview.LoopView
+        <com.feitianzhu.huangliwo.view.pickview.LoopView
             android:layout_marginTop="50dp"
             android:id="@+id/loopView3"
             android:layout_width="0dp"

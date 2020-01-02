@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/bg_normal"
     android:orientation="vertical"
-    tools:context="com.feitianzhu.fu700.bankcard.MyBankCardActivity">
+    tools:context="com.feitianzhu.huangliwo.bankcard.MyBankCardActivity">
 
     <LinearLayout
         android:id="@+id/ll_no_card"

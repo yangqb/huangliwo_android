@@ -7,7 +7,7 @@
 
     android:background="@color/bg_normal"
     android:orientation="vertical"
-    tools:context="com.feitianzhu.fu700.bankcard.MyBankCardActivity">
+    tools:context="com.feitianzhu.huangliwo.bankcard.MyBankCardActivity">
 
     <RelativeLayout
         android:id="@+id/rl_card"

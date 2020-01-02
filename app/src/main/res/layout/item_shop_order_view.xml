@@ -14,7 +14,7 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp">
 
-        <com.feitianzhu.fu700.view.CircleImageView
+        <com.feitianzhu.huangliwo.view.CircleImageView
             android:id="@+id/item_icon"
             android:layout_width="50dp"
             android:layout_height="50dp" />

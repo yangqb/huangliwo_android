@@ -5,7 +5,7 @@
     android:orientation="horizontal"
     android:background="@color/white"
     >
-    <com.feitianzhu.fu700.view.CircleImageView
+    <com.feitianzhu.huangliwo.view.CircleImageView
         android:id="@+id/civ_head"
         android:layout_width="50dp"
         android:layout_height="50dp"

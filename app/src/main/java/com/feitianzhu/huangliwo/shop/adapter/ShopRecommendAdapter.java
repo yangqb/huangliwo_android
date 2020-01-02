@@ -1,0 +1,28 @@
+package com.feitianzhu.huangliwo.shop.adapter;
+
+import android.support.annotation.Nullable;
+import android.widget.ImageView;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.chad.library.adapter.base.BaseViewHolder;
+import com.feitianzhu.huangliwo.R;
+import com.feitianzhu.huangliwo.common.base.SFBaseAdapter;
+import com.feitianzhu.huangliwo.model.RecommndShopModel;
+import java.util.List;
+
+/**
+ * Created by Administrator on 2017/8/28 0028.
+ */
+
+public class ShopRecommendAdapter extends SFBaseAdapter<RecommndShopModel.ListEntity, BaseViewHolder> {
+  public ShopRecommendAdapter( @Nullable List<RecommndShopModel.ListEntity> data) {
+    super(R.layout.shop_item_recommend, data);
+  }
+
+  @Override protected void convert(BaseViewHolder mBaseViewHolder, RecommndShopModel.ListEntity mShopTypeModel) {
+        ImageView mView = mBaseViewHolder.getView(R.id.item_icon);
+            Glide.with(mContext).load(mShopTypeModel.merchantHeadImg).apply(RequestOptions.placeholderOf(R.mipmap.pic_fuwutujiazaishibai).dontAnimate()).into(mView);
+            mBaseViewHolder.setText(R.id.item_name,mShopTypeModel.merchantName);
+            mBaseViewHolder.setText(R.id.item_type,mShopTypeModel.clsName);
+  }
+}

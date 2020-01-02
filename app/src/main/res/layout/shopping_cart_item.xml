@@ -109,7 +109,7 @@
                         android:textColor="@color/color_FEA811"
                         android:textSize="18sp" />
 
-                    <com.feitianzhu.fu700.view.AmountView
+                    <com.feitianzhu.huangliwo.view.AmountView
                         android:id="@+id/amount_view"
                         android:layout_width="wrap_content"
                         android:layout_height="25dp"

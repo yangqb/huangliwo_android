@@ -181,7 +181,7 @@
                     android:textColor="@color/color_666666"
                     android:textSize="13sp" />
 
-                <com.feitianzhu.fu700.view.SwitchButton
+                <com.feitianzhu.huangliwo.view.SwitchButton
                     android:id="@+id/switchButton"
                     android:layout_width="45dp"
                     android:layout_height="25dp"

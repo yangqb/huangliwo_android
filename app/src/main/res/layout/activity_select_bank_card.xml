@@ -8,7 +8,7 @@
     android:layout_marginRight="20dp"
     android:background="@color/bg_normal"
     android:orientation="vertical"
-    tools:context="com.feitianzhu.fu700.bankcard.MyBankCardActivity">
+    tools:context="com.feitianzhu.huangliwo.bankcard.MyBankCardActivity">
 
 
     <LinearLayout

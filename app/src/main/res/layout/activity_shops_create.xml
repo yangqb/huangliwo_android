@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.feitianzhu.fu700.me.ui.ShopsCreateActivity"
+    tools:context="com.feitianzhu.huangliwo.me.ui.ShopsCreateActivity"
     >
   <LinearLayout
       android:layout_width="match_parent"

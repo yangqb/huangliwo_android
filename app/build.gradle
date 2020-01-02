@@ -19,7 +19,7 @@ MobSDK {
                 BypassApproval = "false"
                 Enable = "true"
             }
-            QQ {
+            /*QQ {
                 Id = "7"
                 SortId = "4"
                 AppId = "1110085823"
@@ -27,7 +27,7 @@ MobSDK {
                 BypassApproval = "false"
                 ShareByAppClient = "true"
                 Enable = "true"
-            }
+            }*/
             WechatMoments {
                 Id = "5"
                 SortId = "2"
@@ -36,14 +36,14 @@ MobSDK {
                 BypassApproval = "false"
                 Enable = "true"
             }
-            QZone {
+            /*QZone {
                 Id = "3"
                 SortId = "5"
                 AppId = "1110085823"
                 AppKey = "osnroqSxxckkJOdI"
                 BypassApproval = "false"
                 Enable = "true"
-            }
+            }*/
         }
     }
 }
@@ -73,7 +73,7 @@ android {
     compileSdkVersion globalConfiguration.androidCompileSdkVersion
     buildToolsVersion globalConfiguration.androidBuildToolsVersion
     defaultConfig {
-        applicationId "com.feitianzhu.fu700"
+        applicationId "com.feitianzhu.huangliwo"
         minSdkVersion globalConfiguration.androidMinSdkVersion
         targetSdkVersion globalConfiguration.androidTargetSdkVersion
         versionCode 2
