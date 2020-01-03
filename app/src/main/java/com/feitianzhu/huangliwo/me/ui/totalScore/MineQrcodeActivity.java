@@ -79,7 +79,7 @@ public class MineQrcodeActivity extends BaseActivity {
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         mineInfoModel = (MineInfoModel) getIntent().getSerializableExtra(MINE_DATA);
-        mTvName.setText(mineInfoModel.getNickName());
+        mTvName.setText("邀请码：" + mineInfoModel.getUserId());
         Glide.with(mContext).load(mineInfoModel.getHeadImg()).apply(RequestOptions.placeholderOf(R.mipmap.b08_01touxiang).error(R.mipmap.b08_01touxiang).dontAnimate())
                 .into(mCivPic);
     }
@@ -212,7 +212,7 @@ public class MineQrcodeActivity extends BaseActivity {
     }
 
     private void showShare() {
-        saveBitmapToLocal();
+        //saveBitmapToLocal();
         if (mData == null) {
             ToastUtils.showShortToast("分享的资料信息未完善，请先完善资料");
             return;

@@ -1,14 +1,23 @@
 package com.feitianzhu.huangliwo.me;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.AbsoluteSizeSpan;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -19,17 +28,25 @@ import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.SFFragment;
 import com.feitianzhu.huangliwo.login.LoginEvent;
 import com.feitianzhu.huangliwo.me.adapter.CenterAdapter;
+import com.feitianzhu.huangliwo.me.ui.AuthEvent;
 import com.feitianzhu.huangliwo.me.ui.PersonalCenterActivity2;
 import com.feitianzhu.huangliwo.me.ui.VerificationActivity2;
 import com.feitianzhu.huangliwo.me.ui.totalScore.MineQrcodeActivity;
+import com.feitianzhu.huangliwo.model.BalanceModel;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
+import com.feitianzhu.huangliwo.model.UserAuth;
+import com.feitianzhu.huangliwo.pushshop.PushShopHomeActivity;
 import com.feitianzhu.huangliwo.settings.SettingsActivity;
 import com.feitianzhu.huangliwo.shop.ShopDao;
 import com.feitianzhu.huangliwo.shop.ui.MyOrderActivity2;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
+import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.view.CircleImageView;
 import com.feitianzhu.huangliwo.vip.VipActivity;
+import com.google.gson.Gson;
+import com.lxj.xpopup.XPopup;
+import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -41,12 +58,14 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Arrays;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import okhttp3.Call;
+import okhttp3.Response;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
@@ -60,7 +79,6 @@ import static com.feitianzhu.huangliwo.common.Constant.USERID;
  * @Date 2019/11/19 0019 下午 6:28
  */
 public class MyCenterFragment extends SFFragment {
-
     @BindView(R.id.recyclerview)
     RecyclerView mRecyclerView;
     @BindView(R.id.civ_head)
@@ -71,15 +89,31 @@ public class MyCenterFragment extends SFFragment {
     TextView gradeName;
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
+    @BindView(R.id.ll_show_balance)
+    LinearLayout llShowBalance;
+    @BindView(R.id.img_show)
+    ImageView imgShow;
+    @BindView(R.id.toBeReleased_Amount)
+    TextView toBeReleasedAmount;
+    @BindView(R.id.tv_profit)
+    TextView tvProfit;
+    @BindView(R.id.tv_withdrawal)
+    TextView tvWithdrawal;
     private String mParam1;
     private String mParam2;
     private CenterAdapter adapter;
     Unbinder unbinder;
     private MineInfoModel mTempData = new MineInfoModel();
+    private BalanceModel balanceModel;
+    private String token;
+    private String userId;
+    private String amount = "0.00";
+    private String amount2 = "0.00";
+    private String amount3 = "0.00";
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    Integer[] integers = {R.mipmap.b08_05yuer, R.mipmap.b08_06zhanghu, R.mipmap.b08_07yinhangka, R.mipmap.b08_08dingdan, R.mipmap.b08_09shangpu,
-            R.mipmap.b08_10shouchang, R.mipmap.b08_11dizhi, R.mipmap.b08_12huiyuan, R.mipmap.b08_15fenxiang, R.mipmap.b08_14gouwuche};
+    Integer[] integers = {R.mipmap.b08_08dingdan, R.mipmap.b08_14gouwuche, R.mipmap.b08_11dizhi, R.mipmap.b08_06zhanghu, R.mipmap.b08_12huiyuan,
+            R.mipmap.b08_07yinhangka, R.mipmap.b08_10shouchang, R.mipmap.b08_09shangpu, R.mipmap.b08_15fenxiang};
 
     public MyCenterFragment() {
     }
@@ -116,14 +150,56 @@ public class MyCenterFragment extends SFFragment {
         mRecyclerView.setLayoutManager(manager);
         mRecyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
+        isShowBalance = SPUtils.getBoolean(getActivity(), Constant.SP_SHOW_BALANCE, true);
+        if (isShowBalance) {
+            imgShow.setBackgroundResource(R.mipmap.h01_01dakai);
+        } else {
+            imgShow.setBackgroundResource(R.mipmap.h01_02guanbi);
+        }
+        ShopDao.loadUserAuthImpl(getActivity());
+        token = SPUtils.getString(getActivity(), Constant.SP_ACCESS_TOKEN);
+        userId = SPUtils.getString(getActivity(), Constant.SP_LOGIN_USERID);
         initListener();
         requestData();
+        getData();
         return view;
     }
 
+    public void getData() {
+        OkHttpUtils.get()
+                .url(Urls.GET_USER_MONEY_INFO)
+                .addParams(Constant.ACCESSTOKEN, token)
+                .addParams(Constant.USERID, userId)
+                .build()
+                .execute(new Callback() {
+                    @Override
+                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
+                        return new Gson().fromJson(mData, BalanceModel.class);
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        ToastUtils.showShortToast(e.getMessage());
+                    }
+
+                    @Override
+                    public void onResponse(Object response, int id) {
+                        balanceModel = (BalanceModel) response;
+                        if (balanceModel != null) {
+                            amount = String.format(Locale.getDefault(), "%.2f", balanceModel.getWaitRelease());
+                            amount2 = String.format(Locale.getDefault(), "%.2f", balanceModel.getTotalAmount());
+                            amount3 = String.format(Locale.getDefault(), "%.2f", balanceModel.getBalance());
+                            setSpannableString(toBeReleasedAmount, tvProfit, tvWithdrawal, amount, amount2, amount3);
+                        } else {
+                            setSpannableString(toBeReleasedAmount, tvProfit, tvWithdrawal, "0.00", "0.00", "0.00");
+                        }
+                    }
+                });
+    }
+
     public void requestData() {
-        String token = SPUtils.getString(getActivity(), Constant.SP_ACCESS_TOKEN);
-        String userId = SPUtils.getString(getActivity(), Constant.SP_LOGIN_USERID);
+        token = SPUtils.getString(getActivity(), Constant.SP_ACCESS_TOKEN);
+        userId = SPUtils.getString(getActivity(), Constant.SP_LOGIN_USERID);
         OkHttpUtils.get()//
                 .url(Common_HEADER + POST_MINE_INFO)
                 .addParams(ACCESSTOKEN, token)//
@@ -180,16 +256,11 @@ public class MyCenterFragment extends SFFragment {
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Intent intent;
                 switch (position) {
-                    case 0: //余额
-                        //JumpActivity(getContext(), MyWalletActivity.class);
-                        intent = new Intent(getActivity(), BalanceActivity.class);
-                        startActivity(intent);
-                        break;
-                    case 1: //实名认证
+                    case 3: //实名认证
                         intent = new Intent(getActivity(), VerificationActivity2.class);
                         startActivity(intent);
                         break;
-                    case 2:
+                    case 5:
                         //银行卡 //暂不提供银行卡功能
                         ToastUtils.showShortToast("敬请期待");
                         /*if (!Constant.loadUserAuth) {
@@ -210,26 +281,26 @@ public class MyCenterFragment extends SFFragment {
                             });
                         }*/
                         break;
-                    case 3://我的订单
+                    case 0://我的订单
                         // JumpActivity(getContext(), MyOrderActivity.class);
                         intent = new Intent(getActivity(), MyOrderActivity2.class);
                         startActivity(intent);
                         break;
-                    case 4: //推店
-                        ToastUtils.showShortToast("敬请期待");
+                    case 7: //推店
+                        //ToastUtils.showShortToast("敬请期待");
                         //ShopHelp.veriJumpActivity(getActivity());
-                     /*  intent = new Intent(getActivity(), PushShopHomeActivity.class);
-                        startActivity(intent);*/
+                        intent = new Intent(getActivity(), PushShopHomeActivity.class);
+                        startActivity(intent);
                         break;
-                    case 5://我的收藏
+                    case 6://我的收藏
                         ToastUtils.showShortToast("敬请期待");
                         //JumpActivity(getContext(), MineCollectionActivity.class);
                         break;
-                    case 6://地址管理
+                    case 2://地址管理
                         intent = new Intent(getActivity(), AddressManagementActivity.class);
                         startActivity(intent);
                         break;
-                    case 7://成为会员
+                    case 4://成为会员
                         intent = new Intent(getContext(), VipActivity.class);
                         intent.putExtra(VipActivity.MINE_INFO, mTempData);
                         startActivity(intent);
@@ -239,7 +310,7 @@ public class MyCenterFragment extends SFFragment {
                         intent.putExtra(MineQrcodeActivity.MINE_DATA, mTempData);
                         startActivity(intent);
                         break;
-                    case 9: //购物车
+                    case 1: //购物车
                         ToastUtils.showShortToast("敬请期待");
                        /* intent = new Intent(getContext(), ShoppingCartActivity.class);
                         startActivity(intent);*/
@@ -252,13 +323,16 @@ public class MyCenterFragment extends SFFragment {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                 requestData();
+                getData();
             }
         });
 
     }
 
 
-    @OnClick({R.id.ll_userInfo, R.id.iv_setting, R.id.iv_qrcode})
+    private boolean isShowBalance = true;
+
+    @OnClick({R.id.ll_userInfo, R.id.iv_setting, R.id.iv_qrcode, R.id.ll_show_balance, R.id.btn_withdrawal, R.id.detailed_rules})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ll_userInfo:
@@ -272,7 +346,101 @@ public class MyCenterFragment extends SFFragment {
                 intent.putExtra(MineQrcodeActivity.MINE_DATA, mTempData);
                 startActivity(intent);
                 break;
+            case R.id.ll_show_balance:
+                isShowBalance = !isShowBalance;
+                if (isShowBalance) {
+                    imgShow.setBackgroundResource(R.mipmap.h01_01dakai);
+                } else {
+                    imgShow.setBackgroundResource(R.mipmap.h01_02guanbi);
+                }
+                setSpannableString(toBeReleasedAmount, tvProfit, tvWithdrawal, amount, amount2, amount3);
+                SPUtils.putBoolean(getActivity(), Constant.SP_SHOW_BALANCE, isShowBalance);
+                break;
+            case R.id.btn_withdrawal:
+                UserAuth mAuth = Constant.mUserAuth;
+                if (null == mAuth || 0 == mAuth.isRnAuth) {
+                    //未实名 审核被拒
+                    showDialog("你还没有进行实名认证，请先进行实名认证再进行该操作", true);
+                } else if (-1 == mAuth.isRnAuth) {
+                    showDialog("审核被拒：" + mAuth.rnAuthRefuseReason + ",是否继续进行实名认证", true);
+                } else if (mAuth.isRnAuth == 2) {
+                    showDialog("你的实名认证正在审核中，请等审核通过后再进行该操作", false);
+                } else {
+                    //验证用户审核通过
+                    intent = new Intent(getActivity(), WithdrawActivity.class);
+                    if (balanceModel == null) {
+                        intent.putExtra(WithdrawActivity.BALANCE, 0.00);
+                    } else {
+                        intent.putExtra(WithdrawActivity.BALANCE, balanceModel.getBalance());
+                    }
+                    startActivity(intent);
+                }
+                break;
+            case R.id.detailed_rules: //细则
+                intent = new Intent(getActivity(), DetailedRulesActivity.class);
+                startActivity(intent);
+                break;
         }
+    }
+
+    public void showDialog(String result, boolean isGoAuth) {
+        new XPopup.Builder(getActivity())
+                .asConfirm("温馨提示", result, "取消", "确定", new OnConfirmListener() {
+                    @Override
+                    public void onConfirm() {
+                        if (isGoAuth) {
+                            Intent mIntent = new Intent(getActivity(), VerificationActivity2.class);
+                            startActivity(mIntent);
+                        }
+                    }
+                }, null, false)
+                .bindLayout(R.layout.layout_dialog) //绑定已有布局
+                .show();
+    }
+
+    public void setSpannableString(TextView view1, TextView view2, TextView view3, String str1, String str2, String str3) {
+        view1.setText("");
+        view2.setText("");
+        view3.setText("");
+        String str0 = "¥ ";
+        SpannableString span1 = new SpannableString(str0);
+        SpannableString span3 = new SpannableString(str0);
+        SpannableString span2 = new SpannableString(str1);
+        SpannableString span4 = new SpannableString(str2);
+        SpannableString span5 = new SpannableString(str3);
+        ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.parseColor("#333333"));
+        span1.setSpan(new AbsoluteSizeSpan(15, true), 0, str0.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        span1.setSpan(new StyleSpan(Typeface.BOLD), 0, str0.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        span1.setSpan(colorSpan, 0, str0.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        span3.setSpan(new AbsoluteSizeSpan(12, true), 0, str0.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        span3.setSpan(new StyleSpan(Typeface.BOLD), 0, str0.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        span3.setSpan(colorSpan, 0, str0.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+
+        span2.setSpan(new AbsoluteSizeSpan(24, true), 0, str1.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        span2.setSpan(new StyleSpan(Typeface.BOLD), 0, str1.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        span2.setSpan(colorSpan, 0, str1.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+
+        span4.setSpan(new AbsoluteSizeSpan(18, true), 0, str2.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        span4.setSpan(new StyleSpan(Typeface.BOLD), 0, str2.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        span4.setSpan(colorSpan, 0, str2.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+
+        span5.setSpan(new AbsoluteSizeSpan(18, true), 0, str3.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        span5.setSpan(new StyleSpan(Typeface.BOLD), 0, str3.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        span5.setSpan(colorSpan, 0, str3.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+
+        if (isShowBalance) {
+            view1.append(span1);
+            view1.append(span2);
+            view2.append(span3);
+            view2.append(span4);
+            view3.append(span3);
+            view3.append(span5);
+        } else {
+            view1.setText("****");
+            view2.setText("****");
+            view3.setText("****");
+        }
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
@@ -280,15 +448,16 @@ public class MyCenterFragment extends SFFragment {
         switch (event) {
             case EDITOR_INFO:
             case BUY_VIP:
-                requestData();
+                requestData();  //一定要获取token，userId,防止直接从商品列表进入VIP购买
                 break;
         }
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        ShopDao.loadUserAuthImpl(getActivity());
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void onAuthEvent(AuthEvent mAuth) {
+        if (mAuth == AuthEvent.SUCCESS) {
+            ShopDao.loadUserAuthImpl(getActivity());  //实名认证后更新用户认证信息
+        }
     }
 
     @Override

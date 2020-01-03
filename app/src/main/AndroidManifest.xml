@@ -50,8 +50,8 @@
         android:allowBackup="true"
         android:icon="@mipmap/logo"
         android:label="@string/app_name"
-        android:supportsRtl="true"
         android:largeHeap="true"
+        android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:icon, android:theme">
@@ -441,6 +441,14 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="com.feitianzhu.huangliwo.shop.ShopsActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".pushshop.MySelfMerchantsOrderActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".pushshop.RecordOrderActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
 

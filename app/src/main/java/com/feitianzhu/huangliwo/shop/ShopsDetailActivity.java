@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,11 +33,13 @@ import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
+import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.ProductParameters;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.view.CustomSpecificationDialog;
+import com.feitianzhu.huangliwo.vip.VipActivity;
 import com.google.gson.Gson;
 import com.itheima.roundedimageview.RoundedImageView;
 import com.lxj.xpopup.XPopup;
@@ -61,6 +64,11 @@ import butterknife.OnClick;
 import okhttp3.Call;
 import okhttp3.Response;
 
+import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
+import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
+import static com.feitianzhu.huangliwo.common.Constant.POST_MINE_INFO;
+import static com.feitianzhu.huangliwo.common.Constant.USERID;
+
 /**
  * @class name：com.feitianzhu.fu700.shop
  * @anthor yangqinbo
@@ -79,6 +87,7 @@ public class ShopsDetailActivity extends BaseActivity {
     private ProductParameters productParameters;
     private List<BaseGoodsListBean.GoodsEvaluateMode> evalList;
     private List<ProductParameters.GoodsSpecifications> specifications = new ArrayList<>();
+    private MineInfoModel mineInfoModel = new MineInfoModel();
     private String token;
     private String userId;
     @BindView(R.id.tv_amount)
@@ -145,6 +154,30 @@ public class ShopsDetailActivity extends BaseActivity {
     protected void initData() {
         getDetail(goodsId + "");
         getSpecifications();
+        getUserInfo();
+    }
+
+    public void getUserInfo() {
+        OkHttpUtils.get()//
+                .url(Common_HEADER + POST_MINE_INFO)
+                .addParams(ACCESSTOKEN, token)//
+                .addParams(USERID, userId)
+                .build()
+                .execute(new Callback<MineInfoModel>() {
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        Log.e("wangyan", "onError---->" + e.getMessage());
+                        ToastUtils.showShortToast(e.getMessage());
+                    }
+
+                    @Override
+                    public void onResponse(MineInfoModel response, int id) {
+                        if (response != null) {
+                            mineInfoModel = response;
+                        }
+                    }
+                });
     }
 
     public void getSpecifications() {
@@ -310,7 +343,7 @@ public class ShopsDetailActivity extends BaseActivity {
         }
     }
 
-    @OnClick({R.id.left_button, R.id.tv_pay, R.id.rl_more_evaluation, R.id.add_shopping_cart, R.id.shopping_cart, R.id.call_phone, R.id.collect, R.id.select_specifications, R.id.right_img})
+    @OnClick({R.id.left_button, R.id.tv_pay, R.id.rl_more_evaluation, R.id.add_shopping_cart, R.id.shopping_cart, R.id.call_phone, R.id.collect, R.id.select_specifications, R.id.right_img, R.id.ll_rebate})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.left_button:
@@ -394,6 +427,11 @@ public class ShopsDetailActivity extends BaseActivity {
                                 specificationsName.setText("选择了：" + sb.toString());
                             }
                         }).show();
+                break;
+            case R.id.ll_rebate:
+                intent = new Intent(ShopsDetailActivity.this, VipActivity.class);
+                intent.putExtra(VipActivity.MINE_INFO, mineInfoModel);
+                startActivity(intent);
                 break;
         }
 

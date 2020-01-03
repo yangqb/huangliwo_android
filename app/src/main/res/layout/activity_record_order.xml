@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <include layout="@layout/layout_head" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/color_eeeeee" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@null"
+        android:gravity="bottom"
+        android:hint="请输入套餐码"
+        android:paddingStart="18dp"
+        android:paddingBottom="@dimen/dp_10"
+        android:text=""
+        android:textColor="@color/color_333333"
+        android:textColorHint="@color/color_666666"
+        android:textSize="14sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginStart="18dp"
+        android:layout_marginEnd="18dp"
+        android:background="@color/color_cccccc" />
+
+</LinearLayout>

@@ -68,8 +68,9 @@ public class MySelfMerchantsActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.left_button, R.id.right_button, R.id.myMerchant})
+    @OnClick({R.id.left_button, R.id.right_button, R.id.myMerchant, R.id.merchants_order})
     public void onClick(View view) {
+        Intent intent;
         switch (view.getId()) {
             case R.id.left_button:
                 finish();
@@ -77,9 +78,14 @@ public class MySelfMerchantsActivity extends BaseActivity {
             case R.id.right_button:
                 break;
             case R.id.myMerchant:
-                Intent intent = new Intent(MySelfMerchantsActivity.this, MerchantsDetailActivity.class);
+                intent = new Intent(MySelfMerchantsActivity.this, MerchantsDetailActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.merchants_order:
+                intent = new Intent(MySelfMerchantsActivity.this, MySelfMerchantsOrderActivity.class);
+                startActivity(intent);
+                break;
+
         }
     }
 }
