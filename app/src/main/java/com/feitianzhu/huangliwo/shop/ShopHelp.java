@@ -15,7 +15,6 @@ import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.huangliwo.common.impl.onNetFinishLinstenerT;
 import com.feitianzhu.huangliwo.dao.NetworkDao;
 import com.feitianzhu.huangliwo.me.ui.ShopShowNoCreateActivity;
-import com.feitianzhu.huangliwo.me.ui.VerificationActivity;
 import com.feitianzhu.huangliwo.me.ui.VerificationActivity2;
 import com.feitianzhu.huangliwo.model.PayInfo;
 import com.feitianzhu.huangliwo.model.UserAuth;
@@ -197,7 +196,7 @@ public class ShopHelp {
                 .asConfirm("温馨提示", result, "取消", "确定", new OnConfirmListener() {
                     @Override
                     public void onConfirm() {
-                        Intent mIntent = new Intent(sContext, VerificationActivity.class);
+                        Intent mIntent = new Intent(sContext, VerificationActivity2.class);
                         mIntent.putExtra(Constant.VERI_SHOPS, true);
                         sContext.startActivity(mIntent);
                     }

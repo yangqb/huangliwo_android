@@ -26,6 +26,6 @@ public class ShopInfoDetailImgAdapter extends BaseQuickAdapter<Integer, BaseView
     @Override
     protected void convert(BaseViewHolder helper, Integer item) {
         RoundedImageView imageView = helper.getView(R.id.img);
-        Glide.with(mContext).load(R.mipmap.e01_16taocantupian1).into(imageView);
+        Glide.with(mContext).load(R.mipmap.g10_04weijiazai).into(imageView);
     }
 }

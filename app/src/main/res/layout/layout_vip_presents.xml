@@ -18,7 +18,7 @@
             android:id="@+id/imageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/f01_06liping2" />
+            android:src="@mipmap/g10_04weijiazai" />
 
         <TextView
             android:id="@+id/tvTitle"

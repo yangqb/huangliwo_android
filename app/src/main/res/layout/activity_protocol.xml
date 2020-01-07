@@ -19,18 +19,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_20"
-                android:src="@mipmap/xieyi01" />
+                android:src="@mipmap/xieyi0101" />
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/xieyi02" />
+                android:src="@mipmap/xieyi0202" />
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="30dp"
-                android:src="@mipmap/xieyi03" />
+                android:src="@mipmap/xieyi0303" />
 
         </LinearLayout>
 

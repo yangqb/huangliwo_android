@@ -229,7 +229,6 @@
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
             android:scaleType="centerCrop"
-            android:src="@mipmap/pic_tianjiatouxiang"
             />
 
 
@@ -256,7 +255,6 @@
             android:layout_marginTop="10dp"
             android:layout_gravity="center"
             android:scaleType="centerCrop"
-            android:src="@mipmap/pic_tianjiafengmian"
             />
 
 

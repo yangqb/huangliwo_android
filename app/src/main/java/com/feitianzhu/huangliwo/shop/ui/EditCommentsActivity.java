@@ -29,6 +29,7 @@ import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.builder.PostFormBuilder;
 import com.zhy.http.okhttp.callback.Callback;
 
 import java.io.File;
@@ -236,11 +237,13 @@ public class EditCommentsActivity extends BaseActivity {
                         files.put(name, new File(allSelect.get(i)));
                     }
                 }
-
-                OkHttpUtils.post()
-                        .url(Urls.EVALUATE_ORDER)
-                        .addFiles("files", files)
-                        .addParams(ACCESSTOKEN, token)
+                PostFormBuilder postForm = OkHttpUtils.post().url(Urls.EVALUATE_ORDER);
+                if (files.size() > 0) {
+                    postForm.addFiles("files", files);
+                } else {
+                    postForm.setMultipart(true);
+                }
+                postForm.addParams(ACCESSTOKEN, token)
                         .addParams(USERID, userId)
                         .addParams("evaluateBody", json)
                         .build()

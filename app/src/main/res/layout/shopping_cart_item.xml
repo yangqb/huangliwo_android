@@ -40,7 +40,7 @@
                 android:layout_height="100dp"
                 android:layout_marginRight="13dp"
                 android:scaleType="centerCrop"
-                android:src="@mipmap/e01_15pingjiatu1"
+                android:src="@mipmap/g10_04weijiazai"
                 app:riv_corner_radius="5dp" />
 
             <LinearLayout

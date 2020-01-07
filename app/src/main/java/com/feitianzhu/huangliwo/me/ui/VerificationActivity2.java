@@ -18,10 +18,14 @@ import com.feitianzhu.huangliwo.model.Province;
 import com.feitianzhu.huangliwo.model.UserAuth;
 import com.feitianzhu.huangliwo.model.UserVeriModel;
 import com.feitianzhu.huangliwo.shop.ShopDao;
+import com.feitianzhu.huangliwo.shop.ui.EditApplyRefundActivity;
 import com.feitianzhu.huangliwo.shop.ui.dialog.ProvinceCallBack;
-import com.feitianzhu.huangliwo.shop.ui.dialog.ProvincehDialog;
+import com.feitianzhu.huangliwo.shop.ui.dialog.ProvinceDialog2;
+import com.feitianzhu.huangliwo.utils.IDCardValidate;
 import com.feitianzhu.huangliwo.utils.SPUtils;
+import com.feitianzhu.huangliwo.utils.StringUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
+import com.feitianzhu.huangliwo.view.CustomRefundView;
 import com.feitianzhu.huangliwo.view.CustomSelectPhotoView;
 import com.google.gson.Gson;
 import com.lxj.xpopup.XPopup;
@@ -65,19 +69,17 @@ import static com.feitianzhu.huangliwo.common.Constant.USERID;
  * 实名认证
  */
 public class VerificationActivity2 extends BaseTakePhotoActivity {
+    public static final String AUTH_INFO = "auth_info";
     private String[] certificates = new String[]{"身份证", "护照", "其他"};
     private int photo_type;
     private String photo_file_one = "";
     private String photo_file_two = "";
-    private Province mOnSelectProvince;
     @BindView(R.id.title_name)
     TextView titleName;
-    @BindView(R.id.img_veri_one)
+    @BindView(R.id.take_photo_one)
     ImageView mImgVeriOne;
-    @BindView(R.id.img_veri_two)
+    @BindView(R.id.take_photo_two)
     ImageView mImgVeriTwo;
-    @BindView(R.id.txt_address_type)
-    TextView mTxtAddressType;
     @BindView(R.id.txt_idcard_type)
     TextView mTxtIdcardType;
     @BindView(R.id.ly_shiming_success)
@@ -96,6 +98,8 @@ public class VerificationActivity2 extends BaseTakePhotoActivity {
     TextView idNum;
     private String token;
     private String userId;
+    private UserAuth mAuth;
+    private int index = -1;
 
     @Override
     protected int getLayoutId() {
@@ -107,50 +111,31 @@ public class VerificationActivity2 extends BaseTakePhotoActivity {
         titleName.setText("实名认证");
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
+        mAuth = (UserAuth) getIntent().getSerializableExtra(AUTH_INFO);
+        if (mAuth != null) {
+            if (mAuth.isRnAuth == 0) {
+                //未实名
+                lyShiming.setVisibility(View.VISIBLE);
+            } else if (mAuth.isRnAuth == -1) {
+                //审核被拒绝
+                lyShiming.setVisibility(View.VISIBLE);
+            } else if (mAuth.isRnAuth == 2) {
+                //审核中
+                lyShiming.setVisibility(View.GONE);
+                lyWait.setVisibility(View.VISIBLE);
+            } else {
+                //通过
+                mLyShimingSuccess.setVisibility(View.VISIBLE);
+                lyShiming.setVisibility(View.GONE);
+                getAuthInfo();
+            }
+        } else {
+            lyShiming.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
     protected void initData() {
-        OkHttpUtils.post()//
-                .url(Common_HEADER + LOAD_USER_AUTH)
-                .addParams(ACCESSTOKEN, token)//
-                .addParams(USERID, userId)//
-                .build().execute(new Callback() {
-            @Override
-            public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                return new Gson().fromJson(mData, UserAuth.class);
-            }
-
-            @Override
-            public void onError(Call call, Exception e, int id) {
-                ToastUtils.showShortToast(e.getMessage());
-            }
-
-            @Override
-            public void onResponse(Object response, int id) {
-                UserAuth mAuth = (UserAuth) response;
-                if (mAuth != null) {
-                    if (mAuth.isRnAuth == 0) {
-                        //未实名或是未通过
-                        lyShiming.setVisibility(View.VISIBLE);
-                    } else if (mAuth.isRnAuth == -1) {
-                        //审核被拒绝
-                        lyShiming.setVisibility(View.VISIBLE);
-                    } else if (mAuth.isRnAuth == 2) {
-                        //审核中
-                        lyShiming.setVisibility(View.GONE);
-                        lyWait.setVisibility(View.VISIBLE);
-                    } else {
-                        //通过
-                        mLyShimingSuccess.setVisibility(View.VISIBLE);
-                        lyShiming.setVisibility(View.GONE);
-                        getAuthInfo();
-                    }
-                } else {
-                    lyShiming.setVisibility(View.VISIBLE);
-                }
-            }
-        });
 
     }
 
@@ -160,8 +145,8 @@ public class VerificationActivity2 extends BaseTakePhotoActivity {
             @Override
             public void onSuccess(int code, Object result) {
                 UserVeriModel veriModel = (UserVeriModel) result;
-                realName.setText("真实姓名：" + veriModel.realName);
-                idNum.setText("证件号：" + veriModel.certifNo);
+                realName.setText(veriModel.realName);
+                idNum.setText(veriModel.certifNo);
             }
 
             @Override
@@ -171,7 +156,7 @@ public class VerificationActivity2 extends BaseTakePhotoActivity {
         });
     }
 
-    @OnClick({R.id.left_button, R.id.take_photo_one, R.id.take_photo_two, R.id.ly_type, R.id.ly_huji, R.id.btn_submit})
+    @OnClick({R.id.left_button, R.id.take_photo_one, R.id.take_photo_two, R.id.ly_type, R.id.btn_submit})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.left_button:
@@ -186,26 +171,18 @@ public class VerificationActivity2 extends BaseTakePhotoActivity {
                 showDialog();
                 break;
             case R.id.ly_type: //证件类型
-                List<String> mList = Arrays.asList(certificates);
-                showTypeDialog(mList);
-                break;
-            case R.id.ly_huji: //户籍
-                ProvincehDialog branchDialog = ProvincehDialog.newInstance(this);
-                branchDialog.setAddress("北京市", "北京市");
-                branchDialog.setSelectOnListener(new ProvinceCallBack() {
-                    @Override
-                    public void onWhellFinish(Province province, Province.CityListBean city,
-                                              Province.AreaListBean mAreaListBean) {
-                        String mProvince_name = province.name;
-                        String mCity_name = city.name;
-                        String mProvince_id = province.id;
-                        String mCity_id = city.id;
-                        mOnSelectProvince = new Province(mProvince_name, mCity_name, mCity_id, mProvince_id);
-                        mTxtAddressType.setText(mProvince_name + mCity_name + "");
-                        KLog.e("mProvince" + mProvince_name + "mCity_name" + mCity_name);
-                    }
-                });
-                branchDialog.show(getSupportFragmentManager());
+                new XPopup.Builder(this)
+                        .asCustom(new CustomRefundView(VerificationActivity2.this)
+                                .setData(Arrays.asList(certificates))
+                                .setOnItemClickListener(new CustomRefundView.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(int position) {
+                                        index = position;
+                                        mTxtIdcardType.setText(certificates[position]);
+                                        mTxtIdcardType.setTextColor(getResources().getColor(R.color.color_333333));
+                                    }
+                                }))
+                        .show();
                 break;
             case R.id.btn_submit:
                 submit();
@@ -228,7 +205,7 @@ public class VerificationActivity2 extends BaseTakePhotoActivity {
             ToastUtils.showShortToast("还没有填写真实姓名");
             return;
         }
-        if (selectIndex == 0) {
+        if (index == -1) {
             ToastUtils.showShortToast("还没有选择证件类型");
             return;
         }
@@ -236,21 +213,18 @@ public class VerificationActivity2 extends BaseTakePhotoActivity {
             ToastUtils.showShortToast("还没有填写证件号码");
             return;
         }
-        if (18 < id_num.length()) {
-            ToastUtils.showShortToast("证件号码格式错误");
-            return;
-        }
-        String address_num = mTxtAddressType.getText().toString().trim();
-        if (TextUtils.isEmpty(address_num) || mOnSelectProvince == null) {
-            ToastUtils.showShortToast("还没有选择地区");
+        if ((index != certificates.length - 1)) {
+            if (!StringUtils.isIDCard(id_num) && !StringUtils.isPassport(id_num)) {
+                ToastUtils.showShortToast("请输入正确的证件号码");
+            }
             return;
         }
 
         String businatures;
-        if (selectIndex > 2) {
+        if (index == certificates.length - 1) {
             businatures = "10";
         } else {
-            businatures = selectIndex + "";
+            businatures = index + "";
         }
 
         OkHttpUtils.post()//
@@ -262,10 +236,6 @@ public class VerificationActivity2 extends BaseTakePhotoActivity {
                 .addParams(REALNAME, name)//
                 .addParams(CERTIFTYPE, businatures)//
                 .addParams(CERTIFNO, id_num)//
-                .addParams(PROVINCEID, mOnSelectProvince.id)//
-                .addParams(PROVINCENAME, mOnSelectProvince.name)//
-                .addParams(CITYID, mOnSelectProvince.pid)//
-                .addParams(CITYNAME, mOnSelectProvince.city_name)//
                 .build()//
                 .execute(new Callback() {
                     @Override
@@ -316,7 +286,6 @@ public class VerificationActivity2 extends BaseTakePhotoActivity {
 
     @Override
     protected void onWheelSelect(int num, List<String> mList) {
-        mTxtIdcardType.setText(mList.get(num - 1));
     }
 
     @Override

@@ -24,6 +24,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
+import com.feitianzhu.huangliwo.TestActivity;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.SFFragment;
 import com.feitianzhu.huangliwo.login.LoginEvent;
@@ -39,10 +40,13 @@ import com.feitianzhu.huangliwo.pushshop.PushShopHomeActivity;
 import com.feitianzhu.huangliwo.settings.SettingsActivity;
 import com.feitianzhu.huangliwo.shop.ShopDao;
 import com.feitianzhu.huangliwo.shop.ui.MyOrderActivity2;
+import com.feitianzhu.huangliwo.shop.ui.ShoppingCartActivity;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.view.CircleImageView;
+import com.feitianzhu.huangliwo.view.CustomVerificationView;
+import com.feitianzhu.huangliwo.vip.CustomPopup;
 import com.feitianzhu.huangliwo.vip.VipActivity;
 import com.google.gson.Gson;
 import com.lxj.xpopup.XPopup;
@@ -69,6 +73,7 @@ import okhttp3.Response;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
+import static com.feitianzhu.huangliwo.common.Constant.LOAD_USER_AUTH;
 import static com.feitianzhu.huangliwo.common.Constant.POST_MINE_INFO;
 import static com.feitianzhu.huangliwo.common.Constant.USERID;
 
@@ -249,7 +254,6 @@ public class MyCenterFragment extends SFFragment {
         }
     }
 
-
     public void initListener() {
         adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
@@ -257,8 +261,26 @@ public class MyCenterFragment extends SFFragment {
                 Intent intent;
                 switch (position) {
                     case 3: //实名认证
-                        intent = new Intent(getActivity(), VerificationActivity2.class);
-                        startActivity(intent);
+                        UserAuth mAuth = Constant.mUserAuth;
+                        if (mAuth != null && mAuth.isRnAuth == -1) {
+                            new XPopup.Builder(getActivity())
+                                    .enableDrag(false)
+                                    .asCustom(new CustomVerificationView(getActivity())
+                                            .setContent(mAuth.rnAuthRefuseReason)
+                                            .setOnConfirmListener(new CustomVerificationView.OnConfirmListener() {
+                                                @Override
+                                                public void onConfirm() {
+                                                    Intent intent = new Intent(getActivity(), VerificationActivity2.class);
+                                                    intent.putExtra(VerificationActivity2.AUTH_INFO, mAuth);
+                                                    startActivity(intent);
+                                                }
+                                            }))
+                                    .show();
+                        } else {
+                            intent = new Intent(getActivity(), VerificationActivity2.class);
+                            intent.putExtra(VerificationActivity2.AUTH_INFO, mAuth);
+                            startActivity(intent);
+                        }
                         break;
                     case 5:
                         //银行卡 //暂不提供银行卡功能
@@ -294,6 +316,8 @@ public class MyCenterFragment extends SFFragment {
                         break;
                     case 6://我的收藏
                         ToastUtils.showShortToast("敬请期待");
+                        intent = new Intent(getActivity(), TestActivity.class);
+                        startActivity(intent);
                         //JumpActivity(getContext(), MineCollectionActivity.class);
                         break;
                     case 2://地址管理
@@ -311,9 +335,9 @@ public class MyCenterFragment extends SFFragment {
                         startActivity(intent);
                         break;
                     case 1: //购物车
-                        ToastUtils.showShortToast("敬请期待");
-                       /* intent = new Intent(getContext(), ShoppingCartActivity.class);
-                        startActivity(intent);*/
+                        //ToastUtils.showShortToast("敬请期待");
+                        intent = new Intent(getContext(), ShoppingCartActivity.class);
+                        startActivity(intent);
                         break;
                 }
             }
@@ -360,11 +384,11 @@ public class MyCenterFragment extends SFFragment {
                 UserAuth mAuth = Constant.mUserAuth;
                 if (null == mAuth || 0 == mAuth.isRnAuth) {
                     //未实名 审核被拒
-                    showDialog("你还没有进行实名认证，请先进行实名认证再进行该操作", true);
+                    showDialog("您还没有进行实名认证，请先进行实名认证再进行该操作", false);
                 } else if (-1 == mAuth.isRnAuth) {
-                    showDialog("审核被拒：" + mAuth.rnAuthRefuseReason + ",是否继续进行实名认证", true);
+                    showDialog("您的实名认证审核被拒：请重新进行实名认证", false);
                 } else if (mAuth.isRnAuth == 2) {
-                    showDialog("你的实名认证正在审核中，请等审核通过后再进行该操作", false);
+                    showDialog("您的实名认证正在审核中，请等审核通过后再进行该操作", false);
                 } else {
                     //验证用户审核通过
                     intent = new Intent(getActivity(), WithdrawActivity.class);
@@ -385,15 +409,7 @@ public class MyCenterFragment extends SFFragment {
 
     public void showDialog(String result, boolean isGoAuth) {
         new XPopup.Builder(getActivity())
-                .asConfirm("温馨提示", result, "取消", "确定", new OnConfirmListener() {
-                    @Override
-                    public void onConfirm() {
-                        if (isGoAuth) {
-                            Intent mIntent = new Intent(getActivity(), VerificationActivity2.class);
-                            startActivity(mIntent);
-                        }
-                    }
-                }, null, false)
+                .asConfirm("温馨提示", result, "取消", "确定", null, null, false)
                 .bindLayout(R.layout.layout_dialog) //绑定已有布局
                 .show();
     }

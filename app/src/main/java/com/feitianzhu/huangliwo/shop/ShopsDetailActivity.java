@@ -208,6 +208,14 @@ public class ShopsDetailActivity extends BaseActivity {
                         if (productParameters != null && productParameters.getGoodslist() != null && productParameters.getGoodslist().size() > 0) {
                             llSpecifications.setVisibility(View.VISIBLE);
                             specifications = productParameters.getGoodslist();
+                            /*
+                             * 默认选中第一个
+                             * */
+                            for (int i = 0; i < specifications.size(); i++) {
+                                for (int j = 0; j < specifications.get(i).getSkuValueList().size(); j++) {
+                                    specifications.get(i).getSkuValueList().get(0).setSelect(true);
+                                }
+                            }
                         } else {
                             llSpecifications.setVisibility(View.GONE);
                         }
@@ -341,6 +349,7 @@ public class ShopsDetailActivity extends BaseActivity {
                             .error(R.mipmap.g10_03weijiazai))
                     .into(mImageView);
         }
+
     }
 
     @OnClick({R.id.left_button, R.id.tv_pay, R.id.rl_more_evaluation, R.id.add_shopping_cart, R.id.shopping_cart, R.id.call_phone, R.id.collect, R.id.select_specifications, R.id.right_img, R.id.ll_rebate})

@@ -62,7 +62,6 @@
                  <ImageView
                      android:layout_width="wrap_content"
                      android:layout_height="match_parent"
-                     android:src="@drawable/icon_chengweiqudai"
                      android:layout_margin="@dimen/dp_10"
                      />
              </RelativeLayout>
@@ -132,7 +131,6 @@
                  <ImageView
                      android:layout_width="wrap_content"
                      android:layout_height="match_parent"
-                     android:src="@drawable/shidai"
                      android:layout_margin="@dimen/dp_10"
                      />
              </RelativeLayout>

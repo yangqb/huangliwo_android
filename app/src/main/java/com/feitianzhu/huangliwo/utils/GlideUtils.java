@@ -1,6 +1,7 @@
 package com.feitianzhu.huangliwo.utils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.DisplayMetrics;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.feitianzhu.huangliwo.common.Constant;
 import com.tencent.mm.opensdk.utils.Log;
 
 public class GlideUtils {

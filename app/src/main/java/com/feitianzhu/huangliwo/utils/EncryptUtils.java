@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -607,11 +608,7 @@ public class EncryptUtils {
         String md51 = EncryptUtils.encryptMD5ToString(password);
         String md52 = EncryptUtils.encryptMD5ToString(md51);
         String base64Pwd = "";
-        try {
-            base64Pwd = Base64.encodeToString(md52.getBytes("utf-8"), Base64.DEFAULT);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        base64Pwd = Base64.encodeToString(md52.getBytes(StandardCharsets.UTF_8), Base64.DEFAULT);
         Log.e("wangyan","password: " + password + " -- md51: " + md51 + "  -- md52: " + md52 + " -- base64Pwd: " + base64Pwd);
         return base64Pwd;
     }

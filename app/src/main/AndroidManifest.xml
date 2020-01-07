@@ -105,10 +105,6 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.feitianzhu.huangliwo.me.ui.VerificationActivity"
-            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
-            android:screenOrientation="portrait" />
-        <activity
             android:name="com.feitianzhu.huangliwo.splash.SplashActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait"
@@ -259,7 +255,7 @@
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <activity
+        <!--<activity
             android:name="cn.sharesdk.tencent.qq.ReceiveActivity"
             android:launchMode="singleTask"
             android:noHistory="true">
@@ -271,7 +267,7 @@
 
                 <data android:scheme="tencent1110085823" />
             </intent-filter>
-        </activity>
+        </activity>-->
         <!-- ShareSdk  end -->
         <activity
             android:name="com.feitianzhu.huangliwo.shop.ui.ShopReportActivity"
@@ -329,10 +325,6 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="com.feitianzhu.huangliwo.shop.ShopPayActivity"
-            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="com.feitianzhu.huangliwo.me.BalanceActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
@@ -449,6 +441,11 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".pushshop.RecordOrderActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity android:name=".TestActivity" />
+        <activity
+            android:name=".shop.NewYearShoppingActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
 

@@ -1,10 +1,12 @@
 package com.feitianzhu.huangliwo.model;
 
+import java.io.Serializable;
+
 /**
  * Created by dicallc on 2017/9/11 0011.
  */
 
-public class UserAuth {
+public class UserAuth implements Serializable {
 
   /**
    * isRnAuth : 1

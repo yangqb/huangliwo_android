@@ -37,7 +37,7 @@ import com.feitianzhu.huangliwo.shop.adapter.LeftAdapter;
 import com.feitianzhu.huangliwo.shop.adapter.RightAdapter;
 import com.feitianzhu.huangliwo.shop.ui.SearchShopActivity;
 import com.feitianzhu.huangliwo.shop.ui.dialog.ProvinceCallBack;
-import com.feitianzhu.huangliwo.shop.ui.dialog.ProvincehDialog;
+import com.feitianzhu.huangliwo.shop.ui.dialog.ProvinceDialog2;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
@@ -347,7 +347,7 @@ public class CommodityClassificationFragment extends SFFragment implements View.
         Intent intent;
         switch (view.getId()) {
             case R.id.ll_location:
-                ProvincehDialog branchDialog = ProvincehDialog.newInstance(getActivity());
+                ProvinceDialog2 branchDialog = ProvinceDialog2.newInstance();
                 branchDialog.setAddress("北京市", "北京市");
                 branchDialog.setSelectOnListener(this);
                 branchDialog.show(getChildFragmentManager());

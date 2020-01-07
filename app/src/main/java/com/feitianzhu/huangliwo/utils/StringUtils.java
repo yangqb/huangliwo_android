@@ -148,4 +148,26 @@ public class StringUtils {
             return isMatch;
         }
     }
+
+    /*
+     * 身份证
+     * */
+    public static boolean isIDCard(String idCard) {
+        String regex = "^(([1][1-5])|([2][1-3])|([3][1-7])|([4][1-6])|([5][0-4])|([6][1-5])|([7][1])|([8][1-2]))\\d{4}(([1][9]\\d{2})|([2]\\d{3}))(([0][1-9])|([1][0-2]))(([0][1-9])|([1-2][0-9])|([3][0-1]))\\d{3}[0-9xX]$";//身份证
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(idCard);
+        boolean isMatch = m.matches();
+        return isMatch;
+    }
+
+    /*
+     * 护照
+     * */
+    public static boolean isPassport(String passport) {
+        String regex = "^([a-zA-z]|[0-9]){5,17}$";
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(passport);
+        boolean isMatch = m.matches();
+        return isMatch;
+    }
 }

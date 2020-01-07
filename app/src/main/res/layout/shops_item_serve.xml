@@ -88,7 +88,6 @@
         android:layout_width="73dp"
         android:layout_height="27.5dp"
         android:id="@+id/item_state"
-        android:src="@mipmap/icon_shenheshibai"
         />
   </FrameLayout>
 </RelativeLayout>

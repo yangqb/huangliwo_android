@@ -8,9 +8,9 @@ public class Urls {
 
 
     //private static final String BASE_URL = "http://www.huangliwo.top:8088/"; //正式环境
-    private static final String BASE_URL = "http://39.106.65.35:8088/"; //测试地址
+    //private static final String BASE_URL = "http://39.106.65.35:8088/"; //测试地址
     //private static final String BASE_URL = "http://192.168.0.21:8089/";//钟工本地地址
-    //private static final String BASE_URL = "http://192.168.0.15:8089/"; //周工本地地址
+    private static final String BASE_URL = "http://192.168.0.15:8089/"; //周工本地地址
     /**
      * 注册
      */
@@ -31,6 +31,10 @@ public class Urls {
      */
     public static final String GET_INDEX = BASE_URL + "fhwl/index/getindex";
 
+    /*
+     * 年货专区数据
+     * */
+    public static final String GET_NEW_YEAR = BASE_URL + "/fhwl/shop/getactivity";
     /*
      * 获取VIP赠送礼品
      * */

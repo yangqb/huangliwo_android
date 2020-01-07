@@ -39,18 +39,21 @@ import com.feitianzhu.huangliwo.model.HomeShops;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.Province;
 import com.feitianzhu.huangliwo.model.ShopClassify;
+import com.feitianzhu.huangliwo.shop.NewYearShoppingActivity;
 import com.feitianzhu.huangliwo.shop.ShopsActivity;
 import com.feitianzhu.huangliwo.shop.ShopsDetailActivity;
 import com.feitianzhu.huangliwo.shop.ui.SearchShopActivity;
 import com.feitianzhu.huangliwo.shop.ui.dialog.ProvinceCallBack;
-import com.feitianzhu.huangliwo.shop.ui.dialog.ProvincehDialog;
+import com.feitianzhu.huangliwo.shop.ui.dialog.ProvinceDialog2;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.view.CircleImageView;
+import com.feitianzhu.huangliwo.view.CustomNerYearPopView;
 import com.feitianzhu.huangliwo.vip.VipActivity;
 import com.google.gson.Gson;
 import com.itheima.roundedimageview.RoundedImageView;
+import com.lxj.xpopup.XPopup;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
@@ -256,15 +259,16 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, View.
 
     @OnClick({R.id.ll_location, R.id.iv_head, R.id.rl_ticket, R.id.rl_financial, R.id.rl_travel, R.id.rl_mall, R.id.rl_merchants})
     public void onViewClicked(View view) {
+        Intent intent;
         switch (view.getId()) {
             case R.id.ll_location:
-                ProvincehDialog branchDialog = ProvincehDialog.newInstance(getActivity());
+                ProvinceDialog2 branchDialog = ProvinceDialog2.newInstance();
                 branchDialog.setAddress("北京市", "北京市");
                 branchDialog.setSelectOnListener(this);
                 branchDialog.show(getChildFragmentManager());
                 break;
             case R.id.iv_head: //
-                Intent intent = new Intent(getActivity(), PersonalCenterActivity2.class);
+                intent = new Intent(getActivity(), PersonalCenterActivity2.class);
                 startActivity(intent);
                 break;
             case R.id.rl_mall:
@@ -274,6 +278,14 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, View.
                 mCallbackBFragment.skipToCommodityFragment(1, view);
                 break;
             case R.id.rl_ticket:
+                new XPopup.Builder(getActivity())
+                        .enableDrag(false)
+                        .asCustom(new CustomNerYearPopView(getActivity()).setOnConfirmClickListener(new CustomNerYearPopView.OnConfirmClickListener() {
+                            @Override
+                            public void onConfirm() {
+                                ToastUtils.showShortToast("点击了确认按钮");
+                            }
+                        })).show();
                 ToastUtils.showShortToast("敬请期待");
                 break;
             case R.id.rl_financial:
@@ -496,8 +508,8 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, View.
                 //WebViewActivity.startActivity(getActivity(), mHomeEntity.bannerList.get(i).outUrl, "");
                 break;
             case 4:
-                //ToastUtils.showShortToast("敬请期待");
-                // WebViewActivity.startActivity(getActivity(), mHomeEntity.bannerList.get(i).outUrl, "");
+                intent = new Intent(getActivity(), NewYearShoppingActivity.class);
+                startActivity(intent);
                 break;
 
         }

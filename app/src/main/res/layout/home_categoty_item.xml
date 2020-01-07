@@ -25,7 +25,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="8dp"
             android:scaleType="centerCrop"
-            android:src="@mipmap/a06_01tupian"
+            android:src="@mipmap/g10_04weijiazai"
             app:riv_corner_radius="5dp"
             app:riv_oval="false" />
 

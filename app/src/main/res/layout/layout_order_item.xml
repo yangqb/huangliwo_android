@@ -55,7 +55,7 @@
                 app:riv_oval="false"
                 app:riv_corner_radius="5dp"
                 android:layout_marginRight="13dp"
-                android:src="@mipmap/a06_01tupian" />
+                android:src="@mipmap/g10_04weijiazai" />
 
             <LinearLayout
                 android:layout_width="170dp"

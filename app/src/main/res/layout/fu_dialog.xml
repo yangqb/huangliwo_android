@@ -24,7 +24,6 @@
           android:layout_width="0dp"
           android:layout_height="72dp"
           android:layout_weight="1"
-          android:src="@mipmap/icon_fu_weiwomaidan"
           />
       <ImageView
           android:id="@+id/iv_saoyisao"
@@ -32,14 +31,12 @@
           android:layout_height="72dp"
           android:layout_marginBottom="18dp"
           android:layout_weight="1"
-          android:src="@mipmap/icon_fu_saoyisao"
           />
       <ImageView
           android:id="@+id/iv_woyaoshoukuan"
           android:layout_width="0dp"
           android:layout_height="72dp"
           android:layout_weight="1"
-          android:src="@mipmap/icon_fu_woyaoshoukuan"
           />
     </LinearLayout>
     <LinearLayout
@@ -57,7 +54,6 @@
           android:layout_width="0dp"
           android:layout_height="72dp"
           android:layout_weight="1"
-          android:src="@mipmap/icon_fu_shangjialudan"
           />
       <ImageView
           android:id="@+id/iv_fabufuwu"
@@ -65,7 +61,6 @@
           android:layout_height="72dp"
           android:layout_marginBottom="18dp"
           android:layout_weight="1"
-          android:src="@mipmap/icon_fabufuwu"
           />
     </LinearLayout>
   </LinearLayout>
@@ -86,7 +81,6 @@
         android:layout_width="40dp"
 
         android:layout_height="40dp"
-        android:src="@mipmap/icon_guanbi"
         />
   </LinearLayout>
 </LinearLayout>
