@@ -214,7 +214,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="《黄鹂窝优选会员服务协议》"
-                    android:textColor="@color/color_289CFE"
+                    android:textColor="@color/color_289cef"
                     android:textSize="@dimen/sp_12" />
 
             </LinearLayout>

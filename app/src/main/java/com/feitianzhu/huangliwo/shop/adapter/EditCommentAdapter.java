@@ -35,6 +35,7 @@ public class EditCommentAdapter extends BaseMultiItemQuickAdapter<MultiItemComme
             helper.setVisible(R.id.btn_cancel, false);
         } else {
             Glide.with(mContext).load(item.getPath()).apply(new RequestOptions()
+                    .dontAnimate()
                     .placeholder(R.mipmap.g10_04weijiazai)
                     .error(R.mipmap.g10_04weijiazai))
                     .into((RoundedImageView) helper.getView(R.id.roundImage));

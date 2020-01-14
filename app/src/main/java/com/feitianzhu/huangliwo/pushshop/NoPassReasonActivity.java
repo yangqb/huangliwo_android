@@ -10,8 +10,11 @@ import android.widget.TextView;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.pushshop.adapter.ReasonAdapter;
+import com.feitianzhu.huangliwo.pushshop.bean.MerchantsModel;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -24,6 +27,8 @@ import butterknife.OnClick;
  * email: 694125155@qq.com
  */
 public class NoPassReasonActivity extends BaseActivity {
+    public static final String REASON_DATA = "reason_data";
+    private MerchantsModel merchantsModel;
     private ReasonAdapter adapter;
     @BindView(R.id.title_name)
     TextView titleName;
@@ -42,12 +47,13 @@ public class NoPassReasonActivity extends BaseActivity {
         titleName.setText("详情");
         rightImg.setBackgroundResource(R.mipmap.g01_08fankui);
         rightImg.setVisibility(View.VISIBLE);
-        String[] strings = new String[]{"身份证正面不清晰", "身份证正面不清晰", "身份证正面不清晰", "身份证正面不清晰"};
-        adapter = new ReasonAdapter(Arrays.asList(strings));
+        merchantsModel = (MerchantsModel) getIntent().getSerializableExtra(REASON_DATA);
+        List<String> strings = new ArrayList<>();
+        strings.add(merchantsModel.getRefuseReason());
+        adapter = new ReasonAdapter(strings);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
-
     }
 
     @Override
@@ -60,7 +66,9 @@ public class NoPassReasonActivity extends BaseActivity {
         Intent intent;
         switch (view.getId()) {
             case R.id.reSubmit:
-                intent = new Intent(NoPassReasonActivity.this, EditMerchantsActivity.class);
+                intent = new Intent(NoPassReasonActivity.this, MerchantsDetailActivity.class);
+                intent.putExtra(MerchantsDetailActivity.IS_MY_MERCHANTS, false);
+                intent.putExtra(MerchantsDetailActivity.MERCHANTS_DETAIL_DATA, merchantsModel);
                 startActivity(intent);
                 break;
             case R.id.left_button:
@@ -69,6 +77,7 @@ public class NoPassReasonActivity extends BaseActivity {
             case R.id.right_button:
                 intent = new Intent(NoPassReasonActivity.this, ProblemFeedbackActivity.class);
                 startActivity(intent);
+                finish();
                 break;
         }
     }

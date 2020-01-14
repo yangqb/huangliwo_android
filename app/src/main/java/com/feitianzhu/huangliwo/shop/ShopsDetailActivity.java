@@ -294,7 +294,7 @@ public class ShopsDetailActivity extends BaseActivity {
             if (goodsListBean.getGoodsIntroduceImg() == null || TextUtils.isEmpty(goodsListBean.getGoodsIntroduceImg())) {
                 llGoodsDetail.setVisibility(View.GONE);
             } else {
-                Glide.with(this).load(goodsListBean.getGoodsIntroduceImg()).downloadOnly(new SimpleTarget<File>() {
+                Glide.with(this).load(goodsListBean.getGoodsIntroduceImg()).apply(new RequestOptions().dontAnimate()).downloadOnly(new SimpleTarget<File>() {
                     @Override
                     public void onResourceReady(File resource, Transition<? super File> transition) {
                         Uri uri = Uri.fromFile(resource);
@@ -345,6 +345,7 @@ public class ShopsDetailActivity extends BaseActivity {
         public void onBind(final Context context, BaseGoodsListBean.GoodsImgsListBean data, final int position, final int size) {
             Glide.with(context).load(data.getGoodsImg())
                     .apply(new RequestOptions()
+                            .dontAnimate()
                             .placeholder(R.mipmap.g10_03weijiazai)
                             .error(R.mipmap.g10_03weijiazai))
                     .into(mImageView);

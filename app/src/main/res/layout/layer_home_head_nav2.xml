@@ -88,7 +88,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:scaleType="centerInside"
-            android:src="@mipmap/a01_04jia" />
+            android:src="@mipmap/a01_0saoyisao" />
 
     </LinearLayout>
 

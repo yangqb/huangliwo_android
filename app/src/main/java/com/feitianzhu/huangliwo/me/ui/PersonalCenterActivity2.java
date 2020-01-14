@@ -166,7 +166,7 @@ public class PersonalCenterActivity2 extends BaseTakePhotoActivity {
         tvSign.setText(response.getPersonSign() == null ? "" : response.getPersonSign().toString());
         tvPersonId.setText(String.valueOf(response.getUserId()));
         if (response.getAccountType() == 0) {
-            tvVip.setText("普通用户");
+            tvVip.setText("消费者");
         } else if (response.getAccountType() == 1) {
             tvVip.setText("市代理");
         } else if (response.getAccountType() == 2) {
@@ -176,7 +176,7 @@ public class PersonalCenterActivity2 extends BaseTakePhotoActivity {
         } else if (response.getAccountType() == 4) {
             tvVip.setText("超级会员");
         } else if (response.getAccountType() == 5) {
-            tvVip.setText("普通会员");
+            tvVip.setText("优选会员");
         }
     }
 

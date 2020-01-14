@@ -68,7 +68,7 @@ public class MineInfoModel implements Serializable {
     private String parentHeadImg;
     private String realName;
     private int isRnAuth;
-    private int isMerchantAuth;
+    private int isMerchant;
     private int rate;
     private int userType;
     private List<?> interestLabel;
@@ -293,12 +293,12 @@ public class MineInfoModel implements Serializable {
         this.isRnAuth = isRnAuth;
     }
 
-    public int getIsMerchantAuth() {
-        return isMerchantAuth;
+    public int getIsMerchant() {
+        return isMerchant;
     }
 
-    public void setIsMerchantAuth(int isMerchantAuth) {
-        this.isMerchantAuth = isMerchantAuth;
+    public void setIsMerchant(int isMerchant) {
+        this.isMerchant = isMerchant;
     }
 
     public int getRate() {

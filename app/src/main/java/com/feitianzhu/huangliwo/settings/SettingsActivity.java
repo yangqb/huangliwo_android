@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.feitianzhu.huangliwo.MainActivity;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.impl.onNetFinishLinstenerT;
@@ -19,15 +20,22 @@ import com.feitianzhu.huangliwo.model.UpdateAppModel;
 import com.feitianzhu.huangliwo.model.UserAuth;
 import com.feitianzhu.huangliwo.shop.ShopDao;
 import com.feitianzhu.huangliwo.utils.DataCleanUtils;
+import com.feitianzhu.huangliwo.utils.HProgressDialogUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.UpdateAppHttpUtil;
 import com.feitianzhu.huangliwo.utils.VersionManagementUtil;
 import com.google.gson.Gson;
+import com.lxj.xpopup.XPopup;
+import com.lxj.xpopup.interfaces.OnCancelListener;
+import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.vector.update_app.UpdateAppBean;
 import com.vector.update_app.UpdateAppManager;
 import com.vector.update_app.UpdateCallback;
+import com.vector.update_app.service.DownloadService;
 import com.vector.update_app.utils.AppUpdateUtils;
+
+import java.io.File;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -36,7 +44,7 @@ import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
 import static com.feitianzhu.huangliwo.common.Constant.UAPDATE;
 
 public class SettingsActivity extends BaseActivity {
-
+    boolean constraint = false;
     @BindView(R.id.rl_change_phone)
     RelativeLayout mRlChangePhone;
     @BindView(R.id.rl_change_password)
@@ -202,7 +210,6 @@ public class SettingsActivity extends BaseActivity {
                     protected UpdateAppBean parseJson(String json) {
                         UpdateAppBean updateAppBean = new UpdateAppBean();
                         UpdateAppModel updateAppModel = new Gson().fromJson(json, UpdateAppModel.class);
-                        boolean constraint = false;
                         String update = "No";
                         if (VersionManagementUtil.VersionComparison(updateAppModel.versionName + "", versionName) == 1) {
                             update = "Yes";
@@ -234,6 +241,9 @@ public class SettingsActivity extends BaseActivity {
 
                     @Override
                     protected void hasNewApp(UpdateAppBean updateApp, UpdateAppManager updateAppManager) {
+                      /*
+                        自定义对话框
+                        * */
                         updateAppManager.showDialogFragment();
                     }
 
@@ -242,7 +252,7 @@ public class SettingsActivity extends BaseActivity {
                      */
                     @Override
                     public void onBefore() {
-                       // showloadDialog("");
+                        // showloadDialog("");
 //                CProgressDialogUtils.showProgressDialog(JavaActivity.this);
                     }
 
@@ -251,7 +261,7 @@ public class SettingsActivity extends BaseActivity {
                      */
                     @Override
                     public void onAfter() {
-                     //   goneloadDialog();
+                        //   goneloadDialog();
 //                CProgressDialogUtils.cancelProgressDialog(JavaActivity.this);
                     }
 
@@ -261,10 +271,9 @@ public class SettingsActivity extends BaseActivity {
                     @Override
                     protected void noNewApp(String error) {
                         super.noNewApp(error);
-                       // goneloadDialog();
+                        // goneloadDialog();
                         ToastUtils.showShortToast("没有新版本");
                     }
                 });
-
     }
 }

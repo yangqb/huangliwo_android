@@ -48,11 +48,10 @@
                         <EditText
                             android:id="@+id/edit_merchants_name"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
+                            android:layout_height="match_parent"
                             android:layout_toRightOf="@id/tag1"
                             android:background="@null"
-                            android:gravity="right"
+                            android:gravity="end|center_vertical"
                             android:hint="请输入商铺名称"
                             android:lines="1"
                             android:textColor="@color/color_333333"
@@ -67,6 +66,7 @@
                         android:background="@color/color_eeeeee" />
 
                     <RelativeLayout
+                        android:id="@+id/rl_merchants_type"
                         android:layout_width="match_parent"
                         android:layout_height="64dp"
                         android:background="@color/white">
@@ -90,6 +90,7 @@
                             android:src="@mipmap/b08_04jinru" />
 
                         <TextView
+                            android:id="@+id/merchants_clsName"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
@@ -98,6 +99,42 @@
                             android:lines="1"
                             android:text="请选择类型"
                             android:textColor="@color/color_333333"
+                            android:textSize="16sp" />
+
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/color_eeeeee" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="64dp"
+                        android:background="@color/white">
+
+                        <TextView
+                            android:id="@+id/tag12"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="15dp"
+                            android:text="营业执照注册号"
+                            android:textColor="@color/color_333333"
+                            android:textSize="16sp" />
+
+                        <EditText
+                            android:id="@+id/edit_business_license"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_toRightOf="@id/tag12"
+                            android:background="@null"
+                            android:gravity="end|center_vertical"
+                            android:hint="请输入营业执照注册号"
+                            android:inputType="phone"
+                            android:lines="1"
+                            android:textColor="@color/color_333333"
+                            android:textColorHint="@color/color_999999"
                             android:textSize="16sp" />
 
                     </RelativeLayout>
@@ -123,13 +160,14 @@
                             android:textSize="16sp" />
 
                         <EditText
+                            android:id="@+id/edit_phone"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
+                            android:layout_height="match_parent"
                             android:layout_toRightOf="@id/tag3"
                             android:background="@null"
-                            android:gravity="right"
+                            android:gravity="end|center_vertical"
                             android:hint="请输入商铺手机"
+                            android:inputType="phone"
                             android:lines="1"
                             android:textColor="@color/color_333333"
                             android:textColorHint="@color/color_999999"
@@ -170,12 +208,12 @@
                             android:textSize="16sp" />
 
                         <EditText
+                            android:id="@+id/edit_code"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
+                            android:layout_height="match_parent"
                             android:layout_toLeftOf="@id/tvCode"
                             android:background="@null"
-                            android:gravity="right"
+                            android:gravity="end|center_vertical"
                             android:hint="请输入验证码"
                             android:inputType="number"
                             android:lines="1"
@@ -191,6 +229,7 @@
                         android:background="@color/color_eeeeee" />
 
                     <RelativeLayout
+                        android:id="@+id/rl_merchants_area"
                         android:layout_width="match_parent"
                         android:layout_height="64dp"
                         android:background="@color/white">
@@ -214,11 +253,11 @@
                             android:src="@mipmap/b08_04jinru" />
 
                         <TextView
+                            android:id="@+id/tvAreaAddress"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
+                            android:layout_height="match_parent"
                             android:layout_toLeftOf="@id/tag5"
-                            android:gravity="right"
+                            android:gravity="end|center_vertical"
                             android:lines="1"
                             android:text="请选择地区"
                             android:textColor="@color/color_333333"
@@ -248,12 +287,13 @@
                             android:textSize="16sp" />
 
                         <EditText
+                            android:id="@+id/edit_address"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
                             android:layout_toRightOf="@id/tag6"
+                            android:layout_centerVertical="true"
                             android:background="@null"
-                            android:gravity="right"
+                            android:gravity="end"
                             android:hint="请输入详细地址"
                             android:textColor="@color/color_333333"
                             android:textColorHint="@color/color_999999"
@@ -282,12 +322,12 @@
                             android:textSize="16sp" />
 
                         <EditText
+                            android:id="@+id/edit_email"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
+                            android:layout_height="match_parent"
                             android:layout_toRightOf="@id/tag7"
                             android:background="@null"
-                            android:gravity="right"
+                            android:gravity="end|center_vertical"
                             android:hint="请输入邮箱"
                             android:lines="1"
                             android:textColor="@color/color_333333"
@@ -307,7 +347,7 @@
                         android:background="@color/white">
 
                         <LinearLayout
-                            android:id="@+id/tag8"
+                            android:id="@+id/ll_discount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
@@ -329,14 +369,24 @@
                                 android:background="@mipmap/g04_02yiwen" />
                         </LinearLayout>
 
+                        <TextView
+                            android:id="@+id/tag8"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            android:textColor="@color/color_333333"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:text="\u25"/>
 
                         <EditText
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_toRightOf="@id/tag8"
+                            android:id="@+id/edit_percentage"
+                            android:layout_toLeftOf="@+id/tag8"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:inputType="number"
                             android:background="@null"
-                            android:gravity="right"
+                            android:gravity="end|center_vertical"
                             android:hint="请输入折扣比例"
                             android:lines="1"
                             android:textColor="@color/color_333333"
@@ -364,6 +414,7 @@
                         android:textSize="16sp" />
 
                     <EditText
+                        android:id="@+id/edit_merchants_introduce"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dp_20"

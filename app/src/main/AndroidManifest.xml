@@ -76,7 +76,7 @@
 
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="sj7Duk6sDsVFhabLZKKP04lb4bka9hPh" />
+            android:value="nW4uiO8LpXcfEYM5A6bsilNtN4G7mwq1" />
 
         <activity
             android:name="com.feitianzhu.huangliwo.MainActivity"
@@ -446,6 +446,22 @@
         <activity android:name=".TestActivity" />
         <activity
             android:name=".shop.NewYearShoppingActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".pushshop.MySelfMerchantsListActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".pushshop.EditSetMealActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".pushshop.SetMealListActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".pushshop.SetMealDetailActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
 

@@ -54,7 +54,7 @@ public class EditCommentsActivity extends BaseActivity {
     private static final int REQUEST_CODE_CHOOSE = 1000;
     public static final String ORDER_DATA = "order_data";
     private int maxSize = 3;
-    private boolean isAdd = true; //是否还可以添加图片
+    private boolean isAdd = false; //是否还可以添加图片
     private EditCommentAdapter mAdapter;
     private List<MultiItemComment> multiItemCommentList = new ArrayList<>();
     private List<String> mSelected = new ArrayList<>();

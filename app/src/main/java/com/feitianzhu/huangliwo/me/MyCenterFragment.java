@@ -148,6 +148,8 @@ public class MyCenterFragment extends SFFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_center, container, false);
         unbinder = ButterKnife.bind(this, view);
+        token = SPUtils.getString(getActivity(), Constant.SP_ACCESS_TOKEN);
+        userId = SPUtils.getString(getActivity(), Constant.SP_LOGIN_USERID);
         refreshLayout.setEnableLoadMore(false);
         mRecyclerView.setNestedScrollingEnabled(false);
         adapter = new CenterAdapter(Arrays.asList(integers));
@@ -162,8 +164,6 @@ public class MyCenterFragment extends SFFragment {
             imgShow.setBackgroundResource(R.mipmap.h01_02guanbi);
         }
         ShopDao.loadUserAuthImpl(getActivity());
-        token = SPUtils.getString(getActivity(), Constant.SP_ACCESS_TOKEN);
-        userId = SPUtils.getString(getActivity(), Constant.SP_LOGIN_USERID);
         initListener();
         requestData();
         getData();
@@ -240,7 +240,7 @@ public class MyCenterFragment extends SFFragment {
                 .into(civHead);
         nickName.setText(response.getNickName() == null ? "小黄鹂" : response.getNickName());
         if (response.getAccountType() == 0) {
-            gradeName.setText("普通用户");
+            gradeName.setText("消费者");
         } else if (response.getAccountType() == 1) {
             gradeName.setText("市代理");
         } else if (response.getAccountType() == 2) {
@@ -250,7 +250,7 @@ public class MyCenterFragment extends SFFragment {
         } else if (response.getAccountType() == 4) {
             gradeName.setText("超级会员");
         } else if (response.getAccountType() == 5) {
-            gradeName.setText("普通会员");
+            gradeName.setText("优选会员");
         }
     }
 
@@ -309,15 +309,15 @@ public class MyCenterFragment extends SFFragment {
                         startActivity(intent);
                         break;
                     case 7: //推店
-                        //ToastUtils.showShortToast("敬请期待");
+                        ToastUtils.showShortToast("敬请期待");
                         //ShopHelp.veriJumpActivity(getActivity());
                         intent = new Intent(getActivity(), PushShopHomeActivity.class);
                         startActivity(intent);
                         break;
                     case 6://我的收藏
                         ToastUtils.showShortToast("敬请期待");
-                        intent = new Intent(getActivity(), TestActivity.class);
-                        startActivity(intent);
+                        /*intent = new Intent(getActivity(), TestActivity.class);
+                        startActivity(intent);*/
                         //JumpActivity(getContext(), MineCollectionActivity.class);
                         break;
                     case 2://地址管理
@@ -336,8 +336,8 @@ public class MyCenterFragment extends SFFragment {
                         break;
                     case 1: //购物车
                         //ToastUtils.showShortToast("敬请期待");
-                        intent = new Intent(getContext(), ShoppingCartActivity.class);
-                        startActivity(intent);
+                        /*intent = new Intent(getContext(), ShoppingCartActivity.class);
+                        startActivity(intent);*/
                         break;
                 }
             }

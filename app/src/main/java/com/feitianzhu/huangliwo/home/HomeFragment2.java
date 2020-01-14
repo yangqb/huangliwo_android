@@ -30,11 +30,13 @@ import com.feitianzhu.huangliwo.common.base.SFFragment;
 import com.feitianzhu.huangliwo.home.adapter.HAdapter;
 import com.feitianzhu.huangliwo.home.adapter.HomeRecommendAdapter2;
 import com.feitianzhu.huangliwo.home.entity.HomeEntity;
+import com.feitianzhu.huangliwo.home.entity.NoticeModel;
 import com.feitianzhu.huangliwo.home.entity.ShopAndMerchants;
 import com.feitianzhu.huangliwo.login.LoginEvent;
 import com.feitianzhu.huangliwo.me.ui.PersonalCenterActivity2;
 import com.feitianzhu.huangliwo.me.ui.ScannerActivity;
 import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
+import com.feitianzhu.huangliwo.model.HomePopModel;
 import com.feitianzhu.huangliwo.model.HomeShops;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.Province;
@@ -95,7 +97,7 @@ import static com.feitianzhu.huangliwo.login.LoginEvent.EDITOR_INFO;
  * @email QQ:694125155
  * @Date 2019/11/16 0016 下午 4:35
  */
-public class HomeFragment2 extends SFFragment implements ProvinceCallBack, View.OnClickListener {
+public class HomeFragment2 extends SFFragment implements ProvinceCallBack {
     Unbinder unbinder;
     @BindView(R.id.recyclerview)
     RecyclerView mRecyclerview;
@@ -113,14 +115,16 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, View.
     BannerViewPager<HomeEntity.BannerListBean, DataViewHolder> mViewpager;
     @BindView(R.id.iv_head)
     CircleImageView ivHead;
+    @BindView(R.id.tvNotice)
+    TextView tvNotice;
+    @BindView(R.id.ll_notice)
+    LinearLayout llNotice;
     private List<ShopAndMerchants> shopAndMerchants = new ArrayList<>();
     private List<ShopClassify.GGoodsClsListBean> shopClassifyLsit = new ArrayList<>();
     private List<BaseGoodsListBean> shopsLists = new ArrayList<>();
     private HomeRecommendAdapter2 mAdapter;
     private HAdapter hAdapter;
     private HomeEntity mHomeEntity;
-    private PopupWindow popupWindow;
-    private View vPopupWindow;
     private List<HomeEntity.BannerListBean> mBanners = new ArrayList<>();
     private boolean isLoadMore;
     private String token;
@@ -162,17 +166,6 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, View.
         if (!TextUtils.isEmpty(Constant.mCity)) {
             mTxtLocation.setText(Constant.mCity);
         }
-        vPopupWindow = getLayoutInflater().inflate(R.layout.layout_popupwindow, null);
-        // View vPopupWindow = View.inflate(getActivity(), R.layout.layout_popupwindow, null);//引入弹窗布局
-        popupWindow = new PopupWindow(vPopupWindow, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        //相对于父控件的位置（例如正中央Gravity.CENTER，下方Gravity.BOTTOM等），可以设置偏移或无偏移
-        popupWindow.setFocusable(true);
-        popupWindow.setOutsideTouchable(true);
-
-        vPopupWindow.findViewById(R.id.iv_saoyisao).setOnClickListener(this);
-        vPopupWindow.findViewById(R.id.iv_shoukuan).setOnClickListener(this);
-        vPopupWindow.findViewById(R.id.iv_ludan).setOnClickListener(this);
-        vPopupWindow.findViewById(R.id.iv_fabufuwu).setOnClickListener(this);
 
         mRecyclerview.setLayoutManager(new LinearLayoutManager(getActivity()));
         hAdapter = new HAdapter(shopClassifyLsit);
@@ -186,15 +179,13 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, View.
         mRecyclerview.setNestedScrollingEnabled(false);
         hList.setNestedScrollingEnabled(false);
         //商家
-
-        ivRight.setOnClickListener(this);
-        mSearchLayout.setOnClickListener(this);
         token = SPUtils.getString(getActivity(), Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(getActivity(), Constant.SP_LOGIN_USERID);
         getData();
         requestData();
         getGoodsData();
         getClasses(); //商品类别
+        getNotice();
         initListener();
         return view;
     }
@@ -250,14 +241,15 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, View.
                 isLoadMore = false;
                 pageNo = 1;
                 getData();
+                getNotice();
                 requestData();
-                getGoodsData();
                 getClasses();
+                getGoodsData();
             }
         });
     }
 
-    @OnClick({R.id.ll_location, R.id.iv_head, R.id.rl_ticket, R.id.rl_financial, R.id.rl_travel, R.id.rl_mall, R.id.rl_merchants})
+    @OnClick({R.id.ll_location, R.id.iv_head, R.id.rl_ticket, R.id.rl_financial, R.id.rl_travel, R.id.rl_mall, R.id.rl_merchants, R.id.search, R.id.iv_home_nv_right})
     public void onViewClicked(View view) {
         Intent intent;
         switch (view.getId()) {
@@ -278,14 +270,6 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, View.
                 mCallbackBFragment.skipToCommodityFragment(1, view);
                 break;
             case R.id.rl_ticket:
-                new XPopup.Builder(getActivity())
-                        .enableDrag(false)
-                        .asCustom(new CustomNerYearPopView(getActivity()).setOnConfirmClickListener(new CustomNerYearPopView.OnConfirmClickListener() {
-                            @Override
-                            public void onConfirm() {
-                                ToastUtils.showShortToast("点击了确认按钮");
-                            }
-                        })).show();
                 ToastUtils.showShortToast("敬请期待");
                 break;
             case R.id.rl_financial:
@@ -294,8 +278,45 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, View.
             case R.id.rl_travel:
                 ToastUtils.showShortToast("敬请期待");
                 break;
+            case R.id.search:
+                JumpActivity(getActivity(), SearchShopActivity.class);
+                break;
+            case R.id.iv_home_nv_right:
+                requestPermission();
+                break;
         }
 
+    }
+
+    public void getNotice() {
+        OkHttpUtils
+                .get()
+                .url(Urls.GET_HOME_NOTICE)
+                .addParams("accessToken", token)
+                .addParams("userId", userId)
+                .build()
+                .execute(new Callback<NoticeModel>() {
+
+                    @Override
+                    public NoticeModel parseNetworkResponse(String mData, Response response, int id) throws Exception {
+                        return super.parseNetworkResponse(mData, response, id);
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        ToastUtils.showShortToast(e.getMessage());
+                    }
+
+                    @Override
+                    public void onResponse(NoticeModel response, int id) {
+                        if (response.getPushMsg() != null && !TextUtils.isEmpty(response.getPushMsg().getPushContent()) && response.getPushMsg().getPushContent() != null) {
+                            llNotice.setVisibility(View.VISIBLE);
+                            tvNotice.setText(response.getPushMsg().getPushContent());
+                        } else {
+                            llNotice.setVisibility(View.GONE);
+                        }
+                    }
+                });
     }
 
     public void getData() {
@@ -309,18 +330,15 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, View.
                     @Override
                     public void onBefore(Request request, int id) {
                         super.onBefore(request, id);
-                        showloadDialog("");
                     }
 
                     @Override
                     public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                        goneloadDialog();
                         return new Gson().fromJson(mData, HomeEntity.class);
                     }
 
                     @Override
                     public void onError(Call call, Exception e, int id) {
-                        goneloadDialog();
                         if (!isLoadMore) {
                             mSwipeLayout.finishRefresh(false);
                         } else {
@@ -332,7 +350,6 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, View.
 
                     @Override
                     public void onResponse(Object response, int id) {
-                        goneloadDialog();
                         if (!isLoadMore) {
                             mSwipeLayout.finishRefresh();
                         } else {
@@ -374,12 +391,19 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, View.
                 .build()
                 .execute(new Callback() {
                     @Override
+                    public void onBefore(Request request, int id) {
+                        super.onBefore(request, id);
+                        showloadDialog("");
+                    }
+
+                    @Override
                     public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
                         return new Gson().fromJson(mData, HomeShops.class);
                     }
 
                     @Override
                     public void onError(Call call, Exception e, int id) {
+                        goneloadDialog();
                         if (!isLoadMore) {
                             mSwipeLayout.finishRefresh(false);
                         } else {
@@ -389,6 +413,7 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, View.
 
                     @Override
                     public void onResponse(Object response, int id) {
+                        goneloadDialog();
                         if (!isLoadMore) {
                             mSwipeLayout.finishRefresh();
                         } else {
@@ -518,41 +543,6 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, View.
     private void JumpActivity(Context context, Class clazz) {
         Intent intent = new Intent(context, clazz);
         context.startActivity(intent);
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.search:
-                JumpActivity(getActivity(), SearchShopActivity.class);
-                break;
-            case R.id.iv_home_nv_right:
-                vPopupWindow.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-                popupWindow.showAsDropDown(ivRight, -vPopupWindow.getMeasuredWidth() + ivRight.getWidth() - 3, 0);
-                break;
-            case R.id.iv_saoyisao:
-                requestPermission();
-                popupWindow.dismiss();
-                break;
-            case R.id.iv_shoukuan:
-                popupWindow.dismiss();
-                ToastUtils.showShortToast("敬请期待");
-                /*Intent collIntent = new Intent(getActivity(), CollectMoneyActivity.class);
-                ShopHelp.veriUserShopJumpActivity(getActivity(), collIntent);*/
-                break;
-            case R.id.iv_ludan:
-                popupWindow.dismiss();
-                ToastUtils.showShortToast("敬请期待");
-               /* intent = new Intent(getActivity(), ShopRecordActivity.class);
-                ShopHelpTwo.veriUserShopJumpActivity(getActivity(), intent);*/
-                break;
-            case R.id.iv_fabufuwu:
-                popupWindow.dismiss();
-                ToastUtils.showShortToast("敬请期待");
-              /*  Intent pushIntent = new Intent(getActivity(), PushServiceActivity.class);
-                ShopHelp.veriUserShopJumpActivity(getActivity(), pushIntent);*/
-                break;
-        }
     }
 
     private void requestPermission() {

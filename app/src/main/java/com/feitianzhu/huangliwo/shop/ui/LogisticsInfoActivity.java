@@ -92,7 +92,7 @@ public class LogisticsInfoActivity extends BaseActivity {
             OkHttpUtils.get()
                     .url(Urls.GET_LOGISTICS_INFO)
                     .addParams(Constant.ACCESSTOKEN, token)
-                    .addParams(Constant.USERID,userId)
+                    .addParams(Constant.USERID, userId)
                     .addParams("expressNo", logisticsNo)
                     .build()
                     .execute(new Callback() {
@@ -109,9 +109,9 @@ public class LogisticsInfoActivity extends BaseActivity {
                         @Override
                         public void onResponse(Object response, int id) {
                             LogisticsModel logisticsModel = (LogisticsModel) response;
-                            if (logisticsModel != null) {
+                            if (logisticsModel != null && logisticsModel.getData() != null) {
                                 logisticsModes.clear();
-                                logisticsModes.addAll(logisticsModel.getData());
+                                logisticsModes = logisticsModel.getData();
                                 adapter.setNewData(logisticsModes);
                                 adapter.notifyDataSetChanged();
                             }

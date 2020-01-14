@@ -16,16 +16,16 @@
 
         <ImageView
             android:id="@+id/iv_close"
-            android:layout_width="37dp"
-            android:layout_height="37dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_below="@id/imageView"
             android:layout_centerHorizontal="true"
             android:src="@mipmap/h11_03guanbi" />
 
         <ImageView
             android:id="@+id/confirm"
-            android:layout_width="150dp"
-            android:layout_height="60dp"
+            android:layout_width="140dp"
+            android:layout_height="50dp"
             android:layout_above="@id/iv_close"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="60dp"

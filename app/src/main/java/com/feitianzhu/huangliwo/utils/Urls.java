@@ -26,6 +26,15 @@ public class Urls {
      */
     public static final String GET_SMSCODE = BASE_URL + "fhwl/commons/getsmscode";
 
+    /*
+     * 首页公告
+     * */
+    public static final String GET_HOME_NOTICE = BASE_URL + "/fhwl/pushmsg/getPushMsg";
+    /*
+     * 首页活动弹窗
+     * */
+    public static final String GET_POP_DATA = BASE_URL + "/fhwl/index/getPopup";
+
     /**
      * 获取首页数据
      */
@@ -137,6 +146,61 @@ public class Urls {
      * 余额细则,细则类型 1推广返利 2消费折扣
      * */
     public static final String GET_DETAIL_RULES = BASE_URL + "fhwl/order/detailRules";
+
+    /*
+     * 创建商铺
+     * */
+    public static final String CREATE_MERCHANTS = BASE_URL + "fhwl/merchant/createMerchant";
+    /*
+     * 编辑商铺
+     * */
+    public static final String UPDATA_MERCHANTS = BASE_URL + "fhwl/merchant/updateMerchant";
+
+    /*
+     * 商铺详情数据
+     * */
+    public static final String GET_MERCHANTS_DETAIL = BASE_URL + "fhwl/merchant/getMerchantInfo";
+
+    /*
+     * 获取我的商铺列表
+     * */
+    public static final String GET_MERCHANTS_LIST = BASE_URL + "fhwl/merchant/getMerchants";
+
+    /*
+     * 新增套餐
+     * */
+    public static final String ADD_SETMEAL = BASE_URL + "fhwl/setMeal/saveSetMeal";
+
+    /*
+    * 修改套餐
+    * */
+    public static final String UPDATE_SETMEAL = BASE_URL + "fhwl/setMeal/updateSetMeal";
+
+    /*
+     * 获取套餐列表
+     * */
+    public static final String GET_SETMEAL_LIST = BASE_URL + "fhwl/setMeal/getSetMealList";
+
+    /*
+     * 获取套餐详情
+     * */
+    public static final String GET_SETMEAL_DETAIL = BASE_URL + "fhwl/setMeal/getSetMeal";
+
+    /*
+     * 套餐上下架
+     * */
+    public static final String UPDATE_SETMEAL_SHELF = BASE_URL + "fhwl/setMeal/updateShelf";
+
+    /*
+     * 获取我推荐的商铺列表
+     * */
+    public static final String GET_PUSH_MERCHANTS_LIST = BASE_URL + "fhwl/merchant/recommendDetail";
+
+    /**
+     * 获取商铺类型
+     */
+    public final static String GET_SHOPS_TYPE = BASE_URL + "fhwl/commons/merchant/getmclslist";
+
     /*
      * 余额提现
      * */

@@ -20,6 +20,8 @@ import com.lxj.xpopup.core.CenterPopupView;
  * email: 694125155@qq.com
  */
 public class CustomNerYearPopView extends CenterPopupView {
+    private String url;
+
     public CustomNerYearPopView(@NonNull Context context) {
         super(context);
     }
@@ -41,6 +43,10 @@ public class CustomNerYearPopView extends CenterPopupView {
         return R.layout.custom_new_year_pop;
     }
 
+    public CustomNerYearPopView setImgUrl(String url) {
+        this.url = url;
+        return this;
+    }
 
     // 执行初始化操作，比如：findView，设置点击，或者任何你弹窗内的业务逻辑
     @Override
@@ -62,7 +68,7 @@ public class CustomNerYearPopView extends CenterPopupView {
             }
         });
         ImageView imageView = findViewById(R.id.imageView);
-        Glide.with(getContext()).load(R.mipmap.h11_01hongbao).into(GlideUtils.getImageView2((Activity) getContext(), R.mipmap.h11_01hongbao, imageView));
+        Glide.with(getContext()).load(url).into(GlideUtils.getImageView((Activity) getContext(), url, imageView));
     }
 
     // 设置最大宽度，看需要而定

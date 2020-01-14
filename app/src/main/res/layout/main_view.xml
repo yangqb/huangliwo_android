@@ -32,8 +32,8 @@
 
                 <ImageView
                     android:id="@+id/img_index"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
+                    android:layout_width="27dp"
+                    android:layout_height="27dp"
                     android:src="@drawable/tab_index_select" />
 
                 <TextView
@@ -41,6 +41,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="首页"
+                    android:textSize="9sp"
                     android:textColor="@drawable/tab_select_text" />
             </LinearLayout>
 
@@ -54,8 +55,8 @@
 
                 <ImageView
                     android:id="@+id/img_shop"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
+                    android:layout_width="27dp"
+                    android:layout_height="27dp"
                     android:src="@drawable/tab_gouwu_select" />
 
                 <TextView
@@ -63,6 +64,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="分类"
+                    android:textSize="9sp"
                     android:textColor="@drawable/tab_select_text" />
             </LinearLayout>
 
@@ -76,8 +78,8 @@
 
                 <ImageView
                     android:id="@+id/img_jiaoliu"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
+                    android:layout_width="27dp"
+                    android:layout_height="27dp"
                     android:src="@drawable/tab_jiaoliu_select" />
 
                 <TextView
@@ -85,6 +87,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="关注"
+                    android:textSize="9sp"
                     android:textColor="@drawable/tab_select_text" />
             </LinearLayout>
 
@@ -98,8 +101,8 @@
 
                 <ImageView
                     android:id="@+id/img_me"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
+                    android:layout_width="27dp"
+                    android:layout_height="27dp"
                     android:src="@drawable/tab_my_select" />
 
                 <TextView
@@ -107,6 +110,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="我的"
+                    android:textSize="9sp"
                     android:textColor="@drawable/tab_select_text" />
             </LinearLayout>
 

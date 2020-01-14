@@ -20,8 +20,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="@dimen/dp_10"
-            android:text="重新上传"
-            android:textColor="@color/color_289CFE"
+            android:text="重新提交"
+            android:textColor="@color/color_289cef"
             android:textSize="14sp" />
 
         <android.support.v7.widget.RecyclerView

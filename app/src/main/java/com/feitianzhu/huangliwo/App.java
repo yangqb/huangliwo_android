@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.multidex.MultiDex;
 
+import com.baidu.mapapi.SDKInitializer;
 import com.mob.MobApplication;
 
 import com.scwang.smartrefresh.header.MaterialHeader;
@@ -75,10 +76,10 @@ public class App extends MobApplication {
         context = this;
         ZXingLibrary.initDisplayOpinion(this);
         initOkUtils();
-        //SDKInitializer.initialize(getApplicationContext());
         initPush();
         AutoSizeConfig.getInstance().setCustomFragment(true);
-        CrashReport.initCrashReport(getApplicationContext(), "ad4dea9550", false);
+        CrashReport.initCrashReport(getApplicationContext(), "ad4dea9550", false); //正式发布改为false
+        SDKInitializer.initialize(this);
     }
 
     private void initPush() {

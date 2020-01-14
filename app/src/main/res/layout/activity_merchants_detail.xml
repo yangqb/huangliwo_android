@@ -47,11 +47,10 @@
                         <EditText
                             android:id="@+id/edit_merchants_name"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
+                            android:layout_height="match_parent"
                             android:layout_toRightOf="@id/tag1"
                             android:background="@null"
-                            android:gravity="right"
+                            android:gravity="end|center_vertical"
                             android:hint="请输入商铺名称"
                             android:lines="1"
                             android:textColor="@color/color_333333"
@@ -90,14 +89,50 @@
                             android:src="@mipmap/b08_04jinru" />
 
                         <TextView
+                            android:id="@+id/merchants_clsName"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
+                            android:layout_height="match_parent"
                             android:layout_toLeftOf="@id/tag2"
-                            android:gravity="right"
+                            android:gravity="end|center_vertical"
                             android:lines="1"
                             android:text="请选择类型"
                             android:textColor="@color/color_333333"
+                            android:textSize="16sp" />
+
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/color_eeeeee" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="64dp"
+                        android:background="@color/white">
+
+                        <TextView
+                            android:id="@+id/tag14"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="15dp"
+                            android:text="营业执照注册号"
+                            android:textColor="@color/color_333333"
+                            android:textSize="16sp" />
+
+                        <EditText
+                            android:id="@+id/edit_business_license"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_toRightOf="@id/tag14"
+                            android:background="@null"
+                            android:gravity="end|center_vertical"
+                            android:hint="请输入营业执照注册号"
+                            android:inputType="phone"
+                            android:lines="1"
+                            android:textColor="@color/color_333333"
+                            android:textColorHint="@color/color_999999"
                             android:textSize="16sp" />
 
                     </RelativeLayout>
@@ -125,11 +160,10 @@
                         <EditText
                             android:id="@+id/edit_merchants_phone"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
+                            android:layout_height="match_parent"
                             android:layout_toRightOf="@id/tag3"
                             android:background="@null"
-                            android:gravity="right"
+                            android:gravity="end|center_vertical"
                             android:hint="请输入商铺手机"
                             android:lines="1"
                             android:textColor="@color/color_333333"
@@ -144,9 +178,11 @@
                         android:background="@color/color_eeeeee" />
 
                     <RelativeLayout
+                        android:id="@+id/ll_code"
                         android:layout_width="match_parent"
                         android:layout_height="64dp"
-                        android:background="@color/white">
+                        android:background="@color/white"
+                        android:visibility="gone">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -173,11 +209,10 @@
                         <EditText
                             android:id="@+id/edit_merchants_code"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
+                            android:layout_height="match_parent"
                             android:layout_toLeftOf="@id/tvCode"
                             android:background="@null"
-                            android:gravity="right"
+                            android:gravity="end|center_vertical"
                             android:hint="请输入验证码"
                             android:inputType="number"
                             android:lines="1"
@@ -217,11 +252,11 @@
                             android:src="@mipmap/b08_04jinru" />
 
                         <TextView
+                            android:id="@+id/tvArea"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
+                            android:layout_height="match_parent"
                             android:layout_toLeftOf="@id/tag5"
-                            android:gravity="right"
+                            android:gravity="end|center_vertical"
                             android:lines="1"
                             android:text="请选择地区"
                             android:textColor="@color/color_333333"
@@ -257,7 +292,7 @@
                             android:layout_centerVertical="true"
                             android:layout_toRightOf="@id/tag6"
                             android:background="@null"
-                            android:gravity="right"
+                            android:gravity="end"
                             android:hint="请输入详细地址"
                             android:textColor="@color/color_333333"
                             android:textColorHint="@color/color_999999"
@@ -288,11 +323,10 @@
                         <EditText
                             android:id="@+id/edit_merchants_email"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
+                            android:layout_height="match_parent"
                             android:layout_toRightOf="@id/tag7"
                             android:background="@null"
-                            android:gravity="right"
+                            android:gravity="end|center_vertical"
                             android:hint="请输入邮箱"
                             android:lines="1"
                             android:textColor="@color/color_333333"
@@ -312,7 +346,7 @@
                         android:background="@color/white">
 
                         <LinearLayout
-                            android:id="@+id/tag8"
+                            android:id="@+id/ll_discount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
@@ -334,15 +368,23 @@
                                 android:background="@mipmap/g04_02yiwen" />
                         </LinearLayout>
 
+                        <TextView
+                            android:id="@+id/tag8"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:text="\u25"
+                            android:textColor="@color/color_333333"
+                            android:textSize="16sp" />
 
                         <EditText
                             android:id="@+id/edit_merchants_discount"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_toRightOf="@id/tag8"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_toLeftOf="@id/tag8"
                             android:background="@null"
-                            android:gravity="right"
+                            android:gravity="end|center_vertical"
                             android:hint="请输入折扣比例"
                             android:lines="1"
                             android:textColor="@color/color_333333"
@@ -351,141 +393,57 @@
 
                     </RelativeLayout>
 
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_10"
-                    android:background="@drawable/bg_ffffff_r5"
-                    android:orientation="vertical"
-                    android:padding="@dimen/dp_10">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dp_20"
-                        android:text="上传套餐"
-                        android:textColor="@color/color_333333"
-                        android:textSize="16sp" />
-
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/recyclerView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dp_20">
-
-                    </android.support.v7.widget.RecyclerView>
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="64dp"
-                        android:background="@color/white">
-
-                        <TextView
-                            android:id="@+id/tag10"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginRight="15dp"
-                            android:text="套餐名称"
-                            android:textColor="@color/color_333333"
-                            android:textSize="16sp" />
-
-                        <EditText
-                            android:id="@+id/edit_setMeal_name"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:background="@null"
-                            android:hint="请输入套餐名称"
-                            android:textColorHint="@color/color_999999"
-                            android:layout_toRightOf="@id/tag10"
-                            android:gravity="right"
-                            android:textColor="@color/color_333333"
-                            android:textSize="16sp" />
-
-                    </RelativeLayout>
-
                     <View
+                        android:id="@+id/endLine"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:background="@color/color_eeeeee" />
 
                     <RelativeLayout
+                        android:id="@+id/select_business_hours"
                         android:layout_width="match_parent"
                         android:layout_height="64dp"
-                        android:background="@color/white">
+                        android:background="@color/white"
+                        android:visibility="gone">
 
                         <TextView
-                            android:id="@+id/tag11"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_marginRight="15dp"
-                            android:text="套餐价格"
+                            android:text="营业时间"
                             android:textColor="@color/color_333333"
                             android:textSize="16sp" />
 
-                        <EditText
-                            android:id="@+id/edit_setMeal_price"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@null"
-                            android:hint="请输入套餐价格"
-                            android:textColorHint="@color/color_999999"
-                            android:layout_centerVertical="true"
-                            android:layout_toRightOf="@id/tag11"
-                            android:gravity="right"
-                            android:textColor="@color/color_333333"
-                            android:textSize="16sp" />
-
-                    </RelativeLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/color_eeeeee" />
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="64dp"
-                        android:background="@color/white">
-
-                        <LinearLayout
-                            android:id="@+id/tag12"
+                        <ImageView
+                            android:id="@+id/tag13"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
-                            android:layout_marginRight="15dp"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
+                            android:layout_marginLeft="@dimen/dp_10"
+                            android:src="@mipmap/b08_04jinru" />
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginRight="5dp"
-                                android:text="套餐折扣比例"
-                                android:textColor="@color/color_333333"
-                                android:textSize="16sp" />
+                        <TextView
+                            android:id="@+id/tv_business_hours"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_toLeftOf="@id/tag13"
+                            android:gravity="end|center_vertical"
+                            android:lines="1"
+                            android:text="请选择时间"
+                            android:textColor="@color/color_333333"
+                            android:textSize="16sp" />
 
-                            <ImageView
-                                android:layout_width="18dp"
-                                android:layout_height="18dp"
-                                android:background="@mipmap/g04_02yiwen" />
-                        </LinearLayout>
-
-
-                        <EditText
-                            android:id="@+id/edit_setMeal_discount"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:background="@null"
-                            android:hint="请输入套餐折扣比例"
-                            android:textColorHint="@color/color_999999"
-                            android:layout_toRightOf="@id/tag12"
-                            android:gravity="right"
+                        <TextView
+                            android:id="@+id/tv_business_day"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginEnd="@dimen/dp_10"
+                            android:layout_toLeftOf="@id/tv_business_hours"
+                            android:gravity="end|center_vertical"
+                            android:lines="1"
+                            android:text="请选择日期"
                             android:textColor="@color/color_333333"
                             android:textSize="16sp" />
 
@@ -987,7 +945,6 @@
                                 android:text="上传清晰完整的许可证照片， 请勿遮挡"
                                 android:textColor="@color/color_999999"
                                 android:textSize="14sp" />
-
                         </LinearLayout>
 
                         <com.itheima.roundedimageview.RoundedImageView

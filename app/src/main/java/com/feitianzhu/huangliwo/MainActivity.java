@@ -19,33 +19,49 @@ import com.feitianzhu.huangliwo.home.HomeFragment2;
 import com.feitianzhu.huangliwo.me.MyCenterFragment;
 import com.feitianzhu.huangliwo.me.ui.ScannerActivity;
 import com.feitianzhu.huangliwo.message.MessageFragment;
+import com.feitianzhu.huangliwo.model.HomePopModel;
 import com.feitianzhu.huangliwo.model.LocationPost;
 import com.feitianzhu.huangliwo.model.MyPoint;
 import com.feitianzhu.huangliwo.model.UpdateAppModel;
 import com.feitianzhu.huangliwo.shop.CommodityClassificationFragment;
+import com.feitianzhu.huangliwo.shop.NewYearShoppingActivity;
+import com.feitianzhu.huangliwo.utils.HProgressDialogUtils;
 import com.feitianzhu.huangliwo.utils.LocationUtils;
+import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.UpdateAppHttpUtil;
+import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.utils.VersionManagementUtil;
+import com.feitianzhu.huangliwo.view.CustomNerYearPopView;
 import com.google.gson.Gson;
 import com.gyf.immersionbar.ImmersionBar;
+import com.lxj.xpopup.XPopup;
+import com.lxj.xpopup.interfaces.OnCancelListener;
+import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.socks.library.KLog;
 import com.vector.update_app.UpdateAppBean;
 import com.vector.update_app.UpdateAppManager;
 import com.vector.update_app.UpdateCallback;
+import com.vector.update_app.listener.IUpdateDialogFragmentListener;
+import com.vector.update_app.service.DownloadService;
 import com.vector.update_app.utils.AppUpdateUtils;
+import com.vector.update_app.view.NumberProgressBar;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
 import com.yanzhenjie.permission.Rationale;
 import com.yanzhenjie.permission.RationaleListener;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.Callback;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.File;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import okhttp3.Call;
 
 import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
 import static com.feitianzhu.huangliwo.common.Constant.UAPDATE;
@@ -89,6 +105,11 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
     private FragmentTransaction mTransaction;
     private ObjectAnimator animator;
     private int type = 2;
+    private String token;
+    private String userId;
+    private int isShow; //是否弹出活动的框
+    boolean constraint = false; //是否强制更新
+    private HomePopModel.PopupBean popupBean = new HomePopModel.PopupBean();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,8 +117,10 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
         setContentView(R.layout.main_view);
         ButterKnife.bind(this);
         LocationUtils.getInstance().start();
+        token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
+        userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         initView();
-        initData();
+        updateDiy();
         mTransaction = getSupportFragmentManager().beginTransaction();
         mHomeFragment = HomeFragment2.newInstance();
         mTransaction.add(R.id.fragment_container, mHomeFragment);
@@ -108,11 +131,6 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
                 .statusBarColor(R.color.bg_yellow)
                 .init();
     }
-
-    private void initData() {
-        updateDiy();
-    }
-
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true) //在ui线程执行
     public void onLocationDataSynEvent(LocationPost mMoel) {
@@ -323,6 +341,33 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
         }
     };
 
+    /*
+     * 活动弹窗
+     * */
+    public void getPopData() {
+        OkHttpUtils.get()
+                .url(Urls.GET_POP_DATA)
+                .addParams("accessToken", token)
+                .addParams("userId", userId)
+                .build()
+                .execute(new Callback<HomePopModel>() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        ToastUtils.showShortToast(e.getMessage());
+                    }
+
+                    @Override
+                    public void onResponse(HomePopModel response, int id) {
+                        if (response != null && response.getPopup() != null) {
+                            popupBean = response.getPopup();
+                            isShow = response.getPopup().getStatus();
+                            if (isShow == 1) {
+                                showActivityPop();
+                            }
+                        }
+                    }
+                });
+    }
 
     public void updateDiy() {
         final String versionName = AppUpdateUtils.getVersionName(this);
@@ -333,6 +378,13 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
                 .setUpdateUrl(Common_HEADER + UAPDATE)
                 .setPost(false)
                 .setThemeColor(0xfffed428)
+                .setUpdateDialogFragmentListener(new IUpdateDialogFragmentListener() {
+                    @Override
+                    public void onUpdateNotifyDialogCancel(UpdateAppBean updateApp) {
+                        //用户点击关闭按钮，取消了更新，如果是下载完，用户取消了安装，则可以在 onActivityResult 监听到。
+                        getPopData();
+                    }
+                })
                 .build()
                 .checkNewApp(new UpdateCallback() {
                     /**
@@ -345,7 +397,6 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
                     protected UpdateAppBean parseJson(String json) {
                         UpdateAppBean updateAppBean = new UpdateAppBean();
                         UpdateAppModel updateAppModel = new Gson().fromJson(json, UpdateAppModel.class);
-                        boolean constraint = false;
                         String update = "No";
                         if (VersionManagementUtil.VersionComparison(updateAppModel.versionName + "", versionName) == 1) {
                             update = "Yes";
@@ -377,6 +428,9 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
 
                     @Override
                     protected void hasNewApp(UpdateAppBean updateApp, UpdateAppManager updateAppManager) {
+                        /*
+                        自定义对话框
+                        * */
                         updateAppManager.showDialogFragment();
                     }
 
@@ -402,11 +456,23 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
                      */
                     @Override
                     protected void noNewApp(String error) {
-                        super.noNewApp(error);
+                        getPopData();
                     }
-
                 });
+    }
 
+    public void showActivityPop() {
+        new XPopup.Builder(MainActivity.this)
+                .enableDrag(false)
+                .asCustom(new CustomNerYearPopView(MainActivity.this)
+                        .setImgUrl(popupBean.getImgUrl())
+                        .setOnConfirmClickListener(new CustomNerYearPopView.OnConfirmClickListener() {
+                            @Override
+                            public void onConfirm() {
+                                Intent intent = new Intent(MainActivity.this, NewYearShoppingActivity.class);
+                                startActivity(intent);
+                            }
+                        })).show();
     }
 
     //对返回键进行监听

@@ -86,7 +86,7 @@ import static com.feitianzhu.huangliwo.login.LoginEvent.EDITOR_INFO;
  */
 
 
-public class CommodityClassificationFragment extends SFFragment implements View.OnClickListener, ProvinceCallBack {
+public class CommodityClassificationFragment extends SFFragment implements ProvinceCallBack {
     @BindView(R.id.swipeLayout)
     SmartRefreshLayout mSwipeLayout;
     @BindView(R.id.search)
@@ -110,8 +110,6 @@ public class CommodityClassificationFragment extends SFFragment implements View.
     private int mParam1 = 2;
     private String mParam2;
     Unbinder unbinder;
-    private PopupWindow popupWindow;
-    private View vPopupWindow;
     private LeftAdapter leftAdapter;
     private RightAdapter rightAdapter;
     private List<ShopClassify.GGoodsClsListBean> shopClassifyLsit = new ArrayList<>();
@@ -155,18 +153,6 @@ public class CommodityClassificationFragment extends SFFragment implements View.
         }
         token = SPUtils.getString(getActivity(), Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(getActivity(), Constant.SP_LOGIN_USERID);
-
-        vPopupWindow = getLayoutInflater().inflate(R.layout.layout_popupwindow, null);
-        // View vPopupWindow = View.inflate(getActivity(), R.layout.layout_popupwindow, null);//引入弹窗布局
-        popupWindow = new PopupWindow(vPopupWindow, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        //相对于父控件的位置（例如正中央Gravity.CENTER，下方Gravity.BOTTOM等），可以设置偏移或无偏移
-        popupWindow.setFocusable(true);
-        popupWindow.setOutsideTouchable(true);
-
-        vPopupWindow.findViewById(R.id.iv_saoyisao).setOnClickListener(this);
-        vPopupWindow.findViewById(R.id.iv_shoukuan).setOnClickListener(this);
-        vPopupWindow.findViewById(R.id.iv_ludan).setOnClickListener(this);
-        vPopupWindow.findViewById(R.id.iv_fabufuwu).setOnClickListener(this);
 
         leftAdapter = new LeftAdapter(shopClassifyLsit);
         leftRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -318,6 +304,7 @@ public class CommodityClassificationFragment extends SFFragment implements View.
                         ToastUtils.showShortToast(e.getMessage());
                         multipleItemList.clear();
                         goodsListBeans.clear();
+
                         rightAdapter.notifyDataSetChanged();
                         goneloadDialog();
                     }
@@ -335,6 +322,7 @@ public class CommodityClassificationFragment extends SFFragment implements View.
                             multipleItem.setGoodsListBean(goodsListBeans.get(i));
                             multipleItemList.add(multipleItem);
                         }
+                        rightRecyclerView.smoothScrollToPosition(0);
                         rightAdapter.setNewData(multipleItemList);
                         rightAdapter.notifyDataSetChanged();
                     }
@@ -378,9 +366,7 @@ public class CommodityClassificationFragment extends SFFragment implements View.
                 initData();
                 break;
             case R.id.iv_home_nv_right:
-                // popupWindow.showAtLocation(ivRight, Gravity.BOTTOM, 0, 0);
-                vPopupWindow.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-                popupWindow.showAsDropDown(ivRight, -vPopupWindow.getMeasuredWidth() + ivRight.getWidth() - 3, 0);
+                requestPermission();
                 break;
         }
 
@@ -390,35 +376,6 @@ public class CommodityClassificationFragment extends SFFragment implements View.
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.iv_saoyisao:
-                requestPermission();
-                popupWindow.dismiss();
-                break;
-            case R.id.iv_shoukuan:
-                popupWindow.dismiss();
-                ToastUtils.showShortToast("敬请期待");
-                /*Intent collIntent = new Intent(getActivity(), CollectMoneyActivity.class);
-                ShopHelp.veriUserShopJumpActivity(getActivity(), collIntent);*/
-                break;
-            case R.id.iv_ludan:
-                popupWindow.dismiss();
-                ToastUtils.showShortToast("敬请期待");
-               /* Intent intent = new Intent(getActivity(), ShopRecordActivity.class);
-                ShopHelpTwo.veriUserShopJumpActivity(getActivity(), intent);*/
-                break;
-            case R.id.iv_fabufuwu:
-                popupWindow.dismiss();
-                ToastUtils.showShortToast("敬请期待");
-                /*Intent pushIntent = new Intent(getActivity(), PushServiceActivity.class);
-                ShopHelp.veriUserShopJumpActivity(getActivity(), pushIntent);*/
-                break;
-        }
-
     }
 
     private void requestPermission() {

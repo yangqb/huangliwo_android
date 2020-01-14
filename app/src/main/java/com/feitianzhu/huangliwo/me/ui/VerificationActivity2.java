@@ -216,15 +216,15 @@ public class VerificationActivity2 extends BaseTakePhotoActivity {
         if ((index != certificates.length - 1)) {
             if (!StringUtils.isIDCard(id_num) && !StringUtils.isPassport(id_num)) {
                 ToastUtils.showShortToast("请输入正确的证件号码");
+                return;
             }
-            return;
         }
 
         String businatures;
         if (index == certificates.length - 1) {
             businatures = "10";
         } else {
-            businatures = index + "";
+            businatures = (index + 1) + "";
         }
 
         OkHttpUtils.post()//
