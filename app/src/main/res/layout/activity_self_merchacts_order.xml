@@ -19,7 +19,7 @@
             android:paddingRight="@dimen/dp_10"
             android:orientation="vertical">
 
-            <RelativeLayout
+            <!--<RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_10"
@@ -48,7 +48,7 @@
                     android:text="套餐购买"
                     android:textColor="@color/color_333333"
                     android:textSize="16sp" />
-            </RelativeLayout>
+            </RelativeLayout>-->
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerView"

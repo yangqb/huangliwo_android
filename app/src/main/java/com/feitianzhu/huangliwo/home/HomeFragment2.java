@@ -201,8 +201,8 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack {
                     startActivity(intent);
                 } else {
                     //套餐详情页
-                   /* Intent intent = new Intent(getActivity(), ShopSetMealActivity.class);
-                    intent.putExtra(ShopSetMealActivity.MERCHANT_DATA, recommendListBeanList.get(position - shopsLists.size()));
+                   /* Intent intent = new Intent(getActivity(), ShopMerchantsDetailActivity.class);
+                    intent.putExtra(ShopMerchantsDetailActivity.MERCHANT_DATA, recommendListBeanList.get(position - shopsLists.size()));
                     startActivity(intent);*/
                 }
                 //startShopsActivity(mHomeEntity.recommendList.get(position).merchantId);
@@ -255,7 +255,7 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack {
         switch (view.getId()) {
             case R.id.ll_location:
                 ProvinceDialog2 branchDialog = ProvinceDialog2.newInstance();
-                branchDialog.setAddress("北京市", "北京市");
+                branchDialog.setAddress("北京市", "东城区","东华门街道");
                 branchDialog.setSelectOnListener(this);
                 branchDialog.show(getChildFragmentManager());
                 break;
@@ -579,6 +579,7 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack {
             // 和onActivityResult()的requestCode一样，用来区分多个不同的请求。
             if (requestCode == 200) {
                 Intent intent = new Intent(getActivity(), ScannerActivity.class);
+                intent.putExtra(ScannerActivity.IS_MERCHANTS, mineInfoModel.getIsMerchant());
                 startActivity(intent);
             }
         }

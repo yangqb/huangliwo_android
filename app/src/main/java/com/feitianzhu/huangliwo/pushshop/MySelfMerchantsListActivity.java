@@ -2,8 +2,11 @@ package com.feitianzhu.huangliwo.pushshop;
 
 import android.content.Intent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
@@ -11,6 +14,8 @@ import com.feitianzhu.huangliwo.pushshop.bean.MerchantsModel;
 import com.feitianzhu.huangliwo.pushshop.bean.UpdataMechantsEvent;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
+import com.feitianzhu.huangliwo.view.CircleImageView;
+import com.itheima.roundedimageview.RoundedImageView;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
 
@@ -44,6 +49,8 @@ public class MySelfMerchantsListActivity extends BaseActivity {
     TextView tvDate;
     @BindView(R.id.title_name)
     TextView titleName;
+    @BindView(R.id.merchantsLogo)
+    CircleImageView merchantsLogo;
 
     @Override
     protected int getLayoutId() {
@@ -101,6 +108,7 @@ public class MySelfMerchantsListActivity extends BaseActivity {
                             merchantsBean = response;
                             merchantsName.setText(merchantsBean.getMerchantName());
                             tvDate.setText("创建日期：" + merchantsBean.getCreateDate());
+                            Glide.with(mContext).load(merchantsBean.getLogo()).apply(new RequestOptions().error(R.mipmap.b08_01touxiang).placeholder(R.mipmap.b08_01touxiang)).into(merchantsLogo);
                         }
                     }
                 });

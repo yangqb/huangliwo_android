@@ -11,6 +11,7 @@
         android:background="@color/white">
 
         <TextView
+            android:id="@+id/singleName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="商品名称商品名称"
@@ -18,6 +19,7 @@
             android:textSize="13sp" />
 
         <TextView
+            android:id="@+id/singlePrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"

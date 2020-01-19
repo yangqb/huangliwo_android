@@ -18,7 +18,7 @@
         android:paddingBottom="@dimen/dp_20">
 
         <com.feitianzhu.huangliwo.view.CircleImageView
-            android:id="@+id/ivHead"
+            android:id="@+id/merchantsLogo"
             android:layout_width="57dp"
             android:layout_height="57dp"
             android:background="@mipmap/b08_01touxiang" />
@@ -29,7 +29,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="50dp"
-            android:layout_toRightOf="@+id/ivHead"
+            android:layout_toRightOf="@+id/merchantsLogo"
             android:orientation="vertical">
 
             <TextView

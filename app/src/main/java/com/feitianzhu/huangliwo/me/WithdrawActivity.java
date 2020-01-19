@@ -1,5 +1,6 @@
 package com.feitianzhu.huangliwo.me;
 
+import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -20,6 +21,7 @@ import com.google.gson.Gson;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.builder.PostFormBuilder;
 import com.zhy.http.okhttp.callback.Callback;
 
 import butterknife.BindView;
@@ -37,7 +39,9 @@ import okhttp3.Response;
  */
 public class WithdrawActivity extends BaseActivity {
     public static final String BALANCE = "balance";
+    public static final String MERCHANT_ID = "merchantId";
     private double balance;
+    private int merchantId = -1;
     private String token;
     private String userId;
     @BindView(R.id.title_name)
@@ -46,6 +50,8 @@ public class WithdrawActivity extends BaseActivity {
     EditText editAmount;
     @BindView(R.id.alipayNo)
     EditText editAlipayNo;
+    @BindView(R.id.right_text)
+    TextView rightText;
 
     @Override
     protected int getLayoutId() {
@@ -57,11 +63,14 @@ public class WithdrawActivity extends BaseActivity {
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         titleName.setText("提现");
+        rightText.setText("明细");
+        rightText.setVisibility(View.VISIBLE);
         balance = getIntent().getDoubleExtra(BALANCE, 0.00);
+        merchantId = getIntent().getIntExtra(MERCHANT_ID, -1);
         EditTextUtils.afterDotTwo(editAmount);
     }
 
-    @OnClick({R.id.submit, R.id.left_button})
+    @OnClick({R.id.submit, R.id.left_button, R.id.right_button})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.left_button:
@@ -69,6 +78,11 @@ public class WithdrawActivity extends BaseActivity {
                 break;
             case R.id.submit:
                 VeriPassword(balance);
+                break;
+            case R.id.right_button:
+                Intent intent = new Intent(WithdrawActivity.this, WithdrawRecordActivity.class);
+                intent.putExtra(WithdrawRecordActivity.MERCHANT_ID, merchantId);
+                startActivity(intent);
                 break;
         }
     }
@@ -115,9 +129,12 @@ public class WithdrawActivity extends BaseActivity {
     }
 
     public void submit(String passWord) {
-        OkHttpUtils.post()
-                .url(Urls.WITHDRAW)
-                .addParams(Constant.ACCESSTOKEN, token)
+        PostFormBuilder postForm = OkHttpUtils.post()
+                .url(Urls.WITHDRAW);
+        if (merchantId != -1) {
+            postForm.addParams("merchantId", merchantId + "");
+        }
+        postForm.addParams(Constant.ACCESSTOKEN, token)
                 .addParams(Constant.USERID, userId)
                 .addParams("account", editAlipayNo.getText().toString().trim())
                 .addParams("amount", editAmount.getText().toString().trim())

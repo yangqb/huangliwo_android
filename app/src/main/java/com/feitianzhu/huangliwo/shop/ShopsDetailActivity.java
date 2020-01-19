@@ -260,7 +260,7 @@ public class ShopsDetailActivity extends BaseActivity {
             if (goodsListBean.getRebatePv() == 0) {
                 llRebate.setVisibility(View.GONE);
             }
-            tvRebate.setText("省¥" + rebatePv);
+            tvRebate.setText("赚¥" + rebatePv);
             evalList = goodsListBean.getEvalList();
             if (evalList != null && evalList.size() > 0) {
                 llEvaluate.setVisibility(View.VISIBLE);

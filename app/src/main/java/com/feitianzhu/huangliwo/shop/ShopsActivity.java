@@ -109,14 +109,14 @@ public class ShopsActivity extends BaseActivity {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 int type = rightAdapter.getItemViewType(position);
-                if (type == MultipleItem.IMG) {
+                if (type == MultipleItem.GOODS) {
                     //商品详情
                     Intent intent = new Intent(ShopsActivity.this, ShopsDetailActivity.class);
                     intent.putExtra(ShopsDetailActivity.GOODS_DETAIL_DATA, goodsListBeans.get(position).getGoodsId());
                     startActivity(intent);
                 } else {
                     //套餐详情页
-                    Intent intent = new Intent(ShopsActivity.this, ShopSetMealActivity.class);
+                    Intent intent = new Intent(ShopsActivity.this, ShopMerchantsDetailActivity.class);
                     startActivity(intent);
                 }
             }
@@ -158,7 +158,7 @@ public class ShopsActivity extends BaseActivity {
                         goodsListBeans.clear();
                         goodsListBeans = shops.getGoodslist();
                         for (int i = 0; i < goodsListBeans.size(); i++) {
-                            MultipleItem multipleItem = new MultipleItem(MultipleItem.IMG);
+                            MultipleItem multipleItem = new MultipleItem(MultipleItem.GOODS);
                             multipleItem.setGoodsListBean(goodsListBeans.get(i));
                             multipleItemList.add(multipleItem);
                         }

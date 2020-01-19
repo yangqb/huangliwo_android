@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.feitianzhu.huangliwo.R;
+import com.feitianzhu.huangliwo.pushshop.bean.SingleGoodsModel;
 import com.feitianzhu.huangliwo.utils.EditTextUtils;
 import com.lxj.xpopup.core.CenterPopupView;
 
@@ -24,6 +25,7 @@ public class AddSetMealView extends CenterPopupView {
     private EditText editName;
     private EditText editNum;
     private EditText editPrice;
+    private SingleGoodsModel singleGoodsModel;
     private OnConfirmClickListener onConfirmClickListener;
 
     public interface OnConfirmClickListener {
@@ -54,7 +56,17 @@ public class AddSetMealView extends CenterPopupView {
         tvCancel = findViewById(R.id.tv_cancel);
         tvConfirm = findViewById(R.id.tv_confirm);
         EditTextUtils.afterDotTwo(editPrice);
+        if (singleGoodsModel != null) {
+            editName.setText(singleGoodsModel.getName());
+            editNum.setText(String.valueOf(singleGoodsModel.getNum()));
+            editPrice.setText(String.valueOf(singleGoodsModel.getSinglePrice()));
+        }
         initListener();
+    }
+
+    public AddSetMealView setData(SingleGoodsModel singleGoodsModel) {
+        this.singleGoodsModel = singleGoodsModel;
+        return this;
     }
 
     public void initListener() {

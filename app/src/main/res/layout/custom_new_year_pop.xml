@@ -29,6 +29,7 @@
             android:layout_above="@id/iv_close"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="60dp"
-            android:src="@mipmap/h11_02jinru" />
+            android:src="@mipmap/h11_02jinru"
+            android:visibility="gone" />
     </RelativeLayout>
 </LinearLayout>

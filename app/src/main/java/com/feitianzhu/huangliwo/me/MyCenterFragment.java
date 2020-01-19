@@ -69,6 +69,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import okhttp3.Call;
+import okhttp3.Request;
 import okhttp3.Response;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
@@ -210,9 +211,15 @@ public class MyCenterFragment extends SFFragment {
                 .addParams(ACCESSTOKEN, token)//
                 .addParams(USERID, userId)
                 .build().execute(new Callback<MineInfoModel>() {
+            @Override
+            public void onBefore(Request request, int id) {
+                super.onBefore(request, id);
+                showloadDialog("");
+            }
 
             @Override
             public void onError(Call call, Exception e, int id) {
+                goneloadDialog();
                 if (refreshLayout != null) {
                     refreshLayout.finishRefresh();
                 }
@@ -222,6 +229,7 @@ public class MyCenterFragment extends SFFragment {
 
             @Override
             public void onResponse(MineInfoModel response, int id) {
+                goneloadDialog();
                 if (refreshLayout != null) {
                     refreshLayout.finishRefresh();
                 }
@@ -309,9 +317,9 @@ public class MyCenterFragment extends SFFragment {
                         startActivity(intent);
                         break;
                     case 7: //推店
-                        ToastUtils.showShortToast("敬请期待");
                         //ShopHelp.veriJumpActivity(getActivity());
                         intent = new Intent(getActivity(), PushShopHomeActivity.class);
+                        intent.putExtra(PushShopHomeActivity.MINE_INFO, mTempData);
                         startActivity(intent);
                         break;
                     case 6://我的收藏

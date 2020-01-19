@@ -140,6 +140,7 @@ public class OkHttpUtils {
                         try {
                             String mData = (new JSONObject(json)).getString("data");
                             Object o = finalCallback.parseNetworkResponse(mData, response, id);
+
                             OkHttpUtils.this.sendSuccessResultCallback(o, finalCallback, id);
                         } catch (Exception e) {
                             //String s = e.getMessage();

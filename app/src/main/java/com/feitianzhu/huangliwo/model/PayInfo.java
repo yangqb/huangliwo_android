@@ -29,8 +29,10 @@ public class PayInfo {
     public static final int BUY_SERVICE = 10; //购买服务
     public static final int FAIL = 11;
     public static final int SUCCESS = 12;
+    public static final int SETMEAL_PAY = 13; //线上套餐支付
+    public static final int RECEIVABLES_SETMEAL_PAY = 14; //线下扫码支付
 
-    @IntDef({MyMoneyPay, ShopPay, NOTIFYADAPTER, getDisList, THURSDAY, FRIDAY, NoPay, SHOPRECORDER, UNIONLEVEL, PAY_FORME, BUY_SERVICE, FAIL, SUCCESS})
+    @IntDef({MyMoneyPay, ShopPay, NOTIFYADAPTER, getDisList, THURSDAY, FRIDAY, NoPay, SHOPRECORDER, UNIONLEVEL, PAY_FORME, BUY_SERVICE, FAIL, SUCCESS, SETMEAL_PAY, RECEIVABLES_SETMEAL_PAY})
     @Retention(RetentionPolicy.SOURCE)
     public @interface WeekDays {
     }

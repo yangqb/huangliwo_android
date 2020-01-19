@@ -1,17 +1,33 @@
 package com.feitianzhu.huangliwo.shop.adapter;
 
+import android.annotation.SuppressLint;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.AbsoluteSizeSpan;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.view.View;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.model.MultipleItem;
+import com.feitianzhu.huangliwo.model.MultipleMerchantsItem;
+import com.feitianzhu.huangliwo.view.CircleImageView;
+import com.itheima.roundedimageview.RoundedImageView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import cc.shinichi.library.ImagePreview;
 
@@ -21,76 +37,87 @@ import cc.shinichi.library.ImagePreview;
  * @email QQ:694125155
  * @Date 2019/11/21 0021 下午 6:48
  */
-public class ShopDetailAdapter extends BaseMultiItemQuickAdapter<MultipleItem, BaseViewHolder> {
-    public ShopDetailAdapter(List<MultipleItem> data) {
+public class ShopDetailAdapter extends BaseMultiItemQuickAdapter<MultipleMerchantsItem, BaseViewHolder> {
+
+    private ShopDetailAdapter.OnChildClickListener onItemClickListener;
+
+    public interface OnChildClickListener {
+        //成功的方法传 int 的索引
+        void success(int index, int pos);
+    }
+
+    public void setOnChildPositionListener(ShopDetailAdapter.OnChildClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
+
+    public ShopDetailAdapter(List<MultipleMerchantsItem> data) {
         super(data);
-        addItemType(MultipleItem.TEXT, R.layout.shop_detail_between_item);
-        addItemType(MultipleItem.IMG, R.layout.commodity_valuate_item);
+        addItemType(MultipleMerchantsItem.SETMEAL_TYPE, R.layout.shop_detail_between_item);
+        addItemType(MultipleMerchantsItem.COMMENTS_TYPE, R.layout.commodity_valuate_item);
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, MultipleItem item) {
+    protected void convert(BaseViewHolder helper, MultipleMerchantsItem item) {
         switch (helper.getItemViewType()) {
-            case MultipleItem.TEXT:
-                // helper.setImageUrl(R.id.tv, item.getContent());
+            case MultipleMerchantsItem.SETMEAL_TYPE:
+                helper.setText(R.id.tvSetMealName, item.getSetMealInfo().getSmName());
+                helper.setText(R.id.setMealDescription, item.getSetMealInfo().getRemark());
+                setSpannableString(String.format(Locale.getDefault(), "%.2f", item.getSetMealInfo().getPrice()), helper.getView(R.id.setMealPrice));
+                String[] imgUrls = item.getSetMealInfo().getImgs().split(",");
+                if (item.getSetMealInfo().getImgs().contains(",")) {
+                    Glide.with(mContext).load(imgUrls[0])
+                            .apply(new RequestOptions().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai).dontAnimate()).into((RoundedImageView) helper.getView(R.id.image));
+                } else {
+                    Glide.with(mContext).load(item.getSetMealInfo().getImgs())
+                            .apply(new RequestOptions().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai).dontAnimate()).into((RoundedImageView) helper.getView(R.id.image));
+                }
+
                 break;
-            case MultipleItem.IMG:
-                //helper.setImageUrl(R.id.iv, item.getContent());
-                List<String> integers = new ArrayList<>();
+            case MultipleMerchantsItem.COMMENTS_TYPE:
+                Glide.with(mContext).load(item.getEvalDetailModel().getHeadImg())
+                        .apply(new RequestOptions().placeholder(R.mipmap.b08_01touxiang).error(R.mipmap.b08_01touxiang).dontAnimate()).into((CircleImageView) helper.getView(R.id.iv_head));
+                 helper.setText(R.id.userName, item.getEvalDetailModel().getNickName());
+                 helper.setText(R.id.tvContent, item.getEvalDetailModel().getContent());
+                 helper.setText(R.id.tvDate, item.getEvalDetailModel().getEvalDate());
                 RecyclerView recyclerView = helper.getView(R.id.recyclerView);
                 recyclerView.setLayoutManager(new GridLayoutManager(mContext, 3));
-                for (int i = 0; i < 6; i++) {
-                    integers.add(i + "");
-                }
-                List<String> imageList = new ArrayList<>();
-                imageList.add("http://g.hiphotos.baidu.com/image/pic/item/6d81800a19d8bc3e770bd00d868ba61ea9d345f2.jpg");
-                imageList.add("http://a.hiphotos.baidu.com/image/pic/item/8d5494eef01f3a292d2472199d25bc315d607c7c.jpg");
-                imageList.add("http://h.hiphotos.baidu.com/image/pic/item/902397dda144ad340668b847d4a20cf430ad851e.jpg");
-                imageList.add("http://d.hiphotos.baidu.com/image/pic/item/b58f8c5494eef01f119945cbe2fe9925bc317d2a.jpg");
-                imageList.add("http://a.hiphotos.baidu.com/image/pic/item/e824b899a9014c087eb617650e7b02087af4f464.jpg");
-                imageList.add("http://b.hiphotos.baidu.com/image/pic/item/e824b899a9014c08878b2c4c0e7b02087af4f4a3.jpg");
                 recyclerView.setNestedScrollingEnabled(false);
-                CommentImgAdapter adapter = new CommentImgAdapter(integers);
+                List<String> imgs = new ArrayList<>();
+                if (item.getEvalDetailModel().getImgs() != null) {
+                    String[] strings = (item.getEvalDetailModel().getImgs().split(","));
+                    imgs = Arrays.asList(strings);
+                }
+                CommentImgAdapter adapter = new CommentImgAdapter(imgs);
                 recyclerView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
 
                 adapter.setOnItemClickListener(new OnItemClickListener() {
                     @Override
                     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                        // 仅需一行代码,默认配置为：
-                        //      显示顶部进度指示器、
-                        //      显示右侧下载按钮、
-                        //      隐藏左侧关闭按钮、
-                        //      开启点击图片关闭、
-                        //      关闭下拉图片关闭、
-                        //      加载方式为手动模式
-                        //      加载原图的百分比在底部
-                        ImagePreview
-                                .getInstance()
-                                // 上下文，必须是activity，不需要担心内存泄漏，本框架已经处理好；
-                                .setContext(mContext)
-                                .setEnableDragClose(true) //下拉图片关闭
-                                // 设置从第几张开始看（索引从0开始）
-                                .setIndex(position)
-                                .setShowErrorToast(true)//加载失败提示
-                                //=================================================================================================
-                                // 有三种设置数据集合的方式，根据自己的需求进行三选一：
-                                // 1：第一步生成的imageInfo List
-                                //.setImageInfoList(imageInfoList)
-
-                                // 2：直接传url List
-                                .setImageList(imageList)
-
-                                // 3：只有一张图片的情况，可以直接传入这张图片的url
-                                //.setImage(String image)
-                                //=================================================================================================
-
-                                // 开启预览
-                                .start();
+                        onItemClickListener.success(position, helper.getAdapterPosition());
                     }
                 });
-
                 break;
         }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void setSpannableString(String str3, TextView view) {
+        String str1 = "¥";
+        view.setText("");
+        SpannableString span1 = new SpannableString(str1);
+        SpannableString span3 = new SpannableString(str3);
+        ForegroundColorSpan colorSpan1 = new ForegroundColorSpan(Color.parseColor("#F88D03"));
+        span1.setSpan(new AbsoluteSizeSpan(11, true), 0, str1.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        span1.setSpan(colorSpan1, 0, str1.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+
+        ForegroundColorSpan colorSpan3 = new ForegroundColorSpan(Color.parseColor("#F88D03"));
+        span3.setSpan(new AbsoluteSizeSpan(16, true), 0, str3.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        span3.setSpan(new StyleSpan(Typeface.BOLD), 0, str3.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        span3.setSpan(colorSpan3, 0, str3.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+
+        view.append(span1);
+        view.append(span3);
+
     }
 }

@@ -1,5 +1,6 @@
 package com.feitianzhu.huangliwo.me.ui.totalScore;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -22,6 +23,7 @@ import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.MineQRcodeModel;
+import com.feitianzhu.huangliwo.utils.GlideUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ShareImageUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
@@ -66,6 +68,8 @@ public class MineQrcodeActivity extends BaseActivity {
     TextView tvName;
     @BindView(R.id.shareLayout)
     LinearLayout shareLayout;
+    @BindView(R.id.yearImg)
+    ImageView imageView;
     private Bitmap bitmap;
     private String token;
     private String userId;
@@ -121,6 +125,7 @@ public class MineQrcodeActivity extends BaseActivity {
 
 
     private void setShowData(MineQRcodeModel response) {
+        Glide.with(this).load(response.getYearImg()).apply(new RequestOptions().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai)).into(GlideUtils.getImageView(this, response.getYearImg(), imageView));
         String qrUrl = response.getLink();
         if (TextUtils.isEmpty(qrUrl)) {
             ToastUtils.showShortToast("未获取到分享地址");

@@ -94,8 +94,8 @@ public class MerchantsModel implements Serializable {
     private String distince;
     private String distinceStr;
     private String smsCode;
-    private String income;
-    private String balance;
+    private double income;
+    private double balance;
     private String businessTime;
 
     public String getBusinessTime() {
@@ -418,19 +418,19 @@ public class MerchantsModel implements Serializable {
         this.smsCode = smsCode;
     }
 
-    public String getIncome() {
+    public double getIncome() {
         return income;
     }
 
-    public void setIncome(String income) {
+    public void setIncome(double income) {
         this.income = income;
     }
 
-    public String getBalance() {
+    public double getBalance() {
         return balance;
     }
 
-    public void setBalance(String balance) {
+    public void setBalance(double balance) {
         this.balance = balance;
     }
 }

@@ -56,11 +56,35 @@ public class Province {
     public String pid;
     public String id;
     public List<AreaListBean> areaList;
+
+    public List<AreaListBean> getAreaList() {
+      return areaList;
+    }
+
+    public void setAreaList(List<AreaListBean> areaList) {
+      this.areaList = areaList;
+    }
+
+    public String getName() {
+      return name;
+    }
+
+    public void setName(String name) {
+      this.name = name;
+    }
   }
 
   public static class AreaListBean {
 
     public String name;
     public String id;
+
+    public String getName() {
+      return name;
+    }
+
+    public void setName(String name) {
+      this.name = name;
+    }
   }
 }

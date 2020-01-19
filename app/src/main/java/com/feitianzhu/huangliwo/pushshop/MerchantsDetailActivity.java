@@ -109,10 +109,6 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
     private double latitude;
     private double longitude;
     private GeoCoder geoCoder;
-    @BindView(R.id.right_img)
-    ImageView imageView;
-    @BindView(R.id.right_text)
-    TextView rightText;
     @BindView(R.id.edit_merchants_name)
     EditText editMerchantsName;
     @BindView(R.id.edit_merchants_phone)
@@ -203,23 +199,18 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         merchantsBean = (MerchantsModel) getIntent().getSerializableExtra(MERCHANTS_DETAIL_DATA);
         isMySelfMerchants = getIntent().getBooleanExtra(IS_MY_MERCHANTS, false);
-        imageView.setBackgroundResource(R.mipmap.g06_01bianji);
-        rightText.setText("编辑");
+        editBusinessLicenseNo.setFocusable(false);
+        editBusinessLicenseNo.setFocusableInTouchMode(false);
         if (isMySelfMerchants) {
-            setEditable(false);
             selectBusinessHours.setVisibility(View.VISIBLE);
             endLine.setVisibility(View.VISIBLE);
-            rightText.setVisibility(View.VISIBLE);
-            imageView.setVisibility(View.VISIBLE);
         } else {
-            setEditable(true);
             selectBusinessHours.setVisibility(View.GONE);
             endLine.setVisibility(View.GONE);
-            rightText.setVisibility(View.GONE);
-            imageView.setVisibility(View.GONE);
-            btnSubmit.setVisibility(View.VISIBLE);
         }
         if (merchantsBean != null) {
+            latitude = Double.valueOf(merchantsBean.getLatitude());
+            longitude = Double.valueOf(merchantsBean.getLongitude());
             clsId = merchantsBean.getClsId();
             clsName = merchantsBean.getClsName();
             editMerchantsName.setText(merchantsBean.getMerchantName());
@@ -252,7 +243,7 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
     @Override
     protected void initData() {
         OkHttpUtils.get()
-                .url(Urls.GET_SHOPS_TYPE)
+                .url(Urls.GET_MERCHANTS_TYPE)
                 .addParams(ACCESSTOKEN, token)
                 .addParams(USERID, userId)
                 .build()
@@ -295,6 +286,27 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
 
             }
         });
+
+        editMerchantsAddress.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (merchantsBean.getCityName() != null && !TextUtils.isEmpty(merchantsBean.getCityName())) {
+                    geoCoder.geocode(new GeoCodeOption()
+                            .city(merchantsBean.getCityName())
+                            .address(merchantsBean.getCityName() + merchantsBean.getAreaName() + editMerchantsAddress.getText().toString().trim()));
+                }
+            }
+        });
     }
 
     @OnClick({R.id.left_button, R.id.right_button, R.id.tvCode, R.id.tv_business_hours, R.id.tv_business_day, R.id.imageView1, R.id.imageView2, R.id.imageView3, R.id.imageView4, R.id.imageView5, R.id.imageView6, R.id.imageView7
@@ -303,10 +315,6 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
         switch (view.getId()) {
             case R.id.left_button:
                 finish();
-                break;
-            case R.id.right_button:
-                setEditable(true);
-                btnSubmit.setVisibility(View.VISIBLE);
                 break;
             case R.id.tvCode:
                 String phone = editMerchantsPhone.getText().toString().trim();
@@ -379,7 +387,7 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
                 }
                 break;
             case R.id.ll_discount:
-                  //折扣比例说明
+                //折扣比例说明
                 String content = "折扣比例由商家决定折扣部分全额返现给会员消费者，例如：折扣比例为80%，会员消费100元，其中80元直接进入店家账户，随时提现，20元进入会员待释放额度，45天平均返现。";
                 new XPopup.Builder(this)
                         .asConfirm("折扣比例说明", content, "", "确定", null, null, true)
@@ -413,6 +421,11 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
                 merchantsBean.setAreaId(district.getId());
                 merchantsBean.setAreaName(district.getName());
                 tvArea.setText(province.getName() + city.getName() + district.getName());
+                if (!TextUtils.isEmpty(editMerchantsAddress.getText().toString().trim())) {
+                    geoCoder.geocode(new GeoCodeOption()
+                            .city(merchantsBean.getCityName())
+                            .address(merchantsBean.getCityName() + merchantsBean.getAreaName() + editMerchantsAddress.getText().toString().trim()));
+                }
             }
 
             @Override
@@ -503,16 +516,20 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
             ToastUtils.showShortToast("请填写商铺地址");
             return;
         }
-        geoCoder.geocode(new GeoCodeOption()
-                .city(merchantsBean.getCityName())
-                .address(merchantsBean.getCityName() + merchantsBean.getAreaName() + address));
-
         if (TextUtils.isEmpty(email)) {
             ToastUtils.showShortToast("请填写邮箱地址");
             return;
         }
+        if (!StringUtils.isEmail(email)) {
+            ToastUtils.showShortToast("请填写正确的邮箱地址");
+            return;
+        }
         if (TextUtils.isEmpty(percentage)) {
             ToastUtils.showShortToast("请填写折扣比例");
+            return;
+        }
+        if (Integer.valueOf(percentage) > 100) {
+            ToastUtils.showShortToast("折扣比例不能大于100%");
             return;
         }
         if (TextUtils.isEmpty(merchantsIntroduce)) {
@@ -617,52 +634,6 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
                         finish();
                     }
                 });
-    }
-
-    /*
-     * 是否可编辑
-     * */
-    public void setEditable(boolean editable) {
-        if (editable) {
-            editMerchantsName.setFocusable(true);
-            editMerchantsName.setFocusableInTouchMode(true);
-            editMerchantsName.requestFocus();
-            editMerchantsPhone.setFocusable(true);
-            editMerchantsPhone.setFocusableInTouchMode(true);
-            editMerchantsCode.setFocusable(true);
-            editMerchantsCode.setFocusableInTouchMode(true);
-            editMerchantsAddress.setFocusable(true);
-            editMerchantsAddress.setFocusableInTouchMode(true);
-            editMerchantsEmail.setFocusable(true);
-            editMerchantsEmail.setFocusableInTouchMode(true);
-            editMerchantsDiscount.setFocusable(true);
-            editMerchantsDiscount.setFocusableInTouchMode(true);
-            editMerchantsIntroduction.setFocusable(true);
-            editMerchantsIntroduction.setFocusableInTouchMode(true);
-            selectMerchantsType.setEnabled(true);
-            selectMerchantsArea.setEnabled(true);
-            selectBusinessHours.setEnabled(true);
-        } else {
-            editMerchantsName.setFocusable(false);
-            editMerchantsName.setFocusableInTouchMode(false);
-            editMerchantsPhone.setFocusable(false);
-            editMerchantsPhone.setFocusableInTouchMode(false);
-            editMerchantsCode.setFocusable(false);
-            editMerchantsCode.setFocusableInTouchMode(false);
-            editMerchantsAddress.setFocusable(false);
-            editMerchantsAddress.setFocusableInTouchMode(false);
-            editMerchantsEmail.setFocusable(false);
-            editMerchantsEmail.setFocusableInTouchMode(false);
-            editMerchantsDiscount.setFocusable(false);
-            editMerchantsDiscount.setFocusableInTouchMode(false);
-            editMerchantsIntroduction.setFocusable(false);
-            editMerchantsIntroduction.setFocusableInTouchMode(false);
-            editBusinessLicenseNo.setFocusable(false);
-            editBusinessLicenseNo.setFocusableInTouchMode(false);
-            selectMerchantsType.setEnabled(false);
-            selectMerchantsArea.setEnabled(false);
-            selectBusinessHours.setEnabled(false);
-        }
     }
 
     @SuppressLint("SetTextI18n")

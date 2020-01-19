@@ -23,11 +23,11 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <com.itheima.roundedimageview.RoundedImageView
+            <com.feitianzhu.huangliwo.view.CircleImageView
+                android:id="@+id/merchantsImg"
                 android:layout_width="57dp"
                 android:layout_height="57dp"
-                android:src="@mipmap/b08_01touxiang"
-                app:riv_oval="true" />
+                android:src="@mipmap/b08_01touxiang" />
 
             <LinearLayout
                 android:layout_width="wrap_content"

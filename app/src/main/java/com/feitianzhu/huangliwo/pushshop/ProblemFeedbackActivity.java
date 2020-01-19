@@ -4,27 +4,44 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
+import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.MultiItemComment;
 import com.feitianzhu.huangliwo.shop.adapter.EditCommentAdapter;
 import com.feitianzhu.huangliwo.utils.Glide4Engine;
+import com.feitianzhu.huangliwo.utils.SPUtils;
+import com.feitianzhu.huangliwo.utils.ToastUtils;
+import com.feitianzhu.huangliwo.utils.Urls;
+import com.feitianzhu.huangliwo.view.CustomRefundView;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.builder.PostFormBuilder;
+import com.zhy.http.okhttp.callback.Callback;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import cc.shinichi.library.ImagePreview;
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * package name: com.feitianzhu.fu700.pushshop
@@ -37,11 +54,21 @@ public class ProblemFeedbackActivity extends BaseActivity {
     private static final int REQUEST_CODE_CHOOSE = 1000;
     private List<MultiItemComment> multiItemCommentList = new ArrayList<>();
     private EditCommentAdapter mAdapter;
+    private String[] strings = new String[]{"推店问题", "提现问题", "购买商品问题", "成为会员问题", "线下购买问题", "系统问题", "其他"};
+    private String userId;
+    private String token;
+    private int maxSize = 3;
+    private boolean isAdd = false; //是否还可以添加图片
+    private String problem = "";
     private List<String> mSelected = new ArrayList<>();
     @BindView(R.id.title_name)
     TextView titleName;
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
+    @BindView(R.id.editContent)
+    EditText editContent;
+    @BindView(R.id.tvProblem)
+    TextView tvProblem;
 
     @Override
     protected int getLayoutId() {
@@ -51,6 +78,8 @@ public class ProblemFeedbackActivity extends BaseActivity {
     @Override
     protected void initView() {
         titleName.setText("问题反馈");
+        token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
+        userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         MultiItemComment comment = new MultiItemComment(MultiItemComment.upImg);
         comment.setId(R.mipmap.g01_01shangchuan);
         multiItemCommentList.add(comment);
@@ -67,7 +96,6 @@ public class ProblemFeedbackActivity extends BaseActivity {
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-
                 if (adapter.getItemViewType(position) == MultiItemComment.upImg) {
                     selectPhoto();
                 } else {
@@ -111,6 +139,13 @@ public class ProblemFeedbackActivity extends BaseActivity {
                 mAdapter.setNewData(multiItemCommentList);
                 mAdapter.notifyDataSetChanged();
                 allSelect.remove(position);
+                maxSize = 6 - allSelect.size();
+                if (isAdd) {
+                    MultiItemComment comment = new MultiItemComment(MultiItemComment.upImg);
+                    comment.setId(R.mipmap.g01_01shangchuan);
+                    multiItemCommentList.add(comment);
+                }
+                isAdd = false;
             }
         });
     }
@@ -127,7 +162,7 @@ public class ProblemFeedbackActivity extends BaseActivity {
                 //有序选择图片 123456...
                 .countable(true)
                 //最大选择数量为6
-                .maxSelectable(6)
+                .maxSelectable(maxSize)
                 //选择方向
                 .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
                 //图片过滤
@@ -150,17 +185,88 @@ public class ProblemFeedbackActivity extends BaseActivity {
 
     }
 
-    @OnClick(R.id.left_button)
-    public void onClick() {
-        new XPopup.Builder(this)
-                .asConfirm("确定要退出反馈？", "", "关闭", "确定", new OnConfirmListener() {
+    @OnClick({R.id.left_button, R.id.btn_submit, R.id.rl_problem})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.left_button:
+                new XPopup.Builder(this)
+                        .asConfirm("确定要退出反馈？", "", "关闭", "确定", new OnConfirmListener() {
+                            @Override
+                            public void onConfirm() {
+                                finish();
+                            }
+                        }, null, false)
+                        .bindLayout(R.layout.layout_dialog) //绑定已有布局
+                        .show();
+                break;
+            case R.id.btn_submit:
+                if (TextUtils.isEmpty(editContent.getText().toString().trim())) {
+                    ToastUtils.showShortToast("请输入反馈内容");
+                    return;
+                }
+                if (TextUtils.isEmpty(problem)) {
+                    ToastUtils.showShortToast("请选择问题类型");
+                    return;
+                }
+                submit();
+                break;
+            case R.id.rl_problem:
+
+                new XPopup.Builder(this)
+                        .asCustom(new CustomRefundView(ProblemFeedbackActivity.this)
+                                .setData(Arrays.asList(strings))
+                                .setOnItemClickListener(new CustomRefundView.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(int position) {
+                                        problem = strings[position];
+                                        tvProblem.setText(problem);
+                                    }
+                                }))
+                        .show();
+
+                break;
+        }
+    }
+
+    public void submit() {
+
+        PostFormBuilder postFormBuilder = OkHttpUtils.post()
+                .url(Urls.USER_FEEDBACK);
+        Map<String, File> files = new HashMap<>();
+        if (allSelect.size() > 0) {
+            for (int i = 0; i < allSelect.size(); i++) {
+                String name = i + ".png";
+                files.put(name, new File(allSelect.get(i)));
+            }
+        }
+        if (files.size() > 0) {
+            postFormBuilder.addFiles("files", files);
+        } else {
+            postFormBuilder.setMultipart(true);
+        }
+        postFormBuilder
+                .addParams("accessToken", token)
+                .addParams("userId", userId)
+                .addParams("content", editContent.getText().toString().trim())
+                .addParams("status", problem)
+                .build()
+                .execute(new Callback() {
                     @Override
-                    public void onConfirm() {
+                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
+                        return mData;
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        ToastUtils.showShortToast(e.getMessage());
+                    }
+
+                    @Override
+                    public void onResponse(Object response, int id) {
+                        ToastUtils.showShortToast("提交成功");
                         finish();
                     }
-                }, null, false)
-                .bindLayout(R.layout.layout_dialog) //绑定已有布局
-                .show();
+                });
     }
 
     private List<String> allSelect = new ArrayList<>();
@@ -175,6 +281,11 @@ public class ProblemFeedbackActivity extends BaseActivity {
                 MultiItemComment comment = new MultiItemComment(MultiItemComment.LookImg);
                 comment.setPath(mSelected.get(i));
                 multiItemCommentList.add(multiItemCommentList.size() - 1, comment);
+            }
+            maxSize = 6 - allSelect.size();
+            if (maxSize <= 0) {
+                multiItemCommentList.remove(multiItemCommentList.size() - 1);
+                isAdd = true;
             }
             mAdapter.setNewData(multiItemCommentList);
             mAdapter.notifyDataSetChanged();

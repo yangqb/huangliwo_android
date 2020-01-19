@@ -28,25 +28,28 @@ import java.util.Locale;
  * @Date 2019/11/20 0020 下午 2:53
  */
 public class RightAdapter extends BaseMultiItemQuickAdapter<MultipleItem, BaseViewHolder> {
-
     public RightAdapter(List<MultipleItem> data) {
         super(data);
-        addItemType(MultipleItem.TEXT, R.layout.shop_right_item);
-        addItemType(MultipleItem.IMG, R.layout.shop_right_item2);
+        addItemType(MultipleItem.MERCHANTS, R.layout.shop_right_item);
+        addItemType(MultipleItem.GOODS, R.layout.shop_right_item2);
     }
 
     @Override
     protected void convert(BaseViewHolder helper, MultipleItem item) {
         switch (helper.getItemViewType()) {
-            case MultipleItem.TEXT:
-                // helper.setImageUrl(R.id.tv, item.getContent());
+            case MultipleItem.MERCHANTS:
+                helper.setText(R.id.merchantsName,item.getMerchantsModel().getMerchantName());
+                helper.setText(R.id.merchants_introduce, item.getMerchantsModel().getIntroduce());
+                helper.setText(R.id.distance, item.getMerchantsModel().getDistinceStr());
+                Glide.with(mContext).load(item.getMerchantsModel().getLogo())
+                        .apply(new RequestOptions().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai).dontAnimate()).into((RoundedImageView) helper.getView(R.id.image));
                 break;
-            case MultipleItem.IMG:
+            case MultipleItem.GOODS:
                 helper.setText(R.id.tv_category, item.getGoodsListBean().getGoodsName());
                 setSpannableString(String.format(Locale.getDefault(), "%.2f", item.getGoodsListBean().getPrice()), helper.getView(R.id.price));
                 helper.setText(R.id.tvContent, item.getGoodsListBean().getSummary());
                 String rebatePv = String.format(Locale.getDefault(), "%.2f", item.getGoodsListBean().getRebatePv());
-                helper.setText(R.id.tv_rebate, "省¥" + rebatePv);
+                helper.setText(R.id.tv_rebate, "赚¥" + rebatePv);
                 if (item.getGoodsListBean().getRebatePv() == 0) {
                     helper.setVisible(R.id.ll_rebate, false);
                 } else {

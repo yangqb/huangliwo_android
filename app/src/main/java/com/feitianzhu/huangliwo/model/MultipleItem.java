@@ -1,6 +1,7 @@
 package com.feitianzhu.huangliwo.model;
 
 import com.chad.library.adapter.base.entity.MultiItemEntity;
+import com.feitianzhu.huangliwo.pushshop.bean.MerchantsModel;
 
 /**
  * @class name：com.feitianzhu.fu700.model
@@ -9,11 +10,20 @@ import com.chad.library.adapter.base.entity.MultiItemEntity;
  * @Date 2019/11/20 0020 下午 2:44
  */
 public class MultipleItem implements MultiItemEntity {
-    public static final int TEXT = 1;
-    public static final int IMG = 2;
+    public static final int MERCHANTS = 1;
+    public static final int GOODS = 2;
     private int itemType;
 
-    public BaseGoodsListBean goodsListBean;
+    private BaseGoodsListBean goodsListBean;
+    private MerchantsModel merchantsModel;
+
+    public MerchantsModel getMerchantsModel() {
+        return merchantsModel;
+    }
+
+    public void setMerchantsModel(MerchantsModel merchantsModel) {
+        this.merchantsModel = merchantsModel;
+    }
 
     public BaseGoodsListBean getGoodsListBean() {
         return goodsListBean;

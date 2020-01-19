@@ -6,7 +6,7 @@
 
     <RelativeLayout
         android:layout_width="140dp"
-        android:layout_height="216dp"
+        android:layout_height="110dp"
         android:background="@color/transparent">
 
         <LinearLayout
@@ -17,7 +17,7 @@
             android:paddingTop="7dp">
 
             <LinearLayout
-                android:id="@+id/iv_saoyisao"
+                android:id="@+id/ivScanQRCode"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
@@ -34,10 +34,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="扫一扫"
+                    android:text="扫码录单"
                     android:textColor="@color/white"
                     android:textSize="16sp" />
-
             </LinearLayout>
 
             <View
@@ -48,38 +47,7 @@
                 android:background="@color/color_80ffffff" />
 
             <LinearLayout
-                android:id="@+id/iv_shoukuan"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingLeft="17dp">
-
-                <ImageView
-                    android:layout_width="23dp"
-                    android:layout_height="23dp"
-                    android:layout_marginRight="12dp"
-                    android:src="@mipmap/b01_02shoukuanma" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="收款码"
-                    android:textColor="@color/white"
-                    android:textSize="16sp" />
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="13dp"
-                android:layout_marginRight="13dp"
-                android:background="@color/color_80ffffff" />
-
-            <LinearLayout
-                android:id="@+id/iv_ludan"
+                android:id="@+id/ivRecordOrder"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
@@ -96,47 +64,12 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="商家录单"
+                    android:text="手动录单"
                     android:textColor="@color/white"
                     android:textSize="16sp" />
 
             </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="13dp"
-                android:layout_marginRight="13dp"
-                android:background="@color/color_80ffffff" />
-
-            <LinearLayout
-                android:id="@+id/iv_fabufuwu"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingLeft="17dp">
-
-                <ImageView
-                    android:layout_width="23dp"
-                    android:layout_height="23dp"
-                    android:layout_marginRight="12dp"
-                    android:src="@mipmap/b01_04fabu" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="发布服务"
-                    android:textColor="@color/white"
-                    android:textSize="16sp" />
-
-            </LinearLayout>
-
-
         </LinearLayout>
-
-
     </RelativeLayout>
 
 </LinearLayout>

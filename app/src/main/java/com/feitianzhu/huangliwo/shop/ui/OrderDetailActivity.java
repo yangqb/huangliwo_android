@@ -183,7 +183,6 @@ public class OrderDetailActivity extends BaseActivity {
                 }
                 break;
             case R.id.ll_order_detail:
-                //TODO:后面需要根据类型跳转
                 //商品详情
                 Intent intent = new Intent(OrderDetailActivity.this, ShopsDetailActivity.class);
                 intent.putExtra(ShopsDetailActivity.GOODS_DETAIL_DATA, goodsOrderBean.getGoodId());

@@ -1,6 +1,7 @@
 package com.feitianzhu.huangliwo.pushshop;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -11,6 +12,9 @@ import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
 
@@ -32,11 +36,14 @@ import static com.feitianzhu.huangliwo.common.Constant.USERID;
  * email: 694125155@qq.com
  */
 public class PushShopHomeActivity extends BaseActivity {
+    public static final String MINE_INFO = "mine_info";
     private MineInfoModel userInfo;
     private String userId;
     private String token;
     @BindView(R.id.title_name)
     TextView titleName;
+    @BindView(R.id.refreshLayout)
+    SmartRefreshLayout refreshLayout;
 
     @Override
     protected int getLayoutId() {
@@ -46,8 +53,20 @@ public class PushShopHomeActivity extends BaseActivity {
     @Override
     protected void initView() {
         titleName.setText("推店");
+        userInfo = (MineInfoModel) getIntent().getSerializableExtra(MINE_INFO);
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
+        refreshLayout.setEnableLoadMore(false);
+        initListener();
+    }
+
+    public void initListener() {
+        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                initData();
+            }
+        });
     }
 
     @Override
@@ -57,23 +76,25 @@ public class PushShopHomeActivity extends BaseActivity {
                 .addParams(ACCESSTOKEN, token)//
                 .addParams(USERID, userId)
                 .build().execute(new Callback<MineInfoModel>() {
-
             @Override
             public void onBefore(Request request, int id) {
                 super.onBefore(request, id);
-                showloadDialog("");
             }
 
             @Override
             public void onError(Call call, Exception e, int id) {
+                if (refreshLayout != null) {
+                    refreshLayout.finishRefresh();
+                }
                 Log.e("wangyan", "onError---->" + e.getMessage());
                 ToastUtils.showShortToast(e.getMessage());
-                goneloadDialog();
             }
 
             @Override
             public void onResponse(MineInfoModel response, int id) {
-                goneloadDialog();
+                if (refreshLayout != null) {
+                    refreshLayout.finishRefresh();
+                }
                 if (response != null) {
                     userInfo = response;
                 }

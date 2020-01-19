@@ -8,9 +8,9 @@ public class Urls {
 
 
     //private static final String BASE_URL = "http://www.huangliwo.top:8088/"; //正式环境
-    //private static final String BASE_URL = "http://39.106.65.35:8088/"; //测试地址
+    private static final String BASE_URL = "http://39.106.65.35:8088/"; //测试地址
     //private static final String BASE_URL = "http://192.168.0.21:8089/";//钟工本地地址
-    private static final String BASE_URL = "http://192.168.0.15:8089/"; //周工本地地址
+    //private static final String BASE_URL = "http://192.168.0.15:8089/"; //周工本地地址
     /**
      * 注册
      */
@@ -71,6 +71,11 @@ public class Urls {
     public static final String GET_SHOP = BASE_URL + "fhwl/shop/getclsid";
 
     /*
+     * 获取分类商铺列表
+     * */
+    public static final String GET_MERCHANTS = BASE_URL + "fhwl/merchant/getMerchantByCls";
+
+    /*
      * 商品详情数据
      * */
     public static final String GET_SHOP_DETAIL = BASE_URL + "fhwl/index/getGoodsDetail";
@@ -85,7 +90,7 @@ public class Urls {
      * */
     public static final String GTE_ORDER_COUNT = BASE_URL + "fhwl/order/getBuyInfo";
     /*
-     * 所有订单列表数据status --- -1代表全部,0代表待评价-2代表售后的单子（退款中和已退款） 其他的按照订单的状态传值
+     * 所有商品订单列表数据status --- -1代表全部,0代表待评价-2代表售后的单子（退款中和已退款） 其他的按照订单的状态传值
      * */
     public static final String GET_ORDER_INFO = BASE_URL + "fhwl/order/svbill/goodsorder";
     /*
@@ -167,13 +172,34 @@ public class Urls {
     public static final String GET_MERCHANTS_LIST = BASE_URL + "fhwl/merchant/getMerchants";
 
     /*
+     * 获取商户收款二维码
+     * */
+    public static final String GET_MERCHANTS_PAYMENT_CODE = BASE_URL + "fhwl/qrcode/merchant/create";
+
+
+    /*
+     * 商铺收益细则和订单列表
+     * */
+    public static final String GET_EARNINGS_RULES = BASE_URL + "fhwl/merchant/getMerchantOrder";
+
+    /*
+     * 提现记录
+     * */
+    public static final String GET_WITHDRAW_RECORD = BASE_URL + "fhwl/withdrawal/selectWithdrawal";
+
+    /*
+     * 取消提现
+     * */
+    public static final String WITHDRAW_CANCEL = BASE_URL + "fhwl/withdrawal/cancel";
+
+    /*
      * 新增套餐
      * */
     public static final String ADD_SETMEAL = BASE_URL + "fhwl/setMeal/saveSetMeal";
 
     /*
-    * 修改套餐
-    * */
+     * 修改套餐
+     * */
     public static final String UPDATE_SETMEAL = BASE_URL + "fhwl/setMeal/updateSetMeal";
 
     /*
@@ -182,9 +208,19 @@ public class Urls {
     public static final String GET_SETMEAL_LIST = BASE_URL + "fhwl/setMeal/getSetMealList";
 
     /*
+     * 获取所有套餐的评价
+     * */
+    public static final String GET_SETMEAL_EVALIST = BASE_URL + "fhwl/merchant/getEvalList";
+
+    /*
      * 获取套餐详情
      * */
     public static final String GET_SETMEAL_DETAIL = BASE_URL + "fhwl/setMeal/getSetMeal";
+
+    /*
+     * 商家录单
+     * */
+    public static final String RECORD_ORDER = BASE_URL + "fhwl/merchantPay/record";
 
     /*
      * 套餐上下架
@@ -199,7 +235,7 @@ public class Urls {
     /**
      * 获取商铺类型
      */
-    public final static String GET_SHOPS_TYPE = BASE_URL + "fhwl/commons/merchant/getmclslist";
+    public final static String GET_MERCHANTS_TYPE = BASE_URL + "fhwl/commons/merchant/getmclslist";
 
     /*
      * 余额提现
@@ -266,6 +302,34 @@ public class Urls {
      * 线上商品支付生成订单
      * */
     public static final String PAY_SHOPS = BASE_URL + "fhwl/order/svbill/create-goods";
+
+    /*
+     * 线上套餐支付生成订单
+     * */
+    public static final String PAY_SETMEAL = BASE_URL + "fhwl/merchantPay/buySetMeal";
+
+    /*
+     * 商户线下支付
+     * */
+    public static final String RECEIVABLES_PAY_SETMEAL = BASE_URL + "fhwl/merchantPay/receivables";
+
+    /*
+     * 套餐订单详情
+     * */
+    public static final String SETMEAL_ORDER_DETAIL = BASE_URL + "fhwl/merchantPay/orderDetail";
+
+    /*
+     * 套餐订单列表
+     * */
+    public static final String SETMEAL_ORDER_LIST = BASE_URL + "fhwl/merchantPay/list";
+    /*
+     * 取消套餐订单和退款
+     * */
+    public static final String CANCEL_SETMEAL_ORDER = BASE_URL + "fhwl/merchantPay/updateOrder";
+    /*
+     * 套餐评价
+     * */
+    public static final String EVALUATE_SETMEAL_ORDER = BASE_URL + "fhwl/merchantPay/eval";
 
     /**
      * 删除银行卡

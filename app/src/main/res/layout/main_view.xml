@@ -41,7 +41,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="首页"
-                    android:textSize="9sp"
+                    android:textSize="12sp"
                     android:textColor="@drawable/tab_select_text" />
             </LinearLayout>
 
@@ -64,7 +64,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="分类"
-                    android:textSize="9sp"
+                    android:textSize="12sp"
                     android:textColor="@drawable/tab_select_text" />
             </LinearLayout>
 
@@ -87,7 +87,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="关注"
-                    android:textSize="9sp"
+                    android:textSize="12sp"
                     android:textColor="@drawable/tab_select_text" />
             </LinearLayout>
 
@@ -110,7 +110,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="我的"
-                    android:textSize="9sp"
+                    android:textSize="12sp"
                     android:textColor="@drawable/tab_select_text" />
             </LinearLayout>
 

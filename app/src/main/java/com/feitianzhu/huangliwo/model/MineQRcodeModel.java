@@ -18,6 +18,15 @@ public class MineQRcodeModel {
     private String link;
     private String description;
     private String title;
+    private String yearImg;
+
+    public String getYearImg() {
+        return yearImg;
+    }
+
+    public void setYearImg(String yearImg) {
+        this.yearImg = yearImg;
+    }
 
     public String getHeadImg() {
         return headImg;

@@ -2,9 +2,11 @@ package com.feitianzhu.huangliwo.pushshop;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Canvas;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +14,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.callback.ItemDragAndSwipeCallback;
+import com.chad.library.adapter.base.listener.OnItemSwipeListener;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
@@ -20,6 +24,7 @@ import com.feitianzhu.huangliwo.pushshop.adapter.SetMealGoodsAdapter;
 import com.feitianzhu.huangliwo.pushshop.bean.SetMealInfo;
 import com.feitianzhu.huangliwo.pushshop.bean.SingleGoodsModel;
 import com.feitianzhu.huangliwo.shop.adapter.EditCommentAdapter;
+import com.feitianzhu.huangliwo.utils.EditTextUtils;
 import com.feitianzhu.huangliwo.utils.Glide4Engine;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
@@ -103,6 +108,11 @@ public class EditSetMealActivity extends BaseActivity {
         rightText.setVisibility(View.VISIBLE);
         goodsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new SetMealGoodsAdapter(list);
+        ItemDragAndSwipeCallback itemDragAndSwipeCallback = new ItemDragAndSwipeCallback(mAdapter);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemDragAndSwipeCallback);
+        itemTouchHelper.attachToRecyclerView(goodsRecyclerView);
+        // 开启滑动删除
+        mAdapter.enableSwipeItem();
         goodsRecyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
         MultiItemComment comment = new MultiItemComment(MultiItemComment.upImg);
@@ -112,10 +122,42 @@ public class EditSetMealActivity extends BaseActivity {
         editCommentAdapter = new EditCommentAdapter(multiItemCommentList);
         recyclerView.setAdapter(editCommentAdapter);
         editCommentAdapter.notifyDataSetChanged();
+        EditTextUtils.afterDotTwo(editSetMealPrice);
         initListener();
     }
 
     public void initListener() {
+
+        mAdapter.setOnItemSwipeListener(new OnItemSwipeListener() {
+            @Override
+            public void onItemSwipeStart(RecyclerView.ViewHolder viewHolder, int pos) {
+                Log.e("onItemSwipeStart", pos + "");
+            }
+
+            @Override
+            public void clearView(RecyclerView.ViewHolder viewHolder, int pos) {
+                Log.e("clearView", pos + "");
+            }
+
+            @Override
+            public void onItemSwiped(RecyclerView.ViewHolder viewHolder, int pos) {
+                Log.e("onItemSwiped", pos + "");
+                list.remove(pos);
+            }
+
+            @Override
+            public void onItemSwipeMoving(Canvas canvas, RecyclerView.ViewHolder viewHolder, float dX, float dY, boolean isCurrentlyActive) {
+                Log.e("onItemSwipeMoving", "dX=" + dX + ";dY=" + dY);
+            }
+        });
+
+        mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                addSingles(list.get(position), position);
+            }
+        });
+
         editCommentAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
@@ -175,6 +217,41 @@ public class EditSetMealActivity extends BaseActivity {
         });
     }
 
+    public void addSingles(SingleGoodsModel singleGoodsModel, int position) {
+        new XPopup.Builder(EditSetMealActivity.this)
+                .asCustom(new AddSetMealView(EditSetMealActivity.this)
+                        .setData(singleGoodsModel)
+                        .setOnConfirmClickListener(new AddSetMealView.OnConfirmClickListener() {
+                            @Override
+                            public void onConfirm(String name, String num, String price) {
+                                if (TextUtils.isEmpty(name)) {
+                                    ToastUtils.showShortToast("请输入商品名称");
+                                    return;
+                                } else if (TextUtils.isEmpty(num)) {
+                                    ToastUtils.showShortToast("请输入商品数量");
+                                    return;
+                                } else if (TextUtils.isEmpty(price)) {
+                                    ToastUtils.showShortToast("请输入商品价格");
+                                    return;
+                                }
+                                if (singleGoodsModel == null) {  //添加
+                                    SingleGoodsModel model = new SingleGoodsModel();
+                                    model.setSinglePrice(Double.valueOf(price));
+                                    model.setName(name);
+                                    model.setNum(Integer.valueOf(num));
+                                    list.add(model);
+                                } else { //修改
+                                    list.get(position).setName(name);
+                                    list.get(position).setNum(Integer.valueOf(num));
+                                    list.get(position).setSinglePrice(Double.valueOf(price));
+                                }
+                                mAdapter.setNewData(list);
+                                mAdapter.notifyDataSetChanged();
+                            }
+                        }))
+                .show();
+    }
+
     public void selectPhoto() {
         Matisse.from(EditSetMealActivity.this)
                 .choose(MimeType.ofImage())
@@ -216,31 +293,7 @@ public class EditSetMealActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.addSetMeal:
-                new XPopup.Builder(EditSetMealActivity.this)
-                        .asCustom(new AddSetMealView(EditSetMealActivity.this)
-                                .setOnConfirmClickListener(new AddSetMealView.OnConfirmClickListener() {
-                                    @Override
-                                    public void onConfirm(String name, String num, String price) {
-                                        if (TextUtils.isEmpty(name)) {
-                                            ToastUtils.showShortToast("请输入商品名称");
-                                            return;
-                                        } else if (TextUtils.isEmpty(num)) {
-                                            ToastUtils.showShortToast("请输入商品数量");
-                                            return;
-                                        } else if (TextUtils.isEmpty(price)) {
-                                            ToastUtils.showShortToast("请输入商品价格");
-                                            return;
-                                        }
-                                        SingleGoodsModel model = new SingleGoodsModel();
-                                        model.setSinglePrice(Double.valueOf(price));
-                                        model.setName(name);
-                                        model.setNum(Integer.valueOf(num));
-                                        list.add(model);
-                                        mAdapter.setNewData(list);
-                                        mAdapter.notifyDataSetChanged();
-                                    }
-                                }))
-                        .show();
+                addSingles(null, -1);
                 break;
             case R.id.ll_discount:
                 //折扣比例说明
@@ -280,6 +333,10 @@ public class EditSetMealActivity extends BaseActivity {
         }
         if (TextUtils.isEmpty(percentage)) {
             ToastUtils.showShortToast("请输入套餐折扣比例");
+            return;
+        }
+        if (Integer.valueOf(percentage) > 100) {
+            ToastUtils.showShortToast("折扣比例不能大于100%");
             return;
         }
         if (TextUtils.isEmpty(rules)) {
@@ -330,6 +387,7 @@ public class EditSetMealActivity extends BaseActivity {
                     public void onResponse(Object response, int id) {
                         goneloadDialog();
                         ToastUtils.showShortToast("添加成功");
+                        setResult(RESULT_OK);
                         finish();
                     }
                 });

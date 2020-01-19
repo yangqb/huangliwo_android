@@ -15,9 +15,9 @@
         android:orientation="vertical">
 
         <ImageView
+            android:id="@+id/yearImg"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@mipmap/h10_01fenxiang" />
+            android:layout_height="310dp" />
 
         <RelativeLayout
             android:layout_width="match_parent"

@@ -63,6 +63,12 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
                     case PayInfo.BUY_SERVICE:
                         EventBus.getDefault().post(new PayInfo(PayInfo.BUY_SERVICE, PayInfo.SUCCESS));
                         break;
+                    case PayInfo.SETMEAL_PAY:
+                        EventBus.getDefault().post(new PayInfo(PayInfo.BUY_SERVICE, PayInfo.SUCCESS));
+                        break;
+                    case PayInfo.RECEIVABLES_SETMEAL_PAY:
+                        EventBus.getDefault().post(new PayInfo(PayInfo.BUY_SERVICE, PayInfo.SUCCESS));
+                        break;
                 }
             } else {
                 switch (Constant.PayFlag) {
@@ -82,6 +88,12 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
                         EventBus.getDefault().post(new PayInfo(PayInfo.PAY_FORME, PayInfo.FAIL));
                         break;
                     case PayInfo.BUY_SERVICE:
+                        EventBus.getDefault().post(new PayInfo(PayInfo.BUY_SERVICE, PayInfo.FAIL));
+                        break;
+                    case PayInfo.SETMEAL_PAY:
+                        EventBus.getDefault().post(new PayInfo(PayInfo.BUY_SERVICE, PayInfo.FAIL));
+                        break;
+                    case PayInfo.RECEIVABLES_SETMEAL_PAY:
                         EventBus.getDefault().post(new PayInfo(PayInfo.BUY_SERVICE, PayInfo.FAIL));
                         break;
                 }

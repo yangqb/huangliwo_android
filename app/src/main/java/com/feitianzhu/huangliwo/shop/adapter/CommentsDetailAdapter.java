@@ -37,6 +37,7 @@ public class CommentsDetailAdapter extends BaseQuickAdapter<BaseGoodsListBean.Go
     public void setOnChildPositionListener(CommentsDetailAdapter.OnChildClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }
+
     public CommentsDetailAdapter(@Nullable List<BaseGoodsListBean.GoodsEvaluateMode> data) {
         super(R.layout.commodity_valuate_item, data);
     }

@@ -11,9 +11,27 @@ import java.io.Serializable;
  */
 public class EvaluateMode implements Serializable {
     private int goodId;
-    private int userId;
+    private String userId;
     private String orderNo;
     private String content;
+    private int smId;
+    private int merchantId;
+
+    public int getSmId() {
+        return smId;
+    }
+
+    public void setSmId(int smId) {
+        this.smId = smId;
+    }
+
+    public int getMerchantId() {
+        return merchantId;
+    }
+
+    public void setMerchantId(int merchantId) {
+        this.merchantId = merchantId;
+    }
 
     public int getGoodId() {
         return goodId;
@@ -23,11 +41,11 @@ public class EvaluateMode implements Serializable {
         this.goodId = goodId;
     }
 
-    public int getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

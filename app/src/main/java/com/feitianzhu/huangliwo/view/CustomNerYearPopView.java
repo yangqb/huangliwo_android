@@ -7,7 +7,9 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.feitianzhu.huangliwo.R;
+import com.feitianzhu.huangliwo.model.HomePopModel;
 import com.feitianzhu.huangliwo.utils.GlideUtils;
 import com.lxj.xpopup.animator.PopupAnimator;
 import com.lxj.xpopup.core.CenterPopupView;
@@ -20,7 +22,7 @@ import com.lxj.xpopup.core.CenterPopupView;
  * email: 694125155@qq.com
  */
 public class CustomNerYearPopView extends CenterPopupView {
-    private String url;
+    private HomePopModel.PopupBean popupBea;
 
     public CustomNerYearPopView(@NonNull Context context) {
         super(context);
@@ -43,8 +45,8 @@ public class CustomNerYearPopView extends CenterPopupView {
         return R.layout.custom_new_year_pop;
     }
 
-    public CustomNerYearPopView setImgUrl(String url) {
-        this.url = url;
+    public CustomNerYearPopView setImgUrl(HomePopModel.PopupBean bean) {
+        this.popupBea = bean;
         return this;
     }
 
@@ -58,7 +60,11 @@ public class CustomNerYearPopView extends CenterPopupView {
                 dismiss();
             }
         });
-        findViewById(R.id.confirm).setOnClickListener(new OnClickListener() {
+        ImageView btnConfirm = findViewById(R.id.confirm);
+        if (popupBea.getLikeType() == 4) {
+            btnConfirm.setVisibility(VISIBLE);
+        }
+        btnConfirm.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (listener != null) {
@@ -68,7 +74,7 @@ public class CustomNerYearPopView extends CenterPopupView {
             }
         });
         ImageView imageView = findViewById(R.id.imageView);
-        Glide.with(getContext()).load(url).into(GlideUtils.getImageView((Activity) getContext(), url, imageView));
+        Glide.with(getContext()).load(popupBea.getImgUrl()).apply(new RequestOptions().error(R.mipmap.g10_04weijiazai)).into(GlideUtils.getImageView((Activity) getContext(), popupBea.getImgUrl(), imageView));
     }
 
     // 设置最大宽度，看需要而定

@@ -51,6 +51,8 @@ public class ProvinceDialog2 extends DialogFragment {
     WheelView mWvProvince;
     @BindView(R.id.wv_city)
     WheelView mWvCity;
+    @BindView(R.id.wv_area)
+    WheelView mWvArea;
 
     private int maxsize = 24;
     private int minsize = 14;
@@ -61,11 +63,17 @@ public class ProvinceDialog2 extends DialogFragment {
     /**
      * 城市列表
      */
-    private ArrayList<Province.CityListBean> arrCitys = new ArrayList<>();
+    private ArrayList<String> arrCitys = new ArrayList<>();
+    /*
+     * 区列表
+     * */
+    private ArrayList<String> arrAreas = new ArrayList<>();
     private ProvinceDialog2.AddressTextAdapter provinceAdapter;
     private ProvinceDialog2.CityAddressTextAdapter cityAdapter;
+    private ProvinceDialog2.AreaAddressTextAdapter areaAdapter;
     private String strProvince = "北京市";
     private String strCity = "北京市";
+    private String strArea = "东城区";
     private int selColor;
     private int unSelColor;
     private ProvinceCallBack mListener;
@@ -74,6 +82,12 @@ public class ProvinceDialog2 extends DialogFragment {
      * 省份列表
      */
     private List<Province> provinceCityLists;
+    /*
+     * 市列表
+     * */
+    private List<Province.CityListBean> cityLists;
+
+    private List<Province.AreaListBean> areaLists;
 
     public void setSelectOnListener(ProvinceCallBack listener) {
         this.mListener = listener;
@@ -121,14 +135,7 @@ public class ProvinceDialog2 extends DialogFragment {
         mWvProvince.setShadowColor(Color.TRANSPARENT, Color.TRANSPARENT, Color.TRANSPARENT);
         mWvProvince.setWheelBackground(R.drawable.province_wheel_bg);
         mWvProvince.setWheelForeground(R.drawable.province_wheel_val);
-        mWvProvince.post(new Runnable() {
-
-            @Override
-            public void run() {
-                String currentText = (String) provinceAdapter.getItemText(mWvProvince.getCurrentItem());
-                setTextviewSize(currentText, provinceAdapter);
-            }
-        });
+        setTextviewSize(strProvince, provinceAdapter);
 
         initCitys(strProvince);
         cityAdapter = new ProvinceDialog2.CityAddressTextAdapter(getActivity(), arrCitys, getCityItem(strCity), maxsize, minsize);
@@ -138,14 +145,18 @@ public class ProvinceDialog2 extends DialogFragment {
         mWvCity.setShadowColor(Color.TRANSPARENT, Color.TRANSPARENT, Color.TRANSPARENT);
         mWvCity.setWheelBackground(R.drawable.province_wheel_bg);
         mWvCity.setWheelForeground(R.drawable.province_wheel_val);
-        mWvCity.post(new Runnable() {
+        setCityTextviewSize(strCity, cityAdapter);
 
-            @Override
-            public void run() {
-                String currentText = (String) cityAdapter.getItemText(mWvCity.getCurrentItem());
-                setCityTextviewSize(currentText, cityAdapter);
-            }
-        });
+        initAreas(strCity);
+        areaAdapter = new ProvinceDialog2.AreaAddressTextAdapter(getActivity(), arrAreas, getAreaItem(strArea), maxsize, minsize);
+        mWvArea.setVisibleItems(5);
+        mWvArea.setViewAdapter(areaAdapter);
+        mWvArea.setCurrentItem(getAreaItem(strArea));
+        mWvArea.setShadowColor(Color.TRANSPARENT, Color.TRANSPARENT, Color.TRANSPARENT);
+        mWvArea.setWheelBackground(R.drawable.province_wheel_bg);
+        mWvArea.setWheelForeground(R.drawable.province_wheel_val);
+        setAreaTextviewSize(strArea, areaAdapter);
+
         initListener();
     }
 
@@ -164,6 +175,13 @@ public class ProvinceDialog2 extends DialogFragment {
                 String currentCityText = (String) cityAdapter.getItemText(mWvCity.getCurrentItem());
                 setCityTextviewSize(currentCityText, cityAdapter);
                 mWvCity.setViewAdapter(cityAdapter);
+                initAreas(arrCitys.get(0));
+                areaAdapter = new ProvinceDialog2.AreaAddressTextAdapter(getActivity(), arrAreas, 0, maxsize, minsize);
+                mWvArea.setVisibleItems(5);
+                mWvArea.setCurrentItem(0);
+                String currentAreaText = (String) areaAdapter.getItemText(mWvArea.getCurrentItem());
+                setAreaTextviewSize(currentAreaText, areaAdapter);
+                mWvArea.setViewAdapter(areaAdapter);
             }
         });
 
@@ -187,6 +205,13 @@ public class ProvinceDialog2 extends DialogFragment {
                 String currentText = (String) cityAdapter.getItemText(wheel.getCurrentItem());
                 strCity = currentText;
                 setCityTextviewSize(currentText, cityAdapter);
+                initAreas(currentText);
+                areaAdapter = new ProvinceDialog2.AreaAddressTextAdapter(getActivity(), arrAreas, 0, maxsize, minsize);
+                mWvArea.setVisibleItems(5);
+                mWvArea.setCurrentItem(0);
+                String currentCityText = (String) areaAdapter.getItemText(mWvArea.getCurrentItem());
+                setAreaTextviewSize(currentCityText, areaAdapter);
+                mWvArea.setViewAdapter(areaAdapter);
             }
         });
 
@@ -200,6 +225,29 @@ public class ProvinceDialog2 extends DialogFragment {
             public void onScrollingFinished(WheelView wheel) {
                 String currentText = (String) cityAdapter.getItemText(wheel.getCurrentItem());
                 setCityTextviewSize(currentText, cityAdapter);
+            }
+        });
+
+        mWvArea.addChangingListener(new OnWheelChangedListener() {
+
+            @Override
+            public void onChanged(WheelView wheel, int oldValue, int newValue) {
+                String currentText = (String) areaAdapter.getItemText(wheel.getCurrentItem());
+                strArea = currentText;
+                setAreaTextviewSize(currentText, areaAdapter);
+            }
+        });
+
+        mWvArea.addScrollingListener(new OnWheelScrollListener() {
+
+            @Override
+            public void onScrollingStarted(WheelView wheel) {
+            }
+
+            @Override
+            public void onScrollingFinished(WheelView wheel) {
+                String currentText = (String) areaAdapter.getItemText(wheel.getCurrentItem());
+                setAreaTextviewSize(currentText, areaAdapter);
             }
         });
     }
@@ -247,9 +295,9 @@ public class ProvinceDialog2 extends DialogFragment {
     }
 
     private class CityAddressTextAdapter extends AbstractWheelTextAdapter {
-        List<Province.CityListBean> list;
+        List<String> list;
 
-        protected CityAddressTextAdapter(Context context, List<Province.CityListBean> list, int currentItem, int maxsize, int minsize) {
+        protected CityAddressTextAdapter(Context context, List<String> list, int currentItem, int maxsize, int minsize) {
             super(context, R.layout.item_view, NO_RESOURCE, currentItem, maxsize, minsize, selColor, unSelColor);
             this.list = list;
             setItemTextResource(R.id.tempValue);
@@ -268,7 +316,33 @@ public class ProvinceDialog2 extends DialogFragment {
 
         @Override
         protected CharSequence getItemText(int index) {
-            return list.get(index).name + "";
+            return list.get(index) + "";
+        }
+    }
+
+    private class AreaAddressTextAdapter extends AbstractWheelTextAdapter {
+        List<String> list;
+
+        public AreaAddressTextAdapter(Context context, List<String> list, int currentItem, int maxsize, int minsize) {
+            super(context, R.layout.item_view, NO_RESOURCE, currentItem, maxsize, minsize, selColor, unSelColor);
+            this.list = list;
+            setItemTextResource(R.id.tempValue);
+        }
+
+        @Override
+        protected CharSequence getItemText(int i) {
+            return list.size() == 0 ? "" : list.get(i) + "";
+        }
+
+        @Override
+        public View getItem(int index, View convertView, ViewGroup parent) {
+            View view = super.getItem(index, convertView, parent);
+            return view;
+        }
+
+        @Override
+        public int getItemsCount() {
+            return list.size();
         }
     }
 
@@ -312,23 +386,61 @@ public class ProvinceDialog2 extends DialogFragment {
         }
     }
 
+    public void setAreaTextviewSize(String curriteItemText, ProvinceDialog2.AreaAddressTextAdapter adapter) {
+        ArrayList<View> arrayList = adapter.getTestViews();
+        int size = arrayList.size();
+        String currentText;
+        for (int i = 0; i < size; i++) {
+            TextView textvew = (TextView) arrayList.get(i);
+            currentText = textvew.getText().toString();
+            if (curriteItemText.equals(currentText)) {
+                textvew.setTextSize(20);
+                textvew.setTextColor(selColor);
+            } else {
+                textvew.setTextSize(14);
+                textvew.setTextColor(unSelColor);
+            }
+        }
+    }
+
     /**
      * 根据省找到市
      *
      * @param
      */
-    private void initCitys(String province) {
+    private List<String> initCitys(String province) {
         arrCitys.clear();
         for (Province provinceCity : provinceCityLists) {
             if (provinceCity.getProvince().equals(province)) {
-                List<Province.CityListBean> citys = provinceCity.getCitys();
-                if (citys != null && !citys.isEmpty()) {
-                    for (Province.CityListBean string : citys) {
-                        arrCitys.add(string);
+                cityLists = provinceCity.getCitys();
+                if (cityLists != null && !cityLists.isEmpty()) {
+                    for (Province.CityListBean string : cityLists) {
+                        arrCitys.add(string.getName());
                     }
                 }
             }
         }
+        return arrCitys;
+    }
+
+    /**
+     * 根据市找到区
+     *
+     * @param
+     */
+    private List<String> initAreas(String strCity) {
+        arrAreas.clear();
+        for (Province.CityListBean cityListBean : cityLists) {
+            if (cityListBean.getName().equals(strCity)) {
+                areaLists = cityListBean.getAreaList();
+                if (areaLists != null && !areaLists.isEmpty()) {
+                    for (Province.AreaListBean string : areaLists) {
+                        arrAreas.add(string.getName());
+                    }
+                }
+            }
+        }
+        return arrAreas;
     }
 
     /**
@@ -337,12 +449,15 @@ public class ProvinceDialog2 extends DialogFragment {
      * @param province
      * @param city
      */
-    public void setAddress(String province, String city) {
+    public void setAddress(String province, String city, String strArea) {
         if (!TextUtils.isEmpty(province)) {
             this.strProvince = province;
         }
         if (!TextUtils.isEmpty(city)) {
             this.strCity = city;
+        }
+        if (!TextUtils.isEmpty(strArea)) {
+            this.strArea = strArea;
         }
     }
 
@@ -384,17 +499,38 @@ public class ProvinceDialog2 extends DialogFragment {
         return cityIndex;
     }
 
+    /**
+     * 得到区的索引
+     *
+     * @param strArea
+     * @return
+     */
+    public int getAreaItem(String strArea) {
+        int size = arrAreas.size();
+        int areaIndex = 0;
+        for (int i = 0; i < size; i++) {
+            if (strArea.equals(arrAreas.get(i))) {
+                return areaIndex;
+            } else {
+                areaIndex++;
+            }
+        }
+        return areaIndex;
+    }
+
     @OnClick({R.id.iv_wheel_ok, R.id.iv_wheel_cancel})
     public void okClick(View v) {
         switch (v.getId()) {
             case R.id.iv_wheel_ok:
-                int mItem = mWvProvince.getCurrentItem();
-                Province mProvince = provinceCityLists.get(mItem);
+                int mProvinceItem = mWvProvince.getCurrentItem();
+                Province mProvince = provinceCityLists.get(mProvinceItem);
                 strProvince = mProvince.getProvince();
-                int mCurrentItem = mWvCity.getCurrentItem();
-                Province.CityListBean mCityListBean = arrCitys.get(mCurrentItem);
+                int mCityItem = mWvCity.getCurrentItem();
+                Province.CityListBean mCityListBean = cityLists.get(mCityItem);
                 strCity = mCityListBean.name;
-                mListener.onWhellFinish(mProvince, mCityListBean, null);
+                int mAreaItem = mWvArea.getCurrentItem();
+                Province.AreaListBean mAreaListBean = areaLists.get(mAreaItem);
+                mListener.onWhellFinish(mProvince, mCityListBean, mAreaListBean);
                 dismiss();
                 break;
             case R.id.iv_wheel_cancel:

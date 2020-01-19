@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -25,6 +26,7 @@ import com.feitianzhu.huangliwo.pushshop.adapter.SetMealGoodsAdapter;
 import com.feitianzhu.huangliwo.pushshop.bean.SetMealInfo;
 import com.feitianzhu.huangliwo.pushshop.bean.SingleGoodsModel;
 import com.feitianzhu.huangliwo.shop.adapter.EditCommentAdapter;
+import com.feitianzhu.huangliwo.utils.EditTextUtils;
 import com.feitianzhu.huangliwo.utils.Glide4Engine;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
@@ -96,6 +98,10 @@ public class SetMealDetailActivity extends BaseActivity {
     EditText editRules;
     @BindView(R.id.recyclerView2)
     RecyclerView goodsRecyclerView;
+    @BindView(R.id.title_name)
+    TextView titleName;
+    @BindView(R.id.ll_parent)
+    LinearLayout llParent;
 
     @Override
     protected int getLayoutId() {
@@ -124,7 +130,7 @@ public class SetMealDetailActivity extends BaseActivity {
         mAdapter.enableSwipeItem();
         goodsRecyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
-
+        EditTextUtils.afterDotTwo(editSetMealPrice);
         initListener();
     }
 
@@ -132,22 +138,30 @@ public class SetMealDetailActivity extends BaseActivity {
         mAdapter.setOnItemSwipeListener(new OnItemSwipeListener() {
             @Override
             public void onItemSwipeStart(RecyclerView.ViewHolder viewHolder, int pos) {
-
+                Log.e("onItemSwipeStart", pos + "");
             }
 
             @Override
             public void clearView(RecyclerView.ViewHolder viewHolder, int pos) {
-
+                Log.e("clearView", pos + "");
             }
 
             @Override
             public void onItemSwiped(RecyclerView.ViewHolder viewHolder, int pos) {
+                Log.e("onItemSwiped", pos + "");
                 list.remove(pos);
             }
 
             @Override
             public void onItemSwipeMoving(Canvas canvas, RecyclerView.ViewHolder viewHolder, float dX, float dY, boolean isCurrentlyActive) {
+                Log.e("onItemSwipeMoving", "dX=" + dX + ";dY=" + dY);
+            }
+        });
 
+        mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                addSingles(list.get(position), position);
             }
         });
 
@@ -264,7 +278,7 @@ public class SetMealDetailActivity extends BaseActivity {
                 });
     }
 
-    @OnClick({R.id.left_button, R.id.submit, R.id.addSetMeal})
+    @OnClick({R.id.left_button, R.id.submit, R.id.addSetMeal, R.id.ll_discount})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.left_button:
@@ -274,37 +288,57 @@ public class SetMealDetailActivity extends BaseActivity {
                 submit();
                 break;
             case R.id.addSetMeal:
-                new XPopup.Builder(SetMealDetailActivity.this)
-                        .asCustom(new AddSetMealView(SetMealDetailActivity.this)
-                                .setOnConfirmClickListener(new AddSetMealView.OnConfirmClickListener() {
-                                    @Override
-                                    public void onConfirm(String name, String num, String price) {
-                                        if (TextUtils.isEmpty(name)) {
-                                            ToastUtils.showShortToast("请输入商品名称");
-                                            return;
-                                        } else if (TextUtils.isEmpty(num)) {
-                                            ToastUtils.showShortToast("请输入商品数量");
-                                            return;
-                                        } else if (TextUtils.isEmpty(price)) {
-                                            ToastUtils.showShortToast("请输入商品价格");
-                                            return;
-                                        }
-                                        SingleGoodsModel model = new SingleGoodsModel();
-                                        model.setSinglePrice(Double.valueOf(price));
-                                        model.setName(name);
-                                        model.setNum(Integer.valueOf(num));
-                                        list.add(model);
-                                        mAdapter.setNewData(list);
-                                        mAdapter.notifyDataSetChanged();
-                                    }
-                                }))
+                addSingles(null, -1);
+                break;
+            case R.id.ll_discount:
+                //折扣比例说明
+                String content = "套餐折扣比例区别于整体折扣比例，单独结算。";
+                new XPopup.Builder(this)
+                        .asConfirm("套餐折扣比例说明", content, "", "确定", null, null, true)
+                        .bindLayout(R.layout.layout_dialog) //绑定已有布局
                         .show();
                 break;
         }
 
     }
 
+    public void addSingles(SingleGoodsModel singleGoodsModel, int position) {
+        new XPopup.Builder(SetMealDetailActivity.this)
+                .asCustom(new AddSetMealView(SetMealDetailActivity.this)
+                        .setData(singleGoodsModel)
+                        .setOnConfirmClickListener(new AddSetMealView.OnConfirmClickListener() {
+                            @Override
+                            public void onConfirm(String name, String num, String price) {
+                                if (TextUtils.isEmpty(name)) {
+                                    ToastUtils.showShortToast("请输入商品名称");
+                                    return;
+                                } else if (TextUtils.isEmpty(num)) {
+                                    ToastUtils.showShortToast("请输入商品数量");
+                                    return;
+                                } else if (TextUtils.isEmpty(price)) {
+                                    ToastUtils.showShortToast("请输入商品价格");
+                                    return;
+                                }
+                                if (singleGoodsModel == null) {  //添加
+                                    SingleGoodsModel model = new SingleGoodsModel();
+                                    model.setSinglePrice(Double.valueOf(price));
+                                    model.setName(name);
+                                    model.setNum(Integer.valueOf(num));
+                                    list.add(model);
+                                } else { //修改
+                                    list.get(position).setName(name);
+                                    list.get(position).setNum(Integer.valueOf(num));
+                                    list.get(position).setSinglePrice(Double.valueOf(price));
+                                }
+                                mAdapter.setNewData(list);
+                                mAdapter.notifyDataSetChanged();
+                            }
+                        }))
+                .show();
+    }
+
     public void showView() {
+        titleName.setText(setMealInfo.getSmName());
         String[] imgs = setMealInfo.getImgs().split(",");
         imgList = Arrays.asList(imgs);
         for (int i = 0; i < imgList.size(); i++) {

@@ -189,10 +189,6 @@
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.feitianzhu.huangliwo.settings.FeedbackActivity"
-            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
-            android:screenOrientation="portrait" />
-        <activity
             android:name="com.feitianzhu.huangliwo.me.ui.ShopsEditActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
@@ -303,7 +299,7 @@
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.feitianzhu.huangliwo.shop.ShopSetMealActivity"
+            android:name="com.feitianzhu.huangliwo.shop.ShopMerchantsDetailActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
@@ -320,7 +316,7 @@
             android:largeHeap="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.feitianzhu.huangliwo.shop.ShopInfoDetailActivity"
+            android:name="com.feitianzhu.huangliwo.shop.ShopSetMealDetailActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
@@ -455,6 +451,7 @@
         <activity
             android:name=".pushshop.EditSetMealActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait" />
         <activity
             android:name=".pushshop.SetMealListActivity"
@@ -462,6 +459,35 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".pushshop.SetMealDetailActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".shop.SetMealPayActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".shop.SetMealOrderDetailActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".pushshop.MyMerchantsEarningsRulesActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".me.WithdrawRecordActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".pushshop.MerchantsPaymentCodeActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".pushshop.MyPaymentActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".me.BindingAccountActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
 

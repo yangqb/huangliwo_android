@@ -9,6 +9,7 @@
         android:id="@+id/img"
         android:layout_width="143dp"
         android:layout_height="143dp"
+        android:scaleType="centerCrop"
         android:layout_marginRight="8dp"
         app:riv_corner_radius="5dp"
         app:riv_oval="false" />

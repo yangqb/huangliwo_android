@@ -574,8 +574,7 @@ public class DateUtils {
     }
 
     /**
-     *
-     * @param time  1541569323155
+     * @param time    1541569323155
      * @param pattern yyyy-MM-dd HH:mm:ss
      * @return 2018-11-07 13:42:03
      */
@@ -583,5 +582,11 @@ public class DateUtils {
         Date date = new Date(time);
         SimpleDateFormat format = new SimpleDateFormat(pattern, Locale.getDefault());
         return format.format(date);
+    }
+
+    public static String getCurrentDateStr(String pattern) {
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern, Locale.getDefault());
+        Date date = new Date();
+        return sdf.format(date);
     }
 }

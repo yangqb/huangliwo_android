@@ -47,6 +47,7 @@ import okhttp3.Response;
  */
 public class PushShopListActivity extends BaseActivity {
     private int type = 0;
+    private static final int REQUEST_CODE = 1000;
     private PushShopAdapter mAdapter;
     private List<MerchantsModel> examineMerchants = new ArrayList<>();
     private List<MerchantsModel> passedMerchants = new ArrayList<>();
@@ -205,7 +206,7 @@ public class PushShopListActivity extends BaseActivity {
                 boolean isAgreed = SPUtils.getBoolean(this, Constant.SP_PUSH_SHOP_INSTRUCTIONS);
                 if (isAgreed) {
                     intent = new Intent(PushShopListActivity.this, EditMerchantsActivity.class);
-                    startActivity(intent);
+                    startActivityForResult(intent, REQUEST_CODE);
                 } else {
                     intent = new Intent(PushShopListActivity.this, PushShopProtocolActivity.class);
                     intent.putExtra(PushShopProtocolActivity.PUSH_PROTOCOL, false);
@@ -214,12 +215,23 @@ public class PushShopListActivity extends BaseActivity {
                 break;
         }
     }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onUpdataMechantsEvent(UpdataMechantsEvent event) {
-        if(event == UpdataMechantsEvent.SUCCESS){
+        if (event == UpdataMechantsEvent.SUCCESS) {
             initData();
         }
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_CODE) {
+                initData();
+            }
+        }
     }
 
     @Override

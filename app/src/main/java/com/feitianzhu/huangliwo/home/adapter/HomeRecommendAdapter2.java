@@ -48,7 +48,7 @@ public class HomeRecommendAdapter2 extends BaseMultiItemQuickAdapter<ShopAndMerc
                 setSpannableString(String.format(Locale.getDefault(), "%.2f", shopsList.getPrice()), holder.getView(R.id.price));
                 holder.setVisible(R.id.ll_price, true);
                 String rebatePv = String.format(Locale.getDefault(), "%.2f", shopsList.getRebatePv());
-                holder.setText(R.id.tv_rebate, "省¥" + rebatePv);
+                holder.setText(R.id.tv_rebate, "赚¥" + rebatePv);
                 if (shopsList.getRebatePv() == 0) {
                     holder.setVisible(R.id.ll_rebate, false);
                 } else {

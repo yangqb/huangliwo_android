@@ -1,6 +1,7 @@
 package com.feitianzhu.huangliwo.pushshop;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -18,6 +19,9 @@ import com.feitianzhu.huangliwo.pushshop.bean.SingleGoodsModel;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
 
@@ -40,7 +44,8 @@ import static com.feitianzhu.huangliwo.common.Constant.USERID;
  * email: 694125155@qq.com
  */
 public class SetMealListActivity extends BaseActivity {
-    private static final int REQUEST_CODE = 1000;
+    private static final int EDIT_REQUEST_CODE = 1000;
+    private static final int ADD_REQUEST_CODE = 999;
     public static final String MERCHANTS_ID = "merchants_id";
     private List<SetMealInfo> setMealInfoList = new ArrayList<>();
     private int merchantsId = -1;
@@ -55,6 +60,8 @@ public class SetMealListActivity extends BaseActivity {
     ImageView rightImg;
     @BindView(R.id.title_name)
     TextView titleName;
+    @BindView(R.id.refreshLayout)
+    SmartRefreshLayout refreshLayout;
 
     @Override
     protected int getLayoutId() {
@@ -84,6 +91,7 @@ public class SetMealListActivity extends BaseActivity {
         mAdapter.setEmptyView(mEmptyView);
         recyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
+        refreshLayout.setEnableLoadMore(false);
         initListener();
     }
 
@@ -93,7 +101,7 @@ public class SetMealListActivity extends BaseActivity {
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Intent intent = new Intent(SetMealListActivity.this, SetMealDetailActivity.class);
                 intent.putExtra(SetMealDetailActivity.SETMEAL_ID, setMealInfoList.get(position).getSmId());
-                startActivityForResult(intent, REQUEST_CODE);
+                startActivityForResult(intent, EDIT_REQUEST_CODE);
             }
         });
 
@@ -108,6 +116,13 @@ public class SetMealListActivity extends BaseActivity {
                 mAdapter.setNewData(setMealInfoList);
                 mAdapter.notifyItemChanged(position);
                 update(setMealInfoList.get(position).getIsShelf(), setMealInfoList.get(position).getSmId());
+            }
+        });
+
+        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                initData();
             }
         });
     }
@@ -174,7 +189,7 @@ public class SetMealListActivity extends BaseActivity {
             case R.id.right_button:
                 Intent intent = new Intent(SetMealListActivity.this, EditSetMealActivity.class);
                 intent.putExtra(EditSetMealActivity.MERCHANTS_ID, merchantsId);
-                startActivity(intent);
+                startActivityForResult(intent, ADD_REQUEST_CODE);
                 break;
         }
     }
@@ -183,7 +198,7 @@ public class SetMealListActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            if (requestCode == REQUEST_CODE) {
+            if (requestCode == EDIT_REQUEST_CODE || requestCode == ADD_REQUEST_CODE) {
                 initData();
             }
         }

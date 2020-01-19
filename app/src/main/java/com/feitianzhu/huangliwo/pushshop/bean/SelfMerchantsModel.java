@@ -1,6 +1,7 @@
 package com.feitianzhu.huangliwo.pushshop.bean;
 
 import com.chad.library.adapter.base.entity.MultiItemEntity;
+import com.feitianzhu.huangliwo.model.MerchantsEarnRulesInfo;
 
 import java.util.List;
 
@@ -12,10 +13,19 @@ import java.util.List;
  * email: 694125155@qq.com
  */
 public class SelfMerchantsModel implements MultiItemEntity {
-    public static final int OFFLINE_TYPE = 1;
-    public static final int ONLINE_TYPE = 2;
+    public static final int RULES_TYPE = 1;
+    public static final int ORDER_TYPE = 2;
     private int type;
-    private String orderInfo;
+
+    private MerchantsEarnRulesInfo.MerchantsEarnRulesModel merchantsEarnRulesModel;
+
+    public MerchantsEarnRulesInfo.MerchantsEarnRulesModel getMerchantsEarnRulesModel() {
+        return merchantsEarnRulesModel;
+    }
+
+    public void setMerchantsEarnRulesModel(MerchantsEarnRulesInfo.MerchantsEarnRulesModel merchantsEarnRulesModel) {
+        this.merchantsEarnRulesModel = merchantsEarnRulesModel;
+    }
 
     public SelfMerchantsModel(int type) {
         this.type = type;
@@ -24,13 +34,5 @@ public class SelfMerchantsModel implements MultiItemEntity {
     @Override
     public int getItemType() {
         return type;
-    }
-
-    public String getOrderInfo() {
-        return orderInfo;
-    }
-
-    public void setOrderInfo(String orderInfo) {
-        this.orderInfo = orderInfo;
     }
 }

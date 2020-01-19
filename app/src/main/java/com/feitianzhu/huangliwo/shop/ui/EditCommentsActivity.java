@@ -52,14 +52,13 @@ import static com.feitianzhu.huangliwo.common.Constant.USERID;
  * */
 public class EditCommentsActivity extends BaseActivity {
     private static final int REQUEST_CODE_CHOOSE = 1000;
-    public static final String ORDER_DATA = "order_data";
+    public static final String EVALUATE_DATA = "evaluate_data";
     private int maxSize = 3;
     private boolean isAdd = false; //是否还可以添加图片
     private EditCommentAdapter mAdapter;
     private List<MultiItemComment> multiItemCommentList = new ArrayList<>();
     private List<String> mSelected = new ArrayList<>();
     private EvaluateMode evaluateMode;
-    private GoodsOrderInfo.GoodsOrderListBean goodsOrderListBean;
     @BindView(R.id.title_name)
     TextView titleName;
     @BindView(R.id.right_text)
@@ -83,7 +82,7 @@ public class EditCommentsActivity extends BaseActivity {
         titleName.setText("评价");
         rightText.setText("发布");
         rightText.setVisibility(View.VISIBLE);
-        goodsOrderListBean = (GoodsOrderInfo.GoodsOrderListBean) getIntent().getSerializableExtra(ORDER_DATA);
+        evaluateMode = (EvaluateMode) getIntent().getSerializableExtra(EVALUATE_DATA);
         MultiItemComment comment = new MultiItemComment(MultiItemComment.upImg);
         comment.setId(R.mipmap.g01_01shangchuan);
         multiItemCommentList.add(comment);
@@ -222,10 +221,6 @@ public class EditCommentsActivity extends BaseActivity {
                     return;
                 }
 
-                evaluateMode = new EvaluateMode();
-                evaluateMode.setGoodId(goodsOrderListBean.getGoodId());
-                evaluateMode.setOrderNo(goodsOrderListBean.getOrderNo());
-                evaluateMode.setUserId(Integer.valueOf(userId));
                 evaluateMode.setContent(editContent.getText().toString());
                 String json = new Gson().toJson(evaluateMode);
 
@@ -237,7 +232,12 @@ public class EditCommentsActivity extends BaseActivity {
                         files.put(name, new File(allSelect.get(i)));
                     }
                 }
-                PostFormBuilder postForm = OkHttpUtils.post().url(Urls.EVALUATE_ORDER);
+                PostFormBuilder postForm = OkHttpUtils.post();
+                if (evaluateMode.getMerchantId() != 0) {
+                    postForm.url(Urls.EVALUATE_SETMEAL_ORDER);
+                } else {
+                    postForm.url(Urls.EVALUATE_ORDER);
+                }
                 if (files.size() > 0) {
                     postForm.addFiles("files", files);
                 } else {

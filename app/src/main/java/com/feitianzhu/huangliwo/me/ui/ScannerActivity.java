@@ -16,6 +16,10 @@ import com.feitianzhu.huangliwo.common.base.LazyWebActivity;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.me.helper.ImageUtil;
 import com.feitianzhu.huangliwo.me.ui.totalScore.MineQrcodeActivity;
+import com.feitianzhu.huangliwo.pushshop.MyPaymentActivity;
+import com.feitianzhu.huangliwo.pushshop.RecordOrderActivity;
+import com.feitianzhu.huangliwo.pushshop.bean.PaymentInfo;
+import com.feitianzhu.huangliwo.shop.ShopDao;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.gyf.immersionbar.ImmersionBar;
 import com.uuzuche.lib_zxing.activity.CaptureFragment;
@@ -32,7 +36,8 @@ import butterknife.OnClick;
  */
 
 public class ScannerActivity extends BaseActivity {
-
+    public static final String IS_MERCHANTS = "isMerchants";
+    private int isMerchants;
     @BindView(R.id.textview)
     TextView mTextview;
     @BindView(R.id.tv_title)
@@ -55,6 +60,7 @@ public class ScannerActivity extends BaseActivity {
                 .statusBarDarkFont(true, 0.2f)
                 .statusBarColor(R.color.bg_yellow)
                 .init();
+        isMerchants = getIntent().getIntExtra(IS_MERCHANTS, 0);
         title.setText("扫一扫");
         tvRight.setText("相册");
         title.setVisibility(View.VISIBLE);
@@ -121,31 +127,43 @@ public class ScannerActivity extends BaseActivity {
         }
     };
 
-
     private void checkUrl(String result) {
         Intent intent = null;
-        if (result.contains(Constant.CHECK_URL_HEAD)) {  //.判断是否是当前服务器地址的前缀
-            if (result.contains("type=1")) { //商户
-               /* intent = new Intent(ScannerActivity.this, ShopsPayActivity.class);
-                String merchantId = getStringByUrl(result, "merchantId");
-                intent.putExtra("merchantId", merchantId);
-                startActivity(intent);
-                finish();*/
-            } else if (result.contains("type=2")) { //跳转进入到商户详情页
-              /*  intent = new Intent(ScannerActivity.this, ShopDetailActivity.class);
-                String otherId = getStringByUrl(result, "userId");
-                intent.putExtra("otherId", otherId);
-                startActivity(intent);
-                finish();*/
-            }
+        if (isUrl(result)) {
+            intent = new Intent(ScannerActivity.this, LazyWebActivity.class);
+            intent.putExtra(Constant.URL, result);
+            intent.putExtra(Constant.H5_TITLE, "扫描二维码");
+            startActivity(intent);
+            finish();
         } else {
-            if (isUrl(result)) {
-                //跳转到webViewnull
-                intent = new Intent(ScannerActivity.this, LazyWebActivity.class);
-                intent.putExtra(Constant.URL, result);
-                intent.putExtra(Constant.H5_TITLE, "扫描二维码");
+            if (result.contains("-")) {
+              /*
+               录单页面
+              * */
+                if (isMerchants != 2) {
+                    ToastUtils.showShortToast("您不是商户不可录单");
+                    finish();
+                } else {
+                    String[] strings = result.split("-");
+                    if (strings[0].length() == 12) {
+                        intent = new Intent(ScannerActivity.this, RecordOrderActivity.class);
+                        intent.putExtra(RecordOrderActivity.SET_MEAL_CODE, strings[0]);
+                        intent.putExtra(RecordOrderActivity.MERCHANTS_ID, strings[1]);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        ToastUtils.showShortToast("无法识别此二维码!!");
+                    }
+                }
+            } else if (result.contains("merchantId")) {
+                 /*
+               收款页面
+              * */
+                intent = new Intent(ScannerActivity.this, MyPaymentActivity.class);
+                intent.putExtra(MyPaymentActivity.PAYMENT_INFO, result);
                 startActivity(intent);
                 finish();
+
             } else {
                 ToastUtils.showShortToast("无法识别此二维码!!");
             }

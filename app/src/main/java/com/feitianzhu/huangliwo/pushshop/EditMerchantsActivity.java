@@ -1,7 +1,9 @@
 package com.feitianzhu.huangliwo.pushshop;
 
 import android.os.CountDownTimer;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -159,7 +161,7 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
     @Override
     protected void initData() {
         OkHttpUtils.get()
-                .url(Urls.GET_SHOPS_TYPE)
+                .url(Urls.GET_MERCHANTS_TYPE)
                 .addParams(ACCESSTOKEN, token)
                 .addParams(USERID, userId)
                 .build()
@@ -177,6 +179,26 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
     }
 
     public void initListener() {
+        editAddress.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (mCity != null && !TextUtils.isEmpty(mCity.getName())) {
+                    geoCoder.geocode(new GeoCodeOption()
+                            .city(mCity.getName())
+                            .address(mCity.getName() + mDistrict.getName() + editAddress.getText().toString().trim()));
+                }
+            }
+        });
 
     }
 
@@ -320,16 +342,21 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
             ToastUtils.showShortToast("请填写商铺地址");
             return;
         }
-        geoCoder.geocode(new GeoCodeOption()
-                .city(mCity.getName())
-                .address(mCity.getName() + mDistrict.getName() + address));
-
         if (TextUtils.isEmpty(email)) {
             ToastUtils.showShortToast("请填写邮箱地址");
             return;
         }
+        if (!StringUtils.isEmail(email)) {
+            ToastUtils.showShortToast("请填写正确的邮箱地址");
+            return;
+        }
+
         if (TextUtils.isEmpty(percentage)) {
             ToastUtils.showShortToast("请填写折扣比例");
+            return;
+        }
+        if (Integer.valueOf(percentage) > 100) {
+            ToastUtils.showShortToast("折扣比例不能大于100%");
             return;
         }
         if (TextUtils.isEmpty(merchantsIntroduce)) {
@@ -421,6 +448,7 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
                     public void onResponse(Object response, int id) {
                         goneloadDialog();
                         ToastUtils.showShortToast("创建成功等待审核");
+                        setResult(RESULT_OK);
                         finish();
                     }
                 });
@@ -444,6 +472,11 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
                 mCity = city;
                 mDistrict = district;
                 tvAreaAddress.setText(province.getName() + city.getName() + district.getName());
+                if (!TextUtils.isEmpty(editAddress.getText().toString().trim())) {
+                    geoCoder.geocode(new GeoCodeOption()
+                            .city(mCity.getName())
+                            .address(mCity.getName() + mDistrict.getName() + editAddress.getText().toString().trim()));
+                }
             }
 
             @Override

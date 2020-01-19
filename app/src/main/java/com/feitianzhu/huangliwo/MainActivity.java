@@ -322,14 +322,7 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
     private PermissionListener listener = new PermissionListener() {
         @Override
         public void onSucceed(int requestCode, List<String> grantedPermissions) {
-            // 权限申请成功回调。
 
-            // 这里的requestCode就是申请时设置的requestCode。
-            // 和onActivityResult()的requestCode一样，用来区分多个不同的请求。
-            if (requestCode == 200) {
-                Intent intent = new Intent(MainActivity.this, ScannerActivity.class);
-                startActivity(intent);
-            }
         }
 
         @Override
@@ -465,7 +458,7 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
         new XPopup.Builder(MainActivity.this)
                 .enableDrag(false)
                 .asCustom(new CustomNerYearPopView(MainActivity.this)
-                        .setImgUrl(popupBean.getImgUrl())
+                        .setImgUrl(popupBean)
                         .setOnConfirmClickListener(new CustomNerYearPopView.OnConfirmClickListener() {
                             @Override
                             public void onConfirm() {

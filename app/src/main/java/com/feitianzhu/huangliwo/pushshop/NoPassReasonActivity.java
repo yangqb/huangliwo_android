@@ -77,7 +77,6 @@ public class NoPassReasonActivity extends BaseActivity {
             case R.id.right_button:
                 intent = new Intent(NoPassReasonActivity.this, ProblemFeedbackActivity.class);
                 startActivity(intent);
-                finish();
                 break;
         }
     }

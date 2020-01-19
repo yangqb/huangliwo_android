@@ -36,9 +36,13 @@ import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.huangliwo.common.Constant.USERID;
 
 public class EditApplyRefundActivity extends BaseActivity {
-    public static final String ORDER_DATA = "order_data";
-    private GoodsOrderInfo.GoodsOrderListBean orderListBean;
-    private String[] strings = new String[]{"我不想要了", "选错规格", "填错地址或信息", "其他",};
+    public static final String ORDER_NO = "order_no";
+    public static final String ORDER_AMOUNT = "order_amount";
+    public static final String ORDER_TYPE = "order_type";
+    private String orderNo;
+    private double amount;
+    private int type;
+    private String[] strings;
     @BindView(R.id.title_name)
     TextView titleName;
     @BindView(R.id.right_text)
@@ -64,13 +68,16 @@ public class EditApplyRefundActivity extends BaseActivity {
         titleName.setText("申请退款");
         rightText.setText("提交");
         rightText.setVisibility(View.VISIBLE);
-        orderListBean = (GoodsOrderInfo.GoodsOrderListBean) getIntent().getSerializableExtra(ORDER_DATA);
-        str2 = "¥ ";
-        if (orderListBean != null) {
-            str3 = String.format(Locale.getDefault(), "%.2f", orderListBean.getAmount());
+        orderNo = getIntent().getStringExtra(ORDER_NO);
+        amount = getIntent().getDoubleExtra(ORDER_AMOUNT, 0.00);
+        type = getIntent().getIntExtra(ORDER_TYPE, 0);
+        if (type == 0) {
+            strings = new String[]{"我不想要了", "选错规格", "填错地址或信息", "其他"};
         } else {
-            str3 = "0.00";
+            strings = new String[]{"我不想要了", "点错了", "支付遇到问题", "其他"};
         }
+        str2 = "¥ ";
+        str3 = String.format(Locale.getDefault(), "%.2f", amount);
         setSpannableString();
     }
 
@@ -96,14 +103,19 @@ public class EditApplyRefundActivity extends BaseActivity {
                 if (TextUtils.isEmpty(tvReason.getText().toString())) {
                     ToastUtils.showShortToast("请选择退款原因");
                 } else {
-                    refund(orderListBean.getOrderNo(), tvReason.getText().toString());
+                    if (type == 0) {
+                        refundGoodsOrder(orderNo, tvReason.getText().toString());
+                    } else {
+                        refundSetMealOrder(orderNo, tvReason.getText().toString());
+                    }
+
                 }
                 break;
         }
 
     }
 
-    public void refund(String orderNo, String reason) {
+    public void refundGoodsOrder(String orderNo, String reason) {
         OkHttpUtils.post()
                 .url(Urls.REFUND_ORDER)
                 .addParams(ACCESSTOKEN, token)
@@ -126,6 +138,35 @@ public class EditApplyRefundActivity extends BaseActivity {
                     @Override
                     public void onResponse(Object response, int id) {
                         ToastUtils.showShortToast("申请成功");
+                        setResult(RESULT_OK);
+                        finish();
+                    }
+                });
+    }
+
+    public void refundSetMealOrder(String orderNo, String reason) {
+        OkHttpUtils.post()
+                .url(Urls.CANCEL_SETMEAL_ORDER)
+                .addParams(ACCESSTOKEN, token)
+                .addParams(USERID, userId)
+                .addParams("orderNo", orderNo)
+                .addParams("returnReason", reason)
+                .addParams("status", "3")
+                .build()
+                .execute(new Callback() {
+                    @Override
+                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
+                        return mData;
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        ToastUtils.showShortToast(e.getMessage());
+                    }
+
+                    @Override
+                    public void onResponse(Object response, int id) {
+                        ToastUtils.showShortToast("退款成功");
                         setResult(RESULT_OK);
                         finish();
                     }

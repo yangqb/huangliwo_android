@@ -22,7 +22,7 @@ import com.feitianzhu.huangliwo.home.entity.ShopAndMerchants;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
 import com.feitianzhu.huangliwo.model.SearchGoodsMode;
-import com.feitianzhu.huangliwo.shop.ShopSetMealActivity;
+import com.feitianzhu.huangliwo.shop.ShopMerchantsDetailActivity;
 import com.feitianzhu.huangliwo.shop.ShopsDetailActivity;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
@@ -187,7 +187,7 @@ public class SearchShopActivity extends BaseActivity {
                     startActivity(intent);
                 } else {
                     //套餐详情页
-                    Intent intent = new Intent(SearchShopActivity.this, ShopSetMealActivity.class);
+                    Intent intent = new Intent(SearchShopActivity.this, ShopMerchantsDetailActivity.class);
                     startActivity(intent);
 
                 }

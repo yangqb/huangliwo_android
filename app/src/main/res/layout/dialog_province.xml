@@ -63,6 +63,14 @@
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:layout_weight="1" />
+
+        <kankan.wheel.widget.WheelView
+            android:id="@+id/wv_area"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:visibility="gone"/>
     </LinearLayout>
 
 </LinearLayout>

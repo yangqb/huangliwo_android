@@ -50,13 +50,13 @@ public class CenterAdapter extends BaseQuickAdapter<Integer, BaseViewHolder> {
                 textView.setText("成为会员");
                 break;
             case 5:
-                textView.setText("银行卡");
+                textView.setText("绑定账号");
                 break;
             case 6:
                 textView.setText("我的收藏");
                 break;
             case 7:
-                textView.setText("推店");
+                textView.setText("推店赚钱");
                 break;
             case 8:
                 textView.setText("分享");

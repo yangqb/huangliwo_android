@@ -33,11 +33,21 @@ public class SetMealInfo implements Serializable {
     private String imgs;
     private int isShelf;
     private int merchantId;
+    private String userId;
     private double price;
     private int smId;
     private String smName;
     private String updateTime;
     private String useRules;
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     private List<SingleGoodsModel> singleList;
 
     public List<SingleGoodsModel> getSingleList() {

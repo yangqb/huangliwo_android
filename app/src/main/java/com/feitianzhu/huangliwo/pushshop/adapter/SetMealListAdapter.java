@@ -45,7 +45,11 @@ public class SetMealListAdapter extends BaseQuickAdapter<SetMealInfo, BaseViewHo
             helper.setText(R.id.tvStatus, "下架");
         }
         String[] imgs = item.getImgs().split(",");
-        Glide.with(mContext).load(imgs[0]).apply(new RequestOptions().error(R.mipmap.g10_04weijiazai).placeholder(R.mipmap.g10_04weijiazai)).into((RoundedImageView) helper.getView(R.id.imageView));
+        if (item.getImgs().contains(",")) {
+            Glide.with(mContext).load(imgs[0]).apply(new RequestOptions().error(R.mipmap.g10_04weijiazai).placeholder(R.mipmap.g10_04weijiazai)).into((RoundedImageView) helper.getView(R.id.imageView));
+        } else {
+            Glide.with(mContext).load(item.getImgs()).apply(new RequestOptions().error(R.mipmap.g10_04weijiazai).placeholder(R.mipmap.g10_04weijiazai)).into((RoundedImageView) helper.getView(R.id.imageView));
+        }
         helper.addOnClickListener(R.id.tvStatus);
     }
 

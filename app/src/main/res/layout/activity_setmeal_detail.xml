@@ -15,12 +15,16 @@
             android:layout_height="match_parent">
 
             <LinearLayout
+                android:id="@+id/ll_parent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingBottom="200dp"
                 android:layout_margin="@dimen/dp_10"
                 android:background="@drawable/bg_ffffff_r5"
                 android:orientation="vertical"
-                android:padding="@dimen/dp_10">
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp"
+                android:paddingTop="10dp">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recyclerView"
@@ -123,6 +127,7 @@
                         android:layout_toRightOf="@id/tag11"
                         android:background="@null"
                         android:gravity="right"
+                        android:inputType="number"
                         android:hint="请输入套餐价格"
                         android:textColor="@color/color_333333"
                         android:textColorHint="@color/color_999999"
@@ -250,7 +255,7 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@mipmap/a01_04jia" />
+                            android:src="@mipmap/i01_05jia" />
                     </RelativeLayout>
                 </RelativeLayout>
 
@@ -293,8 +298,7 @@
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recyclerView2"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="100dp">
+                    android:layout_height="wrap_content">
 
                 </android.support.v7.widget.RecyclerView>
             </LinearLayout>

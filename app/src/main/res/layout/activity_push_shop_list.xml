@@ -22,7 +22,7 @@
             android:layout_alignParentStart="true"
             android:background="@drawable/selecter_push_shop"
             android:gravity="center"
-            android:text="待审核(3)"
+            android:text="待审核(0)"
             android:textColor="@color/color_333333"
             android:textSize="16sp" />
 
@@ -33,7 +33,7 @@
             android:layout_centerHorizontal="true"
             android:background="@drawable/selecter_push_shop"
             android:gravity="center"
-            android:text="已通过(3)"
+            android:text="已通过(0)"
             android:textColor="@color/color_333333"
             android:textSize="16sp" />
 
@@ -44,7 +44,7 @@
             android:layout_alignParentEnd="true"
             android:background="@drawable/selecter_push_shop"
             android:gravity="center"
-            android:text="未通过(3)"
+            android:text="未通过(0)"
             android:textColor="@color/color_333333"
             android:textSize="16sp" />
 

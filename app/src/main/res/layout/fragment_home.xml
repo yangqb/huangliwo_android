@@ -59,10 +59,10 @@
                                 android:layout_weight="1">
 
                                 <ImageView
-                                    android:layout_width="63dp"
-                                    android:layout_height="63dp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
                                     android:layout_centerInParent="true"
-                                    android:src="@mipmap/b_01shangjia" />
+                                    android:src="@mipmap/a02_01shangjia" />
                             </RelativeLayout>
 
                             <RelativeLayout
@@ -72,10 +72,10 @@
                                 android:layout_weight="1">
 
                                 <ImageView
-                                    android:layout_width="63dp"
-                                    android:layout_height="63dp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
                                     android:layout_centerInParent="true"
-                                    android:src="@mipmap/b_02shangcheng" />
+                                    android:src="@mipmap/a02_02shangcheng" />
                             </RelativeLayout>
 
                             <RelativeLayout
@@ -85,10 +85,10 @@
                                 android:layout_weight="1">
 
                                 <ImageView
-                                    android:layout_width="63dp"
-                                    android:layout_height="63dp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
                                     android:layout_centerInParent="true"
-                                    android:src="@mipmap/b_03jipiao" />
+                                    android:src="@mipmap/a02_03jipiao" />
                             </RelativeLayout>
 
                             <RelativeLayout
@@ -98,10 +98,10 @@
                                 android:layout_weight="1">
 
                                 <ImageView
-                                    android:layout_width="63dp"
-                                    android:layout_height="63dp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
                                     android:layout_centerInParent="true"
-                                    android:src="@mipmap/b_04jinrong" />
+                                    android:src="@mipmap/a02_04jinrong" />
                             </RelativeLayout>
 
                             <RelativeLayout
@@ -111,10 +111,10 @@
                                 android:layout_weight="1">
 
                                 <ImageView
-                                    android:layout_width="63dp"
-                                    android:layout_height="63dp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
                                     android:layout_centerInParent="true"
-                                    android:src="@mipmap/b_05lvyou" />
+                                    android:src="@mipmap/a02_05lvyou" />
                             </RelativeLayout>
 
 

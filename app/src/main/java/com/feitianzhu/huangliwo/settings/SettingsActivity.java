@@ -18,6 +18,8 @@ import com.feitianzhu.huangliwo.login.LoginActivity;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.UpdateAppModel;
 import com.feitianzhu.huangliwo.model.UserAuth;
+import com.feitianzhu.huangliwo.pushshop.MySelfMerchantsActivity;
+import com.feitianzhu.huangliwo.pushshop.ProblemFeedbackActivity;
 import com.feitianzhu.huangliwo.shop.ShopDao;
 import com.feitianzhu.huangliwo.utils.DataCleanUtils;
 import com.feitianzhu.huangliwo.utils.HProgressDialogUtils;
@@ -168,7 +170,7 @@ public class SettingsActivity extends BaseActivity {
 
                 break;
             case R.id.rl_feedback:
-                startActivity(new Intent(this, FeedbackActivity.class));
+                startActivity(new Intent(SettingsActivity.this, ProblemFeedbackActivity.class));
                 break;
             case R.id.rl_clear_cache:
                 DataCleanUtils.cleanApplicationData(this);
