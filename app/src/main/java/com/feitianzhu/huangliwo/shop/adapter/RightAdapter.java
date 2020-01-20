@@ -43,7 +43,7 @@ public class RightAdapter extends BaseMultiItemQuickAdapter<MultipleItem, BaseVi
                 helper.setText(R.id.distance, item.getMerchantsModel().getDistinceStr());
                 Glide.with(mContext).load(item.getMerchantsModel().getLogo())
                         .apply(new RequestOptions().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai).dontAnimate()).into((RoundedImageView) helper.getView(R.id.image));
-                String discount = String.valueOf((1 - item.getMerchantsModel().getDiscount()) * 100);
+                String discount = String.valueOf((100 - item.getMerchantsModel().getDiscount()*100));
                 helper.setText(R.id.tv_rebate, "返" + discount + "%");
                /* if (item.getMerchantsModel().getDiscount() == 100) {
                     helper.setVisible(R.id.ll_rebate, false);

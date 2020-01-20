@@ -76,7 +76,7 @@ android {
         applicationId "com.feitianzhu.huangliwo"
         minSdkVersion globalConfiguration.androidMinSdkVersion
         targetSdkVersion globalConfiguration.androidTargetSdkVersion
-        versionCode 10
+        versionCode 11
         multiDexEnabled true
         versionName "1.0.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"

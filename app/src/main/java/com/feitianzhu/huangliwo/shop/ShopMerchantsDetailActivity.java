@@ -111,6 +111,8 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
     private int merchantsId;
     private String token;
     private String userId;
+    @BindView(R.id.title_name)
+    TextView titleName;
 
     @Override
     protected int getLayoutId() {
@@ -119,6 +121,7 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+        titleName.setText("商铺详情");
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         shareImg.setVisibility(View.VISIBLE);
@@ -132,7 +135,7 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
             merchantsId = merchantsDetail.getMerchantId();
             shopName.setText(merchantsDetail.getMerchantName());
             address.setText(merchantsDetail.getCityName() + merchantsDetail.getAreaName() + merchantsDetail.getDtlAddr());
-            String discount = String.valueOf((1 - merchantsDetail.getDiscount()) * 100);
+            String discount = String.valueOf((100 - merchantsDetail.getDiscount() * 100));
             tvRebate.setText("返" + discount + "%");
             getSetMealList(merchantsId);
             String urlLogo = merchantsDetail.getLogo();
@@ -160,6 +163,7 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
 
             }
         });
+        mRecyclerView.setNestedScrollingEnabled(false);
         mAdapter = new ShopDetailAdapter(multipleItemList);
         mAdapter.setEmptyView(mEmptyView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));

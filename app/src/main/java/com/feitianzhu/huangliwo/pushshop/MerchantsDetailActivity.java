@@ -235,12 +235,12 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
             }
 
             if (merchantsBean.getExamineModel() != null) {
-                if (merchantsBean.getExamineModel().getBlStatus() == 0 || merchantsBean.getExamineModel().getCardStatus() == 0) {
+                if (merchantsBean.getExamineModel().getBlStatus() == 0 || merchantsBean.getExamineModel().getCardStatus() == 0 || merchantsBean.getExamineModel().getDcStatus() == 0) {
                     btnSubmit.setVisibility(View.GONE);
                 } else {
                     btnSubmit.setVisibility(View.VISIBLE);
                 }
-                if (merchantsBean.getExamineModel().getBlStatus() == -1) {
+              /*  if (merchantsBean.getExamineModel().getBlStatus() == -1) {
                     businessStatus.setText("审核被拒：" + (merchantsBean.getExamineModel().getBlReason() == null ? "" : merchantsBean.getExamineModel().getBlReason()));
                 } else if (merchantsBean.getExamineModel().getBlStatus() == 0) {
                     businessStatus.setText("审核中");
@@ -251,15 +251,15 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
                 } else if (merchantsBean.getExamineModel().getCardStatus() == 0) {
                     idCardFrontStatus.setText("审核中");
                     idCardBackStatus.setText("审核中");
-                }
-                idCardFrontStatus.setVisibility(View.VISIBLE);
+                }*/
+                /*idCardFrontStatus.setVisibility(View.VISIBLE);
                 idCardBackStatus.setVisibility(View.VISIBLE);
-                businessStatus.setVisibility(View.VISIBLE);
+                businessStatus.setVisibility(View.VISIBLE);*/
             } else {
-                btnSubmit.setVisibility(View.VISIBLE);
-                idCardFrontStatus.setVisibility(View.GONE);
+               btnSubmit.setVisibility(View.VISIBLE);
+                /*idCardFrontStatus.setVisibility(View.GONE);
                 idCardBackStatus.setVisibility(View.GONE);
-                businessStatus.setVisibility(View.GONE);
+                businessStatus.setVisibility(View.GONE);*/
             }
 
             Glide.with(mContext).load(merchantsBean.getLogo()).apply(new RequestOptions().dontAnimate().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai)).into(logoImg);
@@ -583,9 +583,9 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
         }
         merchantInfo.setMerchantId(String.valueOf(merchantsBean.getMerchantId()));
         merchantInfo.setMerchantName(merchantsName);
-        if (!merchantsBean.getRegisterNo().equals(businessLicenseNo)) {
+      /*  if (!merchantsBean.getRegisterNo().equals(businessLicenseNo)) {
             merchantInfo.setRegisterNo(businessLicenseNo);
-        }
+        }*/
         merchantInfo.setClsId(clsId);
         merchantInfo.setClsName(clsName);
         merchantInfo.setPhone(phone);

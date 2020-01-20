@@ -146,11 +146,13 @@ public class SetMealListActivity extends BaseActivity {
 
                     @Override
                     public void onError(Call call, Exception e, int id) {
+                        refreshLayout.finishRefresh(false);
                         ToastUtils.showShortToast(e.getMessage());
                     }
 
                     @Override
                     public void onResponse(Object response, int id) {
+                        refreshLayout.finishRefresh();
                         ToastUtils.showShortToast("修改成功");
                     }
                 });

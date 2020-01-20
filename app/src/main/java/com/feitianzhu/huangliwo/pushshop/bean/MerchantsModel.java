@@ -458,6 +458,15 @@ public class MerchantsModel implements Serializable {
         private int merchantId;//(integer, optional): 商户id ,
         private String merchantName;// (string, optional): 商户名称 ,
         private String updateDate;//(string, optional)
+        private int dcStatus;  //折扣比例审核
+
+        public int getDcStatus() {
+            return dcStatus;
+        }
+
+        public void setDcStatus(int dcStatus) {
+            this.dcStatus = dcStatus;
+        }
 
         public String getBackCardImg() {
             return backCardImg;

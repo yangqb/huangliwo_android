@@ -112,9 +112,9 @@ public class MySelfMerchantsListActivity extends BaseActivity {
                             tvDate.setText("创建日期：" + merchantsBean.getCreateDate());
                             Glide.with(mContext).load(merchantsBean.getLogo()).apply(new RequestOptions().error(R.mipmap.b08_01touxiang).placeholder(R.mipmap.b08_01touxiang)).into(merchantsLogo);
                             if (merchantsBean.getExamineModel() != null) {
-                                if (merchantsBean.getExamineModel().getBlStatus() == -1 || merchantsBean.getExamineModel().getCardStatus() == -1) {
+                                if (merchantsBean.getExamineModel().getBlStatus() == -1 || merchantsBean.getExamineModel().getCardStatus() == -1 || merchantsBean.getExamineModel().getDcStatus() == -1) {
                                     tvStatus.setText("审核拒绝");
-                                } else if (merchantsBean.getExamineModel().getBlStatus() == 0 || merchantsBean.getExamineModel().getCardStatus() == 0) {
+                                } else if (merchantsBean.getExamineModel().getBlStatus() == 0 || merchantsBean.getExamineModel().getCardStatus() == 0 || merchantsBean.getExamineModel().getDcStatus() == 0) {
                                     tvStatus.setText("审核中");
                                 }
                             }
