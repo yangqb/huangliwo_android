@@ -155,7 +155,7 @@ public class ScannerActivity extends BaseActivity {
                         ToastUtils.showShortToast("无法识别此二维码!!");
                     }
                 }
-            } else if (result.contains("merchantId")) {
+            } else if (result.contains("merchantId") && result.contains("receivables")) {
                  /*
                收款页面
               * */

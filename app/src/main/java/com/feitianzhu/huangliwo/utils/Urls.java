@@ -7,8 +7,8 @@ package com.feitianzhu.huangliwo.utils;
 public class Urls {
 
 
-    //private static final String BASE_URL = "http://www.huangliwo.top:8088/"; //正式环境
-    private static final String BASE_URL = "http://39.106.65.35:8088/"; //测试地址
+    private static final String BASE_URL = "http://www.huangliwo.top:8088/"; //正式环境
+    //private static final String BASE_URL = "http://39.106.65.35:8088/"; //测试地址
     //private static final String BASE_URL = "http://192.168.0.21:8089/";//钟工本地地址
     //private static final String BASE_URL = "http://192.168.0.15:8089/"; //周工本地地址
     /**
@@ -191,6 +191,16 @@ public class Urls {
      * 取消提现
      * */
     public static final String WITHDRAW_CANCEL = BASE_URL + "fhwl/withdrawal/cancel";
+
+    /*
+     * 绑定支付宝账号
+     * */
+    public static final String BING_ALI_ACCOUNT = BASE_URL + "fhwl/user/bankcard/addAliAccount";
+
+    /*
+     * 获取支付宝账号
+     * */
+    public static final String GET_ALI_ACCOUNT = BASE_URL + "fhwl/user/bankcard/getAliAccount";
 
     /*
      * 新增套餐

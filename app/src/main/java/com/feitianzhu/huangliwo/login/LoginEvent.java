@@ -7,5 +7,5 @@ package com.feitianzhu.huangliwo.login;
  */
 
 public enum LoginEvent {
-    EDITOR_INFO,BUY_VIP
+    EDITOR_INFO, BUY_VIP, BINDING_ALI_ACCOUNT
 }

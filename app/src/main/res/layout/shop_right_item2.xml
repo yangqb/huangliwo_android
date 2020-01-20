@@ -13,10 +13,7 @@
         android:layout_marginTop="@dimen/dp_10"
         android:background="@drawable/bg_ffffff_r5"
         android:orientation="vertical"
-        android:paddingLeft="@dimen/dp_10"
-        android:paddingTop="@dimen/dp_10"
-        android:paddingRight="@dimen/dp_10"
-        android:paddingBottom="@dimen/dp_10">
+        android:padding="10dp">
 
         <RelativeLayout
             android:layout_width="match_parent"

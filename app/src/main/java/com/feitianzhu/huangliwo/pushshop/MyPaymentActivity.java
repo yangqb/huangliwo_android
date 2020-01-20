@@ -15,6 +15,7 @@ import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.PayInfo;
 import com.feitianzhu.huangliwo.model.WXModel;
+import com.feitianzhu.huangliwo.pushshop.bean.MerchantsModel;
 import com.feitianzhu.huangliwo.pushshop.bean.PaymentInfo;
 import com.feitianzhu.huangliwo.utils.EditTextUtils;
 import com.feitianzhu.huangliwo.utils.PayUtils;
@@ -52,6 +53,7 @@ import static com.feitianzhu.huangliwo.common.Constant.USERID;
  */
 public class MyPaymentActivity extends BaseActivity {
     public static final String PAYMENT_INFO = "payment_info";
+    private MerchantsModel merchantsBean;
     private String payInfo;
     private String payChannel = "wx";
     private String appId = "";
@@ -60,6 +62,7 @@ public class MyPaymentActivity extends BaseActivity {
     private String orderInfo = "";
     private String token;
     private String userId;
+    private String merchantsId;
     @BindView(R.id.title_name)
     TextView titleName;
     @BindView(R.id.weixinPay_icon)
@@ -89,15 +92,33 @@ public class MyPaymentActivity extends BaseActivity {
         EditTextUtils.afterDotTwo(editAmount);
         payInfo = getIntent().getStringExtra(PAYMENT_INFO);
         weiXinIcon.setBackgroundResource(R.mipmap.e01_23xuanzhong);
-        String[] result = payInfo.split("&");
-        String json = result[result.length - 1];
-        paymentInfo = new Gson().fromJson(json, PaymentInfo.class);
-        tvName.setText("付款给" + paymentInfo.getMerchantName());
-        Glide.with(this).load(paymentInfo.getMerchantLogo()).apply(new RequestOptions().error(R.mipmap.g10_04weijiazai).placeholder(R.mipmap.g10_04weijiazai)).into(imgView);
+        String[] result = payInfo.split("=");
+        merchantsId = result[1];
     }
 
     @Override
     protected void initData() {
+        OkHttpUtils.get()
+                .url(Urls.GET_MERCHANTS_DETAIL)
+                .addParams(ACCESSTOKEN, token)
+                .addParams(USERID, userId)
+                .addParams("merchantId", merchantsId + "")
+                .build()
+                .execute(new Callback<MerchantsModel>() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+
+                    }
+
+                    @Override
+                    public void onResponse(MerchantsModel response, int id) {
+                        if (response != null) {
+                            merchantsBean = response;
+                            tvName.setText("付款给" + merchantsBean.getMerchantName());
+                            Glide.with(MyPaymentActivity.this).load(merchantsBean.getLogo()).apply(new RequestOptions().error(R.mipmap.g10_04weijiazai).placeholder(R.mipmap.g10_04weijiazai)).into(imgView);
+                        }
+                    }
+                });
 
     }
 
@@ -150,7 +171,7 @@ public class MyPaymentActivity extends BaseActivity {
                 .addParams(ACCESSTOKEN, token)//
                 .addParams(USERID, userId)//
                 .addParams("appId", appId)  //这个是微信才需要的，
-                .addParams("merchantId", paymentInfo.getMerchantId() + "")
+                .addParams("merchantId", merchantsId)
                 .addParams("channel", payChannel)
                 .addParams("amount", editAmount.getText().toString().trim())
                 .build()

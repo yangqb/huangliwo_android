@@ -38,11 +38,19 @@ public class RightAdapter extends BaseMultiItemQuickAdapter<MultipleItem, BaseVi
     protected void convert(BaseViewHolder helper, MultipleItem item) {
         switch (helper.getItemViewType()) {
             case MultipleItem.MERCHANTS:
-                helper.setText(R.id.merchantsName,item.getMerchantsModel().getMerchantName());
+                helper.setText(R.id.merchantsName, item.getMerchantsModel().getMerchantName());
                 helper.setText(R.id.merchants_introduce, item.getMerchantsModel().getIntroduce());
                 helper.setText(R.id.distance, item.getMerchantsModel().getDistinceStr());
                 Glide.with(mContext).load(item.getMerchantsModel().getLogo())
                         .apply(new RequestOptions().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai).dontAnimate()).into((RoundedImageView) helper.getView(R.id.image));
+                String discount = String.valueOf((1 - item.getMerchantsModel().getDiscount()) * 100);
+                helper.setText(R.id.tv_rebate, "返" + discount + "%");
+               /* if (item.getMerchantsModel().getDiscount() == 100) {
+                    helper.setVisible(R.id.ll_rebate, false);
+                } else {
+                    helper.setVisible(R.id.ll_rebate, true);
+                }*/
+                helper.addOnClickListener(R.id.ll_rebate);
                 break;
             case MultipleItem.GOODS:
                 helper.setText(R.id.tv_category, item.getGoodsListBean().getGoodsName());
@@ -50,11 +58,11 @@ public class RightAdapter extends BaseMultiItemQuickAdapter<MultipleItem, BaseVi
                 helper.setText(R.id.tvContent, item.getGoodsListBean().getSummary());
                 String rebatePv = String.format(Locale.getDefault(), "%.2f", item.getGoodsListBean().getRebatePv());
                 helper.setText(R.id.tv_rebate, "赚¥" + rebatePv);
-                if (item.getGoodsListBean().getRebatePv() == 0) {
+               /* if (item.getGoodsListBean().getRebatePv() == 0) {
                     helper.setVisible(R.id.ll_rebate, false);
                 } else {
                     helper.setVisible(R.id.ll_rebate, true);
-                }
+                }*/
                 helper.addOnClickListener(R.id.ll_rebate);
                 Glide.with(mContext).load(item.getGoodsListBean().getGoodsImg())
                         .apply(new RequestOptions().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai).dontAnimate()).into((RoundedImageView) helper.getView(R.id.image));

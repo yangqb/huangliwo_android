@@ -57,6 +57,8 @@ public class MerchantsPaymentCodeActivity extends BaseActivity {
     TextView tvContent;
     @BindView(R.id.name)
     TextView merchantName;
+    @BindView(R.id.logo)
+    RoundedImageView logoImg;
 
     @Override
     protected int getLayoutId() {
@@ -101,9 +103,10 @@ public class MerchantsPaymentCodeActivity extends BaseActivity {
                     public void onResponse(MerchantsPaymentCodeModel response, int id) {
                         goneloadDialog();
                         if (response != null) {
-                            createCode(response.getQrCodeUrl(), response.getMerchantHeadImg());
+                            createCode(response.getQrCodeUrl());
                             tvContent.setText("扫二维码 向我付款");
                             merchantName.setText(response.getMerchantName());
+                            Glide.with(MerchantsPaymentCodeActivity.this).load(response.getMerchantHeadImg()).apply(new RequestOptions().error(R.mipmap.g10_04weijiazai).placeholder(R.mipmap.g10_04weijiazai)).into(logoImg);
                         } else {
                             ToastUtils.showShortToast("未获取到收款码");
                         }
@@ -111,14 +114,14 @@ public class MerchantsPaymentCodeActivity extends BaseActivity {
                 });
     }
 
-    private void createCode(String url, String logoUrl) {
+    private void createCode(String url) {
         if (TextUtils.isEmpty(url)) {
             ToastUtils.showShortToast("未获取到收款码");
             return;
         }
         Log.e("Test", "-------->" + url);
-        bitmap = CodeUtils.createImage(url, 400, 400, getLogoBitMap(logoUrl));
-        //bitmap = CodeUtils.createImage(url, 400, 400, null);
+        //bitmap = CodeUtils.createImage(url, 400, 400, getLogoBitMap(logoUrl));
+        bitmap = CodeUtils.createImage(url, 400, 400, null);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
         byte[] bytes = baos.toByteArray();

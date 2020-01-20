@@ -18,22 +18,88 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="65dp">
+            android:layout_height="65dp"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
+                android:layout_height="match_parent"
+                android:gravity="center"
                 android:text="姓名"
                 android:textColor="@color/color_333333"
                 android:textSize="16sp" />
 
             <EditText
+                android:id="@+id/edit_name"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@null" />
+                android:background="@null"
+                android:gravity="end|center_vertical"
+                android:hint="请输入真实姓名"
+                android:textColor="@color/color_333333"
+                android:textColorHint="@color/color_999999"
+                android:textSize="16sp" />
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/color_eeeeee" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="支付宝账号"
+                android:textColor="@color/color_333333"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/edit_account"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:gravity="end|center_vertical"
+                android:hint="请输入支付宝账号"
+                android:textColor="@color/color_333333"
+                android:textColorHint="@color/color_999999"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/color_eeeeee" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="再次输入账号"
+                android:textColor="@color/color_333333"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/edit_again_account"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:gravity="end|center_vertical"
+                android:hint="请再次输入支付宝账号"
+                android:textColor="@color/color_333333"
+                android:textColorHint="@color/color_999999"
+                android:textSize="16sp" />
+        </LinearLayout>
 
     </LinearLayout>
 

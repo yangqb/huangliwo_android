@@ -87,12 +87,12 @@ public class MineQrcodeActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        View v = LayoutInflater.from(this).inflate(R.layout.layout_share, null, false);
+        /*View v = LayoutInflater.from(this).inflate(R.layout.layout_share, null, false);
         DisplayMetrics metric = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metric);
         int width = metric.widthPixels;     // 屏幕宽度（像素）
         int height = metric.heightPixels;   // 屏幕高度（像素）
-        ShareImageUtils.layoutView(v, width, height);
+        ShareImageUtils.layoutView(v, width, height);*/
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         mineInfoModel = (MineInfoModel) getIntent().getSerializableExtra(MINE_DATA);
@@ -125,7 +125,8 @@ public class MineQrcodeActivity extends BaseActivity {
 
 
     private void setShowData(MineQRcodeModel response) {
-        Glide.with(this).load(response.getYearImg()).apply(new RequestOptions().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai)).into(GlideUtils.getImageView(this, response.getYearImg(), imageView));
+        //Glide.with(this).load(response.getYearImg()).apply(new RequestOptions().placeholder(R.mipmap.g10_03weijiazai).error(R.mipmap.g10_03weijiazai)).into(GlideUtils.getImageView(this, response.getYearImg(), imageView));
+        Glide.with(this).load(response.getYearImg()).apply(new RequestOptions().placeholder(R.mipmap.g10_03weijiazai).error(R.mipmap.g10_03weijiazai)).into(imageView);
         String qrUrl = response.getLink();
         if (TextUtils.isEmpty(qrUrl)) {
             ToastUtils.showShortToast("未获取到分享地址");

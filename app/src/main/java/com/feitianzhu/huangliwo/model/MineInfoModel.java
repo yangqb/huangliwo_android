@@ -41,6 +41,7 @@ public class MineInfoModel implements Serializable {
      * isMerchantAuth : 1
      * rate : 20
      * userType : 1
+     * isBind是否绑定支付宝账号1是.0否
      */
 
     private int userId;
@@ -75,7 +76,15 @@ public class MineInfoModel implements Serializable {
     private List<?> industryLabel;
     private int gradeId;
     private Integer accountType; //会员级别(账号类型0消费者，1市代理，2区代理，3合伙人，4超级会员，5普通会员，6商户")
+    private int isBind;
 
+    public int getIsBind() {
+        return isBind;
+    }
+
+    public void setIsBind(int isBind) {
+        this.isBind = isBind;
+    }
 
     public Integer getAccountType() {
         return accountType;

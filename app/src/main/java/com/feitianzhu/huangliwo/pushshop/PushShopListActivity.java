@@ -206,7 +206,7 @@ public class PushShopListActivity extends BaseActivity {
                 boolean isAgreed = SPUtils.getBoolean(this, Constant.SP_PUSH_SHOP_INSTRUCTIONS);
                 if (isAgreed) {
                     intent = new Intent(PushShopListActivity.this, EditMerchantsActivity.class);
-                    startActivityForResult(intent, REQUEST_CODE);
+                    startActivity(intent);
                 } else {
                     intent = new Intent(PushShopListActivity.this, PushShopProtocolActivity.class);
                     intent.putExtra(PushShopProtocolActivity.PUSH_PROTOCOL, false);
@@ -222,16 +222,6 @@ public class PushShopListActivity extends BaseActivity {
             initData();
         }
 
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        //super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            if (requestCode == REQUEST_CODE) {
-                initData();
-            }
-        }
     }
 
     @Override

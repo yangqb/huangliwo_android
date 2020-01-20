@@ -304,17 +304,6 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                     intent.putExtra(ShopsDetailActivity.GOODS_DETAIL_DATA, goodsListBeans.get(position).getGoodsId());
                     startActivity(intent);
                 }
-                /*if (type == 1) {
-                 //商品详情
-                    Intent intent = new Intent(getActivity(), ShopsDetailActivity.class);
-                    intent.putExtra(ShopsDetailActivity.GOODS_DETAIL_DATA, goodsListBeans.get(position));
-                    startActivity(intent);
-                } else {
-                    //商家
-                    Intent intent = new Intent(getActivity(), ShopMerchantsDetailActivity.class);
-                    startActivity(intent);
-                }*/
-
             }
         });
 

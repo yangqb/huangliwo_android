@@ -51,6 +51,8 @@ public class MySelfMerchantsListActivity extends BaseActivity {
     TextView titleName;
     @BindView(R.id.merchantsLogo)
     CircleImageView merchantsLogo;
+    @BindView(R.id.tvStatus)
+    TextView tvStatus;
 
     @Override
     protected int getLayoutId() {
@@ -109,6 +111,13 @@ public class MySelfMerchantsListActivity extends BaseActivity {
                             merchantsName.setText(merchantsBean.getMerchantName());
                             tvDate.setText("创建日期：" + merchantsBean.getCreateDate());
                             Glide.with(mContext).load(merchantsBean.getLogo()).apply(new RequestOptions().error(R.mipmap.b08_01touxiang).placeholder(R.mipmap.b08_01touxiang)).into(merchantsLogo);
+                            if (merchantsBean.getExamineModel() != null) {
+                                if (merchantsBean.getExamineModel().getBlStatus() == -1 || merchantsBean.getExamineModel().getCardStatus() == -1) {
+                                    tvStatus.setText("审核拒绝");
+                                } else if (merchantsBean.getExamineModel().getBlStatus() == 0 || merchantsBean.getExamineModel().getCardStatus() == 0) {
+                                    tvStatus.setText("审核中");
+                                }
+                            }
                         }
                     }
                 });

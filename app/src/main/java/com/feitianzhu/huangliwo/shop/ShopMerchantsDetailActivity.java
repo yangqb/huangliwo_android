@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import com.feitianzhu.huangliwo.App;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
+import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.MultipleMerchantsItem;
 import com.feitianzhu.huangliwo.model.SetMealEvalDetailInfo;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsModel;
@@ -35,6 +37,7 @@ import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.view.CustomRefundView;
+import com.feitianzhu.huangliwo.vip.VipActivity;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.yanzhenjie.permission.AndPermission;
@@ -58,6 +61,8 @@ import okhttp3.Call;
 import okhttp3.Response;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
+import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
+import static com.feitianzhu.huangliwo.common.Constant.POST_MINE_INFO;
 import static com.feitianzhu.huangliwo.common.Constant.USERID;
 
 /**
@@ -79,6 +84,7 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
     //3.腾讯地图包名
     public static final String QQMAP_PACKAGENAME = "com.tencent.map";
     private ShopDetailAdapter mAdapter;
+    private MineInfoModel mineInfoModel = new MineInfoModel();
     private List<MultipleMerchantsItem> multipleItemList = new ArrayList<>();
     private List<SetMealInfo> setMealInfoList = new ArrayList<>();
     private List<SetMealEvalDetailInfo.SetMealEvalDetailModel> setMealEvalDetailModelList = new ArrayList<>();
@@ -100,6 +106,8 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
     TextView shopName;
     @BindView(R.id.address)
     TextView address;
+    @BindView(R.id.tv_rebate)
+    TextView tvRebate;
     private int merchantsId;
     private String token;
     private String userId;
@@ -124,6 +132,8 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
             merchantsId = merchantsDetail.getMerchantId();
             shopName.setText(merchantsDetail.getMerchantName());
             address.setText(merchantsDetail.getCityName() + merchantsDetail.getAreaName() + merchantsDetail.getDtlAddr());
+            String discount = String.valueOf((1 - merchantsDetail.getDiscount()) * 100);
+            tvRebate.setText("返" + discount + "%");
             getSetMealList(merchantsId);
             String urlLogo = merchantsDetail.getLogo();
             imgs.add(urlLogo);
@@ -160,7 +170,7 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
         initListener();
     }
 
-    @OnClick({R.id.button1, R.id.button2, R.id.left_button, R.id.img_collect, R.id.call_phone, R.id.address})
+    @OnClick({R.id.button1, R.id.button2, R.id.left_button, R.id.img_collect, R.id.call_phone, R.id.address, R.id.ll_rebate})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.button1:
@@ -223,6 +233,11 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
                                     }))
                             .show();
                 }
+                break;
+            case R.id.ll_rebate:
+                Intent intent = new Intent(ShopMerchantsDetailActivity.this, VipActivity.class);
+                intent.putExtra(VipActivity.MINE_INFO, mineInfoModel);
+                startActivity(intent);
                 break;
         }
     }
@@ -452,7 +467,30 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
 
     @Override
     protected void initData() {
+        getUserInfo();
+    }
 
+    public void getUserInfo() {
+        OkHttpUtils.get()//
+                .url(Common_HEADER + POST_MINE_INFO)
+                .addParams(ACCESSTOKEN, token)//
+                .addParams(USERID, userId)
+                .build()
+                .execute(new Callback<MineInfoModel>() {
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        Log.e("wangyan", "onError---->" + e.getMessage());
+                        ToastUtils.showShortToast(e.getMessage());
+                    }
+
+                    @Override
+                    public void onResponse(MineInfoModel response, int id) {
+                        if (response != null) {
+                            mineInfoModel = response;
+                        }
+                    }
+                });
     }
 
     /*

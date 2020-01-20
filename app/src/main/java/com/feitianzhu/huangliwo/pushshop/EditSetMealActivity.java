@@ -335,8 +335,8 @@ public class EditSetMealActivity extends BaseActivity {
             ToastUtils.showShortToast("请输入套餐折扣比例");
             return;
         }
-        if (Integer.valueOf(percentage) > 100) {
-            ToastUtils.showShortToast("折扣比例不能大于100%");
+        if (Double.valueOf(percentage) > 100 || Double.valueOf(percentage) < 0) {
+            ToastUtils.showShortToast("折扣比例不能大于100小于0");
             return;
         }
         if (TextUtils.isEmpty(rules)) {

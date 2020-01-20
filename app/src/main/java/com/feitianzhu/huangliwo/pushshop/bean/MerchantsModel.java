@@ -97,6 +97,15 @@ public class MerchantsModel implements Serializable {
     private double income;
     private double balance;
     private String businessTime;
+    private AuditModel examineModel;
+
+    public AuditModel getExamineModel() {
+        return examineModel;
+    }
+
+    public void setExamineModel(AuditModel examineModel) {
+        this.examineModel = examineModel;
+    }
 
     public String getBusinessTime() {
         return businessTime;
@@ -433,4 +442,135 @@ public class MerchantsModel implements Serializable {
     public void setBalance(double balance) {
         this.balance = balance;
     }
+
+    public static class AuditModel implements Serializable {
+        private String backCardImg;// (string, optional): 身份证反面图片 ,
+        private String blReason;// (string, optional): 营业执照审核拒绝原因 ,
+        private int blStatus;// (integer, optional): 营业执照审核状态（0：审核中，1：审核通过，-1：拒绝） ,
+        private String businessLicenseImg;// (string, optional): 营业执照图片 ,
+        private String businessLicenseNum;//(string, optional): 营业执照号 ,
+        private String cardReason;//(string, optional): 身份证审核拒绝原因 ,
+        private int cardStatus;//(integer, optional): 身份证审核状态（0：审核中，1：审核通过，-1：拒绝） ,
+        private String createDate;//(string, optional),
+        private String examineBy;//(string, optional),
+        private String examineDate;//(string, optional),
+        private String frontCardImg;//(string, optional): 身份证正面图片 ,
+        private int merchantId;//(integer, optional): 商户id ,
+        private String merchantName;// (string, optional): 商户名称 ,
+        private String updateDate;//(string, optional)
+
+        public String getBackCardImg() {
+            return backCardImg;
+        }
+
+        public void setBackCardImg(String backCardImg) {
+            this.backCardImg = backCardImg;
+        }
+
+        public String getBlReason() {
+            return blReason;
+        }
+
+        public void setBlReason(String blReason) {
+            this.blReason = blReason;
+        }
+
+        public int getBlStatus() {
+            return blStatus;
+        }
+
+        public void setBlStatus(int blStatus) {
+            this.blStatus = blStatus;
+        }
+
+        public String getBusinessLicenseImg() {
+            return businessLicenseImg;
+        }
+
+        public void setBusinessLicenseImg(String businessLicenseImg) {
+            this.businessLicenseImg = businessLicenseImg;
+        }
+
+        public String getBusinessLicenseNum() {
+            return businessLicenseNum;
+        }
+
+        public void setBusinessLicenseNum(String businessLicenseNum) {
+            this.businessLicenseNum = businessLicenseNum;
+        }
+
+        public String getCardReason() {
+            return cardReason;
+        }
+
+        public void setCardReason(String cardReason) {
+            this.cardReason = cardReason;
+        }
+
+        public int getCardStatus() {
+            return cardStatus;
+        }
+
+        public void setCardStatus(int cardStatus) {
+            this.cardStatus = cardStatus;
+        }
+
+        public String getCreateDate() {
+            return createDate;
+        }
+
+        public void setCreateDate(String createDate) {
+            this.createDate = createDate;
+        }
+
+        public String getExamineBy() {
+            return examineBy;
+        }
+
+        public void setExamineBy(String examineBy) {
+            this.examineBy = examineBy;
+        }
+
+        public String getExamineDate() {
+            return examineDate;
+        }
+
+        public void setExamineDate(String examineDate) {
+            this.examineDate = examineDate;
+        }
+
+        public String getFrontCardImg() {
+            return frontCardImg;
+        }
+
+        public void setFrontCardImg(String frontCardImg) {
+            this.frontCardImg = frontCardImg;
+        }
+
+        public int getMerchantId() {
+            return merchantId;
+        }
+
+        public void setMerchantId(int merchantId) {
+            this.merchantId = merchantId;
+        }
+
+        public String getMerchantName() {
+            return merchantName;
+        }
+
+        public void setMerchantName(String merchantName) {
+            this.merchantName = merchantName;
+        }
+
+        public String getUpdateDate() {
+            return updateDate;
+        }
+
+        public void setUpdateDate(String updateDate) {
+            this.updateDate = updateDate;
+        }
+    }
+
+
 }

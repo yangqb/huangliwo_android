@@ -2,6 +2,7 @@ package com.feitianzhu.huangliwo.me;
 
 import android.content.Intent;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -9,8 +10,13 @@ import android.widget.TextView;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
+import com.feitianzhu.huangliwo.login.LoginEvent;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
+import com.feitianzhu.huangliwo.model.BindingAliAccountModel;
+import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.WithdrawModel;
+import com.feitianzhu.huangliwo.pushshop.MySelfMerchantsActivity;
+import com.feitianzhu.huangliwo.shop.ShopDao;
 import com.feitianzhu.huangliwo.shop.ShopHelp;
 import com.feitianzhu.huangliwo.utils.EditTextUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
@@ -24,10 +30,20 @@ import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.builder.PostFormBuilder;
 import com.zhy.http.okhttp.callback.Callback;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 import okhttp3.Call;
+import okhttp3.Request;
 import okhttp3.Response;
+
+import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
+import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
+import static com.feitianzhu.huangliwo.common.Constant.POST_MINE_INFO;
+import static com.feitianzhu.huangliwo.common.Constant.USERID;
 
 /**
  * package name: com.feitianzhu.fu700.me
@@ -40,6 +56,7 @@ import okhttp3.Response;
 public class WithdrawActivity extends BaseActivity {
     public static final String BALANCE = "balance";
     public static final String MERCHANT_ID = "merchantId";
+    private MineInfoModel infoModel;
     private double balance;
     private int merchantId = -1;
     private String token;
@@ -60,6 +77,7 @@ public class WithdrawActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+        EventBus.getDefault().register(this);
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         titleName.setText("提现");
@@ -112,13 +130,29 @@ public class WithdrawActivity extends BaseActivity {
             ToastUtils.showShortToast("当前余额不足");
             return;
         }
+
+
         ShopHelp.veriPassword(this, new onConnectionFinishLinstener() {
             @Override
             public void onSuccess(int code, Object result) {
                 /*
                  * 提现
                  * */
-                submit(result.toString());
+                if (infoModel != null && infoModel.getIsBind() == 1) {
+                    submit(result.toString());
+                } else {
+                    new XPopup.Builder(WithdrawActivity.this)
+                            .asConfirm("提示", "提现需要绑定支付宝账号是否现在去绑定？", "关闭", "确定", new OnConfirmListener() {
+                                @Override
+                                public void onConfirm() {
+                                    Intent intent = new Intent(WithdrawActivity.this, BindingAccountActivity.class);
+                                    intent.putExtra(BindingAccountActivity.MINE_INFO, infoModel);
+                                    startActivity(intent);
+                                }
+                            }, null, false)
+                            .bindLayout(R.layout.layout_dialog) //绑定已有布局
+                            .show();
+                }
             }
 
             @Override
@@ -166,7 +200,73 @@ public class WithdrawActivity extends BaseActivity {
                 });
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void onMessageEvent(LoginEvent event) {
+        if (event == LoginEvent.BINDING_ALI_ACCOUNT) {
+            initData();
+        }
+    }
+
     @Override
     protected void initData() {
+        token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
+        userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
+        OkHttpUtils.get()//
+                .url(Common_HEADER + POST_MINE_INFO)
+                .addParams(ACCESSTOKEN, token)//
+                .addParams(USERID, userId)
+                .build().execute(new Callback<MineInfoModel>() {
+            @Override
+            public void onBefore(Request request, int id) {
+                super.onBefore(request, id);
+                showloadDialog("");
+            }
+
+            @Override
+            public void onError(Call call, Exception e, int id) {
+                goneloadDialog();
+                Log.e("wangyan", "onError---->" + e.getMessage());
+                ToastUtils.showShortToast(e.getMessage());
+            }
+
+            @Override
+            public void onResponse(MineInfoModel response, int id) {
+                goneloadDialog();
+                if (response != null) {
+                    infoModel = response;
+                    if (response.getIsBind() == 1) {
+                        getAccount();
+                    }
+                }
+            }
+        });
+
+    }
+
+    public void getAccount() {
+        OkHttpUtils.get()
+                .url(Urls.GET_ALI_ACCOUNT)
+                .addParams(Constant.ACCESSTOKEN, token)
+                .addParams(Constant.USERID, userId)
+                .build()
+                .execute(new Callback<BindingAliAccountModel>() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+
+                    }
+
+                    @Override
+                    public void onResponse(BindingAliAccountModel response, int id) {
+                        if (response != null) {
+                            editAlipayNo.setText(response.getBankCardNo());
+                        }
+                    }
+                });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

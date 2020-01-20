@@ -161,6 +161,12 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
     View endLine;
     @BindView(R.id.submit)
     TextView btnSubmit;
+    @BindView(R.id.idCardFront_status)
+    TextView idCardFrontStatus;
+    @BindView(R.id.idCardBack_status)
+    TextView idCardBackStatus;
+    @BindView(R.id.business_status)
+    TextView businessStatus;
 
     private CountDownTimer mTimer = new CountDownTimer(6000 * 10, 1000) {
 
@@ -199,8 +205,6 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         merchantsBean = (MerchantsModel) getIntent().getSerializableExtra(MERCHANTS_DETAIL_DATA);
         isMySelfMerchants = getIntent().getBooleanExtra(IS_MY_MERCHANTS, false);
-        editBusinessLicenseNo.setFocusable(false);
-        editBusinessLicenseNo.setFocusableInTouchMode(false);
         if (isMySelfMerchants) {
             selectBusinessHours.setVisibility(View.VISIBLE);
             endLine.setVisibility(View.VISIBLE);
@@ -225,10 +229,39 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
             if (merchantsBean.getBusinessTime() != null && !TextUtils.isEmpty(merchantsBean.getBusinessTime())) {
                 isWeek = true;
                 isTimes = true;
-                String[] businessTimes = merchantsBean.getBusinessTime().split(",");
+                String[] businessTimes = merchantsBean.getBusinessTime().split("&");
                 tvBusinessDay.setText(businessTimes[0]);
                 tvBusinessHours.setText(businessTimes[1]);
             }
+
+            if (merchantsBean.getExamineModel() != null) {
+                if (merchantsBean.getExamineModel().getBlStatus() == 0 || merchantsBean.getExamineModel().getCardStatus() == 0) {
+                    btnSubmit.setVisibility(View.GONE);
+                } else {
+                    btnSubmit.setVisibility(View.VISIBLE);
+                }
+                if (merchantsBean.getExamineModel().getBlStatus() == -1) {
+                    businessStatus.setText("审核被拒：" + (merchantsBean.getExamineModel().getBlReason() == null ? "" : merchantsBean.getExamineModel().getBlReason()));
+                } else if (merchantsBean.getExamineModel().getBlStatus() == 0) {
+                    businessStatus.setText("审核中");
+                }
+                if (merchantsBean.getExamineModel().getCardStatus() == -1) {
+                    idCardFrontStatus.setText("审核被拒：" + (merchantsBean.getExamineModel().getCardReason() == null ? "" : merchantsBean.getExamineModel().getCardReason()));
+                    idCardBackStatus.setText("审核被拒：" + (merchantsBean.getExamineModel().getCardReason() == null ? "" : merchantsBean.getExamineModel().getCardReason()));
+                } else if (merchantsBean.getExamineModel().getCardStatus() == 0) {
+                    idCardFrontStatus.setText("审核中");
+                    idCardBackStatus.setText("审核中");
+                }
+                idCardFrontStatus.setVisibility(View.VISIBLE);
+                idCardBackStatus.setVisibility(View.VISIBLE);
+                businessStatus.setVisibility(View.VISIBLE);
+            } else {
+                btnSubmit.setVisibility(View.VISIBLE);
+                idCardFrontStatus.setVisibility(View.GONE);
+                idCardBackStatus.setVisibility(View.GONE);
+                businessStatus.setVisibility(View.GONE);
+            }
+
             Glide.with(mContext).load(merchantsBean.getLogo()).apply(new RequestOptions().dontAnimate().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai)).into(logoImg);
             Glide.with(mContext).load(merchantsBean.getShopFrontImg()).apply(new RequestOptions().dontAnimate().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai)).into(shopFrontImg);
             Glide.with(mContext).load(merchantsBean.getShopInsideImg()).apply(new RequestOptions().dontAnimate().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai)).into(shopInsideImg);
@@ -493,7 +526,7 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
         String percentage = editMerchantsDiscount.getText().toString().trim();
         String merchantsIntroduce = editMerchantsIntroduction.getText().toString().trim();
         String businessLicenseNo = editBusinessLicenseNo.getText().toString().trim();
-        String businessTimes = tvBusinessDay.getText().toString() + "," + tvBusinessHours.getText().toString();
+        String businessTimes = tvBusinessDay.getText().toString() + "&" + tvBusinessHours.getText().toString();
 
         if (TextUtils.isEmpty(merchantsName)) {
             ToastUtils.showShortToast("请填写商铺名称");
@@ -528,8 +561,8 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
             ToastUtils.showShortToast("请填写折扣比例");
             return;
         }
-        if (Integer.valueOf(percentage) > 100) {
-            ToastUtils.showShortToast("折扣比例不能大于100%");
+        if (Double.valueOf(percentage) > 100 || Double.valueOf(percentage) < 0) {
+            ToastUtils.showShortToast("折扣比例不能大于100小于0");
             return;
         }
         if (TextUtils.isEmpty(merchantsIntroduce)) {
@@ -550,7 +583,9 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
         }
         merchantInfo.setMerchantId(String.valueOf(merchantsBean.getMerchantId()));
         merchantInfo.setMerchantName(merchantsName);
-        merchantInfo.setRegisterNo(businessLicenseNo);
+        if (!merchantsBean.getRegisterNo().equals(businessLicenseNo)) {
+            merchantInfo.setRegisterNo(businessLicenseNo);
+        }
         merchantInfo.setClsId(clsId);
         merchantInfo.setClsName(clsName);
         merchantInfo.setPhone(phone);

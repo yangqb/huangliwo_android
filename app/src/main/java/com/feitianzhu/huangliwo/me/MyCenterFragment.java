@@ -292,7 +292,9 @@ public class MyCenterFragment extends SFFragment {
                         break;
                     case 5:
                         //银行卡 //暂不提供银行卡功能
-                        ToastUtils.showShortToast("敬请期待");
+                        intent = new Intent(getActivity(), BindingAccountActivity.class);
+                        intent.putExtra(BindingAccountActivity.MINE_INFO, mTempData);
+                        startActivity(intent);
                         /*if (!Constant.loadUserAuth) {
                             ToastUtils.showShortToast("正在获取授权信息，稍候进入");
                             ShopDao.loadUserAuthImpl();
@@ -472,6 +474,7 @@ public class MyCenterFragment extends SFFragment {
         switch (event) {
             case EDITOR_INFO:
             case BUY_VIP:
+            case BINDING_ALI_ACCOUNT:
                 requestData();  //一定要获取token，userId,防止直接从商品列表进入VIP购买
                 break;
         }

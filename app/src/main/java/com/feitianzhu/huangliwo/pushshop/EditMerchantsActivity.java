@@ -26,6 +26,7 @@ import com.feitianzhu.huangliwo.me.base.BaseTakePhotoActivity;
 import com.feitianzhu.huangliwo.pushshop.bean.EditMerchantInfo;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsClassifyModel;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsModel;
+import com.feitianzhu.huangliwo.pushshop.bean.UpdataMechantsEvent;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.StringUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
@@ -46,6 +47,7 @@ import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
 
 import org.devio.takephoto.model.TResult;
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -355,8 +357,8 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
             ToastUtils.showShortToast("请填写折扣比例");
             return;
         }
-        if (Integer.valueOf(percentage) > 100) {
-            ToastUtils.showShortToast("折扣比例不能大于100%");
+        if (Double.valueOf(percentage) > 100 || Double.valueOf(percentage) < 0) {
+            ToastUtils.showShortToast("折扣比例不能大于100小于0");
             return;
         }
         if (TextUtils.isEmpty(merchantsIntroduce)) {
@@ -448,7 +450,7 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
                     public void onResponse(Object response, int id) {
                         goneloadDialog();
                         ToastUtils.showShortToast("创建成功等待审核");
-                        setResult(RESULT_OK);
+                        EventBus.getDefault().post(UpdataMechantsEvent.SUCCESS);
                         finish();
                     }
                 });
