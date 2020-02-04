@@ -43,7 +43,7 @@ public class NewYearShoppingAdapter extends BaseQuickAdapter<BaseGoodsListBean, 
         helper.setText(R.id.tv_introduce, item.getSummary());
         setSpannableString(String.format(Locale.getDefault(), "%.2f", item.getPrice()), helper.getView(R.id.tv_price));
         String rebatePv = String.format(Locale.getDefault(), "%.2f", item.getRebatePv());
-        helper.setText(R.id.tv_rebate, "赚¥" + rebatePv);
+        helper.setText(R.id.tv_rebate, "返¥" + rebatePv);
         if (item.getRebatePv() == 0) {
             helper.setVisible(R.id.ll_rebate, false);
         } else {

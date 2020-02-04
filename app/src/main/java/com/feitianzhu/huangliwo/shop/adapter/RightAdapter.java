@@ -59,7 +59,7 @@ public class RightAdapter extends BaseMultiItemQuickAdapter<MultipleItem, BaseVi
                 setSpannableString(String.format(Locale.getDefault(), "%.2f", item.getGoodsListBean().getPrice()), helper.getView(R.id.price));
                 helper.setText(R.id.tvContent, item.getGoodsListBean().getSummary());
                 String rebatePv = String.format(Locale.getDefault(), "%.2f", item.getGoodsListBean().getRebatePv());
-                helper.setText(R.id.tv_rebate, "赚¥" + rebatePv);
+                helper.setText(R.id.tv_rebate, "返¥" + rebatePv);
                /* if (item.getGoodsListBean().getRebatePv() == 0) {
                     helper.setVisible(R.id.ll_rebate, false);
                 } else {
