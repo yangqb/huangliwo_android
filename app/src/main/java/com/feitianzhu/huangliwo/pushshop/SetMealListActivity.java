@@ -164,13 +164,14 @@ public class SetMealListActivity extends BaseActivity {
                 .url(Urls.GET_SETMEAL_LIST)
                 .addParams(ACCESSTOKEN, token)
                 .addParams(USERID, userId)
+                .addParams("type","1")
                 .addParams("merchantId", merchantsId + "")
                 .build()
                 .execute(new Callback<SetMealListInfo>() {
 
                     @Override
                     public void onError(Call call, Exception e, int id) {
-
+                          ToastUtils.showShortToast(e.getMessage());
                     }
 
                     @Override

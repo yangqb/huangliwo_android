@@ -32,12 +32,11 @@ public class PushShopProtocolActivity extends BaseActivity {
     private PushShopProtocolAdapter adapter;
     private List<Integer> integers = new ArrayList<>();
     Integer[] integers1 = new Integer[]{R.mipmap.g05_01xieyi, R.mipmap.g05_02xieyi, R.mipmap.g05_03xieyi, R.mipmap.g05_04xieyi};
-    Integer[] integers2 = new Integer[]{R.mipmap.g05_05xieyi, R.mipmap.g05_06xieyi};
+    Integer[] integers2 = new Integer[]{R.mipmap.g05_07xieyi, R.mipmap.g05_08xieyi};
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     @BindView(R.id.title_name)
     TextView titleName;
-
     @Override
     protected int getLayoutId() {
         return R.layout.activity_push_shop_protocol;

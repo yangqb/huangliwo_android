@@ -223,9 +223,15 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
             editMerchantsPhone.setText(merchantsBean.getPhone());
             tvArea.setText(merchantsBean.getProvinceName() + merchantsBean.getCityName() + merchantsBean.getAreaName());
             editMerchantsAddress.setText(merchantsBean.getDtlAddr());
-            editMerchantsEmail.setText(merchantsBean.getEmail());
+            if(merchantsBean.getEmail()!=null){
+                editMerchantsEmail.setText(merchantsBean.getEmail());
+            }
+
             editMerchantsDiscount.setText(String.valueOf(merchantsBean.getDiscount() * 100));
-            editMerchantsIntroduction.setText(merchantsBean.getIntroduce());
+            if(merchantsBean.getIntroduce()!=null){
+                editMerchantsIntroduction.setText(merchantsBean.getIntroduce());
+            }
+
             if (merchantsBean.getBusinessTime() != null && !TextUtils.isEmpty(merchantsBean.getBusinessTime())) {
                 isWeek = true;
                 isTimes = true;
@@ -549,14 +555,14 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
             ToastUtils.showShortToast("请填写商铺地址");
             return;
         }
-        if (TextUtils.isEmpty(email)) {
+        /*if (TextUtils.isEmpty(email)) {
             ToastUtils.showShortToast("请填写邮箱地址");
             return;
         }
         if (!StringUtils.isEmail(email)) {
             ToastUtils.showShortToast("请填写正确的邮箱地址");
             return;
-        }
+        }*/
         if (TextUtils.isEmpty(percentage)) {
             ToastUtils.showShortToast("请填写折扣比例");
             return;
@@ -565,10 +571,10 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
             ToastUtils.showShortToast("折扣比例不能大于100小于0");
             return;
         }
-        if (TextUtils.isEmpty(merchantsIntroduce)) {
+        /*if (TextUtils.isEmpty(merchantsIntroduce)) {
             ToastUtils.showShortToast("请填写商铺说明");
             return;
-        }
+        }*/
         if (isMySelfMerchants) {
             if (!isTimes || !isWeek) {
                 ToastUtils.showShortToast("请选择营业日期和时间");

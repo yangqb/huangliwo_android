@@ -39,7 +39,9 @@ public class RightAdapter extends BaseMultiItemQuickAdapter<MultipleItem, BaseVi
         switch (helper.getItemViewType()) {
             case MultipleItem.MERCHANTS:
                 helper.setText(R.id.merchantsName, item.getMerchantsModel().getMerchantName());
-                helper.setText(R.id.merchants_introduce, item.getMerchantsModel().getIntroduce());
+                if(item.getMerchantsModel().getIntroduce()!=null){
+                    helper.setText(R.id.merchants_introduce, item.getMerchantsModel().getIntroduce());
+                }
                 helper.setText(R.id.distance, item.getMerchantsModel().getDistinceStr());
                 Glide.with(mContext).load(item.getMerchantsModel().getLogo())
                         .apply(new RequestOptions().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai).dontAnimate()).into((RoundedImageView) helper.getView(R.id.image));

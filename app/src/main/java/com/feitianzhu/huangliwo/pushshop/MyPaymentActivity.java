@@ -208,7 +208,7 @@ public class MyPaymentActivity extends BaseActivity {
     }
 
     private void wexinPay(WXModel result) {
-        Constant.PayFlag = PayInfo.ShopPay;
+        Constant.PayFlag = PayInfo.RECEIVABLES_SETMEAL_PAY;
         IWXAPI api = WXAPIFactory.createWXAPI(MyPaymentActivity.this, result.appid);
         api.registerApp(Constant.WX_APP_ID);
         PayReq mPayReq = new PayReq();

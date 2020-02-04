@@ -1,6 +1,12 @@
 package com.feitianzhu.huangliwo.pushshop;
 
+import android.content.ContentResolver;
+import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.CountDownTimer;
+import android.support.annotation.DrawableRes;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -50,8 +56,10 @@ import org.devio.takephoto.model.TResult;
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -130,6 +138,7 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
     private List<MerchantsClassifyModel.ListBean> listBean;
     private double latitude;
     private double longitude;
+    private File file;
     private CountDownTimer mTimer = new CountDownTimer(6000 * 10, 1000) {
 
         @Override
@@ -157,6 +166,7 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
         titleName.setText("新增门店");
         geoCoder = GeoCoder.newInstance();
         geoCoder.setOnGetGeoCodeResultListener(this);
+        file = drawableToFile(this,R.mipmap.g10_04weijiazai,"huangliwo");
         initListener();
     }
 
@@ -344,14 +354,14 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
             ToastUtils.showShortToast("请填写商铺地址");
             return;
         }
-        if (TextUtils.isEmpty(email)) {
+        /*if (TextUtils.isEmpty(email)) {
             ToastUtils.showShortToast("请填写邮箱地址");
             return;
-        }
-        if (!StringUtils.isEmail(email)) {
+        }*/
+        /*if (!StringUtils.isEmail(email)) {
             ToastUtils.showShortToast("请填写正确的邮箱地址");
             return;
-        }
+        }*/
 
         if (TextUtils.isEmpty(percentage)) {
             ToastUtils.showShortToast("请填写折扣比例");
@@ -361,11 +371,11 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
             ToastUtils.showShortToast("折扣比例不能大于100小于0");
             return;
         }
-        if (TextUtils.isEmpty(merchantsIntroduce)) {
+       /* if (TextUtils.isEmpty(merchantsIntroduce)) {
             ToastUtils.showShortToast("请填写商铺说明");
             return;
-        }
-        if (TextUtils.isEmpty(photo1)) {
+        }*/
+        /*if (TextUtils.isEmpty(photo1)) {
             ToastUtils.showShortToast("请上传商品logo");
             return;
         }
@@ -384,7 +394,7 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
         if (TextUtils.isEmpty(photo5)) {
             ToastUtils.showShortToast("请上传身份证反面照片");
             return;
-        }
+        }*/
         if (TextUtils.isEmpty(photo6)) {
             ToastUtils.showShortToast("请上传店铺营业执照");
             return;
@@ -415,12 +425,43 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
         merchantInfo.setLatitude(String.valueOf(latitude));
         merchantInfo.setInviteCode(Integer.valueOf(userId));
         String json = new Gson().toJson(merchantInfo);
-        Map<String, File> files = new HashMap<>();
-        files.put("logo.png", new File(photo1));
-        files.put("shopFrontImg.png", new File(photo2));
-        files.put("shopInsideImg.png", new File(photo3));
-        files.put("cardFrontImg.png", new File(photo4));
-        files.put("cardBackImg.png", new File(photo5));
+        Map<String, File> files = new LinkedHashMap<>();
+
+            if(TextUtils.isEmpty(photo1)){
+                files.put("logo.png", file);
+            }else {
+                files.put("logo.png", new File(photo1));
+            }
+
+
+            if(TextUtils.isEmpty(photo2)){
+                files.put("shopFrontImg.png", file);
+            }else {
+                files.put("shopFrontImg.png", new File(photo2));
+            }
+
+            if(TextUtils.isEmpty(photo3)){
+                files.put("shopInsideImg.png", file);
+            }else {
+                files.put("shopInsideImg.png", new File(photo3));
+            }
+
+
+            if(TextUtils.isEmpty(photo4)){
+                files.put("cardFrontImg.png", file);
+            }else {
+                files.put("cardFrontImg.png", new File(photo4));
+            }
+
+            if(TextUtils.isEmpty(photo5)){
+                files.put("cardBackImg.png", file);
+            }else {
+                files.put("cardBackImg.png", new File(photo5));
+            }
+
+
+
+
         files.put("businessLicenseImg.png", new File(photo6));
         files.put("permitImg.png", new File(photo7));
         OkHttpUtils.post().url(Urls.CREATE_MERCHANTS)
@@ -443,6 +484,7 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
 
                     @Override
                     public void onError(Call call, Exception e, int id) {
+                        goneloadDialog();
                         ToastUtils.showShortToast(e.getMessage());
                     }
 
@@ -583,5 +625,33 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
     @Override
     public void onGetReverseGeoCodeResult(ReverseGeoCodeResult reverseGeoCodeResult) {
 
+    }
+
+    public File drawableToFile(Context mContext, int drawableId, String fileName){
+//        InputStream is = view.getContext().getResources().openRawResource(R.drawable.logo);
+        Bitmap bitmap = BitmapFactory.decodeResource(mContext.getResources(), drawableId);
+//        Bitmap bitmap = BitmapFactory.decodeStream(is);
+
+        String defaultPath = mContext.getFilesDir()
+                .getAbsolutePath() + "/defaultGoodInfo";
+        File file = new File(defaultPath);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        String defaultImgPath = defaultPath + "/"+fileName;
+        file = new File(defaultImgPath);
+        try {
+            file.createNewFile();
+
+            FileOutputStream fOut = new FileOutputStream(file);
+
+            bitmap.compress(Bitmap.CompressFormat.PNG, 20, fOut);
+//            is.close();
+            fOut.flush();
+            fOut.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return file;
     }
 }

@@ -32,7 +32,7 @@ public class PushShopAdapter extends BaseQuickAdapter<MerchantsModel, BaseViewHo
     protected void convert(@NonNull BaseViewHolder helper, MerchantsModel item) {
         helper.setText(R.id.merchants_Name, item.getMerchantName());
         helper.setText(R.id.tvDate, item.getCreateDate());
-        Glide.with(mContext).load(item.getLogo()).apply(new RequestOptions().error(R.mipmap.b08_01touxiang).placeholder(R.mipmap.b08_01touxiang)).into((CircleImageView) helper.getView(R.id.merchantsImg));
+        Glide.with(mContext).load(item.getLogo()).apply(new RequestOptions().error(R.mipmap.g10_04weijiazai).placeholder(R.mipmap.g10_04weijiazai)).into((CircleImageView) helper.getView(R.id.merchantsImg));
         if (item.getStatus() == 0) {
             helper.setText(R.id.tvStatus, "审核中");
             helper.setVisible(R.id.image, false);

@@ -326,7 +326,7 @@
                             android:layout_toRightOf="@id/tag7"
                             android:background="@null"
                             android:gravity="end|center_vertical"
-                            android:hint="请输入邮箱"
+                            android:hint="请输入邮箱(选填)"
                             android:lines="1"
                             android:textColor="@color/color_333333"
                             android:textColorHint="@color/color_999999"
@@ -462,7 +462,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dp_20"
-                        android:text="商铺介绍"
+                        android:text="商铺介绍(选填)"
                         android:textColor="@color/color_333333"
                         android:textSize="16sp" />
 
@@ -524,7 +524,7 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="商铺logo"
+                                    android:text="商铺logo(选填)"
                                     android:textColor="@color/color_333333"
                                     android:textSize="16sp" />
                             </LinearLayout>
@@ -593,7 +593,7 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="商铺门面照片"
+                                    android:text="商铺门面照片(选填)"
                                     android:textColor="@color/color_333333"
                                     android:textSize="16sp" />
                             </LinearLayout>
@@ -661,7 +661,7 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="店内环境照片"
+                                    android:text="店内环境照片(选填)"
                                     android:textColor="@color/color_333333"
                                     android:textSize="16sp" />
                             </LinearLayout>
@@ -729,7 +729,7 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="身份证正面"
+                                    android:text="身份证正面(选填)"
                                     android:textColor="@color/color_333333"
                                     android:textSize="16sp" />
                             </LinearLayout>
@@ -807,7 +807,7 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="身份证反面"
+                                    android:text="身份证反面(选填)"
                                     android:textColor="@color/color_333333"
                                     android:textSize="16sp" />
                             </LinearLayout>

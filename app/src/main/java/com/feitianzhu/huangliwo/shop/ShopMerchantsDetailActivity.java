@@ -138,7 +138,7 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
             String discount = String.valueOf((100 - merchantsDetail.getDiscount() * 100));
             tvRebate.setText("返" + discount + "%");
             getSetMealList(merchantsId);
-            String urlLogo = merchantsDetail.getLogo();
+            String urlLogo = merchantsDetail.getLogo()==null?"":merchantsDetail.getLogo();
             imgs.add(urlLogo);
             mViewpager.setCanLoop(true)
                     .setAutoPlay(true)
@@ -444,6 +444,7 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
         OkHttpUtils.get()
                 .url(Urls.GET_SETMEAL_LIST)
                 .addParams(ACCESSTOKEN, token)
+                .addParams("type","2")
                 .addParams(USERID, userId)
                 .addParams("merchantId", merchantsId + "")
                 .build()
