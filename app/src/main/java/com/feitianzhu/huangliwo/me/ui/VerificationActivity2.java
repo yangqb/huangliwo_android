@@ -13,6 +13,8 @@ import com.bumptech.glide.request.RequestOptions;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseTakePhotoActivity;
 import com.feitianzhu.huangliwo.model.Province;
 import com.feitianzhu.huangliwo.model.UserAuth;
@@ -29,6 +31,7 @@ import com.feitianzhu.huangliwo.view.CustomRefundView;
 import com.feitianzhu.huangliwo.view.CustomSelectPhotoView;
 import com.google.gson.Gson;
 import com.lxj.xpopup.XPopup;
+import com.lzy.okgo.OkGo;
 import com.socks.library.KLog;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
@@ -52,11 +55,14 @@ import static com.feitianzhu.huangliwo.common.Constant.CERTIFTYPE;
 import static com.feitianzhu.huangliwo.common.Constant.CITYID;
 import static com.feitianzhu.huangliwo.common.Constant.CITYNAME;
 import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
+import static com.feitianzhu.huangliwo.common.Constant.FailCode;
+import static com.feitianzhu.huangliwo.common.Constant.LOADER_VERI_USER_INFO;
 import static com.feitianzhu.huangliwo.common.Constant.LOAD_USER_AUTH;
 import static com.feitianzhu.huangliwo.common.Constant.POST_REALAUTH;
 import static com.feitianzhu.huangliwo.common.Constant.PROVINCEID;
 import static com.feitianzhu.huangliwo.common.Constant.PROVINCENAME;
 import static com.feitianzhu.huangliwo.common.Constant.REALNAME;
+import static com.feitianzhu.huangliwo.common.Constant.SuccessCode;
 import static com.feitianzhu.huangliwo.common.Constant.USERID;
 
 /**
@@ -140,20 +146,27 @@ public class VerificationActivity2 extends BaseTakePhotoActivity {
     }
 
     public void getAuthInfo() {
-        ShopDao.loadUserVeriInfo(this, new onConnectionFinishLinstener() {
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void onSuccess(int code, Object result) {
-                UserVeriModel veriModel = (UserVeriModel) result;
-                realName.setText(veriModel.realName);
-                idNum.setText(veriModel.certifNo);
-            }
 
-            @Override
-            public void onFail(int code, String result) {
-                ToastUtils.showShortToast(result);
-            }
-        });
+        OkGo.<LzyResponse<UserVeriModel>>get(Common_HEADER + LOADER_VERI_USER_INFO)
+                .tag(this)
+                .params(ACCESSTOKEN, token)
+                .params(USERID, userId)
+                .execute(new JsonCallback<LzyResponse<UserVeriModel>>() {
+                    @Override
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<UserVeriModel>> response) {
+                        super.onSuccess(VerificationActivity2.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0 && response.body().data != null) {
+                            UserVeriModel veriModel = response.body().data;
+                            realName.setText(veriModel.realName);
+                            idNum.setText(veriModel.certifNo);
+                        }
+                    }
+
+                    @Override
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse<UserVeriModel>> response) {
+                        super.onError(response);
+                    }
+                });
     }
 
     @OnClick({R.id.left_button, R.id.take_photo_one, R.id.take_photo_two, R.id.ly_type, R.id.btn_submit})
@@ -227,40 +240,37 @@ public class VerificationActivity2 extends BaseTakePhotoActivity {
             businatures = (index + 1) + "";
         }
 
-        OkHttpUtils.post()//
-                .addFile("certifFile", "01.png", new File(photo_file_one))//
-                .addFile("certifFile", "02.png", new File(photo_file_two))//
-                .url(Common_HEADER + POST_REALAUTH)
-                .addParams(ACCESSTOKEN, token)//
-                .addParams(USERID, userId)//
-                .addParams(REALNAME, name)//
-                .addParams(CERTIFTYPE, businatures)//
-                .addParams(CERTIFNO, id_num)//
-                .build()//
-                .execute(new Callback() {
+        OkGo.<LzyResponse>post(Common_HEADER + POST_REALAUTH)
+                .tag(this)
+                .params("certifFile", new File(photo_file_one), "01.png")//
+                .params("certifFile", new File(photo_file_two), "02.png")//
+                .params(ACCESSTOKEN, token)//
+                .params(USERID, userId)//
+                .params(REALNAME, name)//
+                .params(CERTIFTYPE, businatures)//
+                .params(CERTIFNO, id_num)//
+                .execute(new JsonCallback<LzyResponse>() {
                     @Override
-                    public void onBefore(Request request, int id) {
-                        super.onBefore(request, id);
+                    public void onStart(com.lzy.okgo.request.base.Request<LzyResponse, ? extends com.lzy.okgo.request.base.Request> request) {
+                        super.onStart(request);
                         showloadDialog("");
                     }
 
                     @Override
-                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                        return mData;
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onSuccess(VerificationActivity2.this, response.body().msg, response.body().code);
+                        goneloadDialog();
+                        if (response.body().code == 0) {
+                            ToastUtils.showShortToast("提交成功，请等待验证");
+                            EventBus.getDefault().postSticky(AuthEvent.SUCCESS);
+                            finish();
+                        }
                     }
 
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-                        ToastUtils.showShortToast(e.getMessage());
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onError(response);
                         goneloadDialog();
-                    }
-
-                    @Override
-                    public void onResponse(Object response, int id) {
-                        goneloadDialog();
-                        ToastUtils.showShortToast("提交成功，请等待验证");
-                        EventBus.getDefault().postSticky(AuthEvent.SUCCESS);
-                        finish();
                     }
                 });
     }

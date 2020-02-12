@@ -19,14 +19,25 @@ import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.huangliwo.dao.NetworkDao;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
+import com.feitianzhu.huangliwo.login.ForgetPasswordActivity;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.utils.EncryptUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
+import com.feitianzhu.huangliwo.utils.Urls;
+import com.lzy.okgo.OkGo;
 import com.socks.library.KLog;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.Callback;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import okhttp3.Call;
+import okhttp3.Response;
+
+import static com.feitianzhu.huangliwo.common.Constant.FailCode;
 
 
 public class GetPasswordActivity extends BaseActivity implements View.OnClickListener {
@@ -55,6 +66,8 @@ public class GetPasswordActivity extends BaseActivity implements View.OnClickLis
     @BindView(R.id.title_name)
     TextView titleName;
     private int mType;
+    private String userId;
+    private String token;
 
     /**
      * 找回登录密码
@@ -96,6 +109,8 @@ public class GetPasswordActivity extends BaseActivity implements View.OnClickLis
 
     @Override
     protected void initView() {
+        token = SPUtils.getString(GetPasswordActivity.this, Constant.SP_ACCESS_TOKEN);
+        userId = SPUtils.getString(GetPasswordActivity.this, Constant.SP_LOGIN_USERID);
         mLayoutCode.setOnClickListener(this);
         mSignInButton.setOnClickListener(this);
     }
@@ -160,58 +175,88 @@ public class GetPasswordActivity extends BaseActivity implements View.OnClickLis
                 String encryptPssword2 = EncryptUtils.encodePassword(newPassword2);
                 String phone = SPUtils.getString(this, Constant.SP_PHONE, "");
                 if (mType == TYPE_GET_LOGIN_PWD) { //找回登录密码
+                    OkGo.<LzyResponse>post(Urls.GET_MYPASSWORD)
+                            .tag(this)
+                            .params("phone", phone)
+                            .params("smsCode", smsCode)
+                            .params("newPassword", encryptPssword1)
+                            .params("confirmPassword", encryptPssword2)
+                            .execute(new JsonCallback<LzyResponse>() {
+                                @Override
+                                public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
+                                    super.onSuccess(GetPasswordActivity.this, response.body().msg, response.body().code);
+                                    if (response.body().code == 0) {
+                                        ToastUtils.showShortToast(mContext, R.string.change_ok);
+                                        SPUtils.putString(mContext, Constant.SP_PHONE, phone);
+                                        SPUtils.putString(mContext, Constant.SP_PASSWORD, encryptPssword1);
 
-                    NetworkDao.getLoginPwd(phone, smsCode, encryptPssword1, encryptPssword2, new onConnectionFinishLinstener() {
-                        @Override
-                        public void onSuccess(int code, Object result) {
+                                        startActivity(new Intent(mContext, MainActivity.class));
+                                        finish();
+                                    }
+                                }
 
-                            ToastUtils.showShortToast(mContext, R.string.change_ok);
-                            SPUtils.putString(mContext, Constant.SP_PHONE, phone);
-                            SPUtils.putString(mContext, Constant.SP_PASSWORD, encryptPssword1);
-
-                            startActivity(new Intent(mContext, MainActivity.class));
-                            finish();
-                        }
-
-                        @Override
-                        public void onFail(int code, String result) {
-                            ToastUtils.showShortToast(result);
-                        }
-                    });
+                                @Override
+                                public void onError(com.lzy.okgo.model.Response<LzyResponse> response) {
+                                    super.onError(response);
+                                }
+                            });
                 } else if (mType == TYPE_GET_PAY_PASSWORD_PWD) { //找回二级密码
-                    NetworkDao.getPayPwd(this, phone, smsCode, encryptPssword1, encryptPssword2, new onConnectionFinishLinstener() {
-                        @Override
-                        public void onSuccess(int code, Object result) {
-                            if (Constant.mUserAuth != null) {
-                                Constant.mUserAuth.isPaypass = 1;
-                            }
-                            ToastUtils.showShortToast(mContext, R.string.change_ok);
-                            finish();
-                        }
 
-                        @Override
-                        public void onFail(int code, String result) {
-                            ToastUtils.showLongToast(result);
-                        }
-                    });
+                    OkGo.<LzyResponse>post(Urls.GET_UPAYPASS)
+                            .tag(this)
+                            .params("phone", phone)
+                            .params("smsCode", smsCode)
+                            .params("newPassword", encryptPssword1)
+                            .params("confirmPassword", encryptPssword2)
+                            .params("accessToken", token)
+                            .params("userId", userId)
+                            .execute(new JsonCallback<LzyResponse>() {
+                                @Override
+                                public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
+                                    super.onSuccess(GetPasswordActivity.this, response.body().msg, response.body().code);
+                                    if (response.body().code == 0) {
+                                        if (Constant.mUserAuth != null) {
+                                            Constant.mUserAuth.isPaypass = 1;
+                                        }
+                                        ToastUtils.showShortToast(mContext, R.string.change_ok);
+                                        finish();
+                                    }
+                                }
+
+                                @Override
+                                public void onError(com.lzy.okgo.model.Response<LzyResponse> response) {
+                                    super.onError(response);
+                                }
+                            });
 
                 } else if (mType == TYPE_SET_PAY_PASSWORD_PWD) {//设置二级密码
 
-                    NetworkDao.setPayPassword(this, phone, smsCode, encryptPssword1, encryptPssword2, new onConnectionFinishLinstener() {
-                        @Override
-                        public void onSuccess(int code, Object result) {
-                            if (Constant.mUserAuth != null) {
-                                Constant.mUserAuth.isPaypass = 1;
-                            }
-                            ToastUtils.showShortToast("设置成功");
-                            finish();
-                        }
+                    OkGo.<LzyResponse>post(Urls.SET_PAYPASS)
+                            .tag(this)
+                            .params("phone", phone)
+                            .params("smsCode", smsCode)
+                            .params("paypass", encryptPssword1)
+                            .params("confirmPaypass", encryptPssword2)
+                            .params("accessToken", token)
+                            .params("userId", userId)
+                            .execute(new JsonCallback<LzyResponse>() {
+                                @Override
+                                public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
+                                    super.onSuccess(GetPasswordActivity.this, response.body().msg, response.body().code);
+                                    if (response.body().code == 0) {
+                                        if (Constant.mUserAuth != null) {
+                                            Constant.mUserAuth.isPaypass = 1;
+                                        }
+                                        ToastUtils.showShortToast("设置成功");
+                                        finish();
+                                    }
+                                }
 
-                        @Override
-                        public void onFail(int code, String result) {
-                            ToastUtils.showShortToast(result);
-                        }
-                    });
+                                @Override
+                                public void onError(com.lzy.okgo.model.Response<LzyResponse> response) {
+                                    super.onError(response);
+                                }
+                            });
                 }
 
                 break;
@@ -256,18 +301,27 @@ public class GetPasswordActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void getSmsCode(String phone, String type) {
-        NetworkDao.getSmsCode(this, phone, type, new onConnectionFinishLinstener() {
-            @Override
-            public void onSuccess(int code, Object result) {
+        String token = SPUtils.getString(GetPasswordActivity.this, Constant.SP_ACCESS_TOKEN, "");
+        OkGo.<LzyResponse>get(Urls.GET_SMSCODE)
+                .tag(this)
+                .params("phone", phone)
+                .params("type", type)
+                .params("accessToken", token)
+                .execute(new JsonCallback<LzyResponse>() {
+                    @Override
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onSuccess(GetPasswordActivity.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0) {
+                            ToastUtils.showShortToast("验证码已发送至您的手机");
+                        }
+                    }
 
-            }
+                    @Override
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onError(response);
+                    }
+                });
 
-            @Override
-            public void onFail(int code, String result) {
-                Toast.makeText(mContext, result, Toast.LENGTH_SHORT).show();
-                KLog.e(result);
-            }
-        });
     }
 
     @Override

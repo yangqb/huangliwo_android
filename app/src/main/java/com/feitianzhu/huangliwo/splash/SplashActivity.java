@@ -12,11 +12,20 @@ import android.widget.TextView;
 import com.feitianzhu.huangliwo.MainActivity;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.login.LoginActivity;
+import com.feitianzhu.huangliwo.login.entity.LoginEntity;
+import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.utils.LocationUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
+import com.feitianzhu.huangliwo.utils.Urls;
+import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 import com.feitianzhu.huangliwo.view.CustomVideoView;
 import com.gyf.immersionbar.ImmersionBar;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.Response;
+import com.socks.library.KLog;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 import com.yanzhenjie.permission.PermissionListener;
@@ -28,6 +37,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
+import static com.feitianzhu.huangliwo.common.Constant.POST_MINE_INFO;
 
 
 public class SplashActivity extends AppCompatActivity {

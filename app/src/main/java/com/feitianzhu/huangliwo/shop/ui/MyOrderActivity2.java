@@ -13,6 +13,8 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.EvaluateMode;
 import com.feitianzhu.huangliwo.model.GoodOrderCountMode;
@@ -31,6 +33,8 @@ import com.feitianzhu.huangliwo.view.CustomRefundView;
 import com.google.gson.Gson;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.Response;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -45,7 +49,6 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import okhttp3.Call;
 import okhttp3.Request;
-import okhttp3.Response;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.huangliwo.common.Constant.USERID;
@@ -342,6 +345,7 @@ public class MyOrderActivity2 extends BaseActivity {
                                             waitSendingOrder.setText("待发货(0)");
                                             waitReceiveOrder.setText("待收货(0)");
                                             waitEvaluateOrder.setText("待评价(0)");
+                                            status = -1;
                                             initData();
                                         } else {
                                             llWaitReceiveOrder.setVisibility(View.GONE);
@@ -365,6 +369,7 @@ public class MyOrderActivity2 extends BaseActivity {
                 break;
             case R.id.all_order:
                 butType = 0;
+                status = -1;
                 setSelect(allOrder, true);
                 setSelect(waitPayOrder, false);
                 setSelect(waitSendingOrder, false);
@@ -376,7 +381,7 @@ public class MyOrderActivity2 extends BaseActivity {
                 setSelect(lineWaitReceive, false);
                 setSelect(lineWaitEvaluate, false);
                 if (type == 0) {
-                    getOrderList(-1);
+                    getOrderList(status);
                 } else {
                     multipleItemOrderModels.clear();
                     currSetMealOder = allSetMealOder;
@@ -495,88 +500,86 @@ public class MyOrderActivity2 extends BaseActivity {
 
     @Override
     protected void initData() {
-        OkHttpUtils.get()
-                .url(Urls.GTE_ORDER_COUNT)
-                .addParams(ACCESSTOKEN, token)
-                .addParams(USERID, userId)
-                .build()
-                .execute(new Callback() {
+        OkGo.<LzyResponse<GoodOrderCountMode>>get(Urls.GTE_ORDER_COUNT)
+                .tag(this)
+                .params(ACCESSTOKEN, token)
+                .params(USERID, userId)
+                .execute(new JsonCallback<LzyResponse<GoodOrderCountMode>>() {
                     @Override
-                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                        return new Gson().fromJson(mData, GoodOrderCountMode.class);
-                    }
-
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-                        ToastUtils.showShortToast(e.getMessage());
-                    }
-
-                    @SuppressLint("SetTextI18n")
-                    @Override
-                    public void onResponse(Object response, int id) {
-                        GoodOrderCountMode orderCountMode = (GoodOrderCountMode) response;
-                        if (orderCountMode != null) {
-                            waitPayOrder.setText("待付款(" + orderCountMode.getWaitPay() + ")");
-                            waitSendingOrder.setText("待发货(" + orderCountMode.getWaitDeliver() + ")");
-                            waitReceiveOrder.setText("待收货(" + orderCountMode.getWaitReceiving() + ")");
-                            waitEvaluateOrder.setText("待评价(" + orderCountMode.getWaitEval() + ")");
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<GoodOrderCountMode>> response) {
+                        //super.onSuccess(MyOrderActivity2.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0 && response.body().data != null) {
+                            GoodOrderCountMode orderCountMode = response.body().data;
+                            if (orderCountMode != null) {
+                                waitPayOrder.setText("待付款(" + orderCountMode.getWaitPay() + ")");
+                                waitSendingOrder.setText("待发货(" + orderCountMode.getWaitDeliver() + ")");
+                                waitReceiveOrder.setText("待收货(" + orderCountMode.getWaitReceiving() + ")");
+                                waitEvaluateOrder.setText("待评价(" + orderCountMode.getWaitEval() + ")");
+                            }
                         }
+                    }
+
+                    @Override
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse<GoodOrderCountMode>> response) {
+                        super.onError(response);
                     }
                 });
         getOrderList(status);
     }
 
     public void getSetMealOrderList() {
-        OkHttpUtils.get()
-                .url(Urls.SETMEAL_ORDER_LIST)
-                .addParams(ACCESSTOKEN, token)
-                .addParams(USERID, userId)
-                .build()
-                .execute(new Callback<SetMealOrderInfo>() {
 
+        OkGo.<LzyResponse<SetMealOrderInfo>>get(Urls.SETMEAL_ORDER_LIST)
+                .tag(this)
+                .params(ACCESSTOKEN, token)
+                .params(USERID, userId)
+                .execute(new JsonCallback<LzyResponse<SetMealOrderInfo>>() {
                     @Override
-                    public void onBefore(Request request, int id) {
-                        super.onBefore(request, id);
+                    public void onStart(com.lzy.okgo.request.base.Request<LzyResponse<SetMealOrderInfo>, ? extends com.lzy.okgo.request.base.Request> request) {
+                        super.onStart(request);
                         showloadDialog("");
                     }
 
                     @Override
-                    public void onError(Call call, Exception e, int id) {
+                    public void onSuccess(Response<LzyResponse<SetMealOrderInfo>> response) {
+                        super.onSuccess(MyOrderActivity2.this, response.body().msg, response.body().code);
                         goneloadDialog();
-                        refreshLayout.finishRefresh(false);
-                        ToastUtils.showShortToast(e.getMessage());
+                        refreshLayout.finishRefresh();
+                        if (response.body().code == 0 && response.body().data != null) {
+                            if (response != null) {
+                                waitPayOrder.setText("待付款(" + response.body().data.getWaitPayCount() + ")");
+                                waitSendingOrder.setText("待使用(" + response.body().data.getWaitUseCount() + ")");
+                                waitEvaluateOrder.setText("待评价(" + response.body().data.getWaitEvalCount() + ")");
+                                allSetMealOder = response.body().data.getAll();
+                                waitEvalSetMealOder = response.body().data.getWaitEval();
+                                waitPaySetMealOder = response.body().data.getWaitPay();
+                                waitUseSetMealOder = response.body().data.getWaitUse();
+                                if (butType == 0) {
+                                    currSetMealOder = allSetMealOder;
+                                } else if (butType == 1) {
+                                    currSetMealOder = waitPaySetMealOder;
+                                } else if (butType == 2) {
+                                    currSetMealOder = waitUseSetMealOder;
+                                } else if (butType == 4) {
+                                    currSetMealOder = waitEvalSetMealOder;
+                                }
+                                multipleItemOrderModels.clear();
+                                for (int i = 0; i < currSetMealOder.size(); i++) {
+                                    MultipleItemOrderModel multipleItemOrderModel = new MultipleItemOrderModel(MultipleItemOrderModel.SETMEAL_ORDER);
+                                    multipleItemOrderModel.setSetMealOrderModel(currSetMealOder.get(i));
+                                    multipleItemOrderModels.add(multipleItemOrderModel);
+                                }
+                                mAdapter.setNewData(multipleItemOrderModels);
+                                mAdapter.notifyDataSetChanged();
+                            }
+                        }
                     }
 
                     @Override
-                    public void onResponse(SetMealOrderInfo response, int id) {
+                    public void onError(Response<LzyResponse<SetMealOrderInfo>> response) {
+                        super.onError(response);
                         goneloadDialog();
-                        refreshLayout.finishRefresh();
-                        if (response != null) {
-                            waitPayOrder.setText("待付款(" + response.getWaitPayCount() + ")");
-                            waitSendingOrder.setText("待使用(" + response.getWaitUseCount() + ")");
-                            waitEvaluateOrder.setText("待评价(" + response.getWaitEvalCount() + ")");
-                            allSetMealOder = response.getAll();
-                            waitEvalSetMealOder = response.getWaitEval();
-                            waitPaySetMealOder = response.getWaitPay();
-                            waitUseSetMealOder = response.getWaitUse();
-                            if (butType == 0) {
-                                currSetMealOder = allSetMealOder;
-                            } else if (butType == 1) {
-                                currSetMealOder = waitPaySetMealOder;
-                            } else if (butType == 2) {
-                                currSetMealOder = waitUseSetMealOder;
-                            } else if (butType == 4) {
-                                currSetMealOder = waitEvalSetMealOder;
-                            }
-                            multipleItemOrderModels.clear();
-                            for (int i = 0; i < currSetMealOder.size(); i++) {
-                                MultipleItemOrderModel multipleItemOrderModel = new MultipleItemOrderModel(MultipleItemOrderModel.SETMEAL_ORDER);
-                                multipleItemOrderModel.setSetMealOrderModel(currSetMealOder.get(i));
-                                multipleItemOrderModels.add(multipleItemOrderModel);
-                            }
-                            mAdapter.setNewData(multipleItemOrderModels);
-                            mAdapter.notifyDataSetChanged();
-                        }
+                        refreshLayout.finishRefresh(false);
                     }
                 });
     }
@@ -585,154 +588,136 @@ public class MyOrderActivity2 extends BaseActivity {
         /*
         status --- -1代表全部,0代表待评价-2代表售后的单子（退款中和已退款） 其他的按照订单的状态传值
         * */
-        OkHttpUtils.post()
-                .url(Urls.GET_ORDER_INFO)
-                .addParams(ACCESSTOKEN, token)
-                .addParams(USERID, userId)
-                .addParams("status", status + "")
-                .build()
-                .execute(new Callback() {
 
+        OkGo.<LzyResponse<GoodsOrderInfo>>post(Urls.GET_ORDER_INFO)
+                .tag(this)
+                .params(ACCESSTOKEN, token)
+                .params(USERID, userId)
+                .params("status", status + "")
+                .execute(new JsonCallback<LzyResponse<GoodsOrderInfo>>() {
                     @Override
-                    public void onBefore(Request request, int id) {
-                        super.onBefore(request, id);
+                    public void onStart(com.lzy.okgo.request.base.Request<LzyResponse<GoodsOrderInfo>, ? extends com.lzy.okgo.request.base.Request> request) {
+                        super.onStart(request);
                         showloadDialog("");
                     }
 
                     @Override
-                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                        return new Gson().fromJson(mData, GoodsOrderInfo.class);
-                    }
-
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-                        goneloadDialog();
-                        refreshLayout.finishRefresh(false);
-                    }
-
-                    @Override
-                    public void onResponse(Object response, int id) {
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<GoodsOrderInfo>> response) {
+                        super.onSuccess(MyOrderActivity2.this, response.body().msg, response.body().code);
                         goneloadDialog();
                         refreshLayout.finishRefresh();
-                        goodsOrderInfo = (GoodsOrderInfo) response;
-                        multipleItemOrderModels.clear();
-                        if (goodsOrderInfo != null && goodsOrderInfo.getGoodsOrderList() != null) {
-                            goodsOrderList = goodsOrderInfo.getGoodsOrderList();
-                            for (int i = 0; i < goodsOrderList.size(); i++) {
-                                MultipleItemOrderModel multipleItemOrderModel = new MultipleItemOrderModel(MultipleItemOrderModel.GOODS_ORDER);
-                                multipleItemOrderModel.setGoodsOrderListBean(goodsOrderList.get(i));
-                                multipleItemOrderModels.add(multipleItemOrderModel);
+                        if (response.body().code == 0 && response.body().data != null) {
+                            goodsOrderInfo = response.body().data;
+                            multipleItemOrderModels.clear();
+                            if (goodsOrderInfo != null && goodsOrderInfo.getGoodsOrderList() != null) {
+                                goodsOrderList = goodsOrderInfo.getGoodsOrderList();
+                                for (int i = 0; i < goodsOrderList.size(); i++) {
+                                    MultipleItemOrderModel multipleItemOrderModel = new MultipleItemOrderModel(MultipleItemOrderModel.GOODS_ORDER);
+                                    multipleItemOrderModel.setGoodsOrderListBean(goodsOrderList.get(i));
+                                    multipleItemOrderModels.add(multipleItemOrderModel);
+                                }
                             }
+                            mAdapter.setNewData(multipleItemOrderModels);
+                            mAdapter.notifyDataSetChanged();
                         }
-                        mAdapter.setNewData(multipleItemOrderModels);
-                        mAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse<GoodsOrderInfo>> response) {
+                        super.onError(response);
+                        goneloadDialog();
+                        refreshLayout.finishRefresh(false);
                     }
                 });
     }
 
     public void delete(String orderNo) {
-        OkHttpUtils.get()
-                .url(Urls.DELETE_ORDER)
-                .addParams(ACCESSTOKEN, token)
-                .addParams(USERID, userId)
-                .addParams("orderNo", orderNo)
-                .build()
-                .execute(new Callback() {
+        OkGo.<LzyResponse>get(Urls.DELETE_ORDER)
+                .tag(this)
+                .params(ACCESSTOKEN, token)
+                .params(USERID, userId)
+                .params("orderNo", orderNo)
+                .execute(new JsonCallback<LzyResponse>() {
                     @Override
-                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                        return mData;
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onSuccess(MyOrderActivity2.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0) {
+                            ToastUtils.showShortToast("删除成功");
+                            initData();
+                        }
                     }
 
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-                        ToastUtils.showShortToast(e.getMessage());
-                    }
-
-                    @Override
-                    public void onResponse(Object response, int id) {
-                        ToastUtils.showShortToast("删除成功");
-                        initData();
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onError(response);
                     }
                 });
     }
 
     public void cancel(String orderNo) {
-        OkHttpUtils.get()
-                .url(Urls.CANCEL_ORDER)
-                .addParams(ACCESSTOKEN, token)
-                .addParams(USERID, userId)
-                .addParams("orderNo", orderNo)
-                .build()
-                .execute(new Callback() {
+
+        OkGo.<LzyResponse>get(Urls.CANCEL_ORDER)
+                .tag(this)
+                .params(ACCESSTOKEN, token)
+                .params(USERID, userId)
+                .params("orderNo", orderNo)
+                .execute(new JsonCallback<LzyResponse>() {
                     @Override
-                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                        return mData;
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onSuccess(MyOrderActivity2.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0) {
+                            ToastUtils.showShortToast("取消成功");
+                            initData();
+                        }
                     }
 
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-                        ToastUtils.showShortToast(e.getMessage());
-                    }
-
-                    @Override
-                    public void onResponse(Object response, int id) {
-                        ToastUtils.showShortToast("取消成功");
-                        initData();
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onError(response);
                     }
                 });
-
     }
 
     public void cancelSetMealOrder(String orderNo, String status) {
 
-        OkHttpUtils.post()
-                .url(Urls.CANCEL_SETMEAL_ORDER)
-                .addParams(ACCESSTOKEN, token)
-                .addParams(USERID, userId)
-                .addParams("orderNo", orderNo)
-                .addParams("status", status)
-                .build()
-                .execute(new Callback() {
+        OkGo.<LzyResponse>post(Urls.CANCEL_SETMEAL_ORDER)
+                .tag(this)
+                .params(ACCESSTOKEN, token)
+                .params(USERID, userId)
+                .params("orderNo", orderNo)
+                .params("status", status)
+                .execute(new JsonCallback<LzyResponse>() {
                     @Override
-                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                        return mData;
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onSuccess(MyOrderActivity2.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0) {
+                            ToastUtils.showShortToast("取消成功");
+                            getSetMealOrderList();
+                        }
                     }
 
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-                        ToastUtils.showShortToast(e.getMessage());
-                    }
-
-                    @Override
-                    public void onResponse(Object response, int id) {
-                        ToastUtils.showShortToast("取消成功");
-                        getSetMealOrderList();
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onError(response);
                     }
                 });
     }
 
     public void confirm(String orderNo) {
-        OkHttpUtils.get()
-                .url(Urls.CONFIRM_ORDER)
-                .addParams(ACCESSTOKEN, token)
-                .addParams(USERID, userId)
-                .addParams("orderNo", orderNo)
-                .build()
-                .execute(new Callback() {
-                    @Override
-                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                        return mData;
-                    }
 
+        OkGo.<LzyResponse>get(Urls.CONFIRM_ORDER)
+                .tag(this)
+                .params(ACCESSTOKEN, token)
+                .params(USERID, userId)
+                .params("orderNo", orderNo)
+                .execute(new JsonCallback<LzyResponse>() {
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-                        ToastUtils.showShortToast(e.getMessage());
-                    }
-
-                    @Override
-                    public void onResponse(Object response, int id) {
-                        ToastUtils.showShortToast("确认收货");
-                        initData();
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onSuccess(MyOrderActivity2.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0) {
+                            ToastUtils.showShortToast("确认收货");
+                            initData();
+                        }
                     }
                 });
     }

@@ -7,6 +7,8 @@ import android.widget.TextView;
 
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.login.LoginEvent;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.BindingAliAccountModel;
@@ -15,6 +17,8 @@ import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.StringUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.request.PostRequest;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.builder.PostFormBuilder;
 import com.zhy.http.okhttp.callback.Callback;
@@ -68,23 +72,25 @@ public class BindingAccountActivity extends BaseActivity {
     @Override
     protected void initData() {
         if (infoModel.getIsBind() == 1) {
-            OkHttpUtils.get()
-                    .url(Urls.GET_ALI_ACCOUNT)
-                    .addParams(Constant.ACCESSTOKEN, token)
-                    .addParams(Constant.USERID, userId)
-                    .build()
-                    .execute(new Callback<BindingAliAccountModel>() {
+            OkGo.<LzyResponse<BindingAliAccountModel>>get(Urls.GET_ALI_ACCOUNT)
+                    .tag(this)
+                    .params(Constant.ACCESSTOKEN, token)
+                    .params(Constant.USERID, userId)
+                    .execute(new JsonCallback<LzyResponse<BindingAliAccountModel>>() {
                         @Override
-                        public void onError(Call call, Exception e, int id) {
-
+                        public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<BindingAliAccountModel>> response) {
+                            super.onSuccess(BindingAccountActivity.this, response.body().msg, response.body().code);
+                            if (response.body().code == 0 && response.body().data != null) {
+                                bindingAliAccountModel = response.body().data;
+                                editName.setText(bindingAliAccountModel.getRealName());
+                                editAccount.setText(bindingAliAccountModel.getBankCardNo());
+                                editAgainAccount.setText(bindingAliAccountModel.getBankCardNo());
+                            }
                         }
 
                         @Override
-                        public void onResponse(BindingAliAccountModel response, int id) {
-                            bindingAliAccountModel = response;
-                            editName.setText(response.getRealName());
-                            editAccount.setText(response.getBankCardNo());
-                            editAgainAccount.setText(response.getBankCardNo());
+                        public void onError(com.lzy.okgo.model.Response<LzyResponse<BindingAliAccountModel>> response) {
+                            super.onError(response);
                         }
                     });
         }
@@ -117,37 +123,35 @@ public class BindingAccountActivity extends BaseActivity {
             ToastUtils.showShortToast("两次输入的账号不一致");
             return;
         }
-        PostFormBuilder postFormBuilder = OkHttpUtils.post()
-                .url(Urls.BING_ALI_ACCOUNT);
+
+        PostRequest<LzyResponse> postRequest = OkGo.<LzyResponse>post(Urls.BING_ALI_ACCOUNT)
+                .tag(this);
         if (infoModel != null && infoModel.getIsBind() == 1) {
-            postFormBuilder.addParams("id", bindingAliAccountModel.getBankCardId() + "");
+            postRequest.params("id", bindingAliAccountModel.getBankCardId() + "");
         }
-        postFormBuilder
-                .addParams(Constant.ACCESSTOKEN, token)
-                .addParams(Constant.USERID, userId)
-                .addParams("name", editName.getText().toString().trim())
-                .addParams("account", editAgainAccount.getText().toString().trim())
-                .build()
-                .execute(new Callback() {
+        postRequest
+                .params(Constant.ACCESSTOKEN, token)
+                .params(Constant.USERID, userId)
+                .params("name", editName.getText().toString().trim())
+                .params("account", editAgainAccount.getText().toString().trim())
+                .execute(new JsonCallback<LzyResponse>() {
                     @Override
-                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                        return mData;
-                    }
-
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-                        ToastUtils.showShortToast(e.getMessage());
-                    }
-
-                    @Override
-                    public void onResponse(Object response, int id) {
-                        if (infoModel.getIsBind() == 1) {
-                            ToastUtils.showShortToast("修改成功");
-                        } else {
-                            ToastUtils.showShortToast("绑定成功");
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onSuccess(BindingAccountActivity.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0) {
+                            if (infoModel.getIsBind() == 1) {
+                                ToastUtils.showShortToast("修改成功");
+                            } else {
+                                ToastUtils.showShortToast("绑定成功");
+                            }
+                            EventBus.getDefault().postSticky(LoginEvent.BINDING_ALI_ACCOUNT);
+                            finish();
                         }
-                        EventBus.getDefault().postSticky(LoginEvent.BINDING_ALI_ACCOUNT);
-                        finish();
+                    }
+
+                    @Override
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onError(response);
                     }
                 });
     }

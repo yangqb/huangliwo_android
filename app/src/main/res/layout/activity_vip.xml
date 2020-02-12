@@ -150,23 +150,53 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/dp_20"
-                        android:layout_marginTop="33dp"
-                        android:text="成为会员享受专属礼品"
-                        android:textColor="@color/color_333333"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
+                        android:layout_marginLeft="10dp"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal"
+                        android:background="@mipmap/f01_03huiyuanlipin" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginRight="10dp"
+                            android:drawableRight="@mipmap/xiala"
+                            android:drawablePadding="5dp"
+                            android:gravity="center"
+                            android:text="全部"
+                            android:textColor="@color/color_333333"
+                            android:textSize="13sp"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginRight="40dp"
+                            android:gravity="center"
+                            android:text="成为会员获得礼品总价值"
+                            android:textColor="@color/color_333333"
+                            android:textSize="15sp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="￥9998.00"
+                            android:textColor="@color/color_333333"
+                            android:textSize="17sp"/>
+
+                        </LinearLayout>
 
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
                         android:layout_marginBottom="110dp"
-                        android:orientation="horizontal"
-                        android:padding="@dimen/dp_10">
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:orientation="horizontal">
 
                         <android.support.v7.widget.RecyclerView
                             android:id="@+id/recyclerView"

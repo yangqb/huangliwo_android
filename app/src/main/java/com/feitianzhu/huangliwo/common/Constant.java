@@ -66,9 +66,9 @@ public class Constant {
     public final static int FailCode = 404;
 
     /*URL常量*/
-   public static final String Common_HEADER = "http://www.huangliwo.top:8088/";//正式环境
+   //public static final String Common_HEADER = "http://www.huangliwo.top:8088/";//正式环境
     //public final static String Common_HEADER = "http://192.168.0.21:8089/"; //钟工本地地址
-    //public final static String Common_HEADER = "http://39.106.65.35:8088/"; //测试地址
+     public final static String Common_HEADER = "http://39.106.65.35:8088/"; //测试地址
     //public final static String Common_HEADER = "http://192.168.0.15:8089/";//周工本地地址
     public final static String Common_H5_HEADER = "http://118.190.156.13/";
     public final static String LOADER_USERINFO = "fhwl/user/getuserinfo";
@@ -233,6 +233,7 @@ public class Constant {
     public static UserAuth mUserAuth;
     public static String provinceId;
     public static String cityId;
+    public static String USER_DATA = "user_data";
     public static String INTENT_GET_SET_PSW_TYPE = "intent_get_set_psw_type";
     public static String INTENT_IS_CHANGE_LOGIN_PWD = "is_change_login_pwd";
     public static String INTENT_OLD_PHONE = "intent_old_phone";

@@ -13,6 +13,8 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.MultiItemComment;
 import com.feitianzhu.huangliwo.shop.adapter.EditCommentAdapter;
@@ -23,6 +25,8 @@ import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.view.CustomRefundView;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.request.PostRequest;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -230,41 +234,37 @@ public class ProblemFeedbackActivity extends BaseActivity {
 
     public void submit() {
 
-        PostFormBuilder postFormBuilder = OkHttpUtils.post()
-                .url(Urls.USER_FEEDBACK);
-        Map<String, File> files = new HashMap<>();
+        PostRequest<LzyResponse> postRequest = OkGo.<LzyResponse>post(Urls.USER_FEEDBACK).tag(this);
+        List<File> fileList = new ArrayList<>();
         if (allSelect.size() > 0) {
             for (int i = 0; i < allSelect.size(); i++) {
-                String name = i + ".png";
-                files.put(name, new File(allSelect.get(i)));
+                fileList.add(new File(allSelect.get(i)));
             }
         }
-        if (files.size() > 0) {
-            postFormBuilder.addFiles("files", files);
+        if (fileList.size() > 0) {
+            postRequest.addFileParams("files", fileList);
         } else {
-            postFormBuilder.setMultipart(true);
+            postRequest.isMultipart(true);
         }
-        postFormBuilder
-                .addParams("accessToken", token)
-                .addParams("userId", userId)
-                .addParams("content", editContent.getText().toString().trim())
-                .addParams("status", problem)
-                .build()
-                .execute(new Callback() {
+
+        postRequest
+                .params("accessToken", token)
+                .params("userId", userId)
+                .params("content", editContent.getText().toString().trim())
+                .params("status", problem)
+                .execute(new JsonCallback<LzyResponse>() {
                     @Override
-                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                        return mData;
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onSuccess(ProblemFeedbackActivity.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0) {
+                            ToastUtils.showShortToast("提交成功");
+                            finish();
+                        }
                     }
 
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-                        ToastUtils.showShortToast(e.getMessage());
-                    }
-
-                    @Override
-                    public void onResponse(Object response, int id) {
-                        ToastUtils.showShortToast("提交成功");
-                        finish();
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onError(response);
                     }
                 });
     }

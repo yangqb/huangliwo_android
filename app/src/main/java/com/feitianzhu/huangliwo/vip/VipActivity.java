@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.me.ui.VerificationActivity2;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
@@ -19,10 +21,12 @@ import com.feitianzhu.huangliwo.model.PresentsModel;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
+import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 import com.google.gson.Gson;
 import com.gyf.immersionbar.ImmersionBar;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
+import com.lzy.okgo.OkGo;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
 
@@ -80,23 +84,24 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         mTempData = (MineInfoModel) getIntent().getSerializableExtra(MINE_INFO);
-        if (mTempData != null && mTempData.getAccountType() != 0) {
-            btnSumbit.setText("恭喜您已成为会员");
-            btnSumbit.setBackgroundResource(R.drawable.shape_e6e5e5_r5);
-            btnSumbit.setEnabled(false);
-            mCheckBox.setEnabled(false);
+        if (mTempData != null) {
+            if (mTempData.getAccountType() != 0) {
+                btnSumbit.setText("恭喜您已成为会员");
+                btnSumbit.setBackgroundResource(R.drawable.shape_e6e5e5_r5);
+                btnSumbit.setEnabled(false);
+                mCheckBox.setEnabled(false);
+            }
         }
         titleName.setText("成为会员");
         mCheckBox.setChecked(true);
         mCheckBox.setOnCheckedChangeListener(this);
         mCheckBox.setBackgroundResource(R.mipmap.f01_06xuanzhong5);
         adapter = new VipPresentsAdapter(shopGiftList);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
 
-    boolean isMore = true;
 
     @OnClick({R.id.left_button, R.id.moreVip, R.id.btn_submit, R.id.tv_protocol})
     public void onClick(View view) {
@@ -106,16 +111,7 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
                 finish();
                 break;
             case R.id.moreVip:
-                if (isMore) {
-                    moreVip.setText("收起会员权益");
-                    parentView.setVisibility(View.VISIBLE);
-                    imageView.setVisibility(View.GONE);
-                } else {
-                    moreVip.setText("更多会员权益");
-                    parentView.setVisibility(View.GONE);
-                    imageView.setVisibility(View.VISIBLE);
-                }
-                isMore = !isMore;
+                //跳转更多权益
                 break;
             case R.id.btn_submit:
                /* UserAuth mAuth = Constant.mUserAuth;
@@ -161,32 +157,32 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
 
     @Override
     protected void initData() {
-        OkHttpUtils.get()
-                .url(Urls.GET_VIP_PRESENT)
-                .addParams("accessToken", token)
-                .addParams("userId", userId)
-                .build()
-                .execute(new Callback() {
-                    @Override
-                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                        return new Gson().fromJson(mData, PresentsModel.class);
-                    }
 
+        OkGo.<LzyResponse<PresentsModel>>get(Urls.GET_VIP_PRESENT)
+                .tag(this)
+                .params("accessToken", token)
+                .params("userId", userId)
+                .execute(new JsonCallback<LzyResponse<PresentsModel>>() {
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-                        ToastUtils.showShortToast(e.getMessage());
-                    }
-
-                    @Override
-                    public void onResponse(Object response, int id) {
-                        PresentsModel presentsModel = (PresentsModel) response;
-                        if (presentsModel.getShopGiftList() == null || presentsModel.getShopGiftList().size() <= 0) {
-                            llPresents.setVisibility(View.GONE);
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<PresentsModel>> response) {
+                        super.onSuccess(VipActivity.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0 && response.body().data != null) {
+                            PresentsModel presentsModel = response.body().data;
+                            if (presentsModel.getShopGiftList() == null || presentsModel.getShopGiftList().size() <= 0) {
+                                llPresents.setVisibility(View.GONE);
+                            } else {
+                                shopGiftList = presentsModel.getShopGiftList();
+                                adapter.setNewData(shopGiftList);
+                                adapter.notifyDataSetChanged();
+                            }
                         } else {
-                            shopGiftList = presentsModel.getShopGiftList();
-                            adapter.setNewData(shopGiftList);
-                            adapter.notifyDataSetChanged();
+                            llPresents.setVisibility(View.GONE);
                         }
+                    }
+
+                    @Override
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse<PresentsModel>> response) {
+                        super.onError(response);
                     }
                 });
     }
@@ -207,6 +203,9 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
                 btnSumbit.setEnabled(false);
                 mCheckBox.setBackgroundResource(R.mipmap.f01_06xuanzhong5);
                 mCheckBox.setEnabled(false);
+                MineInfoModel mineInfoModel = UserInfoUtils.getUserInfo(VipActivity.this);
+                mineInfoModel.setAccountType(5);
+                UserInfoUtils.saveUserInfo(VipActivity.this, mineInfoModel);
             }
         }
     }

@@ -17,9 +17,9 @@ public class BalanceModel implements Serializable {
      * balance : 132
      */
 
-    private double waitRelease;
-    private double totalAmount;
-    private double balance;
+    public double waitRelease;
+    public double totalAmount;
+    public double balance;
 
     public double getWaitRelease() {
         return waitRelease;

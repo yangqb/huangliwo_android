@@ -20,6 +20,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.MineQRcodeModel;
@@ -28,6 +30,8 @@ import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ShareImageUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.view.CircleImageView;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.Response;
 import com.socks.library.KLog;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -104,21 +108,23 @@ public class MineQrcodeActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        OkHttpUtils.get()//
-                .url(Common_HEADER + Constant.POST_MINE_QRCODE)
-                .addParams(ACCESSTOKEN, token)//
-                .addParams(USERID, userId)
-                .build()
-                .execute(new Callback<MineQRcodeModel>() {
 
+        OkGo.<LzyResponse<MineQRcodeModel>>get(Common_HEADER + Constant.POST_MINE_QRCODE)
+                .tag(this)
+                .params(ACCESSTOKEN, token)//
+                .params(USERID, userId)
+                .execute(new JsonCallback<LzyResponse<MineQRcodeModel>>() {
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-                        Log.e("wangyan", "onError---->" + e.getMessage());
+                    public void onSuccess(Response<LzyResponse<MineQRcodeModel>> response) {
+                        super.onSuccess(MineQrcodeActivity.this,response.body().msg,response.body().code);
+                        if(response.body().data!=null){
+                            setShowData(response.body().data);
+                        }
                     }
 
                     @Override
-                    public void onResponse(MineQRcodeModel response, int id) {
-                        setShowData(response);
+                    public void onError(Response<LzyResponse<MineQRcodeModel>> response) {
+                        super.onError(response);
                     }
                 });
     }

@@ -11,6 +11,8 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
 import com.feitianzhu.huangliwo.model.MultipleItem;
@@ -21,6 +23,8 @@ import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.google.gson.Gson;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.request.base.Request;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -129,43 +133,45 @@ public class ShopsActivity extends BaseActivity {
     }
 
     public void getShops(int clsId) {
-        OkHttpUtils.post()
-                .url(Urls.GET_SHOP)
-                .addParams(ACCESSTOKEN, token)
-                .addParams(USERID, userId)
-                .addParams("cls_id", clsId + "")
-                .build()
-                .execute(new Callback() {
+
+        OkGo.<LzyResponse<Shops>>post(Urls.GET_SHOP)
+                .tag(this)
+                .params(ACCESSTOKEN, token)
+                .params(USERID, userId)
+                .params("cls_id", clsId + "")
+                .execute(new JsonCallback<LzyResponse<Shops>>() {
                     @Override
-                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                        goneloadDialog();
-                        return new Gson().fromJson(mData, Shops.class);
+                    public void onStart(Request<LzyResponse<Shops>, ? extends Request> request) {
+                        super.onStart(request);
+                        showloadDialog("");
                     }
 
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-                        mSwipeLayout.finishRefresh(false);
-                        ToastUtils.showShortToast(e.getMessage());
-                        goneloadDialog();
-                    }
-
-                    @Override
-                    public void onResponse(Object response, int id) {
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<Shops>> response) {
+                        super.onSuccess(ShopsActivity.this, "", response.body().code);
                         mSwipeLayout.finishRefresh();
                         goneloadDialog();
-                        Shops shops = (Shops) response;
-                        multipleItemList.clear();
-                        goodsListBeans.clear();
-                        goodsListBeans = shops.getGoodslist();
-                        for (int i = 0; i < goodsListBeans.size(); i++) {
-                            MultipleItem multipleItem = new MultipleItem(MultipleItem.GOODS);
-                            multipleItem.setGoodsListBean(goodsListBeans.get(i));
-                            multipleItemList.add(multipleItem);
+                        if (response.body().data != null) {
+                            Shops shops = response.body().data;
+                            multipleItemList.clear();
+                            goodsListBeans.clear();
+                            goodsListBeans = shops.getGoodslist();
+                            for (int i = 0; i < goodsListBeans.size(); i++) {
+                                MultipleItem multipleItem = new MultipleItem(MultipleItem.GOODS);
+                                multipleItem.setGoodsListBean(goodsListBeans.get(i));
+                                multipleItemList.add(multipleItem);
+                            }
+                            rightAdapter.setNewData(multipleItemList);
+                            rightAdapter.notifyDataSetChanged();
                         }
-                        rightAdapter.setNewData(multipleItemList);
-                        rightAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse<Shops>> response) {
+                        super.onError(response);
+                        mSwipeLayout.finishRefresh(false);
+                        goneloadDialog();
                     }
                 });
-
     }
 }

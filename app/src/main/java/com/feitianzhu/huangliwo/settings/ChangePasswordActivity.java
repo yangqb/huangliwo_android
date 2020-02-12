@@ -15,13 +15,24 @@ import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.huangliwo.dao.NetworkDao;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.utils.EncryptUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
+import com.feitianzhu.huangliwo.utils.Urls;
+import com.lzy.okgo.OkGo;
+import com.socks.library.KLog;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.Callback;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import okhttp3.Call;
+import okhttp3.Response;
+
+import static com.feitianzhu.huangliwo.common.Constant.FailCode;
 
 
 public class ChangePasswordActivity extends BaseActivity implements View.OnClickListener {
@@ -42,6 +53,8 @@ public class ChangePasswordActivity extends BaseActivity implements View.OnClick
     @BindView(R.id.title_name)
     TextView titleName;
     private boolean mIsChangeLoginPwd;
+    private String token;
+    private String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +69,8 @@ public class ChangePasswordActivity extends BaseActivity implements View.OnClick
     @Override
     protected void initView() {
         Intent intent = getIntent();
+        token = SPUtils.getString(ChangePasswordActivity.this, Constant.SP_ACCESS_TOKEN);
+        userId = SPUtils.getString(ChangePasswordActivity.this, Constant.SP_LOGIN_USERID);
         if (intent != null) {
             mIsChangeLoginPwd = intent.getBooleanExtra(Constant.INTENT_IS_CHANGE_LOGIN_PWD, true);
         }
@@ -116,42 +131,55 @@ public class ChangePasswordActivity extends BaseActivity implements View.OnClick
 
                 if (mIsChangeLoginPwd) {
 
-                    NetworkDao.changePassword(this, oldPassWord, newPassword1, newPassword2, new onConnectionFinishLinstener() {
-                        @Override
-                        public void onSuccess(int code, Object result) {
+                    OkGo.<LzyResponse>post(Urls.UPDATE_ULPASS)
+                            .tag(this)
+                            .params("oldPassword", oldPassWord)
+                            .params("newPassword", newPassword1)
+                            .params("confirmPassword", newPassword2)
+                            .params("accessToken", token)
+                            .params("userId", userId)
+                            .execute(new JsonCallback<LzyResponse>() {
+                                @Override
+                                public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
+                                    super.onSuccess(ChangePasswordActivity.this,response.body().msg,response.body().code);
+                                    if (response.body().code == 0) {
+                                        ToastUtils.showShortToast(mContext, R.string.change_ok);
+                                        SPUtils.putString(mContext, Constant.SP_PASSWORD, finalNewPassword);
+                                        startActivity(new Intent(mContext, MainActivity.class));
+                                        finish();
+                                    }
+                                }
 
-                            ToastUtils.showShortToast(mContext, R.string.change_ok);
-                            SPUtils.putString(mContext, Constant.SP_PASSWORD, finalNewPassword);
-                            startActivity(new Intent(mContext, MainActivity.class));
-                            finish();
-
-                        }
-
-                        @Override
-                        public void onFail(int code, String result) {
-
-                            ToastUtils.showShortToast(result);
-                        }
-                    });
+                                @Override
+                                public void onError(com.lzy.okgo.model.Response<LzyResponse> response) {
+                                    super.onError(response);
+                                }
+                            });
                 } else {
 
-                    NetworkDao.updatePayPassword(ChangePasswordActivity.this, oldPassWord, newPassword1, newPassword2, new onConnectionFinishLinstener() {
-                        @Override
-                        public void onSuccess(int code, Object result) {
+                    OkGo.<LzyResponse>post(Urls.UPDATE_UPAYPASS)
+                            .tag(this)
+                            .params("oldPassword", oldPassWord)
+                            .params("newPassword", newPassword1)
+                            .params("confirmPassword", newPassword2)
+                            .params("accessToken", token)
+                            .params("userId", userId)
+                            .execute(new JsonCallback<LzyResponse>() {
+                                @Override
+                                public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
+                                    super.onSuccess(ChangePasswordActivity.this,response.body().msg,response.body().code);
+                                    if (response.body().code == 0) {
+                                        ToastUtils.showShortToast(mContext, R.string.change_ok);
+                                        startActivity(new Intent(mContext, MainActivity.class));
+                                        finish();
+                                    }
+                                }
 
-                            ToastUtils.showShortToast(mContext, R.string.change_ok);
-                            startActivity(new Intent(mContext, MainActivity.class));
-                            finish();
-
-                        }
-
-                        @Override
-                        public void onFail(int code, String result) {
-
-                            ToastUtils.showShortToast(result);
-                        }
-                    });
-
+                                @Override
+                                public void onError(com.lzy.okgo.model.Response<LzyResponse> response) {
+                                    super.onError(response);
+                                }
+                            });
                 }
                 break;
             case R.id.tv_forget_password:

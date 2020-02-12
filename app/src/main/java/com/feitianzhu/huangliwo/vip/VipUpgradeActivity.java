@@ -19,12 +19,15 @@ import android.widget.TextView;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.login.LoginEvent;
 import com.feitianzhu.huangliwo.me.AddressManagementActivity;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.me.helper.CityModel;
 import com.feitianzhu.huangliwo.model.AddressInfo;
 import com.feitianzhu.huangliwo.model.PayInfo;
+import com.feitianzhu.huangliwo.model.PayModel;
 import com.feitianzhu.huangliwo.model.ShopRecordWxModel;
 import com.feitianzhu.huangliwo.shop.ShopDao;
 import com.feitianzhu.huangliwo.utils.PayUtils;
@@ -35,6 +38,7 @@ import com.feitianzhu.huangliwo.utils.doubleclick.SingleClick;
 import com.feitianzhu.huangliwo.view.CustomInputView;
 import com.google.gson.Gson;
 import com.lxj.xpopup.XPopup;
+import com.lzy.okgo.OkGo;
 import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
@@ -241,40 +245,34 @@ public class VipUpgradeActivity extends BaseActivity {
         } else {
             appId = "";
         }
-        OkHttpUtils.post().url(Common_HEADER + Constant.POST_UNION_LEVEL_PAY)
-                .addParams(ACCESSTOKEN, token)//
-                .addParams(USERID, userId)
-                .addParams("addressId", addressBean.getAddressId() + "")
-                .addParams("appId", appId)//这个是微信才需要的，
-                .addParams("payChannel", payType)
-                .addParams("parentId", account)
-                .build()
-                .execute(new Callback() {
-                    @Override
-                    public Object parseNetworkResponse(String mData, Response response, int id)
-                            throws Exception {
-                        return mData;
-                    }
 
+        OkGo.<LzyResponse<PayModel>>post(Common_HEADER + Constant.POST_UNION_LEVEL_PAY)
+                .tag(this)
+                .params(ACCESSTOKEN, token)//
+                .params(USERID, userId)
+                .params("addressId", addressBean.getAddressId() + "")
+                .params("appId", appId)//这个是微信才需要的，
+                .params("payChannel", payType)
+                .params("parentId", account)
+                .execute(new JsonCallback<LzyResponse<PayModel>>() {
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-                        ToastUtils.showShortToast(e.getMessage());
-                    }
-
-                    @Override
-                    public void onResponse(Object response, int id) {
-                        if ("alipay".equals(payType)) {
-                            try {
-                                JSONObject object = new JSONObject(response.toString());
-                                String orderInfo = object.getString("payParam");
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<PayModel>> response) {
+                        super.onSuccess(VipUpgradeActivity.this, response.body().msg, response.body().code);
+                        if (response.body().data != null && response.body().code == 0) {
+                            if ("alipay".equals(payType)) {
+                                String orderInfo = response.body().data.payParam;
                                 aliPay(orderInfo);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+
+                            } else if ("wx".equals(payType)) {
+                                Constant.PayFlag = PayInfo.UNIONLEVEL;
+                                CallWxPay(response.body().data);
                             }
-                        } else if ("wx".equals(payType)) {
-                            Constant.PayFlag = PayInfo.UNIONLEVEL;
-                            CallWxPay(response.toString());
                         }
+                    }
+
+                    @Override
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse<PayModel>> response) {
+                        super.onError(response);
                     }
                 });
 
@@ -324,20 +322,17 @@ public class VipUpgradeActivity extends BaseActivity {
                 .show();
     }
 
-    private void CallWxPay(String result) {
-        Log.e("Test", "--------result----->" + result);
-        Gson gson = new Gson();
-        ShopRecordWxModel mResult = gson.fromJson(result, ShopRecordWxModel.class);
-        IWXAPI api = WXAPIFactory.createWXAPI(VipUpgradeActivity.this, mResult.getAppid());
-        api.registerApp(mResult.getAppid());
+    private void CallWxPay(PayModel mResult) {
+        IWXAPI api = WXAPIFactory.createWXAPI(VipUpgradeActivity.this, mResult.appid);
+        api.registerApp(mResult.appid);
         PayReq mPayReq = new PayReq();
         mPayReq.appId = Constant.WX_APP_ID;
-        mPayReq.partnerId = mResult.getPartnerid();
-        mPayReq.prepayId = mResult.getPrepayid();
+        mPayReq.partnerId = mResult.partnerid;
+        mPayReq.prepayId = mResult.prepayid;
         mPayReq.packageValue = "Sign=WXPay";
-        mPayReq.nonceStr = mResult.getNoncestr();
-        mPayReq.timeStamp = mResult.getTimestamp() + "";
-        mPayReq.sign = mResult.getSign();
+        mPayReq.nonceStr = mResult.noncestr;
+        mPayReq.timeStamp = mResult.timestamp + "";
+        mPayReq.sign = mResult.sign;
         api.sendReq(mPayReq);
         ToastUtils.showShortToast("正在打开微信中");
     }
@@ -348,47 +343,46 @@ public class VipUpgradeActivity extends BaseActivity {
         /*
          * 获取默认收货地址
          * */
-        OkHttpUtils.post()
-                .url(Urls.GET_ADDRESS)
-                .addParams("accessToken", token)
-                .addParams("userId", userId)
-                .build()
-                .execute(new Callback() {
+        OkGo.<LzyResponse<AddressInfo>>post(Urls.GET_ADDRESS)
+                .tag(this)
+                .params("accessToken", token)
+                .params("userId", userId)
+                .execute(new JsonCallback<LzyResponse<AddressInfo>>() {
                     @Override
-                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                        return new Gson().fromJson(mData, AddressInfo.class);
-                    }
-
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-
-                    }
-
-                    @Override
-                    public void onResponse(Object response, int id) {
-                        AddressInfo addressInfo = (AddressInfo) response;
-                        addressInfos = addressInfo.getShopAddressList();
-                        if (addressInfos.size() > 0) {
-                            for (AddressInfo.ShopAddressListBean address : addressInfos
-                            ) {
-                                if (address.getIsDefalt() == 1) {
-                                    noAddress.setVisibility(View.GONE);
-                                    rlAddress.setVisibility(View.VISIBLE);
-                                    addressBean = address;
-                                    tvAddress.setText(addressBean.getProvinceName() + addressBean.getCityName() + addressBean.getAreaName() + addressBean.getDetailAddress());
-                                    name.setText(addressBean.getUserName());
-                                    phone.setText(addressBean.getPhone());
-                                    break;
-                                } else {
-                                    noAddress.setVisibility(View.VISIBLE);
-                                    rlAddress.setVisibility(View.GONE);
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<AddressInfo>> response) {
+                        super.onSuccess(VipUpgradeActivity.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0 && response.body().data != null) {
+                            AddressInfo addressInfo = response.body().data;
+                            addressInfos = addressInfo.getShopAddressList();
+                            if (addressInfos.size() > 0) {
+                                for (AddressInfo.ShopAddressListBean address : addressInfos
+                                ) {
+                                    if (address.getIsDefalt() == 1) {
+                                        noAddress.setVisibility(View.GONE);
+                                        rlAddress.setVisibility(View.VISIBLE);
+                                        addressBean = address;
+                                        tvAddress.setText(addressBean.getProvinceName() + addressBean.getCityName() + addressBean.getAreaName() + addressBean.getDetailAddress());
+                                        name.setText(addressBean.getUserName());
+                                        phone.setText(addressBean.getPhone());
+                                        break;
+                                    } else {
+                                        noAddress.setVisibility(View.VISIBLE);
+                                        rlAddress.setVisibility(View.GONE);
+                                    }
                                 }
+                            } else {
+                                noAddress.setVisibility(View.VISIBLE);
+                                rlAddress.setVisibility(View.GONE);
                             }
                         } else {
                             noAddress.setVisibility(View.VISIBLE);
                             rlAddress.setVisibility(View.GONE);
                         }
+                    }
 
+                    @Override
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse<AddressInfo>> response) {
+                        super.onError(response);
                     }
                 });
     }

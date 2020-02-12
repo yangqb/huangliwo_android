@@ -32,6 +32,9 @@ import com.feitianzhu.huangliwo.home.adapter.HomeRecommendAdapter2;
 import com.feitianzhu.huangliwo.home.entity.HomeEntity;
 import com.feitianzhu.huangliwo.home.entity.NoticeModel;
 import com.feitianzhu.huangliwo.home.entity.ShopAndMerchants;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
+import com.feitianzhu.huangliwo.login.LoginActivity;
 import com.feitianzhu.huangliwo.login.LoginEvent;
 import com.feitianzhu.huangliwo.me.ui.PersonalCenterActivity2;
 import com.feitianzhu.huangliwo.me.ui.ScannerActivity;
@@ -50,12 +53,14 @@ import com.feitianzhu.huangliwo.shop.ui.dialog.ProvinceDialog2;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
+import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 import com.feitianzhu.huangliwo.view.CircleImageView;
 import com.feitianzhu.huangliwo.view.CustomNerYearPopView;
 import com.feitianzhu.huangliwo.vip.VipActivity;
 import com.google.gson.Gson;
 import com.itheima.roundedimageview.RoundedImageView;
 import com.lxj.xpopup.XPopup;
+import com.lzy.okgo.OkGo;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
@@ -255,7 +260,7 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack {
         switch (view.getId()) {
             case R.id.ll_location:
                 ProvinceDialog2 branchDialog = ProvinceDialog2.newInstance();
-                branchDialog.setAddress("北京市", "东城区","东华门街道");
+                branchDialog.setAddress("北京市", "东城区", "东华门街道");
                 branchDialog.setSelectOnListener(this);
                 branchDialog.show(getChildFragmentManager());
                 break;
@@ -289,77 +294,51 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack {
     }
 
     public void getNotice() {
-        OkHttpUtils
-                .get()
-                .url(Urls.GET_HOME_NOTICE)
-                .addParams("accessToken", token)
-                .addParams("userId", userId)
-                .build()
-                .execute(new Callback<NoticeModel>() {
-
+        OkGo.<LzyResponse<NoticeModel>>get(Urls.GET_HOME_NOTICE)
+                .tag(this)
+                .params("accessToken", token)
+                .params("userId", userId)
+                .execute(new JsonCallback<LzyResponse<NoticeModel>>() {
                     @Override
-                    public NoticeModel parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                        return super.parseNetworkResponse(mData, response, id);
-                    }
-
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-                        ToastUtils.showShortToast(e.getMessage());
-                    }
-
-                    @Override
-                    public void onResponse(NoticeModel response, int id) {
-                        if (response.getPushMsg() != null && !TextUtils.isEmpty(response.getPushMsg().getPushContent()) && response.getPushMsg().getPushContent() != null) {
-                            llNotice.setVisibility(View.VISIBLE);
-                            tvNotice.setText(response.getPushMsg().getPushContent());
-                        } else {
-                            llNotice.setVisibility(View.GONE);
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<NoticeModel>> response) {
+                        super.onSuccess(getActivity(), "", response.body().code);
+                        if (response.body().data != null) {
+                            NoticeModel noticeModel = response.body().data;
+                            if (noticeModel.getPushMsg() != null && !TextUtils.isEmpty(noticeModel.getPushMsg().getPushContent()) && noticeModel.getPushMsg().getPushContent() != null) {
+                                llNotice.setVisibility(View.VISIBLE);
+                                tvNotice.setText(noticeModel.getPushMsg().getPushContent());
+                            } else {
+                                llNotice.setVisibility(View.GONE);
+                            }
                         }
+                    }
+
+                    @Override
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse<NoticeModel>> response) {
+                        super.onError(response);
                     }
                 });
     }
 
     public void getData() {
-        OkHttpUtils
-                .get()
-                .url(Urls.GET_INDEX)
-                .addParams("accessToken", token)
-                .addParams("userId", userId)
-                .build()
-                .execute(new Callback() {
+        OkGo.<LzyResponse<HomeEntity>>get(Urls.GET_INDEX)
+                .tag(this)
+                .params("accessToken", token)
+                .params("userId", userId)
+                .execute(new JsonCallback<LzyResponse<HomeEntity>>() {
                     @Override
-                    public void onBefore(Request request, int id) {
-                        super.onBefore(request, id);
-                    }
-
-                    @Override
-                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                        return new Gson().fromJson(mData, HomeEntity.class);
-                    }
-
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-                        if (!isLoadMore) {
-                            mSwipeLayout.finishRefresh(false);
-                        } else {
-                            mSwipeLayout.finishLoadMore(false);
-                        }
-                        Toast.makeText(getActivity(), TextUtils.isEmpty(e.getMessage()) ? "加载失败，请重试" : e.getMessage(), Toast.LENGTH_SHORT).show();
-                        KLog.e(e);
-                    }
-
-                    @Override
-                    public void onResponse(Object response, int id) {
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<HomeEntity>> response) {
+                        super.onSuccess(getActivity(), "", response.body().code);
                         if (!isLoadMore) {
                             mSwipeLayout.finishRefresh();
                         } else {
                             mSwipeLayout.finishLoadMore();
                         }
 
-                        mHomeEntity = (HomeEntity) response;
+                        mHomeEntity = response.body().data;
 
                         //1.set banner
-                        if (mHomeEntity.bannerList != null && !mHomeEntity.bannerList.isEmpty()) {
+                        if (mHomeEntity != null && mHomeEntity.bannerList != null && !mHomeEntity.bannerList.isEmpty()) {
                             mBanners.clear();
                             mBanners.addAll(mHomeEntity.bannerList);
                             mViewpager.setCanLoop(true)
@@ -378,31 +357,66 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack {
                             mViewpager.startLoop();
                         }
                     }
+
+                    @Override
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse<HomeEntity>> response) {
+                        super.onError(response);
+                        if (!isLoadMore) {
+                            mSwipeLayout.finishRefresh(false);
+                        } else {
+                            mSwipeLayout.finishLoadMore(false);
+                        }
+                        Toast.makeText(getActivity(), TextUtils.isEmpty(response.body().msg) ? "加载失败，请重试" : response.body().msg, Toast.LENGTH_SHORT).show();
+                    }
                 });
     }
 
     public void getGoodsData() {
-        OkHttpUtils.get()
-                .url(Urls.GET_HOME_GOODS_LIST)
-                .addParams("accessToken", token)
-                .addParams("userId", userId)
-                .addParams("limitNum", Constant.PAGE_SIZE)
-                .addParams("curPage", pageNo + "")
-                .build()
-                .execute(new Callback() {
+
+        OkGo.<LzyResponse<HomeShops>>get(Urls.GET_HOME_GOODS_LIST)
+                .tag(this)
+                .params("accessToken", token)
+                .params("userId", userId)
+                .params("limitNum", Constant.PAGE_SIZE)
+                .params("curPage", pageNo + "")
+                .execute(new JsonCallback<LzyResponse<HomeShops>>() {
                     @Override
-                    public void onBefore(Request request, int id) {
-                        super.onBefore(request, id);
+                    public void onStart(com.lzy.okgo.request.base.Request<LzyResponse<HomeShops>, ? extends com.lzy.okgo.request.base.Request> request) {
+                        super.onStart(request);
                         showloadDialog("");
                     }
 
                     @Override
-                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                        return new Gson().fromJson(mData, HomeShops.class);
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<HomeShops>> response) {
+                        super.onSuccess(getActivity(), "", response.body().code);
+                        goneloadDialog();
+                        if (!isLoadMore) {
+                            mSwipeLayout.finishRefresh();
+                        } else {
+                            mSwipeLayout.finishLoadMore();
+                        }
+                        HomeShops homeShops = response.body().data;
+                        if (!isLoadMore) {
+                            shopAndMerchants.clear();
+                        }
+                        //商品
+                        if (homeShops != null) {
+                            shopsLists = homeShops.getGoodsList();
+                            if (shopsLists != null && shopsLists.size() > 0) {
+                                for (int i = 0; i < shopsLists.size(); i++) {
+                                    ShopAndMerchants entity = new ShopAndMerchants(ShopAndMerchants.TYPE_GOODS);
+                                    entity.setShopsList(shopsLists.get(i));
+                                    shopAndMerchants.add(entity);
+                                }
+                                mAdapter.setNewData(shopAndMerchants);
+                                mAdapter.notifyDataSetChanged();
+                            }
+                        }
                     }
 
                     @Override
-                    public void onError(Call call, Exception e, int id) {
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse<HomeShops>> response) {
+                        super.onError(response);
                         goneloadDialog();
                         if (!isLoadMore) {
                             mSwipeLayout.finishRefresh(false);
@@ -410,62 +424,33 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack {
                             mSwipeLayout.finishLoadMore(false);
                         }
                     }
-
-                    @Override
-                    public void onResponse(Object response, int id) {
-                        goneloadDialog();
-                        if (!isLoadMore) {
-                            mSwipeLayout.finishRefresh();
-                        } else {
-                            mSwipeLayout.finishLoadMore();
-                        }
-                        HomeShops homeShops = (HomeShops) response;
-                        shopsLists = homeShops.getGoodsList();
-                        if (!isLoadMore) {
-                            shopAndMerchants.clear();
-                        }
-                        //商品
-                        if (shopsLists != null && shopsLists.size() > 0) {
-                            for (int i = 0; i < shopsLists.size(); i++) {
-                                ShopAndMerchants entity = new ShopAndMerchants(ShopAndMerchants.TYPE_GOODS);
-                                entity.setShopsList(shopsLists.get(i));
-                                shopAndMerchants.add(entity);
-                            }
-                            mAdapter.setNewData(shopAndMerchants);
-                            mAdapter.notifyDataSetChanged();
-                        }
-
-                    }
                 });
     }
 
     public void getClasses() {
-        OkHttpUtils.post()
-                .url(Urls.GET_SHOP_CLASS)
-                .addParams(ACCESSTOKEN, token)
-                .addParams(USERID, userId)
-                .build()
-                .execute(new Callback() {
 
+        OkGo.<LzyResponse<ShopClassify>>post(Urls.GET_SHOP_CLASS)
+                .tag(this)
+                .params(ACCESSTOKEN, token)
+                .params(USERID, userId)
+                .execute(new JsonCallback<LzyResponse<ShopClassify>>() {
                     @Override
-                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                        return new Gson().fromJson(mData, ShopClassify.class);
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<ShopClassify>> response) {
+                        super.onSuccess(getActivity(), "", response.body().code);
+                        ShopClassify shopClassify = response.body().data;
+                        if (shopClassify != null && shopClassify.getGGoodsClsList() != null) {
+                            shopClassifyLsit = shopClassify.getGGoodsClsList();
+                            hAdapter.setNewData(shopClassifyLsit);
+                            hAdapter.notifyDataSetChanged();
+                        }
                     }
 
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-                        Toast.makeText(getActivity(), TextUtils.isEmpty(e.getMessage()) ? "加载失败，请重试" : e.getMessage(), Toast.LENGTH_SHORT).show();
-                        KLog.e(e);
-                    }
-
-                    @Override
-                    public void onResponse(Object response, int id) {
-                        ShopClassify shopClassify = (ShopClassify) response;
-                        shopClassifyLsit = shopClassify.getGGoodsClsList();
-                        hAdapter.setNewData(shopClassifyLsit);
-                        hAdapter.notifyDataSetChanged();
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse<ShopClassify>> response) {
+                        super.onError(response);
                     }
                 });
+
     }
 
     @Override
@@ -614,27 +599,25 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack {
      * 获取头像
      * */
     private void requestData() {
-        OkHttpUtils.get()//
-                .url(Common_HEADER + POST_MINE_INFO)
-                .addParams(ACCESSTOKEN, token)//
-                .addParams(USERID, userId)
-                .build()
-                .execute(new Callback<MineInfoModel>() {
-
+        OkGo.<LzyResponse<MineInfoModel>>get(Common_HEADER + POST_MINE_INFO)
+                .tag(this)
+                .params(ACCESSTOKEN, token)
+                .params(USERID, userId)
+                .execute(new JsonCallback<LzyResponse<MineInfoModel>>() {
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-                        Log.e("wangyan", "onError---->" + e.getMessage());
-                        ToastUtils.showShortToast(e.getMessage());
-                    }
-
-                    @Override
-                    public void onResponse(MineInfoModel response, int id) {
-                        if (response != null) {
-                            mineInfoModel = response;
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<MineInfoModel>> response) {
+                        super.onSuccess(getActivity(), "", response.body().code);
+                        if (response.body().data != null) {
+                            mineInfoModel = response.body().data;
                             String headImg = mineInfoModel.getHeadImg();
                             Glide.with(mContext).load(headImg).apply(RequestOptions.placeholderOf(R.mipmap.b08_01touxiang).error(R.mipmap.b08_01touxiang).dontAnimate())
                                     .into(ivHead);
                         }
+                    }
+
+                    @Override
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse<MineInfoModel>> response) {
+                        super.onError(response);
                     }
                 });
     }

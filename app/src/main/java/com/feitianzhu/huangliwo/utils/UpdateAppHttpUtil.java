@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.feitianzhu.huangliwo.common.Constant;
+import com.lzy.okgo.OkGo;
 import com.vector.update_app.HttpManager;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.OkHttpUtilsForDown;
@@ -40,6 +41,29 @@ public class UpdateAppHttpUtil implements HttpManager {
      */
     @Override
     public void asyncGet(@NonNull String url, @NonNull Map<String, String> params, @NonNull final Callback callBack) {
+       /* OkGo.<String>get(url)
+                .params(ACCESSTOKEN, token)//
+                .params(USERID, userId)//
+                .params(TYPE, "1")//
+                .execute(new com.lzy.okgo.callback.StringCallback(){
+
+                    @Override
+                    public void onSuccess(com.lzy.okgo.model.Response<String> response) {
+                        if (null != callBack) {
+                            callBack.onResponse(response.body());
+                        }
+                    }
+
+                    @Override
+                    public void onError(com.lzy.okgo.model.Response<String> response) {
+                        super.onError(response);
+                        if (null != callBack) {
+                            callBack.onError(response.message());
+                        }
+                    }
+                });*/
+
+
         OkHttpUtils.get()
                 .url(url)
                 .addParams(ACCESSTOKEN, token)//

@@ -11,12 +11,15 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.adapter.AddressManagementAdapter;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.AddressInfo;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.google.gson.Gson;
+import com.lzy.okgo.OkGo;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
 
@@ -61,7 +64,7 @@ public class AddressManagementActivity extends BaseActivity {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new AddressManagementAdapter(addressInfos);
-      View mEmptyView = View.inflate(this, R.layout.view_common_nodata, null);
+        View mEmptyView = View.inflate(this, R.layout.view_common_nodata, null);
         ImageView img_empty = (ImageView) mEmptyView.findViewById(R.id.img_empty);
         img_empty.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,28 +139,26 @@ public class AddressManagementActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        OkHttpUtils.post()
-                .url(Urls.GET_ADDRESS)
-                .addParams("accessToken", token)
-                .addParams("userId", userId)
-                .build()
-                .execute(new Callback() {
-                    @Override
-                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                        return new Gson().fromJson(mData, AddressInfo.class);
-                    }
 
+        OkGo.<LzyResponse<AddressInfo>>post(Urls.GET_ADDRESS)
+                .tag(this)
+                .params("accessToken", token)
+                .params("userId", userId)
+                .execute(new JsonCallback<LzyResponse<AddressInfo>>() {
                     @Override
-                    public void onError(Call call, Exception e, int id) {
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<AddressInfo>> response) {
+                        super.onSuccess(AddressManagementActivity.this, response.body().msg, response.body().code);
                         mSwipeLayout.setRefreshing(false);
+                        if (response.body().code == 0 && response.body().data != null) {
+                            AddressInfo addressInfo = response.body().data;
+                            addressInfos = addressInfo.getShopAddressList();
+                            adapter.setNewData(addressInfos);
+                            adapter.notifyDataSetChanged();
+                        }
                     }
-
                     @Override
-                    public void onResponse(Object response, int id) {
-                        AddressInfo addressInfo = (AddressInfo) response;
-                        addressInfos = addressInfo.getShopAddressList();
-                        adapter.setNewData(addressInfos);
-                        adapter.notifyDataSetChanged();
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse<AddressInfo>> response) {
+                        super.onError(response);super.onError(response);
                         mSwipeLayout.setRefreshing(false);
                     }
                 });

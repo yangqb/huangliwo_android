@@ -12,7 +12,6 @@ import android.text.Spanned;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,9 +23,10 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
-import com.feitianzhu.huangliwo.TestActivity;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.SFFragment;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.login.LoginEvent;
 import com.feitianzhu.huangliwo.me.adapter.CenterAdapter;
 import com.feitianzhu.huangliwo.me.ui.AuthEvent;
@@ -40,22 +40,19 @@ import com.feitianzhu.huangliwo.pushshop.PushShopHomeActivity;
 import com.feitianzhu.huangliwo.settings.SettingsActivity;
 import com.feitianzhu.huangliwo.shop.ShopDao;
 import com.feitianzhu.huangliwo.shop.ui.MyOrderActivity2;
-import com.feitianzhu.huangliwo.shop.ui.ShoppingCartActivity;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
+import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 import com.feitianzhu.huangliwo.view.CircleImageView;
 import com.feitianzhu.huangliwo.view.CustomVerificationView;
-import com.feitianzhu.huangliwo.vip.CustomPopup;
 import com.feitianzhu.huangliwo.vip.VipActivity;
-import com.google.gson.Gson;
 import com.lxj.xpopup.XPopup;
-import com.lxj.xpopup.interfaces.OnConfirmListener;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.Response;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.Callback;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -68,15 +65,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-import okhttp3.Call;
-import okhttp3.Request;
-import okhttp3.Response;
 
-import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
-import static com.feitianzhu.huangliwo.common.Constant.LOAD_USER_AUTH;
 import static com.feitianzhu.huangliwo.common.Constant.POST_MINE_INFO;
-import static com.feitianzhu.huangliwo.common.Constant.USERID;
 
 /**
  * @class name：com.feitianzhu.fu700.me
@@ -172,33 +163,31 @@ public class MyCenterFragment extends SFFragment {
     }
 
     public void getData() {
-        OkHttpUtils.get()
-                .url(Urls.GET_USER_MONEY_INFO)
-                .addParams(Constant.ACCESSTOKEN, token)
-                .addParams(Constant.USERID, userId)
-                .build()
-                .execute(new Callback() {
-                    @Override
-                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                        return new Gson().fromJson(mData, BalanceModel.class);
-                    }
 
+        OkGo.<LzyResponse<BalanceModel>>get(Urls.GET_USER_MONEY_INFO)
+                .tag(this)
+                .params(Constant.ACCESSTOKEN, token)
+                .params(Constant.USERID, userId)
+                .execute(new JsonCallback<LzyResponse<BalanceModel>>() {
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-                        ToastUtils.showShortToast(e.getMessage());
-                    }
-
-                    @Override
-                    public void onResponse(Object response, int id) {
-                        balanceModel = (BalanceModel) response;
-                        if (balanceModel != null) {
-                            amount = String.format(Locale.getDefault(), "%.2f", balanceModel.getWaitRelease());
-                            amount2 = String.format(Locale.getDefault(), "%.2f", balanceModel.getTotalAmount());
-                            amount3 = String.format(Locale.getDefault(), "%.2f", balanceModel.getBalance());
-                            setSpannableString(toBeReleasedAmount, tvProfit, tvWithdrawal, amount, amount2, amount3);
-                        } else {
-                            setSpannableString(toBeReleasedAmount, tvProfit, tvWithdrawal, "0.00", "0.00", "0.00");
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<BalanceModel>> response) {
+                        super.onSuccess(getActivity(), response.body().msg, response.body().code);
+                        if (response.body().code == 0) {
+                            balanceModel = response.body().data;
+                            if (balanceModel != null) {
+                                amount = String.format(Locale.getDefault(), "%.2f", balanceModel.getWaitRelease());
+                                amount2 = String.format(Locale.getDefault(), "%.2f", balanceModel.getTotalAmount());
+                                amount3 = String.format(Locale.getDefault(), "%.2f", balanceModel.getBalance());
+                                setSpannableString(toBeReleasedAmount, tvProfit, tvWithdrawal, amount, amount2, amount3);
+                            } else {
+                                setSpannableString(toBeReleasedAmount, tvProfit, tvWithdrawal, "0.00", "0.00", "0.00");
+                            }
                         }
+                    }
+
+                    @Override
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse<BalanceModel>> response) {
+                        super.onError(response);
                     }
                 });
     }
@@ -206,39 +195,42 @@ public class MyCenterFragment extends SFFragment {
     public void requestData() {
         token = SPUtils.getString(getActivity(), Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(getActivity(), Constant.SP_LOGIN_USERID);
-        OkHttpUtils.get()//
-                .url(Common_HEADER + POST_MINE_INFO)
-                .addParams(ACCESSTOKEN, token)//
-                .addParams(USERID, userId)
-                .build().execute(new Callback<MineInfoModel>() {
-            @Override
-            public void onBefore(Request request, int id) {
-                super.onBefore(request, id);
-                showloadDialog("");
-            }
+        OkGo.<LzyResponse<MineInfoModel>>get(Common_HEADER + POST_MINE_INFO)
+                .tag(this)
+                .params(Constant.ACCESSTOKEN, token)
+                .params(Constant.USERID, userId)
+                .execute(new JsonCallback<LzyResponse<MineInfoModel>>() {
+                    @Override
+                    public void onStart(com.lzy.okgo.request.base.Request<LzyResponse<MineInfoModel>, ? extends com.lzy.okgo.request.base.Request> request) {
+                        super.onStart(request);
+                        showloadDialog("");
+                    }
 
-            @Override
-            public void onError(Call call, Exception e, int id) {
-                goneloadDialog();
-                if (refreshLayout != null) {
-                    refreshLayout.finishRefresh();
-                }
-                Log.e("wangyan", "onError---->" + e.getMessage());
-                ToastUtils.showShortToast(e.getMessage());
-            }
+                    @Override
+                    public void onSuccess(Response<LzyResponse<MineInfoModel>> response) {
+                        //super.onSuccess(getActivity(), "您的账号在其它设备登录", response.body().code);
 
-            @Override
-            public void onResponse(MineInfoModel response, int id) {
-                goneloadDialog();
-                if (refreshLayout != null) {
-                    refreshLayout.finishRefresh();
-                }
-                if (response != null) {
-                    mTempData = response;
-                    setShowData(response);
-                }
-            }
-        });
+                        goneloadDialog();
+                        if (refreshLayout != null) {
+                            refreshLayout.finishRefresh();
+                        }
+                        if (response.body().code == 0 && response.body().data != null) {
+                            mTempData = response.body().data;
+                            UserInfoUtils.saveUserInfo(getActivity(), mTempData);
+                            setShowData(response.body().data);
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Response<LzyResponse<MineInfoModel>> response) {
+                        super.onError(response);
+                        goneloadDialog();
+                        if (refreshLayout != null) {
+                            refreshLayout.finishRefresh();
+                        }
+                    }
+                });
     }
 
     private void setShowData(MineInfoModel response) {

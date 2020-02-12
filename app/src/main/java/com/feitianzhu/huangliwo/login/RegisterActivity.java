@@ -18,12 +18,16 @@ import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.huangliwo.dao.NetworkDao;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.utils.EncryptUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.StringUtils;
+import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.gyf.immersionbar.ImmersionBar;
+import com.lzy.okgo.OkGo;
 import com.socks.library.KLog;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
@@ -31,6 +35,8 @@ import com.zhy.http.okhttp.callback.Callback;
 import butterknife.BindView;
 import okhttp3.Call;
 import okhttp3.Response;
+
+import static com.feitianzhu.huangliwo.common.Constant.FailCode;
 
 
 public class RegisterActivity extends BaseActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
@@ -146,36 +152,29 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
     private void register(final String account, final String password, String code, String parentId) {
 
-        OkHttpUtils
-                .post()
-                .url(Urls.REGISTER)
-                .addParams("phone", account)
-                .addParams("password", password)
-                .addParams("parentId", parentId)
-                .addParams("smsCode", code)
-                .build()
-                .execute(new Callback() {
+        OkGo.<LzyResponse>post(Urls.REGISTER)
+                .tag(this)
+                .params("phone", account)
+                .params("password", password)
+                .params("parentId", parentId)
+                .params("smsCode", code)
+                .execute(new JsonCallback<LzyResponse>() {
                     @Override
-                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                        return mData;
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onSuccess(RegisterActivity.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0) {
+                            Toast.makeText(mContext, "注册成功", Toast.LENGTH_SHORT).show();
+                            SPUtils.putString(RegisterActivity.this, Constant.SP_PHONE, mAccount);
+                            LoginActivity.startActivity(mContext);
+                            finish();
+                        }
                     }
 
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-                        KLog.e(e);
-                        Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onResponse(Object response, int id) {
-                        KLog.i("response:%s", response);
-                        Toast.makeText(mContext, "注册成功", Toast.LENGTH_SHORT).show();
-                        SPUtils.putString(RegisterActivity.this, Constant.SP_PHONE, mAccount);
-                        LoginActivity.startActivity(mContext);
-                        finish();
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onError(response);
                     }
                 });
-
     }
 
 
@@ -259,20 +258,26 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
      * 获取验证码
      */
     private void getValicationCode(String phone) {
+        String token = SPUtils.getString(RegisterActivity.this, Constant.SP_ACCESS_TOKEN, "");
+        OkGo.<LzyResponse>get(Urls.GET_SMSCODE)
+                .tag(this)
+                .params("phone", phone)
+                .params("type", "1")
+                .params("accessToken", token)
+                .execute(new JsonCallback<LzyResponse>() {
+                    @Override
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onSuccess(RegisterActivity.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0) {
+                            ToastUtils.showShortToast("验证码已发送至您的手机");
+                        }
+                    }
 
-        NetworkDao.getSmsCode(this, phone, "1", new onConnectionFinishLinstener() {
-
-            @Override
-            public void onSuccess(int code, Object result) {
-                KLog.i("response:%s", result.toString());
-            }
-
-            @Override
-            public void onFail(int code, String result) {
-                Toast.makeText(mContext, result, Toast.LENGTH_SHORT).show();
-            }
-        });
-
+                    @Override
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onError(response);
+                    }
+                });
     }
 
     public static void startActivity(Context context, boolean isShow) {

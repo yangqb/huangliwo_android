@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.LogisticsModel;
 import com.feitianzhu.huangliwo.shop.adapter.LogisticsAdapter;
@@ -18,6 +20,7 @@ import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.google.gson.Gson;
+import com.lzy.okgo.OkGo;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
 
@@ -89,32 +92,29 @@ public class LogisticsInfoActivity extends BaseActivity {
     @Override
     protected void initData() {
         if (logisticsNo != null) {
-            OkHttpUtils.get()
-                    .url(Urls.GET_LOGISTICS_INFO)
-                    .addParams(Constant.ACCESSTOKEN, token)
-                    .addParams(Constant.USERID, userId)
-                    .addParams("expressNo", logisticsNo)
-                    .build()
-                    .execute(new Callback() {
+            OkGo.<LzyResponse<LogisticsModel>>get(Urls.GET_LOGISTICS_INFO)
+                    .tag(this)
+                    .params(Constant.ACCESSTOKEN, token)
+                    .params(Constant.USERID, userId)
+                    .params("expressNo", logisticsNo)
+                    .execute(new JsonCallback<LzyResponse<LogisticsModel>>() {
                         @Override
-                        public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                            return new Gson().fromJson(mData, LogisticsModel.class);
-                        }
-
-                        @Override
-                        public void onError(Call call, Exception e, int id) {
-                            ToastUtils.showShortToast(e.getMessage());
-                        }
-
-                        @Override
-                        public void onResponse(Object response, int id) {
-                            LogisticsModel logisticsModel = (LogisticsModel) response;
-                            if (logisticsModel != null && logisticsModel.getData() != null) {
-                                logisticsModes.clear();
-                                logisticsModes = logisticsModel.getData();
-                                adapter.setNewData(logisticsModes);
-                                adapter.notifyDataSetChanged();
+                        public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<LogisticsModel>> response) {
+                            super.onSuccess(LogisticsInfoActivity.this, response.body().msg, response.code());
+                            if (response.body().code == 0 && response.body().data != null) {
+                                LogisticsModel logisticsModel = response.body().data;
+                                if (logisticsModel != null && logisticsModel.getData() != null) {
+                                    logisticsModes.clear();
+                                    logisticsModes = logisticsModel.getData();
+                                    adapter.setNewData(logisticsModes);
+                                    adapter.notifyDataSetChanged();
+                                }
                             }
+                        }
+
+                        @Override
+                        public void onError(com.lzy.okgo.model.Response<LzyResponse<LogisticsModel>> response) {
+                            super.onError(response);
                         }
                     });
         }

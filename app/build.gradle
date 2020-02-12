@@ -76,9 +76,9 @@ android {
         applicationId "com.feitianzhu.huangliwo"
         minSdkVersion globalConfiguration.androidMinSdkVersion
         targetSdkVersion globalConfiguration.androidTargetSdkVersion
-        versionCode 11
+        versionCode 12
         multiDexEnabled true
-        versionName "1.0.5"
+        versionName "1.0.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             //设置支持的SO库架构
@@ -143,7 +143,15 @@ dependencies {
     implementation project(':takephoto')
     implementation project(':okhttputils')
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.50'
-    implementation 'com.squareup.okhttp3:okhttp:3.8.0'
+    //必须使用
+    implementation 'com.lzy.net:okgo:3.0.4'
+
+    //以下三个选择添加，okrx和okrx2不能同时使用
+    //implementation 'com.lzy.net:okrx:1.0.2'
+    //implementation 'com.lzy.net:okrx2:2.0.2'
+    //implementation 'com.lzy.net:okserver:2.0.5'
+    implementation 'com.readystatesoftware.chuck:library:1.0.4'
+    //implementation 'com.squareup.okhttp3:okhttp:3.8.0'
     implementation 'com.google.code.gson:gson:2.2.4'
     implementation 'com.github.zhaokaiqiang.klog:library:1.6.0'
     implementation 'com.jakewharton:butterknife:9.0.0' /*{

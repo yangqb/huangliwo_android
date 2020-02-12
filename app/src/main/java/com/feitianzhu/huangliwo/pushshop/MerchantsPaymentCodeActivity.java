@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,6 +15,7 @@ import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsPaymentCodeModel;
 import com.feitianzhu.huangliwo.utils.SPUtils;
+import com.feitianzhu.huangliwo.utils.ShareImageUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.gyf.immersionbar.ImmersionBar;
@@ -130,9 +132,17 @@ public class MerchantsPaymentCodeActivity extends BaseActivity {
         }
     }
 
-    @OnClick(R.id.left_button)
-    public void onClick() {
-        finish();
+    @OnClick({R.id.left_button,R.id.save})
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.left_button:
+                finish();
+                break;
+            case R.id.save:
+                ShareImageUtils.saveImg(bitmap, "paycode_image");
+                break;
+        }
+
     }
 
     private Bitmap logoBitmap;

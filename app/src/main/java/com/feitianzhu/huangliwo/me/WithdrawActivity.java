@@ -10,6 +10,8 @@ import android.widget.TextView;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.login.LoginEvent;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.BindingAliAccountModel;
@@ -26,6 +28,8 @@ import com.feitianzhu.huangliwo.utils.Urls;
 import com.google.gson.Gson;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.request.PostRequest;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.builder.PostFormBuilder;
 import com.zhy.http.okhttp.callback.Callback;
@@ -163,39 +167,37 @@ public class WithdrawActivity extends BaseActivity {
     }
 
     public void submit(String passWord) {
-        PostFormBuilder postForm = OkHttpUtils.post()
-                .url(Urls.WITHDRAW);
+        PostRequest<LzyResponse<WithdrawModel>> postRequest = OkGo.<LzyResponse<WithdrawModel>>post(Urls.WITHDRAW)
+                .tag(this);
         if (merchantId != -1) {
-            postForm.addParams("merchantId", merchantId + "");
+            postRequest.params("merchantId", merchantId + "");
         }
-        postForm.addParams(Constant.ACCESSTOKEN, token)
-                .addParams(Constant.USERID, userId)
-                .addParams("account", editAlipayNo.getText().toString().trim())
-                .addParams("amount", editAmount.getText().toString().trim())
-                .addParams("payPass", passWord)
-                .build()
-                .execute(new Callback() {
+
+        postRequest.params(Constant.ACCESSTOKEN, token)
+                .params(Constant.USERID, userId)
+                .params("account", editAlipayNo.getText().toString().trim())
+                .params("amount", editAmount.getText().toString().trim())
+                .params("payPass", passWord)
+                .execute(new JsonCallback<LzyResponse<WithdrawModel>>() {
                     @Override
-                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                        return new Gson().fromJson(mData, WithdrawModel.class);
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<WithdrawModel>> response) {
+                        super.onSuccess(WithdrawActivity.this, response.body().msg, response.body().code);
+                        if (response.body().data != null && response.body().code == 0) {
+                            new XPopup.Builder(WithdrawActivity.this)
+                                    .asConfirm("提示", response.body().data.getMsg(), "关闭", "确定", new OnConfirmListener() {
+                                        @Override
+                                        public void onConfirm() {
+                                            finish();
+                                        }
+                                    }, null, false)
+                                    .bindLayout(R.layout.layout_dialog) //绑定已有布局
+                                    .show();
+                        }
                     }
 
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-                        ToastUtils.showLongToast(e.getMessage());
-                    }
-
-                    @Override
-                    public void onResponse(Object response, int id) {
-                        new XPopup.Builder(WithdrawActivity.this)
-                                .asConfirm("提示", ((WithdrawModel) response).getMsg(), "关闭", "确定", new OnConfirmListener() {
-                                    @Override
-                                    public void onConfirm() {
-                                        finish();
-                                    }
-                                }, null, false)
-                                .bindLayout(R.layout.layout_dialog) //绑定已有布局
-                                .show();
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse<WithdrawModel>> response) {
+                        super.onError(response);
                     }
                 });
     }
@@ -211,55 +213,57 @@ public class WithdrawActivity extends BaseActivity {
     protected void initData() {
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
-        OkHttpUtils.get()//
-                .url(Common_HEADER + POST_MINE_INFO)
-                .addParams(ACCESSTOKEN, token)//
-                .addParams(USERID, userId)
-                .build().execute(new Callback<MineInfoModel>() {
-            @Override
-            public void onBefore(Request request, int id) {
-                super.onBefore(request, id);
-                showloadDialog("");
-            }
 
-            @Override
-            public void onError(Call call, Exception e, int id) {
-                goneloadDialog();
-                Log.e("wangyan", "onError---->" + e.getMessage());
-                ToastUtils.showShortToast(e.getMessage());
-            }
-
-            @Override
-            public void onResponse(MineInfoModel response, int id) {
-                goneloadDialog();
-                if (response != null) {
-                    infoModel = response;
-                    if (response.getIsBind() == 1) {
-                        getAccount();
+        OkGo.<LzyResponse<MineInfoModel>>get(Common_HEADER + POST_MINE_INFO)
+                .tag(this)
+                .params(ACCESSTOKEN, token)//
+                .params(USERID, userId)
+                .execute(new JsonCallback<LzyResponse<MineInfoModel>>() {
+                    @Override
+                    public void onStart(com.lzy.okgo.request.base.Request<LzyResponse<MineInfoModel>, ? extends com.lzy.okgo.request.base.Request> request) {
+                        super.onStart(request);
+                        showloadDialog("");
                     }
-                }
-            }
-        });
+
+                    @Override
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<MineInfoModel>> response) {
+                        super.onSuccess(WithdrawActivity.this, response.body().msg, response.body().code);
+                        goneloadDialog();
+                        if (response.body().data != null && response.body().code == 0) {
+                            infoModel = response.body().data;
+                            if (response.body().data.getIsBind() == 1) {
+                                getAccount();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse<MineInfoModel>> response) {
+                        super.onError(response);
+                        goneloadDialog();
+                    }
+                });
 
     }
 
     public void getAccount() {
-        OkHttpUtils.get()
-                .url(Urls.GET_ALI_ACCOUNT)
-                .addParams(Constant.ACCESSTOKEN, token)
-                .addParams(Constant.USERID, userId)
-                .build()
-                .execute(new Callback<BindingAliAccountModel>() {
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
 
+        OkGo.<LzyResponse<BindingAliAccountModel>>get(Urls.GET_ALI_ACCOUNT)
+                .tag(this)
+                .params(Constant.ACCESSTOKEN, token)
+                .params(Constant.USERID, userId)
+                .execute(new JsonCallback<LzyResponse<BindingAliAccountModel>>() {
+                    @Override
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<BindingAliAccountModel>> response) {
+                        super.onSuccess(WithdrawActivity.this, response.body().msg, response.body().code);
+                        if (response.body().data != null) {
+                            editAlipayNo.setText(response.body().data.getBankCardNo());
+                        }
                     }
 
                     @Override
-                    public void onResponse(BindingAliAccountModel response, int id) {
-                        if (response != null) {
-                            editAlipayNo.setText(response.getBankCardNo());
-                        }
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse<BindingAliAccountModel>> response) {
+                        super.onError(response);
                     }
                 });
     }

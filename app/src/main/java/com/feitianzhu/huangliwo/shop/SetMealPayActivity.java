@@ -18,8 +18,11 @@ import com.bumptech.glide.request.RequestOptions;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.PayInfo;
+import com.feitianzhu.huangliwo.model.PayModel;
 import com.feitianzhu.huangliwo.model.SetMealPayInfo;
 import com.feitianzhu.huangliwo.model.WXModel;
 import com.feitianzhu.huangliwo.pushshop.bean.SetMealInfo;
@@ -28,6 +31,7 @@ import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.google.gson.Gson;
+import com.lzy.okgo.OkGo;
 import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
@@ -187,46 +191,38 @@ public class SetMealPayActivity extends BaseActivity {
             info.setMerchantId(setMealInfo.getMerchantId());
             json = new Gson().toJson(info);
         }
-        OkHttpUtils.post()
-                .url(Urls.PAY_SETMEAL)
-                .addParams(ACCESSTOKEN, token)//
-                .addParams(USERID, userId)//
-                .addParams("appId", appId)  //这个是微信才需要的，
-                .addParams("merchantOrderInfo", json)
-                .build()
-                .execute(new Callback() {
 
+        OkGo.<LzyResponse<PayModel>>post(Urls.PAY_SETMEAL)
+                .tag(this)
+                .params(ACCESSTOKEN, token)//
+                .params(USERID, userId)//
+                .params("appId", appId)  //这个是微信才需要的，
+                .params("merchantOrderInfo", json)
+                .execute(new JsonCallback<LzyResponse<PayModel>>() {
                     @Override
-                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                        return mData;
-                    }
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<PayModel>> response) {
+                        super.onSuccess(SetMealPayActivity.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0 && response.body().data != null) {
 
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-                        ToastUtils.showShortToast("提交订单失败");
-                    }
-
-                    @Override
-                    public void onResponse(Object response, int id) {
-                        try {
-                            JSONObject object = new JSONObject(response.toString());
-                            if ("wx".equals(payChannel)) {
-                                WXModel wxModel = new Gson().fromJson(object.toString(), WXModel.class);
-                                orderNo = wxModel.orderNo;
-                                wexinPay(wxModel);
-                            } else if ("alipay".equals(payChannel)) {
-                                orderInfo = object.getString("payParam");
-                                orderNo = object.getString("orderNo");
-                                aliPay(orderInfo, orderNo);
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                                if ("wx".equals(payChannel)) {
+                                    orderNo = response.body().data.orderNo;
+                                    wexinPay(response.body().data);
+                                } else if ("alipay".equals(payChannel)) {
+                                    orderInfo = response.body().data.payParam;
+                                    orderNo = response.body().data.orderNo;
+                                    aliPay(orderInfo, orderNo);
+                                }
                         }
+                    }
+
+                    @Override
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse<PayModel>> response) {
+                        super.onError(response);
                     }
                 });
     }
 
-    private void wexinPay(WXModel result) {
+    private void wexinPay(PayModel result) {
         Constant.PayFlag = PayInfo.SETMEAL_PAY;
         IWXAPI api = WXAPIFactory.createWXAPI(SetMealPayActivity.this, result.appid);
         api.registerApp(Constant.WX_APP_ID);

@@ -16,6 +16,8 @@ import android.widget.Toast;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.SFActivity;
 import com.feitianzhu.huangliwo.home.HomeFragment2;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.MyCenterFragment;
 import com.feitianzhu.huangliwo.me.ui.ScannerActivity;
 import com.feitianzhu.huangliwo.message.MessageFragment;
@@ -38,6 +40,8 @@ import com.gyf.immersionbar.ImmersionBar;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnCancelListener;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.Response;
 import com.socks.library.KLog;
 import com.vector.update_app.UpdateAppBean;
 import com.vector.update_app.UpdateAppManager;
@@ -338,26 +342,26 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
      * 活动弹窗
      * */
     public void getPopData() {
-        OkHttpUtils.get()
-                .url(Urls.GET_POP_DATA)
-                .addParams("accessToken", token)
-                .addParams("userId", userId)
-                .build()
-                .execute(new Callback<HomePopModel>() {
+        OkGo.<LzyResponse<HomePopModel>>get(Urls.GET_POP_DATA)
+                .tag(this)
+                .params("accessToken", token)
+                .params("userId", userId)
+                .execute(new JsonCallback<LzyResponse<HomePopModel>>() {
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-                        ToastUtils.showShortToast(e.getMessage());
-                    }
-
-                    @Override
-                    public void onResponse(HomePopModel response, int id) {
-                        if (response != null && response.getPopup() != null) {
-                            popupBean = response.getPopup();
-                            isShow = response.getPopup().getStatus();
+                    public void onSuccess(Response<LzyResponse<HomePopModel>> response) {
+                        super.onSuccess(MainActivity.this,"",response.body().code);
+                        if (response.body().data != null && response.body().data.getPopup() != null) {
+                            popupBean = response.body().data.getPopup();
+                            isShow = response.body().data.getPopup().getStatus();
                             if (isShow == 1) {
                                 showActivityPop();
                             }
                         }
+                    }
+
+                    @Override
+                    public void onError(Response<LzyResponse<HomePopModel>> response) {
+                        super.onError(response);
                     }
                 });
     }

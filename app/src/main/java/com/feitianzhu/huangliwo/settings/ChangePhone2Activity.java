@@ -16,13 +16,24 @@ import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.huangliwo.dao.NetworkDao;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
+import com.feitianzhu.huangliwo.login.ForgetPasswordActivity;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
+import com.feitianzhu.huangliwo.utils.Urls;
+import com.lzy.okgo.OkGo;
 import com.socks.library.KLog;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.Callback;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import okhttp3.Call;
+import okhttp3.Response;
+
+import static com.feitianzhu.huangliwo.common.Constant.FailCode;
 
 public class ChangePhone2Activity extends BaseActivity {
 
@@ -102,23 +113,36 @@ public class ChangePhone2Activity extends BaseActivity {
                     return;
                 }
 
-                NetworkDao.updatePhone(this, mOldPhone, mOldSmsCode, newPhone, newSmsCode, new onConnectionFinishLinstener() {
-                    @Override
-                    public void onSuccess(int code, Object result) {
-                        ToastUtils.showShortToast("修改成功");
-                        Constant.PHONE = newPhone;
-                        SPUtils.putString(ChangePhone2Activity.this, Constant.SP_PHONE, newPhone);
-                        KLog.i("new Constant.PHONE : " + Constant.PHONE);
-                        startActivity(new Intent(mContext, MainActivity.class));
-                        finish();
-                    }
+                String token = SPUtils.getString(ChangePhone2Activity.this, Constant.SP_ACCESS_TOKEN);
+                String userId = SPUtils.getString(ChangePhone2Activity.this, Constant.SP_LOGIN_USERID);
 
-                    @Override
-                    public void onFail(int code, String result) {
+                OkGo.<LzyResponse>post(Urls.UPDATE_PHONE)
+                        .tag(this)
+                        .params("oldPhone", mOldPhone)
+                        .params("oldSmsCode", mOldSmsCode)
+                        .params("newPhone", newPhone)
+                        .params("newSmsCode", newSmsCode)
+                        .params("accessToken", token)
+                        .params("userId", userId)
+                        .execute(new JsonCallback<LzyResponse>() {
+                            @Override
+                            public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
+                                super.onSuccess(ChangePhone2Activity.this, response.body().msg, response.body().code);
+                                if (response.body().code == 0) {
+                                    ToastUtils.showShortToast("修改成功");
+                                    Constant.PHONE = newPhone;
+                                    SPUtils.putString(ChangePhone2Activity.this, Constant.SP_PHONE, newPhone);
+                                    KLog.i("new Constant.PHONE : " + Constant.PHONE);
+                                    startActivity(new Intent(mContext, MainActivity.class));
+                                    finish();
+                                }
+                            }
 
-                        ToastUtils.showShortToast(result);
-                    }
-                });
+                            @Override
+                            public void onError(com.lzy.okgo.model.Response<LzyResponse> response) {
+                                super.onError(response);
+                            }
+                        });
                 break;
             case R.id.rl_code:
                 String phone = mEtPhone.getText().toString();
@@ -144,19 +168,27 @@ public class ChangePhone2Activity extends BaseActivity {
      */
     private void getSmsCode(String phone) {
 
-        NetworkDao.getSmsCode(this, phone, "3", new onConnectionFinishLinstener() {
+        String token = SPUtils.getString(ChangePhone2Activity.this, Constant.SP_ACCESS_TOKEN, "");
+        OkGo.<LzyResponse>get(Urls.GET_SMSCODE)
+                .tag(this)
+                .params("phone", phone)
+                .params("type", "3")
+                .params("accessToken", token)
+                .execute(new JsonCallback<LzyResponse>() {
+                    @Override
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onSuccess(ChangePhone2Activity.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0) {
+                            ToastUtils.showShortToast("验证码已发送至您的手机");
+                        }
+                    }
 
-            @Override
-            public void onSuccess(int code, Object result) {
+                    @Override
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onError(response);
+                    }
+                });
 
-                KLog.i("response:%s", result.toString());
-            }
-
-            @Override
-            public void onFail(int code, String result) {
-                Toast.makeText(mContext, result, Toast.LENGTH_SHORT).show();
-            }
-        });
 
     }
 

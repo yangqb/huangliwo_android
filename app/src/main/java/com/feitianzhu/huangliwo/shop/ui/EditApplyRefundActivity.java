@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.GoodsOrderInfo;
 import com.feitianzhu.huangliwo.utils.SPUtils;
@@ -21,6 +23,7 @@ import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.view.CustomRefundView;
 import com.lxj.xpopup.XPopup;
+import com.lzy.okgo.OkGo;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
 
@@ -116,59 +119,53 @@ public class EditApplyRefundActivity extends BaseActivity {
     }
 
     public void refundGoodsOrder(String orderNo, String reason) {
-        OkHttpUtils.post()
-                .url(Urls.REFUND_ORDER)
-                .addParams(ACCESSTOKEN, token)
-                .addParams(USERID, userId)
-                .addParams("orderNo", orderNo)
-                .addParams("reason", reason)
-                .addParams("status", "5")
-                .build()
-                .execute(new Callback() {
+        OkGo.<LzyResponse>post(Urls.REFUND_ORDER)
+                .tag(this)
+                .params(ACCESSTOKEN, token)
+                .params(USERID, userId)
+                .params("orderNo", orderNo)
+                .params("reason", reason)
+                .params("status", "5")
+                .execute(new JsonCallback<LzyResponse>() {
                     @Override
-                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                        return mData;
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onSuccess(EditApplyRefundActivity.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0) {
+                            ToastUtils.showShortToast("申请成功");
+                            setResult(RESULT_OK);
+                            finish();
+                        }
                     }
 
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-                        ToastUtils.showShortToast(e.getMessage());
-                    }
-
-                    @Override
-                    public void onResponse(Object response, int id) {
-                        ToastUtils.showShortToast("申请成功");
-                        setResult(RESULT_OK);
-                        finish();
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onError(response);
                     }
                 });
     }
 
     public void refundSetMealOrder(String orderNo, String reason) {
-        OkHttpUtils.post()
-                .url(Urls.CANCEL_SETMEAL_ORDER)
-                .addParams(ACCESSTOKEN, token)
-                .addParams(USERID, userId)
-                .addParams("orderNo", orderNo)
-                .addParams("returnReason", reason)
-                .addParams("status", "3")
-                .build()
-                .execute(new Callback() {
+        OkGo.<LzyResponse>post(Urls.CANCEL_SETMEAL_ORDER)
+                .tag(this)
+                .params(ACCESSTOKEN, token)
+                .params(USERID, userId)
+                .params("orderNo", orderNo)
+                .params("returnReason", reason)
+                .params("status", "3")
+                .execute(new JsonCallback<LzyResponse>() {
                     @Override
-                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                        return mData;
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onSuccess(EditApplyRefundActivity.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0) {
+                            ToastUtils.showShortToast("退款成功");
+                            setResult(RESULT_OK);
+                            finish();
+                        }
                     }
 
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-                        ToastUtils.showShortToast(e.getMessage());
-                    }
-
-                    @Override
-                    public void onResponse(Object response, int id) {
-                        ToastUtils.showShortToast("退款成功");
-                        setResult(RESULT_OK);
-                        finish();
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onError(response);
                     }
                 });
     }

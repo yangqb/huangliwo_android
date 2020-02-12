@@ -14,9 +14,14 @@ import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.huangliwo.dao.NetworkDao;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
+import com.feitianzhu.huangliwo.login.ForgetPasswordActivity;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
+import com.feitianzhu.huangliwo.utils.Urls;
+import com.lzy.okgo.OkGo;
 import com.socks.library.KLog;
 
 import butterknife.BindView;
@@ -117,18 +122,27 @@ public class ChangePhone1Activity extends BaseActivity {
      */
     private void getSmsCode(String phone) {
 
-        NetworkDao.getSmsCode(this, phone, "2", new onConnectionFinishLinstener() {
+        String token = SPUtils.getString(ChangePhone1Activity.this, Constant.SP_ACCESS_TOKEN, "");
+        OkGo.<LzyResponse>get(Urls.GET_SMSCODE)
+                .tag(this)
+                .params("phone", phone)
+                .params("type", "2")
+                .params("accessToken", token)
+                .execute(new JsonCallback<LzyResponse>() {
+                    @Override
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onSuccess(ChangePhone1Activity.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0) {
+                            ToastUtils.showShortToast("验证码已发送至您的手机");
+                        }
+                    }
 
-            @Override
-            public void onSuccess(int code, Object result) {
-                KLog.i("mSmsCode:%s", result);
-            }
+                    @Override
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onError(response);
+                    }
+                });
 
-            @Override
-            public void onFail(int code, String result) {
-                Toast.makeText(mContext, result, Toast.LENGTH_SHORT).show();
-            }
-        });
 
     }
 

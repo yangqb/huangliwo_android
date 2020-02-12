@@ -20,12 +20,15 @@ import com.bumptech.glide.request.RequestOptions;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.AddressManagementActivity;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.AddressInfo;
 import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
 import com.feitianzhu.huangliwo.model.GoodsOrderInfo;
 import com.feitianzhu.huangliwo.model.PayInfo;
+import com.feitianzhu.huangliwo.model.PayModel;
 import com.feitianzhu.huangliwo.model.WXModel;
 import com.feitianzhu.huangliwo.shop.ui.OrderDetailActivity;
 import com.feitianzhu.huangliwo.utils.PayUtils;
@@ -35,6 +38,7 @@ import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.utils.doubleclick.SingleClick;
 import com.feitianzhu.huangliwo.view.AmountView;
 import com.google.gson.Gson;
+import com.lzy.okgo.OkGo;
 import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
@@ -266,46 +270,37 @@ public class ShopPayActivity extends BaseActivity {
         }
         orderListBean.setOrderNo(""); //详情页的无orderNo
         String json = new Gson().toJson(orderListBean);
-        OkHttpUtils.post()
-                .url(Urls.PAY_SHOPS)
-                .addParams(ACCESSTOKEN, token)//
-                .addParams(USERID, userId)//
-                .addParams("appId", appId)  //这个是微信才需要的，
-                .addParams("order", json)
-                .build()
-                .execute(new Callback() {
 
+        OkGo.<LzyResponse<PayModel>>post(Urls.PAY_SHOPS)
+                .tag(this)
+                .params(ACCESSTOKEN, token)//
+                .params(USERID, userId)//
+                .params("appId", appId)  //这个是微信才需要的，
+                .params("order", json)
+                .execute(new JsonCallback<LzyResponse<PayModel>>() {
                     @Override
-                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                        return mData;
-                    }
-
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-                        ToastUtils.showShortToast("提交订单失败");
-                    }
-
-                    @Override
-                    public void onResponse(Object response, int id) {
-                        try {
-                            JSONObject object = new JSONObject(response.toString());
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<PayModel>> response) {
+                        super.onSuccess(ShopPayActivity.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0 && response.body().data != null) {
                             if ("wx".equals(payChannel)) {
-                                WXModel wxModel = new Gson().fromJson(object.toString(), WXModel.class);
-                                orderNo = wxModel.orderNo;
-                                wexinPay(wxModel);
+                                orderNo = response.body().data.orderNo;
+                                wexinPay(response.body().data);
                             } else if ("alipay".equals(payChannel)) {
-                                orderInfo = object.getString("payParam");
-                                orderNo = object.getString("orderNo");
+                                orderInfo = response.body().data.payParam;
+                                orderNo = response.body().data.orderNo;
                                 aliPay(orderInfo, orderNo);
                             }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
                         }
+                    }
+
+                    @Override
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse<PayModel>> response) {
+                        super.onError(response);
                     }
                 });
     }
 
-    private void wexinPay(WXModel result) {
+    private void wexinPay(PayModel result) {
         Constant.PayFlag = PayInfo.ShopPay;
         IWXAPI api = WXAPIFactory.createWXAPI(ShopPayActivity.this, result.appid);
         api.registerApp(Constant.WX_APP_ID);
@@ -363,55 +358,53 @@ public class ShopPayActivity extends BaseActivity {
     @Override
     protected void initData() {
         EventBus.getDefault().register(this);
-        getAddress();
     }
 
     /*
      * 获取默认收货地址
      * */
     public void getAddress() {
-        OkHttpUtils.post()
-                .url(Urls.GET_ADDRESS)
-                .addParams("accessToken", token)
-                .addParams("userId", userId)
-                .build()
-                .execute(new Callback() {
+        OkGo.<LzyResponse<AddressInfo>>post(Urls.GET_ADDRESS)
+                .tag(this)
+                .params("accessToken", token)
+                .params("userId", userId)
+                .execute(new JsonCallback<LzyResponse<AddressInfo>>() {
                     @Override
-                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                        return new Gson().fromJson(mData, AddressInfo.class);
-                    }
-
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-
-                    }
-
-                    @Override
-                    public void onResponse(Object response, int id) {
-                        AddressInfo addressInfo = (AddressInfo) response;
-                        addressInfos = addressInfo.getShopAddressList();
-                        if (addressInfos.size() > 0) {
-                            for (AddressInfo.ShopAddressListBean address : addressInfos
-                            ) {
-                                if (address.getIsDefalt() == 1) {
-                                    noAddress.setVisibility(View.GONE);
-                                    rlAddress.setVisibility(View.VISIBLE);
-                                    addressBean = address;
-                                    tvAddress.setText(addressBean.getProvinceName() + addressBean.getCityName() + addressBean.getAreaName() + addressBean.getDetailAddress());
-                                    consigneeName.setText(addressBean.getUserName());
-                                    phone.setText(addressBean.getPhone());
-                                    isAddress = true;
-                                    break;
-                                } else {
-                                    noAddress.setVisibility(View.VISIBLE);
-                                    rlAddress.setVisibility(View.GONE);
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<AddressInfo>> response) {
+                        super.onSuccess(ShopPayActivity.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0 && response.body().data != null) {
+                            AddressInfo addressInfo = response.body().data;
+                            addressInfos = addressInfo.getShopAddressList();
+                            if (addressInfos.size() > 0) {
+                                for (AddressInfo.ShopAddressListBean address : addressInfos
+                                ) {
+                                    if (address.getIsDefalt() == 1) {
+                                        noAddress.setVisibility(View.GONE);
+                                        rlAddress.setVisibility(View.VISIBLE);
+                                        addressBean = address;
+                                        tvAddress.setText(addressBean.getProvinceName() + addressBean.getCityName() + addressBean.getAreaName() + addressBean.getDetailAddress());
+                                        consigneeName.setText(addressBean.getUserName());
+                                        phone.setText(addressBean.getPhone());
+                                        isAddress = true;
+                                        break;
+                                    } else {
+                                        noAddress.setVisibility(View.VISIBLE);
+                                        rlAddress.setVisibility(View.GONE);
+                                    }
                                 }
+                            } else {
+                                noAddress.setVisibility(View.VISIBLE);
+                                rlAddress.setVisibility(View.GONE);
                             }
                         } else {
                             noAddress.setVisibility(View.VISIBLE);
                             rlAddress.setVisibility(View.GONE);
                         }
+                    }
 
+                    @Override
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse<AddressInfo>> response) {
+                        super.onError(response);
                     }
                 });
     }

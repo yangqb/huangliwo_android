@@ -23,6 +23,8 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.App;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.MultipleMerchantsItem;
@@ -40,6 +42,8 @@ import com.feitianzhu.huangliwo.view.CustomRefundView;
 import com.feitianzhu.huangliwo.vip.VipActivity;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.Response;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
 import com.yanzhenjie.permission.Rationale;
@@ -58,7 +62,6 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import cc.shinichi.library.ImagePreview;
 import okhttp3.Call;
-import okhttp3.Response;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
@@ -138,7 +141,7 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
             String discount = String.valueOf((100 - merchantsDetail.getDiscount() * 100));
             tvRebate.setText("返" + discount + "%");
             getSetMealList(merchantsId);
-            String urlLogo = merchantsDetail.getLogo()==null?"":merchantsDetail.getLogo();
+            String urlLogo = merchantsDetail.getLogo() == null ? "" : merchantsDetail.getLogo();
             imgs.add(urlLogo);
             mViewpager.setCanLoop(true)
                     .setAutoPlay(true)
@@ -412,60 +415,65 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
     }
 
     public void getSetMealEvaList() {
-        OkHttpUtils.get()
-                .url(Urls.GET_SETMEAL_EVALIST)
-                .addParams(ACCESSTOKEN, token)
-                .addParams(USERID, userId)
-                .addParams("merchantId", merchantsId + "")
-                .build()
-                .execute(new Callback<SetMealEvalDetailInfo>() {
 
+        OkGo.<LzyResponse<SetMealEvalDetailInfo>>get(Urls.GET_SETMEAL_EVALIST)
+                .tag(this)
+                .params(ACCESSTOKEN, token)
+                .params(USERID, userId)
+                .params("merchantId", merchantsId + "")
+                .execute(new JsonCallback<LzyResponse<SetMealEvalDetailInfo>>() {
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-                        ToastUtils.showShortToast(e.getMessage());
+                    public void onSuccess(Response<LzyResponse<SetMealEvalDetailInfo>> response) {
+                        super.onSuccess(ShopMerchantsDetailActivity.this, "", response.body().code);
+                        if (response.body().data != null) {
+                            setMealEvalDetailModelList = response.body().data.getList();
+                            multipleItemList.clear();
+                            for (int i = 0; i < setMealEvalDetailModelList.size(); i++) {
+                                MultipleMerchantsItem multipleMerchantsItem = new MultipleMerchantsItem(MultipleMerchantsItem.COMMENTS_TYPE);
+                                multipleMerchantsItem.setEvalDetailModel(setMealEvalDetailModelList.get(i));
+                                multipleItemList.add(multipleMerchantsItem);
+                            }
+                            mAdapter.setNewData(multipleItemList);
+                            mAdapter.notifyDataSetChanged();
+                        }
                     }
 
                     @Override
-                    public void onResponse(SetMealEvalDetailInfo response, int id) {
-                        setMealEvalDetailModelList = response.getList();
-                        multipleItemList.clear();
-                        for (int i = 0; i < setMealEvalDetailModelList.size(); i++) {
-                            MultipleMerchantsItem multipleMerchantsItem = new MultipleMerchantsItem(MultipleMerchantsItem.COMMENTS_TYPE);
-                            multipleMerchantsItem.setEvalDetailModel(setMealEvalDetailModelList.get(i));
-                            multipleItemList.add(multipleMerchantsItem);
-                        }
-                        mAdapter.setNewData(multipleItemList);
-                        mAdapter.notifyDataSetChanged();
+                    public void onError(Response<LzyResponse<SetMealEvalDetailInfo>> response) {
+                        super.onError(response);
                     }
                 });
     }
 
     public void getSetMealList(int merchantsId) {
-        OkHttpUtils.get()
-                .url(Urls.GET_SETMEAL_LIST)
-                .addParams(ACCESSTOKEN, token)
-                .addParams("type","2")
-                .addParams(USERID, userId)
-                .addParams("merchantId", merchantsId + "")
-                .build()
-                .execute(new Callback<SetMealListInfo>() {
 
+        OkGo.<LzyResponse<SetMealListInfo>>get(Urls.GET_SETMEAL_LIST)
+                .tag(this)
+                .params(ACCESSTOKEN, token)
+                .params("type", "2")
+                .params(USERID, userId)
+                .params("merchantId", merchantsId + "")
+                .execute(new JsonCallback<LzyResponse<SetMealListInfo>>() {
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-                        ToastUtils.showShortToast(e.getMessage());
+                    public void onSuccess(Response<LzyResponse<SetMealListInfo>> response) {
+                        super.onSuccess(ShopMerchantsDetailActivity.this, "", response.body().code);
+                        if (response.body().data != null) {
+                            setMealInfoList = response.body().data.getList();
+                            multipleItemList.clear();
+                            for (int i = 0; i < setMealInfoList.size(); i++) {
+                                MultipleMerchantsItem multipleMerchantsItem = new MultipleMerchantsItem(MultipleMerchantsItem.SETMEAL_TYPE);
+                                multipleMerchantsItem.setSetMealInfo(setMealInfoList.get(i));
+                                multipleItemList.add(multipleMerchantsItem);
+                            }
+                            mAdapter.setNewData(multipleItemList);
+                            mAdapter.notifyDataSetChanged();
+                        }
+
                     }
 
                     @Override
-                    public void onResponse(SetMealListInfo response, int id) {
-                        setMealInfoList = response.getList();
-                        multipleItemList.clear();
-                        for (int i = 0; i < setMealInfoList.size(); i++) {
-                            MultipleMerchantsItem multipleMerchantsItem = new MultipleMerchantsItem(MultipleMerchantsItem.SETMEAL_TYPE);
-                            multipleMerchantsItem.setSetMealInfo(setMealInfoList.get(i));
-                            multipleItemList.add(multipleMerchantsItem);
-                        }
-                        mAdapter.setNewData(multipleItemList);
-                        mAdapter.notifyDataSetChanged();
+                    public void onError(Response<LzyResponse<SetMealListInfo>> response) {
+                        super.onError(response);
                     }
                 });
     }
@@ -476,24 +484,22 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
     }
 
     public void getUserInfo() {
-        OkHttpUtils.get()//
-                .url(Common_HEADER + POST_MINE_INFO)
-                .addParams(ACCESSTOKEN, token)//
-                .addParams(USERID, userId)
-                .build()
-                .execute(new Callback<MineInfoModel>() {
-
+        OkGo.<LzyResponse<MineInfoModel>>get(Common_HEADER + POST_MINE_INFO)
+                .tag(this)
+                .params(ACCESSTOKEN, token)//
+                .params(USERID, userId)
+                .execute(new JsonCallback<LzyResponse<MineInfoModel>>() {
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-                        Log.e("wangyan", "onError---->" + e.getMessage());
-                        ToastUtils.showShortToast(e.getMessage());
+                    public void onSuccess(Response<LzyResponse<MineInfoModel>> response) {
+                        super.onSuccess(ShopMerchantsDetailActivity.this, "", response.body().code);
+                        if (response.body().data != null) {
+                            mineInfoModel = response.body().data;
+                        }
                     }
 
                     @Override
-                    public void onResponse(MineInfoModel response, int id) {
-                        if (response != null) {
-                            mineInfoModel = response;
-                        }
+                    public void onError(Response<LzyResponse<MineInfoModel>> response) {
+                        super.onError(response);
                     }
                 });
     }

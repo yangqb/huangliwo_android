@@ -10,6 +10,8 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.adapter.WithdrawRecordAdapter;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.WithdrawRecordInfo;
@@ -18,6 +20,10 @@ import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.GetRequest;
+import com.lzy.okgo.request.PostRequest;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -32,7 +38,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 import okhttp3.Call;
-import okhttp3.Response;
 
 /**
  * package name: com.feitianzhu.huangliwo.me
@@ -112,60 +117,61 @@ public class WithdrawRecordActivity extends BaseActivity {
     }
 
     public void cancelWithdraw() {
-        PostFormBuilder postForm = OkHttpUtils.post()
-                .url(Urls.WITHDRAW_CANCEL);
+
+        PostRequest<LzyResponse> postRequest = OkGo.<LzyResponse>post(Urls.WITHDRAW_CANCEL)
+                .tag(this);
         if (merchantId != -1) {
-            postForm.addParams("merchantId", merchantId + "");
+            postRequest.params("merchantId", merchantId + "");
         }
-        postForm.addParams("accessToken", token)
-                .addParams("userId", userId)
-                .build()
-                .execute(new Callback() {
+        postRequest.params("accessToken", token)
+                .params("userId", userId)
+                .execute(new JsonCallback<LzyResponse>() {
                     @Override
-                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                        return mData;
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onSuccess(WithdrawRecordActivity.this, response.body().msg, response.body().code);
+                        if(response.body().code==0){
+                            ToastUtils.showShortToast("取消成功");
+                            initData();
+                        }
                     }
 
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-                        ToastUtils.showShortToast(e.getMessage());
-                    }
-
-                    @Override
-                    public void onResponse(Object response, int id) {
-                        ToastUtils.showShortToast("取消成功");
-                        initData();
+                    public void onError(Response<LzyResponse> response) {
+                        super.onError(response);
                     }
                 });
+
     }
 
     @Override
     protected void initData() {
-        GetBuilder postForm = OkHttpUtils.get().url(Urls.GET_WITHDRAW_RECORD);
+        GetRequest<LzyResponse<WithdrawRecordInfo>> getRequest = OkGo.<LzyResponse<WithdrawRecordInfo>>get(Urls.GET_WITHDRAW_RECORD)
+                .tag(this);
         if (merchantId != -1) {
-            postForm.addParams("merchantId", merchantId + "");
-            postForm.addParams("type", "2");
+            getRequest.params("merchantId", merchantId + "");
+            getRequest.params("type", "2");
         } else {
-            postForm.addParams("type", "1");
+            getRequest.params("type", "1");
         }
-        postForm.addParams(Constant.ACCESSTOKEN, token)
-                .addParams(Constant.USERID, userId)
-                .build()
-                .execute(new Callback<WithdrawRecordInfo>() {
+        getRequest.params(Constant.ACCESSTOKEN, token)
+                .params(Constant.USERID, userId)
+                .execute(new JsonCallback<LzyResponse<WithdrawRecordInfo>>() {
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-                        refreshLayout.finishRefresh(false);
-                    }
-
-                    @Override
-                    public void onResponse(WithdrawRecordInfo response, int id) {
-                        refreshLayout.finishRefresh();
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<WithdrawRecordInfo>> response) {
+                        super.onSuccess(WithdrawRecordActivity.this, response.body().msg, response.body().code);
                         withdrawRecordModelList.clear();
-                        if (response != null) {
-                            withdrawRecordModelList = response.getList();
+                        refreshLayout.finishRefresh();
+                        if (response.body().data != null && response.body().code == 0) {
+                            withdrawRecordModelList = response.body().data.getList();
                             mAdapter.setNewData(withdrawRecordModelList);
                             mAdapter.notifyDataSetChanged();
                         }
+                    }
+
+                    @Override
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse<WithdrawRecordInfo>> response) {
+                        super.onError(response);
+                        refreshLayout.finishRefresh(false);
                     }
                 });
     }

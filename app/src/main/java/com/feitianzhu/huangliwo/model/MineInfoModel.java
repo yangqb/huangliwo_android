@@ -49,7 +49,7 @@ public class MineInfoModel implements Serializable {
     private String nickName;
     private String headImg;
     private String gradeName;
-    private Object agentName;
+    private String agentName;
     private int age;
     private int sex;
     private String constellation;
@@ -75,7 +75,7 @@ public class MineInfoModel implements Serializable {
     private List<?> interestLabel;
     private List<?> industryLabel;
     private int gradeId;
-    private Integer accountType; //会员级别(账号类型0消费者，1市代理，2区代理，3合伙人，4超级会员，5普通会员，6商户")
+    private int accountType; //会员级别(账号类型0消费者，1市代理，2区代理，3合伙人，4超级会员，5普通会员，6商户")
     private int isBind;
 
     public int getIsBind() {
@@ -86,11 +86,11 @@ public class MineInfoModel implements Serializable {
         this.isBind = isBind;
     }
 
-    public Integer getAccountType() {
+    public int getAccountType() {
         return accountType;
     }
 
-    public void setAccountType(Integer accountType) {
+    public void setAccountType(int accountType) {
         this.accountType = accountType;
     }
 
@@ -142,11 +142,11 @@ public class MineInfoModel implements Serializable {
         this.gradeName = gradeName;
     }
 
-    public Object getAgentName() {
+    public String getAgentName() {
         return agentName;
     }
 
-    public void setAgentName(Object agentName) {
+    public void setAgentName(String agentName) {
         this.agentName = agentName;
     }
 

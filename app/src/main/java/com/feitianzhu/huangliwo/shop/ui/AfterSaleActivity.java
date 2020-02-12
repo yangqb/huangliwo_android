@@ -11,6 +11,8 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.GoodsOrderInfo;
 import com.feitianzhu.huangliwo.model.MultipleItemOrderModel;
@@ -21,6 +23,8 @@ import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.google.gson.Gson;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.Response;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -34,7 +38,6 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import okhttp3.Call;
 import okhttp3.Request;
-import okhttp3.Response;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.huangliwo.common.Constant.USERID;
@@ -162,75 +165,75 @@ public class AfterSaleActivity extends BaseActivity {
 /*
         status --- -1代表全部,0代表待评价-2代表售后的单子（退款中和已退款） 其他的按照订单的状态传值
         * */
-            OkHttpUtils.post()
-                    .url(Urls.GET_ORDER_INFO)
-                    .addParams(ACCESSTOKEN, token)
-                    .addParams(USERID, userId)
-                    .addParams("status", "-2")
-                    .build()
-                    .execute(new Callback() {
 
+            OkGo.<LzyResponse<GoodsOrderInfo>>post(Urls.GET_ORDER_INFO)
+                    .tag(this)
+                    .params(ACCESSTOKEN, token)
+                    .params(USERID, userId)
+                    .params("status", "-2")
+                    .execute(new JsonCallback<LzyResponse<GoodsOrderInfo>>() {
                         @Override
-                        public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                            return new Gson().fromJson(mData, GoodsOrderInfo.class);
-                        }
-
-                        @Override
-                        public void onError(Call call, Exception e, int id) {
-                            refreshLayout.finishRefresh(false);
-                        }
-
-                        @Override
-                        public void onResponse(Object response, int id) {
+                        public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<GoodsOrderInfo>> response) {
+                            super.onSuccess(AfterSaleActivity.this, response.body().msg, response.body().code);
                             refreshLayout.finishRefresh();
-                            GoodsOrderInfo goodsOrderInfo = (GoodsOrderInfo) response;
-                            goodsOrderList = goodsOrderInfo.getGoodsOrderList();
-                            multipleItemOrderModels.clear();
-                            for (int i = 0; i < goodsOrderList.size(); i++) {
-                                MultipleItemOrderModel multipleItemOrderModel = new MultipleItemOrderModel(MultipleItemOrderModel.SETMEAL_ORDER);
-                                multipleItemOrderModel.setGoodsOrderListBean(goodsOrderList.get(i));
-                                multipleItemOrderModels.add(multipleItemOrderModel);
-                            }
-                            mAdapter.setNewData(multipleItemOrderModels);
-                            mAdapter.notifyDataSetChanged();
-                        }
-                    });
-        } else {
-            OkHttpUtils.get()
-                    .url(Urls.SETMEAL_ORDER_LIST)
-                    .addParams(ACCESSTOKEN, token)
-                    .addParams(USERID, userId)
-                    .build()
-                    .execute(new Callback<SetMealOrderInfo>() {
-
-                        @Override
-                        public void onBefore(Request request, int id) {
-                            super.onBefore(request, id);
-                            showloadDialog("");
-                        }
-
-                        @Override
-                        public void onError(Call call, Exception e, int id) {
-                            goneloadDialog();
-                            refreshLayout.finishRefresh(false);
-                            ToastUtils.showShortToast(e.getMessage());
-                        }
-
-                        @Override
-                        public void onResponse(SetMealOrderInfo response, int id) {
-                            goneloadDialog();
-                            refreshLayout.finishRefresh();
-                            if (response != null) {
-                                refundingSetMealOder = response.getRefunding();
+                            if (response.body().code == 0 && response.body().data != null) {
+                                GoodsOrderInfo goodsOrderInfo = response.body().data;
+                                goodsOrderList = goodsOrderInfo.getGoodsOrderList();
                                 multipleItemOrderModels.clear();
-                                for (int i = 0; i < refundingSetMealOder.size(); i++) {
+                                for (int i = 0; i < goodsOrderList.size(); i++) {
                                     MultipleItemOrderModel multipleItemOrderModel = new MultipleItemOrderModel(MultipleItemOrderModel.SETMEAL_ORDER);
-                                    multipleItemOrderModel.setSetMealOrderModel(refundingSetMealOder.get(i));
+                                    multipleItemOrderModel.setGoodsOrderListBean(goodsOrderList.get(i));
                                     multipleItemOrderModels.add(multipleItemOrderModel);
                                 }
                                 mAdapter.setNewData(multipleItemOrderModels);
                                 mAdapter.notifyDataSetChanged();
                             }
+                        }
+
+                        @Override
+                        public void onError(com.lzy.okgo.model.Response<LzyResponse<GoodsOrderInfo>> response) {
+                            super.onError(response);
+                            refreshLayout.finishRefresh(false);
+                        }
+                    });
+        } else {
+
+            OkGo.<LzyResponse<SetMealOrderInfo>>get(Urls.SETMEAL_ORDER_LIST)
+                    .tag(this)
+                    .params(ACCESSTOKEN, token)
+                    .params(USERID, userId)
+                    .execute(new JsonCallback<LzyResponse<SetMealOrderInfo>>() {
+                        @Override
+                        public void onStart(com.lzy.okgo.request.base.Request<LzyResponse<SetMealOrderInfo>, ? extends com.lzy.okgo.request.base.Request> request) {
+                            super.onStart(request);
+                            showloadDialog("");
+                        }
+
+                        @Override
+                        public void onSuccess(Response<LzyResponse<SetMealOrderInfo>> response) {
+                            super.onSuccess(AfterSaleActivity.this, response.body().msg, response.body().code);
+                            goneloadDialog();
+                            refreshLayout.finishRefresh();
+                            if (response.body().code == 0 && response.body().data != null) {
+                                if (response != null) {
+                                    refundingSetMealOder = response.body().data.getRefunding();
+                                    multipleItemOrderModels.clear();
+                                    for (int i = 0; i < refundingSetMealOder.size(); i++) {
+                                        MultipleItemOrderModel multipleItemOrderModel = new MultipleItemOrderModel(MultipleItemOrderModel.SETMEAL_ORDER);
+                                        multipleItemOrderModel.setSetMealOrderModel(refundingSetMealOder.get(i));
+                                        multipleItemOrderModels.add(multipleItemOrderModel);
+                                    }
+                                    mAdapter.setNewData(multipleItemOrderModels);
+                                    mAdapter.notifyDataSetChanged();
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onError(Response<LzyResponse<SetMealOrderInfo>> response) {
+                            super.onError(response);
+                            goneloadDialog();
+                            refreshLayout.finishRefresh(false);
                         }
                     });
         }

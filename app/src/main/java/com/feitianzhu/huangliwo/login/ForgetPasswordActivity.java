@@ -12,15 +12,20 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.feitianzhu.huangliwo.MainActivity;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.huangliwo.dao.NetworkDao;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.utils.EncryptUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
+import com.feitianzhu.huangliwo.utils.Urls;
 import com.gyf.immersionbar.ImmersionBar;
+import com.lzy.okgo.OkGo;
 import com.socks.library.KLog;
 
 import butterknife.BindView;
@@ -126,24 +131,28 @@ public class ForgetPasswordActivity extends BaseActivity implements View.OnClick
                     return;
                 }
 
+                OkGo.<LzyResponse>post(Urls.GET_MYPASSWORD)
+                        .tag(this)
+                        .params("phone", phone)
+                        .params("smsCode", smsCode)
+                        .params("newPassword", EncryptUtils.encodePassword(password1))
+                        .params("confirmPassword", EncryptUtils.encodePassword(password2))
+                        .execute(new JsonCallback<LzyResponse>() {
+                            @Override
+                            public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
+                                if (response.body().code == 0) {
+                                    ToastUtils.showShortToast(mContext, R.string.change_ok);
+                                    SPUtils.putString(ForgetPasswordActivity.this, Constant.SP_PHONE, phone);
+                                    startActivity(new Intent(mContext, LoginActivity.class));
+                                    finish();
+                                }
+                            }
 
-                NetworkDao.getLoginPwd(phone, smsCode, EncryptUtils.encodePassword(password1), EncryptUtils.encodePassword(password2), new onConnectionFinishLinstener() {
-                    @Override
-                    public void onSuccess(int code, Object result) {
-
-                        ToastUtils.showShortToast(mContext, R.string.change_ok);
-                        SPUtils.putString(ForgetPasswordActivity.this, Constant.SP_PHONE, phone);
-                        startActivity(new Intent(mContext, LoginActivity.class));
-                        finish();
-                    }
-
-                    @Override
-                    public void onFail(int code, String result) {
-                        ToastUtils.showShortToast(mContext, R.string.change_failure);
-                    }
-                });
-
-
+                            @Override
+                            public void onError(com.lzy.okgo.model.Response<LzyResponse> response) {
+                                super.onError(response);
+                            }
+                        });
                 break;
             case R.id.rl_code:
 
@@ -171,19 +180,26 @@ public class ForgetPasswordActivity extends BaseActivity implements View.OnClick
      * 获取验证码
      */
     private void getValicationCode(String phone) {
+        String token = SPUtils.getString(ForgetPasswordActivity.this, Constant.SP_ACCESS_TOKEN, "");
+        OkGo.<LzyResponse>get(Urls.GET_SMSCODE)
+                .tag(this)
+                .params("phone", phone)
+                .params("type", "4")
+                .params("accessToken", token)
+                .execute(new JsonCallback<LzyResponse>() {
+                    @Override
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onSuccess(ForgetPasswordActivity.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0) {
+                            ToastUtils.showShortToast("验证码已发送至您的手机");
+                        }
+                    }
 
-        NetworkDao.getSmsCode(this, phone, "4", new onConnectionFinishLinstener() {
-            @Override
-            public void onSuccess(int code, Object result) {
-
-            }
-
-            @Override
-            public void onFail(int code, String result) {
-                Toast.makeText(mContext, result, Toast.LENGTH_SHORT).show();
-                KLog.e(result);
-            }
-        });
+                    @Override
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onError(response);
+                    }
+                });
 
     }
 

@@ -11,6 +11,8 @@ import com.feitianzhu.huangliwo.common.impl.MyInfomationCallback;
 import com.feitianzhu.huangliwo.common.impl.NoDataCallBack;
 import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.huangliwo.common.impl.onNetFinishLinstenerT;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.model.FuFriendModel;
 import com.feitianzhu.huangliwo.model.MyPoint;
 import com.feitianzhu.huangliwo.model.Province;
@@ -35,6 +37,7 @@ import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.lzy.okgo.OkGo;
 import com.socks.library.KLog;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.builder.GetBuilder;
@@ -258,34 +261,6 @@ public class ShopDao {
                     @Override
                     public void onResponse(UserInformation response, int id) {
                         mLinstener.onSuccess(1, response);
-                    }
-                });
-    }
-
-    public static void loadUserVeriInfo(Context context, final onConnectionFinishLinstener mLinstener) {
-        String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN);
-        String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID);
-        OkHttpUtils.get()
-                .addParams(ACCESSTOKEN, token)
-                .addParams(USERID, userId)
-                .url(Common_HEADER + LOADER_VERI_USER_INFO)
-                .build()
-                .execute(new Callback() {
-                    @Override
-                    public Object parseNetworkResponse(String mData, Response response, int id)
-                            throws Exception {
-                        UserVeriModel user = new Gson().fromJson(mData, UserVeriModel.class);
-                        return user;
-                    }
-
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-                        mLinstener.onFail(FailCode, e.getMessage());
-                    }
-
-                    @Override
-                    public void onResponse(Object response, int id) {
-                        mLinstener.onSuccess(SuccessCode, response);
                     }
                 });
     }
@@ -645,39 +620,34 @@ public class ShopDao {
                 .build().execute(new BaseCallBackObject(mLinstener, WalletModel.class) {
         });
     }
-
     /**
      * 获取用户授权信息
-     */
-    public static void loadUserAuth(Context context, final onNetFinishLinstenerT<UserAuth> mLinstener) {
-        String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN);
-        String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID);
-        OkHttpUtils.post()//
-                .url(Common_HEADER + LOAD_USER_AUTH)
-                .addParams(ACCESSTOKEN, token)//
-                .addParams(USERID, userId)//
-                .build().execute(new BaseCallBackObject(mLinstener, UserAuth.class) {
-        });
-    }
-
-    /**
-     * 获取用户认证信息
      */
     public static void loadUserAuthImpl(Context context) {
         Constant.loadUserAuth = false;
         Constant.mUserAuth = null;
-        loadUserAuth(context, new onNetFinishLinstenerT<UserAuth>() {
-            @Override
-            public void onSuccess(int code, UserAuth result) {
-                Constant.mUserAuth = result;
-                Constant.loadUserAuth = true;
-            }
+        String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN);
+        String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID);
+        OkGo.<LzyResponse<UserAuth>>post(Common_HEADER + LOAD_USER_AUTH)
+                .params(ACCESSTOKEN, token)//
+                .params(USERID, userId)//
+                .execute(new JsonCallback<LzyResponse<UserAuth>>() {
+                    @Override
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<UserAuth>> response) {
+                        if (response.body().data != null && response.body().code == 0) {
+                            Constant.mUserAuth = response.body().data;
+                            Constant.loadUserAuth = true;
+                        }else {
+                            Constant.loadUserAuth = false;
+                        }
+                    }
 
-            @Override
-            public void onFail(int code, String result) {
-                Constant.loadUserAuth = false;
-            }
-        });
+                    @Override
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse<UserAuth>> response) {
+                        super.onError(response);
+                        Constant.loadUserAuth = false;
+                    }
+                });
     }
 
     public static void loadFUFriend(String index,

@@ -23,6 +23,8 @@ import com.feitianzhu.huangliwo.App;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.SFFragment;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.login.LoginEvent;
 import com.feitianzhu.huangliwo.me.ui.PersonalCenterActivity2;
 import com.feitianzhu.huangliwo.me.ui.ScannerActivity;
@@ -48,6 +50,8 @@ import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.view.CircleImageView;
 import com.feitianzhu.huangliwo.vip.VipActivity;
 import com.google.gson.Gson;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.Response;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -72,7 +76,6 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import okhttp3.Call;
 import okhttp3.Request;
-import okhttp3.Response;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
@@ -199,75 +202,72 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
     }
 
     public void getMerchantsClass() {
-        OkHttpUtils.get()
-                .url(Urls.GET_MERCHANTS_TYPE)
-                .addParams(ACCESSTOKEN, token)
-                .addParams(USERID, userId)
-                .build()
-                .execute(new Callback<MerchantsClassifyModel>() {
+        OkGo.<LzyResponse<MerchantsClassifyModel>>get(Urls.GET_MERCHANTS_TYPE)
+                .tag(this)
+                .params(ACCESSTOKEN, token)
+                .params(USERID, userId)
+                .execute(new JsonCallback<LzyResponse<MerchantsClassifyModel>>() {
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-                        ToastUtils.showShortToast(e.getMessage());
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<MerchantsClassifyModel>> response) {
+                        super.onSuccess(getActivity(), response.body().msg, response.body().code);
+                        if (response.body().data != null) {
+                            merchantsClassifyList = response.body().data.getList();
+                            multiItemShopAndMerchantsClass.clear();
+                            for (int i = 0; i < merchantsClassifyList.size(); i++) {
+                                MultiItemShopAndMerchants multiItemShopAndMerchants = new MultiItemShopAndMerchants(MultiItemShopAndMerchants.MERCHANTS_TYPE);
+                                multiItemShopAndMerchants.setMerchantsClassifyModel(merchantsClassifyList.get(i));
+                                multiItemShopAndMerchantsClass.add(multiItemShopAndMerchants);
+                            }
+                            leftAdapter.setSelect(0);
+                            leftAdapter.setNewData(multiItemShopAndMerchantsClass);
+                            leftAdapter.notifyDataSetChanged();
+                            clsMearchantsId = merchantsClassifyList.get(0).getClsId();
+                            getMerchants(clsMearchantsId);
+                        }
                     }
 
                     @Override
-                    public void onResponse(MerchantsClassifyModel response, int id) {
-                        merchantsClassifyList = response.getList();
-                        multiItemShopAndMerchantsClass.clear();
-                        for (int i = 0; i < merchantsClassifyList.size(); i++) {
-                            MultiItemShopAndMerchants multiItemShopAndMerchants = new MultiItemShopAndMerchants(MultiItemShopAndMerchants.MERCHANTS_TYPE);
-                            multiItemShopAndMerchants.setMerchantsClassifyModel(merchantsClassifyList.get(i));
-                            multiItemShopAndMerchantsClass.add(multiItemShopAndMerchants);
-                        }
-                        leftAdapter.setSelect(0);
-                        leftAdapter.setNewData(multiItemShopAndMerchantsClass);
-                        leftAdapter.notifyDataSetChanged();
-                        clsMearchantsId = merchantsClassifyList.get(0).getClsId();
-                        getMerchants(clsMearchantsId);
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse<MerchantsClassifyModel>> response) {
+                        super.onError(response);
                     }
                 });
     }
 
     public void getShopClass() {
-        OkHttpUtils.post()
-                .url(Urls.GET_SHOP_CLASS)
-                .addParams(ACCESSTOKEN, token)
-                .addParams(USERID, userId)
-                .build()
-                .execute(new Callback() {
+        OkGo.<LzyResponse<ShopClassify>>post(Urls.GET_SHOP_CLASS)
+                .params(ACCESSTOKEN, token)
+                .params(USERID, userId)
+                .execute(new JsonCallback<LzyResponse<ShopClassify>>() {
                     @Override
-                    public void onBefore(Request request, int id) {
-                        super.onBefore(request, id);
+                    public void onStart(com.lzy.okgo.request.base.Request<LzyResponse<ShopClassify>, ? extends com.lzy.okgo.request.base.Request> request) {
+                        super.onStart(request);
                         showloadDialog("");
                     }
 
                     @Override
-                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                        return new Gson().fromJson(mData, ShopClassify.class);
-                    }
-
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-                        goneloadDialog();
-                        Toast.makeText(getActivity(), TextUtils.isEmpty(e.getMessage()) ? "加载失败，请重试" : e.getMessage(), Toast.LENGTH_SHORT).show();
-                        KLog.e(e);
-                    }
-
-                    @Override
-                    public void onResponse(Object response, int id) {
-                        ShopClassify shopClassify = (ShopClassify) response;
-                        shopClassifyLsit = shopClassify.getGGoodsClsList();
-                        multiItemShopAndMerchantsClass.clear();
-                        for (int i = 0; i < shopClassifyLsit.size(); i++) {
-                            MultiItemShopAndMerchants multiItemShopAndMerchants = new MultiItemShopAndMerchants(MultiItemShopAndMerchants.SHOP_TYPE);
-                            multiItemShopAndMerchants.setShopClassifyModel(shopClassifyLsit.get(i));
-                            multiItemShopAndMerchantsClass.add(multiItemShopAndMerchants);
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<ShopClassify>> response) {
+                        super.onSuccess(getActivity(), "", response.body().code);
+                        if (response.body().data != null) {
+                            ShopClassify shopClassify = response.body().data;
+                            shopClassifyLsit = shopClassify.getGGoodsClsList();
+                            multiItemShopAndMerchantsClass.clear();
+                            for (int i = 0; i < shopClassifyLsit.size(); i++) {
+                                MultiItemShopAndMerchants multiItemShopAndMerchants = new MultiItemShopAndMerchants(MultiItemShopAndMerchants.SHOP_TYPE);
+                                multiItemShopAndMerchants.setShopClassifyModel(shopClassifyLsit.get(i));
+                                multiItemShopAndMerchantsClass.add(multiItemShopAndMerchants);
+                            }
+                            leftAdapter.setSelect(0);
+                            leftAdapter.setNewData(multiItemShopAndMerchantsClass);
+                            leftAdapter.notifyDataSetChanged();
+                            clsShopId = shopClassifyLsit.get(0).getClsId();
+                            getShops(clsShopId);
                         }
-                        leftAdapter.setSelect(0);
-                        leftAdapter.setNewData(multiItemShopAndMerchantsClass);
-                        leftAdapter.notifyDataSetChanged();
-                        clsShopId = shopClassifyLsit.get(0).getClsId();
-                        getShops(clsShopId);
+                    }
+
+                    @Override
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse<ShopClassify>> response) {
+                        super.onError(response);
+                        goneloadDialog();
                     }
                 });
     }
@@ -330,39 +330,42 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
 
 
     public void getShops(int clsId) {
-        OkHttpUtils.post()
-                .url(Urls.GET_SHOP)
-                .addParams(ACCESSTOKEN, token)
-                .addParams(USERID, userId)
-                .addParams("cls_id", clsId + "")
-                .build()
-                .execute(new Callback<Shops>() {
+        OkGo.<LzyResponse<Shops>>post(Urls.GET_SHOP)
+                .tag(this)
+                .params(ACCESSTOKEN, token)
+                .params(USERID, userId)
+                .params("cls_id", clsId + "")
+                .execute(new JsonCallback<LzyResponse<Shops>>() {
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-                        mSwipeLayout.finishRefresh(false);
-                        ToastUtils.showShortToast(e.getMessage());
-                        multipleItemList.clear();
-                        goodsListBeans.clear();
-                        rightAdapter.setNewData(multipleItemList);
-                        rightAdapter.notifyDataSetChanged();
-                        goneloadDialog();
-                    }
-
-                    @Override
-                    public void onResponse(Shops response, int id) {
+                    public void onSuccess(Response<LzyResponse<Shops>> response) {
+                        super.onSuccess(getActivity(), "", response.body().code);
                         mSwipeLayout.finishRefresh();
                         goneloadDialog();
                         multipleItemList.clear();
                         goodsListBeans.clear();
-                        goodsListBeans = response.getGoodslist();
-                        for (int i = 0; i < goodsListBeans.size(); i++) {
-                            MultipleItem multipleItem = new MultipleItem(MultipleItem.GOODS);
-                            multipleItem.setGoodsListBean(goodsListBeans.get(i));
-                            multipleItemList.add(multipleItem);
+                        if (response.body().data != null) {
+                            goodsListBeans = response.body().data.getGoodslist();
+                            for (int i = 0; i < goodsListBeans.size(); i++) {
+                                MultipleItem multipleItem = new MultipleItem(MultipleItem.GOODS);
+                                multipleItem.setGoodsListBean(goodsListBeans.get(i));
+                                multipleItemList.add(multipleItem);
+                            }
                         }
                         rightRecyclerView.smoothScrollToPosition(0);
                         rightAdapter.setNewData(multipleItemList);
                         rightAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onError(Response<LzyResponse<Shops>> response) {
+                        super.onError(response);
+                        mSwipeLayout.finishRefresh(false);
+                        ToastUtils.showShortToast(response.body().msg);
+                        multipleItemList.clear();
+                        goodsListBeans.clear();
+                        rightAdapter.setNewData(multipleItemList);
+                        rightAdapter.notifyDataSetChanged();
+                        goneloadDialog();
                     }
                 });
     }
@@ -373,41 +376,45 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
             longitude = myPoint.longitude;
             latitude = myPoint.latitude;
         }
-        OkHttpUtils.get()
-                .url(Urls.GET_MERCHANTS)
-                .addParams(ACCESSTOKEN, token)
-                .addParams(USERID, userId)
-                .addParams("clsId", clsId + "")
-                .addParams("longitude", longitude + "")
-                .addParams("latitude", latitude + "")
-                .build()
-                .execute(new Callback<MerchantsInfo>() {
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-                        mSwipeLayout.finishRefresh(false);
-                        ToastUtils.showShortToast(e.getMessage());
-                        multipleItemList.clear();
-                        merchantsList.clear();
-                        rightAdapter.setNewData(multipleItemList);
-                        rightAdapter.notifyDataSetChanged();
-                        goneloadDialog();
-                    }
 
+        OkGo.<LzyResponse<MerchantsInfo>>get(Urls.GET_MERCHANTS)
+                .tag(this)
+                .params(ACCESSTOKEN, token)
+                .params(USERID, userId)
+                .params("clsId", clsId + "")
+                .params("longitude", longitude + "")
+                .params("latitude", latitude + "")
+                .execute(new JsonCallback<LzyResponse<MerchantsInfo>>() {
                     @Override
-                    public void onResponse(MerchantsInfo response, int id) {
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<MerchantsInfo>> response) {
+                        super.onSuccess(getActivity(), "", response.body().code);
                         goneloadDialog();
                         mSwipeLayout.finishRefresh();
                         multipleItemList.clear();
                         merchantsList.clear();
-                        merchantsList = response.getList();
-                        for (int i = 0; i < merchantsList.size(); i++) {
-                            MultipleItem multipleItem = new MultipleItem(MultipleItem.MERCHANTS);
-                            multipleItem.setMerchantsModel(merchantsList.get(i));
-                            multipleItemList.add(multipleItem);
+                        if (response.body().data != null) {
+                            merchantsList = response.body().data.getList();
+                            for (int i = 0; i < merchantsList.size(); i++) {
+                                MultipleItem multipleItem = new MultipleItem(MultipleItem.MERCHANTS);
+                                multipleItem.setMerchantsModel(merchantsList.get(i));
+                                multipleItemList.add(multipleItem);
+                            }
                         }
                         rightRecyclerView.smoothScrollToPosition(0);
                         rightAdapter.setNewData(multipleItemList);
                         rightAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse<MerchantsInfo>> response) {
+                        super.onError(response);
+                        mSwipeLayout.finishRefresh(false);
+                        ToastUtils.showShortToast(response.body().msg);
+                        multipleItemList.clear();
+                        merchantsList.clear();
+                        rightAdapter.setNewData(multipleItemList);
+                        rightAdapter.notifyDataSetChanged();
+                        goneloadDialog();
                     }
                 });
     }
@@ -509,27 +516,25 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
     private void requestData() {
         token = SPUtils.getString(getActivity(), Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(getActivity(), Constant.SP_LOGIN_USERID);
-        OkHttpUtils.get()//
-                .url(Common_HEADER + POST_MINE_INFO)
-                .addParams(ACCESSTOKEN, token)//
-                .addParams(USERID, userId)
-                .build()
-                .execute(new Callback<MineInfoModel>() {
-
+        OkGo.<LzyResponse<MineInfoModel>>get(Common_HEADER + POST_MINE_INFO)
+                .tag(this)
+                .params(ACCESSTOKEN, token)//
+                .params(USERID, userId)
+                .execute(new JsonCallback<LzyResponse<MineInfoModel>>() {
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-                        Log.e("wangyan", "onError---->" + e.getMessage());
-                        ToastUtils.showShortToast(e.getMessage());
-                    }
-
-                    @Override
-                    public void onResponse(MineInfoModel response, int id) {
-                        if (response != null) {
-                            mineInfoModel = response;
-                            String headImg = response.getHeadImg();
+                    public void onSuccess(Response<LzyResponse<MineInfoModel>> response) {
+                        super.onSuccess(getActivity(), response.body().msg, response.body().code);
+                        if (response.body().data != null) {
+                            mineInfoModel = response.body().data;
+                            String headImg = response.body().data.getHeadImg();
                             Glide.with(mContext).load(headImg).apply(RequestOptions.placeholderOf(R.mipmap.b08_01touxiang).error(R.mipmap.b08_01touxiang).dontAnimate())
                                     .into(ivHead);
                         }
+                    }
+
+                    @Override
+                    public void onError(Response<LzyResponse<MineInfoModel>> response) {
+                        super.onError(response);
                     }
                 });
     }

@@ -8,6 +8,8 @@ import android.widget.TextView;
 
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.AddressInfo;
 import com.feitianzhu.huangliwo.utils.SPUtils;
@@ -22,13 +24,15 @@ import com.lljjcoder.style.cityjd.JDCityConfig;
 import com.lljjcoder.style.cityjd.JDCityPicker;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.PostRequest;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import okhttp3.Call;
-import okhttp3.Response;
 
 public class EditAddressActivity extends BaseActivity {
     public static final String ADDRESS_DATA = "address_data";
@@ -143,28 +147,25 @@ public class EditAddressActivity extends BaseActivity {
      * 删除地址
      * */
     public void deleteAddress(int addressId) {
-        OkHttpUtils.post()
-                .url(Urls.DELETE_ADDRESS)
-                .addParams("accessToken", token)
-                .addParams("userId", userId)
-                .addParams("addressId", addressId + "")
-                .build()
-                .execute(new Callback() {
+        OkGo.<LzyResponse>post(Urls.DELETE_ADDRESS)
+                .tag(this)
+                .params("accessToken", token)
+                .params("userId", userId)
+                .params("addressId", addressId + "")
+                .execute(new JsonCallback<LzyResponse>() {
                     @Override
-                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                        return mData;
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onSuccess(EditAddressActivity.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0) {
+                            setResult(RESULT_OK);
+                            ToastUtils.showShortToast("删除成功");
+                            finish();
+                        }
                     }
 
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-                        ToastUtils.showShortToast("删除失败");
-                    }
-
-                    @Override
-                    public void onResponse(Object response, int id) {
-                        setResult(RESULT_OK);
-                        ToastUtils.showShortToast("删除成功");
-                        finish();
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onError(response);
                     }
                 });
 
@@ -176,85 +177,53 @@ public class EditAddressActivity extends BaseActivity {
         } else {
             isDefalt = 0;
         }
-
-        if (isAdd) {
-            //新增地址
-            if ("710000".equals(mProvince.getId()) || "810000".equals(mProvince.getId()) || "820000".equals(mProvince.getId())) {
-                ToastUtils.showShortToast("暂不支持港澳台地区配送");
-                return;
-            }
-            OkHttpUtils.post()
-                    .url(Urls.ADD_ADDRESS)
-                    .addParams("accessToken", token)
-                    .addParams("userId", userId)
-                    .addParams("provinceId", mProvince.getId())
-                    .addParams("provinceName", mProvince.getName())
-                    .addParams("cityId", mCity.getId())
-                    .addParams("cityName", mCity.getName())
-                    .addParams("areaId", mDistrict.getId())
-                    .addParams("areaName", mDistrict.getName())
-                    .addParams("detailAddress", editAddressDetail.getText().toString())
-                    .addParams("userName", editName.getText().toString().trim())
-                    .addParams("phone", editPhone.getText().toString().trim())
-                    .addParams("isDefalt", isDefalt + "")
-                    .build()
-                    .execute(new Callback() {
-
-                        @Override
-                        public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                            return mData;
-                        }
-
-                        @Override
-                        public void onError(Call call, Exception e, int id) {
-                            ToastUtils.showShortToast("添加失败");
-                        }
-
-                        @Override
-                        public void onResponse(Object response, int id) {
-                            ToastUtils.showShortToast("添加成功");
-                            setResult(RESULT_OK);
-                            finish();
-                        }
-                    });
-        } else {
-            //修改地址
-            OkHttpUtils.post()
-                    .url(Urls.UPDATA_ADDRESS)
-                    .addParams("accessToken", token)
-                    .addParams("userId", userId)
-                    .addParams("provinceId", mProvince.getId())
-                    .addParams("provinceName", mProvince.getName())
-                    .addParams("cityId", mCity.getId())
-                    .addParams("cityName", mCity.getName())
-                    .addParams("areaId", mDistrict.getId())
-                    .addParams("areaName", mDistrict.getName())
-                    .addParams("detailAddress", editAddressDetail.getText().toString())
-                    .addParams("userName", editName.getText().toString().trim())
-                    .addParams("phone", editPhone.getText().toString().trim())
-                    .addParams("addressId", shopAddressListBean.getAddressId() + "")
-                    .addParams("isDefalt", isDefalt + "")
-                    .build()
-                    .execute(new Callback() {
-
-                        @Override
-                        public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                            return mData;
-                        }
-
-                        @Override
-                        public void onError(Call call, Exception e, int id) {
-                            ToastUtils.showShortToast("修改失败");
-                        }
-
-                        @Override
-                        public void onResponse(Object response, int id) {
-                            ToastUtils.showShortToast("修改成功");
-                            setResult(RESULT_OK);
-                            finish();
-                        }
-                    });
+        String url;
+        //新增地址
+        if ("710000".equals(mProvince.getId()) || "810000".equals(mProvince.getId()) || "820000".equals(mProvince.getId())) {
+            ToastUtils.showShortToast("暂不支持港澳台地区配送");
+            return;
         }
+        if (isAdd) {
+            url = Urls.ADD_ADDRESS;
+        } else {
+            url = Urls.UPDATA_ADDRESS;
+        }
+        PostRequest<LzyResponse> postRequest = OkGo.<LzyResponse>post(url).tag(this);
+        if (!isAdd) {
+            postRequest.params("addressId", shopAddressListBean.getAddressId() + "");
+        }
+        postRequest.params("accessToken", token)
+                .params("userId", userId)
+                .params("provinceId", mProvince.getId())
+                .params("provinceName", mProvince.getName())
+                .params("cityId", mCity.getId())
+                .params("cityName", mCity.getName())
+                .params("areaId", mDistrict.getId())
+                .params("areaName", mDistrict.getName())
+                .params("detailAddress", editAddressDetail.getText().toString())
+                .params("userName", editName.getText().toString().trim())
+                .params("phone", editPhone.getText().toString().trim())
+                .params("isDefalt", isDefalt + "")
+                .execute(new JsonCallback<LzyResponse>() {
+                    @Override
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onSuccess(EditAddressActivity.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0) {
+                            if (isAdd) {
+                                ToastUtils.showShortToast("添加成功");
+                            } else {
+                                ToastUtils.showShortToast("修改成功");
+                            }
+                            setResult(RESULT_OK);
+                            finish();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<LzyResponse> response) {
+                        super.onError(response);
+                    }
+                });
 
 
     }

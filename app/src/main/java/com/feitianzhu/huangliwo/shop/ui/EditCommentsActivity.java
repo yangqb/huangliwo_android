@@ -13,6 +13,8 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.EvaluateMode;
 import com.feitianzhu.huangliwo.model.GoodsOrderInfo;
@@ -26,6 +28,8 @@ import com.feitianzhu.huangliwo.utils.doubleclick.SingleClick;
 import com.google.gson.Gson;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.request.PostRequest;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -223,49 +227,47 @@ public class EditCommentsActivity extends BaseActivity {
 
                 evaluateMode.setContent(editContent.getText().toString());
                 String json = new Gson().toJson(evaluateMode);
-
-                Map<String, File> files = new HashMap<>();
+                List<File> fileList = new ArrayList<>();
 
                 if (allSelect.size() > 0) {
                     for (int i = 0; i < allSelect.size(); i++) {
                         String name = i + ".png";
-                        files.put(name, new File(allSelect.get(i)));
+                        fileList.add(new File(allSelect.get(i)));
                     }
                 }
-                PostFormBuilder postForm = OkHttpUtils.post();
+                String url;
                 if (evaluateMode.getMerchantId() != 0) {
-                    postForm.url(Urls.EVALUATE_SETMEAL_ORDER);
+                    url = Urls.EVALUATE_SETMEAL_ORDER;
                 } else {
-                    postForm.url(Urls.EVALUATE_ORDER);
+                    url = Urls.EVALUATE_ORDER;
                 }
-                if (files.size() > 0) {
-                    postForm.addFiles("files", files);
-                } else {
-                    postForm.setMultipart(true);
+
+                PostRequest<LzyResponse> postRequest = OkGo.<LzyResponse>post(url)
+                        .tag(this);
+                if (fileList.size() > 0) {
+                    postRequest.addFileParams("files", fileList);
+                }else {
+                    postRequest.isMultipart(true);
                 }
-                postForm.addParams(ACCESSTOKEN, token)
-                        .addParams(USERID, userId)
-                        .addParams("evaluateBody", json)
-                        .build()
-                        .execute(new Callback() {
+                postRequest.params(ACCESSTOKEN, token)
+                        .params(USERID, userId)
+                        .params("evaluateBody", json)
+                        .execute(new JsonCallback<LzyResponse>() {
                             @Override
-                            public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                                return mData;
+                            public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
+                                super.onSuccess(EditCommentsActivity.this, response.body().msg, response.body().code);
+                                if (response.body().code == 0) {
+                                    ToastUtils.showShortToast("发布成功");
+                                    setResult(RESULT_OK);
+                                    finish();
+                                }
                             }
 
                             @Override
-                            public void onError(Call call, Exception e, int id) {
-                                ToastUtils.showShortToast(e.getMessage());
-                            }
-
-                            @Override
-                            public void onResponse(Object response, int id) {
-                                ToastUtils.showShortToast("发布成功");
-                                setResult(RESULT_OK);
-                                finish();
+                            public void onError(com.lzy.okgo.model.Response<LzyResponse> response) {
+                                super.onError(response);
                             }
                         });
-
                 break;
         }
     }

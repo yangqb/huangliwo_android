@@ -13,6 +13,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.login.LoginEvent;
 import com.feitianzhu.huangliwo.me.base.BaseTakePhotoActivity;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
@@ -22,6 +24,7 @@ import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.view.CircleImageView;
 import com.feitianzhu.huangliwo.view.CustomSelectPhotoView;
 import com.lxj.xpopup.XPopup;
+import com.lzy.okgo.OkGo;
 import com.socks.library.KLog;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
@@ -130,22 +133,22 @@ public class PersonalCenterActivity2 extends BaseTakePhotoActivity {
     }
 
     private void requestData() {
-        OkHttpUtils.get()//
-                .url(Common_HEADER + POST_MINE_INFO)
-                .addParams(ACCESSTOKEN, token)//
-                .addParams(USERID, userId)
-                .build()
-                .execute(new Callback<MineInfoModel>() {
-
+        OkGo.<LzyResponse<MineInfoModel>>get(Common_HEADER + POST_MINE_INFO)
+                .tag(this)
+                .params(ACCESSTOKEN, token)//
+                .params(USERID, userId)
+                .execute(new JsonCallback<LzyResponse<MineInfoModel>>() {
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-                        Log.e("wangyan", "onError---->" + e.getMessage());
-                        ToastUtils.showShortToast(e.getMessage());
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<MineInfoModel>> response) {
+                        super.onSuccess(PersonalCenterActivity2.this, "", response.body().code);
+                        if (response.body().data != null) {
+                            setShowData(response.body().data);
+                        }
                     }
 
                     @Override
-                    public void onResponse(MineInfoModel response, int id) {
-                        setShowData(response);
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse<MineInfoModel>> response) {
+                        super.onError(response);
                     }
                 });
     }
@@ -202,23 +205,24 @@ public class PersonalCenterActivity2 extends BaseTakePhotoActivity {
      * 获取分享的信息
      */
     private void getSharedInfo() {
-        OkHttpUtils.post()//
-                .url(Common_HEADER + Constant.GET_SHARED_INFO)
-                .addParams(ACCESSTOKEN, token)//
-                .addParams(USERID, userId)
-                .build()
-                .execute(new Callback<SharedInfoModel>() {
 
+        OkGo.<LzyResponse<SharedInfoModel>>post(Common_HEADER + Constant.GET_SHARED_INFO)
+                .tag(this)
+                .params(ACCESSTOKEN, token)//
+                .params(USERID, userId)
+                .execute(new JsonCallback<LzyResponse<SharedInfoModel>>() {
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-                        Log.e("wangyan", "onError---->" + e.getMessage());
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<SharedInfoModel>> response) {
+                        //super.onSuccess(PersonalCenterActivity2.this, "", response.body().code);
+                        if (response.body().data != null && response.body().code == 0) {
+                            mSharedInfo = response.body().data;
+                        }
                     }
 
                     @Override
-                    public void onResponse(SharedInfoModel response, int id) {
-                        mSharedInfo = response;
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse<SharedInfoModel>> response) {
+                        super.onError(response);
                     }
-
                 });
     }
 
@@ -293,36 +297,31 @@ public class PersonalCenterActivity2 extends BaseTakePhotoActivity {
     }
 
     private void uploadPic(String compressPath) {
-        OkHttpUtils.post()//
-                .url(Common_HEADER + POST_UPLOAD_PIC)
-                .addParams(ACCESSTOKEN, token)//
-                .addParams(USERID, userId)
-                .addFile("avatar", "touxiang.png", new File(compressPath))
-                .build()
-                .execute(new Callback() {
+        OkGo.<LzyResponse>post(Common_HEADER + POST_UPLOAD_PIC)
+                .tag(this)
+                .params(ACCESSTOKEN, token)//
+                .params(USERID, userId)
+                .params("avatar", new File(compressPath), "touxiang.png")
+                .execute(new JsonCallback<LzyResponse>() {
                     @Override
-                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                        return mData;
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onSuccess(PersonalCenterActivity2.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0) {
+                            ToastUtils.showShortToast("上传成功!");
+                            EventBus.getDefault().postSticky(LoginEvent.EDITOR_INFO);
+                        }
                     }
 
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-
-
-                    }
-
-                    @Override
-                    public void onResponse(Object response, int id) {
-                        Log.e("wangyan", "response====" + response);
-                        ToastUtils.showShortToast("上传成功!");
-                        EventBus.getDefault().postSticky(LoginEvent.EDITOR_INFO);
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onError(response);
                     }
                 });
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-       super.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case NICK_REQUEST_CODE:

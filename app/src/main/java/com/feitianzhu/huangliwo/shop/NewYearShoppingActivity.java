@@ -12,6 +12,8 @@ import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
@@ -23,6 +25,8 @@ import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.vip.VipActivity;
 import com.gyf.immersionbar.ImmersionBar;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.Response;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -112,46 +116,48 @@ public class NewYearShoppingActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        OkHttpUtils.get().url(Urls.GET_NEW_YEAR)
-                .addParams("accessToken", token)
-                .addParams("userId", userId)
-                .build()
-                .execute(new Callback<NewYearGoodsModel>() {
+
+        OkGo.<LzyResponse<NewYearGoodsModel>>get(Urls.GET_NEW_YEAR)
+                .tag(this)
+                .params("accessToken", token)
+                .params("userId", userId)
+                .execute(new JsonCallback<LzyResponse<NewYearGoodsModel>>() {
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-                        refreshLayout.finishRefresh(false);
-                        ToastUtils.showShortToast(e.getMessage());
+                    public void onSuccess(Response<LzyResponse<NewYearGoodsModel>> response) {
+                        super.onSuccess(NewYearShoppingActivity.this, "", response.body().code);
+                        refreshLayout.finishRefresh();
+                        if (response.body().data != null) {
+                            goodsListBeans = response.body().data.getActivityList();
+                            adapter.setNewData(goodsListBeans);
+                            adapter.notifyDataSetChanged();
+                        }
                     }
 
                     @Override
-                    public void onResponse(NewYearGoodsModel response, int id) {
-                        refreshLayout.finishRefresh();
-                        goodsListBeans = response.getActivityList();
-                        adapter.setNewData(goodsListBeans);
-                        adapter.notifyDataSetChanged();
+                    public void onError(Response<LzyResponse<NewYearGoodsModel>> response) {
+                        super.onError(response);
+                        refreshLayout.finishRefresh(false);
                     }
                 });
     }
 
     private void requestData() {
-        OkHttpUtils.get()//
-                .url(Common_HEADER + POST_MINE_INFO)
-                .addParams(ACCESSTOKEN, token)//
-                .addParams(USERID, userId)
-                .build()
-                .execute(new Callback<MineInfoModel>() {
-
+        OkGo.<LzyResponse<MineInfoModel>>get(Common_HEADER + POST_MINE_INFO)
+                .tag(this)
+                .params(ACCESSTOKEN, token)//
+                .params(USERID, userId)
+                .execute(new JsonCallback<LzyResponse<MineInfoModel>>() {
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-                        Log.e("wangyan", "onError---->" + e.getMessage());
-                        ToastUtils.showShortToast(e.getMessage());
+                    public void onSuccess(Response<LzyResponse<MineInfoModel>> response) {
+                        super.onSuccess(NewYearShoppingActivity.this, "", response.body().code);
+                        if (response.body().data != null) {
+                            mineInfoModel = response.body().data;
+                        }
                     }
 
                     @Override
-                    public void onResponse(MineInfoModel response, int id) {
-                        if (response != null) {
-                            mineInfoModel = response;
-                        }
+                    public void onError(Response<LzyResponse<MineInfoModel>> response) {
+                        super.onError(response);
                     }
                 });
     }

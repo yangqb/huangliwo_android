@@ -19,15 +19,19 @@ import com.bumptech.glide.request.RequestOptions;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.GoodsOrderInfo;
 import com.feitianzhu.huangliwo.model.PayInfo;
+import com.feitianzhu.huangliwo.model.PayModel;
 import com.feitianzhu.huangliwo.model.WXModel;
 import com.feitianzhu.huangliwo.utils.PayUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.google.gson.Gson;
+import com.lzy.okgo.OkGo;
 import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
@@ -194,45 +198,36 @@ public class SelectPayActivity extends BaseActivity {
         orderInfo.setChannel(payChannel);
         orderInfo.setOrderNo(goodsOrderBean.getOrderNo());
         String json = new Gson().toJson(orderInfo);
-        OkHttpUtils.post()
-                .url(Urls.PAY_SHOPS)
-                .addParams(ACCESSTOKEN, token)//
-                .addParams(USERID, userId)//
-                .addParams("appId", appId)  //这个是微信才需要的，
-                .addParams("order", json)
-                .build()
-                .execute(new Callback() {
 
+        OkGo.<LzyResponse<PayModel>>post(Urls.PAY_SHOPS)
+                .tag(this)
+                .params(ACCESSTOKEN, token)//
+                .params(USERID, userId)//
+                .params("appId", appId)  //这个是微信才需要的，
+                .params("order", json)
+                .execute(new JsonCallback<LzyResponse<PayModel>>() {
                     @Override
-                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                        return mData;
-                    }
-
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-                        ToastUtils.showShortToast("提交订单失败");
-                    }
-
-                    @Override
-                    public void onResponse(Object response, int id) {
-                        try {
-                            JSONObject object = new JSONObject(response.toString());
-                            if ("wx".equals(payChannel)) {
-                                WXModel wxModel = new Gson().fromJson(object.toString(), WXModel.class);
-                                wexinPay(wxModel);
-                            } else if ("alipay".equals(payChannel)) {
-                                String orderInfo = object.getString("payParam");
-                                aliPay(orderInfo);
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<PayModel>> response) {
+                        super.onSuccess(SelectPayActivity.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0 && response.body().data != null) {
+                                if ("wx".equals(payChannel)) {
+                                    wexinPay(response.body().data);
+                                } else if ("alipay".equals(payChannel)) {
+                                    String orderInfo = response.body().data.payParam;
+                                    aliPay(orderInfo);
+                                }
                         }
+                    }
+
+                    @Override
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse<PayModel>> response) {
+                        super.onError(response);
                     }
                 });
     }
 
 
-    private void wexinPay(WXModel result) {
+    private void wexinPay(PayModel result) {
         Constant.PayFlag = PayInfo.ShopPay;
         IWXAPI api = WXAPIFactory.createWXAPI(SelectPayActivity.this, result.appid);
         api.registerApp(Constant.WX_APP_ID);

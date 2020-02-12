@@ -27,7 +27,7 @@ public class VipPresentsAdapter extends BaseQuickAdapter<PresentsModel.ShopGiftL
 
     @Override
     protected void convert(@NonNull BaseViewHolder helper, PresentsModel.ShopGiftListBean item) {
-        Glide.with(mContext).load(item.getGiftImg()).apply(new RequestOptions().error(R.mipmap.g10_04weijiazai).placeholder(R.mipmap.g10_04weijiazai)).into((ImageView) helper.getView(R.id.imageView));
-        helper.setText(R.id.tvTitle, item.getGiftTitle());
+        /*Glide.with(mContext).load(item.getGiftImg()).apply(new RequestOptions().error(R.mipmap.g10_04weijiazai).placeholder(R.mipmap.g10_04weijiazai)).into((ImageView) helper.getView(R.id.imageView));
+        helper.setText(R.id.tvTitle, item.getGiftTitle());*/
     }
 }

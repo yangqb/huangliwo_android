@@ -20,6 +20,8 @@ import com.bumptech.glide.request.RequestOptions;
 import com.feitianzhu.huangliwo.App;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.GoodsOrderInfo;
 import com.feitianzhu.huangliwo.shop.SelectPayActivity;
@@ -32,6 +34,7 @@ import com.google.gson.Gson;
 import com.itheima.roundedimageview.RoundedImageView;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
+import com.lzy.okgo.OkGo;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
 import com.yanzhenjie.permission.Rationale;
@@ -193,57 +196,51 @@ public class OrderDetailActivity extends BaseActivity {
 
 
     public void cancel(String orderNo) {
-        OkHttpUtils.get()
-                .url(Urls.CANCEL_ORDER)
-                .addParams(ACCESSTOKEN, token)
-                .addParams(USERID, userId)
-                .addParams("orderNo", orderNo)
-                .build()
-                .execute(new Callback() {
+
+        OkGo.<LzyResponse>get(Urls.CANCEL_ORDER)
+                .tag(this)
+                .params(ACCESSTOKEN, token)
+                .params(USERID, userId)
+                .params("orderNo", orderNo)
+                .execute(new JsonCallback<LzyResponse>() {
                     @Override
-                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                        return mData;
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onSuccess(OrderDetailActivity.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0) {
+                            ToastUtils.showShortToast("取消成功");
+                            initData();
+                        }
                     }
 
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-                        ToastUtils.showShortToast(e.getMessage());
-                    }
-
-                    @Override
-                    public void onResponse(Object response, int id) {
-                        ToastUtils.showShortToast("取消成功");
-                        initData();
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onError(response);
                     }
                 });
-
     }
 
 
     @Override
     protected void initData() {
-        OkHttpUtils.get()
-                .url(Urls.GET_ORDER_DETAIL)
-                .addParams(ACCESSTOKEN, token)
-                .addParams(USERID, userId)
-                .addParams("orderNo", orderNo)
-                .build()
-                .execute(new Callback() {
+        OkGo.<LzyResponse<GoodsOrderInfo.GoodsOrderListBean>>get(Urls.GET_ORDER_DETAIL)
+                .tag(this)
+                .params(ACCESSTOKEN, token)
+                .params(USERID, userId)
+                .params("orderNo", orderNo)
+                .execute(new JsonCallback<LzyResponse<GoodsOrderInfo.GoodsOrderListBean>>() {
                     @Override
-                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                        return new Gson().fromJson(mData, GoodsOrderInfo.GoodsOrderListBean.class);
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<GoodsOrderInfo.GoodsOrderListBean>> response) {
+                        super.onSuccess(OrderDetailActivity.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0 && response.body().data != null) {
+                            goodsOrderBean = response.body().data;
+                            time = (goodsOrderBean.getExpiresDate() - goodsOrderBean.getNowTimeStamp()) / 1000;
+                            showView();
+                        }
                     }
 
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-
-                    }
-
-                    @Override
-                    public void onResponse(Object response, int id) {
-                        goodsOrderBean = (GoodsOrderInfo.GoodsOrderListBean) response;
-                        time = (goodsOrderBean.getExpiresDate() - goodsOrderBean.getNowTimeStamp()) / 1000;
-                        showView();
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse<GoodsOrderInfo.GoodsOrderListBean>> response) {
+                        super.onError(response);
                     }
                 });
     }

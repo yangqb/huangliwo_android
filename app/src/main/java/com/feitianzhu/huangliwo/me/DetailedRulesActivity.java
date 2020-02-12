@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.adapter.DetailedRulesAdapter;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.UserGoodVo;
@@ -16,6 +18,7 @@ import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.google.gson.Gson;
+import com.lzy.okgo.OkGo;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -133,32 +136,31 @@ public class DetailedRulesActivity extends BaseActivity {
             adapter.notifyDataSetChanged();
             refreshLayout.finishRefresh();
         } else {
-            OkHttpUtils.get()
-                    .url(Urls.GET_DETAIL_RULES)
-                    .addParams(Constant.ACCESSTOKEN, token)
-                    .addParams(Constant.USERID, userId)
-                    .addParams("type", type + "")
-                    .build()
-                    .execute(new Callback() {
-                        @Override
-                        public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                            return new Gson().fromJson(mData, UserGoodVo.class);
-                        }
 
+            OkGo.<LzyResponse<UserGoodVo>>get(Urls.GET_DETAIL_RULES)
+                    .tag(this)
+                    .params(Constant.ACCESSTOKEN, token)
+                    .params(Constant.USERID, userId)
+                    .params("type", type + "")
+                    .execute(new JsonCallback<LzyResponse<UserGoodVo>>() {
                         @Override
-                        public void onError(Call call, Exception e, int id) {
-                            refreshLayout.finishRefresh(false);
-                        }
-
-                        @Override
-                        public void onResponse(Object response, int id) {
+                        public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<UserGoodVo>> response) {
+                            super.onSuccess(DetailedRulesActivity.this, response.body().msg, response.body().code);
                             refreshLayout.finishRefresh();
-                            UserGoodVo userGoodVo = (UserGoodVo) response;
-                            if (userGoodVo.getReslut() != null) {
-                                resultBeans = userGoodVo.getReslut();
-                                adapter.setNewData(resultBeans);
-                                adapter.notifyDataSetChanged();
+                            if (response.body().data != null) {
+                                UserGoodVo userGoodVo = response.body().data;
+                                if (userGoodVo.getReslut() != null) {
+                                    resultBeans = userGoodVo.getReslut();
+                                    adapter.setNewData(resultBeans);
+                                    adapter.notifyDataSetChanged();
+                                }
                             }
+                        }
+
+                        @Override
+                        public void onError(com.lzy.okgo.model.Response<LzyResponse<UserGoodVo>> response) {
+                            super.onError(response);
+                            refreshLayout.finishRefresh(false);
                         }
                     });
         }

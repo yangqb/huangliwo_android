@@ -19,6 +19,8 @@ import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.home.adapter.HomeRecommendAdapter2;
 import com.feitianzhu.huangliwo.home.entity.ShopAndMerchants;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
 import com.feitianzhu.huangliwo.model.SearchGoodsMode;
@@ -30,6 +32,7 @@ import com.feitianzhu.huangliwo.utils.Urls;
 import com.google.gson.Gson;
 import com.gyf.immersionbar.ImmersionBar;
 import com.lxj.xpopup.util.KeyboardUtils;
+import com.lzy.okgo.OkGo;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
@@ -109,6 +112,53 @@ public class SearchShopActivity extends BaseActivity {
             ToastUtils.showShortToast("请输入关键字进行搜索");
             return;
         }
+
+        OkGo.<LzyResponse<SearchGoodsMode>>post(Urls.GET_SEARCH_LIST)
+                .tag(this)
+                .params("accessToken", token)
+                .params("userId", userId)
+                .params("limitNum", Constant.PAGE_SIZE)
+                .params("curPage", pageNo + "")
+                .params("searchName", searchText)
+                .execute(new JsonCallback<LzyResponse<SearchGoodsMode>>() {
+                    @Override
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<SearchGoodsMode>> response) {
+                        super.onSuccess(SearchShopActivity.this, "", response.body().code);
+                        if (!isLoadMore) {
+                            mSwipeLayout.finishRefresh();
+                        } else {
+                            mSwipeLayout.finishLoadMore();
+                        }
+                        if (response.body().data != null) {
+                            SearchGoodsMode goodsMode = response.body().data;
+                            goodsListBeans = goodsMode.getList();
+                            if (!isLoadMore) {
+                                shopAndMerchants.clear();
+                            }
+                            //商品
+                            if (goodsListBeans != null && goodsListBeans.size() > 0) {
+                                for (int i = 0; i < goodsListBeans.size(); i++) {
+                                    ShopAndMerchants entity = new ShopAndMerchants(ShopAndMerchants.TYPE_GOODS);
+                                    entity.setShopsList(goodsListBeans.get(i));
+                                    shopAndMerchants.add(entity);
+                                }
+                                mAdapter.setNewData(shopAndMerchants);
+                                mAdapter.notifyDataSetChanged();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse<SearchGoodsMode>> response) {
+                        super.onError(response);
+                        if (!isLoadMore) {
+                            mSwipeLayout.finishRefresh(false);
+                        } else {
+                            mSwipeLayout.finishLoadMore(false);
+                        }
+                    }
+                });
+
         OkHttpUtils.post()
                 .url(Urls.GET_SEARCH_LIST)
                 .addParams("accessToken", token)

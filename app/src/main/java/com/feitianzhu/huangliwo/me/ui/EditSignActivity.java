@@ -10,10 +10,13 @@ import android.widget.Toast;
 
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.login.LoginEvent;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
+import com.lzy.okgo.OkGo;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
 
@@ -79,33 +82,26 @@ public class EditSignActivity extends BaseActivity {
     }
 
     private void sendSaveRequest() {
-        OkHttpUtils.post()//
-                .url(Common_HEADER + EDIT_MINE_INFO)
-                .addParams(ACCESSTOKEN, token)//
-                .addParams(USERID, userId)
-                .addParams("personSign", TextUtils.isEmpty(editText.getText().toString()) ? "" : editText.getText().toString())
-                .build()
-                .execute(new Callback() {
+        OkGo.<LzyResponse>post(Common_HEADER + EDIT_MINE_INFO)
+                .tag(this)
+                .params(ACCESSTOKEN, token)//
+                .params(USERID, userId)
+                .params("personSign", TextUtils.isEmpty(editText.getText().toString()) ? "" : editText.getText().toString())
+                .execute(new JsonCallback<LzyResponse>() {
                     @Override
-                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                        return mData;
-                    }
-
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-                        Log.e("wangyan", "onError---->" + e.getMessage());
-                        Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onResponse(Object response, int id) {
-                        Log.e("wangyan", "onResponse---->" + response);
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onSuccess(EditSignActivity.this,response.body().msg,response.body().code);
                         Toast.makeText(mContext, "修改成功", Toast.LENGTH_SHORT).show();
                         EventBus.getDefault().postSticky(LoginEvent.EDITOR_INFO);
                         Intent intent = new Intent();
                         intent.putExtra(SIGN, editText.getText().toString().trim());
                         setResult(RESULT_OK, intent);
                         finish();
+                    }
+
+                    @Override
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onError(response);
                     }
                 });
     }

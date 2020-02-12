@@ -13,12 +13,16 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.SetMealOrderDetailInfo;
 import com.feitianzhu.huangliwo.pushshop.bean.SetMealInfo;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.Response;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
@@ -93,26 +97,24 @@ public class SetMealOrderDetailActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        OkHttpUtils.get()
-                .url(Urls.SETMEAL_ORDER_DETAIL)
-                .addParams(ACCESSTOKEN, token)//
-                .addParams(USERID, userId)//
-                .addParams("orderNo", orderNo)
-                .build()
-                .execute(new Callback<SetMealOrderDetailInfo>() {
-
+        OkGo.<LzyResponse<SetMealOrderDetailInfo>>get(Urls.SETMEAL_ORDER_DETAIL)
+                .tag(this)
+                .params(ACCESSTOKEN, token)//
+                .params(USERID, userId)//
+                .params("orderNo", orderNo)
+                .execute(new JsonCallback<LzyResponse<SetMealOrderDetailInfo>>() {
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-                        ToastUtils.showShortToast(e.getMessage());
-
+                    public void onSuccess(Response<LzyResponse<SetMealOrderDetailInfo>> response) {
+                        super.onSuccess(SetMealOrderDetailActivity.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0 && response.body().data != null) {
+                            orderDetailInfo = response.body().data;
+                            showView(orderDetailInfo);
+                        }
                     }
 
                     @Override
-                    public void onResponse(SetMealOrderDetailInfo response, int id) {
-                        if (response != null) {
-                            orderDetailInfo = response;
-                            showView(orderDetailInfo);
-                        }
+                    public void onError(Response<LzyResponse<SetMealOrderDetailInfo>> response) {
+                        super.onError(response);
                     }
                 });
     }

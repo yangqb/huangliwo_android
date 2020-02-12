@@ -31,6 +31,8 @@ import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.feitianzhu.huangliwo.App;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
@@ -38,12 +40,14 @@ import com.feitianzhu.huangliwo.model.ProductParameters;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
+import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 import com.feitianzhu.huangliwo.view.CustomSpecificationDialog;
 import com.feitianzhu.huangliwo.vip.VipActivity;
 import com.google.gson.Gson;
 import com.itheima.roundedimageview.RoundedImageView;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
+import com.lzy.okgo.OkGo;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
 import com.yanzhenjie.permission.Rationale;
@@ -66,6 +70,7 @@ import okhttp3.Response;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
+import static com.feitianzhu.huangliwo.common.Constant.ORDERNO;
 import static com.feitianzhu.huangliwo.common.Constant.POST_MINE_INFO;
 import static com.feitianzhu.huangliwo.common.Constant.USERID;
 
@@ -158,93 +163,67 @@ public class ShopsDetailActivity extends BaseActivity {
     }
 
     public void getUserInfo() {
-        OkHttpUtils.get()//
-                .url(Common_HEADER + POST_MINE_INFO)
-                .addParams(ACCESSTOKEN, token)//
-                .addParams(USERID, userId)
-                .build()
-                .execute(new Callback<MineInfoModel>() {
-
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-                        Log.e("wangyan", "onError---->" + e.getMessage());
-                        ToastUtils.showShortToast(e.getMessage());
-                    }
-
-                    @Override
-                    public void onResponse(MineInfoModel response, int id) {
-                        if (response != null) {
-                            mineInfoModel = response;
-                        }
-                    }
-                });
+        mineInfoModel = UserInfoUtils.getUserInfo(this);
     }
 
     public void getSpecifications() {
-        OkHttpUtils.post()
-                .url(Urls.GET_PRODUCT_PARAMETERS)
-                .addParams("accessToken", token)
-                .addParams("userId", userId)
-                .addParams("goodsId", goodsId + "")
-                .build()
-                .execute(new Callback() {
-
+        OkGo.<LzyResponse<ProductParameters>>post(Urls.GET_PRODUCT_PARAMETERS)
+                .tag(this)
+                .params("accessToken", token)
+                .params("userId", userId)
+                .params("goodsId", goodsId + "")
+                .execute(new JsonCallback<LzyResponse<ProductParameters>>() {
                     @Override
-                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                        return new Gson().fromJson(mData, ProductParameters.class);
-                    }
-
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-                        ToastUtils.showShortToast(e.getMessage());
-                    }
-
-                    @Override
-                    public void onResponse(Object response, int id) {
-                        productParameters = (ProductParameters) response;
-                        /*
-                         * 数据处理
-                         * */
-                        if (productParameters != null && productParameters.getGoodslist() != null && productParameters.getGoodslist().size() > 0) {
-                            llSpecifications.setVisibility(View.VISIBLE);
-                            specifications = productParameters.getGoodslist();
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<ProductParameters>> response) {
+                        //super.onSuccess(ShopsDetailActivity.this, response.body().msg, response.body().code);
+                        if (response.body().data != null) {
+                            productParameters = response.body().data;
                             /*
-                             * 默认选中第一个
+                             * 数据处理
                              * */
-                            for (int i = 0; i < specifications.size(); i++) {
-                                for (int j = 0; j < specifications.get(i).getSkuValueList().size(); j++) {
-                                    specifications.get(i).getSkuValueList().get(0).setSelect(true);
+                            if (productParameters != null && productParameters.getGoodslist() != null && productParameters.getGoodslist().size() > 0) {
+                                llSpecifications.setVisibility(View.VISIBLE);
+                                specifications = productParameters.getGoodslist();
+                                /*
+                                 * 默认选中第一个
+                                 * */
+                                for (int i = 0; i < specifications.size(); i++) {
+                                    for (int j = 0; j < specifications.get(i).getSkuValueList().size(); j++) {
+                                        specifications.get(i).getSkuValueList().get(0).setSelect(true);
+                                    }
                                 }
+                            } else {
+                                llSpecifications.setVisibility(View.GONE);
                             }
-                        } else {
-                            llSpecifications.setVisibility(View.GONE);
                         }
+                    }
+
+                    @Override
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse<ProductParameters>> response) {
+                        super.onError(response);
                     }
                 });
     }
 
     public void getDetail(String goodsId) {
-        OkHttpUtils.get()
-                .url(Urls.GET_SHOP_DETAIL)
-                .addParams("accessToken", token)
-                .addParams("userId", userId)
-                .addParams("goodsId", goodsId)
-                .build()
-                .execute(new Callback() {
+        OkGo.<LzyResponse<BaseGoodsListBean>>get(Urls.GET_SHOP_DETAIL)
+                .tag(this)
+                .params("accessToken", token)
+                .params("userId", userId)
+                .params("goodsId", goodsId)
+                .execute(new JsonCallback<LzyResponse<BaseGoodsListBean>>() {
                     @Override
-                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                        return new Gson().fromJson(mData, BaseGoodsListBean.class);
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<BaseGoodsListBean>> response) {
+                        //super.onSuccess(ShopsDetailActivity.this, response.body().msg, response.body().code);
+                        if (response.body().data != null) {
+                            goodsListBean = response.body().data;
+                            showView();
+                        }
                     }
 
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-                        ToastUtils.showShortToast(e.getMessage());
-                    }
-
-                    @Override
-                    public void onResponse(Object response, int id) {
-                        goodsListBean = (BaseGoodsListBean) response;
-                        showView();
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse<BaseGoodsListBean>> response) {
+                        super.onError(response);
                     }
                 });
     }

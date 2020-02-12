@@ -14,6 +14,8 @@ import com.feitianzhu.huangliwo.MainActivity;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.impl.onNetFinishLinstenerT;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.login.LoginActivity;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.UpdateAppModel;
@@ -31,6 +33,7 @@ import com.google.gson.Gson;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnCancelListener;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
+import com.lzy.okgo.OkGo;
 import com.vector.update_app.UpdateAppBean;
 import com.vector.update_app.UpdateAppManager;
 import com.vector.update_app.UpdateCallback;
@@ -42,8 +45,11 @@ import java.io.File;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
+import static com.feitianzhu.huangliwo.common.Constant.LOAD_USER_AUTH;
 import static com.feitianzhu.huangliwo.common.Constant.UAPDATE;
+import static com.feitianzhu.huangliwo.common.Constant.USERID;
 
 public class SettingsActivity extends BaseActivity {
     boolean constraint = false;
@@ -105,27 +111,36 @@ public class SettingsActivity extends BaseActivity {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
+        String token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
+        String userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
+        OkGo.<LzyResponse<UserAuth>>post(Common_HEADER + LOAD_USER_AUTH)
+                .params(ACCESSTOKEN, token)//
+                .params(USERID, userId)//
+                .execute(new JsonCallback<LzyResponse<UserAuth>>() {
+                    @Override
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<UserAuth>> response) {
+                        super.onSuccess(SettingsActivity.this, response.body().msg, response.body().code);
+                        if (response.body().data != null && response.body().code == 0) {
+                            if (response.body().data.isPaypass == 1) {
+                                isPayPassword = true;
+                                mTvPayPassword.setText("重设支付密码");
+                            } else {
+                                isPayPassword = false;
+                                mTvPayPassword.setText("设置支付密码");
+                            }
+                        }else {
+                            isPayPassword = false;
+                            mTvPayPassword.setText("设置支付密码");
+                        }
+                    }
 
-        ShopDao.loadUserAuth(this, new onNetFinishLinstenerT<UserAuth>() {
-            @Override
-            public void onSuccess(int code, UserAuth result) {
-
-                if (result != null && result.isPaypass == 1) {
-                    isPayPassword = true;
-                    mTvPayPassword.setText("重设支付密码");
-                } else {
-                    isPayPassword = false;
-                    mTvPayPassword.setText("设置支付密码");
-                }
-
-            }
-
-            @Override
-            public void onFail(int code, String result) {
-                isPayPassword = false;
-                mTvPayPassword.setText("设置支付密码");
-            }
-        });
+                    @Override
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse<UserAuth>> response) {
+                        super.onError(response);
+                        isPayPassword = false;
+                        mTvPayPassword.setText("设置支付密码");
+                    }
+                });
     }
 
 
