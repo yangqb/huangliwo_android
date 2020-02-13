@@ -7,6 +7,8 @@ import android.widget.TextView;
 
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
@@ -14,6 +16,7 @@ import com.feitianzhu.huangliwo.utils.Urls;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnCancelListener;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
+import com.lzy.okgo.OkGo;
 import com.uuzuche.lib_zxing.view.ViewfinderView;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
@@ -79,40 +82,38 @@ public class RecordOrderActivity extends BaseActivity {
             ToastUtils.showShortToast("请输入套餐码");
             return;
         }
-        OkHttpUtils.post()
-                .url(Urls.RECORD_ORDER)
-                .addParams("num", mealCode)
-                .addParams("merchantId", merchantsId)
-                .addParams(ACCESSTOKEN, token)//
-                .addParams(USERID, userId)//
-                .build()
-                .execute(new Callback() {
+
+        OkGo.<LzyResponse>post(Urls.RECORD_ORDER)
+                .tag(this)
+                .params("num", mealCode)
+                .params("merchantId", merchantsId)
+                .params(ACCESSTOKEN, token)//
+                .params(USERID, userId)//
+                .execute(new JsonCallback<LzyResponse>() {
                     @Override
-                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                        return mData;
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onSuccess(RecordOrderActivity.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0) {
+                            new XPopup.Builder(RecordOrderActivity.this)
+                                    .asConfirm("录单成功！是否继续录单？", "", "取消", "确定", new OnConfirmListener() {
+                                        @Override
+                                        public void onConfirm() {
+                                            editCode.setHint("请输入套餐码");
+                                        }
+                                    }, new OnCancelListener() {
+                                        @Override
+                                        public void onCancel() {
+                                            finish();
+                                        }
+                                    }, false)
+                                    .bindLayout(R.layout.layout_dialog) //绑定已有布局
+                                    .show();
+                        }
                     }
 
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-                        ToastUtils.showShortToast(e.getMessage());
-                    }
-
-                    @Override
-                    public void onResponse(Object response, int id) {
-                        new XPopup.Builder(RecordOrderActivity.this)
-                                .asConfirm("录单成功！是否继续录单？", "", "取消", "确定", new OnConfirmListener() {
-                                    @Override
-                                    public void onConfirm() {
-                                        editCode.setHint("请输入套餐码");
-                                    }
-                                }, new OnCancelListener() {
-                                    @Override
-                                    public void onCancel() {
-                                        finish();
-                                    }
-                                }, false)
-                                .bindLayout(R.layout.layout_dialog) //绑定已有布局
-                                .show();
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onError(response);
                     }
                 });
     }

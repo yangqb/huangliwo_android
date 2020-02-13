@@ -19,6 +19,8 @@ import android.widget.Toast;
 import com.feitianzhu.huangliwo.App;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.login.LoginEvent;
 import com.feitianzhu.huangliwo.me.WithdrawActivity;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
@@ -32,6 +34,8 @@ import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.view.CustomRefundView;
 import com.gyf.immersionbar.ImmersionBar;
 import com.lxj.xpopup.XPopup;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.Response;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -111,36 +115,38 @@ public class MySelfMerchantsActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        OkHttpUtils.get()
-                .url(Urls.GET_MERCHANTS_LIST)
-                .addParams("accessToken", token)
-                .addParams("userId", userId)
-                .build()
-                .execute(new Callback<SelfMerchantsListInfo>() {
+
+        OkGo.<LzyResponse<SelfMerchantsListInfo>>get(Urls.GET_MERCHANTS_LIST)
+                .tag(this)
+                .params("accessToken", token)
+                .params("userId", userId)
+                .execute(new JsonCallback<LzyResponse<SelfMerchantsListInfo>>() {
                     @Override
-                    public void onBefore(Request request, int id) {
-                        super.onBefore(request, id);
+                    public void onStart(com.lzy.okgo.request.base.Request<LzyResponse<SelfMerchantsListInfo>, ? extends com.lzy.okgo.request.base.Request> request) {
+                        super.onStart(request);
                         showloadDialog("");
                     }
 
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-                        refreshLayout.finishRefresh(false);
-                        goneloadDialog();
-                    }
-
-                    @Override
-                    public void onResponse(SelfMerchantsListInfo response, int id) {
+                    public void onSuccess(Response<LzyResponse<SelfMerchantsListInfo>> response) {
+                        super.onSuccess(MySelfMerchantsActivity.this, response.body().msg, response.body().code);
                         refreshLayout.finishRefresh();
                         goneloadDialog();
-                        if (response != null) {
-                            merchantsList = response.getList();
-                            merchantsName.setText(response.getList().get(0).getMerchantName());
-                            balance = response.getList().get(0).getBalance();
-                            String strIncome = String.format(Locale.getDefault(), "%.2f", response.getList().get(0).getIncome());
+                        if (response.body().data != null && response.body().code == 0) {
+                            merchantsList = response.body().data.getList();
+                            merchantsName.setText(response.body().data.getList().get(0).getMerchantName());
+                            balance = response.body().data.getList().get(0).getBalance();
+                            String strIncome = String.format(Locale.getDefault(), "%.2f", response.body().data.getList().get(0).getIncome());
                             String strBalance = String.format(Locale.getDefault(), "%.2f", balance);
                             setSpannableString(tvProfit, tvWithdrawal, strIncome, strBalance);
                         }
+                    }
+
+                    @Override
+                    public void onError(Response<LzyResponse<SelfMerchantsListInfo>> response) {
+                        super.onError(response);
+                        refreshLayout.finishRefresh(false);
+                        goneloadDialog();
                     }
                 });
     }

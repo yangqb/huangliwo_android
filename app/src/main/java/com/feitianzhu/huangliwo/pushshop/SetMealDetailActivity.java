@@ -20,6 +20,8 @@ import com.chad.library.adapter.base.callback.ItemDragAndSwipeCallback;
 import com.chad.library.adapter.base.listener.OnItemSwipeListener;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.MultiItemComment;
 import com.feitianzhu.huangliwo.pushshop.adapter.SetMealGoodsAdapter;
@@ -34,6 +36,8 @@ import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.view.AddSetMealView;
 import com.google.gson.Gson;
 import com.lxj.xpopup.XPopup;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.request.PostRequest;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -256,24 +260,24 @@ public class SetMealDetailActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        OkHttpUtils.get()
-                .url(Urls.GET_SETMEAL_DETAIL)
-                .addParams(ACCESSTOKEN, token)
-                .addParams(USERID, userId)
-                .addParams("smId", setMealId + "")
-                .build()
-                .execute(new Callback<SetMealInfo>() {
+        OkGo.<LzyResponse<SetMealInfo>>get(Urls.GET_SETMEAL_DETAIL)
+                .tag(this)
+                .params(ACCESSTOKEN, token)
+                .params(USERID, userId)
+                .params("smId", setMealId + "")
+                .execute(new JsonCallback<LzyResponse<SetMealInfo>>() {
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-                        ToastUtils.showShortToast(e.getMessage());
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<SetMealInfo>> response) {
+                        super.onSuccess(SetMealDetailActivity.this, response.body().msg, response.body().code);
+                        if (response.body().data != null && response.body().code == 0) {
+                            setMealInfo = response.body().data;
+                            showView();
+                        }
                     }
 
                     @Override
-                    public void onResponse(SetMealInfo response, int id) {
-                        if (response != null) {
-                            setMealInfo = response;
-                            showView();
-                        }
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse<SetMealInfo>> response) {
+                        super.onError(response);
                     }
                 });
     }
@@ -399,14 +403,13 @@ public class SetMealDetailActivity extends BaseActivity {
             return;
         }
         SetMealInfo info = new SetMealInfo();
-        Map<String, File> files = new HashMap<>();
+        List<File> fileList = new ArrayList<>();
         for (int i = 0; i < allSelect.size(); i++) {
             if (allSelect.get(i).startsWith("http") || allSelect.get(i).startsWith("https")) {
                 String url = allSelect.get(i) + ",";
                 imgUrls.append(url);
             } else {
-                String name = i + ".png";
-                files.put(name, new File(allSelect.get(i)));
+                fileList.add(new File(allSelect.get(i)));
             }
         }
         if (imgUrls.toString().endsWith(",")) {
@@ -423,41 +426,40 @@ public class SetMealDetailActivity extends BaseActivity {
         info.setUseRules(rules);
         String json = new Gson().toJson(info);
 
-        PostFormBuilder postFormBuilder = OkHttpUtils.post().url(Urls.UPDATE_SETMEAL);
-        if (files.size() > 0) {
-            postFormBuilder.addFiles("files", files);
+
+        PostRequest<LzyResponse> postRequest = OkGo.<LzyResponse>post(Urls.UPDATE_SETMEAL).tag(this);
+
+        if (fileList.size() > 0) {
+            postRequest.addFileParams("files", fileList);
         } else {
-            postFormBuilder.setMultipart(true);
+            postRequest.isMultipart(true);
         }
 
-        postFormBuilder.addParams(ACCESSTOKEN, token)
-                .addParams(USERID, userId)
-                .addParams("setMealStr", json)
-                .build()
-                .execute(new Callback() {
+        postRequest.params(ACCESSTOKEN, token)
+                .params(USERID, userId)
+                .params("setMealStr", json)
+                .execute(new JsonCallback<LzyResponse>() {
                     @Override
-                    public void onBefore(Request request, int id) {
-                        super.onBefore(request, id);
+                    public void onStart(com.lzy.okgo.request.base.Request<LzyResponse, ? extends com.lzy.okgo.request.base.Request> request) {
+                        super.onStart(request);
                         showloadDialog("");
                     }
 
                     @Override
-                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                        return mData;
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onSuccess(SetMealDetailActivity.this, response.body().msg, response.body().code);
+                        goneloadDialog();
+                        if (response.body().code == 0) {
+                            ToastUtils.showShortToast("修改成功");
+                            setResult(RESULT_OK);
+                            finish();
+                        }
                     }
 
                     @Override
-                    public void onError(Call call, Exception e, int id) {
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onError(response);
                         goneloadDialog();
-                        ToastUtils.showShortToast(e.getMessage());
-                    }
-
-                    @Override
-                    public void onResponse(Object response, int id) {
-                        goneloadDialog();
-                        ToastUtils.showShortToast("修改成功");
-                        setResult(RESULT_OK);
-                        finish();
                     }
                 });
     }

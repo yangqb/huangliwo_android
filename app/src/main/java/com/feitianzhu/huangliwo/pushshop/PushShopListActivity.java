@@ -11,6 +11,8 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.pushshop.adapter.PushShopAdapter;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsModel;
@@ -19,6 +21,8 @@ import com.feitianzhu.huangliwo.pushshop.bean.UpdataMechantsEvent;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.Response;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -36,7 +40,6 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import okhttp3.Call;
 import okhttp3.Request;
-import okhttp3.Response;
 
 /**
  * package name: com.feitianzhu.fu700.pushshop
@@ -123,47 +126,48 @@ public class PushShopListActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        OkHttpUtils.get()
-                .url(Urls.GET_PUSH_MERCHANTS_LIST)
-                .addParams(Constant.ACCESSTOKEN, token)
-                .addParams(Constant.USERID, userId)
-                .build()
-                .execute(new Callback<PushMerchantsListInfo>() {
+
+        OkGo.<LzyResponse<PushMerchantsListInfo>>get(Urls.GET_PUSH_MERCHANTS_LIST)
+                .tag(this)
+                .params(Constant.ACCESSTOKEN, token)
+                .params(Constant.USERID, userId)
+                .execute(new JsonCallback<LzyResponse<PushMerchantsListInfo>>() {
 
                     @Override
-                    public void onBefore(Request request, int id) {
-                        super.onBefore(request, id);
+                    public void onStart(com.lzy.okgo.request.base.Request<LzyResponse<PushMerchantsListInfo>, ? extends com.lzy.okgo.request.base.Request> request) {
+                        super.onStart(request);
                         showloadDialog("");
                     }
 
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-                        refreshLayout.finishRefresh(false);
+                    public void onSuccess(Response<LzyResponse<PushMerchantsListInfo>> response) {
+                        super.onSuccess(PushShopListActivity.this, response.body().msg, response.body().code);
+                        refreshLayout.finishRefresh();
                         goneloadDialog();
-                        ToastUtils.showShortToast(e.getMessage());
+                        if (response.body().code == 0 && response.body().data != null) {
+                                btnToAudit.setText("待审核(" + response.body().data.getExamineCount() + ")");
+                                btnPass.setText("已通过(" + response.body().data.getPassedCount() + ")");
+                                btnNoPass.setText("未通过(" + response.body().data.getUnPassedCount() + ")");
+                                examineMerchants = response.body().data.examineList;
+                                passedMerchants = response.body().data.passedList;
+                                unPassedMerchants = response.body().data.unPassedList;
+                                if (type == 0) {
+                                    merchants = examineMerchants;
+                                } else if (type == 1) {
+                                    merchants = passedMerchants;
+                                } else if (type == 2) {
+                                    merchants = unPassedMerchants;
+                                }
+                                mAdapter.setNewData(merchants);
+                                mAdapter.notifyDataSetChanged();
+                        }
                     }
 
                     @Override
-                    public void onResponse(PushMerchantsListInfo response, int id) {
-                        refreshLayout.finishRefresh();
+                    public void onError(Response<LzyResponse<PushMerchantsListInfo>> response) {
+                        super.onError(response);
+                        refreshLayout.finishRefresh(false);
                         goneloadDialog();
-                        if (response != null) {
-                            btnToAudit.setText("待审核(" + response.getExamineCount() + ")");
-                            btnPass.setText("已通过(" + response.getPassedCount() + ")");
-                            btnNoPass.setText("未通过(" + response.getUnPassedCount() + ")");
-                            examineMerchants = response.examineList;
-                            passedMerchants = response.passedList;
-                            unPassedMerchants = response.unPassedList;
-                            if (type == 0) {
-                                merchants = examineMerchants;
-                            } else if (type == 1) {
-                                merchants = passedMerchants;
-                            } else if (type == 2) {
-                                merchants = unPassedMerchants;
-                            }
-                            mAdapter.setNewData(merchants);
-                            mAdapter.notifyDataSetChanged();
-                        }
                     }
                 });
     }

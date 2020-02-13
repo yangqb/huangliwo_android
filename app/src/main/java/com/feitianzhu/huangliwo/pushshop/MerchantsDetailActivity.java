@@ -56,6 +56,7 @@ import com.lljjcoder.style.cityjd.JDCityConfig;
 import com.lljjcoder.style.cityjd.JDCityPicker;
 import com.lxj.xpopup.XPopup;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.request.PostRequest;
 import com.socks.library.KLog;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.builder.PostFormBuilder;
@@ -227,12 +228,12 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
             editMerchantsPhone.setText(merchantsBean.getPhone());
             tvArea.setText(merchantsBean.getProvinceName() + merchantsBean.getCityName() + merchantsBean.getAreaName());
             editMerchantsAddress.setText(merchantsBean.getDtlAddr());
-            if(merchantsBean.getEmail()!=null){
+            if (merchantsBean.getEmail() != null) {
                 editMerchantsEmail.setText(merchantsBean.getEmail());
             }
 
             editMerchantsDiscount.setText(String.valueOf(merchantsBean.getDiscount() * 100));
-            if(merchantsBean.getIntroduce()!=null){
+            if (merchantsBean.getIntroduce() != null) {
                 editMerchantsIntroduction.setText(merchantsBean.getIntroduce());
             }
 
@@ -266,7 +267,7 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
                 idCardBackStatus.setVisibility(View.VISIBLE);
                 businessStatus.setVisibility(View.VISIBLE);*/
             } else {
-               btnSubmit.setVisibility(View.VISIBLE);
+                btnSubmit.setVisibility(View.VISIBLE);
                 /*idCardFrontStatus.setVisibility(View.GONE);
                 idCardBackStatus.setVisibility(View.GONE);
                 businessStatus.setVisibility(View.GONE);*/
@@ -285,20 +286,22 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
 
     @Override
     protected void initData() {
-        OkHttpUtils.get()
-                .url(Urls.GET_MERCHANTS_TYPE)
-                .addParams(ACCESSTOKEN, token)
-                .addParams(USERID, userId)
-                .build()
-                .execute(new Callback<MerchantsClassifyModel>() {
+        OkGo.<LzyResponse<MerchantsClassifyModel>>get(Urls.GET_MERCHANTS_TYPE)
+                .tag(this)
+                .params(ACCESSTOKEN, token)
+                .params(USERID, userId)
+                .execute(new JsonCallback<LzyResponse<MerchantsClassifyModel>>() {
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-                        ToastUtils.showShortToast(e.getMessage());
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<MerchantsClassifyModel>> response) {
+                        super.onSuccess(MerchantsDetailActivity.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0 && response.body().data != null) {
+                            listBean = response.body().data.getList();
+                        }
                     }
 
                     @Override
-                    public void onResponse(MerchantsClassifyModel response, int id) {
-                        listBean = response.getList();
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse<MerchantsClassifyModel>> response) {
+                        super.onError(response);
                     }
                 });
     }
@@ -629,64 +632,61 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
             merchantInfo.setBusinessTime(businessTimes);
         }
         String json = new Gson().toJson(merchantInfo);
-        PostFormBuilder postFormBuilder = OkHttpUtils.post()
-                .url(Urls.UPDATA_MERCHANTS);
+        PostRequest<LzyResponse> postRequest = OkGo.<LzyResponse>post(Urls.UPDATA_MERCHANTS).tag(this);
+
         if (!TextUtils.isEmpty(photo1)) {
-            postFormBuilder.addFile("logo", "logo.png", new File(photo1));
+            postRequest.params("logo", new File(photo1), "logo.png");
         }
         if (!TextUtils.isEmpty(photo2)) {
-            postFormBuilder.addFile("shopFrontImg", "shopFrontImg.png", new File(photo2));
+            postRequest.params("shopFrontImg", new File(photo2), "shopFrontImg.png");
         }
         if (!TextUtils.isEmpty(photo3)) {
-            postFormBuilder.addFile("cardFrontImg", "cardFrontImg.png", new File(photo3));
+            postRequest.params("cardFrontImg", new File(photo3), "cardFrontImg.png");
         }
         if (!TextUtils.isEmpty(photo4)) {
-            postFormBuilder.addFile("cardFrontImg", "cardFrontImg.png", new File(photo4));
+            postRequest.params("cardFrontImg", new File(photo4), "cardFrontImg.png");
         }
         if (!TextUtils.isEmpty(photo5)) {
-            postFormBuilder.addFile("cardBackImg", "cardBackImg.png", new File(photo5));
+            postRequest.params("cardBackImg", new File(photo5), "cardBackImg.png");
         }
         if (!TextUtils.isEmpty(photo6)) {
-            postFormBuilder.addFile("businessLicenseImg", "businessLicenseImg.png", new File(photo6));
+            postRequest.params("businessLicenseImg", new File(photo6), "businessLicenseImg.png");
         }
         if (!TextUtils.isEmpty(photo7)) {
-            postFormBuilder.addFile("permitImg", "permitImg.png", new File(photo7));
+            postRequest.params("permitImg", new File(photo7), "permitImg.png");
         }
         if (TextUtils.isEmpty(photo1) && TextUtils.isEmpty(photo2) && TextUtils.isEmpty(photo3) && TextUtils.isEmpty(photo4) && TextUtils.isEmpty(photo5) && TextUtils.isEmpty(photo6) && TextUtils.isEmpty(photo7)) {
-            postFormBuilder.setMultipart(true);
+            postRequest.isMultipart(true);
         }
-        postFormBuilder.addParams("accessToken", token)
-                .addParams("userId", userId)
-                .addParams("merchantInfo", json)
-                .build()
-                .execute(new Callback() {
+        postRequest.params("accessToken", token)
+                .params("userId", userId)
+                .params("merchantInfo", json)
+                .execute(new JsonCallback<LzyResponse>() {
                     @Override
-                    public void onBefore(Request request, int id) {
-                        super.onBefore(request, id);
+                    public void onStart(com.lzy.okgo.request.base.Request<LzyResponse, ? extends com.lzy.okgo.request.base.Request> request) {
+                        super.onStart(request);
                         showloadDialog("");
                     }
 
                     @Override
-                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                        return mData;
-                    }
-
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onSuccess(MerchantsDetailActivity.this, response.body().msg, response.body().code);
                         goneloadDialog();
-                        ToastUtils.showShortToast(e.getMessage());
-                    }
-
-                    @Override
-                    public void onResponse(Object response, int id) {
-                        goneloadDialog();
-                        EventBus.getDefault().post(UpdataMechantsEvent.SUCCESS);
-                        if (isMySelfMerchants) {
-                            ToastUtils.showShortToast("修改成功");
-                        } else {
-                            ToastUtils.showShortToast("提交成功等待审核");
+                        if (response.body().code == 0) {
+                            EventBus.getDefault().post(UpdataMechantsEvent.SUCCESS);
+                            if (isMySelfMerchants) {
+                                ToastUtils.showShortToast("修改成功");
+                            } else {
+                                ToastUtils.showShortToast("提交成功等待审核");
+                            }
+                            finish();
                         }
-                        finish();
+                    }
+
+                    @Override
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onError(response);
+                        goneloadDialog();
                     }
                 });
     }

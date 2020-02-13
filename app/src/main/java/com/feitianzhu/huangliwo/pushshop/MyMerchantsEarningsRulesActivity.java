@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.MerchantsEarnRulesInfo;
 import com.feitianzhu.huangliwo.pushshop.adapter.SelfMerchantsOrderAdapter;
@@ -19,6 +21,9 @@ import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.view.BusinessWeekDayDialog;
 import com.feitianzhu.huangliwo.view.DatePickDialog;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.base.Request;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -32,7 +37,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 import okhttp3.Call;
-import okhttp3.Response;
 
 /**
  * package name: com.feitianzhu.huangliwo.pushshop
@@ -101,26 +105,20 @@ public class MyMerchantsEarningsRulesActivity extends BaseActivity implements Da
 
     @Override
     protected void initData() {
-        OkHttpUtils.post()
-                .url(Urls.GET_EARNINGS_RULES)
-                .addParams("accessToken", token)
-                .addParams("userId", userId)
-                .addParams("merchantId", merchantsId + "")
-                .addParams("type", "")
-                .addParams("date", strDate)
-                .build()
-                .execute(new Callback<MerchantsEarnRulesInfo>() {
-
+        OkGo.<LzyResponse<MerchantsEarnRulesInfo>>post(Urls.GET_EARNINGS_RULES)
+                .tag(this)
+                .params("accessToken", token)
+                .params("userId", userId)
+                .params("merchantId", merchantsId + "")
+                .params("type", "")
+                .params("date", strDate)
+                .execute(new JsonCallback<LzyResponse<MerchantsEarnRulesInfo>>() {
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-                        refreshLayout.finishRefresh(false);
-                    }
-
-                    @Override
-                    public void onResponse(MerchantsEarnRulesInfo response, int id) {
+                    public void onSuccess(Response<LzyResponse<MerchantsEarnRulesInfo>> response) {
+                        super.onSuccess(MyMerchantsEarningsRulesActivity.this, response.body().msg, response.body().code);
                         refreshLayout.finishRefresh();
-                        if (response != null) {
-                            earnRulesModelList = response.getList();
+                        if (response.body().code == 0 && response.body().data != null) {
+                            earnRulesModelList = response.body().data.getList();
                             selfMerchantsModels.clear();
                             for (int i = 0; i < earnRulesModelList.size(); i++) {
                                 SelfMerchantsModel merchantsModel = new SelfMerchantsModel(SelfMerchantsModel.RULES_TYPE);
@@ -130,6 +128,17 @@ public class MyMerchantsEarningsRulesActivity extends BaseActivity implements Da
                             selfMerchantsOrderAdapter.setNewData(selfMerchantsModels);
                             selfMerchantsOrderAdapter.notifyDataSetChanged();
                         }
+                    }
+
+                    @Override
+                    public void onStart(Request<LzyResponse<MerchantsEarnRulesInfo>, ? extends Request> request) {
+                        super.onStart(request);
+                    }
+
+                    @Override
+                    public void onError(Response<LzyResponse<MerchantsEarnRulesInfo>> response) {
+                        super.onError(response);
+                        refreshLayout.finishRefresh(false);
                     }
                 });
     }

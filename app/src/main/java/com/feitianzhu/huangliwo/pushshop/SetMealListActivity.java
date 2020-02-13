@@ -11,6 +11,8 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.pushshop.adapter.SetMealListAdapter;
 import com.feitianzhu.huangliwo.pushshop.bean.SetMealInfo;
@@ -19,6 +21,8 @@ import com.feitianzhu.huangliwo.pushshop.bean.SingleGoodsModel;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.request.base.Request;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -131,54 +135,57 @@ public class SetMealListActivity extends BaseActivity {
      * 更新套餐的上架下架
      * */
     public void update(int isShelf, int smId) {
-        OkHttpUtils.get()
-                .url(Urls.UPDATE_SETMEAL_SHELF)
-                .addParams(ACCESSTOKEN, token)
-                .addParams(USERID, userId)
-                .addParams("smId", smId + "")
-                .addParams("isShelf", isShelf + "")
-                .build()
-                .execute(new Callback() {
+        OkGo.<LzyResponse>get(Urls.UPDATE_SETMEAL_SHELF)
+                .tag(this)
+                .params(ACCESSTOKEN, token)
+                .params(USERID, userId)
+                .params("smId", smId + "")
+                .params("isShelf", isShelf + "")
+                .execute(new JsonCallback<LzyResponse>() {
                     @Override
-                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                        return mData;
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onSuccess(SetMealListActivity.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0) {
+                            ToastUtils.showShortToast("修改成功");
+                        }
                     }
 
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-                        refreshLayout.finishRefresh(false);
-                        ToastUtils.showShortToast(e.getMessage());
-                    }
-
-                    @Override
-                    public void onResponse(Object response, int id) {
-                        refreshLayout.finishRefresh();
-                        ToastUtils.showShortToast("修改成功");
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onError(response);
                     }
                 });
     }
 
     @Override
     protected void initData() {
-        OkHttpUtils.get()
-                .url(Urls.GET_SETMEAL_LIST)
-                .addParams(ACCESSTOKEN, token)
-                .addParams(USERID, userId)
-                .addParams("type","1")
-                .addParams("merchantId", merchantsId + "")
-                .build()
-                .execute(new Callback<SetMealListInfo>() {
-
+        OkGo.<LzyResponse<SetMealListInfo>>get(Urls.GET_SETMEAL_LIST)
+                .tag(this)
+                .params(ACCESSTOKEN, token)
+                .params(USERID, userId)
+                .params("type", "1")
+                .params("merchantId", merchantsId + "")
+                .execute(new JsonCallback<LzyResponse<SetMealListInfo>>() {
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-                          ToastUtils.showShortToast(e.getMessage());
+                    public void onStart(Request<LzyResponse<SetMealListInfo>, ? extends Request> request) {
+                        super.onStart(request);
                     }
 
                     @Override
-                    public void onResponse(SetMealListInfo response, int id) {
-                        setMealInfoList = response.getList();
-                        mAdapter.setNewData(setMealInfoList);
-                        mAdapter.notifyDataSetChanged();
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<SetMealListInfo>> response) {
+                        super.onSuccess(SetMealListActivity.this, response.body().msg, response.body().code);
+                        refreshLayout.finishRefresh();
+                        if (response.body().code == 0 && response.body().data != null) {
+                            setMealInfoList = response.body().data.getList();
+                            mAdapter.setNewData(setMealInfoList);
+                            mAdapter.notifyDataSetChanged();
+                        }
+                    }
+
+                    @Override
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse<SetMealListInfo>> response) {
+                        super.onError(response);
+                        refreshLayout.finishRefresh(false);
                     }
                 });
     }

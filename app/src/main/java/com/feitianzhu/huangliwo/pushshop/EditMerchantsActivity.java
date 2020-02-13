@@ -171,26 +171,28 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
         titleName.setText("新增门店");
         geoCoder = GeoCoder.newInstance();
         geoCoder.setOnGetGeoCodeResultListener(this);
-        file = drawableToFile(this,R.mipmap.g10_04weijiazai,"huangliwo");
+        file = drawableToFile(this, R.mipmap.g10_04weijiazai, "huangliwo");
         initListener();
     }
 
     @Override
     protected void initData() {
-        OkHttpUtils.get()
-                .url(Urls.GET_MERCHANTS_TYPE)
-                .addParams(ACCESSTOKEN, token)
-                .addParams(USERID, userId)
-                .build()
-                .execute(new Callback<MerchantsClassifyModel>() {
+        OkGo.<LzyResponse<MerchantsClassifyModel>>get(Urls.GET_MERCHANTS_TYPE)
+                .tag(this)
+                .params(ACCESSTOKEN, token)
+                .params(USERID, userId)
+                .execute(new JsonCallback<LzyResponse<MerchantsClassifyModel>>() {
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-                        ToastUtils.showShortToast(e.getMessage());
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<MerchantsClassifyModel>> response) {
+                        super.onSuccess(EditMerchantsActivity.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0 && response.body().data != null) {
+                            listBean = response.body().data.getList();
+                        }
                     }
 
                     @Override
-                    public void onResponse(MerchantsClassifyModel response, int id) {
-                        listBean = response.getList();
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse<MerchantsClassifyModel>> response) {
+                        super.onError(response);
                     }
                 });
     }
@@ -440,75 +442,73 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
         merchantInfo.setLatitude(String.valueOf(latitude));
         merchantInfo.setInviteCode(Integer.valueOf(userId));
         String json = new Gson().toJson(merchantInfo);
-        Map<String, File> files = new LinkedHashMap<>();
+        //Map<String, File> files = new LinkedHashMap<>();
+        List<File> fileList = new ArrayList<>();
 
-            if(TextUtils.isEmpty(photo1)){
-                files.put("logo.png", file);
-            }else {
-                files.put("logo.png", new File(photo1));
-            }
-
-
-            if(TextUtils.isEmpty(photo2)){
-                files.put("shopFrontImg.png", file);
-            }else {
-                files.put("shopFrontImg.png", new File(photo2));
-            }
-
-            if(TextUtils.isEmpty(photo3)){
-                files.put("shopInsideImg.png", file);
-            }else {
-                files.put("shopInsideImg.png", new File(photo3));
-            }
+        if (TextUtils.isEmpty(photo1)) {
+            fileList.add(file);
+        } else {
+            fileList.add(new File(photo1));
+        }
 
 
-            if(TextUtils.isEmpty(photo4)){
-                files.put("cardFrontImg.png", file);
-            }else {
-                files.put("cardFrontImg.png", new File(photo4));
-            }
+        if (TextUtils.isEmpty(photo2)) {
+            fileList.add(file);
+        } else {
+            fileList.add(new File(photo2));
+        }
 
-            if(TextUtils.isEmpty(photo5)){
-                files.put("cardBackImg.png", file);
-            }else {
-                files.put("cardBackImg.png", new File(photo5));
-            }
-
-
+        if (TextUtils.isEmpty(photo3)) {
+            fileList.add(file);
+        } else {
+            fileList.add(new File(photo3));
+        }
 
 
-        files.put("businessLicenseImg.png", new File(photo6));
-        files.put("permitImg.png", new File(photo7));
-        OkHttpUtils.post().url(Urls.CREATE_MERCHANTS)
-                .addFiles("files", files)
-                .addParams("accessToken", token)
-                .addParams("userId", userId)
-                .addParams("merchantInfo", json)
-                .build()
-                .execute(new Callback() {
+        if (TextUtils.isEmpty(photo4)) {
+            fileList.add(file);
+        } else {
+            fileList.add(new File(photo4));
+        }
+
+        if (TextUtils.isEmpty(photo5)) {
+            fileList.add(file);
+        } else {
+            fileList.add(new File(photo5));
+        }
+
+
+        fileList.add(new File(photo6));
+        fileList.add(new File(photo7));
+
+        OkGo.<LzyResponse>post(Urls.CREATE_MERCHANTS)
+                .tag(this)
+                .addFileParams("files", fileList)
+                .params("accessToken", token)
+                .params("userId", userId)
+                .params("merchantInfo", json)
+                .execute(new JsonCallback<LzyResponse>() {
                     @Override
-                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                        return mData;
-                    }
-
-                    @Override
-                    public void onBefore(Request request, int id) {
-                        super.onBefore(request, id);
+                    public void onStart(com.lzy.okgo.request.base.Request<LzyResponse, ? extends com.lzy.okgo.request.base.Request> request) {
+                        super.onStart(request);
                         showloadDialog("");
                     }
 
                     @Override
-                    public void onError(Call call, Exception e, int id) {
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onSuccess(EditMerchantsActivity.this, response.body().msg, response.body().code);
                         goneloadDialog();
-                        ToastUtils.showShortToast(e.getMessage());
+                        if (response.body().code == 0) {
+                            ToastUtils.showShortToast("创建成功等待审核");
+                            EventBus.getDefault().post(UpdataMechantsEvent.SUCCESS);
+                            finish();
+                        }
                     }
 
                     @Override
-                    public void onResponse(Object response, int id) {
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onError(response);
                         goneloadDialog();
-                        ToastUtils.showShortToast("创建成功等待审核");
-                        EventBus.getDefault().post(UpdataMechantsEvent.SUCCESS);
-                        finish();
                     }
                 });
     }
@@ -642,7 +642,7 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
 
     }
 
-    public File drawableToFile(Context mContext, int drawableId, String fileName){
+    public File drawableToFile(Context mContext, int drawableId, String fileName) {
 //        InputStream is = view.getContext().getResources().openRawResource(R.drawable.logo);
         Bitmap bitmap = BitmapFactory.decodeResource(mContext.getResources(), drawableId);
 //        Bitmap bitmap = BitmapFactory.decodeStream(is);
@@ -653,7 +653,7 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
         if (!file.exists()) {
             file.mkdirs();
         }
-        String defaultImgPath = defaultPath + "/"+fileName;
+        String defaultImgPath = defaultPath + "/" + fileName;
         file = new File(defaultImgPath);
         try {
             file.createNewFile();

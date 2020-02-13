@@ -16,6 +16,8 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.App;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.me.ui.ScannerActivity;
 import com.feitianzhu.huangliwo.model.MerchantsEarnRulesInfo;
@@ -24,6 +26,8 @@ import com.feitianzhu.huangliwo.pushshop.bean.SelfMerchantsModel;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.just.agentweb.ActionActivity;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.Response;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -132,26 +136,21 @@ public class MySelfMerchantsOrderActivity extends BaseActivity implements View.O
 
     @Override
     protected void initData() {
-        OkHttpUtils.post()
-                .url(Urls.GET_EARNINGS_RULES)
-                .addParams("accessToken", token)
-                .addParams("userId", userId)
-                .addParams("merchantId", merchantsId + "")
-                .addParams("type", "setMeal")
-                .addParams("date", "")
-                .build()
-                .execute(new Callback<MerchantsEarnRulesInfo>() {
 
+        OkGo.<LzyResponse<MerchantsEarnRulesInfo>>post(Urls.GET_EARNINGS_RULES)
+                .tag(this)
+                .params("accessToken", token)
+                .params("userId", userId)
+                .params("merchantId", merchantsId + "")
+                .params("type", "setMeal")
+                .params("date", "")
+                .execute(new JsonCallback<LzyResponse<MerchantsEarnRulesInfo>>() {
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-                        refreshLayout.finishRefresh(false);
-                    }
-
-                    @Override
-                    public void onResponse(MerchantsEarnRulesInfo response, int id) {
+                    public void onSuccess(Response<LzyResponse<MerchantsEarnRulesInfo>> response) {
+                        super.onSuccess(MySelfMerchantsOrderActivity.this, response.body().msg, response.body().code);
                         refreshLayout.finishRefresh();
-                        if (response != null) {
-                            earnRulesModelList = response.getList();
+                        if (response.body().code == 0 && response.body().data != null) {
+                            earnRulesModelList = response.body().data.getList();
                             selfMerchantsModels.clear();
                             for (int i = 0; i < earnRulesModelList.size(); i++) {
                                 SelfMerchantsModel merchantsModel = new SelfMerchantsModel(SelfMerchantsModel.ORDER_TYPE);
@@ -161,6 +160,12 @@ public class MySelfMerchantsOrderActivity extends BaseActivity implements View.O
                             selfMerchantsOrderAdapter.setNewData(selfMerchantsModels);
                             selfMerchantsOrderAdapter.notifyDataSetChanged();
                         }
+                    }
+
+                    @Override
+                    public void onError(Response<LzyResponse<MerchantsEarnRulesInfo>> response) {
+                        super.onError(response);
+                        refreshLayout.finishRefresh(false);
                     }
                 });
     }

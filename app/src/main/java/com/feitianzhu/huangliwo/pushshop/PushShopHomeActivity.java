@@ -8,10 +8,14 @@ import android.widget.TextView;
 
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.Response;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -71,35 +75,30 @@ public class PushShopHomeActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        OkHttpUtils.get()//
-                .url(Common_HEADER + POST_MINE_INFO)
-                .addParams(ACCESSTOKEN, token)//
-                .addParams(USERID, userId)
-                .build().execute(new Callback<MineInfoModel>() {
-            @Override
-            public void onBefore(Request request, int id) {
-                super.onBefore(request, id);
-            }
+        OkGo.<LzyResponse<MineInfoModel>>get(Common_HEADER + POST_MINE_INFO)
+                .tag(this)
+                .params(ACCESSTOKEN, token)//
+                .params(USERID, userId)
+                .execute(new JsonCallback<LzyResponse<MineInfoModel>>() {
+                    @Override
+                    public void onSuccess(Response<LzyResponse<MineInfoModel>> response) {
+                        super.onSuccess(PushShopHomeActivity.this, response.message(), response.body().code);
+                        if (refreshLayout != null) {
+                            refreshLayout.finishRefresh();
+                        }
+                        if (response.body().code == 0 && response.body().data != null) {
+                            userInfo = response.body().data;
+                        }
+                    }
 
-            @Override
-            public void onError(Call call, Exception e, int id) {
-                if (refreshLayout != null) {
-                    refreshLayout.finishRefresh();
-                }
-                Log.e("wangyan", "onError---->" + e.getMessage());
-                ToastUtils.showShortToast(e.getMessage());
-            }
-
-            @Override
-            public void onResponse(MineInfoModel response, int id) {
-                if (refreshLayout != null) {
-                    refreshLayout.finishRefresh();
-                }
-                if (response != null) {
-                    userInfo = response;
-                }
-            }
-        });
+                    @Override
+                    public void onError(Response<LzyResponse<MineInfoModel>> response) {
+                        super.onError(response);
+                        if (refreshLayout != null) {
+                            refreshLayout.finishRefresh();
+                        }
+                    }
+                });
     }
 
     @OnClick({R.id.left_button, R.id.push_merchants, R.id.oneself_merchants})

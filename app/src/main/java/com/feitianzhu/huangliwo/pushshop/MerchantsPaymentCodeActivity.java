@@ -12,6 +12,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsPaymentCodeModel;
 import com.feitianzhu.huangliwo.utils.SPUtils;
@@ -20,6 +22,8 @@ import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.gyf.immersionbar.ImmersionBar;
 import com.itheima.roundedimageview.RoundedImageView;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.Response;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
@@ -82,36 +86,35 @@ public class MerchantsPaymentCodeActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        OkHttpUtils.post()
-                .url(Urls.GET_MERCHANTS_PAYMENT_CODE)
-                .addParams("accessToken", token)
-                .addParams("userId", userId)
-                .addParams("merchantId", merchantsId + "")
-                .build()
-                .execute(new Callback<MerchantsPaymentCodeModel>() {
+
+        OkGo.<LzyResponse<MerchantsPaymentCodeModel>>post(Urls.GET_MERCHANTS_PAYMENT_CODE)
+                .tag(this)
+                .params("accessToken", token)
+                .params("userId", userId)
+                .params("merchantId", merchantsId + "")
+                .execute(new JsonCallback<LzyResponse<MerchantsPaymentCodeModel>>() {
                     @Override
-                    public void onBefore(Request request, int id) {
-                        super.onBefore(request, id);
+                    public void onStart(com.lzy.okgo.request.base.Request<LzyResponse<MerchantsPaymentCodeModel>, ? extends com.lzy.okgo.request.base.Request> request) {
+                        super.onStart(request);
                         showloadDialog("");
                     }
 
                     @Override
-                    public void onError(Call call, Exception e, int id) {
+                    public void onSuccess(Response<LzyResponse<MerchantsPaymentCodeModel>> response) {
+                        super.onSuccess(MerchantsPaymentCodeActivity.this, response.body().msg, response.body().code);
                         goneloadDialog();
-                        ToastUtils.showShortToast(e.getMessage());
+                        if (response.body().code == 0 && response.body().data != null) {
+                            createCode(response.body().data.getQrCodeUrl());
+                            tvContent.setText("扫二维码 向我付款");
+                            merchantName.setText(response.body().data.getMerchantName());
+                            Glide.with(MerchantsPaymentCodeActivity.this).load(response.body().data.getMerchantHeadImg()).apply(new RequestOptions().error(R.mipmap.g10_04weijiazai).placeholder(R.mipmap.g10_04weijiazai)).into(logoImg);
+                        }
                     }
 
                     @Override
-                    public void onResponse(MerchantsPaymentCodeModel response, int id) {
+                    public void onError(Response<LzyResponse<MerchantsPaymentCodeModel>> response) {
+                        super.onError(response);
                         goneloadDialog();
-                        if (response != null) {
-                            createCode(response.getQrCodeUrl());
-                            tvContent.setText("扫二维码 向我付款");
-                            merchantName.setText(response.getMerchantName());
-                            Glide.with(MerchantsPaymentCodeActivity.this).load(response.getMerchantHeadImg()).apply(new RequestOptions().error(R.mipmap.g10_04weijiazai).placeholder(R.mipmap.g10_04weijiazai)).into(logoImg);
-                        } else {
-                            ToastUtils.showShortToast("未获取到收款码");
-                        }
                     }
                 });
     }
@@ -132,9 +135,9 @@ public class MerchantsPaymentCodeActivity extends BaseActivity {
         }
     }
 
-    @OnClick({R.id.left_button,R.id.save})
+    @OnClick({R.id.left_button, R.id.save})
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.left_button:
                 finish();
                 break;
@@ -146,7 +149,8 @@ public class MerchantsPaymentCodeActivity extends BaseActivity {
     }
 
     private Bitmap logoBitmap;
-    public Bitmap getLogoBitMap(final String url){
+
+    public Bitmap getLogoBitMap(final String url) {
 
         new Thread(new Runnable() {
             @Override
@@ -159,7 +163,7 @@ public class MerchantsPaymentCodeActivity extends BaseActivity {
                     e.printStackTrace();
                 }
                 try {
-                    HttpURLConnection conn = (HttpURLConnection)imageurl.openConnection();
+                    HttpURLConnection conn = (HttpURLConnection) imageurl.openConnection();
                     conn.setDoInput(true);
                     conn.connect();
                     InputStream is = conn.getInputStream();

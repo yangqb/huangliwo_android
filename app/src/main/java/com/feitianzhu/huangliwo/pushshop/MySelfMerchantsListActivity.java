@@ -9,6 +9,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsModel;
 import com.feitianzhu.huangliwo.pushshop.bean.UpdataMechantsEvent;
@@ -16,6 +18,8 @@ import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.view.CircleImageView;
 import com.itheima.roundedimageview.RoundedImageView;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.Response;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
 
@@ -92,22 +96,18 @@ public class MySelfMerchantsListActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        OkHttpUtils.get()
-                .url(Urls.GET_MERCHANTS_DETAIL)
-                .addParams(ACCESSTOKEN, token)
-                .addParams(USERID, userId)
-                .addParams("merchantId", merchantsId + "")
-                .build()
-                .execute(new Callback<MerchantsModel>() {
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
 
-                    }
-
+        OkGo.<LzyResponse<MerchantsModel>>get(Urls.GET_MERCHANTS_DETAIL)
+                .tag(this)
+                .params(ACCESSTOKEN, token)
+                .params(USERID, userId)
+                .params("merchantId", merchantsId + "")
+                .execute(new JsonCallback<LzyResponse<MerchantsModel>>() {
                     @Override
-                    public void onResponse(MerchantsModel response, int id) {
-                        if (response != null) {
-                            merchantsBean = response;
+                    public void onSuccess(Response<LzyResponse<MerchantsModel>> response) {
+                        super.onSuccess(MySelfMerchantsListActivity.this, response.body().msg, response.body().code);
+                        if (response.body().data != null && response.body().code == 0) {
+                            merchantsBean = response.body().data;
                             merchantsName.setText(merchantsBean.getMerchantName());
                             tvDate.setText("创建日期：" + merchantsBean.getCreateDate());
                             Glide.with(mContext).load(merchantsBean.getLogo()).apply(new RequestOptions().error(R.mipmap.b08_01touxiang).placeholder(R.mipmap.b08_01touxiang)).into(merchantsLogo);
@@ -119,6 +119,11 @@ public class MySelfMerchantsListActivity extends BaseActivity {
                                 }
                             }
                         }
+                    }
+
+                    @Override
+                    public void onError(Response<LzyResponse<MerchantsModel>> response) {
+                        super.onError(response);
                     }
                 });
     }

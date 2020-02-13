@@ -12,8 +12,11 @@ import com.bumptech.glide.request.RequestOptions;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.PayInfo;
+import com.feitianzhu.huangliwo.model.PayModel;
 import com.feitianzhu.huangliwo.model.WXModel;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsModel;
 import com.feitianzhu.huangliwo.pushshop.bean.PaymentInfo;
@@ -24,6 +27,7 @@ import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.google.gson.Gson;
 import com.itheima.roundedimageview.RoundedImageView;
+import com.lzy.okgo.OkGo;
 import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
@@ -98,25 +102,25 @@ public class MyPaymentActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        OkHttpUtils.get()
-                .url(Urls.GET_MERCHANTS_DETAIL)
-                .addParams(ACCESSTOKEN, token)
-                .addParams(USERID, userId)
-                .addParams("merchantId", merchantsId + "")
-                .build()
-                .execute(new Callback<MerchantsModel>() {
+        OkGo.<LzyResponse<MerchantsModel>>get(Urls.GET_MERCHANTS_DETAIL)
+                .tag(this)
+                .params(ACCESSTOKEN, token)
+                .params(USERID, userId)
+                .params("merchantId", merchantsId + "")
+                .execute(new JsonCallback<LzyResponse<MerchantsModel>>() {
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-
-                    }
-
-                    @Override
-                    public void onResponse(MerchantsModel response, int id) {
-                        if (response != null) {
-                            merchantsBean = response;
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<MerchantsModel>> response) {
+                        super.onSuccess(MyPaymentActivity.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0 && response.body().data != null) {
+                            merchantsBean = response.body().data;
                             tvName.setText("付款给" + merchantsBean.getMerchantName());
                             Glide.with(MyPaymentActivity.this).load(merchantsBean.getLogo()).apply(new RequestOptions().error(R.mipmap.g10_04weijiazai).placeholder(R.mipmap.g10_04weijiazai)).into(imgView);
                         }
+                    }
+
+                    @Override
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse<MerchantsModel>> response) {
+                        super.onError(response);
                     }
                 });
 
@@ -166,48 +170,39 @@ public class MyPaymentActivity extends BaseActivity {
         } else {
             appId = "";
         }
-        OkHttpUtils.post()
-                .url(Urls.RECEIVABLES_PAY_SETMEAL)
-                .addParams(ACCESSTOKEN, token)//
-                .addParams(USERID, userId)//
-                .addParams("appId", appId)  //这个是微信才需要的，
-                .addParams("merchantId", merchantsId)
-                .addParams("channel", payChannel)
-                .addParams("amount", editAmount.getText().toString().trim())
-                .build()
-                .execute(new Callback() {
 
+        OkGo.<LzyResponse<PayModel>>post(Urls.RECEIVABLES_PAY_SETMEAL)
+                .tag(this)
+                .params(ACCESSTOKEN, token)//
+                .params(USERID, userId)//
+                .params("appId", appId)  //这个是微信才需要的，
+                .params("merchantId", merchantsId)
+                .params("channel", payChannel)
+                .params("amount", editAmount.getText().toString().trim())
+                .execute(new JsonCallback<LzyResponse<PayModel>>() {
                     @Override
-                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                        return mData;
-                    }
-
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-                        ToastUtils.showShortToast("提交订单失败");
-                    }
-
-                    @Override
-                    public void onResponse(Object response, int id) {
-                        try {
-                            JSONObject object = new JSONObject(response.toString());
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<PayModel>> response) {
+                        super.onSuccess(MyPaymentActivity.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0 && response.body().data != null) {
                             if ("wx".equals(payChannel)) {
-                                WXModel wxModel = new Gson().fromJson(object.toString(), WXModel.class);
-                                orderNo = wxModel.orderNo;
-                                wexinPay(wxModel);
+                                orderNo = response.body().data.orderNo;
+                                wexinPay(response.body().data);
                             } else if ("alipay".equals(payChannel)) {
-                                orderInfo = object.getString("payParam");
-                                orderNo = object.getString("orderNo");
+                                orderInfo = response.body().data.payParam;
+                                orderNo = response.body().data.orderNo;
                                 aliPay(orderInfo, orderNo);
                             }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
                         }
+                    }
+
+                    @Override
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse<PayModel>> response) {
+                        super.onError(response);
                     }
                 });
     }
 
-    private void wexinPay(WXModel result) {
+    private void wexinPay(PayModel result) {
         Constant.PayFlag = PayInfo.RECEIVABLES_SETMEAL_PAY;
         IWXAPI api = WXAPIFactory.createWXAPI(MyPaymentActivity.this, result.appid);
         api.registerApp(Constant.WX_APP_ID);
