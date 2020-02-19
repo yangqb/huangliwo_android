@@ -141,7 +141,7 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
             String discount = String.valueOf((100 - merchantsDetail.getDiscount() * 100));
             tvRebate.setText("返" + discount + "%");
             getSetMealList(merchantsId);
-            String urlLogo = merchantsDetail.getLogo() == null ? "" : merchantsDetail.getLogo();
+            String urlLogo = merchantsDetail.getShopFrontImg() == null ? "" : merchantsDetail.getShopFrontImg();
             imgs.add(urlLogo);
             mViewpager.setCanLoop(true)
                     .setAutoPlay(true)

@@ -140,6 +140,10 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
     TextView merchantsClsName;
     @BindView(R.id.edit_business_license)
     EditText editBusinessLicenseNo;
+    @BindView(R.id.tips1)
+    TextView tips1;
+    @BindView(R.id.tips2)
+    TextView tips2;
     private List<MerchantsClassifyModel.ListBean> listBean;
     private double latitude;
     private double longitude;
@@ -344,32 +348,29 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
         String businessLicenseNo = editBusinessLicenseNo.getText().toString().trim();
 
         if (TextUtils.isEmpty(merchantsName)) {
-            ToastUtils.showShortToast("请填写商铺名称");
-            return;
+            editMerchantsName.setHintTextColor(getResources().getColor(R.color.color_ff0000));
         }
         if (clsName == null) {
-            ToastUtils.showShortToast("请选择商铺类型");
-            return;
+            merchantsClsName.setTextColor(getResources().getColor(R.color.color_ff0000));
+        } else {
+            merchantsClsName.setTextColor(getResources().getColor(R.color.color_333333));
         }
         if (TextUtils.isEmpty(businessLicenseNo)) {
-            ToastUtils.showShortToast("请填写营业执照号码");
-            return;
+            editBusinessLicenseNo.setHintTextColor(getResources().getColor(R.color.color_ff0000));
         }
         if (TextUtils.isEmpty(phone)) {
-            ToastUtils.showShortToast("请填写商家手机号码");
-            return;
+            editPhone.setHintTextColor(getResources().getColor(R.color.color_ff0000));
         }
         if (TextUtils.isEmpty(smsCode)) {
-            ToastUtils.showShortToast("请填写验证码");
-            return;
+            editCode.setHintTextColor(getResources().getColor(R.color.color_ff0000));
         }
         if (mProvince == null || mCity == null || mDistrict == null) {
-            ToastUtils.showShortToast("请选择商铺所在地区");
-            return;
+            tvAreaAddress.setTextColor(getResources().getColor(R.color.color_ff0000));
+        } else {
+            tvAreaAddress.setTextColor(getResources().getColor(R.color.color_333333));
         }
         if (TextUtils.isEmpty(address)) {
-            ToastUtils.showShortToast("请填写商铺地址");
-            return;
+            editAddress.setHintTextColor(getResources().getColor(R.color.color_ff0000));
         }
         /*if (TextUtils.isEmpty(email)) {
             ToastUtils.showShortToast("请填写邮箱地址");
@@ -381,12 +382,7 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
         }*/
 
         if (TextUtils.isEmpty(percentage)) {
-            ToastUtils.showShortToast("请填写折扣比例");
-            return;
-        }
-        if (Double.valueOf(percentage) > 100 || Double.valueOf(percentage) < 0) {
-            ToastUtils.showShortToast("折扣比例不能大于100小于0");
-            return;
+            editPercentage.setHintTextColor(getResources().getColor(R.color.color_ff0000));
         }
        /* if (TextUtils.isEmpty(merchantsIntroduce)) {
             ToastUtils.showShortToast("请填写商铺说明");
@@ -413,13 +409,32 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
             return;
         }*/
         if (TextUtils.isEmpty(photo6)) {
-            ToastUtils.showShortToast("请上传店铺营业执照");
-            return;
+            tips1.setTextColor(getResources().getColor(R.color.color_ff0000));
+        } else {
+            tips1.setTextColor(getResources().getColor(R.color.color_999999));
         }
         if (TextUtils.isEmpty(photo7)) {
-            ToastUtils.showShortToast("请上传经营许可证");
+            tips2.setTextColor(getResources().getColor(R.color.color_ff0000));
+        } else {
+            tips2.setTextColor(getResources().getColor(R.color.color_999999));
+        }
+
+        if (TextUtils.isEmpty(merchantsName) || clsName == null || TextUtils.isEmpty(businessLicenseNo) || TextUtils.isEmpty(phone) || TextUtils.isEmpty(smsCode)
+                || mProvince == null || mCity == null || mDistrict == null || TextUtils.isEmpty(address) || TextUtils.isEmpty(percentage) || TextUtils.isEmpty(photo6) || TextUtils.isEmpty(photo7)) {
+            ToastUtils.showShortToast("您的资料填写不完整");
             return;
         }
+
+        if (!(businessLicenseNo.length() == 15 || businessLicenseNo.length() == 18)) {
+            ToastUtils.showShortToast("请输入正确的营业执照号");
+            return;
+        }
+
+        if (Double.valueOf(percentage) > 100 || Double.valueOf(percentage) < 0) {
+            ToastUtils.showShortToast("折扣比例不能大于100小于0");
+            return;
+        }
+
 
         EditMerchantInfo merchantInfo = new EditMerchantInfo();
         merchantInfo.setMerchantName(merchantsName);

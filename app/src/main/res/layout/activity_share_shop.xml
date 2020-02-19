@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/layout_head" />
+
+    <LinearLayout
+        android:id="@+id/shareLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/shareImg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/j01_002hlw" />
+
+        <TextView
+            android:id="@+id/tvInstruction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="40dp"
+            android:text=""
+            android:textColor="@color/color_333333"
+            android:textSize="17sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="15dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/tv_amount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text=""
+                        android:textColor="@color/color_FEA811"
+                        android:textSize="17sp" />
+
+
+                    <LinearLayout
+                        android:id="@+id/ll_rebate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@id/tv_amount"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dp"
+                            android:background="@drawable/shape_rebate_left_vip"
+                            android:gravity="end|center_vertical"
+                            android:paddingLeft="15dp"
+                            android:paddingRight="5dp"
+                            android:text="成为会员"
+                            android:textColor="@color/color_333333"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/tv_rebate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dp"
+                            android:background="@drawable/shape_rebate_vip"
+                            android:ellipsize="end"
+                            android:gravity="center_vertical"
+                            android:maxLines="1"
+                            android:paddingLeft="5dp"
+                            android:paddingRight="15dp"
+                            android:text="省¥0.00"
+                            android:textColor="@color/color_333333"
+                            android:textSize="12sp" />
+
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <com.feitianzhu.huangliwo.view.CircleImageView
+                        android:id="@+id/civ_pic"
+                        android:layout_width="52dp"
+                        android:layout_height="52dp"
+                        android:src="@mipmap/b08_01touxiang" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tv_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/color_000000"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/tv_userId"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dp_4"
+                            android:text=""
+                            android:textColor="@color/color_000000"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/iv_QRCode"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="40dp"
+                android:src="@color/color_cccccc" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="42dp">
+
+        <Button
+            android:id="@+id/bt_save"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="125dp"
+            android:layout_height="40dp"
+            android:background="@drawable/mine_qrcode_save_shape"
+            android:text="保存"
+            android:textColor="@color/color_333333" />
+
+        <Button
+            android:id="@+id/bt_shared"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="125dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/mine_qrcode_shared_shape"
+            android:text="分享"
+            android:textColor="@color/color_333333" />
+    </RelativeLayout>
+
+</LinearLayout>

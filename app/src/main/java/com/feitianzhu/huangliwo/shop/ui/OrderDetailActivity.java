@@ -95,6 +95,8 @@ public class OrderDetailActivity extends BaseActivity {
     RoundedImageView imageView;
     @BindView(R.id.rl_address)
     RelativeLayout rlAddress;
+    @BindView(R.id.remark)
+    TextView remark;
     private String token;
     private String userId;
 
@@ -254,6 +256,7 @@ public class OrderDetailActivity extends BaseActivity {
             specifications.setText(goodsOrderBean.getAttributeVal());
             count.setText("×" + goodsOrderBean.getCount());
             tvCount.setText("共" + goodsOrderBean.getCount() + "件商品");
+            remark.setText(goodsOrderBean.getRemark());
             if (goodsOrderBean.getDetailAddress() != null && !TextUtils.isEmpty(goodsOrderBean.getDetailAddress())) {
                 rlAddress.setVisibility(View.VISIBLE);
                 address.setText(goodsOrderBean.getDetailAddress());

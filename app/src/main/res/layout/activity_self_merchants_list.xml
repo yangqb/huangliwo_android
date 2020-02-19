@@ -66,7 +66,7 @@
     <RelativeLayout
         android:id="@+id/upSetMeal"
         android:layout_width="match_parent"
-        android:layout_height="68dp"
+        android:layout_height="59dp"
         android:layout_marginLeft="@dimen/dp_10"
         android:layout_marginRight="@dimen/dp_10"
         android:background="@drawable/shape_ffffff_r5"
@@ -78,6 +78,33 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:text="上传套餐"
+            android:textColor="@color/color_333333"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="@mipmap/b08_04jinru" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/upGift"
+        android:layout_width="match_parent"
+        android:layout_height="59dp"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="@dimen/dp_10"
+        android:background="@drawable/shape_ffffff_r5"
+        android:paddingLeft="@dimen/dp_10"
+        android:paddingRight="@dimen/dp_10">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="上传赠品"
             android:textColor="@color/color_333333"
             android:textSize="16sp" />
 

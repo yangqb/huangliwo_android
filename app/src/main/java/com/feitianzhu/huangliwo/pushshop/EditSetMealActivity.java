@@ -145,7 +145,6 @@ public class EditSetMealActivity extends BaseActivity {
             @Override
             public void onItemSwiped(RecyclerView.ViewHolder viewHolder, int pos) {
                 Log.e("onItemSwiped", pos + "");
-                list.remove(pos);
             }
 
             @Override

@@ -6,14 +6,14 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="210dp"
+        android:layout_height="180dp"
         android:background="@mipmap/f01_03shangmianbeijing"
         android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="20dp"
             android:background="@color/transparent">
 
             <RelativeLayout
@@ -39,234 +39,278 @@
                 android:text=""
                 android:textColor="@color/color_333333"
                 android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/btnRecord"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="10dp"
+                android:gravity="center"
+                android:text="领取纪录"
+                android:textColor="@color/color_333333"
+                android:textSize="17sp" />
+
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="140dp">
+            android:layout_height="115dp">
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="124dp"
+                android:layout_height="115dp"
                 android:layout_alignParentBottom="true"
                 android:src="@mipmap/f01_04taitou" />
 
         </RelativeLayout>
     </LinearLayout>
 
-    <FrameLayout
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v4.widget.NestedScrollView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="120dp">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <LinearLayout
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:background="@color/color_f7f7f7"
-                android:orientation="vertical">
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/color_f7f7f7"
-                    android:paddingLeft="@dimen/dp_10"
-                    android:paddingRight="@dimen/dp_10">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="13dp"
-                        android:background="@drawable/shape_ffffff_r10"
-                        android:orientation="vertical"
-                        android:paddingBottom="50dp">
-
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/dp_20">
-
-                            <ImageView
-                                android:id="@+id/imageView"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:src="@mipmap/f02_01tubiao"
-                                android:visibility="visible" />
-
-                            <LinearLayout
-                                android:id="@+id/parent_view"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical"
-                                android:visibility="gone">
-
-                                <ImageView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:src="@mipmap/f02_02tubiao01" />
-
-                                <ImageView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="25dp"
-                                    android:src="@mipmap/f02_02tubiao02" />
-
-                                <ImageView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="25dp"
-                                    android:src="@mipmap/f02_02tubiao03" />
-
-                                <ImageView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="25dp"
-                                    android:src="@mipmap/f02_02tubiao04" />
-                            </LinearLayout>
-
-                        </RelativeLayout>
-
-                    </LinearLayout>
-
-                    <TextView
-                        android:id="@+id/moreVip"
-                        android:layout_width="87dp"
-                        android:layout_height="26dp"
-                        android:layout_gravity="bottom|center"
-                        android:background="@drawable/shape_fee299_r5"
-                        android:gravity="center"
-                        android:text="更多会员权益"
-                        android:textColor="@color/color_433D36"
-                        android:textSize="10sp" />
-
-                </FrameLayout>
+                android:paddingLeft="@dimen/dp_10"
+                android:paddingRight="@dimen/dp_10">
 
                 <LinearLayout
-                    android:id="@+id/ll_presents"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:paddingLeft="15dp"
-                        android:paddingRight="15dp"
-                        android:layout_marginRight="10dp"
-                        android:layout_marginTop="10dp"
-                        android:orientation="horizontal"
-                        android:background="@mipmap/f01_03huiyuanlipin" >
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_marginRight="10dp"
-                            android:drawableRight="@mipmap/xiala"
-                            android:drawablePadding="5dp"
-                            android:gravity="center"
-                            android:text="全部"
-                            android:textColor="@color/color_333333"
-                            android:textSize="13sp"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_marginRight="40dp"
-                            android:gravity="center"
-                            android:text="成为会员获得礼品总价值"
-                            android:textColor="@color/color_333333"
-                            android:textSize="15sp"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:text="￥9998.00"
-                            android:textColor="@color/color_333333"
-                            android:textSize="17sp"/>
-
-                        </LinearLayout>
+                    android:layout_marginBottom="13dp"
+                    android:background="@drawable/shape_ffffff_r10"
+                    android:orientation="vertical"
+                    android:paddingBottom="30dp">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="110dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"
-                        android:orientation="horizontal">
+                        android:layout_marginTop="10dp">
 
-                        <android.support.v7.widget.RecyclerView
-                            android:id="@+id/recyclerView"
+                        <ImageView
+                            android:id="@+id/imageView"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                            android:layout_height="wrap_content"
+                            android:src="@mipmap/f02_01tubiao"
+                            android:visibility="visible" />
 
-                        </android.support.v7.widget.RecyclerView>
+                        <LinearLayout
+                            android:id="@+id/parent_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:visibility="gone">
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:src="@mipmap/f02_02tubiao01" />
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="25dp"
+                                android:src="@mipmap/f02_02tubiao02" />
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="25dp"
+                                android:src="@mipmap/f02_02tubiao03" />
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="25dp"
+                                android:src="@mipmap/f02_02tubiao04" />
+                        </LinearLayout>
 
                     </RelativeLayout>
+
                 </LinearLayout>
-            </LinearLayout>
-        </android.support.v4.widget.NestedScrollView>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_gravity="bottom"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <CheckBox
-                    android:id="@+id/cb_protocol"
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    android:layout_marginRight="5dp"
-                    android:background="@mipmap/f01_06xuanzhong5"
-                    android:button="@null"
-                    android:checked="true" />
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="您已阅读并同意"
-                    android:textColor="@color/color_333333"
-                    android:textSize="@dimen/sp_12" />
+                    android:id="@+id/moreVip"
+                    android:layout_width="87dp"
+                    android:layout_height="26dp"
+                    android:layout_gravity="bottom|center"
+                    android:background="@drawable/shape_fee299_r5"
+                    android:gravity="center"
+                    android:text="更多会员权益"
+                    android:textColor="@color/color_433D36"
+                    android:textSize="10sp" />
 
-                <TextView
-                    android:id="@+id/tv_protocol"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="《黄鹂窝优选会员服务协议》"
-                    android:textColor="@color/color_289cef"
-                    android:textSize="@dimen/sp_12" />
+            </FrameLayout>
 
-            </LinearLayout>
-
-
-            <TextView
-                android:id="@+id/btn_submit"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginLeft="60dp"
-                android:layout_marginTop="@dimen/dp_10"
-                android:layout_marginRight="60dp"
-                android:layout_marginBottom="20dp"
-                android:background="@drawable/shape_fed428_r5"
-                android:gravity="center"
-                android:text="立即升级成为会员"
-                android:textColor="@color/color_333333"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:layout_height="45dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@mipmap/f01_03huiyuanlipin"
+                android:orientation="horizontal"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp">
+
+                <TextView
+                    android:id="@+id/all_gif"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"
+                    android:drawableRight="@mipmap/xiala"
+                    android:drawablePadding="5dp"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:lines="1"
+                    android:maxWidth="45dp"
+                    android:text="全部"
+                    android:textColor="@color/color_333333"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/tvTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/all_gif"
+                    android:gravity="center"
+                    android:text="成为会员获得礼品总价值"
+                    android:textColor="@color/color_333333"
+                    android:textSize="15sp" />
+
+                <ImageView
+                    android:id="@+id/tvInstruction"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="3dp"
+                    android:layout_toRightOf="@id/tvTitle"
+                    android:background="@mipmap/g04_02yiwen" />
+
+                <TextView
+                    android:id="@+id/total_amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:text="￥9998.00"
+                    android:textColor="@color/color_333333"
+                    android:textSize="17sp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/color_f7f7f7">
+
+                <android.support.v4.widget.NestedScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="125dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/color_f7f7f7"
+                        android:orientation="vertical">
+
+
+                        <LinearLayout
+                            android:id="@+id/ll_presents"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"
+                                android:orientation="horizontal">
+
+                                <android.support.v7.widget.RecyclerView
+                                    android:id="@+id/recyclerView"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent">
+
+                                </android.support.v7.widget.RecyclerView>
+
+                            </RelativeLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+                </android.support.v4.widget.NestedScrollView>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="120dp"
+                    android:layout_alignParentBottom="true"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <CheckBox
+                            android:id="@+id/cb_protocol"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@mipmap/f01_06xuanzhong5"
+                            android:button="@null"
+                            android:checked="true" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="您已阅读并同意"
+                            android:textColor="@color/color_333333"
+                            android:textSize="@dimen/sp_12" />
+
+                        <TextView
+                            android:id="@+id/tv_protocol"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="《黄鹂窝优选会员服务协议》"
+                            android:textColor="@color/color_289cef"
+                            android:textSize="@dimen/sp_12" />
+
+                    </LinearLayout>
+
+
+                    <TextView
+                        android:id="@+id/btn_submit"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginLeft="60dp"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:layout_marginRight="60dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/shape_fed428_r5"
+                        android:gravity="center"
+                        android:text="立即升级成为会员"
+                        android:textColor="@color/color_333333"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+            </RelativeLayout>
+
         </LinearLayout>
-
-    </FrameLayout>
-
-
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 </LinearLayout>

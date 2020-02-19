@@ -47,7 +47,27 @@ public class Urls {
     /*
      * 获取VIP赠送礼品
      * */
-    public static final String GET_VIP_PRESENT = BASE_URL + "fhwl/shopGift/getShopGiftList";
+    public static final String GET_VIP_PRESENT = BASE_URL + "fhwl/gift/userGiftList";
+    /*
+     *领取礼品
+     * */
+    public static final String GET_GIFT = BASE_URL + "fhwl/gift/getGift";
+
+    /*
+     * 赠品详情
+     * */
+    public static final String GET_GIFT_DETAIL = BASE_URL + "fhwl/gift/giftRecordDetail";
+
+    /*
+     * 赠品领取记录
+     * */
+    public static final String GET_GIFT_RECORD = BASE_URL + "fhwl/gift/giftRecord";
+
+    /*
+     * 新增赠品
+     * */
+    public static final String ADD_GIFT = BASE_URL + "fhwl/gift/insertGift";
+
 
     /*
      * 首页商品数据
@@ -213,9 +233,20 @@ public class Urls {
     public static final String UPDATE_SETMEAL = BASE_URL + "fhwl/setMeal/updateSetMeal";
 
     /*
+     * 删除赠品
+     * */
+    public static final String DELETE_GIFT = BASE_URL + "fhwl/gift/delGift";
+
+    /*
      * 获取套餐列表
      * */
     public static final String GET_SETMEAL_LIST = BASE_URL + "fhwl/setMeal/getSetMealList";
+
+    /*
+     * 获取商铺赠品列表
+     * */
+
+    public static final String GET_MERCHANT_GIFT_LIST = BASE_URL + "fhwl/gift/getGiftList";
 
     /*
      * 获取所有套餐的评价

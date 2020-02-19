@@ -72,7 +72,7 @@ public class MySelfMerchantsListActivity extends BaseActivity {
         titleName.setText("我的商铺");
     }
 
-    @OnClick({R.id.merchants_detail, R.id.upSetMeal, R.id.left_button})
+    @OnClick({R.id.merchants_detail, R.id.upSetMeal, R.id.left_button, R.id.upGift})
     public void onClick(View view) {
         Intent intent;
         switch (view.getId()) {
@@ -85,6 +85,11 @@ public class MySelfMerchantsListActivity extends BaseActivity {
             case R.id.upSetMeal:
                 intent = new Intent(MySelfMerchantsListActivity.this, SetMealListActivity.class);
                 intent.putExtra(SetMealListActivity.MERCHANTS_ID, merchantsId);
+                startActivity(intent);
+                break;
+            case R.id.upGift:
+                intent = new Intent(MySelfMerchantsListActivity.this, UpMerchantsGiftActivity.class);
+                intent.putExtra(UpMerchantsGiftActivity.MERCHANTS_ID, merchantsId);
                 startActivity(intent);
                 break;
             case R.id.left_button:

@@ -15,11 +15,11 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/dp_10"
             android:background="@drawable/bg_ffffff_r5"
-            android:paddingBottom="200dp"
             android:orientation="vertical"
-            android:paddingRight="10dp"
             android:paddingLeft="10dp"
-            android:paddingTop="10dp">
+            android:paddingTop="10dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="200dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -118,7 +118,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
-                    android:text="套餐价格"
+                    android:text="套餐原价"
                     android:textColor="@color/color_333333"
                     android:textSize="16sp" />
 
@@ -129,6 +129,7 @@
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@id/tag11"
                     android:background="@null"
+                    android:digits="0123456789."
                     android:gravity="right"
                     android:hint="请输入套餐价格"
                     android:textColor="@color/color_333333"

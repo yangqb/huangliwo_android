@@ -906,10 +906,11 @@
                             </LinearLayout>
 
                             <TextView
+                                android:id="@+id/tips1"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/dp_10"
-                                android:text="上传清晰完整的营业执照照 片，请勿遮挡"
+                                android:text="上传清晰完整的营业执照照片，请勿遮挡"
                                 android:textColor="@color/color_999999"
                                 android:textSize="14sp" />
 
@@ -980,6 +981,7 @@
                             </LinearLayout>
 
                             <TextView
+                                android:id="@+id/tips2"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/dp_10"

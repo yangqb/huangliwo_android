@@ -131,8 +131,8 @@ public class MineQrcodeActivity extends BaseActivity {
 
 
     private void setShowData(MineQRcodeModel response) {
-        //Glide.with(this).load(response.getYearImg()).apply(new RequestOptions().placeholder(R.mipmap.g10_03weijiazai).error(R.mipmap.g10_03weijiazai)).into(GlideUtils.getImageView(this, response.getYearImg(), imageView));
-        Glide.with(this).load(response.getYearImg()).apply(new RequestOptions().placeholder(R.mipmap.g10_03weijiazai).error(R.mipmap.g10_03weijiazai)).into(imageView);
+        Glide.with(this).load(response.getYearImg()).apply(new RequestOptions().placeholder(R.mipmap.g10_03weijiazai).error(R.mipmap.g10_03weijiazai)).into(GlideUtils.getImageView(this, response.getYearImg(), imageView));
+        //Glide.with(this).load(response.getYearImg()).apply(new RequestOptions().placeholder(R.mipmap.g10_03weijiazai).error(R.mipmap.g10_03weijiazai)).into(imageView);
         String qrUrl = response.getLink();
         if (TextUtils.isEmpty(qrUrl)) {
             ToastUtils.showShortToast("未获取到分享地址");

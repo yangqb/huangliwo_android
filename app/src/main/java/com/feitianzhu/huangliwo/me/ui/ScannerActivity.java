@@ -144,16 +144,11 @@ public class ScannerActivity extends BaseActivity {
                     ToastUtils.showShortToast("您不是商户不可录单");
                     finish();
                 } else {
-                    String[] strings = result.split("-");
-                    if (strings[0].length() == 12) {
-                        intent = new Intent(ScannerActivity.this, RecordOrderActivity.class);
-                        intent.putExtra(RecordOrderActivity.SET_MEAL_CODE, strings[0]);
-                        intent.putExtra(RecordOrderActivity.MERCHANTS_ID, strings[1]);
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        ToastUtils.showShortToast("无法识别此二维码!!");
-                    }
+                    intent = new Intent(ScannerActivity.this, RecordOrderActivity.class);
+                    intent.putExtra(RecordOrderActivity.TYPE, "1");
+                    intent.putExtra(RecordOrderActivity.URL_CODE, result);
+                    startActivity(intent);
+                    finish();
                 }
             } else if (result.contains("merchantId") && result.contains("receivables")) {
                  /*
@@ -163,6 +158,19 @@ public class ScannerActivity extends BaseActivity {
                 intent.putExtra(MyPaymentActivity.PAYMENT_INFO, result);
                 startActivity(intent);
                 finish();
+
+            } else if (result.contains("record")) {
+                //赠品录单
+                if (isMerchants != 2) {
+                    ToastUtils.showShortToast("您不是商户不可录单");
+                    finish();
+                } else {
+                    intent = new Intent(ScannerActivity.this, RecordOrderActivity.class);
+                    intent.putExtra(RecordOrderActivity.TYPE, "2");
+                    intent.putExtra(RecordOrderActivity.URL_CODE, result);
+                    startActivity(intent);
+                    finish();
+                }
 
             } else {
                 ToastUtils.showShortToast("无法识别此二维码!!");

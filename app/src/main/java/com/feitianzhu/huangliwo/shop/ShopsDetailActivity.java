@@ -2,6 +2,7 @@ package com.feitianzhu.huangliwo.shop;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -37,10 +38,12 @@ import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.ProductParameters;
+import com.feitianzhu.huangliwo.utils.GlideUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.utils.UserInfoUtils;
+import com.feitianzhu.huangliwo.view.CircleImageView;
 import com.feitianzhu.huangliwo.view.CustomSpecificationDialog;
 import com.feitianzhu.huangliwo.vip.VipActivity;
 import com.google.gson.Gson;
@@ -73,6 +76,7 @@ import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
 import static com.feitianzhu.huangliwo.common.Constant.ORDERNO;
 import static com.feitianzhu.huangliwo.common.Constant.POST_MINE_INFO;
 import static com.feitianzhu.huangliwo.common.Constant.USERID;
+import static com.feitianzhu.huangliwo.shop.ShareShopActivity.GOODS_DATA;
 
 /**
  * @class name：com.feitianzhu.fu700.shop
@@ -93,6 +97,7 @@ public class ShopsDetailActivity extends BaseActivity {
     private List<BaseGoodsListBean.GoodsEvaluateMode> evalList;
     private List<ProductParameters.GoodsSpecifications> specifications = new ArrayList<>();
     private MineInfoModel mineInfoModel = new MineInfoModel();
+    private List<String> imgs = new ArrayList<>();
     private String token;
     private String userId;
     @BindView(R.id.tv_amount)
@@ -100,7 +105,7 @@ public class ShopsDetailActivity extends BaseActivity {
     @BindView(R.id.title_name)
     TextView titleName;
     @BindView(R.id.viewpager)
-    BannerViewPager<BaseGoodsListBean.GoodsImgsListBean, ShopsDetailActivity.DataViewHolder> mViewpager;
+    BannerViewPager<String, ShopsDetailActivity.DataViewHolder> mViewpager;
     @BindView(R.id.goodsName)
     TextView goodsName;
     @BindView(R.id.goodsSummary)
@@ -112,7 +117,7 @@ public class ShopsDetailActivity extends BaseActivity {
     @BindView(R.id.tv_count)
     TextView tvCount;
     @BindView(R.id.iv_head)
-    RoundedImageView ivHead;
+    CircleImageView ivHead;
     @BindView(R.id.user_name)
     TextView userName;
     @BindView(R.id.tv_date)
@@ -283,22 +288,22 @@ public class ShopsDetailActivity extends BaseActivity {
                     }
                 });
             }
-            if (goodsListBean.getGoodsImgsList() != null) {
-                List<BaseGoodsListBean.GoodsImgsListBean> bannerList = goodsListBean.getGoodsImgsList();
-                mViewpager.setCanLoop(true)
-                        .setAutoPlay(true)
-                        .setIndicatorStyle(IndicatorStyle.CIRCLE)
-                        //.setIndicatorSlideMode(IndicatorSlideMode.SMOOTH)
-                        .setIndicatorRadius(8)
-                        .setIndicatorColor(Color.parseColor("#CCCCCC"), Color.parseColor("#6C6D72"))
-                        .setHolderCreator(ShopsDetailActivity.DataViewHolder::new).setOnPageClickListener(new BannerViewPager.OnPageClickListener() {
-                    @Override
-                    public void onPageClick(int position) {
-                        onClickBanner(position);
-                    }
-                }).create(bannerList);
-                mViewpager.startLoop();
-            }
+            String urlLogo = goodsListBean.getGoodsImg() == null ? "" : goodsListBean.getGoodsImg();
+            imgs.add(urlLogo);
+            List<BaseGoodsListBean.GoodsImgsListBean> bannerList = goodsListBean.getGoodsImgsList();
+            mViewpager.setCanLoop(true)
+                    .setAutoPlay(true)
+                    .setIndicatorStyle(IndicatorStyle.CIRCLE)
+                    //.setIndicatorSlideMode(IndicatorSlideMode.SMOOTH)
+                    .setIndicatorRadius(8)
+                    .setIndicatorColor(Color.parseColor("#CCCCCC"), Color.parseColor("#6C6D72"))
+                    .setHolderCreator(ShopsDetailActivity.DataViewHolder::new).setOnPageClickListener(new BannerViewPager.OnPageClickListener() {
+                @Override
+                public void onPageClick(int position) {
+                    onClickBanner(position);
+                }
+            }).create(imgs);
+            mViewpager.startLoop();
         }
     }
 
@@ -309,7 +314,7 @@ public class ShopsDetailActivity extends BaseActivity {
 
     }
 
-    public class DataViewHolder implements ViewHolder<BaseGoodsListBean.GoodsImgsListBean> {
+    public class DataViewHolder implements ViewHolder<String> {
         private ImageView mImageView;
 
         @Override
@@ -321,13 +326,14 @@ public class ShopsDetailActivity extends BaseActivity {
         }
 
         @Override
-        public void onBind(final Context context, BaseGoodsListBean.GoodsImgsListBean data, final int position, final int size) {
-            Glide.with(context).load(data.getGoodsImg())
+        public void onBind(final Context context, String data, final int position, final int size) {
+            Glide.with(context).load(data).apply(new RequestOptions().placeholder(R.mipmap.g10_03weijiazai).error(R.mipmap.g10_03weijiazai)).into(GlideUtils.getImageView((Activity)context, data, mImageView));
+            /*Glide.with(context).load()
                     .apply(new RequestOptions()
                             .dontAnimate()
                             .placeholder(R.mipmap.g10_03weijiazai)
                             .error(R.mipmap.g10_03weijiazai))
-                    .into(mImageView);
+                    .into(mImageView);*/
         }
 
     }
@@ -384,7 +390,9 @@ public class ShopsDetailActivity extends BaseActivity {
                 ToastUtils.showShortToast("敬请期待");
                 break;
             case R.id.right_img:
-                ToastUtils.showShortToast("敬请期待");
+                intent = new Intent(ShopsDetailActivity.this, ShareShopActivity.class);
+                intent.putExtra(GOODS_DATA, goodsListBean);
+                startActivity(intent);
                 break;
             case R.id.select_specifications:
                 /* //商品规格

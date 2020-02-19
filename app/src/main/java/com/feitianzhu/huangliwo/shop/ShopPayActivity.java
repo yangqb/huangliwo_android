@@ -10,6 +10,7 @@ import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -114,6 +115,8 @@ public class ShopPayActivity extends BaseActivity {
     TextView tvCount;
     @BindView(R.id.postage)
     TextView postage;
+    @BindView(R.id.editRemark)
+    EditText editRemark;
 
     private String price;
     private String totalAmount;
@@ -260,6 +263,7 @@ public class ShopPayActivity extends BaseActivity {
         } else {
             appId = "";
         }
+        orderListBean.setRemark(editRemark.getText().toString().trim());
         orderListBean.setChannel(payChannel); //支付渠道支付渠道（wx：微信，alipay：支付宝，balance：余额
         orderListBean.setAddressId(addressBean.getAddressId() + "");
         orderListBean.setGoodId(goodsListBean.getGoodsId());

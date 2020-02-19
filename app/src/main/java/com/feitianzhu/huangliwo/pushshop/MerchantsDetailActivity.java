@@ -552,52 +552,64 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
         String businessTimes = tvBusinessDay.getText().toString() + "&" + tvBusinessHours.getText().toString();
 
         if (TextUtils.isEmpty(merchantsName)) {
-            ToastUtils.showShortToast("请填写商铺名称");
-            return;
+            editMerchantsName.setHintTextColor(getResources().getColor(R.color.color_ff0000));
         }
+
         if (TextUtils.isEmpty(businessLicenseNo)) {
-            ToastUtils.showShortToast("请填写营业执照号码");
-            return;
+            editBusinessLicenseNo.setHintTextColor(getResources().getColor(R.color.color_ff0000));
         }
         if (TextUtils.isEmpty(phone)) {
-            ToastUtils.showShortToast("请填写商家手机号码");
-            return;
+            editMerchantsPhone.setHintTextColor(getResources().getColor(R.color.color_ff0000));
         }
         if (llCode.getVisibility() == View.VISIBLE && TextUtils.isEmpty(smsCode)) {
-            ToastUtils.showShortToast("请填写验证码");
-            return;
+            editMerchantsCode.setHintTextColor(getResources().getColor(R.color.color_ff0000));
         }
 
         if (TextUtils.isEmpty(address)) {
-            ToastUtils.showShortToast("请填写商铺地址");
-            return;
+            editMerchantsAddress.setHintTextColor(getResources().getColor(R.color.color_ff0000));
         }
         /*if (TextUtils.isEmpty(email)) {
             ToastUtils.showShortToast("请填写邮箱地址");
             return;
-        }
-        if (!StringUtils.isEmail(email)) {
+        }*/
+        /*if (!StringUtils.isEmail(email)) {
             ToastUtils.showShortToast("请填写正确的邮箱地址");
             return;
         }*/
+
         if (TextUtils.isEmpty(percentage)) {
-            ToastUtils.showShortToast("请填写折扣比例");
+            editMerchantsDiscount.setHintTextColor(getResources().getColor(R.color.color_ff0000));
+        }
+
+        if (isMySelfMerchants) {
+            if (!isTimes) {
+                tvBusinessHours.setTextColor(getResources().getColor(R.color.color_ff0000));
+            } else {
+                tvBusinessHours.setTextColor(getResources().getColor(R.color.color_333333));
+            }
+            if (!isWeek) {
+                tvBusinessDay.setTextColor(getResources().getColor(R.color.color_ff0000));
+            } else {
+                tvBusinessDay.setTextColor(getResources().getColor(R.color.color_333333));
+            }
+        }
+
+        if (TextUtils.isEmpty(merchantsName) || TextUtils.isEmpty(businessLicenseNo) || TextUtils.isEmpty(phone)
+                || TextUtils.isEmpty(address) || TextUtils.isEmpty(percentage) || (isMySelfMerchants && (!isTimes || !isWeek))) {
+            ToastUtils.showShortToast("您的资料填写不完整");
             return;
         }
+
+        if (!(businessLicenseNo.length() == 15 || businessLicenseNo.length() == 18)) {
+            ToastUtils.showShortToast("请输入正确的营业执照号");
+            return;
+        }
+
         if (Double.valueOf(percentage) > 100 || Double.valueOf(percentage) < 0) {
             ToastUtils.showShortToast("折扣比例不能大于100小于0");
             return;
         }
-        /*if (TextUtils.isEmpty(merchantsIntroduce)) {
-            ToastUtils.showShortToast("请填写商铺说明");
-            return;
-        }*/
-        if (isMySelfMerchants) {
-            if (!isTimes || !isWeek) {
-                ToastUtils.showShortToast("请选择营业日期和时间");
-                return;
-            }
-        }
+
         EditMerchantInfo merchantInfo = new EditMerchantInfo();
         if (isMySelfMerchants) {
             merchantInfo.setStatus(1);
@@ -696,6 +708,7 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
     public void onWheelFinish(String startHours, String startMinutes, String endHours, String endMinutes) {
         isTimes = true;
         tvBusinessHours.setText(startHours + ":" + startMinutes + "-" + endHours + ":" + endMinutes);
+        tvBusinessHours.setTextColor(getResources().getColor(R.color.color_333333));
     }
 
     @SuppressLint("SetTextI18n")
@@ -703,6 +716,7 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
     public void onWheelFinish(String startWeek, String endWeek) {
         isWeek = true;
         tvBusinessDay.setText(startWeek + "至" + endWeek);
+        tvBusinessDay.setTextColor(getResources().getColor(R.color.color_333333));
     }
 
     @Override

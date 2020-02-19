@@ -27,6 +27,7 @@ import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.SFFragment;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
+import com.feitianzhu.huangliwo.login.LoginActivity;
 import com.feitianzhu.huangliwo.login.LoginEvent;
 import com.feitianzhu.huangliwo.me.adapter.CenterAdapter;
 import com.feitianzhu.huangliwo.me.ui.AuthEvent;
@@ -109,6 +110,7 @@ public class MyCenterFragment extends SFFragment {
     private String amount3 = "0.00";
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private boolean isLogin = true;
     Integer[] integers = {R.mipmap.b08_08dingdan, R.mipmap.b08_14gouwuche, R.mipmap.b08_11dizhi, R.mipmap.b08_06zhanghu, R.mipmap.b08_12huiyuan,
             R.mipmap.b08_07yinhangka, R.mipmap.b08_10shouchang, R.mipmap.b08_09shangpu, R.mipmap.b08_15fenxiang};
 
@@ -171,7 +173,6 @@ public class MyCenterFragment extends SFFragment {
                 .execute(new JsonCallback<LzyResponse<BalanceModel>>() {
                     @Override
                     public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<BalanceModel>> response) {
-                        super.onSuccess(getActivity(), response.body().msg, response.body().code);
                         if (response.body().code == 0) {
                             balanceModel = response.body().data;
                             if (balanceModel != null) {
@@ -208,7 +209,13 @@ public class MyCenterFragment extends SFFragment {
 
                     @Override
                     public void onSuccess(Response<LzyResponse<MineInfoModel>> response) {
-                        //super.onSuccess(getActivity(), "您的账号在其它设备登录", response.body().code);
+                        super.onSuccess(getActivity(), response.body().msg, response.body().code);
+                        if (response.body().code == 100021105) {
+                            nickName.setText("登陆");
+                            isLogin = false;
+                        } else {
+                            isLogin = true;
+                        }
 
                         goneloadDialog();
                         if (refreshLayout != null) {
@@ -362,7 +369,21 @@ public class MyCenterFragment extends SFFragment {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ll_userInfo:
-                startActivity(new Intent(getActivity(), PersonalCenterActivity2.class));
+                if (isLogin) {
+                    startActivity(new Intent(getActivity(), PersonalCenterActivity2.class));
+                } else {
+                    SPUtils.putString(getActivity(), Constant.SP_PASSWORD, "");
+                    SPUtils.putString(getActivity(), Constant.SP_LOGIN_USERID, "");
+                    SPUtils.putString(getActivity(), Constant.SP_ACCESS_TOKEN, "");
+                    Constant.ACCESS_TOKEN = "";
+                    Constant.LOGIN_USERID = "";
+                    Constant.PHONE = "";
+                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    getActivity().finish();
+                }
+
                 break;
             case R.id.iv_setting:
                 startActivity(new Intent(getActivity(), SettingsActivity.class));

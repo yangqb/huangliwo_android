@@ -451,8 +451,8 @@
         <activity
             android:name=".pushshop.EditSetMealActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
-            android:windowSoftInputMode="adjustResize"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".pushshop.SetMealListActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
@@ -460,8 +460,8 @@
         <activity
             android:name=".pushshop.SetMealDetailActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
-            android:windowSoftInputMode="adjustResize"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".shop.SetMealPayActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
@@ -488,6 +488,30 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".me.BindingAccountActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".vip.VipGiftDetailActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".vip.GiftRecordActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".pushshop.UpMerchantsGiftActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".pushshop.EditMerchantGiftActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".vip.VipEquityActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".shop.ShareShopActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
 

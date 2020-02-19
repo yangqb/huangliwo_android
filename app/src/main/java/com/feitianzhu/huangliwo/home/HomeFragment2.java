@@ -366,7 +366,7 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack {
                         } else {
                             mSwipeLayout.finishLoadMore(false);
                         }
-                        Toast.makeText(getActivity(), TextUtils.isEmpty(response.body().msg) ? "加载失败，请重试" : response.body().msg, Toast.LENGTH_SHORT).show();
+
                     }
                 });
     }

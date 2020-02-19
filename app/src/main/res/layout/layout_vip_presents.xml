@@ -10,50 +10,58 @@
         android:layout_height="wrap_content"
         android:background="@drawable/bg_ffffff_r5"
         android:paddingLeft="@dimen/dp_10"
-        android:paddingRight="@dimen/dp_10"
         android:paddingTop="15dp"
-        android:paddingBottom="15dp"
-        >
-      <LinearLayout
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:orientation="vertical">
+        android:paddingRight="@dimen/dp_10"
+        android:paddingBottom="15dp">
 
-          <TextView
-              android:text="小黄鹂1号炸鸡店"
-              android:textColor="@color/color_333333"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:textSize="13sp"/>
-          <TextView
-              android:text="距离1000m"
-              android:textColor="@color/color_333333"
-              android:drawableLeft="@mipmap/a05_01banner"
-              android:drawablePadding="5dp"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:textSize="11sp"/>
+        <LinearLayout
+            android:id="@+id/ll_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-      </LinearLayout>
+            <TextView
+                android:id="@+id/merchants_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="小黄鹂1号炸鸡店"
+                android:textColor="@color/color_333333"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/distance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@mipmap/a05_01banner"
+                android:drawablePadding="5dp"
+                android:text="距离1000m"
+                android:textColor="@color/color_333333"
+                android:textSize="11sp" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_marginLeft="40dp"
+            android:layout_toRightOf="@id/ll_tag"
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/gif_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="超级大炸鸡一只"
                 android:textColor="@color/color_333333"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"/>
-            <TextView
                 android:text="价值￥68"
                 android:textColor="@color/color_F88D03"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="11sp"/>
+                android:textSize="11sp" />
 
         </LinearLayout>
 
@@ -64,6 +72,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/button"
                 android:layout_width="55dp"
                 android:layout_height="30dp"
                 android:layout_alignParentEnd="true"
@@ -75,13 +84,12 @@
         </LinearLayout>
 
 
-
-
     </RelativeLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="@color/color_eeeeee"/>
+        android:background="@color/color_eeeeee" />
 
     <!--<LinearLayout
         android:layout_width="112dp"

@@ -80,18 +80,19 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
     public T convertResponse(okhttp3.Response response) {
 
         ResponseBody body = response.body();
-        if(body == null) return null;
+
+        if (body == null) return null;
         T data = null;
         Gson gson = new Gson();
         JsonReader jsonReader = new JsonReader(body.charStream());
-        if(type != null){
-            data = Convert.fromJson(jsonReader,type);
-        }else if(clazz != null){
-            data = gson.fromJson(jsonReader,clazz);
-        }else{
+        if (type != null) {
+            data = Convert.fromJson(jsonReader, type);
+        } else if (clazz != null) {
+            data = gson.fromJson(jsonReader, clazz);
+        } else {
             Type genType = getClass().getGenericSuperclass();
-            Type type = ((ParameterizedType)genType).getActualTypeArguments()[0];
-            data = Convert.fromJson(jsonReader,type);
+            Type type = ((ParameterizedType) genType).getActualTypeArguments()[0];
+            data = Convert.fromJson(jsonReader, type);
         }
         return data;
 
@@ -134,10 +135,11 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
     }
 
     private ConfirmPopupView confirmPopupView;
+
     public void onSuccess(Context context, String string, int errorCode) {
-        if(errorCode !=0){
+        if (errorCode != 0) {
             if (errorCode == 100021105) {
-                if(confirmPopupView==null){
+                if (confirmPopupView == null) {
                     confirmPopupView = new XPopup.Builder(context)
                             .asConfirm("", "您的账号已在其他设备登陆，如果这不是您的操作，请及时修改密码并重新登陆。", "忽略", "修改密码", new OnConfirmListener() {
                                 @Override
@@ -147,12 +149,12 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
                             }, null, false)
                             .bindLayout(R.layout.layout_dialog);
                     confirmPopupView.show();//绑定已有布局
-                }else {
-                    if(!confirmPopupView.isShow()){
+                } else {
+                    if (!confirmPopupView.isShow()) {
                         confirmPopupView.show();
                     }
                 }
-            }else {
+            } else {
                 ToastUtils.showShortToast(string);
             }
         }
@@ -163,12 +165,12 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
         super.onError(response);
         int code = response.code();
         if (response.getException() instanceof ConnectException) {
-            ToastUtils.showShortToast("请检查网络连接");
+            ToastUtils.showShortToast("网络连接请求失败");
         } else if (response.getException() instanceof SocketTimeoutException) {
             ToastUtils.showShortToast("请求超时，请检查网络");
         } else if (response.getException() instanceof SocketException) {
             ToastUtils.showShortToast("服务器异常");
-        }else {
+        } else {
             ToastUtils.showShortToast(response.message());
         }
     }

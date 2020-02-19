@@ -39,10 +39,14 @@ import static com.feitianzhu.huangliwo.common.Constant.USERID;
 public class RecordOrderActivity extends BaseActivity {
     public static final String SET_MEAL_CODE = "set_meal_code";
     public static final String MERCHANTS_ID = "merchants_id";
+    public static final String TYPE = "type";
+    public static final String URL_CODE = "url_code";
     private String mealCode;
     private String merchantsId;
     private String userId;
     private String token;
+    private String result;
+    private String type;
     @BindView(R.id.title_name)
     TextView titleName;
     @BindView(R.id.editCode)
@@ -58,8 +62,19 @@ public class RecordOrderActivity extends BaseActivity {
         titleName.setText("商家录单");
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
-        mealCode = getIntent().getStringExtra(SET_MEAL_CODE);
-        merchantsId = getIntent().getStringExtra(MERCHANTS_ID);
+        type = getIntent().getStringExtra(TYPE);
+        result = getIntent().getStringExtra(URL_CODE);
+        if ("1".equals(type)) {
+            String[] strings = result.split("-");
+            mealCode = strings[0];
+            merchantsId = strings[1];
+        } else {
+            String[] aa = result.split("\\?");
+            String[] bb = aa[1].split("\\&");
+            merchantsId = bb[0].split("=")[1];
+            mealCode = bb[2].split("=")[1];
+        }
+
         if (mealCode != null) {
             editCode.setText(mealCode);
         }
@@ -86,6 +101,7 @@ public class RecordOrderActivity extends BaseActivity {
         OkGo.<LzyResponse>post(Urls.RECORD_ORDER)
                 .tag(this)
                 .params("num", mealCode)
+                .params("type", type)
                 .params("merchantId", merchantsId)
                 .params(ACCESSTOKEN, token)//
                 .params(USERID, userId)//

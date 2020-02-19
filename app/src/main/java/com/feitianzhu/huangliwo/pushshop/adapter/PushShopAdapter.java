@@ -36,12 +36,15 @@ public class PushShopAdapter extends BaseQuickAdapter<MerchantsModel, BaseViewHo
         if (item.getStatus() == 0) {
             helper.setText(R.id.tvStatus, "审核中");
             helper.setVisible(R.id.image, false);
+            helper.setVisible(R.id.submit, false);
         } else if (item.getStatus() == 1) {
             helper.setText(R.id.tvStatus, "已通过");
             helper.setVisible(R.id.image, false);
+            helper.setVisible(R.id.submit, false);
         } else if (item.getStatus() == -1) {
             helper.setText(R.id.tvStatus, "未通过");
             helper.setVisible(R.id.image, true);
+            helper.setVisible(R.id.submit, true);
         }
     }
 }

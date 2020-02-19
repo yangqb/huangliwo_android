@@ -120,6 +120,11 @@ public class SettingsActivity extends BaseActivity {
                     @Override
                     public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<UserAuth>> response) {
                         super.onSuccess(SettingsActivity.this, response.body().msg, response.body().code);
+                        if (response.body().code == 100021105) {
+                            mButton.setText("登陆");
+                        } else {
+                            mButton.setText("退出当前账号");
+                        }
                         if (response.body().data != null && response.body().code == 0) {
                             if (response.body().data.isPaypass == 1) {
                                 isPayPassword = true;
@@ -128,7 +133,7 @@ public class SettingsActivity extends BaseActivity {
                                 isPayPassword = false;
                                 mTvPayPassword.setText("设置支付密码");
                             }
-                        }else {
+                        } else {
                             isPayPassword = false;
                             mTvPayPassword.setText("设置支付密码");
                         }

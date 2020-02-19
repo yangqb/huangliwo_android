@@ -89,6 +89,15 @@ userName (string, optional): 用户名
         private String buyerName;//":"HLW0321",
         private String buyerPhone;//":"13100680321",
         private int isEval;//是否评价 1.已评价
+        private String remark;//备注
+
+        public String getRemark() {
+            return remark;
+        }
+
+        public void setRemark(String remark) {
+            this.remark = remark;
+        }
 
         public int getIsEval() {
             return isEval;

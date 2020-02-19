@@ -122,8 +122,8 @@
                         android:layout_height="15dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:visibility="invisible"
-                        android:src="@mipmap/b08_04jinru" />
+                        android:src="@mipmap/b08_04jinru"
+                        android:visibility="invisible" />
 
                 </RelativeLayout>
 
@@ -310,9 +310,8 @@
                             android:id="@+id/orderNo"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
                             android:layout_toLeftOf="@id/tv_copy"
-                            android:text="aABCDEF123456789"
+                            android:text=""
                             android:textColor="@color/color_333333"
                             android:textSize="15sp" />
                     </RelativeLayout>
@@ -337,7 +336,33 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
-                            android:text="2019.12.02 18:25"
+                            android:text=""
+                            android:textColor="@color/color_333333"
+                            android:textSize="15sp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_10">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:text="订单备注"
+                            android:textColor="@color/color_333333"
+                            android:textSize="15sp" />
+
+
+                        <TextView
+                            android:id="@+id/remark"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="100dp"
+                            android:text=""
                             android:textColor="@color/color_333333"
                             android:textSize="15sp" />
                     </RelativeLayout>

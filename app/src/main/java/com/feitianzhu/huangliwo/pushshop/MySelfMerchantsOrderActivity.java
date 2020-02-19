@@ -188,6 +188,7 @@ public class MySelfMerchantsOrderActivity extends BaseActivity implements View.O
         switch (v.getId()) {
             case R.id.ivRecordOrder:
                 Intent intent = new Intent(MySelfMerchantsOrderActivity.this, RecordOrderActivity.class);
+                intent.putExtra(RecordOrderActivity.TYPE, "1");
                 startActivity(intent);
                 popupWindow.dismiss();
                 break;
