@@ -140,7 +140,7 @@ public class ShareShopActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.left_button, R.id.bt_shared, R.id.bt_sav
+    @OnClick({R.id.left_button, R.id.bt_shared, R.id.bt_save})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.left_button:
