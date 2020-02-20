@@ -88,7 +88,10 @@
                     android:background="@drawable/shape_f1efef_r13"
                     android:drawableEnd="@mipmap/g07_04xiala"
                     android:drawablePadding="8dp"
+                    android:ellipsize="end"
                     android:gravity="center"
+                    android:lines="1"
+                    android:maxWidth="150dp"
                     android:paddingLeft="@dimen/dp_20"
                     android:paddingRight="@dimen/dp_20"
                     android:text="黑色"
@@ -109,7 +112,7 @@
                         android:textColor="@color/color_FEA811"
                         android:textSize="18sp" />
 
-                    <com.feitianzhu.huangliwo.view.AmountView
+                    <!--<com.feitianzhu.huangliwo.view.AmountView
                         android:id="@+id/amount_view"
                         android:layout_width="wrap_content"
                         android:layout_height="25dp"
@@ -120,7 +123,9 @@
                         app:btnTextSize="@dimen/sp_14"
                         app:btnWidth="25dp"
                         app:tvTextSize="@dimen/sp_14"
-                        app:tvWidth="25dp" />
+                        app:tvWidth="25dp" />-->
+                    <include
+                        layout="@layout/layout_amount" />
                 </RelativeLayout>
 
             </LinearLayout>

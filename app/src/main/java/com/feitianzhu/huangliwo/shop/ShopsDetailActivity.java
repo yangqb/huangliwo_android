@@ -14,7 +14,6 @@ import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +37,8 @@ import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.ProductParameters;
+import com.feitianzhu.huangliwo.model.AddShoppingCartBody;
+import com.feitianzhu.huangliwo.shop.ui.ShoppingCartActivity;
 import com.feitianzhu.huangliwo.utils.GlideUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
@@ -47,10 +48,10 @@ import com.feitianzhu.huangliwo.view.CircleImageView;
 import com.feitianzhu.huangliwo.view.CustomSpecificationDialog;
 import com.feitianzhu.huangliwo.vip.VipActivity;
 import com.google.gson.Gson;
-import com.itheima.roundedimageview.RoundedImageView;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.Response;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
 import com.yanzhenjie.permission.Rationale;
@@ -58,8 +59,6 @@ import com.yanzhenjie.permission.RationaleListener;
 import com.zhpan.bannerview.BannerViewPager;
 import com.zhpan.bannerview.enums.IndicatorStyle;
 import com.zhpan.bannerview.holder.ViewHolder;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.Callback;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -68,14 +67,7 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import okhttp3.Call;
-import okhttp3.Response;
 
-import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
-import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
-import static com.feitianzhu.huangliwo.common.Constant.ORDERNO;
-import static com.feitianzhu.huangliwo.common.Constant.POST_MINE_INFO;
-import static com.feitianzhu.huangliwo.common.Constant.USERID;
 import static com.feitianzhu.huangliwo.shop.ShareShopActivity.GOODS_DATA;
 
 /**
@@ -90,6 +82,7 @@ public class ShopsDetailActivity extends BaseActivity {
     public static final String GOODS_DETAIL_DATA = "goods_detail_data";
     private StringBuffer sb;
     private StringBuffer valueId;
+    private StringBuffer speciName;
     private String str3 = "0.00";
     private int goodsId;
     private BaseGoodsListBean goodsListBean;
@@ -327,7 +320,7 @@ public class ShopsDetailActivity extends BaseActivity {
 
         @Override
         public void onBind(final Context context, String data, final int position, final int size) {
-            Glide.with(context).load(data).apply(new RequestOptions().placeholder(R.mipmap.g10_03weijiazai).error(R.mipmap.g10_03weijiazai)).into(GlideUtils.getImageView((Activity)context, data, mImageView));
+            Glide.with(context).load(data).apply(new RequestOptions().placeholder(R.mipmap.g10_03weijiazai).error(R.mipmap.g10_03weijiazai)).into(GlideUtils.getImageView((Activity) context, data, mImageView));
             /*Glide.with(context).load()
                     .apply(new RequestOptions()
                             .dontAnimate()
@@ -367,13 +360,11 @@ public class ShopsDetailActivity extends BaseActivity {
                 startActivity(intent);
                 break;
             case R.id.add_shopping_cart:
-                //TODO:添加到购物车
-                ToastUtils.showShortToast("敬请期待");
+                addShoppingCart();
                 break;
             case R.id.shopping_cart:
-                ToastUtils.showShortToast("敬请期待");
-               /* intent = new Intent(ShopsDetailActivity.this, ShoppingCartActivity.class);
-                startActivity(intent);*/
+                intent = new Intent(ShopsDetailActivity.this, ShoppingCartActivity.class);
+                startActivity(intent);
                 break;
             case R.id.call_phone:
                 new XPopup.Builder(this)
@@ -403,21 +394,24 @@ public class ShopsDetailActivity extends BaseActivity {
                             public void onOkClick(List<ProductParameters.GoodsSpecifications> data) {
                                 sb = new StringBuffer();
                                 valueId = new StringBuffer();
-                                List<Integer> ids = new ArrayList<>();
+                                speciName = new StringBuffer();
+                                List<ProductParameters.GoodsSpecifications.SkuValueListBean> selectSpec = new ArrayList<>();
                                 for (int i = 0; i < data.size(); i++) {
                                     for (int j = 0; j < data.get(i).getSkuValueList().size(); j++) {
                                         if (data.get(i).getSkuValueList().get(j).isSelect()) {
                                             sb.append("\"" + data.get(i).getSkuValueList().get(j).getAttributeVal() + "\" ");
-                                            ids.add(data.get(i).getSkuValueList().get(j).getValueId());
+                                            selectSpec.add(data.get(i).getSkuValueList().get(j));
                                         }
                                     }
                                 }
-                                if (ids.size() > 0) {
-                                    for (int i = 0; i < ids.size(); i++) {
-                                        if (i == ids.size() - 1) {
-                                            valueId.append(ids.get(i));
+                                if (selectSpec.size() > 0) {
+                                    for (int i = 0; i < selectSpec.size(); i++) {
+                                        if (i == selectSpec.size() - 1) {
+                                            valueId.append(selectSpec.get(i).getValueId());
+                                            speciName.append(selectSpec.get(i).getAttributeVal());
                                         } else {
-                                            valueId.append(ids.get(i) + ",");
+                                            valueId.append(selectSpec.get(i).getValueId() + ",");
+                                            speciName.append(selectSpec.get(i).getAttributeVal() + ",");
                                         }
                                     }
                                 }
@@ -431,6 +425,43 @@ public class ShopsDetailActivity extends BaseActivity {
                 startActivity(intent);
                 break;
         }
+
+    }
+
+    public void addShoppingCart() {
+        if (specifications.size() > 0 && (sb == null || TextUtils.isEmpty(sb.toString()))) {
+            ToastUtils.showShortToast("请选择商品规格");
+            return;
+        }
+        AddShoppingCartBody model = new AddShoppingCartBody();
+        model.goodsId = goodsId;
+        if (valueId != null) {
+            model.speci = valueId.toString();
+            model.speciName = speciName.toString();
+        } else {
+            model.speci = "";
+            model.speciName = "";
+        }
+        String json = new Gson().toJson(model);
+        OkGo.<LzyResponse>post(Urls.ADD_SHOPPING_CART)
+                .tag(this)
+                .params("accessToken", token)
+                .params("userId", userId)
+                .params("shopingCarBody", json)
+                .execute(new JsonCallback<LzyResponse>() {
+                    @Override
+                    public void onSuccess(Response<LzyResponse> response) {
+                        super.onSuccess(ShopsDetailActivity.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0) {
+                            ToastUtils.showShortToast("添加成功");
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<LzyResponse> response) {
+                        super.onError(response);
+                    }
+                });
 
     }
 

@@ -3,10 +3,12 @@ package com.feitianzhu.huangliwo.shop.ui;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
@@ -16,13 +18,32 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
+import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
-import com.feitianzhu.huangliwo.model.ShoppingCartMode;
+import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
+import com.feitianzhu.huangliwo.model.ProductParameters;
+import com.feitianzhu.huangliwo.model.ShoppingCartModel;
+import com.feitianzhu.huangliwo.model.UpdateShoppingCartBody;
 import com.feitianzhu.huangliwo.shop.adapter.ShoppingCartAdapter;
+import com.feitianzhu.huangliwo.utils.SPUtils;
+import com.feitianzhu.huangliwo.utils.ToastUtils;
+import com.feitianzhu.huangliwo.utils.Urls;
+import com.feitianzhu.huangliwo.view.CustomInputView;
+import com.feitianzhu.huangliwo.view.CustomSpecificationDialog;
+import com.feitianzhu.huangliwo.vip.VipUpgradeActivity;
+import com.google.gson.Gson;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.Response;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -41,15 +62,24 @@ public class ShoppingCartActivity extends BaseActivity {
     private String totalAmount = "0.00";
     private double p = 0.00;
     private ShoppingCartAdapter mAdapter;
-    private List<ShoppingCartMode> shoppingCartModes;
+    private StringBuffer valueId;
+    private StringBuffer speciName;
+    private List<ShoppingCartModel.CartGoodsModel> shoppingCartModels;
+    private UpdateShoppingCartBody shoppingCartBody = new UpdateShoppingCartBody();
+    private ProductParameters productParameters;
+    private List<ProductParameters.GoodsSpecifications> specifications = new ArrayList<>();
     private String str1;
     private String str2;
+    private String token;
+    private String userId;
     @BindView(R.id.title_name)
     TextView titleName;
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     @BindView(R.id.amount)
     TextView bottomAmount;
+    @BindView(R.id.swipeLayout)
+    SmartRefreshLayout refreshLayout;
 
     @Override
     protected int getLayoutId() {
@@ -58,20 +88,13 @@ public class ShoppingCartActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+        token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
+        userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         titleName.setText("购物车");
         str1 = "合计：";
         str2 = "¥ ";
-        shoppingCartModes = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            ShoppingCartMode cartMode = new ShoppingCartMode();
-            cartMode.setSelect(false);
-            cartMode.setPrice(100.00);
-            cartMode.setCount(i);
-            cartMode.setAttributeVal("规格");
-            shoppingCartModes.add(cartMode);
-        }
-
-        mAdapter = new ShoppingCartAdapter(shoppingCartModes);
+        shoppingCartModels = new ArrayList<>();
+        mAdapter = new ShoppingCartAdapter(shoppingCartModels);
         View mEmptyView = View.inflate(this, R.layout.view_common_nodata, null);
         ImageView img_empty = (ImageView) mEmptyView.findViewById(R.id.img_empty);
         img_empty.setOnClickListener(new View.OnClickListener() {
@@ -84,27 +107,40 @@ public class ShoppingCartActivity extends BaseActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
+        refreshLayout.setEnableLoadMore(false);
         setSpannableString(totalAmount);
         initListener();
     }
 
     public void initListener() {
+        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                initData();
+            }
+        });
 
-        mAdapter.setOnGoodsAmountListener(new ShoppingCartAdapter.OnGoodsAmountListener() {
+        /*mAdapter.setOnGoodsAmountListener(new ShoppingCartAdapter.OnGoodsAmountListener() {
             @Override
             public void getGoodsAmount(int pos, int count) {
-                shoppingCartModes.get(pos).setCount(count);
+                shoppingCartModels.get(pos).goodsCount = count;
+                shoppingCartBody.carId = shoppingCartModels.get(pos).carId;
+                shoppingCartBody.checks = shoppingCartModels.get(pos).checks;
+                shoppingCartBody.goodsCount = shoppingCartModels.get(pos).goodsCount;
+                shoppingCartBody.speci = shoppingCartModels.get(pos).speci;
+                shoppingCartBody.speciName = shoppingCartModels.get(pos).speciName;
+                upDateShoppingCart();
                 p = 0.00;
-                for (ShoppingCartMode shoppingCartMode : shoppingCartModes
+                for (ShoppingCartModel.CartGoodsModel shoppingCartModel : shoppingCartModels
                 ) {
-                    if (shoppingCartMode.isSelect()) {
-                        p += shoppingCartMode.getCount() * shoppingCartMode.getPrice();
+                    if (shoppingCartModel.checks == 1) {
+                        p += shoppingCartModel.goodsCount * shoppingCartModel.price;
                     }
                     totalAmount = String.format(Locale.getDefault(), "%.2f", p);
                     setSpannableString(totalAmount);
                 }
             }
-        });
+        });*/
 
         mAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
@@ -115,8 +151,9 @@ public class ShoppingCartActivity extends BaseActivity {
                                 .asConfirm("确定要删除该订单？", "", "取消", "确定", new OnConfirmListener() {
                                     @Override
                                     public void onConfirm() {
-                                        shoppingCartModes.remove(position);
-                                        mAdapter.setNewData(shoppingCartModes);
+                                        deleteShoppingCart(shoppingCartModels.get(position).carId);
+                                        calculationAmount();
+                                        shoppingCartModels.remove(position);
                                         mAdapter.notifyDataSetChanged();
                                     }
                                 }, null, false)
@@ -124,53 +161,261 @@ public class ShoppingCartActivity extends BaseActivity {
                                 .show();
                         break;
                     case R.id.select_goods: //选择支付的商品
-                        shoppingCartModes.get(position).setSelect(!shoppingCartModes.get(position).isSelect());
-                        mAdapter.setNewData(shoppingCartModes);
+                        //修改商品信息
+                        shoppingCartModels.get(position).checks = shoppingCartModels.get(position).checks == 0 ? 1 : 0;
+                        shoppingCartBody.carId = shoppingCartModels.get(position).carId;
+                        shoppingCartBody.checks = shoppingCartModels.get(position).checks;
+                        shoppingCartBody.goodsCount = shoppingCartModels.get(position).goodsCount;
+                        shoppingCartBody.speci = shoppingCartModels.get(position).speci;
+                        shoppingCartBody.speciName = shoppingCartModels.get(position).speciName;
                         mAdapter.notifyItemChanged(position);
-                        for (ShoppingCartMode shoppingCartMode : shoppingCartModes
-                        ) {
-                            p = shoppingCartMode.getCount() * shoppingCartMode.getPrice();
-                            if (!shoppingCartMode.isSelect()) {
-                                p -= shoppingCartMode.getCount() * shoppingCartMode.getPrice();
-                            } else {
-                                p += shoppingCartMode.getCount() * shoppingCartMode.getPrice();
-                            }
-                        }
-                        totalAmount = String.format(Locale.getDefault(), "%.2f", p);
-                        setSpannableString(totalAmount);
+                        calculationAmount();
+                        upDateShoppingCart();
                         break;
                     case R.id.summary: //选择规格
-                        /* //商品规格
-                         */
-                        /*new CustomSpecificationDialog(this).setData(specifications)
-                                .setNegativeButton(new CustomSpecificationDialog.OnOkClickListener() {
-                                    @Override
-                                    public void onOkClick(List<ProductParameters.GoodsSpecifications> data) {
-                                        StringBuffer sb = new StringBuffer();
-                                        for (int i = 0; i < data.size(); i++) {
-                                            for (int j = 0; j < data.get(i).getSkuValueList().size(); j++) {
-                                                if (data.get(i).getSkuValueList().get(j).isSelect()) {
-                                                    sb.append("\"" + data.get(i).getSkuValueList().get(j).getAttributeVal() + "\" ");
-                                                }
-                                            }
-                                        }
-                                        specificationsName.setText("选着了：" + sb.toString());
-                                    }
-                                }).show();*/
+                        getSpecifications(position, shoppingCartModels.get(position).goodsId, shoppingCartModels.get(position).speci);
+                        break;
+                    case R.id.btnDecrease:
+                        if (shoppingCartModels.get(position).goodsCount != 1) {
+                            shoppingCartModels.get(position).goodsCount = shoppingCartModels.get(position).goodsCount - 1;
+                        }
+                        mAdapter.notifyItemChanged(position);
+                        calculationAmount();
+                        shoppingCartBody.carId = shoppingCartModels.get(position).carId;
+                        shoppingCartBody.checks = shoppingCartModels.get(position).checks;
+                        shoppingCartBody.goodsCount = shoppingCartModels.get(position).goodsCount;
+                        shoppingCartBody.speci = shoppingCartModels.get(position).speci;
+                        shoppingCartBody.speciName = shoppingCartModels.get(position).speciName;
+                        upDateShoppingCart();
+                        break;
+                    case R.id.btnIncrease:
+                        if (shoppingCartModels.get(position).goodsCount != 50) {
+                            shoppingCartModels.get(position).goodsCount = shoppingCartModels.get(position).goodsCount + 1;
+                        }
+                        mAdapter.notifyItemChanged(position);
+                        calculationAmount();
+                        shoppingCartBody.carId = shoppingCartModels.get(position).carId;
+                        shoppingCartBody.checks = shoppingCartModels.get(position).checks;
+                        shoppingCartBody.goodsCount = shoppingCartModels.get(position).goodsCount;
+                        shoppingCartBody.speci = shoppingCartModels.get(position).speci;
+                        shoppingCartBody.speciName = shoppingCartModels.get(position).speciName;
+                        upDateShoppingCart();
+                        break;
+                    case R.id.etAmount:
+                        shopEditDialog(position);
                         break;
                 }
             }
         });
     }
 
+    public void shopEditDialog(int pos) {
+        new XPopup.Builder(ShoppingCartActivity.this)
+                .asCustom(new CustomInputView(ShoppingCartActivity.this)
+                        .setTitle("请输入购买数量")
+                        .setText(shoppingCartModels.get(pos).goodsCount)
+                        .setOnConfirmClickListener(new CustomInputView.OnConfirmClickListener() {
+                            @Override
+                            public void onConfirm(String account) {
+                                if (!TextUtils.isEmpty(account) && Integer.valueOf(account) > 0) {
+                                    shoppingCartModels.get(pos).goodsCount = Integer.valueOf(account);
+                                    mAdapter.notifyItemChanged(pos);
+                                    calculationAmount();
+                                    shoppingCartBody.carId = shoppingCartModels.get(pos).carId;
+                                    shoppingCartBody.checks = shoppingCartModels.get(pos).checks;
+                                    shoppingCartBody.goodsCount = shoppingCartModels.get(pos).goodsCount;
+                                    shoppingCartBody.speci = shoppingCartModels.get(pos).speci;
+                                    shoppingCartBody.speciName = shoppingCartModels.get(pos).speciName;
+                                    upDateShoppingCart();
+                                }
+                            }
+                        }))
+                .show();
+    }
+
+    public void deleteShoppingCart(int cartId) {
+        OkGo.<LzyResponse>get(Urls.DELETE_SHOPPING_CART)
+                .tag(this)
+                .params("accessToken", token)
+                .params("userId", userId)
+                .params("carId", cartId)
+                .execute(new JsonCallback<LzyResponse>() {
+                    @Override
+                    public void onSuccess(Response<LzyResponse> response) {
+                        super.onSuccess(ShoppingCartActivity.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0) {
+
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<LzyResponse> response) {
+                        super.onError(response);
+                    }
+                });
+
+    }
+
+    public void upDateShoppingCart() {
+        String json = new Gson().toJson(shoppingCartBody);
+        OkGo.<LzyResponse>post(Urls.UPDATE_SHOPPING_CART)
+                .tag(this)
+                .params("accessToken", token)
+                .params("userId", userId)
+                .params("shopingCarBody", json)
+                .execute(new JsonCallback<LzyResponse>() {
+                    @Override
+                    public void onSuccess(Response<LzyResponse> response) {
+                        super.onSuccess(ShoppingCartActivity.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0) {
+
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<LzyResponse> response) {
+                        super.onError(response);
+                    }
+                });
+
+    }
+
     @Override
     protected void initData() {
+        OkGo.<LzyResponse<ShoppingCartModel>>get(Urls.GET_SHOPPING_CART_LIST)
+                .tag(this)
+                .params("accessToken", token)
+                .params("userId", userId)
+                .execute(new JsonCallback<LzyResponse<ShoppingCartModel>>() {
+                    @Override
+                    public void onSuccess(Response<LzyResponse<ShoppingCartModel>> response) {
+                        super.onSuccess(ShoppingCartActivity.this, response.body().msg, response.body().code);
+                        refreshLayout.finishRefresh();
+                        if (response.body().code == 0 && response.body().data != null) {
+                            if (response.body().data.allSCcar != null) {
+                                shoppingCartModels = response.body().data.allSCcar;
+                                for (int i = 0; i < shoppingCartModels.size(); i++) {
+                                    shoppingCartModels.get(i).checks = 0;
+                                }
+                                mAdapter.setNewData(shoppingCartModels);
+                                mAdapter.notifyDataSetChanged();
+                            }
+                        }
+                    }
 
+                    @Override
+                    public void onError(Response<LzyResponse<ShoppingCartModel>> response) {
+                        super.onError(response);
+                        refreshLayout.finishRefresh(false);
+                    }
+                });
+    }
+
+    public void getSpecifications(int pos, int goodsId, String specIds) {
+        List<String> ids = new ArrayList<>();
+        if (specIds.contains(",")) {
+            String[] strs = specIds.split(",");
+            ids.addAll(Arrays.asList(strs));
+        } else {
+            ids.add(specIds);
+        }
+
+        OkGo.<LzyResponse<ProductParameters>>post(Urls.GET_PRODUCT_PARAMETERS)
+                .tag(this)
+                .params("accessToken", token)
+                .params("userId", userId)
+                .params("goodsId", goodsId + "")
+                .execute(new JsonCallback<LzyResponse<ProductParameters>>() {
+                    @Override
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<ProductParameters>> response) {
+                        //super.onSuccess(ShopsDetailActivity.this, response.body().msg, response.body().code);
+                        if (response.body().data != null) {
+                            productParameters = response.body().data;
+                            /*
+                             * 数据处理
+                             * */
+                            if (productParameters != null && productParameters.getGoodslist() != null && productParameters.getGoodslist().size() > 0) {
+                                specifications = productParameters.getGoodslist();
+                                /*
+                                 * 默认选中第一个
+                                 * */
+                                for (int i = 0; i < specifications.size(); i++) {
+                                    for (int j = 0; j < specifications.get(i).getSkuValueList().size(); j++) {
+                                        for (int k = 0; k < ids.size(); k++) {
+                                            if (specifications.get(i).getSkuValueList().get(j).getValueId() == Integer.valueOf(ids.get(k))) {
+                                                specifications.get(i).getSkuValueList().get(j).setSelect(true);
+                                            }
+                                        }
+                                    }
+                                }
+                                showSpecDialog(pos);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse<ProductParameters>> response) {
+                        super.onError(response);
+                    }
+                });
+    }
+
+    public void showSpecDialog(int pos) {
+        /* //商品规格
+         */
+        new CustomSpecificationDialog(this).setData(specifications)
+                .setNegativeButton(new CustomSpecificationDialog.OnOkClickListener() {
+                    @Override
+                    public void onOkClick(List<ProductParameters.GoodsSpecifications> data) {
+                        valueId = new StringBuffer();
+                        speciName = new StringBuffer();
+                        List<ProductParameters.GoodsSpecifications.SkuValueListBean> selectSpec = new ArrayList<>();
+                        for (int i = 0; i < data.size(); i++) {
+                            for (int j = 0; j < data.get(i).getSkuValueList().size(); j++) {
+                                if (data.get(i).getSkuValueList().get(j).isSelect()) {
+                                    selectSpec.add(data.get(i).getSkuValueList().get(j));
+                                }
+                            }
+                        }
+                        if (selectSpec.size() > 0) {
+                            for (int i = 0; i < selectSpec.size(); i++) {
+                                if (i == selectSpec.size() - 1) {
+                                    valueId.append(selectSpec.get(i).getValueId());
+                                    speciName.append(selectSpec.get(i).getAttributeVal());
+                                } else {
+                                    valueId.append(selectSpec.get(i).getValueId() + ",");
+                                    speciName.append(selectSpec.get(i).getAttributeVal() + ",");
+                                }
+                            }
+                        }
+                        shoppingCartModels.get(pos).speci = valueId.toString();
+                        shoppingCartModels.get(pos).speciName = speciName.toString();
+                        shoppingCartBody.carId = shoppingCartModels.get(pos).carId;
+                        shoppingCartBody.checks = shoppingCartModels.get(pos).checks;
+                        shoppingCartBody.goodsCount = shoppingCartModels.get(pos).goodsCount;
+                        shoppingCartBody.speci = valueId.toString();
+                        shoppingCartBody.speciName = speciName.toString();
+                        mAdapter.notifyItemChanged(pos);
+                        upDateShoppingCart();
+                    }
+                }).show();
     }
 
     @OnClick({R.id.left_button})
     public void onClick(View view) {
         finish();
+    }
+
+    public void calculationAmount() {
+        p = 0.00;
+        for (ShoppingCartModel.CartGoodsModel shoppingCartModel : shoppingCartModels
+        ) {
+            if (shoppingCartModel.checks == 1) {
+                p += shoppingCartModel.goodsCount * shoppingCartModel.price;
+            }
+            totalAmount = String.format(Locale.getDefault(), "%.2f", p);
+            setSpannableString(totalAmount);
+        }
     }
 
     @SuppressLint("SetTextI18n")

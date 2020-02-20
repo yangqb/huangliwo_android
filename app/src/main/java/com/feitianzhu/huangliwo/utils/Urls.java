@@ -106,6 +106,26 @@ public class Urls {
     public static final String GET_PRODUCT_PARAMETERS = BASE_URL + "fhwl/shop/getskuValue";
 
     /*
+     * 添加购物车
+     * */
+    public static final String ADD_SHOPPING_CART = BASE_URL + "fhwl/shopingCar/insterShopingCar";
+
+    /*
+     * 获取购物车商品列表
+     * */
+    public static final String GET_SHOPPING_CART_LIST = BASE_URL + "fhwl/shopingCar/getAllUserShopingCar";
+
+    /*
+     * 修改购物车商品信息
+     * */
+    public static final String UPDATE_SHOPPING_CART = BASE_URL + "fhwl/shopingCar/updateShopingCar";
+
+    /*
+     * 删除购物车商品
+     * */
+    public static final String DELETE_SHOPPING_CART = BASE_URL + "fhwl/shopingCar/deleteShopingCar";
+
+    /*
      * 订单分类的数量
      * */
     public static final String GTE_ORDER_COUNT = BASE_URL + "fhwl/order/getBuyInfo";

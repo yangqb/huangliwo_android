@@ -7,47 +7,28 @@
 
     <include layout="@layout/layout_head" />
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/swipeLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="100dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/color_f7f7f7">
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                </android.support.v7.widget.RecyclerView>
-            </LinearLayout>
-
-        </android.support.v4.widget.SwipeRefreshLayout>
-
         <RelativeLayout
+            android:id="@+id/bottom"
             android:layout_width="match_parent"
             android:layout_height="77dp"
+            android:layout_alignParentBottom="true"
             android:layout_gravity="bottom"
             android:background="@color/white">
 
             <TextView
                 android:id="@+id/tv_pay"
                 android:layout_width="106dp"
-                android:gravity="center"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="9dp"
                 android:layout_marginRight="@dimen/dp_10"
                 android:background="@drawable/shape_fed428_r5"
+                android:gravity="center"
                 android:paddingTop="11dp"
                 android:paddingBottom="11dp"
                 android:text="结算"
@@ -67,6 +48,27 @@
                 android:textSize="20sp" />
 
         </RelativeLayout>
-    </FrameLayout>
+
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:id="@+id/swipeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/bottom">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/color_f7f7f7">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                </android.support.v7.widget.RecyclerView>
+            </LinearLayout>
+
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+    </RelativeLayout>
 
 </LinearLayout>

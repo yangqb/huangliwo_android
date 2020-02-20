@@ -41,6 +41,7 @@ import com.feitianzhu.huangliwo.pushshop.PushShopHomeActivity;
 import com.feitianzhu.huangliwo.settings.SettingsActivity;
 import com.feitianzhu.huangliwo.shop.ShopDao;
 import com.feitianzhu.huangliwo.shop.ui.MyOrderActivity2;
+import com.feitianzhu.huangliwo.shop.ui.ShoppingCartActivity;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
@@ -344,9 +345,8 @@ public class MyCenterFragment extends SFFragment {
                         startActivity(intent);
                         break;
                     case 1: //购物车
-                        //ToastUtils.showShortToast("敬请期待");
-                        /*intent = new Intent(getContext(), ShoppingCartActivity.class);
-                        startActivity(intent);*/
+                        intent = new Intent(getContext(), ShoppingCartActivity.class);
+                        startActivity(intent);
                         break;
                 }
             }
