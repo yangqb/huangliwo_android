@@ -72,8 +72,8 @@ import static com.feitianzhu.huangliwo.common.Constant.USERID;
 public class VipUpgradeActivity extends BaseActivity {
     private String appId = "";
     private static final int REQUEST_CODE = 1000;
-    private AddressInfo.ShopAddressListBean addressBean;
-    private List<AddressInfo.ShopAddressListBean> addressInfos = new ArrayList<>();
+    /*private AddressInfo.ShopAddressListBean addressBean;
+    private List<AddressInfo.ShopAddressListBean> addressInfos = new ArrayList<>();*/
     public static final String PARENT_ID = "parent_id";
     @BindView(R.id.amount)
     TextView bottomAmount;
@@ -87,18 +87,18 @@ public class VipUpgradeActivity extends BaseActivity {
     ImageView alipayIcon;
     @BindView(R.id.balancePay_icon)
     ImageView balancePayIcon;
-    @BindView(R.id.rl_address)
+    /*@BindView(R.id.rl_address)
     RelativeLayout rlAddress;
     @BindView(R.id.no_address)
-    LinearLayout noAddress;
+    LinearLayout noAddress;*/
     private String payType = "wx"; //支付方式
     private CityModel mCityModel;
-    @BindView(R.id.name)
+    /*@BindView(R.id.name)
     TextView name;
     @BindView(R.id.phone)
     TextView phone;
     @BindView(R.id.tv_address)
-    TextView tvAddress;
+    TextView tvAddress;*/
     private String token;
     private String userId;
     private int parentId;
@@ -171,7 +171,7 @@ public class VipUpgradeActivity extends BaseActivity {
     }
 
     @SingleClick
-    @OnClick({R.id.left_button, R.id.weixinPay_icon, R.id.alipay_icon, R.id.balancePay_icon, R.id.tv_pay, R.id.rl_address, R.id.no_address})
+    @OnClick({R.id.left_button, R.id.weixinPay_icon, R.id.alipay_icon, R.id.balancePay_icon, R.id.tv_pay})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.left_button:
@@ -196,18 +196,14 @@ public class VipUpgradeActivity extends BaseActivity {
                 payType = "";
                 break;
             case R.id.tv_pay:
-                if (TextUtils.isEmpty(tvAddress.getText().toString().trim())) {
-                    ToastUtils.showShortToast("请选择收货地址");
-                } else {
-                    showInputDialog();
-                }
+                showInputDialog();
                 break;
-            case R.id.no_address:
+           /* case R.id.no_address:
             case R.id.rl_address:
                 Intent intent = new Intent(this, AddressManagementActivity.class);
                 intent.putExtra(AddressManagementActivity.IS_SELECT, true);
                 startActivityForResult(intent, REQUEST_CODE);
-                break;
+                break;*/
         }
     }
 
@@ -250,7 +246,6 @@ public class VipUpgradeActivity extends BaseActivity {
                 .tag(this)
                 .params(ACCESSTOKEN, token)//
                 .params(USERID, userId)
-                .params("addressId", addressBean.getAddressId() + "")
                 .params("appId", appId)//这个是微信才需要的，
                 .params("payChannel", payType)
                 .params("parentId", account)
@@ -342,7 +337,7 @@ public class VipUpgradeActivity extends BaseActivity {
         EventBus.getDefault().register(this);
         /*
          * 获取默认收货地址
-         * */
+         * *//*
         OkGo.<LzyResponse<AddressInfo>>post(Urls.GET_ADDRESS)
                 .tag(this)
                 .params("accessToken", token)
@@ -384,24 +379,7 @@ public class VipUpgradeActivity extends BaseActivity {
                     public void onError(com.lzy.okgo.model.Response<LzyResponse<AddressInfo>> response) {
                         super.onError(response);
                     }
-                });
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            if (requestCode == REQUEST_CODE) {
-                addressBean = (AddressInfo.ShopAddressListBean) data.getSerializableExtra(AddressManagementActivity.ADDRESS_DATA);
-                if (addressBean != null) {
-                    noAddress.setVisibility(View.GONE);
-                    rlAddress.setVisibility(View.VISIBLE);
-                    tvAddress.setText(addressBean.getProvinceName() + addressBean.getCityName() + addressBean.getAreaName() + addressBean.getDetailAddress());
-                    name.setText(addressBean.getUserName());
-                    phone.setText(addressBean.getPhone());
-                }
-            }
-        }
+                });*/
     }
 
     @Override

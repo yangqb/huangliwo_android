@@ -7,8 +7,8 @@ package com.feitianzhu.huangliwo.utils;
 public class Urls {
 
 
-    //private static final String BASE_URL = "http://www.huangliwo.top:8088/"; //正式环境
-    private static final String BASE_URL = "http://39.106.65.35:8088/"; //测试地址
+    private static final String BASE_URL = "http://www.huangliwo.top:8088/"; //正式环境
+    //private static final String BASE_URL = "http://39.106.65.35:8088/"; //测试地址
     //private static final String BASE_URL = "http://192.168.0.21:8089/";//钟工本地地址
     //private static final String BASE_URL = "http://192.168.0.15:8089/"; //周工本地地址
     /**
@@ -212,6 +212,11 @@ public class Urls {
     public static final String GET_MERCHANTS_LIST = BASE_URL + "fhwl/merchant/getMerchants";
 
     /*
+     * 获取未录单数量
+     * */
+    public static final String GET_UNCONSUME_ORDER = BASE_URL + "fhwl/merchant/getUnConsumeCount";
+
+    /*
      * 获取商户收款二维码
      * */
     public static final String GET_MERCHANTS_PAYMENT_CODE = BASE_URL + "fhwl/qrcode/merchant/create";
@@ -365,6 +370,12 @@ public class Urls {
     public static final String PAY_SHOPS = BASE_URL + "fhwl/order/svbill/create-goods";
 
     /*
+     * 购物车商品支付
+     * */
+    public static final String PAY_SHOPPING_CART = BASE_URL + "fhwl/shopingCar/shoppingPay";
+
+
+    /*
      * 线上套餐支付生成订单
      * */
     public static final String PAY_SETMEAL = BASE_URL + "fhwl/merchantPay/buySetMeal";
@@ -391,6 +402,20 @@ public class Urls {
      * 套餐评价
      * */
     public static final String EVALUATE_SETMEAL_ORDER = BASE_URL + "fhwl/merchantPay/eval";
+
+    /*
+     * 收藏店铺和商品
+     * */
+    public static final String ADD_COLLECTION = BASE_URL + "fhwl/collect/insertcollect";
+    /*
+     * 取消收藏
+     * */
+    public static final String DELETE_COLLECTION = BASE_URL + "fhwl/collect/deletecollect";
+
+    /*
+     * 收藏列表
+     * */
+    public static final String GET_COLLECTION_LIST = BASE_URL + "fhwl/collect/selectcollect";
 
     /**
      * 删除银行卡

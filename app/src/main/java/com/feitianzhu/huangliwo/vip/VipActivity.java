@@ -330,7 +330,7 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
                         if (response.body().code == 0 && response.body().data != null) {
                             shopGiftList.clear();
                             VipGifListInfo presentsModel = response.body().data;
-                            totalAmount.setText("¥" + String.format(Locale.getDefault(), "%.2f", response.body().data.totalPrice));
+                            totalAmount.setText("¥" + response.body().data.totalPrice);
                             if (presentsModel.list != null) {
                                 shopGiftList = presentsModel.list;
                                 adapter.setNewData(shopGiftList);

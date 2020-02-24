@@ -29,8 +29,17 @@ public class BaseGoodsListBean implements Serializable {
     private String isExtend;
     private String connectPhone;
     private String isPoints;
+    private int isCollect;
     private List<GoodsImgsListBean> goodsImgsList;
     private List<GoodsEvaluateMode> evalList;
+
+    public int getIsCollect() {
+        return isCollect;
+    }
+
+    public void setIsCollect(int isCollect) {
+        this.isCollect = isCollect;
+    }
 
     public List<GoodsEvaluateMode> getEvalList() {
         return evalList;

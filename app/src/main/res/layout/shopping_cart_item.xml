@@ -72,7 +72,7 @@
                         android:id="@+id/name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_toLeftOf="@id/delete"
+                        android:layout_marginRight="40dp"
                         android:ellipsize="end"
                         android:maxLines="2"
                         android:text="套餐名称套餐名称套餐 套餐套餐套餐套餐套."
@@ -124,8 +124,7 @@
                         app:btnWidth="25dp"
                         app:tvTextSize="@dimen/sp_14"
                         app:tvWidth="25dp" />-->
-                    <include
-                        layout="@layout/layout_amount" />
+                    <include layout="@layout/layout_amount" />
                 </RelativeLayout>
 
             </LinearLayout>

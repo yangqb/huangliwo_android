@@ -16,8 +16,10 @@
 package com.feitianzhu.huangliwo.http;
 
 import android.content.Context;
+import android.content.Intent;
 
 import com.feitianzhu.huangliwo.R;
+import com.feitianzhu.huangliwo.login.ForgetPasswordActivity;
 import com.feitianzhu.huangliwo.settings.ChangePasswordActivity;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.google.gson.Gson;
@@ -144,7 +146,7 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
                             .asConfirm("", "您的账号已在其他设备登陆，如果这不是您的操作，请及时修改密码并重新登陆。", "忽略", "修改密码", new OnConfirmListener() {
                                 @Override
                                 public void onConfirm() {
-                                    ChangePasswordActivity.startActivity(context, true);
+                                    context.startActivity(new Intent(context, ForgetPasswordActivity.class));
                                 }
                             }, null, false)
                             .bindLayout(R.layout.layout_dialog);

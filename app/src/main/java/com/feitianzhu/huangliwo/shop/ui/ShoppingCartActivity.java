@@ -1,6 +1,7 @@
 package com.feitianzhu.huangliwo.shop.ui;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
@@ -26,6 +27,8 @@ import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
 import com.feitianzhu.huangliwo.model.ProductParameters;
 import com.feitianzhu.huangliwo.model.ShoppingCartModel;
 import com.feitianzhu.huangliwo.model.UpdateShoppingCartBody;
+import com.feitianzhu.huangliwo.shop.SettlementShoppingCartActivity;
+import com.feitianzhu.huangliwo.shop.ShopsDetailActivity;
 import com.feitianzhu.huangliwo.shop.adapter.ShoppingCartAdapter;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
@@ -59,6 +62,7 @@ import butterknife.OnClick;
  * 购物车列表
  */
 public class ShoppingCartActivity extends BaseActivity {
+    private static final int REQUEST_CODE = 111;
     private String totalAmount = "0.00";
     private double p = 0.00;
     private ShoppingCartAdapter mAdapter;
@@ -142,6 +146,16 @@ public class ShoppingCartActivity extends BaseActivity {
             }
         });*/
 
+        mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                //商品详情
+                Intent intent = new Intent(ShoppingCartActivity.this, ShopsDetailActivity.class);
+                intent.putExtra(ShopsDetailActivity.GOODS_DETAIL_DATA, shoppingCartModels.get(position).goodsId);
+                startActivity(intent);
+            }
+        });
+
         mAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
@@ -152,8 +166,8 @@ public class ShoppingCartActivity extends BaseActivity {
                                     @Override
                                     public void onConfirm() {
                                         deleteShoppingCart(shoppingCartModels.get(position).carId);
-                                        calculationAmount();
                                         shoppingCartModels.remove(position);
+                                        calculationAmount();
                                         mAdapter.notifyDataSetChanged();
                                     }
                                 }, null, false)
@@ -299,6 +313,7 @@ public class ShoppingCartActivity extends BaseActivity {
                                 }
                                 mAdapter.setNewData(shoppingCartModels);
                                 mAdapter.notifyDataSetChanged();
+                                calculationAmount();
                             }
                         }
                     }
@@ -401,9 +416,29 @@ public class ShoppingCartActivity extends BaseActivity {
                 }).show();
     }
 
-    @OnClick({R.id.left_button})
+    @OnClick({R.id.left_button, R.id.tv_pay})
     public void onClick(View view) {
-        finish();
+        switch (view.getId()) {
+            case R.id.left_button:
+                finish();
+                break;
+            case R.id.tv_pay:
+                ArrayList<ShoppingCartModel.CartGoodsModel> selectCartModels = new ArrayList<>();
+                for (ShoppingCartModel.CartGoodsModel shoppingCartModel : shoppingCartModels
+                ) {
+                    if (shoppingCartModel.checks == 1) {
+                        selectCartModels.add(shoppingCartModel);
+                    }
+                }
+                if (selectCartModels.size() > 0) {
+                    Intent intent = new Intent(ShoppingCartActivity.this, SettlementShoppingCartActivity.class);
+                    intent.putParcelableArrayListExtra(SettlementShoppingCartActivity.CART_DATA, selectCartModels);
+                    startActivityForResult(intent, REQUEST_CODE);
+                } else {
+                    ToastUtils.showShortToast("没有要结算的商品");
+                }
+                break;
+        }
     }
 
     public void calculationAmount() {
@@ -413,8 +448,18 @@ public class ShoppingCartActivity extends BaseActivity {
             if (shoppingCartModel.checks == 1) {
                 p += shoppingCartModel.goodsCount * shoppingCartModel.price;
             }
-            totalAmount = String.format(Locale.getDefault(), "%.2f", p);
-            setSpannableString(totalAmount);
+        }
+        totalAmount = String.format(Locale.getDefault(), "%.2f", p);
+        setSpannableString(totalAmount);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_CODE) {
+                initData();
+            }
         }
     }
 

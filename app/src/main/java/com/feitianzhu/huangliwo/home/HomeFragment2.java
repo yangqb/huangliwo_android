@@ -44,6 +44,7 @@ import com.feitianzhu.huangliwo.model.HomeShops;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.Province;
 import com.feitianzhu.huangliwo.model.ShopClassify;
+import com.feitianzhu.huangliwo.plane.PlaneHomeActivity;
 import com.feitianzhu.huangliwo.shop.NewYearShoppingActivity;
 import com.feitianzhu.huangliwo.shop.ShopsActivity;
 import com.feitianzhu.huangliwo.shop.ShopsDetailActivity;
@@ -275,7 +276,9 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack {
                 mCallbackBFragment.skipToCommodityFragment(1, view);
                 break;
             case R.id.rl_ticket:
-                ToastUtils.showShortToast("敬请期待");
+                //ToastUtils.showShortToast("敬请期待");
+                intent = new Intent(getActivity(), PlaneHomeActivity.class);
+                startActivity(intent);
                 break;
             case R.id.rl_financial:
                 ToastUtils.showShortToast("敬请期待");

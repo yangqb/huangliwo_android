@@ -147,7 +147,7 @@ public class DetailedRulesActivity extends BaseActivity {
                         public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<UserGoodVo>> response) {
                             super.onSuccess(DetailedRulesActivity.this, response.body().msg, response.body().code);
                             refreshLayout.finishRefresh();
-                            if (response.body().data != null) {
+                            if (response.body().code == 0 && response.body().data != null) {
                                 UserGoodVo userGoodVo = response.body().data;
                                 if (userGoodVo.getReslut() != null) {
                                     resultBeans = userGoodVo.getReslut();

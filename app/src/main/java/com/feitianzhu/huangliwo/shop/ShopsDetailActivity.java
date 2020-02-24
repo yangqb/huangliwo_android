@@ -2,8 +2,6 @@ package com.feitianzhu.huangliwo.shop;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -14,9 +12,7 @@ import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -35,6 +31,7 @@ import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
+import com.feitianzhu.huangliwo.model.CollectionBody;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.ProductParameters;
 import com.feitianzhu.huangliwo.model.AddShoppingCartBody;
@@ -56,9 +53,6 @@ import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
 import com.yanzhenjie.permission.Rationale;
 import com.yanzhenjie.permission.RationaleListener;
-import com.zhpan.bannerview.BannerViewPager;
-import com.zhpan.bannerview.enums.IndicatorStyle;
-import com.zhpan.bannerview.holder.ViewHolder;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -97,8 +91,8 @@ public class ShopsDetailActivity extends BaseActivity {
     TextView tvAmount;
     @BindView(R.id.title_name)
     TextView titleName;
-    @BindView(R.id.viewpager)
-    BannerViewPager<String, ShopsDetailActivity.DataViewHolder> mViewpager;
+    @BindView(R.id.banner_image)
+    ImageView bannerImage;
     @BindView(R.id.goodsName)
     TextView goodsName;
     @BindView(R.id.goodsSummary)
@@ -131,6 +125,8 @@ public class ShopsDetailActivity extends BaseActivity {
     LinearLayout llRebate;
     @BindView(R.id.ll_goods_detail)
     LinearLayout llGoodsDetail;
+    @BindView(R.id.imgCollect)
+    ImageView imgCollect;
 
 
     @Override
@@ -230,6 +226,11 @@ public class ShopsDetailActivity extends BaseActivity {
         tvAmount.setText("");
         String str2 = "¥ ";
         if (goodsListBean != null) {
+            if (goodsListBean.getIsCollect() == 0) {
+                imgCollect.setSelected(false);
+            } else {
+                imgCollect.setSelected(true);
+            }
             str3 = String.format(Locale.getDefault(), "%.2f", goodsListBean.getPrice());
             goodsName.setText(goodsListBean.getGoodsName());
             goodsSummary.setText(goodsListBean.getSummary());
@@ -282,53 +283,8 @@ public class ShopsDetailActivity extends BaseActivity {
                 });
             }
             String urlLogo = goodsListBean.getGoodsImg() == null ? "" : goodsListBean.getGoodsImg();
-            imgs.add(urlLogo);
-            List<BaseGoodsListBean.GoodsImgsListBean> bannerList = goodsListBean.getGoodsImgsList();
-            mViewpager.setCanLoop(true)
-                    .setAutoPlay(true)
-                    .setIndicatorStyle(IndicatorStyle.CIRCLE)
-                    //.setIndicatorSlideMode(IndicatorSlideMode.SMOOTH)
-                    .setIndicatorRadius(8)
-                    .setIndicatorColor(Color.parseColor("#CCCCCC"), Color.parseColor("#6C6D72"))
-                    .setHolderCreator(ShopsDetailActivity.DataViewHolder::new).setOnPageClickListener(new BannerViewPager.OnPageClickListener() {
-                @Override
-                public void onPageClick(int position) {
-                    onClickBanner(position);
-                }
-            }).create(imgs);
-            mViewpager.startLoop();
+            Glide.with(this).load(urlLogo).apply(new RequestOptions().placeholder(R.mipmap.g10_03weijiazai).error(R.mipmap.g10_03weijiazai)).into(GlideUtils.getImageView(this, urlLogo, bannerImage));
         }
-    }
-
-    /*
-     * banner的点击事件
-     * */
-    public void onClickBanner(int i) {
-
-    }
-
-    public class DataViewHolder implements ViewHolder<String> {
-        private ImageView mImageView;
-
-        @Override
-        public View createView(ViewGroup viewGroup, Context context, int position) {
-            // 返回页面布局文件
-            View view = LayoutInflater.from(context).inflate(R.layout.detail_banner_item, viewGroup, false);
-            mImageView = view.findViewById(R.id.banner_image);
-            return view;
-        }
-
-        @Override
-        public void onBind(final Context context, String data, final int position, final int size) {
-            Glide.with(context).load(data).apply(new RequestOptions().placeholder(R.mipmap.g10_03weijiazai).error(R.mipmap.g10_03weijiazai)).into(GlideUtils.getImageView((Activity) context, data, mImageView));
-            /*Glide.with(context).load()
-                    .apply(new RequestOptions()
-                            .dontAnimate()
-                            .placeholder(R.mipmap.g10_03weijiazai)
-                            .error(R.mipmap.g10_03weijiazai))
-                    .into(mImageView);*/
-        }
-
     }
 
     @OnClick({R.id.left_button, R.id.tv_pay, R.id.rl_more_evaluation, R.id.add_shopping_cart, R.id.shopping_cart, R.id.call_phone, R.id.collect, R.id.select_specifications, R.id.right_img, R.id.ll_rebate})
@@ -378,7 +334,11 @@ public class ShopsDetailActivity extends BaseActivity {
                         .show();
                 break;
             case R.id.collect:
-                ToastUtils.showShortToast("敬请期待");
+                if (imgCollect.isSelected()) {
+                    deleteCollect();
+                } else {
+                    collectGoods();
+                }
                 break;
             case R.id.right_img:
                 intent = new Intent(ShopsDetailActivity.this, ShareShopActivity.class);
@@ -465,6 +425,58 @@ public class ShopsDetailActivity extends BaseActivity {
 
     }
 
+    public void collectGoods() {
+        CollectionBody collectionBody = new CollectionBody();
+        collectionBody.type = 2;
+        collectionBody.idValue = goodsId;
+        String json = new Gson().toJson(collectionBody);
+        OkGo.<LzyResponse>post(Urls.ADD_COLLECTION).tag(this)
+                .params("accessToken", token)
+                .params("userId", userId)
+                .params("collect", json)
+                .execute(new JsonCallback<LzyResponse>() {
+                    @Override
+                    public void onSuccess(Response<LzyResponse> response) {
+                        super.onSuccess(ShopsDetailActivity.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0) {
+                            ToastUtils.showShortToast("收藏成功");
+                            imgCollect.setSelected(true);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<LzyResponse> response) {
+                        super.onError(response);
+                    }
+                });
+    }
+
+    public void deleteCollect() {
+        CollectionBody collectionBody = new CollectionBody();
+        collectionBody.type = 2;
+        collectionBody.idValue = goodsId;
+        String json = new Gson().toJson(collectionBody);
+        OkGo.<LzyResponse>post(Urls.DELETE_COLLECTION).tag(this)
+                .params("accessToken", token)
+                .params("userId", userId)
+                .params("collect", json)
+                .execute(new JsonCallback<LzyResponse>() {
+                    @Override
+                    public void onSuccess(Response<LzyResponse> response) {
+                        super.onSuccess(ShopsDetailActivity.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0) {
+                            ToastUtils.showShortToast("取消收藏");
+                            imgCollect.setSelected(false);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<LzyResponse> response) {
+                        super.onError(response);
+                    }
+                });
+    }
+
     private void requestPermission() {
         AndPermission.with(this)
                 .requestCode(200)
@@ -513,23 +525,15 @@ public class ShopsDetailActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mViewpager != null) {
-            mViewpager.stopLoop();
-        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        if (mViewpager != null) {
-            mViewpager.stopLoop();
-        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (mViewpager != null)
-            mViewpager.startLoop();
     }
 }

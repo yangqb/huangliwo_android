@@ -21,10 +21,11 @@
                 android:background="@color/color_f7f7f7"
                 android:orientation="vertical">
 
-                <com.zhpan.bannerview.BannerViewPager
-                    android:id="@+id/viewpager"
+                <ImageView
+                    android:id="@+id/banner_image"
                     android:layout_width="match_parent"
-                    android:layout_height="350dp" />
+                    android:layout_height="wrap_content"
+                    android:scaleType="fitXY" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -326,9 +327,10 @@
                     android:padding="15dp">
 
                     <ImageView
+                        android:id="@+id/imgCollect"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@mipmap/e01_09shouchang" />
+                        android:background="@drawable/shops_celect_select" />
 
                     <TextView
                         android:layout_width="wrap_content"

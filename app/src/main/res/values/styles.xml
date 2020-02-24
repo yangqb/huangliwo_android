@@ -77,4 +77,13 @@
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
     </style>
+
+    <style name="CustomTheme" parent="DefaultCityPickerTheme">
+        <item name="cpCancelTextColor">@color/color_green</item>
+        <item name="cpSearchCursorDrawable">@color/color_green</item>
+        <item name="cpIndexBarNormalTextColor">@color/color_green</item>
+        <item name="cpIndexBarSelectedTextColor">@color/color_green</item>
+        <item name="cpSectionHeight">@dimen/custom_section_height</item>
+        <item name="cpOverlayBackground">@color/color_green</item>
+    </style>
 </resources>

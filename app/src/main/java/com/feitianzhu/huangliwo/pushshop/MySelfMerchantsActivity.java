@@ -12,6 +12,7 @@ import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -58,6 +59,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import okhttp3.Call;
 import okhttp3.Request;
+import q.rorbin.badgeview.QBadgeView;
 
 /**
  * package name: com.feitianzhu.fu700.pushshop
@@ -82,6 +84,10 @@ public class MySelfMerchantsActivity extends BaseActivity {
     TextView tvWithdrawal;
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
+    @BindView(R.id.imgView)
+    ImageView imgView;
+    @BindView(R.id.merchants_order)
+    LinearLayout llMerchantsOrder;
 
 
     @Override
@@ -133,12 +139,15 @@ public class MySelfMerchantsActivity extends BaseActivity {
                         refreshLayout.finishRefresh();
                         goneloadDialog();
                         if (response.body().data != null && response.body().code == 0) {
-                            merchantsList = response.body().data.getList();
-                            merchantsName.setText(response.body().data.getList().get(0).getMerchantName());
-                            balance = response.body().data.getList().get(0).getBalance();
-                            String strIncome = String.format(Locale.getDefault(), "%.2f", response.body().data.getList().get(0).getIncome());
-                            String strBalance = String.format(Locale.getDefault(), "%.2f", balance);
-                            setSpannableString(tvProfit, tvWithdrawal, strIncome, strBalance);
+                            if (response.body().data.getList() != null && response.body().data.getList().size() > 0) {
+                                merchantsList = response.body().data.getList();
+                                merchantsName.setText(response.body().data.getList().get(0).getMerchantName());
+                                balance = response.body().data.getList().get(0).getBalance();
+                                String strIncome = String.format(Locale.getDefault(), "%.2f", response.body().data.getList().get(0).getIncome());
+                                String strBalance = String.format(Locale.getDefault(), "%.2f", balance);
+                                setSpannableString(tvProfit, tvWithdrawal, strIncome, strBalance);
+                                getUnConsumeCount();
+                            }
                         }
                     }
 
@@ -149,6 +158,31 @@ public class MySelfMerchantsActivity extends BaseActivity {
                         goneloadDialog();
                     }
                 });
+    }
+
+    public void getUnConsumeCount() {
+        OkGo.<LzyResponse<Integer>>get(Urls.GET_UNCONSUME_ORDER)
+                .tag(this)
+                .params("accessToken", token)
+                .params("userId", userId)
+                .params("merchantId", merchantsList.get(selectPos).getMerchantId() + "")
+                .execute(new JsonCallback<LzyResponse<Integer>>() {
+                    @Override
+                    public void onSuccess(Response<LzyResponse<Integer>> response) {
+                        if (response.body().code == 0) {
+                            new QBadgeView(MySelfMerchantsActivity.this)
+                                    .bindTarget(llMerchantsOrder).setGravityOffset(15, 15, true)
+                                    .setBadgeNumber(response.body().data);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<LzyResponse<Integer>> response) {
+                        super.onError(response);
+                    }
+                });
+
+
     }
 
     @OnClick({R.id.left_button, R.id.right_button, R.id.myMerchantDetail, R.id.merchants_order, R.id.myMerchantList, R.id.ll_service, R.id.detailed_rules, R.id.btn_withdrawal})

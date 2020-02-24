@@ -190,6 +190,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
+                    android:layout_marginTop="20dp"
                     android:gravity="center"
                     android:orientation="vertical">
 
@@ -209,32 +210,11 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/merchants_order"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@mipmap/g01_16dingdan" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
-                        android:text="套餐订单"
-                        android:textColor="@color/color_333333"
-                        android:textSize="15sp" />
-                </LinearLayout>
-
-                <LinearLayout
                     android:id="@+id/ll_service"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
+                    android:layout_marginTop="20dp"
                     android:gravity="center"
                     android:orientation="vertical">
 
@@ -251,6 +231,33 @@
                         android:textColor="@color/color_333333"
                         android:textSize="15sp" />
 
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/merchants_order"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/imgView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginRight="20dp"
+                        android:src="@mipmap/g01_16dingdan" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:text="套餐订单"
+                        android:textColor="@color/color_333333"
+                        android:textSize="15sp" />
                 </LinearLayout>
             </RelativeLayout>
         </LinearLayout>

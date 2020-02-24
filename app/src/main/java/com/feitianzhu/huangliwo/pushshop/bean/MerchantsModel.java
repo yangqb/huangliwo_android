@@ -98,6 +98,15 @@ public class MerchantsModel implements Serializable {
     private double balance;
     private String businessTime;
     private AuditModel examineModel;
+    private int isCollect;
+
+    public int getIsCollect() {
+        return isCollect;
+    }
+
+    public void setIsCollect(int isCollect) {
+        this.isCollect = isCollect;
+    }
 
     public AuditModel getExamineModel() {
         return examineModel;

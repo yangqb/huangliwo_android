@@ -296,7 +296,7 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                 if (rightAdapter.getItemViewType(position) == MultipleItem.MERCHANTS) {
                     //套餐详情页
                     Intent intent = new Intent(getActivity(), ShopMerchantsDetailActivity.class);
-                    intent.putExtra(ShopMerchantsDetailActivity.MERCHANT_DATA, merchantsList.get(position));
+                    intent.putExtra(ShopMerchantsDetailActivity.MERCHANTS_ID, merchantsList.get(position).getMerchantId());
                     startActivity(intent);
                 } else {
                     //商品详情

@@ -9,7 +9,6 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,20 +25,21 @@ import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
+import com.feitianzhu.huangliwo.model.CollectionBody;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.MultipleMerchantsItem;
 import com.feitianzhu.huangliwo.model.SetMealEvalDetailInfo;
+import com.feitianzhu.huangliwo.pushshop.MyPaymentActivity;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsModel;
 import com.feitianzhu.huangliwo.pushshop.bean.SetMealInfo;
 import com.feitianzhu.huangliwo.pushshop.bean.SetMealListInfo;
 import com.feitianzhu.huangliwo.shop.adapter.ShopDetailAdapter;
-import com.feitianzhu.huangliwo.shop.ui.EditApplyRefundActivity;
-import com.feitianzhu.huangliwo.shop.ui.OrderDetailActivity;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.view.CustomRefundView;
 import com.feitianzhu.huangliwo.vip.VipActivity;
+import com.google.gson.Gson;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.lzy.okgo.OkGo;
@@ -51,8 +51,6 @@ import com.yanzhenjie.permission.RationaleListener;
 import com.zhpan.bannerview.BannerViewPager;
 import com.zhpan.bannerview.enums.IndicatorStyle;
 import com.zhpan.bannerview.holder.ViewHolder;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.Callback;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -61,7 +59,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cc.shinichi.library.ImagePreview;
-import okhttp3.Call;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
@@ -87,11 +84,12 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
     //3.腾讯地图包名
     public static final String QQMAP_PACKAGENAME = "com.tencent.map";
     private ShopDetailAdapter mAdapter;
+    private MerchantsModel merchantsBean;
+    ;
     private MineInfoModel mineInfoModel = new MineInfoModel();
     private List<MultipleMerchantsItem> multipleItemList = new ArrayList<>();
     private List<SetMealInfo> setMealInfoList = new ArrayList<>();
     private List<SetMealEvalDetailInfo.SetMealEvalDetailModel> setMealEvalDetailModelList = new ArrayList<>();
-    private MerchantsModel merchantsDetail;
     private List<String> imgs = new ArrayList<>();
     @BindView(R.id.right_img)
     ImageView shareImg;
@@ -128,36 +126,11 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         shareImg.setVisibility(View.VISIBLE);
-        collectImg.setVisibility(View.VISIBLE);
         button1.setSelected(true);
         button2.setSelected(false);
+        merchantsId = getIntent().getIntExtra(MERCHANTS_ID, -1);
+        collectImg.setVisibility(View.VISIBLE);
 
-        merchantsDetail = (MerchantsModel) getIntent().getSerializableExtra(MERCHANT_DATA);
-
-        if (merchantsDetail != null) {
-            merchantsId = merchantsDetail.getMerchantId();
-            shopName.setText(merchantsDetail.getMerchantName());
-            address.setText(merchantsDetail.getCityName() + merchantsDetail.getAreaName() + merchantsDetail.getDtlAddr());
-            String discount = String.valueOf((100 - merchantsDetail.getDiscount() * 100));
-            tvRebate.setText("返" + discount + "%");
-            getSetMealList(merchantsId);
-            String urlLogo = merchantsDetail.getShopFrontImg() == null ? "" : merchantsDetail.getShopFrontImg();
-            imgs.add(urlLogo);
-            mViewpager.setCanLoop(true)
-                    .setAutoPlay(true)
-                    .setIndicatorStyle(IndicatorStyle.CIRCLE)
-                    //.setIndicatorSlideMode(IndicatorSlideMode.SMOOTH)
-                    .setRoundCorner(10)
-                    .setIndicatorRadius(8)
-                    .setIndicatorColor(Color.parseColor("#CCCCCC"), Color.parseColor("#6C6D72"))
-                    .setHolderCreator(ShopMerchantsDetailActivity.DataViewHolder::new).setOnPageClickListener(new BannerViewPager.OnPageClickListener() {
-                @Override
-                public void onPageClick(int position) {
-                    onClickBanner(position);
-                }
-            }).create(imgs);//.create(mBanners);
-            mViewpager.startLoop();
-        }
         View mEmptyView = View.inflate(this, R.layout.view_common_nodata, null);
         ImageView img_empty = (ImageView) mEmptyView.findViewById(R.id.img_empty);
         img_empty.setOnClickListener(new View.OnClickListener() {
@@ -196,15 +169,15 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.img_collect:
-                /*if (collectImg.isSelected()) { //如果已经是收藏就删除收藏
-                    deleteShops();
+                if (collectImg.isSelected()) { //如果已经是收藏就删除收藏
+                    deleteCollect();
                 } else {  //收藏
-                    doCelectShops();
-                }*/
+                    addCollect();
+                }
                 break;
             case R.id.call_phone:
                 new XPopup.Builder(this)
-                        .asConfirm("拨打商家电话", merchantsDetail.getPhone(), "关闭", "确定", new OnConfirmListener() {
+                        .asConfirm("拨打商家电话", merchantsBean.getPhone(), "关闭", "确定", new OnConfirmListener() {
                             @Override
                             public void onConfirm() {
                                 requestPermission();
@@ -226,14 +199,14 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
                                         public void onItemClick(int position) {
                                             if ("百度地图".equals(mapList.get(position))) {
                                                 Intent i1 = new Intent();
-                                                i1.setData(Uri.parse("baidumap://map/geocoder?src=andr.baidu.openAPIdemo&address=" + merchantsDetail.getCityName() + merchantsDetail.getAreaName() + merchantsDetail.getDtlAddr()));
+                                                i1.setData(Uri.parse("baidumap://map/geocoder?src=andr.baidu.openAPIdemo&address=" + merchantsBean.getCityName() + merchantsBean.getAreaName() + merchantsBean.getDtlAddr()));
                                                 startActivity(i1);
                                             } else if ("高德地图".equals(mapList.get(position))) {
                                                 Intent intent_gdmap = new Intent();
                                                 intent_gdmap.setAction("android.intent.action.VIEW");
                                                 intent_gdmap.setPackage("com.autonavi.minimap");
                                                 intent_gdmap.addCategory("android.intent.category.DEFAULT");
-                                                intent_gdmap.setData(Uri.parse("androidamap://poi?sourceApplication=com.feitianzhu.huangliwo&keywords=" + merchantsDetail.getCityName() + merchantsDetail.getAreaName() + merchantsDetail.getDtlAddr() + "&dev=0"));
+                                                intent_gdmap.setData(Uri.parse("androidamap://poi?sourceApplication=com.feitianzhu.huangliwo&keywords=" + merchantsBean.getCityName() + merchantsBean.getAreaName() + merchantsBean.getDtlAddr() + "&dev=0"));
                                                 startActivity(intent_gdmap);
                                             }
                                         }
@@ -317,7 +290,7 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
             if (requestCode == 200) {
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_CALL);
-                intent.setData(Uri.parse("tel:" + merchantsDetail.getPhone()));
+                intent.setData(Uri.parse("tel:" + merchantsBean.getPhone()));
                 startActivity(intent);
             }
         }
@@ -331,35 +304,56 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
         }
     };
 
-    private void deleteShops() {
-        /*ShopDao.DeleteCollect(this, model.getCollectId() + "", new onConnectionFinishLinstener() {
-            @Override
-            public void onSuccess(int code, Object result) {
-                ToastUtils.showShortToast("取消收藏");
-                collectImg.setSelected(false);
-            }
+    public void deleteCollect() {
+        CollectionBody collectionBody = new CollectionBody();
+        collectionBody.type = 1;
+        collectionBody.idValue = merchantsId;
+        String json = new Gson().toJson(collectionBody);
+        OkGo.<LzyResponse>post(Urls.DELETE_COLLECTION).tag(this)
+                .params("accessToken", token)
+                .params("userId", userId)
+                .params("collect", json)
+                .execute(new JsonCallback<LzyResponse>() {
+                    @Override
+                    public void onSuccess(Response<LzyResponse> response) {
+                        super.onSuccess(ShopMerchantsDetailActivity.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0) {
+                            ToastUtils.showShortToast("取消收藏");
+                            collectImg.setSelected(false);
+                        }
+                    }
 
-            @Override
-            public void onFail(int code, String result) {
-                ToastUtils.showShortToast(result);
-            }
-        });*/
+                    @Override
+                    public void onError(Response<LzyResponse> response) {
+                        super.onError(response);
+                    }
+                });
     }
 
-    private void doCelectShops() {
-        /*ShopDao.PostCollect(this, 2, model.getServiceId(), new onNetFinishLinstenerT() {
-            @Override
-            public void onSuccess(int code, Object result) {
-                model.setCollectId(Integer.parseInt(result.toString()));
-                ToastUtils.showShortToast("收藏成功");
-                collectImg.setSelected(true);
-            }
+    public void addCollect() {
+        CollectionBody collectionBody = new CollectionBody();
+        collectionBody.type = 1;
+        collectionBody.idValue = merchantsId;
+        String json = new Gson().toJson(collectionBody);
+        OkGo.<LzyResponse>post(Urls.ADD_COLLECTION).tag(this)
+                .params("accessToken", token)
+                .params("userId", userId)
+                .params("collect", json)
+                .execute(new JsonCallback<LzyResponse>() {
+                    @Override
+                    public void onSuccess(Response<LzyResponse> response) {
+                        super.onSuccess(ShopMerchantsDetailActivity.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0) {
+                            ToastUtils.showShortToast("收藏成功");
+                            collectImg.setSelected(true);
+                        }
+                    }
 
-            @Override
-            public void onFail(int code, String result) {
-                ToastUtils.showShortToast(result);
-            }
-        });*/
+                    @Override
+                    public void onError(Response<LzyResponse> response) {
+                        super.onError(response);
+                    }
+                });
     }
 
     public void initListener() {
@@ -481,6 +475,54 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
     @Override
     protected void initData() {
         getUserInfo();
+        getMerchantInfo();
+    }
+
+    public void getMerchantInfo() {
+        OkGo.<LzyResponse<MerchantsModel>>get(Urls.GET_MERCHANTS_DETAIL)
+                .tag(this)
+                .params(ACCESSTOKEN, token)
+                .params(USERID, userId)
+                .params("merchantId", merchantsId + "")
+                .execute(new JsonCallback<LzyResponse<MerchantsModel>>() {
+                    @Override
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<MerchantsModel>> response) {
+                        if (response.body().code == 0 && response.body().data != null) {
+                            merchantsBean = response.body().data;
+                            if (merchantsBean.getIsCollect() == 0) {
+                                collectImg.setSelected(false);
+                            } else {
+                                collectImg.setSelected(true);
+                            }
+                            shopName.setText(merchantsBean.getMerchantName());
+                            address.setText(merchantsBean.getCityName() + merchantsBean.getAreaName() + merchantsBean.getDtlAddr());
+                            String discount = String.valueOf((100 - merchantsBean.getDiscount() * 100));
+                            tvRebate.setText("返" + discount + "%");
+                            getSetMealList(merchantsId);
+                            String urlLogo = merchantsBean.getShopFrontImg() == null ? "" : merchantsBean.getShopFrontImg();
+                            imgs.add(urlLogo);
+                            mViewpager.setCanLoop(true)
+                                    .setAutoPlay(true)
+                                    .setIndicatorStyle(IndicatorStyle.CIRCLE)
+                                    //.setIndicatorSlideMode(IndicatorSlideMode.SMOOTH)
+                                    .setRoundCorner(10)
+                                    .setIndicatorRadius(8)
+                                    .setIndicatorColor(Color.parseColor("#CCCCCC"), Color.parseColor("#6C6D72"))
+                                    .setHolderCreator(ShopMerchantsDetailActivity.DataViewHolder::new).setOnPageClickListener(new BannerViewPager.OnPageClickListener() {
+                                @Override
+                                public void onPageClick(int position) {
+                                    onClickBanner(position);
+                                }
+                            }).create(imgs);//.create(mBanners);
+                            mViewpager.startLoop();
+                        }
+                    }
+
+                    @Override
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse<MerchantsModel>> response) {
+                        super.onError(response);
+                    }
+                });
     }
 
     public void getUserInfo() {
@@ -526,6 +568,7 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
         public void onBind(final Context context, String data, final int position, final int size) {
             Glide.with(context).load(data).apply(new RequestOptions().placeholder(R.mipmap.g10_02weijiazai).error(R.mipmap.g10_02weijiazai)).into(mImageView);
         }
+
     }
 
     @Override

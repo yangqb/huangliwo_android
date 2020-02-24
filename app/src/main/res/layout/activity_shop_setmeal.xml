@@ -141,7 +141,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="30dp"
                 android:text="套餐购买后需到店消费"
-                android:textColor="@color/color_333333"
+                android:textColor="@color/color_289cef"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 

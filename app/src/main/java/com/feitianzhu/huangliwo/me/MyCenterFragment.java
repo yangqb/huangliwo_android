@@ -325,10 +325,11 @@ public class MyCenterFragment extends SFFragment {
                         startActivity(intent);
                         break;
                     case 6://我的收藏
-                        ToastUtils.showShortToast("敬请期待");
                         /*intent = new Intent(getActivity(), TestActivity.class);
                         startActivity(intent);*/
                         //JumpActivity(getContext(), MineCollectionActivity.class);
+                        intent = new Intent(getActivity(), MyCollectionActivity.class);
+                        startActivity(intent);
                         break;
                     case 2://地址管理
                         intent = new Intent(getActivity(), AddressManagementActivity.class);

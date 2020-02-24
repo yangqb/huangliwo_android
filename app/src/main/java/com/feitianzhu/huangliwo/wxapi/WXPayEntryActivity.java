@@ -69,6 +69,9 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
                     case PayInfo.RECEIVABLES_SETMEAL_PAY:
                         EventBus.getDefault().post(new PayInfo(PayInfo.RECEIVABLES_SETMEAL_PAY, PayInfo.SUCCESS));
                         break;
+                    case PayInfo.SHOPPING_CART_PAY:
+                        EventBus.getDefault().post(new PayInfo(PayInfo.SHOPPING_CART_PAY, PayInfo.SUCCESS));
+                        break;
                 }
             } else {
                 switch (Constant.PayFlag) {
@@ -95,6 +98,9 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
                         break;
                     case PayInfo.RECEIVABLES_SETMEAL_PAY:
                         EventBus.getDefault().post(new PayInfo(PayInfo.RECEIVABLES_SETMEAL_PAY, PayInfo.FAIL));
+                        break;
+                    case PayInfo.SHOPPING_CART_PAY:
+                        EventBus.getDefault().post(new PayInfo(PayInfo.SHOPPING_CART_PAY, PayInfo.FAIL));
                         break;
                 }
 

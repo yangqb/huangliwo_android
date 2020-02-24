@@ -17,6 +17,7 @@ import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.huangliwo.dao.NetworkDao;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
+import com.feitianzhu.huangliwo.login.LoginActivity;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.utils.EncryptUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
@@ -136,16 +137,17 @@ public class ChangePasswordActivity extends BaseActivity implements View.OnClick
                             .params("oldPassword", oldPassWord)
                             .params("newPassword", newPassword1)
                             .params("confirmPassword", newPassword2)
-                            .params("accessToken", token)
                             .params("userId", userId)
                             .execute(new JsonCallback<LzyResponse>() {
                                 @Override
                                 public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
-                                    super.onSuccess(ChangePasswordActivity.this,response.body().msg,response.body().code);
+                                    super.onSuccess(ChangePasswordActivity.this, response.body().msg, response.body().code);
                                     if (response.body().code == 0) {
                                         ToastUtils.showShortToast(mContext, R.string.change_ok);
                                         SPUtils.putString(mContext, Constant.SP_PASSWORD, finalNewPassword);
-                                        startActivity(new Intent(mContext, MainActivity.class));
+                                        Intent intent = new Intent(ChangePasswordActivity.this, LoginActivity.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        startActivity(intent);
                                         finish();
                                     }
                                 }
@@ -167,7 +169,7 @@ public class ChangePasswordActivity extends BaseActivity implements View.OnClick
                             .execute(new JsonCallback<LzyResponse>() {
                                 @Override
                                 public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
-                                    super.onSuccess(ChangePasswordActivity.this,response.body().msg,response.body().code);
+                                    super.onSuccess(ChangePasswordActivity.this, response.body().msg, response.body().code);
                                     if (response.body().code == 0) {
                                         ToastUtils.showShortToast(mContext, R.string.change_ok);
                                         startActivity(new Intent(mContext, MainActivity.class));
