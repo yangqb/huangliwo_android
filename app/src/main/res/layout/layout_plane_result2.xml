@@ -87,6 +87,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:text="往返总价"
                 android:textColor="@color/color_999999"
                 android:textSize="11sp" />
@@ -95,6 +96,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
                 android:text="495"
                 android:textColor="@color/color_ff8300"
                 android:textSize="18sp" />

@@ -2,6 +2,9 @@ package com.feitianzhu.huangliwo.plane;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.feitianzhu.huangliwo.R;
@@ -11,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class SearchPlanActivity2 extends BaseActivity {
     @BindView(R.id.title_name)
@@ -19,6 +23,14 @@ public class SearchPlanActivity2 extends BaseActivity {
     RecyclerView goRecyclerView;
     @BindView(R.id.come_recyclerView)
     RecyclerView comeRecyclerView;
+    @BindView(R.id.plane_title)
+    LinearLayout planeTitle;
+    @BindView(R.id.startCity)
+    TextView startCity;
+    @BindView(R.id.endCity)
+    TextView endCity;
+    @BindView(R.id.center_img)
+    ImageView centerImg;
 
     @Override
     protected int getLayoutId() {
@@ -27,6 +39,12 @@ public class SearchPlanActivity2 extends BaseActivity {
 
     @Override
     protected void initView() {
+        planeTitle.setVisibility(View.VISIBLE);
+        titleName.setVisibility(View.GONE);
+        startCity.setText("北京");
+        endCity.setText("上海");
+        centerImg.setBackgroundResource(R.mipmap.k01_13wangfan);
+
         List<String> list = new ArrayList<>();
         for (int i = 0; i < 15; i++) {
             list.add(i + "");
@@ -44,5 +62,10 @@ public class SearchPlanActivity2 extends BaseActivity {
     @Override
     protected void initData() {
 
+    }
+
+    @OnClick(R.id.left_button)
+    public void onClick() {
+        finish();
     }
 }

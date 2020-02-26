@@ -175,7 +175,7 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
         titleName.setText("新增门店");
         geoCoder = GeoCoder.newInstance();
         geoCoder.setOnGetGeoCodeResultListener(this);
-        file = drawableToFile(this, R.mipmap.g10_04weijiazai, "huangliwo");
+        file = drawableToFile(this, R.mipmap.g10_04weijiazai, "huangliwo.png");
         initListener();
     }
 
