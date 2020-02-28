@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_f7f7f7"
+    android:orientation="vertical">
+
+    <include layout="@layout/layout_head" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/dp_10"
+        android:paddingBottom="10dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="@dimen/dp_20"
+            android:gravity="bottom|center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/all_order"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="bottom"
+                android:paddingBottom="5dp"
+                android:text="全部"
+                android:textColor="@drawable/select_order_color"
+                android:textSize="13sp" />
+
+            <View
+                android:id="@+id/line_all"
+                android:layout_width="22dp"
+                android:layout_height="2dp"
+                android:background="@drawable/select_order_line_color" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="20dp"
+            android:gravity="bottom|center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/wait_pay_order"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="bottom"
+                android:paddingBottom="5dp"
+                android:text="待出票"
+                android:textColor="@drawable/select_order_color"
+                android:textSize="13sp" />
+
+            <View
+                android:id="@+id/line_wait_pay"
+                android:layout_width="22dp"
+                android:layout_height="2dp"
+                android:background="@drawable/select_order_line_color" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="@dimen/dp_20"
+            android:gravity="bottom|center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/wait_sending_order"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="bottom"
+                android:paddingBottom="5dp"
+                android:text="待出票"
+                android:textColor="@drawable/select_order_color"
+                android:textSize="13sp" />
+
+            <View
+                android:id="@+id/line_wait_sending"
+                android:layout_width="22dp"
+                android:layout_height="2dp"
+                android:background="@drawable/select_order_line_color" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_wait_receive_order"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="@dimen/dp_20"
+            android:gravity="bottom|center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/wait_receive_order"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="bottom"
+                android:paddingBottom="5dp"
+                android:text="已出票"
+                android:textColor="@drawable/select_order_color"
+                android:textSize="13sp" />
+
+            <View
+                android:id="@+id/line_wait_receive"
+                android:layout_width="22dp"
+                android:layout_height="2dp"
+                android:background="@drawable/select_order_line_color" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="bottom|center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/wait_evaluate_order"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="bottom"
+                android:paddingBottom="5dp"
+                android:text="退改单"
+                android:textColor="@drawable/select_order_color"
+                android:textSize="13sp" />
+
+            <View
+                android:id="@+id/line_wait_evaluate"
+                android:layout_width="22dp"
+                android:layout_height="2dp"
+                android:background="@drawable/select_order_line_color" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/refreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+        </android.support.v7.widget.RecyclerView>
+
+
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+</LinearLayout>

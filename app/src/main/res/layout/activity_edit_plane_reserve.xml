@@ -215,15 +215,26 @@
                     android:textSize="16sp" />
 
                 <TextView
+                    android:id="@+id/selectUser"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
+                    android:drawableLeft="@mipmap/k04_01xinzeng"
+                    android:drawablePadding="8dp"
                     android:text="新增乘机人"
                     android:textColor="@color/color_289cef"
                     android:textSize="16sp" />
 
             </RelativeLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+            </android.support.v7.widget.RecyclerView>
 
             <LinearLayout
                 android:layout_width="match_parent"

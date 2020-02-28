@@ -100,12 +100,12 @@ public class ShareShopActivity extends BaseActivity {
         String str2 = "¥ ";
         if (goodsListBean != null) {
             str3 = String.format(Locale.getDefault(), "%.2f", goodsListBean.getPrice());
-            Glide.with(this).load(goodsListBean.getGoodsImg())
+            /*Glide.with(this).load(goodsListBean.getGoodsImg())
                     .apply(new RequestOptions()
                             .dontAnimate()
                             .placeholder(R.mipmap.g10_03weijiazai)
                             .error(R.mipmap.g10_03weijiazai))
-                    .into(shareImg);
+                    .into(shareImg);*/
             Glide.with(this).load(goodsListBean.getGoodsImg()).apply(new RequestOptions().error(R.mipmap.g10_03weijiazai).placeholder(R.mipmap.g10_03weijiazai)).into(GlideUtils.getImageView(this, goodsListBean.getGoodsImg(), shareImg));
             tvInstruction.setText(goodsListBean.getSummary());
 

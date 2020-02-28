@@ -85,7 +85,7 @@ public class PlaneHomeActivity extends BaseActivity {
     }
 
     @OnClick({R.id.left_button, R.id.btn_domestic, R.id.btn_international, R.id.btn_come_go, R.id.startCity, R.id.endCity, R.id.reversalCity,
-            R.id.select_shipping_space, R.id.select_children, R.id.select_baby, R.id.reserve_explain, R.id.search})
+            R.id.select_shipping_space, R.id.select_children, R.id.select_baby, R.id.reserve_explain, R.id.search, R.id.ll_order, R.id.select_seat})
     public void onClick(View view) {
         Intent intent;
         switch (view.getId()) {
@@ -167,7 +167,14 @@ public class PlaneHomeActivity extends BaseActivity {
                     intent = new Intent(this, SearchPlanActivity.class);
                     startActivity(intent);
                 }
-
+                break;
+            case R.id.ll_order:
+                intent = new Intent(PlaneHomeActivity.this, PlaneOrderListActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.select_seat:
+                intent = new Intent(PlaneHomeActivity.this, PlaneSeatSelectionActivity.class);
+                startActivity(intent);
                 break;
         }
     }

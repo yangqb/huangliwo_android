@@ -2,6 +2,8 @@ package com.feitianzhu.huangliwo.shop;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -12,7 +14,9 @@ import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -27,6 +31,8 @@ import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.feitianzhu.huangliwo.App;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.home.HomeFragment2;
+import com.feitianzhu.huangliwo.home.entity.HomeEntity;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
@@ -45,6 +51,7 @@ import com.feitianzhu.huangliwo.view.CircleImageView;
 import com.feitianzhu.huangliwo.view.CustomSpecificationDialog;
 import com.feitianzhu.huangliwo.vip.VipActivity;
 import com.google.gson.Gson;
+import com.itheima.roundedimageview.RoundedImageView;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.lzy.okgo.OkGo;
@@ -53,6 +60,9 @@ import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
 import com.yanzhenjie.permission.Rationale;
 import com.yanzhenjie.permission.RationaleListener;
+import com.zhpan.bannerview.BannerViewPager;
+import com.zhpan.bannerview.enums.IndicatorStyle;
+import com.zhpan.bannerview.holder.ViewHolder;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -91,8 +101,8 @@ public class ShopsDetailActivity extends BaseActivity {
     TextView tvAmount;
     @BindView(R.id.title_name)
     TextView titleName;
-    @BindView(R.id.banner_image)
-    ImageView bannerImage;
+    @BindView(R.id.viewpager)
+    BannerViewPager<BaseGoodsListBean.GoodsImgsListBean, ShopsDetailActivity.DataViewHolder> mViewpager;
     @BindView(R.id.goodsName)
     TextView goodsName;
     @BindView(R.id.goodsSummary)
@@ -282,8 +292,43 @@ public class ShopsDetailActivity extends BaseActivity {
                     }
                 });
             }
-            String urlLogo = goodsListBean.getGoodsImg() == null ? "" : goodsListBean.getGoodsImg();
-            Glide.with(this).load(urlLogo).apply(new RequestOptions().placeholder(R.mipmap.g10_03weijiazai).error(R.mipmap.g10_03weijiazai)).into(GlideUtils.getImageView(this, urlLogo, bannerImage));
+
+            //String urlLogo = goodsListBean.getGoodsImg() == null ? "" : goodsListBean.getGoodsImg();
+            //Glide.with(this).load(urlLogo).apply(new RequestOptions().placeholder(R.mipmap.g10_03weijiazai).error(R.mipmap.g10_03weijiazai)).into(GlideUtils.getImageView(this, urlLogo, bannerImage));
+            if (goodsListBean.getGoodsImgsList() != null) {
+                mViewpager.setCanLoop(true)
+                        .setAutoPlay(true)
+                        .setIndicatorStyle(IndicatorStyle.CIRCLE)
+                        //.setIndicatorSlideMode(IndicatorSlideMode.SMOOTH)
+                        //.setRoundCorner(20)
+                        .setIndicatorRadius(8)
+                        .setIndicatorColor(Color.parseColor("#CCCCCC"), Color.parseColor("#6C6D72"))
+                        .setHolderCreator(ShopsDetailActivity.DataViewHolder::new).setOnPageClickListener(new BannerViewPager.OnPageClickListener() {
+                    @Override
+                    public void onPageClick(int position) {
+                    }
+                }).create(goodsListBean.getGoodsImgsList());
+                mViewpager.startLoop();
+            }
+
+        }
+    }
+
+    public class DataViewHolder implements ViewHolder<BaseGoodsListBean.GoodsImgsListBean> {
+        private ImageView mImageView;
+
+        @Override
+        public View createView(ViewGroup viewGroup, Context context, int position) {
+            // 返回页面布局文件
+            View view = LayoutInflater.from(context).inflate(R.layout.detail_banner_item, viewGroup, false);
+            mImageView = view.findViewById(R.id.banner_image);
+            return view;
+        }
+
+        @Override
+        public void onBind(final Context context, BaseGoodsListBean.GoodsImgsListBean data, final int position, final int size) {
+            //Glide.with(context).load(data.getGoodsImg()).apply(new RequestOptions().error(R.mipmap.g10_03weijiazai).placeholder(R.mipmap.g10_03weijiazai)).into(mImageView);
+            Glide.with(context).load(data.getGoodsImg()).apply(new RequestOptions().error(R.mipmap.g10_03weijiazai).placeholder(R.mipmap.g10_03weijiazai)).into(GlideUtils.getImageView((Activity) context, data.getGoodsImg(), mImageView));
         }
     }
 
@@ -525,15 +570,24 @@ public class ShopsDetailActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (mViewpager != null) {
+            mViewpager.stopLoop();
+        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        if (mViewpager != null) {
+            mViewpager.stopLoop();
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        if (mViewpager != null) {
+            mViewpager.startLoop();
+        }
     }
 }

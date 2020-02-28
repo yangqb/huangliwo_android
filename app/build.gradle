@@ -1,4 +1,4 @@
-apply plugin: 'com.android.application'
+  apply plugin: 'com.android.application'
 //apply plugin: 'com.jakewharton.butterknife'
 apply plugin: 'com.mob.sdk'
 apply plugin: 'com.hujiang.android-aspectjx'
@@ -76,9 +76,9 @@ android {
         applicationId "com.feitianzhu.huangliwo"
         minSdkVersion androidMinSdkVersion
         targetSdkVersion androidTargetSdkVersion
-        versionCode 13
+        versionCode 14
         multiDexEnabled true
-        versionName "1.0.7"
+        versionName "1.0.8"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             //设置支持的SO库架构

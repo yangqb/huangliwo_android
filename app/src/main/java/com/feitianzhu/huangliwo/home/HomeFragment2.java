@@ -276,7 +276,7 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack {
                 mCallbackBFragment.skipToCommodityFragment(1, view);
                 break;
             case R.id.rl_ticket:
-                //ToastUtils.showShortToast("敬请期待");
+                ToastUtils.showShortToast("敬请期待");
                 intent = new Intent(getActivity(), PlaneHomeActivity.class);
                 startActivity(intent);
                 break;

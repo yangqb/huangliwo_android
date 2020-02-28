@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_f7f7f7"
+    android:orientation="vertical">
+
+    <include layout="@layout/layout_head" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/color_eeeeee" />
+
+    <RelativeLayout
+        android:id="@+id/passenger_type"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:background="@color/white"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="乘机人类型"
+            android:textColor="@color/color_333333"
+            android:textSize="16sp" />
+
+
+        <TextView
+            android:id="@+id/tvPassengerType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:drawableRight="@mipmap/b08_04jinru"
+            android:drawablePadding="10dp"
+            android:text="成人票（满12周岁）"
+            android:textColor="@color/color_666666"
+            android:textSize="14sp" />
+
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/color_eeeeee" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:background="@color/white"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
+
+        <TextView
+            android:id="@+id/nameTips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:drawableRight="@mipmap/k04_03tanhao"
+            android:drawablePadding="10dp"
+            android:text="姓名"
+            android:textColor="@color/color_333333"
+            android:textSize="16sp" />
+
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:hint="须与乘机证件一致"
+            android:text=""
+            android:textColor="@color/color_666666"
+            android:textSize="14sp" />
+
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/color_eeeeee" />
+
+    <RelativeLayout
+        android:id="@+id/certificates_type"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:background="@color/white"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="证件类型"
+            android:textColor="@color/color_333333"
+            android:textSize="16sp" />
+
+
+        <TextView
+            android:id="@+id/tvCertificatesType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:drawableRight="@mipmap/b08_04jinru"
+            android:drawablePadding="10dp"
+            android:text="身份证"
+            android:textColor="@color/color_666666"
+            android:textSize="14sp" />
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:background="@color/white"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="证件号码"
+            android:textColor="@color/color_333333"
+            android:textSize="16sp" />
+
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:hint="请填写证件号码"
+            android:text=""
+            android:textColor="@color/color_666666"
+            android:textSize="14sp" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="15dp"
+        android:lineSpacingExtra="5dp"
+        android:text="1. 儿童票：2周岁（含）-12周岁（不含）\n 婴儿票: 14天（含）-2周岁（不含）\n2. 儿童及婴儿乘机需有成人陪伴，一名成人最多携带2名儿童，一名成人最多携带一名婴儿"
+        android:textColor="@color/color_333333"
+        android:textSize="12sp" />
+</LinearLayout>
