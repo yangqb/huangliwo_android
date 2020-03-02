@@ -634,6 +634,30 @@
                 android:textColor="@color/color_666666"
                 android:textSize="12sp" />
 
+            <LinearLayout
+                android:id="@+id/luggage_notice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="行李规定"
+                    android:textColor="@color/color_333333"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="手提行李：1件，5KG，20×40×55CM；托运行李：20KG，40×60×100CM；婴儿票行李：可以免费托运10KG，可免费托运一辆折叠式婴儿车或摇篮。"
+                    android:textColor="@color/color_333333"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
             <TextView
                 android:layout_width="100dp"
                 android:layout_height="28dp"

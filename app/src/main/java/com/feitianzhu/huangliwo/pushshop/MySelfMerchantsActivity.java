@@ -185,7 +185,7 @@ public class MySelfMerchantsActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.left_button, R.id.right_button, R.id.myMerchantDetail, R.id.merchants_order, R.id.myMerchantList, R.id.ll_service, R.id.detailed_rules, R.id.btn_withdrawal})
+    @OnClick({R.id.left_button, R.id.right_button, R.id.myMerchantDetail, R.id.merchants_order, R.id.myMerchantList, R.id.ll_service, R.id.detailed_rules, R.id.btn_withdrawal, R.id.protocol})
     public void onClick(View view) {
         Intent intent;
         switch (view.getId()) {
@@ -235,6 +235,12 @@ public class MySelfMerchantsActivity extends BaseActivity {
             case R.id.detailed_rules:
                 intent = new Intent(MySelfMerchantsActivity.this, MyMerchantsEarningsRulesActivity.class);
                 intent.putExtra(MyMerchantsEarningsRulesActivity.MERCHANTS_ID, merchantsList.get(selectPos).getMerchantId());
+                startActivity(intent);
+                break;
+            case R.id.protocol:
+                intent = new Intent(MySelfMerchantsActivity.this, PushShopProtocolActivity.class);
+                intent.putExtra(PushShopProtocolActivity.CHECK_PROTOCOL, true);
+                intent.putExtra(PushShopProtocolActivity.PUSH_PROTOCOL, false);
                 startActivity(intent);
                 break;
         }

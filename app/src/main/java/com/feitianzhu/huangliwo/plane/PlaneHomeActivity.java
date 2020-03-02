@@ -10,6 +10,8 @@ import android.widget.Toast;
 
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
+import com.feitianzhu.huangliwo.view.CustomCancelChangePopView;
+import com.feitianzhu.huangliwo.view.CustomPlaneProtocolView;
 import com.feitianzhu.huangliwo.view.CustomRefundView;
 import com.feitianzhu.huangliwo.vip.VipActivity;
 import com.lxj.xpopup.XPopup;
@@ -53,16 +55,20 @@ public class PlaneHomeActivity extends BaseActivity {
     View line3;
     @BindView(R.id.ll_comeDate)
     LinearLayout llComeDate;
-    @BindView(R.id.startCity)
-    TextView startCity;
-    @BindView(R.id.endCity)
-    TextView endCity;
+    @BindView(R.id.startCityName)
+    TextView startCityName;
+    @BindView(R.id.endCityName)
+    TextView endCityName;
     @BindView(R.id.tvShoppingSpace)
     TextView tvShoppingSpace;
     @BindView(R.id.select_children)
     ImageView selectChildren;
     @BindView(R.id.select_baby)
     ImageView selectBaby;
+    @BindView(R.id.planeSelect)
+    ImageView planeSelect;
+    @BindView(R.id.trainSelect)
+    ImageView trainSelect;
 
     @Override
     protected int getLayoutId() {
@@ -72,6 +78,7 @@ public class PlaneHomeActivity extends BaseActivity {
     @Override
     protected void initView() {
         titleName.setText("机票");
+        planeSelect.setSelected(true);
     }
 
     @Override
@@ -84,13 +91,21 @@ public class PlaneHomeActivity extends BaseActivity {
         hotCities.add(new HotCity("杭州", "浙江", "101210101"));
     }
 
-    @OnClick({R.id.left_button, R.id.btn_domestic, R.id.btn_international, R.id.btn_come_go, R.id.startCity, R.id.endCity, R.id.reversalCity,
-            R.id.select_shipping_space, R.id.select_children, R.id.select_baby, R.id.reserve_explain, R.id.search, R.id.ll_order, R.id.select_seat})
+    @OnClick({R.id.left_button, R.id.btn_domestic, R.id.btn_international, R.id.btn_come_go, R.id.startCityName, R.id.endCityName, R.id.reversalCity,
+            R.id.select_shipping_space, R.id.select_children, R.id.select_baby, R.id.reserve_explain, R.id.search, R.id.ll_order, R.id.select_seat, R.id.planeSelect, R.id.trainSelect})
     public void onClick(View view) {
         Intent intent;
         switch (view.getId()) {
             case R.id.left_button:
                 finish();
+                break;
+            case R.id.planeSelect:
+                planeSelect.setSelected(true);
+                trainSelect.setSelected(false);
+                break;
+            case R.id.trainSelect:
+                planeSelect.setSelected(false);
+                trainSelect.setSelected(true);
                 break;
             case R.id.btn_domestic:
                 btnDomestic.setTextColor(getResources().getColor(R.color.color_333333));
@@ -122,19 +137,19 @@ public class PlaneHomeActivity extends BaseActivity {
                 llComeDate.setVisibility(View.VISIBLE);
                 isComeAndGo = true;
                 break;
-            case R.id.startCity:
+            case R.id.startCityName:
                 selectCity(1);
                 break;
-            case R.id.endCity:
+            case R.id.endCityName:
                 selectCity(2);
                 break;
             case R.id.reversalCity:
                 if (reversal) {
-                    endCity.setText(tvEndCity);
-                    startCity.setText(tvStartCity);
+                    endCityName.setText(tvEndCity);
+                    startCityName.setText(tvStartCity);
                 } else {
-                    startCity.setText(tvEndCity);
-                    endCity.setText(tvStartCity);
+                    startCityName.setText(tvEndCity);
+                    endCityName.setText(tvStartCity);
                 }
                 reversal = !reversal;
                 break;
@@ -158,6 +173,12 @@ public class PlaneHomeActivity extends BaseActivity {
                 }
                 break;
             case R.id.reserve_explain:
+                Integer[] integers = new Integer[]{R.mipmap.k01_07yuding};
+                new XPopup.Builder(PlaneHomeActivity.this)
+                        .enableDrag(false)
+                        .asCustom(new CustomPlaneProtocolView(this
+                        ).setTitle("儿童/婴儿票预订说明").setData(Arrays.asList(integers))).show();
+
                 break;
             case R.id.search:
                 if (isComeAndGo) {
@@ -205,10 +226,10 @@ public class PlaneHomeActivity extends BaseActivity {
                         //startCity.setText(String.format("当前城市：%s，%s", data.getName(), data.getCode()));
                         if (type == 1) {
                             tvStartCity = data.getName();
-                            startCity.setText(data.getName());
+                            startCityName.setText(data.getName());
                         } else {
                             tvEndCity = data.getName();
-                            endCity.setText(data.getName());
+                            startCityName.setText(data.getName());
                         }
                         Toast.makeText(
                                 getApplicationContext(),

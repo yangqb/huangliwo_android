@@ -33,6 +33,7 @@ public class PlaneSeatSelectionActivity extends BaseActivity {
         PlaneSeatSelectAdapter mAdapter = new PlaneSeatSelectAdapter(list);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(mAdapter);
+        recyclerView.setNestedScrollingEnabled(false);
         mAdapter.notifyDataSetChanged();
 
     }

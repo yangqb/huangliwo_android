@@ -571,6 +571,14 @@
             android:name=".plane.PlaneSeatSelectionActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".plane.PlaneChangeActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".plane.PlaneChangeDetailActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:screenOrientation="portrait" />
 
     </application>
 

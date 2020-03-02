@@ -23,335 +23,398 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@mipmap/f01_01beijing" />
+                    android:background="@mipmap/f01_02beijing" />
+
+                <LinearLayout
+                    android:id="@+id/ll_top"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="15dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:id="@+id/planeSelect"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/tab_plane_select" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:text="机票"
+                            android:textColor="@color/color_333333"
+                            android:textSize="15sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:id="@+id/trainSelect"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/tab_train_select" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:text="火车票"
+                            android:textColor="@color/color_333333"
+                            android:textSize="15sp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/ll_top"
                     android:layout_marginLeft="15dp"
-                    android:layout_marginTop="80dp"
                     android:layout_marginRight="15dp"
-                    android:background="@drawable/bg_ffffff_r10"
-                    android:orientation="vertical"
-                    android:paddingLeft="30dp"
-                    android:paddingRight="30dp">
+                    android:background="@color/color_f7f7f7"
+                    android:orientation="vertical">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:background="@drawable/bg_ffffff_r10"
+                        android:orientation="vertical"
+                        android:paddingLeft="30dp"
+                        android:paddingRight="30dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <TextView
+                                    android:id="@+id/btn_domestic"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:paddingTop="20dp"
+                                    android:text="国内"
+                                    android:textColor="@color/color_333333"
+                                    android:textSize="15sp" />
+
+                                <TextView
+                                    android:id="@+id/btn_international"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerHorizontal="true"
+                                    android:paddingTop="20dp"
+                                    android:text="国际/中国港澳台"
+                                    android:textColor="@color/color_666666"
+                                    android:textSize="15sp" />
+
+                                <TextView
+                                    android:id="@+id/btn_come_go"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentEnd="true"
+                                    android:paddingTop="20dp"
+                                    android:text="往返"
+                                    android:textColor="@color/color_666666"
+                                    android:textSize="15sp" />
+
+                            </RelativeLayout>
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="7dp">
+
+                                <View
+                                    android:id="@+id/line1"
+                                    android:layout_width="28.5dp"
+                                    android:layout_height="2.5dp"
+                                    android:background="@color/color_fed228" />
+
+                                <View
+                                    android:id="@+id/line2"
+                                    android:layout_width="28.5dp"
+                                    android:layout_height="2.5dp"
+                                    android:layout_centerInParent="true"
+                                    android:background="@color/white" />
+
+                                <View
+                                    android:id="@+id/line3"
+                                    android:layout_width="28.5dp"
+                                    android:layout_height="2.5dp"
+                                    android:layout_alignParentEnd="true"
+                                    android:background="@color/white" />
+
+                            </RelativeLayout>
+
+                        </LinearLayout>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="30dp">
+
+                            <TextView
+                                android:id="@+id/startCityName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:text="北京"
+                                android:textColor="@color/color_000000"
+                                android:textSize="26sp" />
+
+                            <ImageView
+                                android:id="@+id/reversalCity"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:layout_centerVertical="true"
+                                android:background="@mipmap/k01_02wangfan" />
+
+                            <TextView
+                                android:id="@+id/endCityName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_centerVertical="true"
+                                android:text="上海"
+                                android:textColor="@color/color_000000"
+                                android:textSize="26sp" />
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="30dp">
+
+                            <LinearLayout
+                                android:id="@+id/ll_goDate"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginRight="5dp"
+                                    android:text="02月16日"
+                                    android:textColor="@color/color_000000"
+                                    android:textSize="18sp" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="周六"
+                                    android:textColor="@color/color_000000"
+                                    android:textSize="14sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/ll_comeDate"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:orientation="horizontal"
+                                android:visibility="invisible">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginRight="5dp"
+                                    android:text="02月16日"
+                                    android:textColor="@color/color_000000"
+                                    android:textSize="18sp" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="周六"
+                                    android:textColor="@color/color_000000"
+                                    android:textSize="14sp" />
+                            </LinearLayout>
+
+                        </RelativeLayout>
+
+
+                        <LinearLayout
+                            android:id="@+id/select_shipping_space"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="30dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="选择舱位："
+                                android:textColor="@color/color_000000"
+                                android:textSize="18sp" />
+
+                            <TextView
+                                android:id="@+id/tvShoppingSpace"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=""
+                                android:textColor="@color/color_000000"
+                                android:textSize="18sp" />
+                        </LinearLayout>
 
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
 
                             <TextView
-                                android:id="@+id/btn_domestic"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:paddingTop="20dp"
-                                android:text="国内"
-                                android:textColor="@color/color_333333"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:id="@+id/btn_international"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerHorizontal="true"
-                                android:paddingTop="20dp"
-                                android:text="国际/中国港澳台"
-                                android:textColor="@color/color_666666"
-                                android:textSize="15sp" />
-
-                            <TextView
-                                android:id="@+id/btn_come_go"
+                                android:id="@+id/reserve_explain"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentEnd="true"
-                                android:paddingTop="20dp"
-                                android:text="往返"
-                                android:textColor="@color/color_666666"
-                                android:textSize="15sp" />
-
+                                android:paddingTop="7dp"
+                                android:text="儿童婴儿预订说明"
+                                android:textColor="@color/color_289cef"
+                                android:textSize="9sp" />
                         </RelativeLayout>
 
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="7dp">
+                            android:layout_marginTop="10dp">
 
-                            <View
-                                android:id="@+id/line1"
-                                android:layout_width="28.5dp"
-                                android:layout_height="2.5dp"
-                                android:background="@color/color_fed228" />
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
 
-                            <View
-                                android:id="@+id/line2"
-                                android:layout_width="28.5dp"
-                                android:layout_height="2.5dp"
-                                android:layout_centerInParent="true"
-                                android:background="@color/white" />
+                                <ImageView
+                                    android:id="@+id/select_children"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginRight="5dp"
+                                    android:background="@mipmap/k01_03weixuanzhong" />
 
-                            <View
-                                android:id="@+id/line3"
-                                android:layout_width="28.5dp"
-                                android:layout_height="2.5dp"
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="携带儿童2~12岁"
+                                    android:textColor="@color/color_666666"
+                                    android:textSize="13sp" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:layout_alignParentEnd="true"
-                                android:background="@color/white" />
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
 
+                                <ImageView
+                                    android:id="@+id/select_baby"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginRight="5dp"
+                                    android:background="@mipmap/k01_03weixuanzhong" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="携带婴儿14天~2岁"
+                                    android:textColor="@color/color_666666"
+                                    android:textSize="13sp" />
+
+                            </LinearLayout>
                         </RelativeLayout>
 
+                        <TextView
+                            android:id="@+id/search"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginTop="44dp"
+                            android:layout_marginBottom="40dp"
+                            android:background="@drawable/shape_fed228_r22"
+                            android:gravity="center"
+                            android:text="搜索"
+                            android:textColor="@color/color_333333"
+                            android:textSize="18sp" />
+
                     </LinearLayout>
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="30dp">
-
-                        <TextView
-                            android:id="@+id/startCity"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:text="北京"
-                            android:textColor="@color/color_000000"
-                            android:textSize="26sp" />
-
-                        <ImageView
-                            android:id="@+id/reversalCity"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:layout_centerVertical="true"
-                            android:background="@mipmap/k01_02wangfan" />
-
-                        <TextView
-                            android:id="@+id/endCity"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:text="上海"
-                            android:textColor="@color/color_000000"
-                            android:textSize="26sp" />
-
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="30dp">
-
-                        <LinearLayout
-                            android:id="@+id/ll_goDate"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginRight="5dp"
-                                android:text="02月16日"
-                                android:textColor="@color/color_000000"
-                                android:textSize="18sp" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="周六"
-                                android:textColor="@color/color_000000"
-                                android:textSize="14sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:id="@+id/ll_comeDate"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:orientation="horizontal"
-                            android:visibility="invisible">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginRight="5dp"
-                                android:text="02月16日"
-                                android:textColor="@color/color_000000"
-                                android:textSize="18sp" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="周六"
-                                android:textColor="@color/color_000000"
-                                android:textSize="14sp" />
-                        </LinearLayout>
-
-                    </RelativeLayout>
-
 
                     <LinearLayout
-                        android:id="@+id/select_shipping_space"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="30dp"
-                        android:orientation="horizontal">
+                        android:layout_marginTop="15dp"
+                        android:layout_marginBottom="15dp"
+                        android:background="@drawable/bg_ffffff_r10"
+                        android:padding="15dp">
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:id="@+id/ll_order"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:text="选择舱位："
-                            android:textColor="@color/color_000000"
-                            android:textSize="18sp" />
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/tvShoppingSpace"
-                            android:layout_width="wrap_content"
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@mipmap/k01_04dingdan" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="5dp"
+                                android:text="机票订单"
+                                android:textColor="@color/color_333333"
+                                android:textSize="14sp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/select_seat"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:text=""
-                            android:textColor="@color/color_000000"
-                            android:textSize="18sp" />
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@mipmap/k01_06xuanzuo" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="5dp"
+                                android:text="值机选座"
+                                android:textColor="@color/color_333333"
+                                android:textSize="14sp" />
+
+                        </LinearLayout>
+
                     </LinearLayout>
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:id="@+id/reserve_explain"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:paddingTop="7dp"
-                            android:text="儿童婴儿预订说明"
-                            android:textColor="@color/color_289cef"
-                            android:textSize="9sp" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp">
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
-
-                            <ImageView
-                                android:id="@+id/select_children"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginRight="5dp"
-                                android:background="@mipmap/k01_03weixuanzhong" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="携带儿童2~12岁"
-                                android:textColor="@color/color_666666"
-                                android:textSize="13sp" />
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
-
-                            <ImageView
-                                android:id="@+id/select_baby"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginRight="5dp"
-                                android:background="@mipmap/k01_03weixuanzhong" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="携带婴儿14天~2岁"
-                                android:textColor="@color/color_666666"
-                                android:textSize="13sp" />
-
-                        </LinearLayout>
-                    </RelativeLayout>
-
-                    <TextView
-                        android:id="@+id/search"
-                        android:layout_width="match_parent"
-                        android:layout_height="45dp"
-                        android:layout_marginTop="44dp"
-                        android:layout_marginBottom="40dp"
-                        android:background="@drawable/shape_fed228_r22"
-                        android:gravity="center"
-                        android:text="搜索"
-                        android:textColor="@color/color_333333"
-                        android:textSize="18sp" />
-
                 </LinearLayout>
+
 
             </RelativeLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="15dp"
-                android:background="@drawable/bg_ffffff_r10"
-                android:padding="15dp">
-
-                <LinearLayout
-                    android:id="@+id/ll_order"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@mipmap/k01_04dingdan" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:text="机票订单"
-                        android:textColor="@color/color_333333"
-                        android:textSize="14sp" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/select_seat"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@mipmap/k01_06xuanzuo" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:text="值机选座"
-                        android:textColor="@color/color_333333"
-                        android:textSize="14sp" />
-
-                </LinearLayout>
-
-            </LinearLayout>
 
         </LinearLayout>
 

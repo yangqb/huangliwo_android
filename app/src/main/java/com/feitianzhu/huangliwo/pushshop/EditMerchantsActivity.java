@@ -53,6 +53,7 @@ import com.lljjcoder.style.cityjd.JDCityConfig;
 import com.lljjcoder.style.cityjd.JDCityPicker;
 import com.lxj.xpopup.XPopup;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.request.PostRequest;
 import com.socks.library.KLog;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
@@ -355,9 +356,9 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
         } else {
             merchantsClsName.setTextColor(getResources().getColor(R.color.color_333333));
         }
-        if (TextUtils.isEmpty(businessLicenseNo)) {
+        /*if (TextUtils.isEmpty(businessLicenseNo)) {
             editBusinessLicenseNo.setHintTextColor(getResources().getColor(R.color.color_ff0000));
-        }
+        }*/
         if (TextUtils.isEmpty(phone)) {
             editPhone.setHintTextColor(getResources().getColor(R.color.color_ff0000));
         }
@@ -408,7 +409,7 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
             ToastUtils.showShortToast("请上传身份证反面照片");
             return;
         }*/
-        if (TextUtils.isEmpty(photo6)) {
+        /*if (TextUtils.isEmpty(photo6)) {
             tips1.setTextColor(getResources().getColor(R.color.color_ff0000));
         } else {
             tips1.setTextColor(getResources().getColor(R.color.color_999999));
@@ -417,17 +418,19 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
             tips2.setTextColor(getResources().getColor(R.color.color_ff0000));
         } else {
             tips2.setTextColor(getResources().getColor(R.color.color_999999));
-        }
+        }*/
 
-        if (TextUtils.isEmpty(merchantsName) || clsName == null || TextUtils.isEmpty(businessLicenseNo) || TextUtils.isEmpty(phone) || TextUtils.isEmpty(smsCode)
-                || mProvince == null || mCity == null || mDistrict == null || TextUtils.isEmpty(address) || TextUtils.isEmpty(percentage) || TextUtils.isEmpty(photo6) || TextUtils.isEmpty(photo7)) {
+        if (TextUtils.isEmpty(merchantsName) || clsName == null || TextUtils.isEmpty(phone) || TextUtils.isEmpty(smsCode)
+                || mProvince == null || mCity == null || mDistrict == null || TextUtils.isEmpty(address) || TextUtils.isEmpty(percentage)) {
             ToastUtils.showShortToast("您的资料填写不完整");
             return;
         }
 
-        if (!(businessLicenseNo.length() == 15 || businessLicenseNo.length() == 18)) {
-            ToastUtils.showShortToast("请输入正确的营业执照号");
-            return;
+        if (!TextUtils.isEmpty(businessLicenseNo)) {
+            if (!(businessLicenseNo.length() == 15 || businessLicenseNo.length() == 18)) {
+                ToastUtils.showShortToast("请输入正确的营业执照号");
+                return;
+            }
         }
 
         if (Double.valueOf(percentage) > 100 || Double.valueOf(percentage) < 0) {
@@ -459,47 +462,34 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
         String json = new Gson().toJson(merchantInfo);
         //Map<String, File> files = new LinkedHashMap<>();
         List<File> fileList = new ArrayList<>();
-
-        if (TextUtils.isEmpty(photo1)) {
-            fileList.add(file);
-        } else {
-            fileList.add(new File(photo1));
+        PostRequest<LzyResponse> postRequest = OkGo.<LzyResponse>post(Urls.CREATE_MERCHANTS)
+                .tag(this);
+        if (!TextUtils.isEmpty(photo1)) {
+            postRequest.params("logo", new File(photo1), "logo.png");
+        }
+        if (!TextUtils.isEmpty(photo2)) {
+            postRequest.params("shopFrontImg", new File(photo2), "shopFrontImg.png");
+        }
+        if (!TextUtils.isEmpty(photo3)) {
+            postRequest.params("cardFrontImg", new File(photo3), "cardFrontImg.png");
+        }
+        if (!TextUtils.isEmpty(photo4)) {
+            postRequest.params("cardFrontImg", new File(photo4), "cardFrontImg.png");
+        }
+        if (!TextUtils.isEmpty(photo5)) {
+            postRequest.params("cardBackImg", new File(photo5), "cardBackImg.png");
+        }
+        if (!TextUtils.isEmpty(photo6)) {
+            postRequest.params("businessLicenseImg", new File(photo6), "businessLicenseImg.png");
+        }
+        if (!TextUtils.isEmpty(photo7)) {
+            postRequest.params("permitImg", new File(photo7), "permitImg.png");
+        }
+        if (TextUtils.isEmpty(photo1) && TextUtils.isEmpty(photo2) && TextUtils.isEmpty(photo3) && TextUtils.isEmpty(photo4) && TextUtils.isEmpty(photo5) && TextUtils.isEmpty(photo6) && TextUtils.isEmpty(photo7)) {
+            postRequest.isMultipart(true);
         }
 
-
-        if (TextUtils.isEmpty(photo2)) {
-            fileList.add(file);
-        } else {
-            fileList.add(new File(photo2));
-        }
-
-        if (TextUtils.isEmpty(photo3)) {
-            fileList.add(file);
-        } else {
-            fileList.add(new File(photo3));
-        }
-
-
-        if (TextUtils.isEmpty(photo4)) {
-            fileList.add(file);
-        } else {
-            fileList.add(new File(photo4));
-        }
-
-        if (TextUtils.isEmpty(photo5)) {
-            fileList.add(file);
-        } else {
-            fileList.add(new File(photo5));
-        }
-
-
-        fileList.add(new File(photo6));
-        fileList.add(new File(photo7));
-
-        OkGo.<LzyResponse>post(Urls.CREATE_MERCHANTS)
-                .tag(this)
-                .addFileParams("files", fileList)
-                .params("accessToken", token)
+        postRequest.params("accessToken", token)
                 .params("userId", userId)
                 .params("merchantInfo", json)
                 .execute(new JsonCallback<LzyResponse>() {

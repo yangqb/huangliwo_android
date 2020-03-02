@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.LinearLayout;
 
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.plane.PlaneCancelChangeAdapter;
@@ -16,6 +17,7 @@ public class CustomCancelChangePopView extends CenterPopupView {
     private PlaneCancelChangeAdapter mAdapter;
     private Context mContext;
     private int type;
+    private boolean isLuggage;
 
     @Override
     protected int getImplLayoutId() {
@@ -32,9 +34,20 @@ public class CustomCancelChangePopView extends CenterPopupView {
         return this;
     }
 
+    public CustomCancelChangePopView setLuggage(boolean isLuggage) {
+        this.isLuggage = isLuggage;
+        return this;
+    }
+
     @Override
     protected void onCreate() {
         super.onCreate();
+        LinearLayout luggage_notice = findViewById(R.id.luggage_notice);
+        if (isLuggage) {
+            luggage_notice.setVisibility(VISIBLE);
+        } else {
+            luggage_notice.setVisibility(GONE);
+        }
         List<Integer> list = new ArrayList<>();
         for (int i = 0; i < 6; i++) {
             list.add(i);

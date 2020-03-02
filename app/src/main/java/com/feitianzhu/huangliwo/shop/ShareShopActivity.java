@@ -107,7 +107,7 @@ public class ShareShopActivity extends BaseActivity {
                             .error(R.mipmap.g10_03weijiazai))
                     .into(shareImg);*/
             Glide.with(this).load(goodsListBean.getGoodsImg()).apply(new RequestOptions().error(R.mipmap.g10_03weijiazai).placeholder(R.mipmap.g10_03weijiazai)).into(GlideUtils.getImageView(this, goodsListBean.getGoodsImg(), shareImg));
-            tvInstruction.setText(goodsListBean.getSummary());
+            tvInstruction.setText(goodsListBean.getGoodsName());
 
             String rebatePv = String.format(Locale.getDefault(), "%.2f", goodsListBean.getRebatePv());
             if (goodsListBean.getRebatePv() == 0) {

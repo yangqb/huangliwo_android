@@ -555,9 +555,6 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
             editMerchantsName.setHintTextColor(getResources().getColor(R.color.color_ff0000));
         }
 
-        if (TextUtils.isEmpty(businessLicenseNo)) {
-            editBusinessLicenseNo.setHintTextColor(getResources().getColor(R.color.color_ff0000));
-        }
         if (TextUtils.isEmpty(phone)) {
             editMerchantsPhone.setHintTextColor(getResources().getColor(R.color.color_ff0000));
         }
@@ -594,15 +591,17 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
             }
         }
 
-        if (TextUtils.isEmpty(merchantsName) || TextUtils.isEmpty(businessLicenseNo) || TextUtils.isEmpty(phone)
+        if (TextUtils.isEmpty(merchantsName) || TextUtils.isEmpty(phone)
                 || TextUtils.isEmpty(address) || TextUtils.isEmpty(percentage) || (isMySelfMerchants && (!isTimes || !isWeek))) {
             ToastUtils.showShortToast("您的资料填写不完整");
             return;
         }
 
-        if (!(businessLicenseNo.length() == 15 || businessLicenseNo.length() == 18)) {
-            ToastUtils.showShortToast("请输入正确的营业执照号");
-            return;
+        if (!TextUtils.isEmpty(businessLicenseNo)) {
+            if (!(businessLicenseNo.length() == 15 || businessLicenseNo.length() == 18)) {
+                ToastUtils.showShortToast("请输入正确的营业执照号");
+                return;
+            }
         }
 
         if (Double.valueOf(percentage) > 100 || Double.valueOf(percentage) < 0) {

@@ -4,11 +4,14 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.text.style.AbsoluteSizeSpan;
+import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.view.View;
@@ -18,8 +21,13 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
+import com.feitianzhu.huangliwo.view.CustomCancelChangePopView;
+import com.feitianzhu.huangliwo.view.CustomPlaneProtocolView;
+import com.feitianzhu.huangliwo.view.CustomPlaneTransferView;
+import com.lxj.xpopup.XPopup;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -89,7 +97,6 @@ public class PlaneDetailActivity extends BaseActivity {
             String str4 = "中转深圳，需在机场重新托运行李";
             setSpannableString(str4, str3, type);
         }
-
         initListener();
     }
 
@@ -98,9 +105,19 @@ public class PlaneDetailActivity extends BaseActivity {
         mAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                Intent intent = new Intent(PlaneDetailActivity.this, EditPlaneReserveActivity.class);
-                intent.putExtra(EditPlaneReserveActivity.PLANE_TYPE, type);
-                startActivity(intent);
+                switch (view.getId()) {
+                    case R.id.luggage_change_notice:
+                        new XPopup.Builder(PlaneDetailActivity.this)
+                                .enableDrag(false)
+                                .asCustom(new CustomCancelChangePopView(PlaneDetailActivity.this
+                                ).setType(type).setLuggage(true)).show();
+                        break;
+                    case R.id.btn_reserve:
+                        Intent intent = new Intent(PlaneDetailActivity.this, EditPlaneReserveActivity.class);
+                        intent.putExtra(EditPlaneReserveActivity.PLANE_TYPE, type);
+                        startActivity(intent);
+                        break;
+                }
             }
         });
     }
@@ -127,6 +144,19 @@ public class PlaneDetailActivity extends BaseActivity {
         ForegroundColorSpan colorSpan3 = new ForegroundColorSpan(Color.parseColor("#28B5FE"));
         span2.setSpan(new AbsoluteSizeSpan(11, true), 0, str2.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         span2.setSpan(colorSpan3, 0, str2.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        span2.setSpan(new ClickableSpan() {
+            @Override
+            public void onClick(@NonNull View widget) {
+                if (type == 3) {
+                    new XPopup.Builder(PlaneDetailActivity.this)
+                            .enableDrag(false)
+                            .asCustom(new CustomPlaneTransferView(PlaneDetailActivity.this
+                            )).show();
+                } else {
+
+                }
+            }
+        }, 0, span2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         if (type == 3) {
             promptContent.append(span1);
@@ -135,5 +165,6 @@ public class PlaneDetailActivity extends BaseActivity {
             promptContent.append(span2);
             promptContent.append(span1);
         }
+        promptContent.setMovementMethod(LinkMovementMethod.getInstance());
     }
 }

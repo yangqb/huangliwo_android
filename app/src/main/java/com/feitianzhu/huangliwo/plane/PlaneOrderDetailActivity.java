@@ -8,6 +8,8 @@ import android.widget.TextView;
 
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
+import com.feitianzhu.huangliwo.view.CustomCancelChangePopView;
+import com.lxj.xpopup.XPopup;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -74,7 +76,7 @@ public class PlaneOrderDetailActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.btn_reimbursement, R.id.btn_refund, R.id.btn_change, R.id.left_button})
+    @OnClick({R.id.btn_reimbursement, R.id.btn_refund, R.id.btn_change, R.id.left_button, R.id.rl_luggage_change_notice})
     public void onClick(View view) {
         Intent intent;
         switch (view.getId()) {
@@ -90,6 +92,15 @@ public class PlaneOrderDetailActivity extends BaseActivity {
                 startActivity(intent);
                 break;
             case R.id.btn_change:
+                intent = new Intent(PlaneOrderDetailActivity.this, PlaneChangeActivity.class);
+                intent.putExtra(PlaneChangeActivity.PLANE_TYPE, planeType);
+                startActivity(intent);
+                break;
+            case R.id.rl_luggage_change_notice:
+                new XPopup.Builder(PlaneOrderDetailActivity.this)
+                        .enableDrag(false)
+                        .asCustom(new CustomCancelChangePopView(PlaneOrderDetailActivity.this
+                        ).setType(planeType).setLuggage(true)).show();
                 break;
         }
     }

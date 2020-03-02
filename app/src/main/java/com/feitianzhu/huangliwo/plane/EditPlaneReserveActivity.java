@@ -16,10 +16,12 @@ import com.feitianzhu.huangliwo.view.CustomCancelChangePopView;
 import com.feitianzhu.huangliwo.view.CustomLuggageBuyTicketNoticeView;
 import com.feitianzhu.huangliwo.view.CustomNerYearPopView;
 import com.feitianzhu.huangliwo.view.CustomPlaneInfoView;
+import com.feitianzhu.huangliwo.view.CustomPlaneProtocolView;
 import com.feitianzhu.huangliwo.view.CustomTicketPriceDetailView;
 import com.lxj.xpopup.XPopup;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -81,7 +83,7 @@ public class EditPlaneReserveActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.left_button, R.id.cancel_change, R.id.rl_plane_info, R.id.luggage_buyTicket_notice, R.id.ticketPrice_detail, R.id.selectUser})
+    @OnClick({R.id.left_button, R.id.cancel_change, R.id.rl_plane_info, R.id.luggage_buyTicket_notice, R.id.ticketPrice_detail, R.id.selectUser, R.id.tvReserveNotice})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.left_button:
@@ -91,7 +93,7 @@ public class EditPlaneReserveActivity extends BaseActivity {
                 new XPopup.Builder(EditPlaneReserveActivity.this)
                         .enableDrag(false)
                         .asCustom(new CustomCancelChangePopView(this
-                        ).setType(type)).show();
+                        ).setType(type).setLuggage(false)).show();
                 break;
             case R.id.rl_plane_info:
                 new XPopup.Builder(EditPlaneReserveActivity.this)
@@ -114,6 +116,13 @@ public class EditPlaneReserveActivity extends BaseActivity {
             case R.id.selectUser:
                 Intent intent = new Intent(EditPlaneReserveActivity.this, PassengerListActivity.class);
                 startActivityForResult(intent, REQUEST_CODE);
+                break;
+            case R.id.tvReserveNotice:
+                Integer[] integers = new Integer[]{R.mipmap.k04_04yuding1, R.mipmap.k04_04yuding2, R.mipmap.k04_04yuding3};
+                new XPopup.Builder(EditPlaneReserveActivity.this)
+                        .enableDrag(false)
+                        .asCustom(new CustomPlaneProtocolView(this
+                        ).setTitle("机票预订须知").setData(Arrays.asList(integers))).show();
                 break;
         }
     }

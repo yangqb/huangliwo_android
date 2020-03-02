@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.feitianzhu.huangliwo.R;
@@ -11,6 +12,7 @@ import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.pushshop.adapter.PushShopProtocolAdapter;
 import com.feitianzhu.huangliwo.utils.SPUtils;
+import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,7 +30,9 @@ import butterknife.OnClick;
  */
 public class PushShopProtocolActivity extends BaseActivity {
     public static final String PUSH_PROTOCOL = "push_protocol";
+    public static final String CHECK_PROTOCOL = "check_protocol";
     private boolean isPushProtocol;
+    private boolean isChecked;
     private PushShopProtocolAdapter adapter;
     private List<Integer> integers = new ArrayList<>();
     Integer[] integers1 = new Integer[]{R.mipmap.g05_01xieyi, R.mipmap.g05_02xieyi, R.mipmap.g05_03xieyi, R.mipmap.g05_04xieyi};
@@ -37,6 +41,9 @@ public class PushShopProtocolActivity extends BaseActivity {
     RecyclerView recyclerView;
     @BindView(R.id.title_name)
     TextView titleName;
+    @BindView(R.id.ll_bottom)
+    LinearLayout ll_bottom;
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_push_shop_protocol;
@@ -45,12 +52,18 @@ public class PushShopProtocolActivity extends BaseActivity {
     @Override
     protected void initView() {
         isPushProtocol = getIntent().getBooleanExtra(PUSH_PROTOCOL, false);
+        isChecked = getIntent().getBooleanExtra(CHECK_PROTOCOL, false);
         if (isPushProtocol) {
             titleName.setText("黄鹂窝优选推店协议");
             integers = Arrays.asList(integers1);
         } else {
             titleName.setText("推店规则和收益说明");
             integers = Arrays.asList(integers2);
+            if (isChecked) {
+                ll_bottom.setVisibility(View.GONE);
+            } else {
+                ll_bottom.setVisibility(View.VISIBLE);
+            }
         }
         adapter = new PushShopProtocolAdapter(integers);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

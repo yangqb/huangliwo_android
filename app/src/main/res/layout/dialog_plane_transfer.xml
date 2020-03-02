@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="60dp"
+    android:layout_marginBottom="60dp"
+    android:background="@drawable/bg_ffffff_r10"
+    android:orientation="vertical"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="25dp"
+        android:text="中转预订须知"
+        android:textColor="@color/color_333333"
+        android:textSize="20sp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/btnSubmit"
+            android:layout_width="100dp"
+            android:layout_height="28dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="30dp"
+            android:background="@drawable/shape_fed428_r14"
+            android:gravity="center"
+            android:text="确定"
+            android:textColor="@color/color_333333"
+            android:textSize="17sp" />
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/btnSubmit">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="中转说明"
+                    android:textColor="@color/color_333333"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="1、航班均需缴纳机场建设费和燃油税\n2、转机过程中，乘客需预留足够时间处理行李和重新办理登机手续\n3、乘客应至少预留1.5小时的转机时间，否则可能导致最后一程航班无法及时登机"
+                    android:textColor="@color/color_333333"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:text="潜在风险"
+                    android:textColor="@color/color_333333"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="1、如其中一程航班延误或取消，导致另外一程无法及时登机且两程航班之间无联运协议，则后续航班仅能享受自愿退票自愿改签的权益\n2、建议购买延误险，如航班发生延误可向保险公司索赔"
+                    android:textColor="@color/color_333333"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:text="法律条款"
+                    android:textColor="@color/color_333333"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="参考：《中华人民共和国民用航空法》第一百二十六条旅客、行李或者货物在航空运输中因延误造成的损失，承运人应当承担责任；但是，承运人证明本人或者其受雇人、代理人为了避免损失的发生，已经采取一切必要措施或者不可能采取此种措施的不承担责任详情请参见免责声明"
+                    android:textColor="@color/color_333333"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+        </android.support.v4.widget.NestedScrollView>
+    </RelativeLayout>
+
+</LinearLayout>

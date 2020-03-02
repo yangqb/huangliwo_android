@@ -16,6 +16,7 @@ public class PlaneDetailAdapter extends BaseQuickAdapter<String, BaseViewHolder>
 
     @Override
     protected void convert(@NonNull BaseViewHolder helper, String item) {
-        helper.addOnClickListener(R.id.btn_reserve);
+        helper.addOnClickListener(R.id.btn_reserve)
+                .addOnClickListener(R.id.luggage_change_notice);
     }
 }

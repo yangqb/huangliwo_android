@@ -35,26 +35,29 @@
                         android:layout_height="64dp"
                         android:background="@color/white">
 
-                           <LinearLayout
-                               android:id="@+id/tag1"
-                               android:layout_width="wrap_content"
-                               android:layout_height="wrap_content"
-                               android:layout_centerVertical="true"
-                               android:layout_marginRight="15dp"
-                               android:orientation="horizontal">
-                               <TextView
-                                   android:layout_width="wrap_content"
-                                   android:layout_height="wrap_content"
-                                   android:text="商铺名称"
-                                   android:textColor="@color/color_333333"
-                                   android:textSize="16sp" />
-                               <TextView
-                                   android:layout_width="wrap_content"
-                                   android:layout_height="wrap_content"
-                                   android:text="*"
-                                   android:textColor="@color/color_ff0000"
-                                   android:textSize="16sp"/>
-                           </LinearLayout>
+                        <LinearLayout
+                            android:id="@+id/tag1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="15dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="商铺名称"
+                                android:textColor="@color/color_333333"
+                                android:textSize="16sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="*"
+                                android:textColor="@color/color_ff0000"
+                                android:textSize="16sp" />
+                        </LinearLayout>
+
                         <EditText
                             android:id="@+id/edit_merchants_name"
                             android:layout_width="match_parent"
@@ -80,12 +83,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="64dp"
                         android:background="@color/white">
+
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_marginRight="15dp"
                             android:orientation="horizontal">
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -93,13 +98,14 @@
                                 android:text="商铺类型"
                                 android:textColor="@color/color_333333"
                                 android:textSize="16sp" />
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="*"
                                 android:textColor="@color/color_ff0000"
-                                android:textSize="16sp"/>
-                            </LinearLayout>
+                                android:textSize="16sp" />
+                        </LinearLayout>
 
 
                         <ImageView
@@ -142,18 +148,21 @@
                             android:layout_centerVertical="true"
                             android:layout_marginRight="15dp"
                             android:orientation="horizontal">
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="营业执照注册号"
                                 android:textColor="@color/color_333333"
                                 android:textSize="16sp" />
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="*"
                                 android:textColor="@color/color_ff0000"
-                                android:textSize="16sp"/>
+                                android:textSize="16sp"
+                                android:visibility="gone" />
                         </LinearLayout>
 
                         <EditText
@@ -188,18 +197,20 @@
                             android:layout_centerVertical="true"
                             android:layout_marginRight="15dp"
                             android:orientation="horizontal">
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="商铺手机"
                                 android:textColor="@color/color_333333"
                                 android:textSize="16sp" />
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="*"
                                 android:textColor="@color/color_ff0000"
-                                android:textSize="16sp"/>
+                                android:textSize="16sp" />
                         </LinearLayout>
 
                         <EditText
@@ -234,18 +245,20 @@
                             android:layout_centerVertical="true"
                             android:layout_marginRight="15dp"
                             android:orientation="horizontal">
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="验证码"
                                 android:textColor="@color/color_333333"
                                 android:textSize="16sp" />
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="*"
                                 android:textColor="@color/color_ff0000"
-                                android:textSize="16sp"/>
+                                android:textSize="16sp" />
                         </LinearLayout>
 
                         <TextView
@@ -294,18 +307,20 @@
                             android:layout_centerVertical="true"
                             android:layout_marginRight="15dp"
                             android:orientation="horizontal">
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="选择地区"
                                 android:textColor="@color/color_333333"
                                 android:textSize="16sp" />
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="*"
                                 android:textColor="@color/color_ff0000"
-                                android:textSize="16sp"/>
+                                android:textSize="16sp" />
                         </LinearLayout>
 
                         <ImageView
@@ -348,26 +363,28 @@
                             android:layout_centerVertical="true"
                             android:layout_marginRight="15dp"
                             android:orientation="horizontal">
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="详细地址"
                                 android:textColor="@color/color_333333"
                                 android:textSize="16sp" />
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="*"
                                 android:textColor="@color/color_ff0000"
-                                android:textSize="16sp"/>
+                                android:textSize="16sp" />
                         </LinearLayout>
 
                         <EditText
                             android:id="@+id/edit_address"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_toRightOf="@id/tag6"
                             android:layout_centerVertical="true"
+                            android:layout_toRightOf="@id/tag6"
                             android:background="@null"
                             android:gravity="end"
                             android:hint="请输入详细地址"
@@ -443,33 +460,34 @@
                                 android:layout_width="18dp"
                                 android:layout_height="18dp"
                                 android:background="@mipmap/g04_02yiwen" />
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="*"
                                 android:textColor="@color/color_ff0000"
-                                android:textSize="16sp"/>
+                                android:textSize="16sp" />
                         </LinearLayout>
 
                         <TextView
                             android:id="@+id/tag8"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textSize="16sp"
-                            android:textColor="@color/color_333333"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
-                            android:text="\u25"/>
+                            android:text="\u25"
+                            android:textColor="@color/color_333333"
+                            android:textSize="16sp" />
 
                         <EditText
                             android:id="@+id/edit_percentage"
-                            android:layout_toLeftOf="@+id/tag8"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:inputType="number"
+                            android:layout_toLeftOf="@+id/tag8"
                             android:background="@null"
                             android:gravity="end|center_vertical"
                             android:hint="请输入折扣比例"
+                            android:inputType="number"
                             android:lines="1"
                             android:textColor="@color/color_333333"
                             android:textColorHint="@color/color_999999"
@@ -633,6 +651,14 @@
                                 android:layout_marginTop="@dimen/dp_10"
                                 android:text="上传带完整清晰的牌匾的门面照片"
                                 android:textColor="@color/color_999999"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/dp_10"
+                                android:text="建议手机横屏拍照"
+                                android:textColor="@color/color_289cef"
                                 android:textSize="14sp" />
 
                         </LinearLayout>
@@ -894,15 +920,17 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="营业执照"
+                                    android:text="营业执照(选填)"
                                     android:textColor="@color/color_333333"
                                     android:textSize="16sp" />
+
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="*"
                                     android:textColor="@color/color_ff0000"
-                                    android:textSize="16sp"/>
+                                    android:textSize="16sp"
+                                    android:visibility="gone" />
                             </LinearLayout>
 
                             <TextView
@@ -969,15 +997,17 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="许可证"
+                                    android:text="许可证(选填)"
                                     android:textColor="@color/color_333333"
                                     android:textSize="16sp" />
+
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="*"
                                     android:textColor="@color/color_ff0000"
-                                    android:textSize="16sp"/>
+                                    android:textSize="16sp"
+                                    android:visibility="gone" />
                             </LinearLayout>
 
                             <TextView
