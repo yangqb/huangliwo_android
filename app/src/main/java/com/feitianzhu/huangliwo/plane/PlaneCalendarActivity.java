@@ -47,6 +47,9 @@ public class PlaneCalendarActivity extends BaseActivity {
         tv_result = findViewById(R.id.tv_result);
         tv_data = findViewById(R.id.tv_data);
         tv_desc = findViewById(R.id.tv_desc);
+
+
+        
         List<String> pointList = Arrays.asList("2018-10-01", "2018-11-19", "2018-11-20", "2018-05-23", "2019-01-01", "2018-12-23");
 
         miui10Calendar = findViewById(R.id.miui10Calendar);
