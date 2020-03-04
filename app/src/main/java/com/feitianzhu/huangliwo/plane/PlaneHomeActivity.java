@@ -15,6 +15,7 @@ import com.feitianzhu.huangliwo.view.CustomPlaneProtocolView;
 import com.feitianzhu.huangliwo.view.CustomRefundView;
 import com.feitianzhu.huangliwo.vip.VipActivity;
 import com.lxj.xpopup.XPopup;
+import com.necer.enumeration.SelectedModel;
 import com.zaaach.citypicker.CityPicker;
 import com.zaaach.citypicker.adapter.OnPickListener;
 import com.zaaach.citypicker.model.City;
@@ -92,7 +93,8 @@ public class PlaneHomeActivity extends BaseActivity {
     }
 
     @OnClick({R.id.left_button, R.id.btn_domestic, R.id.btn_international, R.id.btn_come_go, R.id.startCityName, R.id.endCityName, R.id.reversalCity,
-            R.id.select_shipping_space, R.id.select_children, R.id.select_baby, R.id.reserve_explain, R.id.search, R.id.ll_order, R.id.select_seat, R.id.planeSelect, R.id.trainSelect})
+            R.id.select_shipping_space, R.id.select_children, R.id.select_baby, R.id.reserve_explain, R.id.search, R.id.ll_order, R.id.select_seat, R.id.planeSelect, R.id.trainSelect
+            , R.id.ll_goDate, R.id.ll_comeDate})
     public void onClick(View view) {
         Intent intent;
         switch (view.getId()) {
@@ -195,6 +197,16 @@ public class PlaneHomeActivity extends BaseActivity {
                 break;
             case R.id.select_seat:
                 intent = new Intent(PlaneHomeActivity.this, PlaneSeatSelectionActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.ll_goDate:
+            case R.id.ll_comeDate:
+                intent = new Intent(PlaneHomeActivity.this, PlaneCalendarActivity.class);
+                if (isComeAndGo) {
+                    intent.putExtra(PlaneCalendarActivity.SELECT_MODEL, SelectedModel.SINGLE_SELECTED);
+                } else {
+                    intent.putExtra(PlaneCalendarActivity.SELECT_MODEL, SelectedModel.MULTIPLE);
+                }
                 startActivity(intent);
                 break;
         }

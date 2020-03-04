@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_f7f7f7"
+    android:orientation="vertical">
+
+    <include layout="@layout/layout_head" />
+
+    <TextView
+        android:id="@+id/tv_result"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="15dp" />
+
+
+    <com.necer.view.WeekBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:textColor="#666666" />
+
+
+    <com.necer.calendar.Miui10Calendar
+        android:id="@+id/miui10Calendar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:holidayColor="#519EDC"
+        app:isShowNumberBackground="true"
+        app:lunarHolidayTextColor="#519EDC"
+        app:numberBackgroundAlphaColor="100"
+        app:numberBackgroundTextColor="#398FE9"
+        app:numberBackgroundTextSize="250sp"
+        app:pointLocation="down"
+        app:selectCircleColor="#398FE9"
+        app:selectLunarTextColor="#00ff00"
+        app:selectSolarTextColorColor="#00ff00"
+        app:solarHolidayTextColor="#519EDC"
+        app:solarTermTextColor="#519EDC"
+        app:todaySolarTextColor="#398FE9">
+
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/color_f7f7f7">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="15dp"
+                android:background="@drawable/bg_miui10"
+                android:orientation="vertical"
+                android:padding="15dp">
+
+                <TextView
+                    android:id="@+id/tv_data"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textColor="#333333"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/tv_desc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text=""
+                    android:textColor="#666666"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+        </android.support.v4.widget.NestedScrollView>
+
+    </com.necer.calendar.Miui10Calendar>
+
+
+</LinearLayout>
