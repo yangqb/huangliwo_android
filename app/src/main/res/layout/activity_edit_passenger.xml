@@ -37,7 +37,7 @@
             android:layout_centerVertical="true"
             android:drawableRight="@mipmap/b08_04jinru"
             android:drawablePadding="10dp"
-            android:text="成人票（满12周岁）"
+            android:text=""
             android:textColor="@color/color_666666"
             android:textSize="14sp" />
 
@@ -69,12 +69,88 @@
 
 
         <EditText
+            android:id="@+id/editName"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:background="@null"
+            android:gravity="end|center_vertical"
             android:hint="须与乘机证件一致"
+            android:text=""
+            android:textColor="@color/color_666666"
+            android:textSize="14sp" />
+
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/color_eeeeee" />
+
+    <RelativeLayout
+        android:id="@+id/sex_type"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:background="@color/white"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="性别"
+            android:textColor="@color/color_333333"
+            android:textSize="16sp" />
+
+
+        <TextView
+            android:id="@+id/tvSexType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:drawableRight="@mipmap/b08_04jinru"
+            android:drawablePadding="10dp"
+            android:text=""
+            android:textColor="@color/color_666666"
+            android:textSize="14sp" />
+
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/color_eeeeee" />
+
+    <RelativeLayout
+        android:id="@+id/rl_birthday"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:background="@color/white"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="生日"
+            android:textColor="@color/color_333333"
+            android:textSize="16sp" />
+
+
+        <TextView
+            android:id="@+id/tvBirthday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:drawableRight="@mipmap/b08_04jinru"
+            android:drawablePadding="10dp"
             android:text=""
             android:textColor="@color/color_666666"
             android:textSize="14sp" />
@@ -112,12 +188,17 @@
             android:layout_centerVertical="true"
             android:drawableRight="@mipmap/b08_04jinru"
             android:drawablePadding="10dp"
-            android:text="身份证"
+            android:text=""
             android:textColor="@color/color_666666"
             android:textSize="14sp" />
 
 
     </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/color_eeeeee" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -136,6 +217,7 @@
 
 
         <EditText
+            android:id="@+id/editCardId"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"

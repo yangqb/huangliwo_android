@@ -23,6 +23,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/one_way_startDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="2-18日周二"
@@ -30,6 +31,7 @@
                     android:textSize="13sp" />
 
                 <TextView
+                    android:id="@+id/oneWayBTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -39,6 +41,7 @@
                     android:textSize="24sp" />
 
                 <TextView
+                    android:id="@+id/oneWay_depAirport"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="虹桥机场T2"
@@ -58,6 +61,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/oneWay_flightTimes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="2小时15分"
@@ -77,6 +81,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/one_way_endDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="2-18日周二"
@@ -84,6 +89,7 @@
                     android:textSize="13sp" />
 
                 <TextView
+                    android:id="@+id/oneWayETime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -93,6 +99,7 @@
                     android:textSize="24sp" />
 
                 <TextView
+                    android:id="@+id/oneWay_arrAirport"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="虹桥机场T2"
@@ -100,6 +107,16 @@
                     android:textSize="13sp" />
 
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/one_way_crossDays"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="+1天"
+                android:textColor="@color/color_289cef"
+                android:textSize="12sp"
+                android:visibility="gone" />
 
         </LinearLayout>
 

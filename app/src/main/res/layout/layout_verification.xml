@@ -16,10 +16,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="125dp"
-        android:paddingLeft="@dimen/dp_10"
-        android:paddingRight="@dimen/dp_10"
         android:layout_marginTop="25dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/dp_10"
+        android:paddingRight="@dimen/dp_10">
 
         <ImageView
             android:id="@+id/take_photo_one"
@@ -171,6 +171,49 @@
             android:textColorHint="@color/color_cccccc"
             android:textSize="16sp" />
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginLeft="@dimen/dp_20"
+        android:layout_marginRight="20dp"
+        android:background="@color/color_cccccc" />
+
+    <RelativeLayout
+        android:id="@+id/rl_permanent_address"
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:layout_marginLeft="@dimen/dp_20"
+        android:layout_marginRight="20dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_tag2"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|start"
+            android:text="居住地址"
+            android:textColor="@color/color_666666"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/txt_permanent_address"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@id/tv_tag2"
+            android:gravity="center_vertical|start"
+            android:hint="请选择地址"
+            android:textColor="@color/color_333333"
+            android:textColorHint="@color/color_cccccc"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/b08_04jinru" />
+    </RelativeLayout>
 
     <View
         android:layout_width="match_parent"

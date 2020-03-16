@@ -40,6 +40,7 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="13dp"
@@ -48,6 +49,7 @@
                     android:textSize="14sp" />
 
                 <TextView
+                    android:id="@+id/passenger_type"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="成人"
@@ -62,6 +64,7 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/cardType"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="5dp"
@@ -70,6 +73,7 @@
                     android:textSize="14sp" />
 
                 <TextView
+                    android:id="@+id/cardNo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="1234567891234123456"

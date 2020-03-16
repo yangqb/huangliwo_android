@@ -197,9 +197,6 @@ public class SettingsActivity extends BaseActivity {
                 Toast.makeText(this, R.string.clean_cache_successfully, Toast.LENGTH_SHORT).show();
                 break;
             case R.id.button:
-                SPUtils.putString(this, Constant.SP_PASSWORD, "");
-                SPUtils.putString(this, Constant.SP_LOGIN_USERID, "");
-                SPUtils.putString(this, Constant.SP_ACCESS_TOKEN, "");
                 Constant.ACCESS_TOKEN = "";
                 Constant.LOGIN_USERID = "";
                 Constant.PHONE = "";

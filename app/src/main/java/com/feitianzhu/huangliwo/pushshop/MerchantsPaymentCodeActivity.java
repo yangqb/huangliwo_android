@@ -1,11 +1,15 @@
 package com.feitianzhu.huangliwo.pushshop;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -65,6 +69,8 @@ public class MerchantsPaymentCodeActivity extends BaseActivity {
     TextView merchantName;
     @BindView(R.id.logo)
     RoundedImageView logoImg;
+    @BindView(R.id.save_layout)
+    LinearLayout saveLayout;
 
     @Override
     protected int getLayoutId() {
@@ -142,7 +148,9 @@ public class MerchantsPaymentCodeActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.save:
-                ShareImageUtils.saveImg(bitmap, "paycode_image");
+                ShareImageUtils.saveImg(ShareImageUtils.viewToBitmap(saveLayout), "paycode_image");
+                // 通知图库更新
+                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse(Environment.getExternalStorageDirectory().getPath())));
                 break;
         }
 

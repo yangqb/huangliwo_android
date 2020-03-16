@@ -113,7 +113,7 @@ public class MyCenterFragment extends SFFragment {
     private static final String ARG_PARAM2 = "param2";
     private boolean isLogin = true;
     Integer[] integers = {R.mipmap.b08_08dingdan, R.mipmap.b08_14gouwuche, R.mipmap.b08_11dizhi, R.mipmap.b08_06zhanghu, R.mipmap.b08_12huiyuan,
-            R.mipmap.b08_07yinhangka, R.mipmap.b08_10shouchang, R.mipmap.b08_09shangpu, R.mipmap.b08_15fenxiang};
+            R.mipmap.b08_07yinhangka, R.mipmap.b08_10shouchang, R.mipmap.b08_09shangpu, R.mipmap.b08_15fenxiang, R.mipmap.b08_2tuandui};
 
     public MyCenterFragment() {
     }
@@ -347,6 +347,11 @@ public class MyCenterFragment extends SFFragment {
                         break;
                     case 1: //购物车
                         intent = new Intent(getContext(), ShoppingCartActivity.class);
+                        startActivity(intent);
+                        break;
+                    case 9:
+                        ToastUtils.showShortToast("敬请期待");
+                        intent = new Intent(getContext(), MyTeamActivity.class);
                         startActivity(intent);
                         break;
                 }

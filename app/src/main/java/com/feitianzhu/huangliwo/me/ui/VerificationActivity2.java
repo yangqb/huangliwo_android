@@ -74,7 +74,10 @@ import static com.feitianzhu.huangliwo.common.Constant.USERID;
  * <p>
  * 实名认证
  */
-public class VerificationActivity2 extends BaseTakePhotoActivity {
+public class VerificationActivity2 extends BaseTakePhotoActivity implements ProvinceCallBack {
+    private Province province;
+    private Province.CityListBean city;
+    private Province.AreaListBean area;
     public static final String AUTH_INFO = "auth_info";
     private String[] certificates = new String[]{"身份证", "护照", "其他"};
     private int photo_type;
@@ -106,6 +109,8 @@ public class VerificationActivity2 extends BaseTakePhotoActivity {
     private String userId;
     private UserAuth mAuth;
     private int index = -1;
+    @BindView(R.id.txt_permanent_address)
+    TextView txtPermanentAddress;
 
     @Override
     protected int getLayoutId() {
@@ -169,7 +174,7 @@ public class VerificationActivity2 extends BaseTakePhotoActivity {
                 });
     }
 
-    @OnClick({R.id.left_button, R.id.take_photo_one, R.id.take_photo_two, R.id.ly_type, R.id.btn_submit})
+    @OnClick({R.id.left_button, R.id.take_photo_one, R.id.take_photo_two, R.id.ly_type, R.id.btn_submit, R.id.rl_permanent_address})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.left_button:
@@ -199,6 +204,13 @@ public class VerificationActivity2 extends BaseTakePhotoActivity {
                 break;
             case R.id.btn_submit:
                 submit();
+                break;
+            case R.id.rl_permanent_address:
+                ProvinceDialog2 branchDialog = ProvinceDialog2.newInstance();
+                branchDialog.setCityLevel(ProvinceDialog2.PROVINCE_CITY_AREA);
+                branchDialog.setAddress("北京市", "东城区", "东华门街道");
+                branchDialog.setSelectOnListener(this);
+                branchDialog.show(getSupportFragmentManager());
                 break;
         }
     }
@@ -233,6 +245,11 @@ public class VerificationActivity2 extends BaseTakePhotoActivity {
             }
         }
 
+        if (province == null || city == null || area == null) {
+            ToastUtils.showShortToast("请选择地址");
+            return;
+        }
+
         String businatures;
         if (index == certificates.length - 1) {
             businatures = "10";
@@ -249,6 +266,12 @@ public class VerificationActivity2 extends BaseTakePhotoActivity {
                 .params(REALNAME, name)//
                 .params(CERTIFTYPE, businatures)//
                 .params(CERTIFNO, id_num)//
+                .params("provinceId", province.id)
+                .params("provinceName", province.name)
+                .params("cityId", city.id)
+                .params("cityName", city.name)
+                .params("areaId", area.id)
+                .params("areaName", area.name)
                 .execute(new JsonCallback<LzyResponse>() {
                     @Override
                     public void onStart(com.lzy.okgo.request.base.Request<LzyResponse, ? extends com.lzy.okgo.request.base.Request> request) {
@@ -320,5 +343,13 @@ public class VerificationActivity2 extends BaseTakePhotoActivity {
     @Override
     public void takeCancel() {
 
+    }
+
+    @Override
+    public void onWhellFinish(Province province, Province.CityListBean city, Province.AreaListBean mAreaListBean) {
+        this.province = province;
+        this.city = city;
+        this.area = mAreaListBean;
+        txtPermanentAddress.setText(province.name + city.name + mAreaListBean.name);
     }
 }

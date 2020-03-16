@@ -7,14 +7,25 @@ package com.feitianzhu.huangliwo.utils;
 public class Urls {
 
 
-    private static final String BASE_URL = "http://www.huangliwo.top:8088/"; //正式环境
-    //private static final String BASE_URL = "http://39.106.65.35:8088/"; //测试地址
+    //private static final String BASE_URL = "http://www.huangliwo.top:8088/"; //正式环境
+    private static final String BASE_URL = "http://39.106.65.35:8088/"; //测试地址
     //private static final String BASE_URL = "http://192.168.0.21:8089/";//钟工本地地址
     //private static final String BASE_URL = "http://192.168.0.15:8089/"; //周工本地地址
+    private static final String TICKET_BASE_URL = "http://39.106.65.35:8087/"; //机票测试
     /**
      * 注册
      */
     public static final String REGISTER = BASE_URL + "fhwl/commons/account/registeruser";
+
+    /*
+     * 微信登录
+     * */
+    public static final String WX_LOGIN = BASE_URL + "fhwl/platform/login";
+
+    /*
+     * 绑定手机号
+     * */
+    public static final String BINDING_PHONE = BASE_URL + "fhwl/commons/bindPhone";
 
     /**
      * 登录
@@ -307,6 +318,10 @@ public class Urls {
      * 余额提现
      * */
     public static final String WITHDRAWAL = BASE_URL + "fhwl/withdrawal/create";
+    /*
+     * 我的团队
+     * */
+    public static final String GET_TEAM = BASE_URL + "fhwl/user/getTeam";
 
     /**
      * 更换手机号
@@ -464,49 +479,68 @@ public class Urls {
     /**
      * 提现
      */
-    public static final String WITHDRAW = BASE_URL + "fhwl/withdrawal/create";
+    public static final String WITHDRAW = BASE_URL + "fhwl/withdrawal/withdraw";
 
     /**
      * 提现手续费
      */
     public static final String WITHDRAW_FEE_RATE = BASE_URL + "fhwl/withdrawal/fee-rate";
 
-    /**
-     * 人气商家列表
-     */
-    public static final String GET_RMLIST = BASE_URL + "fhwl/merchant/getrmlist";
-
-    /**
-     * 黄花梨详情
-     */
-    public static final String HUANGHUALI_WEBVIEW = BASE_URL + "fhwl/yellowpear/get";
-
-    /**
-     * 购买黄花梨
-     */
-    public static final String HUANGHUALI_BUY = BASE_URL + "fhwl/yellowpear/buy";
-    /**
-     * 黄花梨购买记录
-     */
-    public static final String HUANGHUALI_LIST = BASE_URL + "fhwl/yellowpear/list";
 
     /**
      * 消息列表
      */
     public static final String NOTICE_LIST = BASE_URL + "fhwl/pushmsg/list";
 
-    /**
-     * 注册协议
-     */
-    public static final String H5_REGISTER_PROTOCOL = "/static/protocol.html";
-    /**
-     * 帮助
-     */
-    public static final String H5_HELPER = "/static/help.html";
+    /*
+     *国内机票搜索
+     * */
+    public static final String SEARCH_FLIGHT = TICKET_BASE_URL + "searchFlight";
+    /*
+     * 国际机票搜索
+     * */
+    public static final String SEARCH_INTERNATIONAL_FLIGHT = TICKET_BASE_URL + "ntsSearchFlight";
+    /*
+     *国内 机票报价搜索
+     * */
+    public static final String SEARCH_PRICE_FLIGHT = TICKET_BASE_URL + "searchQuote";
+    /*
+     * 国际报价搜索
+     * */
+    public static final String SEARCH_PRICE_INTERNATIONAL_FLIGHT = TICKET_BASE_URL + "ntsSearchPrice";
+    /*
+     *国内 机票预订
+     * */
+    public static final String PLANE_BOOK = TICKET_BASE_URL + "express/booking";
+    /*
+     * 国内生单
+     * */
+    public static final String CREATE_PLANE_ORDER = TICKET_BASE_URL + "createOrder";
 
-    /**
-     * 关于
-     */
-    public static final String H5_ABOUT_ME = "/static/about.html";
+    /*
+     * 退改签说明查询接口
+     * */
+    public static final String GET_TGQNEWEXPLAIN = TICKET_BASE_URL + "tgqNewExplain";
+
+    /*
+     * 行李额查询
+     * */
+    public static final String GET_BAGGAGERULES = TICKET_BASE_URL + "baggagerules";
+    /*
+    新增乘机人
+    * */
+    public static final String ADD_PASSENGER = TICKET_BASE_URL + "addPassengers";
+    /*
+     * 获取乘机人列表
+     * */
+    public static final String GET_PASSENGER_LIST = TICKET_BASE_URL + "getPassengersList";
+    /*
+     * 编辑乘机人
+     * */
+    public static final String UPDATE_PASSENGER = TICKET_BASE_URL + "updatePassengers";
+    /*
+     * 删除乘机人
+     * */
+    public static final String DELETE_PASSENGER = TICKET_BASE_URL + "delPassenger";
 
 }

@@ -3,6 +3,7 @@ package com.feitianzhu.huangliwo.shop.ui.dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.ParcelUuid;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -47,6 +48,9 @@ import kankan.wheel.widget.adapters.AbstractWheelTextAdapter;
  * email: 694125155@qq.com
  */
 public class ProvinceDialog2 extends DialogFragment {
+    public static final int PROVINCE_CITY = 1;
+    public static final int PROVINCE_CITY_AREA = 2;
+    private int type = 1;
     @BindView(R.id.wv_province)
     WheelView mWvProvince;
     @BindView(R.id.wv_city)
@@ -113,6 +117,11 @@ public class ProvinceDialog2 extends DialogFragment {
         wlp.width = WindowManager.LayoutParams.MATCH_PARENT;
         wlp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         window.setAttributes(wlp);
+        if (type == PROVINCE_CITY) {
+            mWvArea.setVisibility(View.GONE);
+        } else {
+            mWvArea.setVisibility(View.VISIBLE);
+        }
         return view;
     }
 
@@ -441,6 +450,10 @@ public class ProvinceDialog2 extends DialogFragment {
             }
         }
         return arrAreas;
+    }
+
+    public void setCityLevel(int type) {
+        this.type = type;
     }
 
     /**

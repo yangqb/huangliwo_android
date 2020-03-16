@@ -77,6 +77,14 @@ public class MineInfoModel implements Serializable {
     private int gradeId;
     private int accountType; //会员级别(账号类型0消费者，1市代理，2区代理，3合伙人，4超级会员，5普通会员，6商户")
     private int isBind;
+    private int liveCityId;// (integer, optional),
+    private String prliveCityName;// (string, optional),
+    private int liveProvinceId;// (integer, optional),
+    private String liveProvinceName;// (string, optional),
+    private int homeCityId;// (integer, optional),
+    private String homeCityName;// (string, optional),
+    private int homeProvinceId;// (integer, optional),
+    private String homeProvinceName;// (string, optional),
 
     public int getIsBind() {
         return isBind;

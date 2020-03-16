@@ -1,6 +1,7 @@
 package com.feitianzhu.huangliwo.plane;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -10,8 +11,22 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
+import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.PlaneResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
+import com.feitianzhu.huangliwo.model.FlightSegmentInfo;
+import com.feitianzhu.huangliwo.model.MultipleGoSearchFightInfo;
+import com.feitianzhu.huangliwo.model.SearchFlightModel;
+import com.feitianzhu.huangliwo.model.SearchInternationalFlightModel;
+import com.feitianzhu.huangliwo.model.TransitCityInfo;
+import com.feitianzhu.huangliwo.utils.SPUtils;
+import com.feitianzhu.huangliwo.utils.Urls;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.Response;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +35,15 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 public class SearchPlanActivity extends BaseActivity {
+    public static final String SEARCH_TYPE = "search_type";
+    private List<MultipleGoSearchFightInfo> goSearchFightInfoList = new ArrayList<>();
+    private List<SearchFlightModel.FlightModel> flightInfos = new ArrayList<>();
+    private List<SearchInternationalFlightModel> internationalFlightModels = new ArrayList<>();
     private SearchPlaneResultAdapter mAdapter;
+    private String date;
+    private String userId;
+    private String token;
+    private int searchType;
     @BindView(R.id.title_name)
     TextView titleName;
     @BindView(R.id.right_img)
@@ -47,6 +70,10 @@ public class SearchPlanActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+        token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
+        userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
+        date = getIntent().getStringExtra(PlaneHomeActivity.FLIGHT_DATE);
+        searchType = getIntent().getIntExtra(SEARCH_TYPE, 0);
         planeTitle.setVisibility(View.VISIBLE);
         titleName.setVisibility(View.GONE);
         startCity.setText("北京");
@@ -56,14 +83,11 @@ public class SearchPlanActivity extends BaseActivity {
         rightText.setText("更多日期");
         rightText.setVisibility(View.VISIBLE);
         rightImg.setVisibility(View.VISIBLE);
-        List<String> list = new ArrayList<>();
-        for (int i = 0; i < 15; i++) {
-            list.add(i + "");
-        }
-        mAdapter = new SearchPlaneResultAdapter(list);
+        mAdapter = new SearchPlaneResultAdapter(goSearchFightInfoList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
+        refreshLayout.setEnableLoadMore(false);
 
         initListener();
     }
@@ -73,23 +97,105 @@ public class SearchPlanActivity extends BaseActivity {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Intent intent = new Intent(SearchPlanActivity.this, PlaneDetailActivity.class);
-                if (position % 4 == 0) {
-                    intent.putExtra(PlaneDetailActivity.DETAIL_TYPE, 1);
-                } else if (position % 4 == 1) {
-                    intent.putExtra(PlaneDetailActivity.DETAIL_TYPE, 2);
-                } else if (position % 4 == 2) {
-                    intent.putExtra(PlaneDetailActivity.DETAIL_TYPE, 3);
+                if (searchType == 0) {
+                    intent.putExtra(PlaneDetailActivity.DETAIL_TYPE, searchType);
+                    intent.putExtra(PlaneDetailActivity.FLIGHT_DATE, date);
+                    intent.putExtra(PlaneDetailActivity.FLIGHT_DATA, goSearchFightInfoList.get(position));
+                } else if (searchType == 1) {
+                    intent.putExtra(PlaneDetailActivity.DETAIL_TYPE, searchType);
+                    intent.putExtra(PlaneDetailActivity.FLIGHT_DATE, date);
+                    intent.putExtra(PlaneDetailActivity.FLIGHT_DATA, goSearchFightInfoList.get(position));
                 } else {
-                    intent.putExtra(PlaneDetailActivity.DETAIL_TYPE, 4);
+
                 }
                 startActivity(intent);
+            }
+        });
+        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                initData();
             }
         });
     }
 
     @Override
     protected void initData() {
+        if (searchType == 0) {
+            OkGo.<PlaneResponse<SearchFlightModel>>get(Urls.SEARCH_FLIGHT)
+                    .tag(this)
+                    .params("dpt", "PEK")
+                    .params("arr", "SHA")
+                    .params(Constant.ACCESSTOKEN, token)
+                    .params(Constant.USERID, userId)
+                    .params("date", date)
+                    .params("ex_track", "tehui")
+                    .execute(new JsonCallback<PlaneResponse<SearchFlightModel>>() {
+                        @Override
+                        public void onSuccess(Response<PlaneResponse<SearchFlightModel>> response) {
+                            super.onSuccess(SearchPlanActivity.this, response.body().message, response.body().code);
+                            refreshLayout.finishRefresh();
+                            SearchFlightModel searchFlightModel = response.body().result;
+                            if (response.body().code == 0 && response.body().result.flightInfos != null) {
+                                flightInfos = searchFlightModel.flightInfos;
+                                goSearchFightInfoList.clear();
+                                for (int i = 0; i < flightInfos.size(); i++) {
+                                    MultipleGoSearchFightInfo goSearchFightInfo = new MultipleGoSearchFightInfo(MultipleGoSearchFightInfo.DOMESTIC_TYPE);
+                                    goSearchFightInfo.flightModel = flightInfos.get(i);
+                                    goSearchFightInfoList.add(goSearchFightInfo);
+                                }
+                                mAdapter.setNewData(goSearchFightInfoList);
+                                mAdapter.notifyDataSetChanged();
+                            }
 
+                        }
+
+                        @Override
+                        public void onError(Response<PlaneResponse<SearchFlightModel>> response) {
+                            super.onError(response);
+                            refreshLayout.finishRefresh(false);
+                        }
+                    });
+        } else if (searchType == 1) {
+            OkGo.<PlaneResponse<List<SearchInternationalFlightModel>>>get(Urls.SEARCH_INTERNATIONAL_FLIGHT)
+                    .tag(this)
+                    .params(Constant.ACCESSTOKEN, token)
+                    .params(Constant.USERID, userId)
+                    .params("depCity", "PEK")
+                    .params("arrCity", "WAS")
+                    .params("depDate", date)
+                    //.params("retDate", "")往返必填
+                    .params("source", "ICP_SELECT_open.3724")
+                    //.params("adultNum", "")成人数量
+                    //.params("childNum", "")儿童数量
+                    //.params("cabinLevel", "")舱位等级
+                    .execute(new JsonCallback<PlaneResponse<List<SearchInternationalFlightModel>>>() {
+                        @Override
+                        public void onSuccess(Response<PlaneResponse<List<SearchInternationalFlightModel>>> response) {
+                            super.onSuccess(SearchPlanActivity.this, response.body().message, response.body().code);
+                            refreshLayout.finishRefresh();
+                            if (response.body().code == 0 && response.body().result != null) {
+                                goSearchFightInfoList.clear();
+                                internationalFlightModels = response.body().result;
+                                for (int i = 0; i < internationalFlightModels.size(); i++) {
+                                    MultipleGoSearchFightInfo goSearchFightInfo = new MultipleGoSearchFightInfo(MultipleGoSearchFightInfo.INTERNATIONAL_TYPE);
+                                    goSearchFightInfo.internationalFlightModel = internationalFlightModels.get(i);
+                                    goSearchFightInfoList.add(goSearchFightInfo);
+                                }
+                                mAdapter.setNewData(goSearchFightInfoList);
+                                mAdapter.notifyDataSetChanged();
+                            }
+                        }
+
+                        @Override
+                        public void onError(Response<PlaneResponse<List<SearchInternationalFlightModel>>> response) {
+                            super.onError(response);
+                            refreshLayout.finishRefresh(false);
+                        }
+                    });
+        } else {
+
+        }
     }
 
     @OnClick({R.id.left_button, R.id.right_button})

@@ -35,6 +35,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/dptTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="10:55"
@@ -42,6 +43,7 @@
                         android:textSize="21sp" />
 
                     <TextView
+                        android:id="@+id/dptAirport"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
@@ -61,6 +63,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/flightTimes"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="2小时15分"
@@ -72,6 +75,14 @@
                         android:layout_height="wrap_content"
                         android:background="@mipmap/k02_11quwang" />
 
+                    <TextView
+                        android:id="@+id/stopCity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="转北京"
+                        android:textColor="@color/color_999999"
+                        android:textSize="9sp" />
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -80,6 +91,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/arrTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end"
@@ -88,6 +100,7 @@
                         android:textSize="21sp" />
 
                     <TextView
+                        android:id="@+id/arrAirport"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end"
@@ -97,8 +110,17 @@
                         android:textSize="13sp" />
 
                 </LinearLayout>
-
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/crossDays"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="+1天"
+                android:visibility="gone"
+                android:textColor="@color/color_289cef"
+                android:textSize="12sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -107,6 +129,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/barePrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="495"
@@ -114,6 +137,7 @@
                     android:textSize="21sp" />
 
                 <TextView
+                    android:id="@+id/discount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="经济舱3.5折"
@@ -121,12 +145,14 @@
                     android:textSize="10sp" />
 
                 <TextView
+                    android:id="@+id/cprice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:text="儿童￥200 婴儿￥200"
                     android:textColor="@color/color_999999"
-                    android:textSize="10sp" />
+                    android:textSize="10sp"
+                    android:visibility="gone" />
 
             </LinearLayout>
 
@@ -138,6 +164,7 @@
             android:layout_marginTop="3dp">
 
             <TextView
+                android:id="@+id/flightNum"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"

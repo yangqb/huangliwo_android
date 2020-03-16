@@ -65,10 +65,12 @@ public class OrderAdapter extends BaseMultiItemQuickAdapter<MultipleItemOrderMod
                 } else {
                     helper.setText(R.id.btn_confirm_goods, "评价");
                 }
+                helper.setText(R.id.btn_refund, "删除订单");
                 helper.setText(R.id.tvStatus, "交易成功");
-                helper.setText(R.id.btn_logistics, "删除订单");
+                helper.setText(R.id.btn_logistics, "查看物流");
                 helper.setVisible(R.id.btn_logistics, true);
-                helper.setVisible(R.id.btn_refund, false);
+                helper.setVisible(R.id.btn_refund, true);
+                helper.setVisible(R.id.btn_confirm_goods, true);
             } else if (item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_NO_PAY) {
                 helper.setText(R.id.tvStatus, "待付款");
                 helper.setText(R.id.btn_confirm_goods, "付款");

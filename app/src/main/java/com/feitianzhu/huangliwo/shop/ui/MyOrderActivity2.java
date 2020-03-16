@@ -180,13 +180,13 @@ public class MyOrderActivity2 extends BaseActivity {
                                 intent.putExtra(EditApplyRefundActivity.ORDER_AMOUNT, goodsOrderList.get(position).getAmount());
                                 intent.putExtra(EditApplyRefundActivity.ORDER_TYPE, type);
                                 startActivityForResult(intent, REFUND_REQUEST_CODE);
+                            } else if (goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_COMPLETED) {
+                                //删除订单，
+                                delete(goodsOrderList.get(position).getOrderNo());
                             }
                             break;
                         case R.id.btn_logistics:
-                            if (goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_COMPLETED) {
-                                //删除订单，
-                                delete(goodsOrderList.get(position).getOrderNo());
-                            } else if (goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_NO_PAY) {
+                            if (goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_NO_PAY) {
                                 //取消订单，
                                 new XPopup.Builder(MyOrderActivity2.this)
                                         .asConfirm("确定要取消该订单？", "", "关闭", "确定", new OnConfirmListener() {
@@ -197,7 +197,7 @@ public class MyOrderActivity2 extends BaseActivity {
                                         }, null, false)
                                         .bindLayout(R.layout.layout_dialog) //绑定已有布局
                                         .show();
-                            } else if (goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_WAIT_RECEIVING) {
+                            } else if (goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_WAIT_RECEIVING || goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_COMPLETED) {
                                 //查看物流
                                 intent = new Intent(MyOrderActivity2.this, LogisticsInfoActivity.class);
                                 intent.putExtra(LogisticsInfoActivity.LOGISTICS_COMPANY, goodsOrderList.get(position).getLogisticCpName());

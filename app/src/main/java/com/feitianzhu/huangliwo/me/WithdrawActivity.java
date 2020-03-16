@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.feitianzhu.huangliwo.R;
@@ -20,11 +21,14 @@ import com.feitianzhu.huangliwo.model.WithdrawModel;
 import com.feitianzhu.huangliwo.pushshop.MySelfMerchantsActivity;
 import com.feitianzhu.huangliwo.shop.ShopDao;
 import com.feitianzhu.huangliwo.shop.ShopHelp;
+import com.feitianzhu.huangliwo.shop.ui.EditApplyRefundActivity;
 import com.feitianzhu.huangliwo.utils.EditTextUtils;
+import com.feitianzhu.huangliwo.utils.MathUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.StringUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
+import com.feitianzhu.huangliwo.view.CustomRefundView;
 import com.google.gson.Gson;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
@@ -37,6 +41,8 @@ import com.zhy.http.okhttp.callback.Callback;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -60,6 +66,8 @@ import static com.feitianzhu.huangliwo.common.Constant.USERID;
 public class WithdrawActivity extends BaseActivity {
     public static final String BALANCE = "balance";
     public static final String MERCHANT_ID = "merchantId";
+    private String channel = "wx";
+    private String alipayNo;
     private MineInfoModel infoModel;
     private double balance;
     private int merchantId = -1;
@@ -69,10 +77,14 @@ public class WithdrawActivity extends BaseActivity {
     TextView titleName;
     @BindView(R.id.edit_amount)
     EditText editAmount;
-    @BindView(R.id.alipayNo)
-    EditText editAlipayNo;
     @BindView(R.id.right_text)
     TextView rightText;
+    @BindView(R.id.tvPayType)
+    TextView tvPayType;
+    @BindView(R.id.imageView)
+    ImageView imageView;
+    @BindView(R.id.tvBalance)
+    TextView tvBalance;
 
     @Override
     protected int getLayoutId() {
@@ -88,11 +100,12 @@ public class WithdrawActivity extends BaseActivity {
         rightText.setText("明细");
         rightText.setVisibility(View.VISIBLE);
         balance = getIntent().getDoubleExtra(BALANCE, 0.00);
+        tvBalance.setText("可提现余额" + MathUtils.subZero(String.valueOf(balance)) + "元");
         merchantId = getIntent().getIntExtra(MERCHANT_ID, -1);
         EditTextUtils.afterDotTwo(editAmount);
     }
 
-    @OnClick({R.id.submit, R.id.left_button, R.id.right_button})
+    @OnClick({R.id.submit, R.id.left_button, R.id.right_button, R.id.rl_pay, R.id.allWithdraw})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.left_button:
@@ -101,22 +114,38 @@ public class WithdrawActivity extends BaseActivity {
             case R.id.submit:
                 VeriPassword(balance);
                 break;
+            case R.id.allWithdraw:
+                editAmount.setText(MathUtils.subZero(String.valueOf(balance)));
+                break;
             case R.id.right_button:
                 Intent intent = new Intent(WithdrawActivity.this, WithdrawRecordActivity.class);
                 intent.putExtra(WithdrawRecordActivity.MERCHANT_ID, merchantId);
                 startActivity(intent);
                 break;
+            case R.id.rl_pay:
+                String[] strings = new String[]{"微信", "支付宝"};
+                new XPopup.Builder(this)
+                        .asCustom(new CustomRefundView(WithdrawActivity.this)
+                                .setData(Arrays.asList(strings))
+                                .setOnItemClickListener(new CustomRefundView.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(int position) {
+                                        tvPayType.setText(strings[position]);
+                                        if (position == 0) {
+                                            channel = "wx";
+                                            imageView.setBackgroundResource(R.mipmap.icon_weixinzhifu);
+                                        } else {
+                                            imageView.setBackgroundResource(R.mipmap.icon_zhifubaozhifu);
+                                            channel = "alipay";
+                                        }
+                                    }
+                                }))
+                        .show();
+                break;
         }
     }
 
     private void VeriPassword(double balance) {
-        if (!StringUtils.isPhone(editAlipayNo.getText().toString().trim())) {
-            if (!StringUtils.isEmail(editAlipayNo.getText().toString().trim())) {
-                ToastUtils.showShortToast("请输入正确的支付宝账号");
-                return;
-            }
-        }
-
         if (TextUtils.isEmpty(editAmount.getText().toString())) {
             ToastUtils.showShortToast("请输入正确金额");
             return;
@@ -126,10 +155,10 @@ public class WithdrawActivity extends BaseActivity {
             return;
         }
         double amount = Double.valueOf(editAmount.getText().toString());
-        if (amount < 10) {
+        /*if (amount < 10) {
             ToastUtils.showShortToast("提现金额必须大于10元");
             return;
-        }
+        }*/
         if (amount > balance) {
             ToastUtils.showShortToast("当前余额不足");
             return;
@@ -146,7 +175,7 @@ public class WithdrawActivity extends BaseActivity {
                     submit(result.toString());
                 } else {
                     new XPopup.Builder(WithdrawActivity.this)
-                            .asConfirm("提示", "提现需要绑定支付宝账号是否现在去绑定？", "关闭", "确定", new OnConfirmListener() {
+                            .asConfirm("提示", "您未绑定支付宝账号是否现在去绑定？", "关闭", "确定", new OnConfirmListener() {
                                 @Override
                                 public void onConfirm() {
                                     Intent intent = new Intent(WithdrawActivity.this, BindingAccountActivity.class);
@@ -171,13 +200,19 @@ public class WithdrawActivity extends BaseActivity {
                 .tag(this);
         if (merchantId != -1) {
             postRequest.params("merchantId", merchantId + "");
+            postRequest.params("type", 2);
+        } else {
+            postRequest.params("type", 1);
         }
-
+        if (channel.equals("alipay")) {
+            postRequest.params("account", alipayNo);
+        }
         postRequest.params(Constant.ACCESSTOKEN, token)
                 .params(Constant.USERID, userId)
-                .params("account", editAlipayNo.getText().toString().trim())
+                .params("channel", channel)
                 .params("amount", editAmount.getText().toString().trim())
                 .params("payPass", passWord)
+                .params("device", "android")
                 .execute(new JsonCallback<LzyResponse<WithdrawModel>>() {
                     @Override
                     public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<WithdrawModel>> response) {
@@ -257,7 +292,7 @@ public class WithdrawActivity extends BaseActivity {
                     public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<BindingAliAccountModel>> response) {
                         super.onSuccess(WithdrawActivity.this, response.body().msg, response.body().code);
                         if (response.body().data != null) {
-                            editAlipayNo.setText(response.body().data.getBankCardNo());
+                            alipayNo = response.body().data.getBankCardNo();
                         }
                     }
 

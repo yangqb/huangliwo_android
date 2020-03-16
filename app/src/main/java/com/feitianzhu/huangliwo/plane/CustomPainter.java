@@ -1,6 +1,7 @@
 package com.feitianzhu.huangliwo.plane;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.text.TextUtils;
@@ -11,6 +12,7 @@ import com.necer.painter.CalendarPainter;
 import com.necer.utils.Attrs;
 import com.necer.utils.CalendarUtil;
 import com.necer.view.CalendarView;
+import com.necer.view.MonthView;
 
 import org.joda.time.LocalDate;
 
@@ -33,6 +35,7 @@ public class CustomPainter implements CalendarPainter {
     private Map<LocalDate, String> mReplaceLunarStrMap;
     private Map<LocalDate, Integer> mReplaceLunarColorMap;
     private Map<LocalDate, String> mStretchStrMap;
+    private List<LocalDate> multiSelectList;
 
     private ICalendar mCalendar;
 
@@ -41,9 +44,11 @@ public class CustomPainter implements CalendarPainter {
         this.mCalendar = calendar;
         mTextPaint = getPaint();
         mCirclePaint = getPaint();
+        mCirclePaint.setColor(Color.parseColor("#7D7DFF"));
         mPointList = new ArrayList<>();
         mHolidayList = new ArrayList<>();
         mWorkdayList = new ArrayList<>();
+        multiSelectList = new ArrayList<>();
         mReplaceLunarStrMap = new HashMap<>();
         mReplaceLunarColorMap = new HashMap<>();
         mStretchStrMap = new HashMap<>();
@@ -67,36 +72,64 @@ public class CustomPainter implements CalendarPainter {
 
     @Override
     public void onDrawCalendarBackground(CalendarView iCalendarView, Canvas canvas, RectF rectF, LocalDate localDate, int totalDistance, int currentDistance) {
-
+       /* if (iCalendarView instanceof MonthView && mAttrs.isShowNumberBackground) {
+            mTextPaint.setTextSize(mAttrs.numberBackgroundTextSize);
+            mTextPaint.setColor(mAttrs.numberBackgroundTextColor);
+            int alphaColor = mAttrs.numberBackgroundAlphaColor * currentDistance / totalDistance;
+            mTextPaint.setAlpha(alphaColor);
+            canvas.drawText(localDate.getMonthOfYear() + "", rectF.centerX(), getBaseLineY(rectF), mTextPaint);
+        }*/
     }
 
     @Override
     public void onDrawToday(Canvas canvas, RectF rectF, LocalDate localDate, List<LocalDate> selectDateList) {
-        drawSelectBg(canvas, rectF, noAlphaColor, true);
-        drawSolar(canvas, rectF, localDate, noAlphaColor, true, true);
-        drawLunar(canvas, rectF, localDate, noAlphaColor, true, true);
-        drawPoint(canvas, rectF, true, noAlphaColor, localDate);
-        drawHolidays(canvas, rectF, true, noAlphaColor, localDate);
+        //drawSelectDay(canvas, rectF, localDate);
+        if (selectDateList.contains(localDate)) {
+            drawSelectBg(canvas, rectF, noAlphaColor, true);
+            drawSolar(canvas, rectF, localDate, noAlphaColor, true, true);
+            drawLunar(canvas, rectF, localDate, noAlphaColor, true, true);
+            drawPoint(canvas, rectF, true, noAlphaColor, localDate);
+            drawHolidays(canvas, rectF, true, noAlphaColor, localDate);
+        } else {
+            drawSolar(canvas, rectF, localDate, noAlphaColor, false, true);
+            drawLunar(canvas, rectF, localDate, noAlphaColor, false, true);
+            drawPoint(canvas, rectF, false, noAlphaColor, localDate);
+            drawHolidays(canvas, rectF, false, noAlphaColor, localDate);
+        }
         drawStretchText(canvas, rectF, noAlphaColor, localDate);
     }
 
     @Override
     public void onDrawCurrentMonthOrWeek(Canvas canvas, RectF rectF, LocalDate localDate, List<LocalDate> selectDateList) {
-        drawSelectBg(canvas, rectF, noAlphaColor, false);
-        drawSolar(canvas, rectF, localDate, noAlphaColor, true, false);
-        drawLunar(canvas, rectF, localDate, noAlphaColor, true, false);
-        drawPoint(canvas, rectF, false, noAlphaColor, localDate);
-        drawHolidays(canvas, rectF, false, noAlphaColor, localDate);
+        if (selectDateList.contains(localDate)) {
+            drawSelectBg(canvas, rectF, noAlphaColor, false);
+            drawSolar(canvas, rectF, localDate, noAlphaColor, true, false);
+            drawLunar(canvas, rectF, localDate, noAlphaColor, true, false);
+            drawPoint(canvas, rectF, false, noAlphaColor, localDate);
+            drawHolidays(canvas, rectF, false, noAlphaColor, localDate);
+        } else {
+            drawSolar(canvas, rectF, localDate, noAlphaColor, false, false);
+            drawLunar(canvas, rectF, localDate, noAlphaColor, false, false);
+            drawPoint(canvas, rectF, false, noAlphaColor, localDate);
+            drawHolidays(canvas, rectF, false, noAlphaColor, localDate);
+        }
         drawStretchText(canvas, rectF, noAlphaColor, localDate);
     }
 
     @Override
     public void onDrawLastOrNextMonth(Canvas canvas, RectF rectF, LocalDate localDate, List<LocalDate> selectDateList) {
-        drawSelectBg(canvas, rectF, mAttrs.alphaColor, false);
-        drawSolar(canvas, rectF, localDate, mAttrs.alphaColor, true, false);
-        drawLunar(canvas, rectF, localDate, mAttrs.alphaColor, true, false);
-        drawPoint(canvas, rectF, false, mAttrs.alphaColor, localDate);
-        drawHolidays(canvas, rectF, false, mAttrs.alphaColor, localDate);
+        if (selectDateList.contains(localDate)) {
+            drawSelectBg(canvas, rectF, mAttrs.alphaColor, false);
+            drawSolar(canvas, rectF, localDate, mAttrs.alphaColor, true, false);
+            drawLunar(canvas, rectF, localDate, mAttrs.alphaColor, true, false);
+            drawPoint(canvas, rectF, false, mAttrs.alphaColor, localDate);
+            drawHolidays(canvas, rectF, false, mAttrs.alphaColor, localDate);
+        } else {
+            drawSolar(canvas, rectF, localDate, mAttrs.alphaColor, false, false);
+            drawLunar(canvas, rectF, localDate, mAttrs.alphaColor, false, false);
+            drawPoint(canvas, rectF, false, mAttrs.alphaColor, localDate);
+            drawHolidays(canvas, rectF, false, mAttrs.alphaColor, localDate);
+        }
         drawStretchText(canvas, rectF, mAttrs.alphaColor, localDate);
     }
 
@@ -109,12 +142,27 @@ public class CustomPainter implements CalendarPainter {
         drawStretchText(canvas, rectF, mAttrs.disabledAlphaColor, localDate);
     }
 
+    /*
+     *设置多个日期选中
+     * */
+    public void setMultiSelectDay(List<String> list) {
+        for (int i = 0; i < list.size(); i++) {
+            LocalDate localDate = null;
+            try {
+                localDate = new LocalDate(list.get(i));
+            } catch (Exception e) {
+                throw new RuntimeException("setMultiSelectDay的参数需要 yyyy-MM-dd 格式的日期");
+            }
+            multiSelectList.add(localDate);
+        }
+        mCalendar.notifyCalendar();
+    }
 
     //选中背景
     private void drawSelectBg(Canvas canvas, RectF rectF, int alphaColor, boolean isToday) {
-        mCirclePaint.setStyle(isToday ? Paint.Style.FILL_AND_STROKE : Paint.Style.STROKE);
-        mCirclePaint.setStrokeWidth(mAttrs.hollowCircleStroke);
-        mCirclePaint.setColor(isToday ? mAttrs.selectCircleColor : mAttrs.hollowCircleColor);
+        //mCirclePaint.setStyle(isToday ? Paint.Style.FILL_AND_STROKE : Paint.Style.STROKE);
+        //mCirclePaint.setStrokeWidth(mAttrs.hollowCircleStroke);
+        mCirclePaint.setColor(mAttrs.selectCircleColor);
         mCirclePaint.setAlpha(alphaColor);
         canvas.drawCircle(rectF.centerX(), rectF.centerY(), mAttrs.selectCircleRadius, mCirclePaint);
     }
@@ -123,7 +171,7 @@ public class CustomPainter implements CalendarPainter {
     //绘制公历
     private void drawSolar(Canvas canvas, RectF rectF, LocalDate date, int alphaColor, boolean isSelect, boolean isToday) {
         if (isSelect) {
-            mTextPaint.setColor(isToday ? mAttrs.todaySolarSelectTextColor : mAttrs.selectSolarTextColorColor);
+            mTextPaint.setColor(mAttrs.todaySolarSelectTextColor);
         } else {
             mTextPaint.setColor(isToday ? mAttrs.todaySolarTextColor : mAttrs.solarTextColor);
         }
@@ -157,7 +205,7 @@ public class CustomPainter implements CalendarPainter {
             Integer color = mReplaceLunarColorMap.get(calendarDate.localDate);
             if (color == null) {
                 if (isSelect) {
-                    mTextPaint.setColor(isToday ? mAttrs.todaySelectContrastColor : mAttrs.selectLunarTextColor);
+                    mTextPaint.setColor(mAttrs.todaySelectContrastColor);
                 }
             } else {
                 mTextPaint.setColor(color);
@@ -167,7 +215,6 @@ public class CustomPainter implements CalendarPainter {
             canvas.drawText(lunarString, rectF.centerX(), rectF.centerY() + mAttrs.lunarDistance, mTextPaint);
         }
     }
-
 
     //绘制圆点
     private void drawPoint(Canvas canvas, RectF rectF, boolean isTodaySelect, int alphaColor, LocalDate date) {

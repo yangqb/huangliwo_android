@@ -1,6 +1,7 @@
 package com.feitianzhu.huangliwo.utils;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.net.ParseException;
 
 import java.text.DateFormat;
@@ -588,5 +589,69 @@ public class DateUtils {
         SimpleDateFormat sdf = new SimpleDateFormat(pattern, Locale.getDefault());
         Date date = new Date();
         return sdf.format(date);
+    }
+
+    /*
+     *
+     * 得到周几
+     * */
+    @SuppressLint("SimpleDateFormat")
+    public static String strToDate2(String strDate) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar c = Calendar.getInstance();
+        try {
+            c.setTime(formatter.parse(strDate));
+        } catch (java.text.ParseException e) {
+            e.printStackTrace();
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
+        String week = sdf.format(c.getTime());
+        String result = week.substring(week.length() - 1);
+        return "周" + result;
+    }
+
+    /*
+     * 将YYYY-MM-dd转换成MM-dd
+     * */
+    public static String strToStr(String str) {
+        String[] result = str.split("-");
+        return result[1] + "-" + result[2];
+
+    }
+
+    /*
+     * 将分钟转换成小时
+     * */
+    public static String minToHour(String str) {
+        String result = "";
+        if (Integer.valueOf(str) > 60) {
+            int hour = Integer.valueOf(str) / 60;
+            int min = Integer.valueOf(str) % 60;
+            result = hour + "小时" + min + "分钟";
+        } else {
+            result = str + "分钟";
+        }
+        return result;
+    }
+
+    public static String getFormatedDateTime(String pattern, long dateTime) {
+        SimpleDateFormat sDateFormat = new SimpleDateFormat(pattern);
+        return sDateFormat.format(new Date(dateTime + 0));
+    }
+
+    /**
+     * 调用此方法输入所要转换的时间戳输入例如（1402733340）输出（"2014-06-14"）
+     *
+     * @param time
+     * @return
+     */
+    public static String timedate(String time) {
+        SimpleDateFormat sdr = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        @SuppressWarnings("unused")
+        long lcc = Long.valueOf(time);
+        int i = Integer.parseInt(time);
+        String times = sdr.format(new Date(i * 1000L));
+        return times;
+
     }
 }

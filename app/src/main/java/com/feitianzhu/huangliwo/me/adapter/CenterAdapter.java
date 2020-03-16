@@ -61,6 +61,9 @@ public class CenterAdapter extends BaseQuickAdapter<Integer, BaseViewHolder> {
             case 8:
                 textView.setText("分享");
                 break;
+            case 9:
+                textView.setText("我的团队");
+                break;
         }
     }
 

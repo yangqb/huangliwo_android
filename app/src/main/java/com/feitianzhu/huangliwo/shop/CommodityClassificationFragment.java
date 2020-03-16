@@ -425,6 +425,7 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
         switch (view.getId()) {
             case R.id.ll_location:
                 ProvinceDialog2 branchDialog = ProvinceDialog2.newInstance();
+                branchDialog.setCityLevel(ProvinceDialog2.PROVINCE_CITY);
                 branchDialog.setAddress("北京市", "东城区", "东华门街道");
                 branchDialog.setSelectOnListener(this);
                 branchDialog.show(getChildFragmentManager());

@@ -31,11 +31,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="25dp"
-                android:text="成人 票价"
+                android:text="成人票价"
                 android:textColor="@color/color_333333"
                 android:textSize="15sp" />
 
             <LinearLayout
+                android:id="@+id/ll_go"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -49,6 +50,7 @@
                     android:textSize="12sp" />
 
                 <TextView
+                    android:id="@+id/goPrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="25dp"
@@ -64,6 +66,7 @@
                     android:textSize="12sp" />
 
                 <TextView
+                    android:id="@+id/goArfAndTof"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="¥1650"
@@ -73,6 +76,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/ll_back"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -86,6 +90,7 @@
                     android:textSize="12sp" />
 
                 <TextView
+                    android:id="@+id/backPrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="25dp"
@@ -101,6 +106,7 @@
                     android:textSize="12sp" />
 
                 <TextView
+                    android:id="@+id/backArfAndTof"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="¥1650"
@@ -113,11 +119,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:text="成人 票价"
+                android:text="儿童票价"
                 android:textColor="@color/color_333333"
                 android:textSize="15sp" />
 
             <LinearLayout
+                android:id="@+id/ll_goc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -131,6 +138,7 @@
                     android:textSize="12sp" />
 
                 <TextView
+                    android:id="@+id/gocPrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="25dp"
@@ -146,6 +154,7 @@
                     android:textSize="12sp" />
 
                 <TextView
+                    android:id="@+id/gocArfAndTof"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="¥1650"
@@ -155,6 +164,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/ll_backc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -168,6 +178,7 @@
                     android:textSize="12sp" />
 
                 <TextView
+                    android:id="@+id/backcPrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="25dp"
@@ -183,6 +194,7 @@
                     android:textSize="12sp" />
 
                 <TextView
+                    android:id="@+id/backcArfAndTof"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="¥1650"

@@ -4,8 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,17 +21,40 @@ import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.login.entity.LoginEntity;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
+import com.feitianzhu.huangliwo.model.PayInfo;
+import com.feitianzhu.huangliwo.model.WXLoginInfo;
+import com.feitianzhu.huangliwo.model.WXLoginModel;
+import com.feitianzhu.huangliwo.shop.ShopPayActivity;
+import com.feitianzhu.huangliwo.shop.ui.OrderDetailActivity;
 import com.feitianzhu.huangliwo.utils.EncryptUtils;
+import com.feitianzhu.huangliwo.utils.PayUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.StringUtils;
+import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.utils.UserInfoUtils;
+import com.google.gson.Gson;
 import com.gyf.immersionbar.ImmersionBar;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.Progress;
 import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.base.Request;
 import com.socks.library.KLog;
+import com.tencent.mm.opensdk.modelmsg.SendAuth;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.Callback;
+import com.zhy.http.okhttp.https.HttpsUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONObject;
 
 import butterknife.BindView;
+import butterknife.OnClick;
+import okhttp3.Call;
 
 import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
 import static com.feitianzhu.huangliwo.common.Constant.FailCode;
@@ -49,7 +74,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     TextView mForgetLayout;
     @BindView(R.id.tv_regist)
     TextView mRegister;
-
+    @BindView(R.id.wx_login)
+    ImageView wxLogin;
     private String mAccount;
     private String mPassword;
 
@@ -65,10 +91,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 .statusBarDarkFont(true, 0.2f)
                 .statusBarColor(R.color.white)
                 .init();
-
+        EventBus.getDefault().register(this);
         mSignInButton.setOnClickListener(this);
         mRegister.setOnClickListener(this);
         mForgetLayout.setOnClickListener(this);
+        wxLogin.setOnClickListener(this);
 
         mRegister.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
         mForgetLayout.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
@@ -104,7 +131,18 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             case R.id.tv_forget_password:
                 startActivity(new Intent(this, ForgetPasswordActivity.class));
                 break;
+            case R.id.wx_login:
+                reqWeiXin();
+                break;
         }
+    }
+
+    public void reqWeiXin() {
+        final SendAuth.Req req = new SendAuth.Req();
+        req.scope = "snsapi_userinfo";
+        req.state = "wechat_sdk_demo_test";
+        IWXAPI api = WXAPIFactory.createWXAPI(LoginActivity.this, Constant.WX_APP_ID);
+        api.sendReq(req);
     }
 
 
@@ -150,7 +188,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                             SPUtils.putString(LoginActivity.this, Constant.SP_PASSWORD, base64Ps);
                             SPUtils.putString(LoginActivity.this, Constant.SP_LOGIN_USERID, loginEntity.userId);
                             SPUtils.putString(LoginActivity.this, Constant.SP_ACCESS_TOKEN, loginEntity.accessToken);
-
                             getUserInfo(loginEntity.userId, loginEntity.accessToken);
 
                         } else {
@@ -197,12 +234,64 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                             UserInfoUtils.saveUserInfo(LoginActivity.this, response.body().data);
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             startActivity(intent);
-                            LoginActivity.this.finish();
+                            finish();
                         }
                     }
 
                     @Override
                     public void onError(Response<LzyResponse<MineInfoModel>> response) {
+                        super.onError(response);
+                    }
+                });
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onWXLogin(String code) {
+        OkGo.<WXLoginModel>get("https://api.weixin.qq.com/sns/oauth2/access_token")
+                .tag(this)
+                .params("appid", Constant.WX_APP_ID)
+                .params("secret", "dfd64a9483d48766f13cf3b2fa70fbe0")
+                .params("code", code)
+                .params("grant_type", "authorization_code")
+                .execute(new JsonCallback<WXLoginModel>() {
+                    @Override
+                    public void onSuccess(Response<WXLoginModel> response) {
+                        wxLogin(response.body());
+                    }
+
+                    @Override
+                    public void onError(Response<WXLoginModel> response) {
+                        super.onError(response);
+                    }
+                });
+
+    }
+
+    public void wxLogin(WXLoginModel loginModel) {
+        String json = new Gson().toJson(loginModel);
+        OkGo.<LzyResponse<WXLoginInfo>>post(Urls.WX_LOGIN)
+                .tag(this)
+                .params("loginUserInfo", json)
+                .execute(new JsonCallback<LzyResponse<WXLoginInfo>>() {
+                    @Override
+                    public void onSuccess(Response<LzyResponse<WXLoginInfo>> response) {
+                        if (response.body().code == 0) {
+                            if (response.body().data.isBindPhone == 0) {
+                                Intent intent = new Intent(LoginActivity.this, WXBindingActivity.class);
+                                intent.putExtra(WXBindingActivity.WX_DATA, response.body().data);
+                                startActivity(intent);
+                            } else {
+                                getUserInfo(response.body().data.userId, response.body().data.accessToken);
+                                Constant.ACCESS_TOKEN = response.body().data.accessToken;
+                                Constant.LOGIN_USERID = response.body().data.userId;
+                                SPUtils.putString(LoginActivity.this, Constant.SP_LOGIN_USERID, response.body().data.userId);
+                                SPUtils.putString(LoginActivity.this, Constant.SP_ACCESS_TOKEN, response.body().data.accessToken);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<LzyResponse<WXLoginInfo>> response) {
                         super.onError(response);
                     }
                 });
@@ -215,6 +304,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     public static void startActivity(Context context) {
         Intent intent = new Intent(context, LoginActivity.class);
         context.startActivity(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }
 
