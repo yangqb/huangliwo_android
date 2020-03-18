@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
+import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.necer.calendar.BaseCalendar;
 import com.necer.calendar.Miui10Calendar;
 import com.necer.entity.CalendarDate;
@@ -16,15 +17,19 @@ import com.necer.enumeration.MultipleNumModel;
 import com.necer.enumeration.SelectedModel;
 import com.necer.listener.OnCalendarChangedListener;
 import com.necer.listener.OnCalendarMultipleChangedListener;
+import com.necer.listener.OnClickDisableDateListener;
 import com.necer.painter.InnerPainter;
 import com.necer.utils.CalendarUtil;
 
 import org.joda.time.LocalDate;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -64,9 +69,20 @@ public class PlaneCalendarActivity extends BaseActivity {
         List<String> singerDay = Arrays.asList("2020-03-18");
         CustomPainter innerPainter = new CustomPainter(miui10Calendar);
         miui10Calendar = findViewById(R.id.miui10Calendar);
-        if (selectType == 2) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);// HH:mm:ss
+        Calendar rightNow = Calendar.getInstance();
+        //当前时间 加10天
+        rightNow.add(Calendar.DAY_OF_YEAR, 2);
+        //new SimgpleDateFormat 进行格式化
+        //利用Calendar的getTime方法，将时间转化为Date对象
+        //利用SimpleDateFormat对象 把Date对象格式化
+        if (selectType == 2 || selectType == 3) {
+            miui10Calendar.getAllSelectDateList().remove(0);
             miui10Calendar.setMultipleNum(2, MultipleNumModel.FULL_REMOVE_FIRST);
-            miui10Calendar.getAllSelectDateList().add(new LocalDate("2020-03-20")); //设置默认选中多个日期
+            List<LocalDate> localDateList = new ArrayList<>();
+            localDateList.add(new LocalDate(simpleDateFormat.format((Calendar.getInstance().getTime()))));
+            localDateList.add(new LocalDate(simpleDateFormat.format(rightNow.getTime())));
+            miui10Calendar.getAllSelectDateList().addAll(localDateList); //设置默认选中多个日期
         } else {
             miui10Calendar.setSelectedMode(SelectedModel.SINGLE_SELECTED);
             innerPainter.setMultiSelectDay(singerDay);
@@ -103,7 +119,6 @@ public class PlaneCalendarActivity extends BaseActivity {
 
         miui10Calendar.setCalendarPainter(innerPainter);
 
-
         miui10Calendar.setOnCalendarChangedListener(new OnCalendarChangedListener() {
             @Override
             public void onCalendarChange(BaseCalendar baseCalendar, int year, int month, LocalDate localDate) {
@@ -119,9 +134,11 @@ public class PlaneCalendarActivity extends BaseActivity {
                 } else {
                     tv_data.setText("");
                     tv_desc.setText("");
+                    startDate = null;
                 }
             }
         });
+
         miui10Calendar.setOnCalendarMultipleChangedListener(new OnCalendarMultipleChangedListener() {
             @Override
             public void onCalendarChange(BaseCalendar baseCalendar, int year, int month, List<LocalDate> currectSelectList, List<LocalDate> allSelectList) {
@@ -130,7 +147,17 @@ public class PlaneCalendarActivity extends BaseActivity {
                 //Log.d(TAG, year + "年" + month + "月");
                 //Log.d(TAG, "当前页面选中：：" + currectSelectList);
                 //Log.d(TAG, "全部选中：：" + allSelectList);
-                startDate = currectSelectList.get(0).toString() + "=" + currectSelectList.get(1).toString();
+               /* if (currectSelectList.size() > 2) {
+                    miui10Calendar.getAllSelectDateList().remove(0);
+                }*/
+
+                if (currectSelectList.size() == 2) {
+                    startDate = currectSelectList.get(0).toString() + "=" + currectSelectList.get(1).toString();
+                } else if (currectSelectList.size() == 1) {
+                    startDate = currectSelectList.get(0).toString() + "=" + currectSelectList.get(0).toString();
+                } else {
+                    startDate = null;
+                }
             }
         });
 
@@ -143,10 +170,14 @@ public class PlaneCalendarActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.right_button:
-                Intent intent = new Intent();
-                intent.putExtra(SELECT_DATE, startDate);
-                setResult(RESULT_OK, intent);
-                finish();
+                if (startDate == null) {
+                    ToastUtils.showShortToast("请选择日期");
+                } else {
+                    Intent intent = new Intent();
+                    intent.putExtra(SELECT_DATE, startDate);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }
                 break;
         }
     }

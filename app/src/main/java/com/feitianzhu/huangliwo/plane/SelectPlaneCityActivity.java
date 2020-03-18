@@ -1,5 +1,8 @@
 package com.feitianzhu.huangliwo.plane;
 
+import android.content.Intent;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cretin.tools.cityselect.callback.OnCitySelectListener;
@@ -13,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * package name: com.feitianzhu.huangliwo.plane
@@ -22,8 +26,20 @@ import butterknife.BindView;
  * email: 694125155@qq.com
  */
 public class SelectPlaneCityActivity extends BaseActivity {
+    public static final String CITY_TYPE = "search_type";
+    public int type = 0;//国内0,国际1
     @BindView(R.id.city_view)
     CitySelectView citySelectView;
+    @BindView(R.id.btn_domestic)
+    TextView btnDomestic;
+    @BindView(R.id.btn_international)
+    TextView btnInternational;
+    @BindView(R.id.line1)
+    View line1;
+    @BindView(R.id.line2)
+    View line2;
+    @BindView(R.id.right_text)
+    TextView rightText;
 
     @Override
     protected int getLayoutId() {
@@ -32,6 +48,8 @@ public class SelectPlaneCityActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+        rightText.setText("确定");
+        rightText.setVisibility(View.VISIBLE);
         //设置所有城市数据
         final List<CityModel> allCitys = new ArrayList<>();
         allCitys.add(new CityModel("深圳", "10000000"));
@@ -79,6 +97,35 @@ public class SelectPlaneCityActivity extends BaseActivity {
                 }, 2000);
             }
         });
+    }
+
+    @OnClick({R.id.btn_domestic, R.id.left_button, R.id.btn_international, R.id.right_button})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.btn_domestic:
+                type = 0;
+                btnDomestic.setTextColor(getResources().getColor(R.color.color_333333));
+                btnInternational.setTextColor(getResources().getColor(R.color.color_666666));
+                line1.setBackgroundColor(getResources().getColor(R.color.color_fed228));
+                line2.setBackgroundColor(getResources().getColor(R.color.white));
+                break;
+            case R.id.btn_international:
+                type = 1;
+                btnDomestic.setTextColor(getResources().getColor(R.color.color_666666));
+                btnInternational.setTextColor(getResources().getColor(R.color.color_433D36));
+                line1.setBackgroundColor(getResources().getColor(R.color.white));
+                line2.setBackgroundColor(getResources().getColor(R.color.color_fed228));
+                break;
+            case R.id.left_button:
+                finish();
+                break;
+            case R.id.right_button:
+                Intent intent = new Intent();
+                intent.putExtra(CITY_TYPE, type);
+                setResult(RESULT_OK, intent);
+                finish();
+                break;
+        }
     }
 
     @Override

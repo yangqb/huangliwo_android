@@ -36,6 +36,7 @@ import butterknife.OnClick;
 
 public class SearchPlanActivity extends BaseActivity {
     public static final String SEARCH_TYPE = "search_type";
+    public static final String FLIGHT_DATE = "flight_date";
     private List<MultipleGoSearchFightInfo> goSearchFightInfoList = new ArrayList<>();
     private List<SearchFlightModel.FlightModel> flightInfos = new ArrayList<>();
     private List<SearchInternationalFlightModel> internationalFlightModels = new ArrayList<>();
@@ -72,7 +73,7 @@ public class SearchPlanActivity extends BaseActivity {
     protected void initView() {
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
-        date = getIntent().getStringExtra(PlaneHomeActivity.FLIGHT_DATE);
+        date = getIntent().getStringExtra(FLIGHT_DATE);
         searchType = getIntent().getIntExtra(SEARCH_TYPE, 0);
         planeTitle.setVisibility(View.VISIBLE);
         titleName.setVisibility(View.GONE);
@@ -99,11 +100,11 @@ public class SearchPlanActivity extends BaseActivity {
                 Intent intent = new Intent(SearchPlanActivity.this, PlaneDetailActivity.class);
                 if (searchType == 0) {
                     intent.putExtra(PlaneDetailActivity.DETAIL_TYPE, searchType);
-                    intent.putExtra(PlaneDetailActivity.FLIGHT_DATE, date);
+                    intent.putExtra(PlaneDetailActivity.FLIGHT_START_DATE, date);
                     intent.putExtra(PlaneDetailActivity.FLIGHT_DATA, goSearchFightInfoList.get(position));
                 } else if (searchType == 1) {
                     intent.putExtra(PlaneDetailActivity.DETAIL_TYPE, searchType);
-                    intent.putExtra(PlaneDetailActivity.FLIGHT_DATE, date);
+                    intent.putExtra(PlaneDetailActivity.FLIGHT_START_DATE, date);
                     intent.putExtra(PlaneDetailActivity.FLIGHT_DATA, goSearchFightInfoList.get(position));
                 } else {
 

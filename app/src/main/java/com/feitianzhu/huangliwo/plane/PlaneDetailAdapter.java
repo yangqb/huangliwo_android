@@ -34,7 +34,7 @@ public class PlaneDetailAdapter extends BaseMultiItemQuickAdapter<MultiPriceInfo
         helper.addOnClickListener(R.id.btn_reserve)
                 .addOnClickListener(R.id.luggage_change_notice);
         if (helper.getItemViewType() == MultiPriceInfo.DOMESTIC_TYPE) {
-            setSpannableString(MathUtils.subZero(String.valueOf(item.venDorsInfo.vppr)), helper.getView(R.id.price));
+            setSpannableString(MathUtils.subZero(String.valueOf(item.venDorsInfo.barePrice)), helper.getView(R.id.price));
             if ("A".equals(item.venDorsInfo.cabinCount)) {
                 helper.setText(R.id.cabinCount, "");
                 helper.setVisible(R.id.cabinCount, false);

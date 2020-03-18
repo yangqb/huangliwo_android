@@ -9,6 +9,23 @@
 
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/btn_next"
+            android:layout_width="137dp"
+            android:layout_height="36dp"
+            android:background="@drawable/shape_fed428_r5"
+            android:gravity="center"
+            android:text="下一步"
+            android:textColor="@color/color_333333"
+            android:textSize="17sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="1dp"
         android:orientation="horizontal"
@@ -47,6 +64,7 @@
                     android:textSize="13sp" />
 
                 <TextView
+                    android:id="@+id/depDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawableRight="@mipmap/k01_11genduo"
@@ -156,6 +174,7 @@
                     android:textSize="13sp" />
 
                 <TextView
+                    android:id="@+id/arrDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawableRight="@mipmap/k01_11genduo"

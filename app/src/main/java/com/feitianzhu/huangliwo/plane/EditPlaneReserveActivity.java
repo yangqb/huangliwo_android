@@ -24,6 +24,7 @@ import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.PlaneResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.BaggageRuleInfo;
+import com.feitianzhu.huangliwo.model.CreateOrderInfo;
 import com.feitianzhu.huangliwo.model.CustomPlaneFlightInfo;
 import com.feitianzhu.huangliwo.model.CustomPriceDetailInfo;
 import com.feitianzhu.huangliwo.model.GoBackTripInfo;
@@ -142,7 +143,7 @@ public class EditPlaneReserveActivity extends BaseActivity {
         startCity.setText("北京");
         endCity.setText("上海");
         if (type == 0) {
-            priceDetailInfo.price = venDorsInfo.vppr;
+            priceDetailInfo.price = venDorsInfo.barePrice;
             priceDetailInfo.arf = detailInfo.arf;
             priceDetailInfo.tof = detailInfo.tof;
             priceDetailInfo.cPrice = 0;
@@ -163,7 +164,7 @@ public class EditPlaneReserveActivity extends BaseActivity {
             llGoPlane.setVisibility(View.GONE);
             comeBack.setVisibility(View.GONE);
             tvComeInfo.setText(DateUtils.strToStr(detailInfo.date) + DateUtils.strToDate2(detailInfo.date) + detailInfo.btime + detailInfo.depAirport + detailInfo.depTerminal + "-" + detailInfo.arrAirport + detailInfo.arrTerminal);
-            price.setText("¥" + MathUtils.subZero(String.valueOf(venDorsInfo.vppr)));
+            price.setText("¥" + MathUtils.subZero(String.valueOf(venDorsInfo.barePrice)));
             arfAndTof.setText("机建+燃油 ¥" + MathUtils.subZero(String.valueOf(detailInfo.tof + detailInfo.arf)));
             if (venDorsInfo.cabinType == 0) {
                 tvCabinType.setText("经济舱(" + venDorsInfo.cabin + ")");
@@ -402,7 +403,7 @@ public class EditPlaneReserveActivity extends BaseActivity {
 
     public void createOrder(String bkResult) {
         String passengerJson = new Gson().toJson(list);
-        OkGo.<PlaneResponse>post(Urls.CREATE_PLANE_ORDER)
+        OkGo.<PlaneResponse<CreateOrderInfo>>post(Urls.CREATE_PLANE_ORDER)
                 .tag(this)
                 .params(Constant.ACCESSTOKEN, token)
                 .params(Constant.USERID, userId)
@@ -413,10 +414,20 @@ public class EditPlaneReserveActivity extends BaseActivity {
                 .params("needXcd", false)
                 //.params("address", "深圳市固戍梧桐岛6A栋")
                 .params("passengerStr", passengerJson)
-                .execute(new JsonCallback<PlaneResponse>() {
+                .execute(new JsonCallback<PlaneResponse<CreateOrderInfo>>() {
                     @Override
-                    public void onSuccess(Response<PlaneResponse> response) {
+                    public void onSuccess(Response<PlaneResponse<CreateOrderInfo>> response) {
                         super.onSuccess(EditPlaneReserveActivity.this, response.body().message, response.body().code);
+                        if (response.body().code == 0) {
+                            Intent intent = new Intent(EditPlaneReserveActivity.this, PlaneOrderDetailActivity.class);
+                            startActivity(intent);
+
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<PlaneResponse<CreateOrderInfo>> response) {
+                        super.onError(response);
                     }
                 });
 

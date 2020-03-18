@@ -12,7 +12,6 @@ import com.necer.painter.CalendarPainter;
 import com.necer.utils.Attrs;
 import com.necer.utils.CalendarUtil;
 import com.necer.view.CalendarView;
-import com.necer.view.MonthView;
 
 import org.joda.time.LocalDate;
 

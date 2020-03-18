@@ -28,6 +28,7 @@
             android:textSize="13sp" />
 
         <TextView
+            android:id="@+id/twoWay_go_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawableRight="@mipmap/k01_11genduo"
@@ -37,6 +38,7 @@
             android:textSize="12sp" />
 
         <TextView
+            android:id="@+id/twoWay_go_cityName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
@@ -65,6 +67,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/twoWay_go_depTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -74,6 +77,7 @@
                     android:textSize="24sp" />
 
                 <TextView
+                    android:id="@+id/twoWay_go_depAirportName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="虹桥机场T2"
@@ -93,6 +97,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/twoWay_go_flightTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="2小时15分"
@@ -112,6 +117,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/twoWay_go_arrTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -121,6 +127,7 @@
                     android:textSize="24sp" />
 
                 <TextView
+                    android:id="@+id/twoWay_go_arrAirportName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="虹桥机场T2"
@@ -128,6 +135,15 @@
                     android:textSize="13sp" />
 
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/twoWay_go_CrossDays"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="+1天"
+                android:textColor="@color/color_289cef"
+                android:textSize="12sp"
+                android:visibility="gone"/>
 
         </LinearLayout>
 
@@ -160,11 +176,12 @@
             android:layout_marginRight="8dp"
             android:background="@drawable/shape_9b65ff_r10"
             android:gravity="center"
-            android:text="去程"
+            android:text="返程"
             android:textColor="@color/white"
             android:textSize="13sp" />
 
         <TextView
+            android:id="@+id/twoWay_back_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawableRight="@mipmap/k01_11genduo"
@@ -174,6 +191,7 @@
             android:textSize="12sp" />
 
         <TextView
+            android:id="@+id/twoWay_back_cityName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
@@ -202,6 +220,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/twoWay_back_depTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -211,6 +230,7 @@
                     android:textSize="24sp" />
 
                 <TextView
+                    android:id="@+id/twoWay_back_depAirportName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="虹桥机场T2"
@@ -230,6 +250,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/twoWay_back_flightTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="2小时15分"
@@ -249,6 +270,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/twoWay_back_arrTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -258,6 +280,7 @@
                     android:textSize="24sp" />
 
                 <TextView
+                    android:id="@+id/twoWay_back_arrAirportName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="虹桥机场T2"
@@ -265,6 +288,15 @@
                     android:textSize="13sp" />
 
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/twoWay_back_CrossDays"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="+1天"
+                android:textColor="@color/color_289cef"
+                android:textSize="12sp"
+                android:visibility="gone"/>
 
         </LinearLayout>
 

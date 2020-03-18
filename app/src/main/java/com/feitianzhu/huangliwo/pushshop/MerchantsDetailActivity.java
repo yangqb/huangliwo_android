@@ -638,7 +638,7 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
         merchantInfo.setIntroduce(merchantsIntroduce);
         merchantInfo.setLongitude(String.valueOf(longitude));
         merchantInfo.setLatitude(String.valueOf(latitude));
-        merchantInfo.setInviteCode(Integer.valueOf(userId));
+        //merchantInfo.setInviteCode(Integer.valueOf(userId));
         if (isMySelfMerchants) {
             merchantInfo.setBusinessTime(businessTimes);
         }

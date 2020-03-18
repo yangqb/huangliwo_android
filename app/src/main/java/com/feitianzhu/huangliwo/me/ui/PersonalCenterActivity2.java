@@ -180,6 +180,8 @@ public class PersonalCenterActivity2 extends BaseTakePhotoActivity {
             tvVip.setText("超级会员");
         } else if (response.getAccountType() == 5) {
             tvVip.setText("优选会员");
+        } else if (response.getAccountType() == 7) {
+            tvVip.setText("省代理");
         }
     }
 

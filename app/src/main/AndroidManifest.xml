@@ -595,6 +595,10 @@
             android:name=".plane.SelectPlaneCityActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".plane.PlaneCalendarActivity2"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:screenOrientation="portrait" />
 
     </application>
 

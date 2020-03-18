@@ -26,6 +26,7 @@ import com.feitianzhu.huangliwo.http.PlaneResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.FlightSegmentInfo;
 import com.feitianzhu.huangliwo.model.InternationalPriceInfo;
+import com.feitianzhu.huangliwo.model.MultiGoBackFlightInfo;
 import com.feitianzhu.huangliwo.model.MultiPriceInfo;
 import com.feitianzhu.huangliwo.model.MultipleGoSearchFightInfo;
 import com.feitianzhu.huangliwo.model.PlaneDetailInfo;
@@ -38,9 +39,11 @@ import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.view.CustomCancelChangePopView;
 import com.feitianzhu.huangliwo.view.CustomPlaneProtocolView;
 import com.feitianzhu.huangliwo.view.CustomPlaneTransferView;
+import com.google.gson.Gson;
 import com.lxj.xpopup.XPopup;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.GetRequest;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,14 +55,17 @@ import butterknife.OnClick;
 public class PlaneDetailActivity extends BaseActivity {
     public static final String DETAIL_TYPE = "detail_type";
     public static final String FLIGHT_DATA = "flight_data";
-    public static final String FLIGHT_DATE = "flight_date";
-    private String date;
+    public static final String FLIGHT_START_DATE = "flight_start_date";
+    public static final String FLIGHT_END_DATE = "flight_end_date";
+    private String depDate;
+    private String retDate;
     private PlaneDetailAdapter mAdapter;
     private TransitAdapter transitAdapter;
     private List<MultiPriceInfo> multiPriceInfos = new ArrayList<>();
     private SearchFlightModel.FlightModel flightModel;
     private List<FlightSegmentInfo> flightSegmentInfo;
     private MultipleGoSearchFightInfo goSearchFightInfo;
+    private MultiGoBackFlightInfo goBackSearchFlightInfo;
     private PlaneDetailInfo planeDetailInfo;
     private String userId;
     private String token;
@@ -96,6 +102,38 @@ public class PlaneDetailActivity extends BaseActivity {
     RecyclerView transitRecyclerView;
     @BindView(R.id.one_way_crossDays)
     TextView oneWayCrossDays;
+    @BindView(R.id.twoWay_go_depTime)
+    TextView twoWayGoDepTime;
+    @BindView(R.id.twoWay_go_arrTime)
+    TextView twoWayGoArrTime;
+    @BindView(R.id.twoWay_go_depAirportName)
+    TextView twoWayGoDepAirportName;
+    @BindView(R.id.twoWay_go_arrAirportName)
+    TextView twoWayGoArrAirportName;
+    @BindView(R.id.twoWay_go_flightTime)
+    TextView twoWayGoFlightTime;
+    @BindView(R.id.twoWay_go_date)
+    TextView twoWayGoDate;
+    @BindView(R.id.twoWay_go_cityName)
+    TextView twoWayGoCityName;
+    @BindView(R.id.twoWay_back_date)
+    TextView twoWayBackDate;
+    @BindView(R.id.twoWay_back_cityName)
+    TextView twoWayBackCityName;
+    @BindView(R.id.twoWay_back_depTime)
+    TextView twoWayBackDepTime;
+    @BindView(R.id.twoWay_back_arrTime)
+    TextView twoWayBackArrTime;
+    @BindView(R.id.twoWay_back_flightTime)
+    TextView twoWayBackFlightTime;
+    @BindView(R.id.twoWay_back_depAirportName)
+    TextView twoWayBackDepAirportName;
+    @BindView(R.id.twoWay_back_arrAirportName)
+    TextView twoWayBackArrAirportName;
+    @BindView(R.id.twoWay_go_CrossDays)
+    TextView twoWayGoCrossDays;
+    @BindView(R.id.twoWay_back_CrossDays)
+    TextView twoWayBackCrossDays;
 
     @Override
     protected int getLayoutId() {
@@ -107,13 +145,22 @@ public class PlaneDetailActivity extends BaseActivity {
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         titleName.setText("");
-        type = getIntent().getIntExtra(DETAIL_TYPE, 1);
-        goSearchFightInfo = (MultipleGoSearchFightInfo) getIntent().getSerializableExtra(FLIGHT_DATA);
-        date = getIntent().getStringExtra(FLIGHT_DATE);
+        type = getIntent().getIntExtra(DETAIL_TYPE, 0);
+        if (type == 0 || type == 1) {
+            //单程
+            goSearchFightInfo = (MultipleGoSearchFightInfo) getIntent().getSerializableExtra(FLIGHT_DATA);
+        } else {
+            //往返
+            goBackSearchFlightInfo = (MultiGoBackFlightInfo) getIntent().getSerializableExtra(FLIGHT_DATA);
+        }
+
+        depDate = getIntent().getStringExtra(FLIGHT_START_DATE);
+        retDate = getIntent().getStringExtra(FLIGHT_END_DATE);
         if (type == 0) {
             flightModel = goSearchFightInfo.flightModel;
             //国内单程直达
             layoutTop1.setVisibility(View.VISIBLE);
+            layoutTop2.setVisibility(View.GONE);
             oneWayCrossDays.setVisibility(View.GONE);
             transitRecyclerView.setVisibility(View.GONE);
             promptContent.setText("【机场提示】该航班到达机场为北京大兴国际机场，距市区约46公里，搭乘地铁到市区约30分钟。");
@@ -144,6 +191,7 @@ public class PlaneDetailActivity extends BaseActivity {
                 //国际直达
                 transitRecyclerView.setVisibility(View.GONE);
                 layoutTop1.setVisibility(View.VISIBLE);
+                layoutTop2.setVisibility(View.GONE);
                 promptContent.setText("【机场提示】该航班到达机场为北京大兴国际机场，距市区约46公里，搭乘地铁到市区约30分钟。");
 
                 oneWayStarDate.setText(DateUtils.strToStr(flightSegmentInfo.get(0).depDate) + DateUtils.strToDate2(flightSegmentInfo.get(0).depDate));
@@ -160,8 +208,59 @@ public class PlaneDetailActivity extends BaseActivity {
                     oneWayCrossDays.setText("+" + flightSegmentInfo.get(0).crossDays + "天");
                 }
             }
+        } else if (type == 2) {
+            //国内往返
+            layoutTop2.setVisibility(View.VISIBLE);
+            layoutTop1.setVisibility(View.GONE);
+            transitRecyclerView.setVisibility(View.GONE);
+            twoWayGoDepTime.setText(goBackSearchFlightInfo.domesticFlight.go.depTime);
+            twoWayGoArrTime.setText(goBackSearchFlightInfo.domesticFlight.go.arrTime);
+            twoWayGoDepAirportName.setText(goBackSearchFlightInfo.domesticFlight.go.depAirport + goBackSearchFlightInfo.domesticFlight.go.depTerminal);
+            twoWayGoArrAirportName.setText(goBackSearchFlightInfo.domesticFlight.go.arrAirport + goBackSearchFlightInfo.domesticFlight.go.arrTerminal);
+            twoWayGoFlightTime.setText(goBackSearchFlightInfo.domesticFlight.go.flightTimes);
+            twoWayGoDate.setText(DateUtils.strToStr(depDate) + DateUtils.strToDate2(depDate));
+            twoWayGoCityName.setText(goBackSearchFlightInfo.domesticFlight.go.depAirportCode + "-" + goBackSearchFlightInfo.domesticFlight.go.arrAirportCode);
+            twoWayBackDate.setText(DateUtils.strToStr(retDate) + DateUtils.strToDate2(retDate));
+            twoWayBackCityName.setText(goBackSearchFlightInfo.domesticFlight.back.depAirportCode + "-" + goBackSearchFlightInfo.domesticFlight.back.arrAirportCode);
+            twoWayBackDepTime.setText(goBackSearchFlightInfo.domesticFlight.back.depTime);
+            twoWayBackArrTime.setText(goBackSearchFlightInfo.domesticFlight.back.arrTime);
+            twoWayBackFlightTime.setText(goBackSearchFlightInfo.domesticFlight.back.flightTimes);
+            twoWayBackDepAirportName.setText(goBackSearchFlightInfo.domesticFlight.back.depAirport + goBackSearchFlightInfo.domesticFlight.back.depTerminal);
+            twoWayBackArrAirportName.setText(goBackSearchFlightInfo.domesticFlight.back.arrAirport + goBackSearchFlightInfo.domesticFlight.back.arrTerminal);
+            twoWayGoCrossDays.setVisibility(View.GONE);
+            twoWayBackCrossDays.setVisibility(View.GONE);
         } else {
+            //国际往返
+            layoutTop2.setVisibility(View.VISIBLE);
+            layoutTop1.setVisibility(View.GONE);
+            transitRecyclerView.setVisibility(View.GONE);
+            twoWayGoDepTime.setText(goBackSearchFlightInfo.internationalFlight.goTrip.flightSegments.get(0).depTime);
+            twoWayGoArrTime.setText(goBackSearchFlightInfo.internationalFlight.goTrip.flightSegments.get(goBackSearchFlightInfo.internationalFlight.goTrip.flightSegments.size() - 1).arrTime);
+            twoWayGoDepAirportName.setText(goBackSearchFlightInfo.internationalFlight.goTrip.flightSegments.get(0).depAirportName);
+            twoWayGoArrAirportName.setText(goBackSearchFlightInfo.internationalFlight.goTrip.flightSegments.get(goBackSearchFlightInfo.internationalFlight.goTrip.flightSegments.size() - 1).arrAirportName);
+            twoWayGoFlightTime.setText(DateUtils.minToHour(goBackSearchFlightInfo.internationalFlight.goTrip.duration));
+            twoWayGoDate.setText(DateUtils.strToStr(depDate) + DateUtils.strToDate2(depDate));
+            twoWayGoCityName.setText(goBackSearchFlightInfo.internationalFlight.goTrip.flightSegments.get(0).depCityName + "-" + goBackSearchFlightInfo.internationalFlight.goTrip.flightSegments.get(goBackSearchFlightInfo.internationalFlight.goTrip.flightSegments.size() - 1).arrCityName);
+            twoWayBackDate.setText(DateUtils.strToStr(retDate) + DateUtils.strToDate2(retDate));
+            twoWayBackCityName.setText(goBackSearchFlightInfo.internationalFlight.backTrip.flightSegments.get(0).depCityName + "-" + goBackSearchFlightInfo.internationalFlight.backTrip.flightSegments.get(goBackSearchFlightInfo.internationalFlight.goTrip.flightSegments.size() - 1).arrCityName);
+            twoWayBackDepTime.setText(goBackSearchFlightInfo.internationalFlight.backTrip.flightSegments.get(0).depTime);
+            twoWayBackArrTime.setText(goBackSearchFlightInfo.internationalFlight.backTrip.flightSegments.get(goBackSearchFlightInfo.internationalFlight.backTrip.flightSegments.size() - 1).arrTime);
+            twoWayBackFlightTime.setText(DateUtils.minToHour(goBackSearchFlightInfo.internationalFlight.backTrip.duration));
+            twoWayBackDepAirportName.setText(goBackSearchFlightInfo.internationalFlight.backTrip.flightSegments.get(0).depAirportName);
+            twoWayBackArrAirportName.setText(goBackSearchFlightInfo.internationalFlight.backTrip.flightSegments.get(goBackSearchFlightInfo.internationalFlight.backTrip.flightSegments.size() - 1).arrAirportName);
 
+            if (goBackSearchFlightInfo.internationalFlight.goTrip.crossDays == 0) {
+                twoWayGoCrossDays.setVisibility(View.GONE);
+            } else {
+                twoWayGoCrossDays.setVisibility(View.VISIBLE);
+                twoWayGoCrossDays.setText("+" + goBackSearchFlightInfo.internationalFlight.goTrip.crossDays + "天");
+            }
+            if (goBackSearchFlightInfo.internationalFlight.backTrip.crossDays == 0) {
+                twoWayBackCrossDays.setVisibility(View.GONE);
+            } else {
+                twoWayBackCrossDays.setVisibility(View.VISIBLE);
+                twoWayBackCrossDays.setText("+" + goBackSearchFlightInfo.internationalFlight.backTrip.crossDays + "天");
+            }
         }
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new PlaneDetailAdapter(multiPriceInfos);
@@ -208,7 +307,7 @@ public class PlaneDetailActivity extends BaseActivity {
                     .params("arr", flightModel.arr)
                     .params(Constant.ACCESSTOKEN, token)
                     .params(Constant.USERID, userId)
-                    .params("date", date)
+                    .params("date", depDate)
                     .params("carrier", flightModel.carrier)
                     .params("flightNum", flightModel.flightNum)
                     .params("cabin", flightModel.cabin)
@@ -228,17 +327,54 @@ public class PlaneDetailActivity extends BaseActivity {
                             super.onError(response);
                         }
                     });
-        } else if (type == 1) {
-            OkGo.<PlaneResponse<PlaneInternationalDetailInfo>>get(Urls.SEARCH_PRICE_INTERNATIONAL_FLIGHT)
+        } else if (type == 2) {
+            OkGo.<PlaneResponse>get(Urls.SEARCH_GO_BACK_PRICE_FLIGHT)
                     .tag(this)
                     .params(Constant.ACCESSTOKEN, token)
                     .params(Constant.USERID, userId)
-                    .params("depCity", flightSegmentInfo.get(0).depCityCode)
-                    .params("arrCity", flightSegmentInfo.get(flightSegmentInfo.size() - 1).arrCityCode)
-                    .params("depDate", date)
-                    //.params("retDate")
+                    .params("depCity", goBackSearchFlightInfo.domesticFlight.go.depAirportCode)
+                    .params("arrCity", goBackSearchFlightInfo.domesticFlight.go.arrAirportCode)
+                    .params("goDate", depDate)
+                    .params("backDate", retDate)
+                    .params("flightCodes", goBackSearchFlightInfo.domesticFlight.flightCodes)
+                    .params("exTrack", "retehui")
+                    .execute(new JsonCallback<PlaneResponse>() {
+                        @Override
+                        public void onSuccess(Response<PlaneResponse> response) {
+                            super.onSuccess(PlaneDetailActivity.this, response.body().message, response.body().code);
+                            String json = new Gson().toJson(response.body().result);
+                        }
+
+                        @Override
+                        public void onError(Response<PlaneResponse> response) {
+                            super.onError(response);
+                        }
+                    });
+            //国内往返
+            layoutTop2.setVisibility(View.VISIBLE);
+            btnTitle1.setText("去程");
+            btnTitle2.setText("返程");
+            promptContent.setText("【风险提示】此报价是组合产品，如遇其中一程航班调整，您可办理另一程退改事宜，需自行承担相应费用，详见退改详情。");
+        } else {
+            GetRequest<PlaneResponse<PlaneInternationalDetailInfo>> getRequest = OkGo.<PlaneResponse<PlaneInternationalDetailInfo>>get(Urls.SEARCH_PRICE_INTERNATIONAL_FLIGHT)
+                    .tag(this);
+            if (type != 1) {
+                //国际往返
+                getRequest.params("retDate", retDate)
+                        .params("depCity", goBackSearchFlightInfo.internationalFlight.goTrip.flightSegments.get(0).depCityCode)
+                        .params("arrCity", goBackSearchFlightInfo.internationalFlight.goTrip.flightSegments.get(goBackSearchFlightInfo.internationalFlight.goTrip.flightSegments.size() - 1).arrCityCode)
+                        .params("flightCode", goBackSearchFlightInfo.internationalFlight.flightCode);
+            } else {
+                //国际单程
+                getRequest.params("depCity", goSearchFightInfo.internationalFlightModel.goTrip.flightSegments.get(0).depCityCode)
+                        .params("arrCity", goSearchFightInfo.internationalFlightModel.goTrip.flightSegments.get(goSearchFightInfo.internationalFlightModel.goTrip.flightSegments.size() - 1).arrCityCode)
+                        .params("flightCode", goSearchFightInfo.internationalFlightModel.flightCode);
+            }
+            getRequest
+                    .params(Constant.ACCESSTOKEN, token)
+                    .params(Constant.USERID, userId)
+                    .params("depDate", depDate)
                     .params("source", "ICP_SELECT_open.3724")
-                    .params("flightCode", goSearchFightInfo.internationalFlightModel.flightCode)
                     //.params("adultNum")
                     //.params("childNum")
                     //.params("cabinLevel")
@@ -264,12 +400,6 @@ public class PlaneDetailActivity extends BaseActivity {
                             super.onError(response);
                         }
                     });
-        } else {
-            //国内国际往返
-            layoutTop2.setVisibility(View.VISIBLE);
-            btnTitle1.setText("去程");
-            btnTitle2.setText("返程");
-            promptContent.setText("【风险提示】此报价是组合产品，如遇其中一程航班调整，您可办理另一程退改事宜，需自行承担相应费用，详见退改详情。");
         }
     }
 

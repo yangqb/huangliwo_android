@@ -33,25 +33,32 @@ import com.zaaach.citypicker.model.LocatedCity;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
 public class PlaneHomeActivity extends BaseActivity {
     //private List<HotCity> hotCities;
+    private int startCityType;
+    private int endCityType;
     private static final int DATE_REQUEST_CODE = 100;
-    public static final String FLIGHT_DATE = "flight_date";
+    private static final int REQUEST_START_CODE = 111;
+    private static final int REQUEST_END_CODE = 222;
     private String tvStartCity = "北京";
     private String tvEndCity = "上海";
-    private String date = "";
+    private String startDateStr = "";
+    private String endDateStr = "";
+
     private int anim;
     private boolean enable;
     private boolean reversal;
     private boolean isChildren;
     private boolean isBaby;
-    private int searchType; //0国内1国际2往返
+    private int searchType; //0国内1国际2国内往返3国际往返
     private String userId;
     private String token;
     @BindView(R.id.title_name)
@@ -104,10 +111,22 @@ public class PlaneHomeActivity extends BaseActivity {
         planeSelect.setSelected(true);
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");// HH:mm:ss
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);// HH:mm:ss
         //获取当前时间
         Date curDate = new Date(System.currentTimeMillis());
-        date = simpleDateFormat.format(curDate);
+        startDateStr = simpleDateFormat.format(curDate);
+
+        Calendar rightNow = Calendar.getInstance();
+        //当前时间 加10天
+        rightNow.add(Calendar.DAY_OF_YEAR, 2);
+        //new SimgpleDateFormat 进行格式化
+        //利用Calendar的getTime方法，将时间转化为Date对象
+        //利用SimpleDateFormat对象 把Date对象格式化
+        endDateStr = simpleDateFormat.format(rightNow.getTime());
+        endDate.setText(endDateStr);
+        endWeek.setText(DateUtils.strToDate2(endDateStr));
+        startDate.setText(startDateStr);
+        startWeek.setText(DateUtils.strToDate2(startDateStr));
     }
 
     @Override
@@ -171,12 +190,12 @@ public class PlaneHomeActivity extends BaseActivity {
             case R.id.startCityName:
                 //selectCity(1);
                 intent = new Intent(PlaneHomeActivity.this, SelectPlaneCityActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_START_CODE);
                 break;
             case R.id.endCityName:
                 //selectCity(2);
                 intent = new Intent(PlaneHomeActivity.this, SelectPlaneCityActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_END_CODE);
                 break;
             case R.id.reversalCity:
                 if (reversal) {
@@ -216,13 +235,16 @@ public class PlaneHomeActivity extends BaseActivity {
 
                 break;
             case R.id.search:
-                if (searchType == 2) {
+                if (searchType == 2 || searchType == 3) {
                     intent = new Intent(this, SearchPlanActivity2.class);
+                    intent.putExtra(SearchPlanActivity2.SEARCH_TYPE, searchType);
+                    intent.putExtra(SearchPlanActivity2.FLIGHT_START_DATE, startDateStr);
+                    intent.putExtra(SearchPlanActivity2.FLIGHT_END_DATE, endDateStr);
                 } else {
                     intent = new Intent(this, SearchPlanActivity.class);
                     intent.putExtra(SearchPlanActivity.SEARCH_TYPE, searchType);
+                    intent.putExtra(SearchPlanActivity.FLIGHT_DATE, startDateStr);
                 }
-                intent.putExtra(FLIGHT_DATE, date);
                 startActivity(intent);
                 break;
             case R.id.ll_order:
@@ -305,16 +327,47 @@ public class PlaneHomeActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == DATE_REQUEST_CODE) {
-                if (searchType == 2) {
-                    date = data.getStringExtra(PlaneCalendarActivity.SELECT_DATE);
-                    startDate.setText(date.split("=")[0]);
-                    startWeek.setText(DateUtils.strToDate2(date.split("=")[0]));
-                    endDate.setText(date.split("=")[1]);
-                    endWeek.setText(DateUtils.strToDate2(date.split("=")[1]));
+                if (searchType == 2 || searchType == 3) {
+                    startDateStr = data.getStringExtra(PlaneCalendarActivity.SELECT_DATE).split("=")[0];
+                    endDateStr = data.getStringExtra(PlaneCalendarActivity.SELECT_DATE).split("=")[1];
+                    startDate.setText(startDateStr);
+                    startWeek.setText(DateUtils.strToDate2(startDateStr));
+                    endDate.setText(endDateStr);
+                    endWeek.setText(DateUtils.strToDate2(endDateStr));
                 } else {
-                    date = data.getStringExtra(PlaneCalendarActivity.SELECT_DATE);
-                    startDate.setText(date);
-                    startWeek.setText(DateUtils.strToDate2(date));
+                    startDateStr = data.getStringExtra(PlaneCalendarActivity.SELECT_DATE);
+                    startDate.setText(startDateStr);
+                    startWeek.setText(DateUtils.strToDate2(startDateStr));
+                }
+            } else if (requestCode == REQUEST_END_CODE) {
+                startCityType = data.getIntExtra(SelectPlaneCityActivity.CITY_TYPE, 0);
+                if (startCityType == 0 && endCityType == 0) { //国内城市
+                    if (searchType == 3) {
+                        searchType = 2;
+                    } else if (searchType == 1) {
+                        searchType = 0;
+                    }
+                } else {
+                    if (searchType == 2) {
+                        searchType = 3;
+                    } else if (searchType == 0) {
+                        searchType = 1;
+                    }
+                }
+            } else if (requestCode == REQUEST_START_CODE) {
+                endCityType = data.getIntExtra(SelectPlaneCityActivity.CITY_TYPE, 0);
+                if (startCityType == 0 && endCityType == 0) { //国内城市
+                    if (searchType == 3) {
+                        searchType = 2;
+                    } else if (searchType == 1) {
+                        searchType = 0;
+                    }
+                } else {
+                    if (searchType == 2) {
+                        searchType = 3;
+                    } else if (searchType == 0) {
+                        searchType = 1;
+                    }
                 }
             }
         }

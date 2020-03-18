@@ -259,6 +259,8 @@ public class MyCenterFragment extends SFFragment {
             gradeName.setText("超级会员");
         } else if (response.getAccountType() == 5) {
             gradeName.setText("优选会员");
+        } else if (response.getAccountType() == 7) {
+            gradeName.setText("省代理");
         }
     }
 
@@ -351,8 +353,8 @@ public class MyCenterFragment extends SFFragment {
                         break;
                     case 9:
                         ToastUtils.showShortToast("敬请期待");
-                        intent = new Intent(getContext(), MyTeamActivity.class);
-                        startActivity(intent);
+                       /* intent = new Intent(getContext(), MyTeamActivity.class);
+                        startActivity(intent);*/
                         break;
                 }
             }

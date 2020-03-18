@@ -7,8 +7,8 @@ package com.feitianzhu.huangliwo.utils;
 public class Urls {
 
 
-    //private static final String BASE_URL = "http://www.huangliwo.top:8088/"; //正式环境
-    private static final String BASE_URL = "http://39.106.65.35:8088/"; //测试地址
+    private static final String BASE_URL = "http://www.huangliwo.top:8088/"; //正式环境
+    //private static final String BASE_URL = "http://39.106.65.35:8088/"; //测试地址
     //private static final String BASE_URL = "http://192.168.0.21:8089/";//钟工本地地址
     //private static final String BASE_URL = "http://192.168.0.15:8089/"; //周工本地地址
     private static final String TICKET_BASE_URL = "http://39.106.65.35:8087/"; //机票测试
@@ -497,13 +497,24 @@ public class Urls {
      * */
     public static final String SEARCH_FLIGHT = TICKET_BASE_URL + "searchFlight";
     /*
-     * 国际机票搜索
+     * 国际机票搜索(含往返)
      * */
     public static final String SEARCH_INTERNATIONAL_FLIGHT = TICKET_BASE_URL + "ntsSearchFlight";
     /*
      *国内 机票报价搜索
      * */
     public static final String SEARCH_PRICE_FLIGHT = TICKET_BASE_URL + "searchQuote";
+
+    /*
+     * 国内往返搜索
+     * */
+    public static final String SEARCH_GO_BACK_FLIGHT = TICKET_BASE_URL + "wfSearchFlight";
+
+    /*
+     * 国内往返报价搜索
+     * */
+    public static final String SEARCH_GO_BACK_PRICE_FLIGHT = TICKET_BASE_URL + "wfSearchPrice";
+
     /*
      * 国际报价搜索
      * */

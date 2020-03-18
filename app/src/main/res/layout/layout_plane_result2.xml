@@ -6,6 +6,7 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="1dp"
@@ -20,11 +21,12 @@
             android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/depTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="09:00"
@@ -32,9 +34,12 @@
                     android:textSize="14sp" />
 
                 <TextView
+                    android:id="@+id/depAirportName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:text="天河机场"
                     android:textColor="@color/color_999999"
                     android:textSize="13sp" />
@@ -49,12 +54,13 @@
                 android:background="@mipmap/k01_13quwang" />
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"
                 android:gravity="end"
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/arrTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="09:00"
@@ -62,9 +68,12 @@
                     android:textSize="14sp" />
 
                 <TextView
+                    android:id="@+id/arrAirportName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:text="天河机场"
                     android:textColor="@color/color_999999"
                     android:textSize="13sp" />
@@ -72,6 +81,7 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/flightNum"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -93,6 +103,7 @@
                 android:textSize="11sp" />
 
             <TextView
+                android:id="@+id/price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
