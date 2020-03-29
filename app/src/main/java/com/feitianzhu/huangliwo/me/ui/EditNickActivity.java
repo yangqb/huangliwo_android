@@ -92,13 +92,14 @@ public class EditNickActivity extends BaseActivity {
                     @Override
                     public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
                         super.onSuccess(EditNickActivity.this,response.body().msg,response.body().code);
-                        Toast.makeText(mContext, "修改成功", Toast.LENGTH_SHORT).show();
-                        EventBus.getDefault().postSticky(LoginEvent.EDITOR_INFO);
-                        Intent intent = new Intent();
-                        intent.putExtra(NICE_NAME, editText.getText().toString().trim());
-                        setResult(RESULT_OK, intent);
-                        finish();
-
+                        if(response.body().code==0){
+                            Toast.makeText(mContext, "修改成功", Toast.LENGTH_SHORT).show();
+                            EventBus.getDefault().postSticky(LoginEvent.EDITOR_INFO);
+                            Intent intent = new Intent();
+                            intent.putExtra(NICE_NAME, editText.getText().toString().trim());
+                            setResult(RESULT_OK, intent);
+                            finish();
+                        }
                     }
 
                     @Override

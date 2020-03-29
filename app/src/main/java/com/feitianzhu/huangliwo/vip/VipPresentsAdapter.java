@@ -37,9 +37,11 @@ public class VipPresentsAdapter extends BaseQuickAdapter<VipGifListInfo.VipGifMo
         if (item.isGet == 0) {
             helper.setBackgroundRes(R.id.button, R.drawable.shape_fed428_r5);
             helper.setText(R.id.button, "领取");
+            helper.setTextColor(R.id.button, mContext.getResources().getColor(R.color.color_333333));
         } else {
             helper.setText(R.id.button, "已领取");
             helper.setBackgroundRes(R.id.button, R.drawable.shape_999999_r5);
+            helper.setTextColor(R.id.button, mContext.getResources().getColor(R.color.white));
         }
         helper.addOnClickListener(R.id.button);
 

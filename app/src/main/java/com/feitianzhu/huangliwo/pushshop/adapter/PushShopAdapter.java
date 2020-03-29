@@ -5,14 +5,11 @@ import android.support.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.feitianzhu.huangliwo.R;
-import com.feitianzhu.huangliwo.me.ui.VerificationActivity2;
-import com.feitianzhu.huangliwo.pushshop.bean.MerchantsModel;
-import com.feitianzhu.huangliwo.utils.DateUtils;
+import com.feitianzhu.huangliwo.pushshop.bean.MultiMerchantsModel;
 import com.feitianzhu.huangliwo.view.CircleImageView;
-import com.itheima.roundedimageview.RoundedImageView;
 
 import java.util.List;
 
@@ -23,28 +20,32 @@ import java.util.List;
  * time: 14:04
  * email: 694125155@qq.com
  */
-public class PushShopAdapter extends BaseQuickAdapter<MerchantsModel, BaseViewHolder> {
-    public PushShopAdapter(@Nullable List<MerchantsModel> data) {
-        super(R.layout.layout_push_shop, data);
+public class PushShopAdapter extends BaseMultiItemQuickAdapter<MultiMerchantsModel, BaseViewHolder> {
+    public PushShopAdapter(@Nullable List<MultiMerchantsModel> data) {
+        super(data);
+        addItemType(MultiMerchantsModel.EXAMINE_TYPE, R.layout.layout_push_shop_examine);
+        addItemType(MultiMerchantsModel.PASSED_TYPE, R.layout.layout_push_shop_pass);
+        addItemType(MultiMerchantsModel.UNPASSED_TYPE, R.layout.layout_push_shop_unpass);
     }
 
     @Override
-    protected void convert(@NonNull BaseViewHolder helper, MerchantsModel item) {
-        helper.setText(R.id.merchants_Name, item.getMerchantName());
-        helper.setText(R.id.tvDate, item.getCreateDate());
-        Glide.with(mContext).load(item.getLogo()).apply(new RequestOptions().error(R.mipmap.g10_04weijiazai).placeholder(R.mipmap.g10_04weijiazai)).into((CircleImageView) helper.getView(R.id.merchantsImg));
-        if (item.getStatus() == 0) {
+    protected void convert(@NonNull BaseViewHolder helper, MultiMerchantsModel item) {
+        helper.addOnClickListener(R.id.share);
+        if (helper.getItemViewType() == MultiMerchantsModel.EXAMINE_TYPE) {
+            helper.setText(R.id.merchants_Name, item.merchants.getMerchantName());
+            helper.setText(R.id.tvDate, item.merchants.getCreateDate());
+            Glide.with(mContext).load(item.merchants.getLogo()).apply(new RequestOptions().error(R.mipmap.g10_04weijiazai).placeholder(R.mipmap.g10_04weijiazai)).into((CircleImageView) helper.getView(R.id.merchantsImg));
             helper.setText(R.id.tvStatus, "审核中");
-            helper.setVisible(R.id.image, false);
-            helper.setVisible(R.id.submit, false);
-        } else if (item.getStatus() == 1) {
+        } else if (helper.getItemViewType() == MultiMerchantsModel.PASSED_TYPE) {
+            helper.setText(R.id.merchants_Name, item.merchants.getMerchantName());
+            helper.setText(R.id.tvDate, item.merchants.getCreateDate());
+            Glide.with(mContext).load(item.merchants.getLogo()).apply(new RequestOptions().error(R.mipmap.g10_04weijiazai).placeholder(R.mipmap.g10_04weijiazai)).into((CircleImageView) helper.getView(R.id.merchantsImg));
             helper.setText(R.id.tvStatus, "已通过");
-            helper.setVisible(R.id.image, false);
-            helper.setVisible(R.id.submit, false);
-        } else if (item.getStatus() == -1) {
+        } else {
+            helper.setText(R.id.merchants_Name, item.merchants.getMerchantName());
+            helper.setText(R.id.tvDate, item.merchants.getCreateDate());
+            Glide.with(mContext).load(item.merchants.getLogo()).apply(new RequestOptions().error(R.mipmap.g10_04weijiazai).placeholder(R.mipmap.g10_04weijiazai)).into((CircleImageView) helper.getView(R.id.merchantsImg));
             helper.setText(R.id.tvStatus, "未通过");
-            helper.setVisible(R.id.image, true);
-            helper.setVisible(R.id.submit, true);
         }
     }
 }

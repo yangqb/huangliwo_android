@@ -17,7 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CustomCancelChangePopView extends CenterPopupView {
-    private RefundChangeInfo refundChangeInfo;
+    private RefundChangeInfo goRefundChangeInfo;
+    private RefundChangeInfo backRefundChangeInfo;
     private PlaneCancelChangeAdapter mAdapter1;
     private PlaneCancelChangeAdapter mAdapter2;
     private PlaneCancelChangeAdapter mAdapter3;
@@ -45,10 +46,16 @@ public class CustomCancelChangePopView extends CenterPopupView {
         return this;
     }
 
-    public CustomCancelChangePopView setData(RefundChangeInfo refundChangeInfo) {
-        this.refundChangeInfo = refundChangeInfo;
+    public CustomCancelChangePopView setGoData(RefundChangeInfo refundChangeInfo) {
+        this.goRefundChangeInfo = refundChangeInfo;
         return this;
     }
+
+    public CustomCancelChangePopView setBackData(RefundChangeInfo refundChangeInfo) {
+        this.backRefundChangeInfo = refundChangeInfo;
+        return this;
+    }
+
 
     public CustomCancelChangePopView setLuggage(boolean isLuggage) {
         this.isLuggage = isLuggage;
@@ -73,7 +80,7 @@ public class CustomCancelChangePopView extends CenterPopupView {
         }
 
         TextView go_signText = findViewById(R.id.go_signText);
-        go_signText.setText(refundChangeInfo.signText);
+        go_signText.setText(goRefundChangeInfo.signText);
 
         List<CustomTgqChangeModel> list1 = new ArrayList<>();
         List<CustomTgqChangeModel> list2 = new ArrayList<>();
@@ -83,15 +90,30 @@ public class CustomCancelChangePopView extends CenterPopupView {
         List<CustomTgqChangeModel> list6 = new ArrayList<>();
         List<CustomTgqChangeModel> list7 = new ArrayList<>();
         List<CustomTgqChangeModel> list8 = new ArrayList<>();
-        for (int i = 0; i < refundChangeInfo.tgqPointCharges.size(); i++) {
+        for (int i = 0; i < goRefundChangeInfo.tgqPointCharges.size(); i++) {
             CustomTgqChangeModel changeModel1 = new CustomTgqChangeModel();
             CustomTgqChangeModel changeModel2 = new CustomTgqChangeModel();
-            changeModel1.timeText = refundChangeInfo.tgqPointCharges.get(i).timeText;
-            changeModel1.amount = refundChangeInfo.tgqPointCharges.get(i).returnFee;
-            changeModel2.timeText = refundChangeInfo.tgqPointCharges.get(i).timeText;
-            changeModel2.amount = refundChangeInfo.tgqPointCharges.get(i).changeFee;
+            changeModel1.timeText = goRefundChangeInfo.tgqPointCharges.get(i).timeText;
+            changeModel1.amount = goRefundChangeInfo.tgqPointCharges.get(i).returnFee;
+            changeModel2.timeText = goRefundChangeInfo.tgqPointCharges.get(i).timeText;
+            changeModel2.amount = goRefundChangeInfo.tgqPointCharges.get(i).changeFee;
             list1.add(changeModel1);
             list2.add(changeModel2);
+        }
+
+        if (backRefundChangeInfo != null) {
+            for (int i = 0; i < backRefundChangeInfo.tgqPointCharges.size(); i++) {
+                CustomTgqChangeModel changeModel5 = new CustomTgqChangeModel();
+                CustomTgqChangeModel changeModel6 = new CustomTgqChangeModel();
+                changeModel5.timeText = backRefundChangeInfo.tgqPointCharges.get(i).timeText;
+                changeModel5.amount = backRefundChangeInfo.tgqPointCharges.get(i).returnFee;
+                changeModel6.timeText = backRefundChangeInfo.tgqPointCharges.get(i).timeText;
+                changeModel6.amount = backRefundChangeInfo.tgqPointCharges.get(i).changeFee;
+                list5.add(changeModel5);
+                list6.add(changeModel6);
+            }
+            TextView back_signText = findViewById(R.id.back_signText);
+            back_signText.setText(backRefundChangeInfo.signText);
         }
 
         mAdapter1 = new PlaneCancelChangeAdapter(list1);

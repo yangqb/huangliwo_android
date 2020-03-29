@@ -103,8 +103,8 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void realLogin() {
-        final String token = SPUtils.getString(SplashActivity.this, Constant.SP_ACCESS_TOKEN);
-        final String userId = SPUtils.getString(SplashActivity.this, Constant.SP_LOGIN_USERID);
+        String token = SPUtils.getString(SplashActivity.this, Constant.SP_ACCESS_TOKEN, "");
+        String userId = SPUtils.getString(SplashActivity.this, Constant.SP_LOGIN_USERID, "");
 
         if (!TextUtils.isEmpty(token) && !TextUtils.isEmpty(userId)) {
             startMainActivity();

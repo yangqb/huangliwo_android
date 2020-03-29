@@ -49,7 +49,7 @@
                     android:textSize="12sp" />
 
                 <TextView
-                    android:id="@+id/baggText"
+                    android:id="@+id/go_baggText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -70,11 +70,12 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="去程/第一程"
+                    android:text="返程/第二程"
                     android:textColor="@color/color_333333"
                     android:textSize="12sp" />
 
                 <TextView
+                    android:id="@+id/back_baggText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"

@@ -71,6 +71,7 @@
         android:layout_marginRight="@dimen/dp_10"
         android:background="@drawable/shape_ffffff_r5"
         android:paddingLeft="@dimen/dp_10"
+        android:visibility="gone"
         android:paddingRight="@dimen/dp_10">
 
         <TextView
@@ -95,6 +96,7 @@
         android:layout_height="59dp"
         android:layout_marginLeft="@dimen/dp_10"
         android:layout_marginTop="10dp"
+        android:visibility="gone"
         android:layout_marginRight="@dimen/dp_10"
         android:background="@drawable/shape_ffffff_r5"
         android:paddingLeft="@dimen/dp_10"

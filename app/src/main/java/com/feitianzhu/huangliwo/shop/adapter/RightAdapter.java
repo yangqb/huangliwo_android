@@ -15,7 +15,10 @@ import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.feitianzhu.huangliwo.R;
+import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.MultipleItem;
+import com.feitianzhu.huangliwo.utils.MathUtils;
+import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 import com.itheima.roundedimageview.RoundedImageView;
 
 import java.util.List;
@@ -36,17 +39,26 @@ public class RightAdapter extends BaseMultiItemQuickAdapter<MultipleItem, BaseVi
 
     @Override
     protected void convert(BaseViewHolder helper, MultipleItem item) {
+        MineInfoModel userInfo = UserInfoUtils.getUserInfo(mContext);
         switch (helper.getItemViewType()) {
             case MultipleItem.MERCHANTS:
                 helper.setText(R.id.merchantsName, item.getMerchantsModel().getMerchantName());
-                if(item.getMerchantsModel().getIntroduce()!=null){
+                if (item.getMerchantsModel().getIntroduce() != null) {
                     helper.setText(R.id.merchants_introduce, item.getMerchantsModel().getIntroduce());
                 }
                 helper.setText(R.id.distance, item.getMerchantsModel().getDistinceStr());
                 Glide.with(mContext).load(item.getMerchantsModel().getLogo())
                         .apply(new RequestOptions().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai).dontAnimate()).into((RoundedImageView) helper.getView(R.id.image));
-                String discount = String.valueOf((100 - item.getMerchantsModel().getDiscount()*100));
-                helper.setText(R.id.tv_rebate, "返" + discount + "%");
+                String discount = String.valueOf((100 - item.getMerchantsModel().getDiscount() * 100));
+                helper.setText(R.id.tv_rebate, "返" + MathUtils.subZero(discount) + "%");
+                helper.setText(R.id.vip_rebate, "返" + MathUtils.subZero(discount) + "%");
+                if (userInfo.getAccountType() != 0) {
+                    helper.setVisible(R.id.ll_rebate, false);
+                    helper.setVisible(R.id.vip_rebate, true);
+                } else {
+                    helper.setVisible(R.id.ll_rebate, true);
+                    helper.setVisible(R.id.vip_rebate, false);
+                }
                /* if (item.getMerchantsModel().getDiscount() == 100) {
                     helper.setVisible(R.id.ll_rebate, false);
                 } else {
@@ -56,10 +68,18 @@ public class RightAdapter extends BaseMultiItemQuickAdapter<MultipleItem, BaseVi
                 break;
             case MultipleItem.GOODS:
                 helper.setText(R.id.tv_category, item.getGoodsListBean().getGoodsName());
-                setSpannableString(String.format(Locale.getDefault(), "%.2f", item.getGoodsListBean().getPrice()), helper.getView(R.id.price));
+                setSpannableString(MathUtils.subZero(String.valueOf(item.getGoodsListBean().getPrice())), helper.getView(R.id.price));
                 helper.setText(R.id.tvContent, item.getGoodsListBean().getSummary());
                 String rebatePv = String.format(Locale.getDefault(), "%.2f", item.getGoodsListBean().getRebatePv());
-                helper.setText(R.id.tv_rebate, "返¥" + rebatePv);
+                helper.setText(R.id.tv_rebate, "返¥" + MathUtils.subZero(rebatePv));
+                helper.setText(R.id.vip_rebate, "返¥" + MathUtils.subZero(rebatePv));
+                if (userInfo.getAccountType() != 0) {
+                    helper.setVisible(R.id.ll_rebate, false);
+                    helper.setVisible(R.id.vip_rebate, true);
+                } else {
+                    helper.setVisible(R.id.ll_rebate, true);
+                    helper.setVisible(R.id.vip_rebate, false);
+                }
                /* if (item.getGoodsListBean().getRebatePv() == 0) {
                     helper.setVisible(R.id.ll_rebate, false);
                 } else {

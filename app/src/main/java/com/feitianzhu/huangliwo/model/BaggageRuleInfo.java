@@ -15,4 +15,5 @@ public class BaggageRuleInfo implements Serializable {
     public String cabinBaggageRule;
     public String infantBaggageRule;
     public List<String> specialRules;
+    public String smsContent;
 }

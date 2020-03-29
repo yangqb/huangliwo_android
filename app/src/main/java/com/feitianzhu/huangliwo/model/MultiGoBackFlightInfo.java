@@ -17,7 +17,6 @@ public class MultiGoBackFlightInfo implements MultiItemEntity, Serializable {
     private int type;
     public GoBackFlightList domesticFlight;
     public SearchInternationalFlightModel internationalFlight;
-    public boolean isSelect;
     public double price;
 
     public MultiGoBackFlightInfo(int type) {

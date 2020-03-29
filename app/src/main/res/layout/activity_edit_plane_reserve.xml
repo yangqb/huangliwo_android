@@ -90,10 +90,10 @@
                             android:id="@+id/ll_goPlane"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="5dp"
                             android:orientation="horizontal">
 
                             <TextView
+                                android:id="@+id/goTitle"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginRight="10dp"
@@ -102,8 +102,11 @@
                                 android:textSize="13sp" />
 
                             <TextView
+                                android:id="@+id/tv_go_info"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:maxLines="1"
+                                android:ellipsize="end"
                                 android:text="02-18  周二 19:25  大兴国际-虹桥T2"
                                 android:textColor="@color/color_333333"
                                 android:textSize="13sp" />
@@ -111,23 +114,26 @@
                         </LinearLayout>
 
                         <LinearLayout
+                            android:id="@+id/ll_backPlane"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
                             android:orientation="horizontal">
 
                             <TextView
-                                android:id="@+id/come_back"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginRight="10dp"
-                                android:text="去程/第一程"
+                                android:text="去程/第二程"
                                 android:textColor="@color/color_289cef"
                                 android:textSize="13sp" />
 
                             <TextView
-                                android:id="@+id/tv_come_info"
+                                android:id="@+id/tv_back_info"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:maxLines="1"
+                                android:ellipsize="end"
                                 android:text="02-18  周二 19:25  大兴国际-虹桥T2"
                                 android:textColor="@color/color_333333"
                                 android:textSize="13sp" />

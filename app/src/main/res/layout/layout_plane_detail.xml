@@ -49,7 +49,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="30dp"
-                        android:background="@drawable/shape_rebate_left_vip"
+                        android:background="@drawable/shape_detail_left_vip"
                         android:gravity="end|center_vertical"
                         android:paddingLeft="15dp"
                         android:paddingRight="5dp"
@@ -61,7 +61,7 @@
                         android:id="@+id/tv_rebate"
                         android:layout_width="wrap_content"
                         android:layout_height="30dp"
-                        android:background="@drawable/shape_rebate_vip"
+                        android:background="@drawable/shape_detail_right_vip"
                         android:ellipsize="end"
                         android:gravity="center_vertical"
                         android:maxLines="1"

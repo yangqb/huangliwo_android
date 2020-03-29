@@ -7,7 +7,9 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
@@ -58,6 +60,9 @@ import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 import com.feitianzhu.huangliwo.view.CircleImageView;
 import com.feitianzhu.huangliwo.view.CustomNerYearPopView;
 import com.feitianzhu.huangliwo.vip.VipActivity;
+import com.gcssloop.widget.PagerConfig;
+import com.gcssloop.widget.PagerGridLayoutManager;
+import com.gcssloop.widget.PagerGridSnapHelper;
 import com.google.gson.Gson;
 import com.itheima.roundedimageview.RoundedImageView;
 import com.lxj.xpopup.XPopup;
@@ -175,9 +180,40 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack {
 
         mRecyclerview.setLayoutManager(new LinearLayoutManager(getActivity()));
         hAdapter = new HAdapter(shopClassifyLsit);
-        hList.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
+        // 1.水平分页布局管理器
+        PagerGridLayoutManager layoutManager = new PagerGridLayoutManager(
+                2, 5, PagerGridLayoutManager.HORIZONTAL);
+        hList.setLayoutManager(layoutManager);
+
+        // 2.设置滚动辅助工具
+        PagerGridSnapHelper pageSnapHelper = new PagerGridSnapHelper();
+        pageSnapHelper.attachToRecyclerView(hList);
+        /*// 平滑滚动使用示例
+        hList.smoothScrollToPosition(0);// 平滑滚动到指定条目
+        layoutManager.smoothScrollToPage(0);// 平滑滚动到指定页
+        layoutManager.smoothPrePage();// 平滑滚动到上一页
+        layoutManager.smoothNextPage();// 平滑滚动到下一页*/
+        // 使用示例
+        layoutManager.isAllowContinuousScroll();//设置是否允许连续滚动
+        layoutManager.setAllowContinuousScroll(false);//设置是否允许连续滚动
         hList.setAdapter(hAdapter);
         hAdapter.notifyDataSetChanged();
+
+        //hList.setLayoutManager(new GridLayoutManager(getActivity(), 2, LinearLayoutManager.HORIZONTAL, false));
+        //new GridPagerSnapHelper(2, 3).attachToRecyclerView(hList);
+
+        // 使用示例
+        //layoutManager.setChangeSelectInScrolling(false);// 设置是否在滚动过程中回调页码变化
+        //layoutManager.setPageListener(this);    // 设置页面变化监听器
+        // 使用示例滚动方向
+        //layoutManager.setOrientationType(PagerGridLayoutManager.HORIZONTAL);
+        //设置滚动速度
+        //PagerConfig.setMillisecondsPreInch(60f);
+        //  //直接滚动使用示例
+       /* hList.scrollToPosition(0);
+        layoutManager.scrollToPage(0);
+        layoutManager.prePage();
+        layoutManager.nextPage();*/
 
         //商品
         mAdapter = new HomeRecommendAdapter2(shopAndMerchants);
@@ -278,8 +314,8 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack {
                 break;
             case R.id.rl_ticket:
                 ToastUtils.showShortToast("敬请期待");
-               /* intent = new Intent(getActivity(), PlaneHomeActivity.class);
-                startActivity(intent);*/
+                intent = new Intent(getActivity(), PlaneHomeActivity.class);
+                startActivity(intent);
                 break;
             case R.id.rl_financial:
                 ToastUtils.showShortToast("敬请期待");
@@ -444,6 +480,8 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack {
                         ShopClassify shopClassify = response.body().data;
                         if (shopClassify != null && shopClassify.getGGoodsClsList() != null) {
                             shopClassifyLsit = shopClassify.getGGoodsClsList();
+                            shopClassifyLsit.addAll(shopClassify.getGGoodsClsList());
+                            shopClassifyLsit.addAll(shopClassify.getGGoodsClsList());
                             hAdapter.setNewData(shopClassifyLsit);
                             hAdapter.notifyDataSetChanged();
                         }

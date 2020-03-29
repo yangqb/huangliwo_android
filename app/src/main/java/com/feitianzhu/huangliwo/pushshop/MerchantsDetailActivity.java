@@ -38,6 +38,7 @@ import com.feitianzhu.huangliwo.pushshop.bean.MerchantsClassifyModel;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsModel;
 import com.feitianzhu.huangliwo.pushshop.bean.UpdataMechantsEvent;
 import com.feitianzhu.huangliwo.shop.ShopDao;
+import com.feitianzhu.huangliwo.utils.MathUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.StringUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
@@ -99,7 +100,6 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
     private int clsId;
     private String clsName;
     private MerchantsModel merchantsBean;
-    private boolean isMySelfMerchants;
     private List<MerchantsClassifyModel.ListBean> listBean;
     private int imgType;
     private boolean isTimes = false;
@@ -160,10 +160,6 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
     TextView tvBusinessHours;
     @BindView(R.id.tv_business_day)
     TextView tvBusinessDay;
-    @BindView(R.id.select_business_hours)
-    RelativeLayout selectBusinessHours;
-    @BindView(R.id.endLine)
-    View endLine;
     @BindView(R.id.submit)
     TextView btnSubmit;
     @BindView(R.id.idCardFront_status)
@@ -209,14 +205,6 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         merchantsBean = (MerchantsModel) getIntent().getSerializableExtra(MERCHANTS_DETAIL_DATA);
-        isMySelfMerchants = getIntent().getBooleanExtra(IS_MY_MERCHANTS, false);
-        if (isMySelfMerchants) {
-            selectBusinessHours.setVisibility(View.VISIBLE);
-            endLine.setVisibility(View.VISIBLE);
-        } else {
-            selectBusinessHours.setVisibility(View.GONE);
-            endLine.setVisibility(View.GONE);
-        }
         if (merchantsBean != null) {
             latitude = Double.valueOf(merchantsBean.getLatitude());
             longitude = Double.valueOf(merchantsBean.getLongitude());
@@ -228,11 +216,8 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
             editMerchantsPhone.setText(merchantsBean.getPhone());
             tvArea.setText(merchantsBean.getProvinceName() + merchantsBean.getCityName() + merchantsBean.getAreaName());
             editMerchantsAddress.setText(merchantsBean.getDtlAddr());
-            if (merchantsBean.getEmail() != null) {
-                editMerchantsEmail.setText(merchantsBean.getEmail());
-            }
 
-            editMerchantsDiscount.setText(String.valueOf(merchantsBean.getDiscount() * 100));
+            editMerchantsDiscount.setText(MathUtils.subZero(String.valueOf(merchantsBean.getDiscount() * 100)));
             if (merchantsBean.getIntroduce() != null) {
                 editMerchantsIntroduction.setText(merchantsBean.getIntroduce());
             }
@@ -578,21 +563,20 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
             editMerchantsDiscount.setHintTextColor(getResources().getColor(R.color.color_ff0000));
         }
 
-        if (isMySelfMerchants) {
-            if (!isTimes) {
-                tvBusinessHours.setTextColor(getResources().getColor(R.color.color_ff0000));
-            } else {
-                tvBusinessHours.setTextColor(getResources().getColor(R.color.color_333333));
-            }
-            if (!isWeek) {
-                tvBusinessDay.setTextColor(getResources().getColor(R.color.color_ff0000));
-            } else {
-                tvBusinessDay.setTextColor(getResources().getColor(R.color.color_333333));
-            }
+        if (!isTimes) {
+            tvBusinessHours.setTextColor(getResources().getColor(R.color.color_ff0000));
+        } else {
+            tvBusinessHours.setTextColor(getResources().getColor(R.color.color_333333));
+        }
+        if (!isWeek) {
+            tvBusinessDay.setTextColor(getResources().getColor(R.color.color_ff0000));
+        } else {
+            tvBusinessDay.setTextColor(getResources().getColor(R.color.color_333333));
         }
 
+
         if (TextUtils.isEmpty(merchantsName) || TextUtils.isEmpty(phone)
-                || TextUtils.isEmpty(address) || TextUtils.isEmpty(percentage) || (isMySelfMerchants && (!isTimes || !isWeek))) {
+                || TextUtils.isEmpty(address) || TextUtils.isEmpty(percentage) || (!isTimes || !isWeek)) {
             ToastUtils.showShortToast("您的资料填写不完整");
             return;
         }
@@ -610,11 +594,9 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
         }
 
         EditMerchantInfo merchantInfo = new EditMerchantInfo();
-        if (isMySelfMerchants) {
-            merchantInfo.setStatus(1);
-        } else {
-            merchantInfo.setStatus(0);
-        }
+        merchantInfo.setStatus(1);
+        //merchantInfo.setStatus(0);
+
         merchantInfo.setMerchantId(String.valueOf(merchantsBean.getMerchantId()));
         merchantInfo.setMerchantName(merchantsName);
       /*  if (!merchantsBean.getRegisterNo().equals(businessLicenseNo)) {
@@ -639,9 +621,7 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
         merchantInfo.setLongitude(String.valueOf(longitude));
         merchantInfo.setLatitude(String.valueOf(latitude));
         //merchantInfo.setInviteCode(Integer.valueOf(userId));
-        if (isMySelfMerchants) {
-            merchantInfo.setBusinessTime(businessTimes);
-        }
+        merchantInfo.setBusinessTime(businessTimes);
         String json = new Gson().toJson(merchantInfo);
         PostRequest<LzyResponse> postRequest = OkGo.<LzyResponse>post(Urls.UPDATA_MERCHANTS).tag(this);
 
@@ -685,11 +665,7 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
                         goneloadDialog();
                         if (response.body().code == 0) {
                             EventBus.getDefault().post(UpdataMechantsEvent.SUCCESS);
-                            if (isMySelfMerchants) {
-                                ToastUtils.showShortToast("修改成功");
-                            } else {
-                                ToastUtils.showShortToast("提交成功等待审核");
-                            }
+                            ToastUtils.showShortToast("修改成功");
                             finish();
                         }
                     }

@@ -13,6 +13,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +38,7 @@ import com.feitianzhu.huangliwo.pushshop.bean.EditMerchantInfo;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsClassifyModel;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsModel;
 import com.feitianzhu.huangliwo.pushshop.bean.UpdataMechantsEvent;
+import com.feitianzhu.huangliwo.utils.MathUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.StringUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
@@ -87,20 +89,20 @@ import static com.feitianzhu.huangliwo.common.Constant.USERID;
  * 编辑商铺
  */
 public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGetGeoCoderResultListener {
-    private ProvinceBean mProvince;
-    private CityBean mCity;
-    private DistrictBean mDistrict;
+    public static final String MERCHANTS_DETAIL_DATA = "merchants_detail_data";
+    private MerchantsModel merchantsModel;
+    private String mProvinceId;
+    private String mProvinceName;
+    private String mCityId;
+    private String mCityName;
+    private String mAreaId;
+    private String mAreaName;
     private GeoCoder geoCoder;
     private int clsId;
     private String clsName;
     private int imgType;
     private String photo1 = "";
     private String photo2 = "";
-    private String photo3 = "";
-    private String photo4 = "";
-    private String photo5 = "";
-    private String photo6 = "";
-    private String photo7 = "";
     private String userId;
     private String token;
     @BindView(R.id.title_name)
@@ -109,16 +111,6 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
     RoundedImageView imageView1;
     @BindView(R.id.imageView2)
     RoundedImageView imageView2;
-    @BindView(R.id.imageView3)
-    RoundedImageView imageView3;
-    @BindView(R.id.imageView4)
-    RoundedImageView imageView4;
-    @BindView(R.id.imageView5)
-    RoundedImageView imageView5;
-    @BindView(R.id.imageView6)
-    RoundedImageView imageView6;
-    @BindView(R.id.imageView7)
-    RoundedImageView imageView7;
     @BindView(R.id.edit_merchants_name)
     EditText editMerchantsName;
     @BindView(R.id.edit_phone)
@@ -127,28 +119,19 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
     EditText editCode;
     @BindView(R.id.edit_address)
     EditText editAddress;
-    @BindView(R.id.edit_email)
-    EditText editEmail;
     @BindView(R.id.edit_percentage)
     EditText editPercentage;
-    @BindView(R.id.edit_merchants_introduce)
-    EditText editMerchantsIntroduce;
     @BindView(R.id.tvCode)
     TextView tvCode;
     @BindView(R.id.tvAreaAddress)
     TextView tvAreaAddress;
     @BindView(R.id.merchants_clsName)
     TextView merchantsClsName;
-    @BindView(R.id.edit_business_license)
-    EditText editBusinessLicenseNo;
-    @BindView(R.id.tips1)
-    TextView tips1;
-    @BindView(R.id.tips2)
-    TextView tips2;
+    @BindView(R.id.llCode)
+    RelativeLayout llCode;
     private List<MerchantsClassifyModel.ListBean> listBean;
     private double latitude;
     private double longitude;
-    private File file;
     private CountDownTimer mTimer = new CountDownTimer(6000 * 10, 1000) {
 
         @Override
@@ -173,10 +156,32 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
     protected void initView() {
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
+        merchantsModel = (MerchantsModel) getIntent().getSerializableExtra(MERCHANTS_DETAIL_DATA);
         titleName.setText("新增门店");
         geoCoder = GeoCoder.newInstance();
         geoCoder.setOnGetGeoCodeResultListener(this);
-        file = drawableToFile(this, R.mipmap.g10_04weijiazai, "huangliwo.png");
+        if (merchantsModel != null) {
+            latitude = Double.valueOf(merchantsModel.getLatitude());
+            longitude = Double.valueOf(merchantsModel.getLongitude());
+            llCode.setVisibility(View.GONE);
+            clsId = merchantsModel.getClsId();
+            clsName = merchantsModel.getClsName();
+            editMerchantsName.setText(merchantsModel.getMerchantName());
+            merchantsClsName.setText(merchantsModel.getClsName());
+            editPhone.setText(merchantsModel.getPhone());
+            tvAreaAddress.setText(merchantsModel.getProvinceName() + merchantsModel.getCityName() + merchantsModel.getAreaName());
+            editAddress.setText(merchantsModel.getDtlAddr());
+            editPercentage.setText(MathUtils.subZero(String.valueOf(merchantsModel.getDiscount() * 100)));
+            mProvinceName = merchantsModel.getProvinceName();
+            mProvinceId = merchantsModel.getProvinceId();
+            mCityName = merchantsModel.getCityName();
+            mCityId = merchantsModel.getCityId();
+            mAreaName = merchantsModel.getAreaName();
+            mAreaId = merchantsModel.getAreaId();
+
+            Glide.with(mContext).load(merchantsModel.getLogo()).apply(new RequestOptions().dontAnimate().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai)).into(imageView1);
+            Glide.with(mContext).load(merchantsModel.getShopFrontImg()).apply(new RequestOptions().dontAnimate().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai)).into(imageView2);
+        }
         initListener();
     }
 
@@ -203,6 +208,34 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
     }
 
     public void initListener() {
+        editPhone.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (merchantsModel != null) {
+                    if (s.toString().equals(merchantsModel.getPhone())) {
+                        tvCode.setBackgroundResource(R.drawable.shape_666666_r14);
+                        llCode.setVisibility(View.GONE);
+                        tvCode.setEnabled(false);
+                    } else {
+                        llCode.setVisibility(View.VISIBLE);
+                        tvCode.setBackgroundResource(R.drawable.shape_fed428_r14);
+                        tvCode.setText("验证码");
+                        tvCode.setEnabled(true);
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
         editAddress.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -216,17 +249,17 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (mCity != null && !TextUtils.isEmpty(mCity.getName())) {
+                if (mCityName != null && !TextUtils.isEmpty(mCityName)) {
                     geoCoder.geocode(new GeoCodeOption()
-                            .city(mCity.getName())
-                            .address(mCity.getName() + mDistrict.getName() + editAddress.getText().toString().trim()));
+                            .city(mCityName)
+                            .address(mCityName + mAreaName + editAddress.getText().toString().trim()));
                 }
             }
         });
 
     }
 
-    @OnClick({R.id.left_button, R.id.imageView1, R.id.imageView2, R.id.imageView3, R.id.imageView4, R.id.imageView5, R.id.imageView6, R.id.imageView7, R.id.ll_discount, R.id.submit, R.id.tvCode, R.id.rl_merchants_type, R.id.rl_merchants_area})
+    @OnClick({R.id.left_button, R.id.imageView1, R.id.imageView2, R.id.ll_discount, R.id.submit, R.id.tvCode, R.id.rl_merchants_type, R.id.rl_merchants_area})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ll_discount:
@@ -246,26 +279,6 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
                 break;
             case R.id.imageView2:
                 imgType = 2;
-                showDialog();
-                break;
-            case R.id.imageView3:
-                imgType = 3;
-                showDialog();
-                break;
-            case R.id.imageView4:
-                imgType = 4;
-                showDialog();
-                break;
-            case R.id.imageView5:
-                imgType = 5;
-                showDialog();
-                break;
-            case R.id.imageView6:
-                imgType = 6;
-                showDialog();
-                break;
-            case R.id.imageView7:
-                imgType = 7;
                 showDialog();
                 break;
             case R.id.submit:
@@ -297,6 +310,7 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
                                             clsId = listBean.get(position).getClsId();
                                             clsName = listBean.get(position).getClsName();
                                             merchantsClsName.setText(clsName);
+                                            merchantsClsName.setTextColor(getResources().getColor(R.color.color_333333));
                                         }
                                     }))
                             .show();
@@ -343,11 +357,7 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
         String phone = editPhone.getText().toString().trim();
         String smsCode = editCode.getText().toString().trim();
         String address = editAddress.getText().toString().trim();
-        String email = editEmail.getText().toString().trim();
         String percentage = editPercentage.getText().toString().trim();
-        String merchantsIntroduce = editMerchantsIntroduce.getText().toString().trim();
-        String businessLicenseNo = editBusinessLicenseNo.getText().toString().trim();
-
         if (TextUtils.isEmpty(merchantsName)) {
             editMerchantsName.setHintTextColor(getResources().getColor(R.color.color_ff0000));
         }
@@ -356,16 +366,13 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
         } else {
             merchantsClsName.setTextColor(getResources().getColor(R.color.color_333333));
         }
-        /*if (TextUtils.isEmpty(businessLicenseNo)) {
-            editBusinessLicenseNo.setHintTextColor(getResources().getColor(R.color.color_ff0000));
-        }*/
         if (TextUtils.isEmpty(phone)) {
             editPhone.setHintTextColor(getResources().getColor(R.color.color_ff0000));
         }
-        if (TextUtils.isEmpty(smsCode)) {
+        if (llCode.getVisibility() == View.VISIBLE && TextUtils.isEmpty(smsCode)) {
             editCode.setHintTextColor(getResources().getColor(R.color.color_ff0000));
         }
-        if (mProvince == null || mCity == null || mDistrict == null) {
+        if (mProvinceName == null || mCityName == null || mAreaName == null) {
             tvAreaAddress.setTextColor(getResources().getColor(R.color.color_ff0000));
         } else {
             tvAreaAddress.setTextColor(getResources().getColor(R.color.color_333333));
@@ -373,62 +380,20 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
         if (TextUtils.isEmpty(address)) {
             editAddress.setHintTextColor(getResources().getColor(R.color.color_ff0000));
         }
-        /*if (TextUtils.isEmpty(email)) {
-            ToastUtils.showShortToast("请填写邮箱地址");
-            return;
-        }*/
-        /*if (!StringUtils.isEmail(email)) {
-            ToastUtils.showShortToast("请填写正确的邮箱地址");
-            return;
-        }*/
-
         if (TextUtils.isEmpty(percentage)) {
             editPercentage.setHintTextColor(getResources().getColor(R.color.color_ff0000));
         }
-       /* if (TextUtils.isEmpty(merchantsIntroduce)) {
-            ToastUtils.showShortToast("请填写商铺说明");
-            return;
-        }*/
-        /*if (TextUtils.isEmpty(photo1)) {
-            ToastUtils.showShortToast("请上传商品logo");
-            return;
-        }
-        if (TextUtils.isEmpty(photo2)) {
-            ToastUtils.showShortToast("请上传店铺门面照片");
-            return;
-        }
-        if (TextUtils.isEmpty(photo3)) {
-            ToastUtils.showShortToast("请上传店内环境照片");
-            return;
-        }
-        if (TextUtils.isEmpty(photo4)) {
-            ToastUtils.showShortToast("请上传身份证正面照片");
-            return;
-        }
-        if (TextUtils.isEmpty(photo5)) {
-            ToastUtils.showShortToast("请上传身份证反面照片");
-            return;
-        }*/
-        /*if (TextUtils.isEmpty(photo6)) {
-            tips1.setTextColor(getResources().getColor(R.color.color_ff0000));
-        } else {
-            tips1.setTextColor(getResources().getColor(R.color.color_999999));
-        }
-        if (TextUtils.isEmpty(photo7)) {
-            tips2.setTextColor(getResources().getColor(R.color.color_ff0000));
-        } else {
-            tips2.setTextColor(getResources().getColor(R.color.color_999999));
-        }*/
 
-        if (TextUtils.isEmpty(merchantsName) || clsName == null || TextUtils.isEmpty(phone) || TextUtils.isEmpty(smsCode)
-                || mProvince == null || mCity == null || mDistrict == null || TextUtils.isEmpty(address) || TextUtils.isEmpty(percentage)) {
-            ToastUtils.showShortToast("您的资料填写不完整");
-            return;
-        }
-
-        if (!TextUtils.isEmpty(businessLicenseNo)) {
-            if (!(businessLicenseNo.length() == 15 || businessLicenseNo.length() == 18)) {
-                ToastUtils.showShortToast("请输入正确的营业执照号");
+        if (merchantsModel != null) {
+            if (TextUtils.isEmpty(merchantsName) || clsName == null || TextUtils.isEmpty(phone) || (llCode.getVisibility() == View.VISIBLE && TextUtils.isEmpty(smsCode))
+                    || mProvinceName == null || mCityName == null || mAreaName == null || TextUtils.isEmpty(address) || TextUtils.isEmpty(percentage)) {
+                ToastUtils.showShortToast("您的资料填写不完整");
+                return;
+            }
+        } else {
+            if (TextUtils.isEmpty(merchantsName) || clsName == null || TextUtils.isEmpty(phone) || TextUtils.isEmpty(smsCode)
+                    || mProvinceName == null || mCityName == null || mAreaName == null || TextUtils.isEmpty(address) || TextUtils.isEmpty(percentage) || TextUtils.isEmpty(photo1) || TextUtils.isEmpty(photo2)) {
+                ToastUtils.showShortToast("您的资料填写不完整");
                 return;
             }
         }
@@ -438,84 +403,101 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
             return;
         }
 
-
         EditMerchantInfo merchantInfo = new EditMerchantInfo();
+        if (merchantsModel != null) {
+            merchantInfo.setStatus(0);
+            merchantInfo.setMerchantId(String.valueOf(merchantsModel.getMerchantId()));
+            merchantInfo.setInviteCode(Integer.valueOf(userId));
+        }
         merchantInfo.setMerchantName(merchantsName);
-        merchantInfo.setRegisterNo(businessLicenseNo);
         merchantInfo.setClsId(clsId);
         merchantInfo.setClsName(clsName);
         merchantInfo.setPhone(phone);
-        merchantInfo.setSmsCode(Integer.valueOf(smsCode));
-        merchantInfo.setProvinceId(mProvince.getId());
-        merchantInfo.setProvinceName(mProvince.getName());
-        merchantInfo.setCityName(mCity.getName());
-        merchantInfo.setCityId(mCity.getId());
-        merchantInfo.setAreaName(mDistrict.getName());
-        merchantInfo.setAreaId(mDistrict.getId());
+        merchantInfo.setProvinceId(mProvinceId);
+        merchantInfo.setProvinceName(mProvinceName);
+        merchantInfo.setCityName(mCityName);
+        merchantInfo.setCityId(mCityId);
+        merchantInfo.setAreaName(mAreaName);
+        merchantInfo.setAreaId(mAreaId);
         merchantInfo.setDtlAddr(address);
-        merchantInfo.setEmail(email);
+        if (llCode.getVisibility() == View.VISIBLE) {
+            merchantInfo.setSmsCode(Integer.valueOf(smsCode));
+        }
         merchantInfo.setDiscount(Double.valueOf(percentage) / 100);
-        merchantInfo.setIntroduce(merchantsIntroduce);
         merchantInfo.setLongitude(String.valueOf(longitude));
         merchantInfo.setLatitude(String.valueOf(latitude));
-        merchantInfo.setInviteCode(Integer.valueOf(userId));
         String json = new Gson().toJson(merchantInfo);
-        //Map<String, File> files = new LinkedHashMap<>();
-        List<File> fileList = new ArrayList<>();
-        PostRequest<LzyResponse> postRequest = OkGo.<LzyResponse>post(Urls.CREATE_MERCHANTS)
-                .tag(this);
-        if (!TextUtils.isEmpty(photo1)) {
-            postRequest.params("logo", new File(photo1), "logo.png");
-        }
-        if (!TextUtils.isEmpty(photo2)) {
-            postRequest.params("shopFrontImg", new File(photo2), "shopFrontImg.png");
-        }
-        if (!TextUtils.isEmpty(photo3)) {
-            postRequest.params("cardFrontImg", new File(photo3), "cardFrontImg.png");
-        }
-        if (!TextUtils.isEmpty(photo4)) {
-            postRequest.params("cardFrontImg", new File(photo4), "cardFrontImg.png");
-        }
-        if (!TextUtils.isEmpty(photo5)) {
-            postRequest.params("cardBackImg", new File(photo5), "cardBackImg.png");
-        }
-        if (!TextUtils.isEmpty(photo6)) {
-            postRequest.params("businessLicenseImg", new File(photo6), "businessLicenseImg.png");
-        }
-        if (!TextUtils.isEmpty(photo7)) {
-            postRequest.params("permitImg", new File(photo7), "permitImg.png");
-        }
-        if (TextUtils.isEmpty(photo1) && TextUtils.isEmpty(photo2) && TextUtils.isEmpty(photo3) && TextUtils.isEmpty(photo4) && TextUtils.isEmpty(photo5) && TextUtils.isEmpty(photo6) && TextUtils.isEmpty(photo7)) {
-            postRequest.isMultipart(true);
-        }
 
-        postRequest.params("accessToken", token)
-                .params("userId", userId)
-                .params("merchantInfo", json)
-                .execute(new JsonCallback<LzyResponse>() {
-                    @Override
-                    public void onStart(com.lzy.okgo.request.base.Request<LzyResponse, ? extends com.lzy.okgo.request.base.Request> request) {
-                        super.onStart(request);
-                        showloadDialog("");
-                    }
-
-                    @Override
-                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
-                        super.onSuccess(EditMerchantsActivity.this, response.body().msg, response.body().code);
-                        goneloadDialog();
-                        if (response.body().code == 0) {
-                            ToastUtils.showShortToast("创建成功等待审核");
-                            EventBus.getDefault().post(UpdataMechantsEvent.SUCCESS);
-                            finish();
+        if (merchantsModel != null) {
+            PostRequest<LzyResponse> postRequest = OkGo.<LzyResponse>post(Urls.UPDATA_MERCHANTS).tag(this);
+            if (!TextUtils.isEmpty(photo1)) {
+                postRequest.params("logo", new File(photo1), "logo.png");
+            }
+            if (!TextUtils.isEmpty(photo2)) {
+                postRequest.params("shopFrontImg", new File(photo2), "shopFrontImg.png");
+            }
+            if (TextUtils.isEmpty(photo1) && TextUtils.isEmpty(photo2)) {
+                postRequest.isMultipart(true);
+            }
+            postRequest.params("accessToken", token)
+                    .params("userId", userId)
+                    .params("merchantInfo", json)
+                    .execute(new JsonCallback<LzyResponse>() {
+                        @Override
+                        public void onStart(com.lzy.okgo.request.base.Request<LzyResponse, ? extends com.lzy.okgo.request.base.Request> request) {
+                            super.onStart(request);
+                            showloadDialog("");
                         }
-                    }
 
-                    @Override
-                    public void onError(com.lzy.okgo.model.Response<LzyResponse> response) {
-                        super.onError(response);
-                        goneloadDialog();
-                    }
-                });
+                        @Override
+                        public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
+                            super.onSuccess(EditMerchantsActivity.this, response.body().msg, response.body().code);
+                            goneloadDialog();
+                            if (response.body().code == 0) {
+                                EventBus.getDefault().post(UpdataMechantsEvent.SUCCESS);
+                                ToastUtils.showShortToast("修改成功");
+                                finish();
+                            }
+                        }
+
+                        @Override
+                        public void onError(com.lzy.okgo.model.Response<LzyResponse> response) {
+                            super.onError(response);
+                            goneloadDialog();
+                        }
+                    });
+        } else {
+            OkGo.<LzyResponse>post(Urls.CREATE_MERCHANTS)
+                    .tag(this).params("logo", new File(photo1), "logo.png")
+                    .params("shopFrontImg", new File(photo2), "shopFrontImg.png")
+                    .params("accessToken", token)
+                    .params("userId", userId)
+                    .params("merchantInfo", json)
+                    .execute(new JsonCallback<LzyResponse>() {
+                        @Override
+                        public void onStart(com.lzy.okgo.request.base.Request<LzyResponse, ? extends com.lzy.okgo.request.base.Request> request) {
+                            super.onStart(request);
+                            showloadDialog("");
+                        }
+
+                        @Override
+                        public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
+                            super.onSuccess(EditMerchantsActivity.this, response.body().msg, response.body().code);
+                            goneloadDialog();
+                            if (response.body().code == 0) {
+                                ToastUtils.showShortToast("创建成功等待审核");
+                                EventBus.getDefault().post(UpdataMechantsEvent.SUCCESS);
+                                finish();
+                            }
+                        }
+
+                        @Override
+                        public void onError(com.lzy.okgo.model.Response<LzyResponse> response) {
+                            super.onError(response);
+                            goneloadDialog();
+                        }
+                    });
+        }
     }
 
     /*
@@ -532,14 +514,18 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
             @Override
             public void onSelected(ProvinceBean province, CityBean city, DistrictBean district) {
                 tvAreaAddress.setText("");
-                mProvince = province;
-                mCity = city;
-                mDistrict = district;
+                mProvinceId = province.getId();
+                mProvinceName = province.getName();
+                mCityId = city.getId();
+                mCityName = city.getName();
+                mAreaId = district.getId();
+                mAreaName = district.getName();
                 tvAreaAddress.setText(province.getName() + city.getName() + district.getName());
+                tvAreaAddress.setTextColor(getResources().getColor(R.color.color_333333));
                 if (!TextUtils.isEmpty(editAddress.getText().toString().trim())) {
                     geoCoder.geocode(new GeoCodeOption()
-                            .city(mCity.getName())
-                            .address(mCity.getName() + mDistrict.getName() + editAddress.getText().toString().trim()));
+                            .city(mCityName)
+                            .address(mCityName + mAreaName + editAddress.getText().toString().trim()));
                 }
             }
 
@@ -583,26 +569,6 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
             case 2:
                 photo2 = result.getImage().getCompressPath();
                 Glide.with(EditMerchantsActivity.this).load(photo2).into(imageView2);
-                break;
-            case 3:
-                photo3 = result.getImage().getCompressPath();
-                Glide.with(EditMerchantsActivity.this).load(photo3).into(imageView3);
-                break;
-            case 4:
-                photo4 = result.getImage().getCompressPath();
-                Glide.with(EditMerchantsActivity.this).load(photo4).into(imageView4);
-                break;
-            case 5:
-                photo5 = result.getImage().getCompressPath();
-                Glide.with(EditMerchantsActivity.this).load(photo5).into(imageView5);
-                break;
-            case 6:
-                photo6 = result.getImage().getCompressPath();
-                Glide.with(EditMerchantsActivity.this).load(photo6).into(imageView6);
-                break;
-            case 7:
-                photo7 = result.getImage().getCompressPath();
-                Glide.with(EditMerchantsActivity.this).load(photo7).into(imageView7);
                 break;
         }
         KLog.i("takeSuccess：" + result.getImage().getCompressPath() + "photo_type" + imgType);

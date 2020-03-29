@@ -33,6 +33,7 @@
                 android:textSize="17sp" />
 
             <TextView
+                android:id="@+id/tvStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -50,6 +51,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/goTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
@@ -58,6 +60,7 @@
                 android:textSize="14sp" />
 
             <TextView
+                android:id="@+id/goFlightDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
@@ -66,6 +69,7 @@
                 android:textSize="14sp" />
 
             <TextView
+                android:id="@+id/goFlightCode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="南航CZ6183"
@@ -73,75 +77,23 @@
                 android:textSize="14sp" />
         </LinearLayout>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="下单时间 02-02 14:08"
-                android:textColor="@color/color_999999"
-                android:textSize="14sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:text="¥66.00"
-                android:textColor="@color/color_F88D03"
-                android:textSize="18sp" />
-
-        </RelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="15dp"
-            android:background="@color/color_eeeeee" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:drawableLeft="@mipmap/k03_01feiji"
-                android:drawablePadding="10dp"
-                android:text="北京-上海"
-                android:textColor="@color/color_333333"
-                android:textSize="17sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:text="等待付款"
-                android:textColor="@color/color_666666"
-                android:textSize="14sp" />
-
-        </RelativeLayout>
-
         <LinearLayout
+            android:id="@+id/ll_back"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="5dp"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
-                android:text="去程/第一程"
+                android:text="返程/第二程"
                 android:textColor="@color/color_289cef"
                 android:textSize="14sp" />
 
             <TextView
+                android:id="@+id/backFlightDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
@@ -150,6 +102,7 @@
                 android:textSize="14sp" />
 
             <TextView
+                android:id="@+id/backFlightCode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="南航CZ6183"
@@ -163,6 +116,7 @@
             android:layout_marginTop="8dp">
 
             <TextView
+                android:id="@+id/orderDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="下单时间 02-02 14:08"
@@ -170,6 +124,7 @@
                 android:textSize="14sp" />
 
             <TextView
+                android:id="@+id/price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -193,11 +148,6 @@
                 android:text="付款"
                 android:textColor="@color/color_333333"
                 android:textSize="14sp" />
-
-
         </RelativeLayout>
-
     </LinearLayout>
-
-
 </LinearLayout>

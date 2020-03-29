@@ -133,6 +133,8 @@ public class ShopsDetailActivity extends BaseActivity {
     TextView tvRebate;
     @BindView(R.id.ll_rebate)
     LinearLayout llRebate;
+    @BindView(R.id.vip_rebate)
+    TextView vipRebate;
     @BindView(R.id.ll_goods_detail)
     LinearLayout llGoodsDetail;
     @BindView(R.id.imgCollect)
@@ -168,6 +170,13 @@ public class ShopsDetailActivity extends BaseActivity {
 
     public void getUserInfo() {
         mineInfoModel = UserInfoUtils.getUserInfo(this);
+        if (mineInfoModel.getAccountType() != 0) {
+            llRebate.setVisibility(View.GONE);
+            vipRebate.setVisibility(View.VISIBLE);
+        } else {
+            llRebate.setVisibility(View.VISIBLE);
+            vipRebate.setVisibility(View.GONE);
+        }
     }
 
     public void getSpecifications() {
@@ -245,10 +254,8 @@ public class ShopsDetailActivity extends BaseActivity {
             goodsName.setText(goodsListBean.getGoodsName());
             goodsSummary.setText(goodsListBean.getSummary());
             String rebatePv = String.format(Locale.getDefault(), "%.2f", goodsListBean.getRebatePv());
-            if (goodsListBean.getRebatePv() == 0) {
-                llRebate.setVisibility(View.GONE);
-            }
             tvRebate.setText("返¥" + rebatePv);
+            vipRebate.setText("返¥" + rebatePv);
             evalList = goodsListBean.getEvalList();
             if (evalList != null && evalList.size() > 0) {
                 llEvaluate.setVisibility(View.VISIBLE);

@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -109,11 +110,15 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
     TextView address;
     @BindView(R.id.tv_rebate)
     TextView tvRebate;
+    @BindView(R.id.vip_rebate)
+    TextView vipRebate;
     private int merchantsId;
     private String token;
     private String userId;
     @BindView(R.id.title_name)
     TextView titleName;
+    @BindView(R.id.ll_rebate)
+    LinearLayout llRebate;
 
     @Override
     protected int getLayoutId() {
@@ -498,6 +503,7 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
                             address.setText(merchantsBean.getCityName() + merchantsBean.getAreaName() + merchantsBean.getDtlAddr());
                             String discount = String.valueOf((100 - merchantsBean.getDiscount() * 100));
                             tvRebate.setText("返" + discount + "%");
+                            vipRebate.setText("返" + discount + "%");
                             getSetMealList(merchantsId);
                             String urlLogo = merchantsBean.getShopFrontImg() == null ? "" : merchantsBean.getShopFrontImg();
                             imgs.add(urlLogo);
@@ -536,6 +542,13 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
                         super.onSuccess(ShopMerchantsDetailActivity.this, "", response.body().code);
                         if (response.body().data != null) {
                             mineInfoModel = response.body().data;
+                            if (mineInfoModel.getAccountType() != 0) {
+                                llRebate.setVisibility(View.GONE);
+                                vipRebate.setVisibility(View.VISIBLE);
+                            } else {
+                                llRebate.setVisibility(View.VISIBLE);
+                                vipRebate.setVisibility(View.GONE);
+                            }
                         }
                     }
 

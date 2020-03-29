@@ -7,6 +7,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.model.ShopClassify;
+import com.feitianzhu.huangliwo.view.CircleImageView;
 
 import java.util.List;
 

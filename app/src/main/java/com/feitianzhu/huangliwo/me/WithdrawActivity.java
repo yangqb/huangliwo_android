@@ -33,6 +33,7 @@ import com.google.gson.Gson;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.PostRequest;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.builder.PostFormBuilder;
@@ -48,7 +49,6 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import okhttp3.Call;
 import okhttp3.Request;
-import okhttp3.Response;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
@@ -64,9 +64,10 @@ import static com.feitianzhu.huangliwo.common.Constant.USERID;
  * 余额提现
  */
 public class WithdrawActivity extends BaseActivity {
+    public static final int REQUEST_CODE = 111;
     public static final String BALANCE = "balance";
     public static final String MERCHANT_ID = "merchantId";
-    private String channel = "wx";
+    private String channel = "alipay";
     private String alipayNo;
     private MineInfoModel infoModel;
     private double balance;
@@ -93,7 +94,6 @@ public class WithdrawActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        EventBus.getDefault().register(this);
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         titleName.setText("提现");
@@ -155,7 +155,7 @@ public class WithdrawActivity extends BaseActivity {
             return;
         }
         double amount = Double.valueOf(editAmount.getText().toString());
-        /*if (amount < 10) {
+       /* if (amount < 10) {
             ToastUtils.showShortToast("提现金额必须大于10元");
             return;
         }*/
@@ -180,7 +180,7 @@ public class WithdrawActivity extends BaseActivity {
                                 public void onConfirm() {
                                     Intent intent = new Intent(WithdrawActivity.this, BindingAccountActivity.class);
                                     intent.putExtra(BindingAccountActivity.MINE_INFO, infoModel);
-                                    startActivity(intent);
+                                    startActivityForResult(intent, REQUEST_CODE);
                                 }
                             }, null, false)
                             .bindLayout(R.layout.layout_dialog) //绑定已有布局
@@ -196,7 +196,7 @@ public class WithdrawActivity extends BaseActivity {
     }
 
     public void submit(String passWord) {
-        PostRequest<LzyResponse<WithdrawModel>> postRequest = OkGo.<LzyResponse<WithdrawModel>>post(Urls.WITHDRAW)
+        PostRequest<LzyResponse> postRequest = OkGo.<LzyResponse>post(Urls.WITHDRAW)
                 .tag(this);
         if (merchantId != -1) {
             postRequest.params("merchantId", merchantId + "");
@@ -204,24 +204,22 @@ public class WithdrawActivity extends BaseActivity {
         } else {
             postRequest.params("type", 1);
         }
-        if (channel.equals("alipay")) {
-            postRequest.params("account", alipayNo);
-        }
         postRequest.params(Constant.ACCESSTOKEN, token)
                 .params(Constant.USERID, userId)
                 .params("channel", channel)
                 .params("amount", editAmount.getText().toString().trim())
                 .params("payPass", passWord)
                 .params("device", "android")
-                .execute(new JsonCallback<LzyResponse<WithdrawModel>>() {
+                .execute(new JsonCallback<LzyResponse>() {
                     @Override
-                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<WithdrawModel>> response) {
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
                         super.onSuccess(WithdrawActivity.this, response.body().msg, response.body().code);
-                        if (response.body().data != null && response.body().code == 0) {
+                        if (response.body().code == 0) {
                             new XPopup.Builder(WithdrawActivity.this)
-                                    .asConfirm("提示", response.body().data.getMsg(), "关闭", "确定", new OnConfirmListener() {
+                                    .asConfirm("提示", response.body().msg, "关闭", "确定", new OnConfirmListener() {
                                         @Override
                                         public void onConfirm() {
+                                            setResult(RESULT_OK);
                                             finish();
                                         }
                                     }, null, false)
@@ -231,17 +229,43 @@ public class WithdrawActivity extends BaseActivity {
                     }
 
                     @Override
-                    public void onError(com.lzy.okgo.model.Response<LzyResponse<WithdrawModel>> response) {
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse> response) {
                         super.onError(response);
                     }
                 });
-    }
 
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    public void onMessageEvent(LoginEvent event) {
-        if (event == LoginEvent.BINDING_ALI_ACCOUNT) {
-            initData();
-        }
+            /*PostRequest<LzyResponse<WithdrawModel>> postRequest = OkGo.<LzyResponse<WithdrawModel>>post(Urls.WITHDRAWAL)
+                    .tag(this);
+            if (merchantId != -1) {
+                postRequest.params("merchantId", merchantId + "");
+            }
+            postRequest.params(Constant.ACCESSTOKEN, token)
+                    .params(Constant.USERID, userId)
+                    .params("account", alipayNo)
+                    .params("amount", editAmount.getText().toString().trim())
+                    .params("payPass", passWord)
+                    .execute(new JsonCallback<LzyResponse<WithdrawModel>>() {
+                        @Override
+                        public void onSuccess(Response<LzyResponse<WithdrawModel>> response) {
+                            super.onSuccess(WithdrawActivity.this, response.body().msg, response.body().code);
+                            if (response.body().data != null && response.body().code == 0) {
+                                new XPopup.Builder(WithdrawActivity.this)
+                                        .asConfirm("提示", response.body().data.getMsg(), "关闭", "确定", new OnConfirmListener() {
+                                            @Override
+                                            public void onConfirm() {
+                                                finish();
+                                            }
+                                        }, null, false)
+                                        .bindLayout(R.layout.layout_dialog) //绑定已有布局
+                                        .show();
+                            }
+                        }
+
+                        @Override
+                        public void onError(Response<LzyResponse<WithdrawModel>> response) {
+                            super.onError(response);
+                        }
+                    });*/
     }
 
     @Override
@@ -304,8 +328,17 @@ public class WithdrawActivity extends BaseActivity {
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_CODE) {
+                initData();
+            }
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
     }
 }

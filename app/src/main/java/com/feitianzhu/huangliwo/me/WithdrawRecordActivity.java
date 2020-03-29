@@ -97,39 +97,37 @@ public class WithdrawRecordActivity extends BaseActivity {
         mAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                if (withdrawRecordModelList.get(position).getIsTrans() == 0) {
-                    showDialog();
+                if (withdrawRecordModelList.get(position).getIsTrans() == 0 && withdrawRecordModelList.get(position).getRefuseReason() == null) {
+                    showDialog(withdrawRecordModelList.get(position).getOrderNo());
                 }
             }
         });
     }
 
-    public void showDialog() {
+    public void showDialog(String orderNo) {
         new XPopup.Builder(this)
                 .asConfirm("温馨提示", "确定取消提现吗", "取消", "确定", new OnConfirmListener() {
                     @Override
                     public void onConfirm() {
-                        cancelWithdraw();
+                        cancelWithdraw(orderNo);
                     }
                 }, null, false)
                 .bindLayout(R.layout.layout_dialog) //绑定已有布局
                 .show();
     }
 
-    public void cancelWithdraw() {
+    public void cancelWithdraw(String orderNo) {
 
         PostRequest<LzyResponse> postRequest = OkGo.<LzyResponse>post(Urls.WITHDRAW_CANCEL)
                 .tag(this);
-        if (merchantId != -1) {
-            postRequest.params("merchantId", merchantId + "");
-        }
+        postRequest.params("orderNo", orderNo);
         postRequest.params("accessToken", token)
                 .params("userId", userId)
                 .execute(new JsonCallback<LzyResponse>() {
                     @Override
                     public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
                         super.onSuccess(WithdrawRecordActivity.this, response.body().msg, response.body().code);
-                        if(response.body().code==0){
+                        if (response.body().code == 0) {
                             ToastUtils.showShortToast("取消成功");
                             initData();
                         }

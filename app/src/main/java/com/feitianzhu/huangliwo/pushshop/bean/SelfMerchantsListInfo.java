@@ -11,8 +11,6 @@ import java.util.List;
  * email: 694125155@qq.com
  */
 public class SelfMerchantsListInfo implements Serializable {
-
-
     private List<MerchantsModel> list;
 
     public List<MerchantsModel> getList() {

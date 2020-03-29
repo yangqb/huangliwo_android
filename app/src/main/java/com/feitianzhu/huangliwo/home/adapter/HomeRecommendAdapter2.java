@@ -18,6 +18,9 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.home.entity.ShopAndMerchants;
 import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
+import com.feitianzhu.huangliwo.model.MineInfoModel;
+import com.feitianzhu.huangliwo.utils.MathUtils;
+import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 import com.itheima.roundedimageview.RoundedImageView;
 
 import java.util.List;
@@ -45,14 +48,18 @@ public class HomeRecommendAdapter2 extends BaseMultiItemQuickAdapter<ShopAndMerc
                 BaseGoodsListBean shopsList = item.getShopsList();
                 holder.setText(R.id.tv_category, shopsList.getGoodsName());
                 holder.setText(R.id.summary, shopsList.getSummary());
-                setSpannableString(String.format(Locale.getDefault(), "%.2f", shopsList.getPrice()), holder.getView(R.id.price));
+                setSpannableString(MathUtils.subZero(String.valueOf(shopsList.getPrice())), holder.getView(R.id.price));
                 holder.setVisible(R.id.ll_price, true);
                 String rebatePv = String.format(Locale.getDefault(), "%.2f", shopsList.getRebatePv());
-                holder.setText(R.id.tv_rebate, "返¥" + rebatePv);
-                if (shopsList.getRebatePv() == 0) {
+                holder.setText(R.id.tv_rebate, "返¥" + MathUtils.subZero(rebatePv));
+                holder.setText(R.id.vip_rebate, "返¥" + MathUtils.subZero(rebatePv));
+                MineInfoModel userInfo = UserInfoUtils.getUserInfo(mContext);
+                if (userInfo.getAccountType() != 0) {
                     holder.setVisible(R.id.ll_rebate, false);
+                    holder.setVisible(R.id.vip_rebate, true);
                 } else {
                     holder.setVisible(R.id.ll_rebate, true);
+                    holder.setVisible(R.id.vip_rebate, false);
                 }
                 holder.addOnClickListener(R.id.ll_rebate);
                 holder.setVisible(R.id.address, false);

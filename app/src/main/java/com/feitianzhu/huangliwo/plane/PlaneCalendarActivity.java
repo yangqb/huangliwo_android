@@ -151,10 +151,10 @@ public class PlaneCalendarActivity extends BaseActivity {
                     miui10Calendar.getAllSelectDateList().remove(0);
                 }*/
 
-                if (currectSelectList.size() == 2) {
-                    startDate = currectSelectList.get(0).toString() + "=" + currectSelectList.get(1).toString();
-                } else if (currectSelectList.size() == 1) {
-                    startDate = currectSelectList.get(0).toString() + "=" + currectSelectList.get(0).toString();
+                if (allSelectList.size() == 2) {
+                    startDate = allSelectList.get(0).toString() + "=" + allSelectList.get(1).toString();
+                } else if (allSelectList.size() == 1) {
+                    startDate = allSelectList.get(0).toString() + "=" + allSelectList.get(0).toString();
                 } else {
                     startDate = null;
                 }

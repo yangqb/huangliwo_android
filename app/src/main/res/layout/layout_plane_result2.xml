@@ -136,7 +136,7 @@
                 android:id="@+id/tv_rebate"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
-                android:background="@drawable/shape_rebate_vip"
+                android:background="@drawable/shape_rebate_right_vip"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:maxLines="1"

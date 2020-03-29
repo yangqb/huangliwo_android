@@ -184,7 +184,7 @@
 
                         <RelativeLayout
                             android:layout_width="match_parent"
-                            android:layout_height="80dp"
+                            android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/dp_10"
                             android:layout_marginRight="@dimen/dp_10"
                             android:background="@color/color_f7f7f7">
@@ -192,7 +192,7 @@
                             <android.support.v7.widget.RecyclerView
                                 android:id="@+id/hList"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
+                                android:layout_height="150dp">
 
                             </android.support.v7.widget.RecyclerView>
 

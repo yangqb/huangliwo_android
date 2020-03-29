@@ -18,6 +18,8 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
+import com.feitianzhu.huangliwo.model.MineInfoModel;
+import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 import com.itheima.roundedimageview.RoundedImageView;
 
 import java.util.List;
@@ -44,10 +46,14 @@ public class NewYearShoppingAdapter extends BaseQuickAdapter<BaseGoodsListBean, 
         setSpannableString(String.format(Locale.getDefault(), "%.2f", item.getPrice()), helper.getView(R.id.tv_price));
         String rebatePv = String.format(Locale.getDefault(), "%.2f", item.getRebatePv());
         helper.setText(R.id.tv_rebate, "返¥" + rebatePv);
-        if (item.getRebatePv() == 0) {
+        helper.setText(R.id.vip_rebate,"返¥" + rebatePv);
+        MineInfoModel userInfo = UserInfoUtils.getUserInfo(mContext);
+        if (userInfo.getAccountType() != 0) {
             helper.setVisible(R.id.ll_rebate, false);
+            helper.setVisible(R.id.vip_rebate, true);
         } else {
             helper.setVisible(R.id.ll_rebate, true);
+            helper.setVisible(R.id.vip_rebate, false);
         }
         helper.addOnClickListener(R.id.ll_rebate);
     }

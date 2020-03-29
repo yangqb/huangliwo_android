@@ -42,19 +42,13 @@ public class CustomTotalPriceInfoView extends BottomPopupView {
     @Override
     protected void onCreate() {
         super.onCreate();
-        if (type == 0 || type == 1) {
-            findViewById(R.id.go_title).setVisibility(GONE);
-            findViewById(R.id.ll_back).setVisibility(GONE);
-            TextView goPrice = findViewById(R.id.go_price);
-            goPrice.setText("¥" + MathUtils.subZero(String.valueOf(priceDetailInfo.price)) + "x" + priceDetailInfo.num);
-            TextView goArfTof = findViewById(R.id.go_arfTof);
-            goArfTof.setText("¥" + MathUtils.subZero(String.valueOf(priceDetailInfo.arf + priceDetailInfo.tof)) + "x" + priceDetailInfo.num);
-            TextView goCprice = findViewById(R.id.go_cprice);
-            TextView goCArfTof = findViewById(R.id.go_cArfTof);
-            goCprice.setText("¥" + MathUtils.subZero(String.valueOf(priceDetailInfo.cPrice)) + "x" + priceDetailInfo.cnum);
-            goCArfTof.setText("¥" + MathUtils.subZero(String.valueOf(priceDetailInfo.arf + priceDetailInfo.tof)) + "x" + priceDetailInfo.cnum);
-        }
-
-
+        TextView goPrice = findViewById(R.id.go_price);
+        goPrice.setText("¥" + MathUtils.subZero(String.valueOf(priceDetailInfo.price)) + "x" + priceDetailInfo.num);
+        TextView goArfTof = findViewById(R.id.go_arfTof);
+        goArfTof.setText("¥" + MathUtils.subZero(String.valueOf(priceDetailInfo.arf + priceDetailInfo.tof)) + "x" + priceDetailInfo.num);
+        TextView goCprice = findViewById(R.id.go_cprice);
+        TextView goCArfTof = findViewById(R.id.go_cArfTof);
+        goCprice.setText("¥" + MathUtils.subZero(String.valueOf(priceDetailInfo.cPrice)) + "x" + priceDetailInfo.cnum);
+        goCArfTof.setText("¥" + MathUtils.subZero(String.valueOf(priceDetailInfo.arf + priceDetailInfo.tof)) + "x" + priceDetailInfo.cnum);
     }
 }

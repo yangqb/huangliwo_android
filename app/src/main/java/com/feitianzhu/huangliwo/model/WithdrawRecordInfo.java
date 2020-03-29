@@ -60,6 +60,24 @@ public class WithdrawRecordInfo implements Serializable {
         private String aliAccount;
         private int isTrans;
         private String paymentImg;
+        private String channel;
+        private String timeDesc;
+
+        public String getTimeDesc() {
+            return timeDesc;
+        }
+
+        public void setTimeDesc(String timeDesc) {
+            this.timeDesc = timeDesc;
+        }
+
+        public String getChannel() {
+            return channel;
+        }
+
+        public void setChannel(String channel) {
+            this.channel = channel;
+        }
 
         public String getOrderNo() {
             return orderNo;

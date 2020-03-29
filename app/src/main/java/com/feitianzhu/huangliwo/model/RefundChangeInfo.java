@@ -23,4 +23,11 @@ public class RefundChangeInfo implements Serializable {
     public String signText;//":"不可签转",
     public boolean hasTime;//":true,
     public double basePrice;//":400
+    public String tgqCabin;
+    public int viewType;
+    public String tgqPercentText;
+    public String tgqProduct;
+    public String returnText;
+    public String changeText;
+    public String changeRule;
 }

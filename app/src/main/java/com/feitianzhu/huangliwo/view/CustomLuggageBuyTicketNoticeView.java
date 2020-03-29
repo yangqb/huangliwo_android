@@ -10,14 +10,20 @@ import com.lxj.xpopup.core.CenterPopupView;
 
 public class CustomLuggageBuyTicketNoticeView extends CenterPopupView {
     private int type;
-    private BaggageRuleInfo baggageRuleInfo;
+    private BaggageRuleInfo goBaggageRuleInfo;
+    private BaggageRuleInfo backBaggageRuleInfo;
 
     public CustomLuggageBuyTicketNoticeView(@NonNull Context context) {
         super(context);
     }
 
-    public CustomLuggageBuyTicketNoticeView setData(BaggageRuleInfo baggageRuleInfo) {
-        this.baggageRuleInfo = baggageRuleInfo;
+    public CustomLuggageBuyTicketNoticeView setBackData(BaggageRuleInfo baggageRuleInfo) {
+        this.backBaggageRuleInfo = baggageRuleInfo;
+        return this;
+    }
+
+    public CustomLuggageBuyTicketNoticeView setGoData(BaggageRuleInfo baggageRuleInfo) {
+        this.goBaggageRuleInfo = baggageRuleInfo;
         return this;
     }
 
@@ -36,8 +42,16 @@ public class CustomLuggageBuyTicketNoticeView extends CenterPopupView {
         super.onCreate();
         if (type == 0 || type == 1) {
             findViewById(R.id.back_bagg).setVisibility(GONE);
-            TextView baggText = findViewById(R.id.baggText);
-            baggText.setText("手提行李：" + baggageRuleInfo.cabinBaggageRule + ";托运行李：" + baggageRuleInfo.checkedBaggageRule + ";婴儿票行李：" + baggageRuleInfo.infantBaggageRule);
+        } else {
+            findViewById(R.id.back_bagg).setVisibility(VISIBLE);
+        }
+        TextView go_baggText = findViewById(R.id.go_baggText);
+        TextView back_baggText = findViewById(R.id.back_baggText);
+        if (goBaggageRuleInfo != null) {
+            go_baggText.setText("手提行李：" + goBaggageRuleInfo.cabinBaggageRule + ";托运行李：" + goBaggageRuleInfo.checkedBaggageRule + ";婴儿票行李：" + goBaggageRuleInfo.infantBaggageRule);
+        }
+        if (backBaggageRuleInfo != null) {
+            back_baggText.setText("手提行李：" + goBaggageRuleInfo.cabinBaggageRule + ";托运行李：" + goBaggageRuleInfo.checkedBaggageRule + ";婴儿票行李：" + goBaggageRuleInfo.infantBaggageRule);
         }
     }
 }

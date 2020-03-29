@@ -520,13 +520,31 @@ public class Urls {
      * */
     public static final String SEARCH_PRICE_INTERNATIONAL_FLIGHT = TICKET_BASE_URL + "ntsSearchPrice";
     /*
-     *国内 机票预订
+     *国内 机票单程预订
      * */
     public static final String PLANE_BOOK = TICKET_BASE_URL + "express/booking";
     /*
-     * 国内生单
+     * 国内机票往返预订
+     * */
+    public static final String PLANE_GO_BACK_BOOK = TICKET_BASE_URL + "dbReserve";
+    /*
+     * 国际机票单程和往返预订
+     * */
+    public static final String INTER_PLANE_BOOK = TICKET_BASE_URL + "ntsBooking";
+    /*
+     * 国内单程生单
      * */
     public static final String CREATE_PLANE_ORDER = TICKET_BASE_URL + "createOrder";
+
+    /*
+     *国内往返生单
+     * */
+    public static final String CREATE_PLANE_GO_BACK_ORDER = TICKET_BASE_URL + "fxOrder";
+
+    /*
+     * 国际单程往返生单
+     * */
+    public static final String NET_PLANE_ORDER = TICKET_BASE_URL + "ntsCreateOrder";
 
     /*
      * 退改签说明查询接口
@@ -534,9 +552,18 @@ public class Urls {
     public static final String GET_TGQNEWEXPLAIN = TICKET_BASE_URL + "tgqNewExplain";
 
     /*
+     * 国内往返退改签查询
+     * */
+    public static final String GET_GO_BACK_TGQNEWBACK = TICKET_BASE_URL + "tgqNewBack";
+
+    /*
      * 行李额查询
      * */
     public static final String GET_BAGGAGERULES = TICKET_BASE_URL + "baggagerules";
+    /*
+     * 国内往返行李额查询
+     * */
+    public static final String GET_GO_BACK_BAGGAGERULES = TICKET_BASE_URL + "baggagerule";
     /*
     新增乘机人
     * */
@@ -553,5 +580,10 @@ public class Urls {
      * 删除乘机人
      * */
     public static final String DELETE_PASSENGER = TICKET_BASE_URL + "delPassenger";
+
+    /*
+     * 机票订单列表
+     * */
+    public static final String GET_PLANE_ORDER = TICKET_BASE_URL + "getOrderList";
 
 }

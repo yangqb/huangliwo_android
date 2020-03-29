@@ -41,13 +41,14 @@ public class TransitAdapter extends BaseQuickAdapter<FlightSegmentInfo, BaseView
             helper.setText(R.id.btn_title1, "四程");
             helper.setBackgroundRes(R.id.btn_title1, R.drawable.shape_9b65ff_r10);
         }
+        helper.setGone(R.id.companyName, false);
         helper.setText(R.id.date, DateUtils.strToStr(item.depDate) + DateUtils.strToDate2(item.depDate));
         helper.setText(R.id.cityName, item.depCityName + "-" + item.arrCityName);
         helper.setText(R.id.depTime, item.depTime);
         helper.setText(R.id.arrTime, item.arrTime);
         helper.setText(R.id.duration, DateUtils.minToHour(item.duration));
-        helper.setText(R.id.depAirportName, item.depAirportName);
-        helper.setText(R.id.arrAirportName, item.arrAirportName);
+        helper.setText(R.id.depAirportName, item.depAirportName + item.depTerminal);
+        helper.setText(R.id.arrAirportName, item.arrAirportName + item.arrTerminal);
         if (item.crossDays == 0) {
             helper.setVisible(R.id.crossDays, false);
         } else {

@@ -24,17 +24,24 @@ import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.PlaneResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.BaggageRuleInfo;
+import com.feitianzhu.huangliwo.model.BaggageRuleReqParamModel;
+import com.feitianzhu.huangliwo.model.ContactModel;
 import com.feitianzhu.huangliwo.model.CreateOrderInfo;
-import com.feitianzhu.huangliwo.model.CustomPlaneFlightInfo;
+import com.feitianzhu.huangliwo.model.CustomPlaneDetailInfo;
 import com.feitianzhu.huangliwo.model.CustomPriceDetailInfo;
+import com.feitianzhu.huangliwo.model.DocBookingPriceTagInfo;
+import com.feitianzhu.huangliwo.model.DocPassengerInfo;
+import com.feitianzhu.huangliwo.model.DocResultBookingInfo;
+import com.feitianzhu.huangliwo.model.GoBackBookingInfo;
+import com.feitianzhu.huangliwo.model.GoBackFlight;
 import com.feitianzhu.huangliwo.model.GoBackTripInfo;
-import com.feitianzhu.huangliwo.model.InternationalPriceInfo;
-import com.feitianzhu.huangliwo.model.MultiPriceInfo;
+import com.feitianzhu.huangliwo.model.InterContactModel;
+import com.feitianzhu.huangliwo.model.InterPassengerInfo;
+import com.feitianzhu.huangliwo.model.InterXcdInfo;
 import com.feitianzhu.huangliwo.model.PassengerModel;
-import com.feitianzhu.huangliwo.model.PlaneDetailInfo;
 import com.feitianzhu.huangliwo.model.RefundChangeInfo;
-import com.feitianzhu.huangliwo.model.VenDorsInfo;
-import com.feitianzhu.huangliwo.pushshop.ProblemFeedbackActivity;
+import com.feitianzhu.huangliwo.model.ReimbursementModel;
+import com.feitianzhu.huangliwo.model.UserClientInfo;
 import com.feitianzhu.huangliwo.utils.DateUtils;
 import com.feitianzhu.huangliwo.utils.MathUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
@@ -44,22 +51,19 @@ import com.feitianzhu.huangliwo.view.CustomCancelChangePopView;
 import com.feitianzhu.huangliwo.view.CustomLuggageBuyTicketNoticeView;
 import com.feitianzhu.huangliwo.view.CustomPlaneInfoView;
 import com.feitianzhu.huangliwo.view.CustomPlaneProtocolView;
-import com.feitianzhu.huangliwo.view.CustomRefundView;
 import com.feitianzhu.huangliwo.view.CustomTicketPriceDetailView;
 import com.feitianzhu.huangliwo.view.CustomTotalPriceInfoView;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.lxj.xpopup.XPopup;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -73,16 +77,13 @@ public class EditPlaneReserveActivity extends BaseActivity {
     private int count;//成人数量
     private int cCount;//儿童数量
     private RefundChangeInfo refundChangeInfo;
+    private List<RefundChangeInfo> refundChangeInfos;
     private SelectPassengerAdapter mAdapter;
-    private PlaneDetailInfo detailInfo;
-    private GoBackTripInfo internationalDetailInfo;
-    private MultiPriceInfo priceInfo;
-    private VenDorsInfo venDorsInfo;
     private BaggageRuleInfo baggageRuleInfo;
-    private InternationalPriceInfo internationalPriceInfo;
+    private List<BaggageRuleInfo> baggageRuleInfos;
     private List<PassengerModel> list = new ArrayList<>();
-    private CustomPlaneFlightInfo customPlaneFlightInfo = new CustomPlaneFlightInfo();
     private CustomPriceDetailInfo priceDetailInfo = new CustomPriceDetailInfo();
+    private CustomPlaneDetailInfo customPlaneDetailInfo;
     private String userId;
     private String token;
     @BindView(R.id.title_name)
@@ -97,12 +98,16 @@ public class EditPlaneReserveActivity extends BaseActivity {
     ImageView centerImg;
     @BindView(R.id.ll_goPlane)
     LinearLayout llGoPlane;
-    @BindView(R.id.come_back)
-    TextView comeBack;
+    @BindView(R.id.ll_backPlane)
+    LinearLayout llBackPlane;
+    @BindView(R.id.goTitle)
+    TextView goTitle;
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
-    @BindView(R.id.tv_come_info)
-    TextView tvComeInfo;
+    @BindView(R.id.tv_go_info)
+    TextView tvGoInfo;
+    @BindView(R.id.tv_back_info)
+    TextView tvBackInfo;
     @BindView(R.id.price)
     TextView price;
     @BindView(R.id.arfAndTof)
@@ -126,100 +131,106 @@ public class EditPlaneReserveActivity extends BaseActivity {
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         type = getIntent().getIntExtra(PLANE_TYPE, 1);
-        priceInfo = (MultiPriceInfo) getIntent().getSerializableExtra(PRICE_DATA);
         setSpannableString("0", totalPrice);
-        if (type == 0) {
-            detailInfo = (PlaneDetailInfo) getIntent().getSerializableExtra(PLANE_DETAIL_DATA);
-            venDorsInfo = priceInfo.venDorsInfo;
-        } else if (type == 1) {
-            internationalDetailInfo = (GoBackTripInfo) getIntent().getSerializableExtra(PLANE_DETAIL_DATA);
-            internationalPriceInfo = priceInfo.internationalPriceInfo;
-        } else {
-
-        }
+        customPlaneDetailInfo = (CustomPlaneDetailInfo) getIntent().getSerializableExtra(PLANE_DETAIL_DATA);
 
         planeTitle.setVisibility(View.VISIBLE);
         titleName.setVisibility(View.GONE);
         startCity.setText("北京");
         endCity.setText("上海");
         if (type == 0) {
-            priceDetailInfo.price = venDorsInfo.barePrice;
-            priceDetailInfo.arf = detailInfo.arf;
-            priceDetailInfo.tof = detailInfo.tof;
+            priceDetailInfo.price = customPlaneDetailInfo.customDocGoPriceInfo.barePrice;
+            priceDetailInfo.arf = customPlaneDetailInfo.customDocGoFlightInfo.arf;
+            priceDetailInfo.tof = customPlaneDetailInfo.customDocGoFlightInfo.tof;
             priceDetailInfo.cPrice = 0;
-            customPlaneFlightInfo.date = DateUtils.strToStr(detailInfo.date) + DateUtils.strToDate2(detailInfo.date);
-            customPlaneFlightInfo.depCity = detailInfo.depCode;
-            customPlaneFlightInfo.arrCity = detailInfo.arrCode;
-            customPlaneFlightInfo.depAirport = detailInfo.depAirport;
-            customPlaneFlightInfo.arrAirport = detailInfo.arrAirport;
-            customPlaneFlightInfo.depTerminal = detailInfo.depTerminal;
-            customPlaneFlightInfo.arrTerminal = detailInfo.arrTerminal;
-            customPlaneFlightInfo.bTime = detailInfo.btime;
-            customPlaneFlightInfo.eTime = detailInfo.etime;
-            customPlaneFlightInfo.flightTime = detailInfo.flightTimes;
-            customPlaneFlightInfo.meal = detailInfo.meal;
-            customPlaneFlightInfo.code = detailInfo.code;
-            customPlaneFlightInfo.com = detailInfo.com;
             centerImg.setBackgroundResource(R.mipmap.k01_12quwang);
-            llGoPlane.setVisibility(View.GONE);
-            comeBack.setVisibility(View.GONE);
-            tvComeInfo.setText(DateUtils.strToStr(detailInfo.date) + DateUtils.strToDate2(detailInfo.date) + detailInfo.btime + detailInfo.depAirport + detailInfo.depTerminal + "-" + detailInfo.arrAirport + detailInfo.arrTerminal);
-            price.setText("¥" + MathUtils.subZero(String.valueOf(venDorsInfo.barePrice)));
-            arfAndTof.setText("机建+燃油 ¥" + MathUtils.subZero(String.valueOf(detailInfo.tof + detailInfo.arf)));
-            if (venDorsInfo.cabinType == 0) {
-                tvCabinType.setText("经济舱(" + venDorsInfo.cabin + ")");
-            } else if (venDorsInfo.cabinType == 1) {
-                tvCabinType.setText("头等舱(" + venDorsInfo.cabin + ")");
-            } else if (venDorsInfo.cabinType == 2) {
-                tvCabinType.setText("商务舱(" + venDorsInfo.cabin + ")");
-            } else if (venDorsInfo.cabinType == 3) {
-                tvCabinType.setText("经济舱精选(" + venDorsInfo.cabin + ")");
-            } else if (venDorsInfo.cabinType == 4) {
-                tvCabinType.setText("经济舱y舱(" + venDorsInfo.cabin + ")");
-            } else if (venDorsInfo.cabinType == 5) {
-                tvCabinType.setText("超值头等舱(" + venDorsInfo.cabin + ")");
-            } else if (venDorsInfo.cabinType == -1) {
+            llGoPlane.setVisibility(View.VISIBLE);
+            llBackPlane.setVisibility(View.GONE);
+            goTitle.setVisibility(View.GONE);
+            tvGoInfo.setText(DateUtils.strToStr(customPlaneDetailInfo.customDocGoFlightInfo.date) + DateUtils.strToDate2(customPlaneDetailInfo.customDocGoFlightInfo.date) + customPlaneDetailInfo.customDocGoFlightInfo.btime + customPlaneDetailInfo.customDocGoFlightInfo.depAirport + customPlaneDetailInfo.customDocGoFlightInfo.depTerminal + "-" + customPlaneDetailInfo.customDocGoFlightInfo.arrAirport + customPlaneDetailInfo.customDocGoFlightInfo.arrTerminal);
+            price.setText("¥" + MathUtils.subZero(String.valueOf(customPlaneDetailInfo.customDocGoPriceInfo.barePrice)));
+            arfAndTof.setText("机建+燃油 ¥" + MathUtils.subZero(String.valueOf(customPlaneDetailInfo.customDocGoFlightInfo.tof + customPlaneDetailInfo.customDocGoFlightInfo.arf)));
+            if (customPlaneDetailInfo.customDocGoPriceInfo.cabinType == 0) {
+                tvCabinType.setText("经济舱(" + customPlaneDetailInfo.customDocGoPriceInfo.cabin + ")");
+            } else if (customPlaneDetailInfo.customDocGoPriceInfo.cabinType == 1) {
+                tvCabinType.setText("头等舱(" + customPlaneDetailInfo.customDocGoPriceInfo.cabin + ")");
+            } else if (customPlaneDetailInfo.customDocGoPriceInfo.cabinType == 2) {
+                tvCabinType.setText("商务舱(" + customPlaneDetailInfo.customDocGoPriceInfo.cabin + ")");
+            } else if (customPlaneDetailInfo.customDocGoPriceInfo.cabinType == 3) {
+                tvCabinType.setText("经济舱精选(" + customPlaneDetailInfo.customDocGoPriceInfo.cabin + ")");
+            } else if (customPlaneDetailInfo.customDocGoPriceInfo.cabinType == 4) {
+                tvCabinType.setText("经济舱y舱(" + customPlaneDetailInfo.customDocGoPriceInfo.cabin + ")");
+            } else if (customPlaneDetailInfo.customDocGoPriceInfo.cabinType == 5) {
+                tvCabinType.setText("超值头等舱(" + customPlaneDetailInfo.customDocGoPriceInfo.cabin + ")");
+            } else if (customPlaneDetailInfo.customDocGoPriceInfo.cabinType == -1) {
                 tvCabinType.setText("未配置");
             }
         } else if (type == 1) {
-            priceDetailInfo.price = internationalPriceInfo.price;
+            priceDetailInfo.price = customPlaneDetailInfo.customInterPriceInfo.price;
             priceDetailInfo.arf = 0;
             priceDetailInfo.tof = 0;
-            priceDetailInfo.cPrice = internationalPriceInfo.cPrice;
-            customPlaneFlightInfo.date = DateUtils.strToStr(internationalDetailInfo.flightSegments.get(0).depDate) + DateUtils.strToDate2(internationalDetailInfo.flightSegments.get(0).depDate);
-            customPlaneFlightInfo.depCity = internationalDetailInfo.flightSegments.get(0).depCityName;
-            customPlaneFlightInfo.arrCity = internationalDetailInfo.flightSegments.get(internationalDetailInfo.flightSegments.size() - 1).arrCityName;
-            customPlaneFlightInfo.depAirport = internationalDetailInfo.flightSegments.get(0).depAirportName;
-            customPlaneFlightInfo.arrAirport = internationalDetailInfo.flightSegments.get(internationalDetailInfo.flightSegments.size() - 1).arrAirportName;
-            customPlaneFlightInfo.depTerminal = internationalDetailInfo.flightSegments.get(0).depTerminal;
-            customPlaneFlightInfo.arrTerminal = internationalDetailInfo.flightSegments.get(internationalDetailInfo.flightSegments.size() - 1).arrTerminal;
-            customPlaneFlightInfo.bTime = internationalDetailInfo.flightSegments.get(0).depTime;
-            customPlaneFlightInfo.eTime = internationalDetailInfo.flightSegments.get(internationalDetailInfo.flightSegments.size() - 1).arrTime;
-            customPlaneFlightInfo.flightTime = DateUtils.minToHour(internationalDetailInfo.duration);
-            customPlaneFlightInfo.meal = false;
-            customPlaneFlightInfo.code = internationalDetailInfo.flightSegments.get(0).planeTypeCode;
-            customPlaneFlightInfo.com = internationalDetailInfo.flightSegments.get(0).mainCarrierFullName;
+            priceDetailInfo.cPrice = customPlaneDetailInfo.customInterPriceInfo.cPrice;
+            GoBackTripInfo interGo = customPlaneDetailInfo.customInterFlightInfo.goTrip;
             centerImg.setBackgroundResource(R.mipmap.k01_12quwang);
-            llGoPlane.setVisibility(View.GONE);
-            comeBack.setVisibility(View.GONE);
-            tvComeInfo.setText(DateUtils.strToStr(internationalDetailInfo.flightSegments.get(0).depDate) + DateUtils.strToDate2(internationalDetailInfo.flightSegments.get(0).depDate)
-                    + internationalDetailInfo.flightSegments.get(0).depTime + internationalDetailInfo.flightSegments.get(0).depAirportName + internationalDetailInfo.flightSegments.get(0).depTerminal + "-"
-                    + internationalDetailInfo.flightSegments.get(internationalDetailInfo.flightSegments.size() - 1).arrAirportName + internationalDetailInfo.flightSegments.get(internationalDetailInfo.flightSegments.size() - 1).arrTerminal);
-            price.setText("¥" + MathUtils.subZero(String.valueOf(internationalPriceInfo.price)));
+            llGoPlane.setVisibility(View.VISIBLE);
+            llBackPlane.setVisibility(View.GONE);
+            goTitle.setVisibility(View.GONE);
+            tvGoInfo.setText(DateUtils.strToStr(interGo.flightSegments.get(0).depDate) + DateUtils.strToDate2(interGo.flightSegments.get(0).depDate)
+                    + interGo.flightSegments.get(0).depTime + interGo.flightSegments.get(0).depAirportName + interGo.flightSegments.get(0).depTerminal + "-"
+                    + interGo.flightSegments.get(interGo.flightSegments.size() - 1).arrAirportName + interGo.flightSegments.get(interGo.flightSegments.size() - 1).arrTerminal);
+            price.setText("¥" + MathUtils.subZero(String.valueOf(customPlaneDetailInfo.customInterPriceInfo.price)));
             arfAndTof.setText("机建+燃油 ¥0");
-            if ("economy".equals(internationalPriceInfo.cabinLevel)) {
-                tvCabinType.setText("经济舱(" + internationalPriceInfo.cabin + ")");
-            } else if ("first".equals(internationalPriceInfo.cabinLevel)) {
-                tvCabinType.setText("头等舱(" + internationalPriceInfo.cabin + ")");
-            } else if ("business".equals(internationalPriceInfo.cabinLevel)) {
-                tvCabinType.setText("商务舱(" + internationalPriceInfo.cabin + ")");
+            if ("economy".equals(customPlaneDetailInfo.customInterPriceInfo.cabinLevel)) {
+                tvCabinType.setText("经济舱(" + customPlaneDetailInfo.customInterPriceInfo.cabin + ")");
+            } else if ("first".equals(customPlaneDetailInfo.customInterPriceInfo.cabinLevel)) {
+                tvCabinType.setText("头等舱(" + customPlaneDetailInfo.customInterPriceInfo.cabin + ")");
+            } else if ("business".equals(customPlaneDetailInfo.customInterPriceInfo.cabinLevel)) {
+                tvCabinType.setText("商务舱(" + customPlaneDetailInfo.customInterPriceInfo.cabin + ")");
             } else {
                 tvCabinType.setText("未配置");
             }
         } else {
             centerImg.setBackgroundResource(R.mipmap.k01_13wangfan);
             llGoPlane.setVisibility(View.VISIBLE);
-            comeBack.setVisibility(View.VISIBLE);
+            llBackPlane.setVisibility(View.VISIBLE);
+            goTitle.setVisibility(View.VISIBLE);
+            if (type == 2) {
+                priceDetailInfo.price = customPlaneDetailInfo.customDocGoBackPriceInfo.barePrice;
+                priceDetailInfo.arf = customPlaneDetailInfo.customDocGoBackFlightInfo.arf;
+                priceDetailInfo.tof = customPlaneDetailInfo.customDocGoBackFlightInfo.tof;
+                priceDetailInfo.cPrice = 0;
+                GoBackFlight docGoFlight = customPlaneDetailInfo.customDocGoBackFlightInfo.go;
+                GoBackFlight docBackFlight = customPlaneDetailInfo.customDocGoBackFlightInfo.back;
+                tvGoInfo.setText(DateUtils.strToStr(customPlaneDetailInfo.goDate) + DateUtils.strToDate2(customPlaneDetailInfo.goDate) + docGoFlight.depTime + docGoFlight.depAirport + docGoFlight.depTerminal + "-" + docGoFlight.arrAirport + docGoFlight.arrTerminal);
+                tvBackInfo.setText(DateUtils.strToStr(customPlaneDetailInfo.backDate) + DateUtils.strToDate2(customPlaneDetailInfo.backDate) + docBackFlight.depTime + docBackFlight.depAirport + docBackFlight.depTerminal + "-" + docBackFlight.arrAirport + docBackFlight.arrTerminal);
+                price.setText("¥" + MathUtils.subZero(String.valueOf(customPlaneDetailInfo.customDocGoBackPriceInfo.barePrice)));
+                arfAndTof.setText("机建+燃油 ¥" + MathUtils.subZero(String.valueOf(customPlaneDetailInfo.customDocGoBackFlightInfo.tof + customPlaneDetailInfo.customDocGoBackFlightInfo.arf)));
+                tvCabinType.setText(customPlaneDetailInfo.customDocGoBackPriceInfo.cabinDesc);
+            } else {
+                priceDetailInfo.price = customPlaneDetailInfo.customInterPriceInfo.price;
+                priceDetailInfo.arf = 0;
+                priceDetailInfo.tof = 0;
+                priceDetailInfo.cPrice = customPlaneDetailInfo.customInterPriceInfo.cPrice;
+                GoBackTripInfo interGo = customPlaneDetailInfo.customInterFlightInfo.goTrip;
+                GoBackTripInfo interBack = customPlaneDetailInfo.customInterFlightInfo.backTrip;
+                tvGoInfo.setText(DateUtils.strToStr(interGo.flightSegments.get(0).depDate) + DateUtils.strToDate2(interGo.flightSegments.get(0).depDate)
+                        + interGo.flightSegments.get(0).depTime + interGo.flightSegments.get(0).depAirportName + interGo.flightSegments.get(0).depTerminal + "-"
+                        + interGo.flightSegments.get(interGo.flightSegments.size() - 1).arrAirportName + interGo.flightSegments.get(interGo.flightSegments.size() - 1).arrTerminal);
+                tvBackInfo.setText(DateUtils.strToStr(interBack.flightSegments.get(0).depDate) + DateUtils.strToDate2(interBack.flightSegments.get(0).depDate)
+                        + interBack.flightSegments.get(0).depTime + interBack.flightSegments.get(0).depAirportName + interBack.flightSegments.get(0).depTerminal + "-"
+                        + interBack.flightSegments.get(interBack.flightSegments.size() - 1).arrAirportName + interBack.flightSegments.get(interBack.flightSegments.size() - 1).arrTerminal);
+                price.setText("¥" + MathUtils.subZero(String.valueOf(customPlaneDetailInfo.customInterPriceInfo.price)));
+                arfAndTof.setText("机建+燃油 ¥0");
+                if ("economy".equals(customPlaneDetailInfo.customInterPriceInfo.cabinLevel)) {
+                    tvCabinType.setText("经济舱(" + customPlaneDetailInfo.customInterPriceInfo.cabin + ")");
+                } else if ("first".equals(customPlaneDetailInfo.customInterPriceInfo.cabinLevel)) {
+                    tvCabinType.setText("头等舱(" + customPlaneDetailInfo.customInterPriceInfo.cabin + ")");
+                } else if ("business".equals(customPlaneDetailInfo.customInterPriceInfo.cabinLevel)) {
+                    tvCabinType.setText("商务舱(" + customPlaneDetailInfo.customInterPriceInfo.cabin + ")");
+                } else {
+                    tvCabinType.setText("未配置");
+                }
+            }
         }
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -252,22 +263,22 @@ public class EditPlaneReserveActivity extends BaseActivity {
                     .tag(this)
                     .params(Constant.ACCESSTOKEN, token)
                     .params(Constant.USERID, userId)
-                    .params("flightNum", venDorsInfo.shareShowAct ? detailInfo.actCode : detailInfo.code)
-                    .params("cabin", venDorsInfo.cabin)
-                    .params("dpt", detailInfo.depCode)
-                    .params("arr", detailInfo.arrCode)
-                    .params("dptDate", detailInfo.date)
-                    .params("dptTime", detailInfo.btime)
-                    .params("policyId", venDorsInfo.PolicyId)
-                    .params("maxSellPrice", String.valueOf(venDorsInfo.barePrice))
-                    .params("minSellPrice", String.valueOf(venDorsInfo.barePrice))
-                    .params("printPrice", String.valueOf(venDorsInfo.vppr))
-                    .params("tagName", venDorsInfo.prtag)
+                    .params("flightNum", customPlaneDetailInfo.customDocGoPriceInfo.shareShowAct ? customPlaneDetailInfo.customDocGoFlightInfo.actCode : customPlaneDetailInfo.customDocGoFlightInfo.code)
+                    .params("cabin", customPlaneDetailInfo.customDocGoPriceInfo.cabin)
+                    .params("dpt", customPlaneDetailInfo.customDocGoFlightInfo.depCode)
+                    .params("arr", customPlaneDetailInfo.customDocGoFlightInfo.arrCode)
+                    .params("dptDate", customPlaneDetailInfo.customDocGoFlightInfo.date)
+                    .params("dptTime", customPlaneDetailInfo.customDocGoFlightInfo.btime)
+                    .params("policyId", customPlaneDetailInfo.customDocGoPriceInfo.PolicyId)
+                    .params("maxSellPrice", String.valueOf(customPlaneDetailInfo.customDocGoPriceInfo.barePrice))
+                    .params("minSellPrice", String.valueOf(customPlaneDetailInfo.customDocGoPriceInfo.barePrice))
+                    .params("printPrice", String.valueOf(customPlaneDetailInfo.customDocGoPriceInfo.vppr))
+                    .params("tagName", customPlaneDetailInfo.customDocGoPriceInfo.prtag)
                     .params("translate", false)
-                    .params("sfid", venDorsInfo.groupId)
+                    .params("sfid", customPlaneDetailInfo.customDocGoPriceInfo.groupId)
                     .params("needPercentTgqText", false)
-                    .params("businessExt", venDorsInfo.businessExt)
-                    .params("client", venDorsInfo.domain)
+                    .params("businessExt", customPlaneDetailInfo.customDocGoPriceInfo.businessExt)
+                    .params("client", customPlaneDetailInfo.customDocGoPriceInfo.domain)
                     //.params("childCabin")
                     //.params("childSellPrice")
                     .execute(new JsonCallback<PlaneResponse<RefundChangeInfo>>() {
@@ -275,10 +286,12 @@ public class EditPlaneReserveActivity extends BaseActivity {
                         public void onSuccess(Response<PlaneResponse<RefundChangeInfo>> response) {
                             super.onSuccess(EditPlaneReserveActivity.this, response.body().message, response.body().code);
                             refundChangeInfo = response.body().result;
-                            new XPopup.Builder(EditPlaneReserveActivity.this)
-                                    .enableDrag(false)
-                                    .asCustom(new CustomCancelChangePopView(EditPlaneReserveActivity.this
-                                    ).setType(type).setData(refundChangeInfo).setLuggage(false)).show();
+                            if (response.body().code == 0 && response.body().result != null) {
+                                new XPopup.Builder(EditPlaneReserveActivity.this)
+                                        .enableDrag(false)
+                                        .asCustom(new CustomCancelChangePopView(EditPlaneReserveActivity.this
+                                        ).setType(type).setGoData(refundChangeInfo).setLuggage(false)).show();
+                            }
                         }
 
                         @Override
@@ -287,38 +300,126 @@ public class EditPlaneReserveActivity extends BaseActivity {
                         }
                     });
 
+        } else if (type == 2) {
+            OkGo.<PlaneResponse<List<RefundChangeInfo>>>post(Urls.GET_GO_BACK_TGQNEWBACK)
+                    .tag(this)
+                    .params(Constant.ACCESSTOKEN, token)
+                    .params(Constant.USERID, userId)
+                    .params("client", customPlaneDetailInfo.customDocGoBackPriceInfo.domain)
+                    .params("carrier", customPlaneDetailInfo.customDocGoBackFlightInfo.go.carrier)
+                    .params("depCode", customPlaneDetailInfo.customDocGoBackFlightInfo.go.depAirportCode)
+                    .params("arrCode", customPlaneDetailInfo.customDocGoBackFlightInfo.go.arrAirportCode)
+                    .params("goDate", customPlaneDetailInfo.goDate)
+                    .params("backDate", customPlaneDetailInfo.backDate)
+                    .params("outCabin", customPlaneDetailInfo.customDocGoBackPriceInfo.outCabin)
+                    .params("retCabin", customPlaneDetailInfo.customDocGoBackPriceInfo.retCabin)
+                    .params("businessExts", customPlaneDetailInfo.customDocGoBackPriceInfo.businessExts)
+                    .params("goFlightNum", customPlaneDetailInfo.customDocGoBackFlightInfo.go.flightCode)
+                    .params("backFlightNum", customPlaneDetailInfo.customDocGoBackFlightInfo.back.flightCode)
+                    .params("policyId", customPlaneDetailInfo.customDocGoBackPriceInfo.policyId)
+                    .params("price", customPlaneDetailInfo.customDocGoBackPriceInfo.price)
+                    .params("barePrice", customPlaneDetailInfo.customDocGoBackPriceInfo.barePrice)
+                    .params("tagName", customPlaneDetailInfo.customDocGoBackPriceInfo.tagName)
+                    .execute(new JsonCallback<PlaneResponse<List<RefundChangeInfo>>>() {
+                        @Override
+                        public void onSuccess(Response<PlaneResponse<List<RefundChangeInfo>>> response) {
+                            super.onSuccess(EditPlaneReserveActivity.this, response.body().message, response.body().code);
+                            if (response.body().code == 0 && response.body().result != null) {
+                                refundChangeInfos = response.body().result;
+                                new XPopup.Builder(EditPlaneReserveActivity.this)
+                                        .enableDrag(false)
+                                        .asCustom(new CustomCancelChangePopView(EditPlaneReserveActivity.this
+                                        ).setType(type).setGoData(refundChangeInfos.get(0)).setBackData(refundChangeInfos.get(1)).setLuggage(false)).show();
+                            }
+                        }
+
+                        @Override
+                        public void onError(Response<PlaneResponse<List<RefundChangeInfo>>> response) {
+                            super.onError(response);
+                        }
+                    });
         }
     }
 
     public void getBaggagerule() {
-        OkGo.<PlaneResponse<BaggageRuleInfo>>get(Urls.GET_BAGGAGERULES)
-                .tag(this)
-                .params(Constant.ACCESSTOKEN, token)
-                .params(Constant.USERID, userId)
-                .params("airlineCode", detailInfo.carrier)
-                .params("cabin", venDorsInfo.cabin)
-                .params("depCode", detailInfo.depCode)
-                .params("arrCode", detailInfo.arrCode)
-                .params("luggage", venDorsInfo.luggage)
-                .params("saleDate", detailInfo.date)
-                .params("depDate", detailInfo.date)
-                .execute(new JsonCallback<PlaneResponse<BaggageRuleInfo>>() {
-                    @Override
-                    public void onSuccess(Response<PlaneResponse<BaggageRuleInfo>> response) {
-                        super.onSuccess(EditPlaneReserveActivity.this, response.body().message, response.body().code);
-                        baggageRuleInfo = response.body().result;
-                        new XPopup.Builder(EditPlaneReserveActivity.this)
-                                .enableDrag(false)
-                                .asCustom(new CustomLuggageBuyTicketNoticeView(EditPlaneReserveActivity.this
-                                ).setType(type).setData(baggageRuleInfo)).show();
-                    }
+        if (type == 0) {
+            OkGo.<PlaneResponse<BaggageRuleInfo>>get(Urls.GET_BAGGAGERULES)
+                    .tag(this)
+                    .params(Constant.ACCESSTOKEN, token)
+                    .params(Constant.USERID, userId)
+                    .params("airlineCode", customPlaneDetailInfo.customDocGoFlightInfo.carrier)
+                    .params("cabin", customPlaneDetailInfo.customDocGoPriceInfo.cabin)
+                    .params("depCode", customPlaneDetailInfo.customDocGoFlightInfo.depCode)
+                    .params("arrCode", customPlaneDetailInfo.customDocGoFlightInfo.arrCode)
+                    .params("luggage", customPlaneDetailInfo.customDocGoPriceInfo.luggage)
+                    .params("saleDate", customPlaneDetailInfo.customDocGoFlightInfo.date)
+                    .params("depDate", customPlaneDetailInfo.customDocGoFlightInfo.date)
+                    .execute(new JsonCallback<PlaneResponse<BaggageRuleInfo>>() {
+                        @Override
+                        public void onSuccess(Response<PlaneResponse<BaggageRuleInfo>> response) {
+                            super.onSuccess(EditPlaneReserveActivity.this, response.body().message, response.body().code);
+                            if (response.body().code == 0 && response.body().result != null) {
+                                baggageRuleInfo = response.body().result;
+                                new XPopup.Builder(EditPlaneReserveActivity.this)
+                                        .enableDrag(false)
+                                        .asCustom(new CustomLuggageBuyTicketNoticeView(EditPlaneReserveActivity.this
+                                        ).setType(type).setGoData(baggageRuleInfo)).show();
+                            }
+                        }
 
-                    @Override
-                    public void onError(Response<PlaneResponse<BaggageRuleInfo>> response) {
-                        super.onError(response);
-                    }
-                });
+                        @Override
+                        public void onError(Response<PlaneResponse<BaggageRuleInfo>> response) {
+                            super.onError(response);
+                        }
+                    });
+        } else if (type == 2) {
+            BaggageRuleReqParamModel goBaggageRuleReqParamModel = new BaggageRuleReqParamModel();
+            goBaggageRuleReqParamModel.airlineCode = customPlaneDetailInfo.customDocGoBackFlightInfo.go.codeShare ? customPlaneDetailInfo.customDocGoBackFlightInfo.go.mainCarrier : customPlaneDetailInfo.customDocGoBackFlightInfo.go.carrier;
+            goBaggageRuleReqParamModel.arrCode = customPlaneDetailInfo.customDocGoBackFlightInfo.go.depAirportCode;
+            goBaggageRuleReqParamModel.cabin = customPlaneDetailInfo.customDocGoBackPriceInfo.cabin;
+            goBaggageRuleReqParamModel.depCode = customPlaneDetailInfo.customDocGoBackFlightInfo.go.arrAirportCode;
+            goBaggageRuleReqParamModel.depDate = customPlaneDetailInfo.goDate;
+            goBaggageRuleReqParamModel.saleDate = customPlaneDetailInfo.goDate;
 
+            BaggageRuleReqParamModel backBaggageRuleReqParamModel = new BaggageRuleReqParamModel();
+            backBaggageRuleReqParamModel.airlineCode = customPlaneDetailInfo.customDocGoBackFlightInfo.back.codeShare ? customPlaneDetailInfo.customDocGoBackFlightInfo.back.mainCarrier : customPlaneDetailInfo.customDocGoBackFlightInfo.back.carrier;
+            backBaggageRuleReqParamModel.arrCode = customPlaneDetailInfo.customDocGoBackFlightInfo.back.depAirportCode;
+            backBaggageRuleReqParamModel.cabin = customPlaneDetailInfo.customDocGoBackPriceInfo.cabin;
+            backBaggageRuleReqParamModel.depCode = customPlaneDetailInfo.customDocGoBackFlightInfo.back.arrAirportCode;
+            backBaggageRuleReqParamModel.depDate = customPlaneDetailInfo.backDate;
+            backBaggageRuleReqParamModel.saleDate = customPlaneDetailInfo.backDate;
+
+            List<BaggageRuleReqParamModel> baggageRuleReqParamModelList = new ArrayList<>();
+            baggageRuleReqParamModelList.add(goBaggageRuleReqParamModel);
+            baggageRuleReqParamModelList.add(backBaggageRuleReqParamModel);
+
+            String baggageRuleReqJson = new Gson().toJson(baggageRuleReqParamModelList);
+
+            OkGo.<PlaneResponse<List<BaggageRuleInfo>>>post(Urls.GET_GO_BACK_BAGGAGERULES)
+                    .tag(this)
+                    .params(Constant.ACCESSTOKEN, token)
+                    .params(Constant.USERID, userId)
+                    .params("listStr", baggageRuleReqJson)
+                    .execute(new JsonCallback<PlaneResponse<List<BaggageRuleInfo>>>() {
+                        @Override
+                        public void onSuccess(Response<PlaneResponse<List<BaggageRuleInfo>>> response) {
+                            super.onSuccess(EditPlaneReserveActivity.this, response.body().message, response.body().code);
+                            if (response.body().code == 0 && response.body().result != null) {
+                                baggageRuleInfos = response.body().result;
+                                new XPopup.Builder(EditPlaneReserveActivity.this)
+                                        .enableDrag(false)
+                                        .asCustom(new CustomLuggageBuyTicketNoticeView(EditPlaneReserveActivity.this
+                                        ).setType(type).setGoData(baggageRuleInfos.get(0)).setBackData(baggageRuleInfos.get(1))).show();
+                            }
+                        }
+
+                        @Override
+                        public void onError(Response<PlaneResponse<List<BaggageRuleInfo>>> response) {
+                            super.onError(response);
+                        }
+                    });
+
+        }
     }
 
     @OnClick({R.id.left_button, R.id.cancel_change, R.id.rl_plane_info, R.id.luggage_buyTicket_notice, R.id.ticketPrice_detail, R.id.selectUser, R.id.tvReserveNotice, R.id.btn_submit, R.id.priceInfo})
@@ -334,7 +435,7 @@ public class EditPlaneReserveActivity extends BaseActivity {
                 new XPopup.Builder(EditPlaneReserveActivity.this)
                         .enableDrag(false)
                         .asCustom(new CustomPlaneInfoView(this
-                        ).setType(type).setData(customPlaneFlightInfo)).show();
+                        ).setType(type).setData(customPlaneDetailInfo)).show();
                 break;
             case R.id.luggage_buyTicket_notice:
                 getBaggagerule();
@@ -357,7 +458,15 @@ public class EditPlaneReserveActivity extends BaseActivity {
                         ).setTitle("机票预订须知").setData(Arrays.asList(integers))).show();
                 break;
             case R.id.btn_submit:
-                submit();
+                if (list.size() == 0) {
+                    ToastUtils.showShortToast("请选择乘机人");
+                } else {
+                    if (type == 0 || type == 2) {
+                        docSubmit();
+                    } else {
+                        interSubmit();
+                    }
+                }
                 break;
             case R.id.priceInfo:
                 if (list.size() == 0) {
@@ -371,26 +480,182 @@ public class EditPlaneReserveActivity extends BaseActivity {
         }
     }
 
-    public void submit() {
-        //BookingInfo
-        String json = new Gson().toJson(venDorsInfo);
-        OkGo.<PlaneResponse>post(Urls.PLANE_BOOK)
+    public void docSubmit() {
+        if (type == 0) {
+            String json = new Gson().toJson(customPlaneDetailInfo.customDocGoPriceInfo);
+            String depCode = customPlaneDetailInfo.customDocGoFlightInfo.depCode;
+            String arrCode = customPlaneDetailInfo.customDocGoFlightInfo.arrCode;
+            String code = customPlaneDetailInfo.customDocGoFlightInfo.code;
+            String date = customPlaneDetailInfo.customDocGoFlightInfo.date;
+            String carrier = customPlaneDetailInfo.customDocGoFlightInfo.carrier;
+            String btime = customPlaneDetailInfo.customDocGoFlightInfo.btime;
+            OkGo.<PlaneResponse>post(Urls.PLANE_BOOK)
+                    .tag(this)
+                    .params(Constant.ACCESSTOKEN, token)
+                    .params(Constant.USERID, userId)
+                    .params("vendorStr", json)
+                    .params("depCode", depCode)
+                    .params("arrCode", arrCode)
+                    .params("code", code)
+                    .params("date", date)
+                    .params("carrier", carrier)
+                    .params("btime", btime)
+                    .execute(new JsonCallback<PlaneResponse>() {
+                        @Override
+                        public void onSuccess(Response<PlaneResponse> response) {
+                            super.onSuccess(EditPlaneReserveActivity.this, response.body().message, response.body().code);
+                            //BookingInfo
+                            String json = new Gson().toJson(response.body().result);
+                            createOrder(json);
+                        }
+
+                        @Override
+                        public void onError(Response<PlaneResponse> response) {
+                            super.onError(response);
+                        }
+                    });
+        } else if (type == 2) {
+            OkGo.<PlaneResponse<DocResultBookingInfo>>get(Urls.PLANE_GO_BACK_BOOK)
+                    .tag(this)
+                    .params(Constant.ACCESSTOKEN, token)
+                    .params(Constant.USERID, userId)
+                    .params("bookingParamKey", customPlaneDetailInfo.customDocGoBackPriceInfo.bookingParamKey)
+                    .execute(new JsonCallback<PlaneResponse<DocResultBookingInfo>>() {
+                        @Override
+                        public void onSuccess(Response<PlaneResponse<DocResultBookingInfo>> response) {
+                            super.onSuccess(EditPlaneReserveActivity.this, response.body().message, response.body().code);
+                            createOrder3(response.body().result);
+                        }
+
+                        @Override
+                        public void onError(Response<PlaneResponse<DocResultBookingInfo>> response) {
+                            super.onError(response);
+                        }
+                    });
+        }
+
+    }
+
+    public void interSubmit() {
+        OkGo.<PlaneResponse>get(Urls.INTER_PLANE_BOOK)
                 .tag(this)
                 .params(Constant.ACCESSTOKEN, token)
                 .params(Constant.USERID, userId)
-                .params("vendorStr", json)
-                .params("depCode", detailInfo.depCode)
-                .params("arrCode", detailInfo.arrCode)
-                .params("code", detailInfo.code)
-                .params("date", detailInfo.date)
-                .params("carrier", detailInfo.carrier)
-                .params("btime", detailInfo.btime)
+                .params("source", "ICP_SELECT_open.3724")
+                .params("priceKey", customPlaneDetailInfo.customInterPriceInfo.priceKey)
                 .execute(new JsonCallback<PlaneResponse>() {
                     @Override
                     public void onSuccess(Response<PlaneResponse> response) {
                         super.onSuccess(EditPlaneReserveActivity.this, response.body().message, response.body().code);
                         String json = new Gson().toJson(response.body().result);
-                        createOrder(json);
+                        createOrder2(json);
+                    }
+
+                    @Override
+                    public void onError(Response<PlaneResponse> response) {
+                        super.onError(response);
+                    }
+                });
+    }
+
+    /*
+     * 国内往返生单
+     * */
+    List<DocBookingPriceTagInfo> adultTagInfo;
+    List<DocBookingPriceTagInfo> childrenTagInfo;
+    List<DocBookingPriceTagInfo> babyTagInfo;
+
+    public void createOrder3(DocResultBookingInfo docResultBookingInfo) {
+        GoBackBookingInfo goBackBookingInfo = new GoBackBookingInfo();
+        goBackBookingInfo.flightType = docResultBookingInfo.type;
+        goBackBookingInfo.bookingTag = docResultBookingInfo.bookingTag;
+        goBackBookingInfo.soloChild = docResultBookingInfo.tripInfos.get(0).clientBookingResult.get(0).policyInfo.soloChild ? 1 : 0;
+        goBackBookingInfo.orderFrom = "DOMESTIC_ROUND_WAY_PACKAGE";
+
+        String bookJson = new Gson().toJson(goBackBookingInfo);
+
+        List<DocPassengerInfo> docPassengerInfoList = new ArrayList<>();
+        // ②成人取ADU节点，儿童取CHI，婴儿取INF；key为：ADU，CHI，INF, CBA分别代表成人，儿童，婴儿，儿童买成人
+        adultTagInfo = docResultBookingInfo.tripInfos.get(0).clientBookingResult.get(0).priceInfo.priceTag.get("ADU");
+        if (docResultBookingInfo.tripInfos.get(0).clientBookingResult.get(0).priceInfo.priceTag.get("CHI") != null) {
+            childrenTagInfo = docResultBookingInfo.tripInfos.get(0).clientBookingResult.get(0).priceInfo.priceTag.get("CHI");
+        } else if (docResultBookingInfo.tripInfos.get(0).clientBookingResult.get(0).priceInfo.priceTag.get("CBA") != null) {
+            childrenTagInfo = docResultBookingInfo.tripInfos.get(0).clientBookingResult.get(0).priceInfo.priceTag.get("CBA");
+        }
+        if (docResultBookingInfo.tripInfos.get(0).clientBookingResult.get(0).priceInfo.priceTag.get("INF") != null) {
+            babyTagInfo = docResultBookingInfo.tripInfos.get(0).clientBookingResult.get(0).priceInfo.priceTag.get("INF");
+        }
+
+        List<String> aduPriceTags = new ArrayList<>();
+        for (int j = 0; j < adultTagInfo.size(); j++) {
+            aduPriceTags.add(adultTagInfo.get(j).productPackageCode);
+        }
+        List<String> childPriceTags = new ArrayList<>();
+        if (babyTagInfo != null) {
+            for (int j = 0; j < babyTagInfo.size(); j++) {
+                childPriceTags.add(babyTagInfo.get(j).productPackageCode);
+            }
+        }
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).ageType == 1 && babyTagInfo == null) {
+                ToastUtils.showShortToast("不支持儿童生单");
+                return;
+            }
+        }
+
+        for (int i = 0; i < list.size(); i++) {
+            DocPassengerInfo docPassengerInfo = new DocPassengerInfo();
+            docPassengerInfo.ageType = list.get(i).ageType;
+            docPassengerInfo.birthday = list.get(i).birthday;
+            docPassengerInfo.cardNo = list.get(i).cardNo;
+            docPassengerInfo.mobile = "13100680321";
+            docPassengerInfo.mobilePreNum = "86";
+            docPassengerInfo.name = list.get(i).name;
+            docPassengerInfo.sex = list.get(i).sex;
+            docPassengerInfo.cardType = list.get(i).cardType;
+            if (list.get(i).ageType == 0) {
+                docPassengerInfo.priceTags = aduPriceTags;
+            } else {
+                docPassengerInfo.priceTags = childPriceTags;
+            }
+            docPassengerInfoList.add(docPassengerInfo);
+        }
+
+        String passengerJson = new Gson().toJson(docPassengerInfoList);
+
+
+        ContactModel contactModel = new ContactModel();
+        contactModel.mobile = contactPhone.getText().toString().trim();
+        contactModel.mobilePreNum = "86";
+        contactModel.name = contactName.getText().toString().trim();
+        String contactJson = new Gson().toJson(contactModel);
+        ReimbursementModel reimbursementModel = new ReimbursementModel();
+        reimbursementModel.xcd = false;
+        String reimbursementJson = new Gson().toJson(reimbursementModel);
+
+        String tripItemsJson = new Gson().toJson(docResultBookingInfo.tripInfos.get(0).tripItems);
+
+        UserClientInfo userClientInfo = new UserClientInfo();
+        String userClientInfoJson = new Gson().toJson(userClientInfo);
+
+        OkGo.<PlaneResponse>post(Urls.CREATE_PLANE_GO_BACK_ORDER)
+                .tag(this)
+                .params(Constant.ACCESSTOKEN, token)
+                .params(Constant.USERID, userId)
+                // .params("userClientInfo", userClientInfoJson) //去哪儿用户名
+                .params("bookingInfo", bookJson)
+                .params("passengerInfos", passengerJson)
+                .params("contact", contactJson)
+                .params("tripItems", tripItemsJson)
+                .params("reimbursement", reimbursementJson)
+                .execute(new JsonCallback<PlaneResponse>() {
+                    @Override
+                    public void onSuccess(Response<PlaneResponse> response) {
+                        super.onSuccess(EditPlaneReserveActivity.this, response.body().message, response.body().code);
+                        if (response.body().code == 0) {
+                            Intent intent = new Intent(EditPlaneReserveActivity.this, PlaneOrderDetailActivity.class);
+                            startActivity(intent);
+                        }
                     }
 
                     @Override
@@ -401,6 +666,66 @@ public class EditPlaneReserveActivity extends BaseActivity {
 
     }
 
+    /*
+    国际单程往返生单
+    * */
+    String bookingTagKey;
+
+    public void createOrder2(String bkResult) {
+        InterContactModel interContactModel = new InterContactModel();
+        interContactModel.email = "694125155@qq.com";
+        interContactModel.mobCountryCode = "86";
+        interContactModel.mobile = contactPhone.getText().toString().trim();
+        interContactModel.name = "YANGQINBO";
+        String contactJson = new Gson().toJson(interContactModel);
+        List<InterPassengerInfo> interPassengerInfoList = new ArrayList<>();
+        InterPassengerInfo passengerModel = new InterPassengerInfo();
+        passengerModel.name = "YANG/QINBO";
+        passengerModel.ageType = 0;
+        passengerModel.birthday = "2001-08-03";
+        passengerModel.gender = "M";
+        passengerModel.cardNum = "E95920837";
+        passengerModel.cardType = "PP";
+        interPassengerInfoList.add(passengerModel);
+
+        String passengerJson = new Gson().toJson(interPassengerInfoList);
+
+        InterXcdInfo interXcdInfo = new InterXcdInfo();
+        interXcdInfo.reimburseType = 0;
+        String xcdJson = new Gson().toJson(interXcdInfo);
+        try {
+            JSONObject object = new JSONObject(bkResult);
+            bookingTagKey = object.getString("bookingTagKey");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        OkGo.<PlaneResponse>get(Urls.NET_PLANE_ORDER)
+                .tag(this)
+                .params(Constant.ACCESSTOKEN, token)
+                .params(Constant.USERID, userId)
+                .params("bookingResult", bkResult)
+                .params("bookingTagKey", bookingTagKey)
+                .params("passengersStr", passengerJson)
+                .params("contact", contactJson)
+                .params("xcd", xcdJson)
+                .execute(new JsonCallback<PlaneResponse>() {
+                    @Override
+                    public void onSuccess(Response<PlaneResponse> response) {
+                        super.onSuccess(EditPlaneReserveActivity.this, response.body().message, response.body().code);
+                    }
+
+                    @Override
+                    public void onError(Response<PlaneResponse> response) {
+                        super.onError(response);
+                    }
+                });
+
+
+    }
+
+    /*
+     * 国内单程生单
+     * */
     public void createOrder(String bkResult) {
         String passengerJson = new Gson().toJson(list);
         OkGo.<PlaneResponse<CreateOrderInfo>>post(Urls.CREATE_PLANE_ORDER)

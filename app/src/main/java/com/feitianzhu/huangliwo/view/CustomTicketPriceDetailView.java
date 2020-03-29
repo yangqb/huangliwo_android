@@ -39,16 +39,9 @@ public class CustomTicketPriceDetailView extends CenterPopupView {
         TextView gocPrice = findViewById(R.id.gocPrice);
         TextView goArfAndTof = findViewById(R.id.goArfAndTof);
         TextView gocArfAndTof = findViewById(R.id.gocArfAndTof);
-        if (type == 0 || type == 1) {
-            findViewById(R.id.ll_back).setVisibility(GONE);
-            findViewById(R.id.ll_backc).setVisibility(GONE);
-            goPrice.setText("¥" + MathUtils.subZero(String.valueOf(priceDetailInfo.price)));
-            goArfAndTof.setText("¥" + MathUtils.subZero(String.valueOf(priceDetailInfo.tof + priceDetailInfo.arf)));
-            gocPrice.setText("¥" + MathUtils.subZero(String.valueOf(priceDetailInfo.cPrice)));
-            gocArfAndTof.setText("¥" + MathUtils.subZero(String.valueOf(priceDetailInfo.tof + priceDetailInfo.arf)));
-        } else {
-            findViewById(R.id.ll_back).setVisibility(VISIBLE);
-            findViewById(R.id.ll_backc).setVisibility(VISIBLE);
-        }
+        goPrice.setText("¥" + MathUtils.subZero(String.valueOf(priceDetailInfo.price)));
+        goArfAndTof.setText("¥" + MathUtils.subZero(String.valueOf(priceDetailInfo.tof + priceDetailInfo.arf)));
+        gocPrice.setText("¥" + MathUtils.subZero(String.valueOf(priceDetailInfo.cPrice)));
+        gocArfAndTof.setText("¥" + MathUtils.subZero(String.valueOf(priceDetailInfo.tof + priceDetailInfo.arf)));
     }
 }

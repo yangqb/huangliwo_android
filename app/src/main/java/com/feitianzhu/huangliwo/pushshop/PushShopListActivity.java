@@ -16,18 +16,16 @@ import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.pushshop.adapter.PushShopAdapter;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsModel;
+import com.feitianzhu.huangliwo.pushshop.bean.MultiMerchantsModel;
 import com.feitianzhu.huangliwo.pushshop.bean.PushMerchantsListInfo;
 import com.feitianzhu.huangliwo.pushshop.bean.UpdataMechantsEvent;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.Callback;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -38,8 +36,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import okhttp3.Call;
-import okhttp3.Request;
 
 /**
  * package name: com.feitianzhu.fu700.pushshop
@@ -52,6 +48,7 @@ public class PushShopListActivity extends BaseActivity {
     private int type = 0;
     private static final int REQUEST_CODE = 1000;
     private PushShopAdapter mAdapter;
+    private List<MultiMerchantsModel> muitlMerchantsModels = new ArrayList<>();
     private List<MerchantsModel> examineMerchants = new ArrayList<>();
     private List<MerchantsModel> passedMerchants = new ArrayList<>();
     private List<MerchantsModel> unPassedMerchants = new ArrayList<>();
@@ -96,7 +93,7 @@ public class PushShopListActivity extends BaseActivity {
 
         View mEmptyView = View.inflate(this, R.layout.view_common_nodata, null);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter = new PushShopAdapter(merchants);
+        mAdapter = new PushShopAdapter(muitlMerchantsModels);
         mAdapter.setEmptyView(mEmptyView);
         recyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
@@ -115,9 +112,20 @@ public class PushShopListActivity extends BaseActivity {
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                if (type == 2) {
+                if (mAdapter.getItemViewType(position) == MultiMerchantsModel.UNPASSED_TYPE) {
                     Intent intent = new Intent(PushShopListActivity.this, NoPassReasonActivity.class);
-                    intent.putExtra(NoPassReasonActivity.REASON_DATA, merchants.get(position));
+                    intent.putExtra(NoPassReasonActivity.REASON_DATA, muitlMerchantsModels.get(position).merchants);
+                    startActivity(intent);
+                }
+            }
+        });
+
+        mAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                if (mAdapter.getItemViewType(position) == MultiMerchantsModel.PASSED_TYPE) {
+                    Intent intent = new Intent(PushShopListActivity.this, ShareMerchantActivity.class);
+                    intent.putExtra(ShareMerchantActivity.MERCHANT_DATA, muitlMerchantsModels.get(position).merchants);
                     startActivity(intent);
                 }
             }
@@ -126,7 +134,6 @@ public class PushShopListActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-
         OkGo.<LzyResponse<PushMerchantsListInfo>>get(Urls.GET_PUSH_MERCHANTS_LIST)
                 .tag(this)
                 .params(Constant.ACCESSTOKEN, token)
@@ -144,22 +151,44 @@ public class PushShopListActivity extends BaseActivity {
                         super.onSuccess(PushShopListActivity.this, response.body().msg, response.body().code);
                         refreshLayout.finishRefresh();
                         goneloadDialog();
+                        muitlMerchantsModels.clear();
                         if (response.body().code == 0 && response.body().data != null) {
-                                btnToAudit.setText("待审核(" + response.body().data.getExamineCount() + ")");
-                                btnPass.setText("已通过(" + response.body().data.getPassedCount() + ")");
-                                btnNoPass.setText("未通过(" + response.body().data.getUnPassedCount() + ")");
-                                examineMerchants = response.body().data.examineList;
-                                passedMerchants = response.body().data.passedList;
-                                unPassedMerchants = response.body().data.unPassedList;
-                                if (type == 0) {
-                                    merchants = examineMerchants;
-                                } else if (type == 1) {
-                                    merchants = passedMerchants;
-                                } else if (type == 2) {
-                                    merchants = unPassedMerchants;
+                            btnToAudit.setText("待审核(" + response.body().data.getExamineCount() + ")");
+                            btnPass.setText("已通过(" + response.body().data.getPassedCount() + ")");
+                            btnNoPass.setText("未通过(" + response.body().data.getUnPassedCount() + ")");
+                            examineMerchants = response.body().data.examineList;
+                            passedMerchants = response.body().data.passedList;
+                            unPassedMerchants = response.body().data.unPassedList;
+                            if (type == 0) {
+                                if (examineMerchants != null && examineMerchants.size() > 0) {
+                                    for (int i = 0; i < examineMerchants.size(); i++) {
+                                        MultiMerchantsModel examineMerchantsModel = new MultiMerchantsModel(MultiMerchantsModel.EXAMINE_TYPE);
+                                        examineMerchantsModel.merchants = examineMerchants.get(i);
+                                        muitlMerchantsModels.add(examineMerchantsModel);
+                                    }
                                 }
-                                mAdapter.setNewData(merchants);
-                                mAdapter.notifyDataSetChanged();
+                                merchants = examineMerchants;
+                            } else if (type == 1) {
+                                if (passedMerchants != null && passedMerchants.size() > 0) {
+                                    for (int i = 0; i < passedMerchants.size(); i++) {
+                                        MultiMerchantsModel passedMerchantsModel = new MultiMerchantsModel(MultiMerchantsModel.PASSED_TYPE);
+                                        passedMerchantsModel.merchants = passedMerchants.get(i);
+                                        muitlMerchantsModels.add(passedMerchantsModel);
+                                    }
+                                }
+                                merchants = passedMerchants;
+                            } else if (type == 2) {
+                                if (unPassedMerchants != null && unPassedMerchants.size() > 0) {
+                                    for (int i = 0; i < unPassedMerchants.size(); i++) {
+                                        MultiMerchantsModel unPassedMerchantsModel = new MultiMerchantsModel(MultiMerchantsModel.UNPASSED_TYPE);
+                                        unPassedMerchantsModel.merchants = unPassedMerchants.get(i);
+                                        muitlMerchantsModels.add(unPassedMerchantsModel);
+                                    }
+                                }
+                                merchants = unPassedMerchants;
+                            }
+                            mAdapter.setNewData(muitlMerchantsModels);
+                            mAdapter.notifyDataSetChanged();
                         }
                     }
 
@@ -181,8 +210,15 @@ public class PushShopListActivity extends BaseActivity {
                 break;
             case R.id.btn_pass:
                 type = 1;
-                merchants = passedMerchants;
-                mAdapter.setNewData(merchants);
+                muitlMerchantsModels.clear();
+                if (passedMerchants != null && passedMerchants.size() > 0) {
+                    for (int i = 0; i < passedMerchants.size(); i++) {
+                        MultiMerchantsModel passedMerchantsModel = new MultiMerchantsModel(MultiMerchantsModel.PASSED_TYPE);
+                        passedMerchantsModel.merchants = passedMerchants.get(i);
+                        muitlMerchantsModels.add(passedMerchantsModel);
+                    }
+                }
+                mAdapter.setNewData(muitlMerchantsModels);
                 mAdapter.notifyDataSetChanged();
                 btnToAudit.setSelected(false);
                 btnPass.setSelected(true);
@@ -190,8 +226,15 @@ public class PushShopListActivity extends BaseActivity {
                 break;
             case R.id.btn_noPass:
                 type = 2;
-                merchants = unPassedMerchants;
-                mAdapter.setNewData(merchants);
+                muitlMerchantsModels.clear();
+                if (unPassedMerchants != null && unPassedMerchants.size() > 0) {
+                    for (int i = 0; i < unPassedMerchants.size(); i++) {
+                        MultiMerchantsModel unPassedMerchantsModel = new MultiMerchantsModel(MultiMerchantsModel.UNPASSED_TYPE);
+                        unPassedMerchantsModel.merchants = unPassedMerchants.get(i);
+                        muitlMerchantsModels.add(unPassedMerchantsModel);
+                    }
+                }
+                mAdapter.setNewData(muitlMerchantsModels);
                 mAdapter.notifyDataSetChanged();
                 btnToAudit.setSelected(false);
                 btnPass.setSelected(false);
@@ -199,8 +242,13 @@ public class PushShopListActivity extends BaseActivity {
                 break;
             case R.id.btn_toAudit:
                 type = 0;
-                merchants = examineMerchants;
-                mAdapter.setNewData(merchants);
+                muitlMerchantsModels.clear();
+                for (int i = 0; i < examineMerchants.size(); i++) {
+                    MultiMerchantsModel examineMerchantsModel = new MultiMerchantsModel(MultiMerchantsModel.EXAMINE_TYPE);
+                    examineMerchantsModel.merchants = examineMerchants.get(i);
+                    muitlMerchantsModels.add(examineMerchantsModel);
+                }
+                mAdapter.setNewData(muitlMerchantsModels);
                 mAdapter.notifyDataSetChanged();
                 btnToAudit.setSelected(true);
                 btnPass.setSelected(false);

@@ -175,7 +175,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     @Override
                     public void onSuccess(Response<LzyResponse<LoginEntity>> response) {
                         super.onSuccess(LoginActivity.this, response.body().msg, response.body().code);
-                        if (response.body().code == 0 && response.body().data != null) {
+                        if (response.body().code == 0) {
 
                             KLog.i("response:%s", response.toString());
 
@@ -230,7 +230,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
                     @Override
                     public void onSuccess(Response<LzyResponse<MineInfoModel>> response) {
-                        if (response.body().data != null) {
+                        if (response.body().code == 0 && response.body().data != null) {
                             UserInfoUtils.saveUserInfo(LoginActivity.this, response.body().data);
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             startActivity(intent);

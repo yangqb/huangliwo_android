@@ -143,8 +143,10 @@ public class BindingAccountActivity extends BaseActivity {
                                 ToastUtils.showShortToast("修改成功");
                             } else {
                                 ToastUtils.showShortToast("绑定成功");
+                                setResult(RESULT_OK);
+                                EventBus.getDefault().postSticky(LoginEvent.BINDING_ALI_ACCOUNT);
                             }
-                            EventBus.getDefault().postSticky(LoginEvent.BINDING_ALI_ACCOUNT);
+
                             finish();
                         }
                     }

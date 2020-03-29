@@ -13,13 +13,13 @@ MobSDK {
                 Id = "4"
                 SortId = "1"
                 AppId = "wxc0ddc8f9cd49d83b"
-                AppSecret = "d1560225488996b2d3c36f219e3278e7"
+                AppSecret = "dfd64a9483d48766f13cf3b2fa70fbe0"
                 userName = "gh_afb25ac019c9"
                 path = "pages/index/index.html?id=1"
                 BypassApproval = "false"
                 Enable = "true"
             }
-            /*QQ {
+            QQ {
                 Id = "7"
                 SortId = "4"
                 AppId = "1110085823"
@@ -27,7 +27,7 @@ MobSDK {
                 BypassApproval = "false"
                 ShareByAppClient = "true"
                 Enable = "true"
-            }*/
+            }
             WechatMoments {
                 Id = "5"
                 SortId = "2"
@@ -36,14 +36,14 @@ MobSDK {
                 BypassApproval = "false"
                 Enable = "true"
             }
-            /*QZone {
+            QZone {
                 Id = "3"
                 SortId = "5"
                 AppId = "1110085823"
                 AppKey = "osnroqSxxckkJOdI"
                 BypassApproval = "false"
                 Enable = "true"
-            }*/
+            }
         }
     }
 }
@@ -57,14 +57,14 @@ android {
             storePassword 'kaisa008'
         }
         debug {
-            keyAlias 'feitianzhu'
-            keyPassword 'kaisa008'
-            storeFile file('../key/feitianzhu.jks')
-            storePassword 'kaisa008'
-            /*keyAlias 'androiddebugkey'
+            /*  keyAlias 'feitianzhu'
+              keyPassword 'kaisa008'
+              storeFile file('../key/feitianzhu.jks')
+              storePassword 'kaisa008'*/
+            keyAlias 'androiddebugkey'
             keyPassword 'android'
             storeFile file('../key/debug.keystore')
-            storePassword 'android'*/
+            storePassword 'android'
         }
     }
 
@@ -186,7 +186,7 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.1'
     implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
     // 支付宝
-    implementation(name: 'alipaySdk-15.6.8-20191021122514', ext: 'aar')
+    implementation(name: 'alipaySdk-15.7.4-20200228192259', ext: 'aar')
     //圆角图片
     implementation 'com.github.open-android:RoundedImageView:v1.0.0'
 
@@ -217,4 +217,5 @@ dependencies {
     implementation 'com.haibin:calendarview:3.6.6'
     implementation 'com.github.MZCretin:CitySelect:1.0.4'
     implementation 'com.contrarywind:Android-PickerView:4.1.9'
+    implementation 'com.gcssloop.recyclerview:pagerlayoutmanager:2.3.8'
 }

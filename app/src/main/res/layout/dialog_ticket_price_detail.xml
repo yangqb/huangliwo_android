@@ -45,7 +45,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="去程/第一程票价 "
+                    android:text="票价 "
                     android:textColor="@color/color_333333"
                     android:textSize="12sp" />
 
@@ -75,46 +75,6 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/ll_back"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="去程/第一程票价 "
-                    android:textColor="@color/color_333333"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/backPrice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="25dp"
-                    android:text="¥1650"
-                    android:textColor="@color/color_333333"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="机建+燃油 "
-                    android:textColor="@color/color_333333"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/backArfAndTof"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="¥1650"
-                    android:textColor="@color/color_333333"
-                    android:textSize="12sp" />
-
-            </LinearLayout>
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -133,7 +93,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="去程/第一程票价 "
+                    android:text="票价 "
                     android:textColor="@color/color_333333"
                     android:textSize="12sp" />
 
@@ -155,46 +115,6 @@
 
                 <TextView
                     android:id="@+id/gocArfAndTof"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="¥1650"
-                    android:textColor="@color/color_333333"
-                    android:textSize="12sp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/ll_backc"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="去程/第一程票价 "
-                    android:textColor="@color/color_333333"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/backcPrice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="25dp"
-                    android:text="¥1650"
-                    android:textColor="@color/color_333333"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="燃油 "
-                    android:textColor="@color/color_333333"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/backcArfAndTof"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="¥1650"

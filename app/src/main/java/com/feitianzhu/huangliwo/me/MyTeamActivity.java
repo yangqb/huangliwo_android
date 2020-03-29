@@ -55,6 +55,8 @@ public class MyTeamActivity extends BaseActivity {
     TextView teamCount;
     @BindView(R.id.areaCount)
     TextView areaCount;
+    @BindView(R.id.tv_level)
+    TextView tvLevel;
 
     @Override
     protected int getLayoutId() {
@@ -80,6 +82,22 @@ public class MyTeamActivity extends BaseActivity {
         recyclerView.setAdapter(teamAdapter);
         teamAdapter.notifyDataSetChanged();
         recyclerView.setNestedScrollingEnabled(false);
+        MineInfoModel userInfo = UserInfoUtils.getUserInfo(this);
+        if (userInfo.getAccountType() == 0) {
+            tvLevel.setText("消费者");
+        } else if (userInfo.getAccountType() == 1) {
+            tvLevel.setText("市代理");
+        } else if (userInfo.getAccountType() == 2) {
+            tvLevel.setText("区代理");
+        } else if (userInfo.getAccountType() == 3) {
+            tvLevel.setText("合伙人");
+        } else if (userInfo.getAccountType() == 4) {
+            tvLevel.setText("超级会员");
+        } else if (userInfo.getAccountType() == 5) {
+            tvLevel.setText("优选会员");
+        } else if (userInfo.getAccountType() == 7) {
+            tvLevel.setText("省代理");
+        }
     }
 
     @Override
@@ -119,14 +137,14 @@ public class MyTeamActivity extends BaseActivity {
                 break;
             case R.id.checkArea:
                 MineInfoModel infoModel = UserInfoUtils.getUserInfo(this);
-                if (infoModel.getAccountType() == 1 || infoModel.getAccountType() == 2) {
+                if (infoModel.getAccountType() == 1 || infoModel.getAccountType() == 2 || infoModel.getAccountType() == 7) {
                     String content = "您所代理的区域为" + teamInfo.addrName + "\n会员总数" + teamInfo.memberNum + "人\n注册总数" + teamInfo.registerNum + "人";
                     new XPopup.Builder(MyTeamActivity.this)
                             .asConfirm("", content, "关闭", "确定", null, null, true)
                             .bindLayout(R.layout.layout_dialog) //绑定已有布局
                             .show();
                 } else {
-                    String content = "您还未是区域代理\n" + "申请成为区域代理可查看更多";
+                    String content = "您还不是区域代理\n" + "申请成为区域代理可查看更多";
                     new XPopup.Builder(MyTeamActivity.this)
                             .asConfirm("", content, "关闭", "确定", null, null, true)
                             .bindLayout(R.layout.layout_dialog) //绑定已有布局

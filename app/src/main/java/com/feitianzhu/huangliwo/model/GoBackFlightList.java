@@ -18,5 +18,6 @@ public class GoBackFlightList implements Serializable {
     public GoBackPack pack;
     public String flightCodes;//":"HU7609_HU7602",
     public int minBarePrice;//":"540"
+    public double zk;
 
 }

@@ -28,6 +28,7 @@ allprojects {
         maven {
             url "https://maven.google.com"
         }
+        maven { url "http://lib.gcssloop.com/repository/gcssloop-central/" }
 
     }
 

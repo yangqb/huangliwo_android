@@ -78,7 +78,6 @@ public class MySelfMerchantsListActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.merchants_detail:
                 intent = new Intent(MySelfMerchantsListActivity.this, MerchantsDetailActivity.class);
-                intent.putExtra(MerchantsDetailActivity.IS_MY_MERCHANTS, true);
                 intent.putExtra(MerchantsDetailActivity.MERCHANTS_DETAIL_DATA, merchantsBean);
                 startActivity(intent);
                 break;

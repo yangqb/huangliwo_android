@@ -43,7 +43,6 @@
                     </RelativeLayout>
 
                     <LinearLayout
-                        android:id="@+id/right_button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
@@ -53,17 +52,31 @@
                         android:padding="@dimen/dp_10">
 
                         <ImageView
+                            android:id="@+id/feedback"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="3dp"
-                            android:background="@mipmap/b08_03erweima" />
+                            android:layout_marginRight="15dp"
+                            android:background="@mipmap/kefu" />
 
-                        <TextView
+                        <LinearLayout
+                            android:id="@+id/right_button"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="收款码"
-                            android:textColor="@color/color_333333"
-                            android:textSize="16sp" />
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="3dp"
+                                android:background="@mipmap/b08_03erweima" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="收款码"
+                                android:textColor="@color/color_333333"
+                                android:textSize="16sp" />
+                        </LinearLayout>
                     </LinearLayout>
 
                 </RelativeLayout>
@@ -99,6 +112,18 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="3dp"
+                            android:background="@mipmap/tixiananniu"
+                            android:gravity="center_horizontal"
+                            android:paddingTop="2dp"
+                            android:text="1笔正在提现中"
+                            android:textColor="@color/color_333333"
+                            android:textSize="10sp"
+                            android:visibility="invisible" />
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -140,6 +165,19 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/withdrawCount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="3dp"
+                            android:background="@mipmap/tixiananniu"
+                            android:gravity="center_horizontal"
+                            android:paddingTop="2dp"
+                            android:text="1笔正在提现中"
+                            android:textColor="@color/color_333333"
+                            android:textSize="10sp"
+                            android:visibility="invisible" />
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -190,7 +228,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
-                    android:layout_marginTop="20dp"
                     android:gravity="center"
                     android:orientation="vertical">
 
@@ -210,7 +247,86 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/ll_service"
+                    android:id="@+id/up_gift"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/g01_17zengping" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:text="赠品上传"
+                        android:textColor="@color/color_333333"
+                        android:textSize="15sp" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/up_SetMeal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/g01_16taocan" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:text="套餐上传"
+                        android:textColor="@color/color_333333"
+                        android:textSize="15sp" />
+                </LinearLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="50dp"
+                android:background="@color/white">
+
+                <LinearLayout
+                    android:id="@+id/ll_investment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/g01_18beitou" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:text="被投详情"
+                        android:textColor="@color/color_333333"
+                        android:textSize="15sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_propaganda"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
@@ -221,13 +337,13 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@mipmap/g01_17shouyi" />
+                        android:src="@mipmap/g01_20kefu" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="15dp"
-                        android:text="我的客服"
+                        android:text="发布宣传"
                         android:textColor="@color/color_333333"
                         android:textSize="15sp" />
 
@@ -255,7 +371,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="15dp"
-                        android:text="套餐订单"
+                        android:text="套餐录单"
                         android:textColor="@color/color_333333"
                         android:textSize="15sp" />
                 </LinearLayout>

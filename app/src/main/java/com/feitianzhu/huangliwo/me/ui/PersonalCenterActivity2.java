@@ -140,8 +140,8 @@ public class PersonalCenterActivity2 extends BaseTakePhotoActivity {
                 .execute(new JsonCallback<LzyResponse<MineInfoModel>>() {
                     @Override
                     public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<MineInfoModel>> response) {
-                        super.onSuccess(PersonalCenterActivity2.this, "", response.body().code);
-                        if (response.body().data != null) {
+                        super.onSuccess(PersonalCenterActivity2.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0 && response.body().data != null) {
                             setShowData(response.body().data);
                         }
                     }

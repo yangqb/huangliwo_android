@@ -68,6 +68,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
+import static android.support.v4.provider.FontsContractCompat.FontRequestCallback.RESULT_OK;
 import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
 import static com.feitianzhu.huangliwo.common.Constant.POST_MINE_INFO;
 
@@ -78,6 +79,7 @@ import static com.feitianzhu.huangliwo.common.Constant.POST_MINE_INFO;
  * @Date 2019/11/19 0019 下午 6:28
  */
 public class MyCenterFragment extends SFFragment {
+    public static final int REQUEST_CODE = 100;
     @BindView(R.id.recyclerview)
     RecyclerView mRecyclerView;
     @BindView(R.id.civ_head)
@@ -98,6 +100,8 @@ public class MyCenterFragment extends SFFragment {
     TextView tvProfit;
     @BindView(R.id.tv_withdrawal)
     TextView tvWithdrawal;
+    @BindView(R.id.withdrawCount)
+    TextView withdrawCount;
     private String mParam1;
     private String mParam2;
     private CenterAdapter adapter;
@@ -152,6 +156,7 @@ public class MyCenterFragment extends SFFragment {
         mRecyclerView.setLayoutManager(manager);
         mRecyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
+        mRecyclerView.setNestedScrollingEnabled(false);
         isShowBalance = SPUtils.getBoolean(getActivity(), Constant.SP_SHOW_BALANCE, true);
         if (isShowBalance) {
             imgShow.setBackgroundResource(R.mipmap.h01_01dakai);
@@ -181,6 +186,12 @@ public class MyCenterFragment extends SFFragment {
                                 amount2 = String.format(Locale.getDefault(), "%.2f", balanceModel.getTotalAmount());
                                 amount3 = String.format(Locale.getDefault(), "%.2f", balanceModel.getBalance());
                                 setSpannableString(toBeReleasedAmount, tvProfit, tvWithdrawal, amount, amount2, amount3);
+                                if (balanceModel.getWithdrawCount() != 0) {
+                                    withdrawCount.setText(balanceModel.getWithdrawCount() + "笔正在提现中");
+                                    withdrawCount.setVisibility(View.VISIBLE);
+                                } else {
+                                    withdrawCount.setVisibility(View.INVISIBLE);
+                                }
                             } else {
                                 setSpannableString(toBeReleasedAmount, tvProfit, tvWithdrawal, "0.00", "0.00", "0.00");
                             }
@@ -352,9 +363,18 @@ public class MyCenterFragment extends SFFragment {
                         startActivity(intent);
                         break;
                     case 9:
-                        ToastUtils.showShortToast("敬请期待");
-                       /* intent = new Intent(getContext(), MyTeamActivity.class);
-                        startActivity(intent);*/
+                        //ToastUtils.showShortToast("敬请期待");
+                        if (mTempData.getAccountType() == 0) {
+                            String content = "您还不是会员无法查看我的团队，请尽快开通！";
+                            new XPopup.Builder(getActivity())
+                                    .asConfirm("", content, "关闭", "确定", null, null, true)
+                                    .bindLayout(R.layout.layout_dialog) //绑定已有布局
+                                    .show();
+                        } else {
+                            intent = new Intent(getContext(), MyTeamActivity.class);
+                            startActivity(intent);
+                        }
+
                         break;
                 }
             }
@@ -373,7 +393,7 @@ public class MyCenterFragment extends SFFragment {
 
     private boolean isShowBalance = true;
 
-    @OnClick({R.id.ll_userInfo, R.id.iv_setting, R.id.iv_qrcode, R.id.ll_show_balance, R.id.btn_withdrawal, R.id.detailed_rules})
+    @OnClick({R.id.ll_userInfo, R.id.iv_setting, R.id.iv_qrcode, R.id.ll_show_balance, R.id.btn_withdrawal, R.id.detailed_rules, R.id.withdrawCount})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ll_userInfo:
@@ -428,11 +448,16 @@ public class MyCenterFragment extends SFFragment {
                     } else {
                         intent.putExtra(WithdrawActivity.BALANCE, balanceModel.getBalance());
                     }
-                    startActivity(intent);
+                    startActivityForResult(intent, REQUEST_CODE);
                 }
                 break;
             case R.id.detailed_rules: //细则
                 intent = new Intent(getActivity(), DetailedRulesActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.withdrawCount:
+                intent = new Intent(getActivity(), WithdrawRecordActivity.class);
+                intent.putExtra(WithdrawRecordActivity.MERCHANT_ID, -1);
                 startActivity(intent);
                 break;
         }
@@ -505,6 +530,16 @@ public class MyCenterFragment extends SFFragment {
     public void onAuthEvent(AuthEvent mAuth) {
         if (mAuth == AuthEvent.SUCCESS) {
             ShopDao.loadUserAuthImpl(getActivity());  //实名认证后更新用户认证信息
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == -1) {
+            if (requestCode == REQUEST_CODE) {
+                getData();
+            }
         }
     }
 

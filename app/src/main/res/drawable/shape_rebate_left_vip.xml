@@ -9,8 +9,8 @@
                 android:top="1dp" />
             <solid android:color="#00d8d7d7" />
             <corners
-                android:topLeftRadius="13dp"
-                android:bottomLeftRadius="13dp" />
+                android:topLeftRadius="8dp"
+                android:bottomLeftRadius="8dp" />
         </shape>
     </item>
     <item>
@@ -21,8 +21,8 @@
                 android:top="1dp" />
             <solid android:color="#10d8d7d7" />
             <corners
-                android:topLeftRadius="13dp"
-                android:bottomLeftRadius="13dp" />
+                android:topLeftRadius="8dp"
+                android:bottomLeftRadius="8dp" />
         </shape>
     </item>
     <item>
@@ -33,8 +33,8 @@
                 android:top="1dp" />
             <solid android:color="#20d8d7d7" />
             <corners
-                android:topLeftRadius="13dp"
-                android:bottomLeftRadius="13dp" />
+                android:topLeftRadius="8dp"
+                android:bottomLeftRadius="8dp" />
         </shape>
     </item>
 
@@ -46,8 +46,8 @@
                 android:top="1dp" />
             <solid android:color="#30d8d7d7" />
             <corners
-                android:topLeftRadius="13dp"
-                android:bottomLeftRadius="13dp" />
+                android:topLeftRadius="8dp"
+                android:bottomLeftRadius="8dp" />
         </shape>
     </item>
 
@@ -59,8 +59,8 @@
                 android:top="1dp" />
             <solid android:color="#40d8d7d7" />
             <corners
-                android:topLeftRadius="13dp"
-                android:bottomLeftRadius="13dp" />
+                android:topLeftRadius="8dp"
+                android:bottomLeftRadius="8dp" />
         </shape>
     </item>
 
@@ -72,8 +72,8 @@
             <!-- 实心 -->
             <solid android:color="#ffffff" />
             <corners
-                android:topLeftRadius="13dp"
-                android:bottomLeftRadius="13dp" />
+                android:topLeftRadius="8dp"
+                android:bottomLeftRadius="8dp" />
         </shape>
     </item>
 </layer-list>

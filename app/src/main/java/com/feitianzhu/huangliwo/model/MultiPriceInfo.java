@@ -14,9 +14,11 @@ import java.io.Serializable;
 public class MultiPriceInfo implements MultiItemEntity, Serializable {
     public static final int DOMESTIC_TYPE = 1;
     public static final int INTERNATIONAL_TYPE = 2;
+    public static final int DOMESTIC_GO_BACK_TYPE = 3;
     private int type;
     public VenDorsInfo venDorsInfo;
     public InternationalPriceInfo internationalPriceInfo;
+    public GoBackVendors goBackVendors;
 
     public MultiPriceInfo(int type) {
         this.type = type;

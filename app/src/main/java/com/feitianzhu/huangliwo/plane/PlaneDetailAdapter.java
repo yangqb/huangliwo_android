@@ -26,6 +26,7 @@ public class PlaneDetailAdapter extends BaseMultiItemQuickAdapter<MultiPriceInfo
     public PlaneDetailAdapter(@Nullable List<MultiPriceInfo> data) {
         super(data);
         addItemType(MultiPriceInfo.DOMESTIC_TYPE, R.layout.layout_plane_detail);
+        addItemType(MultiPriceInfo.DOMESTIC_GO_BACK_TYPE, R.layout.layout_plane_detail);
         addItemType(MultiPriceInfo.INTERNATIONAL_TYPE, R.layout.layout_plane_detail);
     }
 
@@ -37,26 +38,62 @@ public class PlaneDetailAdapter extends BaseMultiItemQuickAdapter<MultiPriceInfo
             setSpannableString(MathUtils.subZero(String.valueOf(item.venDorsInfo.barePrice)), helper.getView(R.id.price));
             if ("A".equals(item.venDorsInfo.cabinCount)) {
                 helper.setText(R.id.cabinCount, "");
-                helper.setVisible(R.id.cabinCount, false);
+                helper.setGone(R.id.cabinCount, false);
             } else if ("BCDEFGHIJKLMNOPQRSTUVWXYZ".contains(item.venDorsInfo.cabinCount)) {
                 helper.setText(R.id.cabinCount, "");
-                helper.setVisible(R.id.cabinCount, false);
+                helper.setGone(R.id.cabinCount, false);
             } else {
                 helper.setText(R.id.cabinCount, "剩" + item.venDorsInfo.cabinCount + "张");
-                helper.setVisible(R.id.cabinCount, true);
+                helper.setGone(R.id.cabinCount, true);
             }
-            helper.setText(R.id.luggage_change_notice, "儿童婴儿不可订经济舱退改¥111>");
+            if (item.venDorsInfo.cabinType == 0) {
+                helper.setText(R.id.luggage_change_notice, "儿童婴儿不可订经济舱退改¥111>");
+            } else if (item.venDorsInfo.cabinType == 1) {
+                helper.setText(R.id.luggage_change_notice, "儿童婴儿不可订头等舱退改¥111>");
+            } else if (item.venDorsInfo.cabinType == 2) {
+                helper.setText(R.id.luggage_change_notice, "儿童婴儿不可订商务舱退改¥111>");
+            } else if (item.venDorsInfo.cabinType == 3) {
+                helper.setText(R.id.luggage_change_notice, "儿童婴儿不可订济舱精选退改¥111>");
+            } else if (item.venDorsInfo.cabinType == 4) {
+                helper.setText(R.id.luggage_change_notice, "儿童婴儿不可订经济舱y舱退改¥111>");
+            } else if (item.venDorsInfo.cabinType == 5) {
+                helper.setText(R.id.luggage_change_notice, "儿童婴儿不可订经超值头等舱改¥111>");
+            } else {
+                helper.setText(R.id.luggage_change_notice, "儿童婴儿不可订未配置舱位退改¥111>");
+            }
             helper.setText(R.id.tv_rebate, "返¥" + MathUtils.subZero(String.valueOf(item.venDorsInfo.zk)));
-        } else {
+        } else if (helper.getItemViewType() == MultiPriceInfo.INTERNATIONAL_TYPE) {
             setSpannableString(MathUtils.subZero(String.valueOf(item.internationalPriceInfo.price)), helper.getView(R.id.price));
             helper.setText(R.id.cabinCount, "");
-            helper.setVisible(R.id.cabinCount, false);
+            helper.setGone(R.id.cabinCount, false);
             helper.setText(R.id.tv_rebate, "返¥" + MathUtils.subZero(String.valueOf(item.internationalPriceInfo.zk)));
             if (item.internationalPriceInfo.cPrice == 0) {
-                helper.setText(R.id.luggage_change_notice, "儿童婴儿不可订经济舱退改¥111>");
+                if ("economy".equals(item.internationalPriceInfo.cabinLevel)) {
+                    helper.setText(R.id.luggage_change_notice, "儿童婴儿不可订经济舱退改¥111>");
+                } else if ("first".equals(item.internationalPriceInfo.cabinLevel)) {
+                    helper.setText(R.id.luggage_change_notice, "儿童婴儿不可订头等舱退改¥111>");
+                } else if ("business".equals(item.internationalPriceInfo.cabinLevel)) {
+                    helper.setText(R.id.luggage_change_notice, "儿童婴儿不可订商务舱退改¥111>");
+                } else {
+                    helper.setText(R.id.luggage_change_notice, "儿童婴儿不可订未配置舱位退改¥111>");
+                }
             } else {
-                helper.setText(R.id.luggage_change_notice, "儿童¥" + MathUtils.subZero(String.valueOf(item.internationalPriceInfo.cPrice)) + "婴儿不可订经济舱退改¥111>");
+                if ("economy".equals(item.internationalPriceInfo.cabinLevel)) {
+                    helper.setText(R.id.luggage_change_notice, "儿童¥" + MathUtils.subZero(String.valueOf(item.internationalPriceInfo.cPrice)) + "婴儿不可订经济舱退改¥111>");
+                } else if ("first".equals(item.internationalPriceInfo.cabinLevel)) {
+                    helper.setText(R.id.luggage_change_notice, "儿童¥" + MathUtils.subZero(String.valueOf(item.internationalPriceInfo.cPrice)) + "婴儿不可订头等舱退改¥111>");
+                } else if ("business".equals(item.internationalPriceInfo.cabinLevel)) {
+                    helper.setText(R.id.luggage_change_notice, "儿童¥" + MathUtils.subZero(String.valueOf(item.internationalPriceInfo.cPrice)) + "婴儿不可订商务舱退改¥111>");
+                } else {
+                    helper.setText(R.id.luggage_change_notice, "儿童¥" + MathUtils.subZero(String.valueOf(item.internationalPriceInfo.cPrice)) + "婴儿不可订未配置舱位退改¥111>");
+                }
             }
+        } else {
+            setSpannableString(MathUtils.subZero(String.valueOf(item.goBackVendors.barePrice)), helper.getView(R.id.price));
+            helper.setText(R.id.cabinCount, "");
+            helper.setGone(R.id.cabinCount, false);
+            helper.setText(R.id.luggage_change_notice, "儿童婴儿不可订" + item.goBackVendors.cabinDesc + "退改¥111>");
+            helper.setText(R.id.tv_rebate, "返¥" + MathUtils.subZero(String.valueOf(item.goBackVendors.zk)));
         }
     }
 

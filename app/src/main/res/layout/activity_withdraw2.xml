@@ -12,6 +12,15 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
+            android:text="选择提现方式"
+            android:textColor="@color/color_333333"
+            android:textSize="14sp" />
+
         <RelativeLayout
             android:id="@+id/rl_pay"
             android:layout_width="match_parent"
@@ -28,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="10dp"
-                android:background="@mipmap/icon_weixinzhifu" />
+                android:background="@mipmap/icon_zhifubaozhifu" />
 
             <TextView
                 android:id="@+id/tvPayType"
@@ -36,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@id/imageView"
-                android:text="微信"
+                android:text="支付宝"
                 android:textColor="@color/color_333333"
                 android:textSize="16sp" />
 

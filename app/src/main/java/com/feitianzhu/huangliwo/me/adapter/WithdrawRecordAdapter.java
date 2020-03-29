@@ -36,15 +36,31 @@ public class WithdrawRecordAdapter extends BaseQuickAdapter<WithdrawRecordInfo.W
     protected void convert(@NonNull BaseViewHolder helper, WithdrawRecordInfo.WithdrawRecordModel item) {
         helper.setText(R.id.date, item.getApplyDate());
         if (item.getIsTrans() == -1) {
-            helper.setText(R.id.status, "已取消");
             helper.setTextColor(R.id.status, mContext.getResources().getColor(R.color.color_666666));
+            helper.setText(R.id.status, "已取消");
+            helper.setText(R.id.tvTime, "");
         } else if (item.getIsTrans() == 1) {
             helper.setText(R.id.status, "已到账");
+            helper.setText(R.id.tvTime, "");
             helper.setTextColor(R.id.status, mContext.getResources().getColor(R.color.color_666666));
         } else {
-            helper.setText(R.id.status, "取消提现");
+            if (item.getRefuseReason() != null) {
+                helper.setText(R.id.status, "提现失败");
+                helper.setText(R.id.tvTime, item.getRefuseReason());
+            } else {
+                helper.setText(R.id.status, "取消提现");
+                helper.setText(R.id.tvTime, item.getTimeDesc());
+            }
             helper.setTextColor(R.id.status, mContext.getResources().getColor(R.color.color_F88D03));
         }
+
+        if ("wx".equals(item.getChannel())) {
+            helper.setText(R.id.tvType, "提现-微信");
+        } else {
+            helper.setText(R.id.tvType, "提现-支付宝");
+        }
+
+
         setSpannableString(String.format(Locale.getDefault(), "%.2f", item.getAmount()), helper.getView(R.id.amount));
         helper.addOnClickListener(R.id.btn_cancel);
     }

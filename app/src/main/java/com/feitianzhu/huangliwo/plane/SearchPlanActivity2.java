@@ -38,10 +38,8 @@ public class SearchPlanActivity2 extends BaseActivity {
     public static final String SEARCH_TYPE = "search_type";
     public static final String FLIGHT_START_DATE = "flight_start_date";
     public static final String FLIGHT_END_DATE = "flight_end_date";
-    public int selectePos;
     private List<MultiGoBackFlightInfo> goBackFlightList = new ArrayList<>();
-    private SearchGoResultAdapter goResultAdapter;
-    private SearchBackResultAdapter backResultAdapter;
+    private SearchResultAdapter2 mAdapter;
     private int searchType = 2;
     private String goDate;
     private String backDate;
@@ -49,10 +47,8 @@ public class SearchPlanActivity2 extends BaseActivity {
     private String token;
     @BindView(R.id.title_name)
     TextView titleName;
-    @BindView(R.id.go_recyclerView)
-    RecyclerView goRecyclerView;
-    @BindView(R.id.come_recyclerView)
-    RecyclerView comeRecyclerView;
+    @BindView(R.id.recyclerView)
+    RecyclerView recyclerView;
     @BindView(R.id.plane_title)
     LinearLayout planeTitle;
     @BindView(R.id.startCity)
@@ -85,48 +81,25 @@ public class SearchPlanActivity2 extends BaseActivity {
         centerImg.setBackgroundResource(R.mipmap.k01_13wangfan);
         depDate.setText(DateUtils.strToStr(goDate) + DateUtils.strToDate2(goDate));
         arrDate.setText(DateUtils.strToStr(backDate) + DateUtils.strToDate2(backDate));
-
-
-        goResultAdapter = new SearchGoResultAdapter(goBackFlightList);
-        backResultAdapter = new SearchBackResultAdapter(goBackFlightList);
-        goRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        goRecyclerView.setAdapter(goResultAdapter);
-        goResultAdapter.notifyDataSetChanged();
-        comeRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        comeRecyclerView.setAdapter(backResultAdapter);
-        backResultAdapter.notifyDataSetChanged();
+        mAdapter = new SearchResultAdapter2(goBackFlightList);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
 
         initListener();
     }
 
     public void initListener() {
-        goResultAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                selectePos = position;
-                for (int i = 0; i < goBackFlightList.size(); i++) {
-                    if (position == i) {
-                        goBackFlightList.get(i).isSelect = true;
-                    } else {
-                        goBackFlightList.get(i).isSelect = false;
-                    }
-                }
-                goResultAdapter.notifyDataSetChanged();
-            }
-        });
 
-        backResultAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+        mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                selectePos = position;
-                for (int i = 0; i < goBackFlightList.size(); i++) {
-                    if (position == i) {
-                        goBackFlightList.get(i).isSelect = true;
-                    } else {
-                        goBackFlightList.get(i).isSelect = false;
-                    }
-                }
-                backResultAdapter.notifyDataSetChanged();
+                Intent intent = new Intent(SearchPlanActivity2.this, PlaneDetailActivity.class);
+                intent.putExtra(PlaneDetailActivity.DETAIL_TYPE, searchType);
+                intent.putExtra(PlaneDetailActivity.FLIGHT_START_DATE, goDate);
+                intent.putExtra(PlaneDetailActivity.FLIGHT_END_DATE, backDate);
+                intent.putExtra(PlaneDetailActivity.FLIGHT_DATA, goBackFlightList.get(position));
+                startActivity(intent);
             }
         });
     }
@@ -143,6 +116,7 @@ public class SearchPlanActivity2 extends BaseActivity {
                     .params("goDate", goDate)
                     .params("backDate", backDate)
                     .params("exTrack", "retehui")
+                    .params("sort", "1") //排序：1为价格最低 2为时间最早
                     .execute(new JsonCallback<PlaneResponse<GoBackFlightInfo>>() {
                         @Override
                         public void onSuccess(Response<PlaneResponse<GoBackFlightInfo>> response) {
@@ -155,11 +129,8 @@ public class SearchPlanActivity2 extends BaseActivity {
                                         multiGoFlightInfo.domesticFlight = flightList.get(i);
                                         goBackFlightList.add(multiGoFlightInfo);
                                     }
-                                    goBackFlightList.get(0).isSelect = true;
-                                    backResultAdapter.setNewData(goBackFlightList);
-                                    goResultAdapter.setNewData(goBackFlightList);
-                                    goResultAdapter.notifyDataSetChanged();
-                                    backResultAdapter.notifyDataSetChanged();
+                                    mAdapter.setNewData(goBackFlightList);
+                                    mAdapter.notifyDataSetChanged();
                                 }
                             }
                         }
@@ -175,11 +146,12 @@ public class SearchPlanActivity2 extends BaseActivity {
                     .tag(this)
                     .params(Constant.ACCESSTOKEN, token)
                     .params(Constant.USERID, userId)
-                    .params("depCity", "PEK")
-                    .params("arrCity", "WAS")
+                    .params("depCity", "PAR")
+                    .params("arrCity", "BER")
                     .params("depDate", goDate)
                     .params("retDate", backDate)//往返必填
                     .params("source", "ICP_SELECT_open.3724")
+                    //.params("sort", "1") //排序：1为价格最低 2为时间最早
                     //.params("adultNum", "")成人数量
                     //.params("childNum", "")儿童数量
                     //.params("cabinLevel", "")舱位等级
@@ -195,11 +167,8 @@ public class SearchPlanActivity2 extends BaseActivity {
                                         multiGoFlightInfo.internationalFlight = internationalFlightModelList.get(i);
                                         goBackFlightList.add(multiGoFlightInfo);
                                     }
-                                    goBackFlightList.get(0).isSelect = true;
-                                    goResultAdapter.setNewData(goBackFlightList);
-                                    backResultAdapter.setNewData(goBackFlightList);
-                                    goResultAdapter.notifyDataSetChanged();
-                                    backResultAdapter.notifyDataSetChanged();
+                                    mAdapter.setNewData(goBackFlightList);
+                                    mAdapter.notifyDataSetChanged();
                                 }
                             }
                         }
@@ -215,18 +184,12 @@ public class SearchPlanActivity2 extends BaseActivity {
 
     @OnClick({R.id.left_button, R.id.btn_next})
     public void onClick(View view) {
-        Intent intent;
         switch (view.getId()) {
             case R.id.left_button:
                 finish();
                 break;
             case R.id.btn_next:
-                intent = new Intent(SearchPlanActivity2.this, PlaneDetailActivity.class);
-                intent.putExtra(PlaneDetailActivity.DETAIL_TYPE, searchType);
-                intent.putExtra(PlaneDetailActivity.FLIGHT_START_DATE, goDate);
-                intent.putExtra(PlaneDetailActivity.FLIGHT_END_DATE, backDate);
-                intent.putExtra(PlaneDetailActivity.FLIGHT_DATA, goBackFlightList.get(selectePos));
-                startActivity(intent);
+
                 break;
         }
     }

@@ -47,19 +47,25 @@ public class SearchPlaneResultAdapter extends BaseMultiItemQuickAdapter<Multiple
             helper.setText(R.id.flightTimes, item.flightModel.flightTimes);
             setSpannableString(MathUtils.subZero(String.valueOf(item.flightModel.barePrice)), helper.getView(R.id.barePrice));
             helper.setText(R.id.flightNum, item.flightModel.flightNum + item.flightModel.flightTypeFullName);
-            helper.setVisible(R.id.discount, false);
             if (item.flightModel.discount != 0) {
+                helper.setGone(R.id.discount, true);
                 helper.setText(R.id.discount, item.flightModel.discount * 10 + "折");
             } else {
+                helper.setGone(R.id.discount, false);
                 helper.setText(R.id.discount, "");
             }
             helper.setVisible(R.id.stopCity, false);
             helper.setVisible(R.id.crossDays, false);
-            helper.setVisible(R.id.cprice, false);
+            if (item.flightModel.childPrice == 0) {
+                helper.setGone(R.id.cprice, false);
+            } else {
+                helper.setGone(R.id.cprice, true);
+                helper.setText(R.id.cprice, "儿童¥" + MathUtils.subZero(String.valueOf(item.flightModel.childPrice)));
+            }
+
             helper.setText(R.id.tv_rebate, "返¥" + MathUtils.subZero(String.valueOf(item.flightModel.zk)));
         } else {
             helper.setText(R.id.tv_rebate, "返¥" + MathUtils.subZero(String.valueOf(item.internationalFlightModel.zk)));
-            helper.setVisible(R.id.discount, false);
             if (item.internationalFlightModel.goTrip.transitCities != null && item.internationalFlightModel.goTrip.transitCities.size() > 0) {
                 helper.setVisible(R.id.stopCity, true);
                 setSpannableString2(item.internationalFlightModel.goTrip.transitCities.get(0).transitCityName, helper.getView(R.id.stopCity));
@@ -90,11 +96,25 @@ public class SearchPlaneResultAdapter extends BaseMultiItemQuickAdapter<Multiple
                 helper.setText(R.id.crossDays, "+" + item.internationalFlightModel.goTrip.crossDays + "天");
             }
             if (item.internationalFlightModel.cprice == 0) {
-                helper.setVisible(R.id.cprice, false);
+                helper.setGone(R.id.cprice, false);
             } else {
                 helper.setText(R.id.cprice, "儿童¥" + MathUtils.subZero(String.valueOf(item.internationalFlightModel.cprice)));
-                helper.setVisible(R.id.cprice, true);
+                helper.setGone(R.id.cprice, true);
             }
+
+            if ("economy".equals(item.internationalFlightModel.cabinLevel)) {
+                helper.setText(R.id.discount, "经济舱");
+                helper.setGone(R.id.discount, true);
+            } else if ("first".equals(item.internationalFlightModel.cabinLevel)) {
+                helper.setText(R.id.discount, "头等舱");
+                helper.setGone(R.id.discount, true);
+            } else if ("business".equals(item.internationalFlightModel.cabinLevel)) {
+                helper.setText(R.id.discount, "商务舱");
+                helper.setGone(R.id.discount, true);
+            } else {
+                helper.setGone(R.id.discount, false);
+            }
+
             setSpannableString(MathUtils.subZero(String.valueOf(item.internationalFlightModel.price)), helper.getView(R.id.barePrice));
         }
     }

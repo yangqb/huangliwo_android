@@ -30,9 +30,11 @@
                 android:textSize="15sp" />
 
             <TextView
-                android:id="@+id/tvPlaneInfo"
+                android:id="@+id/tvGoPlaneInfo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:text="02-18  周二  北京-上海"
                 android:textColor="@color/color_333333"
                 android:textSize="15sp" />
@@ -78,7 +80,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/flightTimes"
+                    android:id="@+id/goFlightTimes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="2小时15分"
@@ -123,7 +125,7 @@
         </RelativeLayout>
 
         <TextView
-            android:id="@+id/tvCompany"
+            android:id="@+id/tvGoCompany"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -157,13 +159,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
-                android:text="去程/第一程"
+                android:text="去程/第二程"
                 android:textColor="@color/color_289cef"
                 android:textSize="15sp" />
 
             <TextView
+                android:id="@+id/tvBackPlaneInfo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:text="02-18  周二  北京-上海"
                 android:textColor="@color/color_333333"
                 android:textSize="15sp" />
@@ -183,6 +188,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/backBTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="10:55"
@@ -190,6 +196,7 @@
                     android:textSize="21sp" />
 
                 <TextView
+                    android:id="@+id/backDepAirport"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
@@ -207,6 +214,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/backFlightTimes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="2小时15分"
@@ -228,6 +236,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/backETime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
@@ -236,6 +245,7 @@
                     android:textSize="21sp" />
 
                 <TextView
+                    android:id="@+id/backArrAirport"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
@@ -249,6 +259,7 @@
         </RelativeLayout>
 
         <TextView
+            android:id="@+id/tvBackCompany"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"

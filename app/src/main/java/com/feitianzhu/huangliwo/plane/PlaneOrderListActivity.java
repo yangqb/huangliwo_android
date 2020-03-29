@@ -8,8 +8,16 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
+import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
-import com.feitianzhu.huangliwo.model.MultiPlaneOrderModel;
+import com.feitianzhu.huangliwo.model.PlaneOrderInfo;
+import com.feitianzhu.huangliwo.model.PlaneOrderModel;
+import com.feitianzhu.huangliwo.utils.SPUtils;
+import com.feitianzhu.huangliwo.utils.Urls;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.Response;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,9 +26,14 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 public class PlaneOrderListActivity extends BaseActivity {
-    private List<MultiPlaneOrderModel> multiPlaneOrderModels = new ArrayList<>();
-    private MultiPlaneOrderModel multiPlaneOrderModel;
     private PlaneOrderAdapter mAdapter;
+    private List<PlaneOrderModel> allOrder = new ArrayList<>();
+    private List<PlaneOrderModel> refundOrUpdateList = new ArrayList<>();
+    private List<PlaneOrderModel> waiPayList = new ArrayList<>();
+    private List<PlaneOrderModel> waitTicketedList = new ArrayList<>();
+    private List<PlaneOrderModel> ticketedList = new ArrayList<>();
+    private String userId;
+    private String token;
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     @BindView(R.id.title_name)
@@ -33,18 +46,11 @@ public class PlaneOrderListActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+        token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
+        userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         titleName.setText("机票订单");
-        for (int i = 0; i < 15; i++) {
-            if (i % 2 == 0) {
-                multiPlaneOrderModel = new MultiPlaneOrderModel(MultiPlaneOrderModel.GO_TYPE);
-            } else {
-                multiPlaneOrderModel = new MultiPlaneOrderModel(MultiPlaneOrderModel.GO_COME_TYPE);
-            }
-            multiPlaneOrderModels.add(multiPlaneOrderModel);
-        }
-
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter = new PlaneOrderAdapter(multiPlaneOrderModels);
+        mAdapter = new PlaneOrderAdapter(allOrder);
         recyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
 
@@ -70,7 +76,7 @@ public class PlaneOrderListActivity extends BaseActivity {
                     intent.putExtra(PlaneOrderDetailActivity.PLANE_TYPE, 2);
                     intent.putExtra(PlaneOrderDetailActivity.ORDER_TYPE, 1);
                 } else if (position % 4 == 3) {
-                   //往返未付款
+                    //往返未付款
                     intent.putExtra(PlaneOrderDetailActivity.PLANE_TYPE, 2);
                     intent.putExtra(PlaneOrderDetailActivity.ORDER_TYPE, 2);
                 }
@@ -83,6 +89,32 @@ public class PlaneOrderListActivity extends BaseActivity {
 
     @Override
     protected void initData() {
+
+        OkGo.<LzyResponse<PlaneOrderInfo>>get(Urls.GET_PLANE_ORDER)
+                .tag(this)
+                .params(Constant.ACCESSTOKEN, token)
+                .params(Constant.USERID, userId)
+                .execute(new JsonCallback<LzyResponse<PlaneOrderInfo>>() {
+                    @Override
+                    public void onSuccess(Response<LzyResponse<PlaneOrderInfo>> response) {
+                        super.onSuccess(PlaneOrderListActivity.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0 && response.body().data != null) {
+                            PlaneOrderInfo planeOrderInfo = response.body().data;
+                            allOrder = planeOrderInfo.all;
+                            refundOrUpdateList = planeOrderInfo.refundOrUpdateList;
+                            ticketedList = planeOrderInfo.ticketedList;
+                            waiPayList = planeOrderInfo.waiPayList;
+                            waitTicketedList = planeOrderInfo.waitTicketedList;
+                            mAdapter.setNewData(allOrder);
+                            mAdapter.notifyDataSetChanged();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<LzyResponse<PlaneOrderInfo>> response) {
+                        super.onError(response);
+                    }
+                });
 
     }
 

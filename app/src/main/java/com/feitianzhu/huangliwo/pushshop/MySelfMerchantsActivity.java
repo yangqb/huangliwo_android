@@ -24,6 +24,7 @@ import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.login.LoginEvent;
 import com.feitianzhu.huangliwo.me.WithdrawActivity;
+import com.feitianzhu.huangliwo.me.WithdrawRecordActivity;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.me.ui.AuthEvent;
 import com.feitianzhu.huangliwo.model.UserAuth;
@@ -31,6 +32,7 @@ import com.feitianzhu.huangliwo.pushshop.bean.MerchantsModel;
 import com.feitianzhu.huangliwo.pushshop.bean.SelfMerchantsListInfo;
 import com.feitianzhu.huangliwo.shop.ShopDao;
 import com.feitianzhu.huangliwo.utils.SPUtils;
+import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.view.CustomRefundView;
 import com.gyf.immersionbar.ImmersionBar;
@@ -69,6 +71,7 @@ import q.rorbin.badgeview.QBadgeView;
  * email: 694125155@qq.com
  */
 public class MySelfMerchantsActivity extends BaseActivity {
+    public static final int REQUEST_CODE = 100;
     private String userId;
     private String token;
     private int selectPos = 0;
@@ -88,6 +91,8 @@ public class MySelfMerchantsActivity extends BaseActivity {
     ImageView imgView;
     @BindView(R.id.merchants_order)
     LinearLayout llMerchantsOrder;
+    @BindView(R.id.withdrawCount)
+    TextView withdrawCount;
 
 
     @Override
@@ -145,6 +150,12 @@ public class MySelfMerchantsActivity extends BaseActivity {
                                 balance = response.body().data.getList().get(0).getBalance();
                                 String strIncome = String.format(Locale.getDefault(), "%.2f", response.body().data.getList().get(0).getIncome());
                                 String strBalance = String.format(Locale.getDefault(), "%.2f", balance);
+                                if (response.body().data.getList().get(0).getWithdrawCount() == 0) {
+                                    withdrawCount.setVisibility(View.INVISIBLE);
+                                } else {
+                                    withdrawCount.setText(response.body().data.getList().get(0).getWithdrawCount() + "笔正在提现中");
+                                    withdrawCount.setVisibility(View.VISIBLE);
+                                }
                                 setSpannableString(tvProfit, tvWithdrawal, strIncome, strBalance);
                                 getUnConsumeCount();
                             }
@@ -185,7 +196,8 @@ public class MySelfMerchantsActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.left_button, R.id.right_button, R.id.myMerchantDetail, R.id.merchants_order, R.id.myMerchantList, R.id.ll_service, R.id.detailed_rules, R.id.btn_withdrawal, R.id.protocol})
+    @OnClick({R.id.left_button, R.id.right_button, R.id.myMerchantDetail, R.id.merchants_order, R.id.myMerchantList, R.id.feedback, R.id.detailed_rules, R.id.btn_withdrawal, R.id.protocol, R.id.withdrawCount
+            , R.id.up_SetMeal, R.id.up_gift, R.id.ll_investment, R.id.ll_propaganda})
     public void onClick(View view) {
         Intent intent;
         switch (view.getId()) {
@@ -212,8 +224,29 @@ public class MySelfMerchantsActivity extends BaseActivity {
                 intent.putExtra(MySelfMerchantsOrderActivity.MERCHANTS_ID, merchantsList.get(selectPos).getMerchantId());
                 startActivity(intent);
                 break;
-            case R.id.ll_service:
+            case R.id.up_gift:
+                intent = new Intent(MySelfMerchantsActivity.this, UpMerchantsGiftActivity.class);
+                intent.putExtra(UpMerchantsGiftActivity.MERCHANTS_ID, merchantsList.get(selectPos).getMerchantId());
+                startActivity(intent);
+                break;
+            case R.id.up_SetMeal:
+                intent = new Intent(MySelfMerchantsActivity.this, SetMealListActivity.class);
+                intent.putExtra(SetMealListActivity.MERCHANTS_ID, merchantsList.get(selectPos).getMerchantId());
+                startActivity(intent);
+                break;
+            case R.id.ll_investment:
+                ToastUtils.showShortToast("敬请期待");
+                break;
+            case R.id.ll_propaganda:
+                ToastUtils.showShortToast("敬请期待");
+                break;
+            case R.id.feedback:
                 startActivity(new Intent(MySelfMerchantsActivity.this, ProblemFeedbackActivity.class));
+                break;
+            case R.id.withdrawCount:
+                intent = new Intent(MySelfMerchantsActivity.this, WithdrawRecordActivity.class);
+                intent.putExtra(WithdrawRecordActivity.MERCHANT_ID, merchantsList.get(selectPos).getMerchantId());
+                startActivity(intent);
                 break;
             case R.id.btn_withdrawal:
                 UserAuth mAuth = Constant.mUserAuth;
@@ -229,7 +262,7 @@ public class MySelfMerchantsActivity extends BaseActivity {
                     intent = new Intent(MySelfMerchantsActivity.this, WithdrawActivity.class);
                     intent.putExtra(WithdrawActivity.BALANCE, balance);
                     intent.putExtra(WithdrawActivity.MERCHANT_ID, merchantsList.get(selectPos).getMerchantId());
-                    startActivity(intent);
+                    startActivityForResult(intent, REQUEST_CODE);
                 }
                 break;
             case R.id.detailed_rules:
@@ -267,6 +300,12 @@ public class MySelfMerchantsActivity extends BaseActivity {
                                 selectPos = position;
                                 merchantsName.setText(merchantsList.get(position).getMerchantName());
                                 balance = merchantsList.get(position).getBalance();
+                                if (merchantsList.get(position).getWithdrawCount() == 0) {
+                                    withdrawCount.setVisibility(View.INVISIBLE);
+                                } else {
+                                    withdrawCount.setText(merchantsList.get(position).getWithdrawCount() + "笔正在提现中");
+                                    withdrawCount.setVisibility(View.VISIBLE);
+                                }
                                 String strIncome = String.format(Locale.getDefault(), "%.2f", merchantsList.get(position).getIncome());
                                 String strBalance = String.format(Locale.getDefault(), "%.2f", balance);
                                 setSpannableString(tvProfit, tvWithdrawal, strIncome, strBalance);
@@ -346,6 +385,16 @@ public class MySelfMerchantsActivity extends BaseActivity {
         view2.append(span1);
         view2.append(span3);
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_CODE) {
+                initData();
+            }
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)

@@ -55,36 +55,55 @@
             android:textColor="@color/color_B71D23"
             android:textSize="20sp" />
 
-        <LinearLayout
-            android:id="@+id/ll_rebate"
+        <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:visibility="gone">
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:id="@+id/ll_rebate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:background="@drawable/shape_new_year_left_vip"
+                    android:gravity="end|center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="8dp"
+                    android:text="成为会员"
+                    android:textColor="@color/color_333333"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/tv_rebate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:background="@drawable/shape_new_year_vip"
+                    android:gravity="start|center_vertical"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="15dp"
+                    android:text=""
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+            </LinearLayout>
 
             <TextView
+                android:id="@+id/vip_rebate"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
-                android:background="@drawable/shape_new_year_left_vip"
-                android:gravity="end|center_vertical"
+                android:background="@drawable/shape_new_year_vip_rebate"
+                android:gravity="center"
                 android:paddingLeft="15dp"
-                android:paddingRight="8dp"
-                android:text="成为会员"
-                android:textColor="@color/color_333333"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/tv_rebate"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:background="@drawable/shape_new_year_vip"
-                android:gravity="start|center_vertical"
-                android:paddingLeft="8dp"
                 android:paddingRight="15dp"
-                android:text=""
+                android:text="省¥0.00"
                 android:textColor="@color/white"
-                android:textSize="12sp" />
-        </LinearLayout>
+                android:textSize="12sp"
+                android:visibility="gone" />
+
+        </RelativeLayout>
+
 
     </LinearLayout>
 

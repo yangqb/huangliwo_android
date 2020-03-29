@@ -20,6 +20,15 @@ public class BalanceModel implements Serializable {
     public double waitRelease;
     public double totalAmount;
     public double balance;
+    public int withdrawCount;
+
+    public int getWithdrawCount() {
+        return withdrawCount;
+    }
+
+    public void setWithdrawCount(int withdrawCount) {
+        this.withdrawCount = withdrawCount;
+    }
 
     public double getWaitRelease() {
         return waitRelease;

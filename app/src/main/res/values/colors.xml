@@ -66,6 +66,8 @@
     <color name="color_28B5FE">#28B5FE</color>
     <color name="color_9B65FF">#9B65FF</color>
     <color name="color_e8f6ff">#E8F6FF</color>
+    <color name="color_ffd600">#FFD600</color>
+    <color name="color_ff0800">#ff0800</color>
 
     <color name="color_wheel_sel">#1c1c1d</color>
     <color name="color_wheel_unsel">#4d4f54</color>

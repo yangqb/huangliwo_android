@@ -90,13 +90,15 @@ public class EditSignActivity extends BaseActivity {
                 .execute(new JsonCallback<LzyResponse>() {
                     @Override
                     public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
-                        super.onSuccess(EditSignActivity.this,response.body().msg,response.body().code);
-                        Toast.makeText(mContext, "修改成功", Toast.LENGTH_SHORT).show();
-                        EventBus.getDefault().postSticky(LoginEvent.EDITOR_INFO);
-                        Intent intent = new Intent();
-                        intent.putExtra(SIGN, editText.getText().toString().trim());
-                        setResult(RESULT_OK, intent);
-                        finish();
+                        super.onSuccess(EditSignActivity.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0) {
+                            Toast.makeText(mContext, "修改成功", Toast.LENGTH_SHORT).show();
+                            EventBus.getDefault().postSticky(LoginEvent.EDITOR_INFO);
+                            Intent intent = new Intent();
+                            intent.putExtra(SIGN, editText.getText().toString().trim());
+                            setResult(RESULT_OK, intent);
+                            finish();
+                        }
                     }
 
                     @Override

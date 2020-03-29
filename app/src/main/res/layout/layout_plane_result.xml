@@ -29,7 +29,7 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="70dp"
                     android:layout_height="wrap_content"
                     android:gravity="start"
                     android:orientation="vertical">
@@ -46,6 +46,8 @@
                         android:id="@+id/dptAirport"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:ellipsize="end"
                         android:layout_marginTop="10dp"
                         android:text="虹桥T2"
                         android:textColor="@color/color_999999"
@@ -57,8 +59,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
                     android:gravity="center"
                     android:orientation="vertical">
 
@@ -86,7 +88,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="70dp"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
@@ -105,6 +107,8 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="end"
                         android:layout_marginTop="10dp"
+                        android:maxLines="1"
+                        android:ellipsize="end"
                         android:text="虹桥T2"
                         android:textColor="@color/color_999999"
                         android:textSize="13sp" />
@@ -183,7 +187,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
-                    android:background="@drawable/shape_rebate_left_vip"
+                    android:background="@drawable/shape_detail_left_vip"
                     android:gravity="end|center_vertical"
                     android:paddingLeft="15dp"
                     android:paddingRight="5dp"
@@ -195,7 +199,7 @@
                     android:id="@+id/tv_rebate"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
-                    android:background="@drawable/shape_rebate_vip"
+                    android:background="@drawable/shape_detail_right_vip"
                     android:ellipsize="end"
                     android:gravity="center_vertical"
                     android:maxLines="1"

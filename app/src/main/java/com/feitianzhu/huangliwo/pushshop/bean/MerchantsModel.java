@@ -99,6 +99,15 @@ public class MerchantsModel implements Serializable {
     private String businessTime;
     private AuditModel examineModel;
     private int isCollect;
+    private int withdrawCount;
+
+    public int getWithdrawCount() {
+        return withdrawCount;
+    }
+
+    public void setWithdrawCount(int withdrawCount) {
+        this.withdrawCount = withdrawCount;
+    }
 
     public int getIsCollect() {
         return isCollect;

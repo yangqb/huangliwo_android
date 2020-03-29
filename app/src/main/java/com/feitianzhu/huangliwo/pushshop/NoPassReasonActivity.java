@@ -66,9 +66,8 @@ public class NoPassReasonActivity extends BaseActivity {
         Intent intent;
         switch (view.getId()) {
             case R.id.reSubmit:
-                intent = new Intent(NoPassReasonActivity.this, MerchantsDetailActivity.class);
-                intent.putExtra(MerchantsDetailActivity.IS_MY_MERCHANTS, false);
-                intent.putExtra(MerchantsDetailActivity.MERCHANTS_DETAIL_DATA, merchantsModel);
+                intent = new Intent(NoPassReasonActivity.this, EditMerchantsActivity.class);
+                intent.putExtra(EditMerchantsActivity.MERCHANTS_DETAIL_DATA, merchantsModel);
                 startActivity(intent);
                 break;
             case R.id.left_button:
