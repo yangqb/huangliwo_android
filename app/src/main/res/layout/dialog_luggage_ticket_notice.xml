@@ -42,6 +42,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/go_tag"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="去程/第一程"
@@ -92,13 +93,15 @@
                 android:layout_marginTop="15dp"
                 android:text="购票须知"
                 android:textColor="@color/color_333333"
-                android:textSize="15sp" />
+                android:textSize="15sp"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"

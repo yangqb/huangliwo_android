@@ -118,7 +118,7 @@
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@mipmap/g12_01dianhua" />
+                                android:src="@mipmap/e01_11dianhua" />
                         </RelativeLayout>
                     </RelativeLayout>
 

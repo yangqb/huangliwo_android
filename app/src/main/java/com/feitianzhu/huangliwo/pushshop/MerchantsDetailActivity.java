@@ -38,6 +38,7 @@ import com.feitianzhu.huangliwo.pushshop.bean.MerchantsClassifyModel;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsModel;
 import com.feitianzhu.huangliwo.pushshop.bean.UpdataMechantsEvent;
 import com.feitianzhu.huangliwo.shop.ShopDao;
+import com.feitianzhu.huangliwo.utils.KeyboardUtils;
 import com.feitianzhu.huangliwo.utils.MathUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.StringUtils;
@@ -168,6 +169,8 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
     TextView idCardBackStatus;
     @BindView(R.id.business_status)
     TextView businessStatus;
+    @BindView(R.id.parent_view)
+    LinearLayout parentView;
 
     private CountDownTimer mTimer = new CountDownTimer(6000 * 10, 1000) {
 
@@ -393,9 +396,11 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
                 showDialog();
                 break;
             case R.id.select_merchants_area:
+                KeyboardUtils.hideKeyboard(parentView);
                 setSelectAddress();
                 break;
             case R.id.select_merchants_type:
+                KeyboardUtils.hideKeyboard(parentView);
                 List<String> strings = new ArrayList<>();
                 if (listBean != null && listBean.size() > 0) {
                     for (int i = 0; i < listBean.size(); i++) {

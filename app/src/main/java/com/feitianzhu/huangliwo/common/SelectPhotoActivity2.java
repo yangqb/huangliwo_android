@@ -2,12 +2,16 @@ package com.feitianzhu.huangliwo.common;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -204,5 +208,28 @@ public abstract class SelectPhotoActivity2 extends AppCompatActivity implements 
                 alertDialog.dismiss();
             }
         });
+    }
+
+    @Override
+    public Resources getResources() {
+        Resources res = super.getResources();
+        Configuration newConfig = new Configuration();
+        //控制字体缩放 1.0为默认
+        newConfig.fontScale = 1.0f;
+        DisplayMetrics displayMetrics = res.getDisplayMetrics();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            //7.0以上系统手机 显示大小 对APP的影响
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                if (displayMetrics.density < DisplayMetrics.DENSITY_DEVICE_STABLE / (float) DisplayMetrics.DENSITY_DEFAULT) {
+                    displayMetrics.densityDpi = (int) (DisplayMetrics.DENSITY_DEVICE_STABLE * 0.92);
+                } else {
+                    displayMetrics.densityDpi = DisplayMetrics.DENSITY_DEVICE_STABLE;
+                }
+                newConfig.densityDpi = displayMetrics.densityDpi;
+            }
+            createConfigurationContext(newConfig);
+        }
+        res.updateConfiguration(newConfig, displayMetrics);
+        return res;
     }
 }

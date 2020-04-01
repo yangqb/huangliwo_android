@@ -1,6 +1,8 @@
 package com.feitianzhu.huangliwo.common.base;
 
 import android.content.Context;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;

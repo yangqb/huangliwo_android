@@ -45,16 +45,16 @@ public class PlaneOrderAdapter extends BaseQuickAdapter<PlaneOrderModel, BaseVie
         helper.setText(R.id.price, MathUtils.subZero(String.valueOf(item.noPayAmount)));
         helper.setText(R.id.goFlightCode, item.flightNum);
         helper.setText(R.id.goFlightDate, item.goFlyTime);
+        helper.setText(R.id.cityName, item.goCityInfo);
         if (item.isGoBack == 0) {
             helper.setGone(R.id.ll_back, false);
             helper.setGone(R.id.goTitle, false);
-            helper.setText(R.id.backFlightDate, "");
-            helper.setText(R.id.backFlightCode, "");
         } else {
             helper.setGone(R.id.ll_back, true);
             helper.setGone(R.id.goTitle, true);
             helper.setText(R.id.backFlightDate, item.backFlyTime);
             helper.setText(R.id.backFlightCode, item.backFlightNum);
+            helper.setText(R.id.cityName, item.backCityInfo);
         }
     }
 }

@@ -17,16 +17,10 @@ import com.lxj.xpopup.core.BottomPopupView;
  * email: 694125155@qq.com
  */
 public class CustomTotalPriceInfoView extends BottomPopupView {
-    private int type;
     private CustomPriceDetailInfo priceDetailInfo;
 
     public CustomTotalPriceInfoView(@NonNull Context context) {
         super(context);
-    }
-
-    public CustomTotalPriceInfoView setType(int type) {
-        this.type = type;
-        return this;
     }
 
     public CustomTotalPriceInfoView setData(CustomPriceDetailInfo priceDetailInfo) {

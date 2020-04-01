@@ -27,7 +27,7 @@ public class FlightSegmentInfo implements Serializable {
     public String arrCityCode;
     public String depDate;
     public String depTime;
-    public String arrdate;
+    public String arrDate;
     public String arrTime;
     public String codeShareStatus;
     public String mainCode;

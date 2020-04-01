@@ -610,6 +610,7 @@ public class DateUtils {
         return "周" + result;
     }
 
+
     /*
      * 将YYYY-MM-dd转换成MM-dd
      * */
@@ -617,6 +618,14 @@ public class DateUtils {
         String[] result = str.split("-");
         return result[1] + "-" + result[2];
 
+    }
+
+    /*
+     * 将2020-03-31-19:00-21:15转换成YYYY-MM-dd
+     * */
+    public static String strToStr2(String str) {
+        String[] result = str.split("-");
+        return result[1] + "-" + result[2] + "-" + result[2];
     }
 
     /*

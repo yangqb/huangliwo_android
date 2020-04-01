@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/color_f7f7f7"
     android:orientation="vertical">
 
@@ -85,134 +86,61 @@
 
     </RelativeLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:background="@color/white"
-        android:orientation="horizontal"
-        android:paddingLeft="@dimen/dp_10"
-        android:paddingBottom="10dp">
-
+        android:layout_height="wrap_content"
+        android:background="@color/white">
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginRight="@dimen/dp_20"
-            android:gravity="bottom|center_horizontal"
-            android:orientation="vertical">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
 
-            <TextView
-                android:id="@+id/all_order"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="bottom"
-                android:paddingBottom="5dp"
-                android:text="全部"
-                android:textColor="@drawable/select_order_color"
-                android:textSize="13sp" />
+            <com.flyco.tablayout.CommonTabLayout
+                android:id="@+id/tabLayout"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@color/white"
+                app:tl_iconVisible="false"
+                app:tl_indicator_bounce_enable="false"
+                app:tl_indicator_color="@color/bg_yellow"
+                app:tl_indicator_height="2dp"
+                app:tl_indicator_width="20dp"
+                app:tl_indicator_width_equal_title="false"
+                app:tl_textSelectColor="@color/color_333333"
+                app:tl_textUnselectColor="@color/color_999999"
+                app:tl_textsize="13sp">
 
-            <View
-                android:id="@+id/line_all"
-                android:layout_width="22dp"
-                android:layout_height="2dp"
-                android:background="@drawable/select_order_line_color" />
+            </com.flyco.tablayout.CommonTabLayout>
         </LinearLayout>
-
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginRight="20dp"
-            android:gravity="bottom|center_horizontal"
-            android:orientation="vertical">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
 
-            <TextView
-                android:id="@+id/wait_pay_order"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="bottom"
-                android:paddingBottom="5dp"
-                android:text="待付款"
-                android:textColor="@drawable/select_order_color"
-                android:textSize="13sp" />
+            <com.flyco.tablayout.CommonTabLayout
+                android:id="@+id/tabLayout2"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@color/white"
+                app:tl_iconVisible="false"
+                app:tl_indicator_bounce_enable="false"
+                app:tl_indicator_color="@color/bg_yellow"
+                app:tl_indicator_height="2dp"
+                app:tl_indicator_width="20dp"
+                app:tl_indicator_width_equal_title="false"
+                app:tl_textSelectColor="@color/color_333333"
+                app:tl_textUnselectColor="@color/color_999999"
+                android:visibility="gone"
+                app:tl_textsize="13sp">
 
-            <View
-                android:id="@+id/line_wait_pay"
-                android:layout_width="22dp"
-                android:layout_height="2dp"
-                android:background="@drawable/select_order_line_color" />
+            </com.flyco.tablayout.CommonTabLayout>
         </LinearLayout>
+    </RelativeLayout>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginRight="@dimen/dp_20"
-            android:gravity="bottom|center_horizontal"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/wait_sending_order"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="bottom"
-                android:paddingBottom="5dp"
-                android:text="待发货"
-                android:textColor="@drawable/select_order_color"
-                android:textSize="13sp" />
-
-            <View
-                android:id="@+id/line_wait_sending"
-                android:layout_width="22dp"
-                android:layout_height="2dp"
-                android:background="@drawable/select_order_line_color" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ll_wait_receive_order"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginRight="@dimen/dp_20"
-            android:gravity="bottom|center_horizontal"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/wait_receive_order"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="bottom"
-                android:paddingBottom="5dp"
-                android:text="待收货"
-                android:textColor="@drawable/select_order_color"
-                android:textSize="13sp" />
-
-            <View
-                android:id="@+id/line_wait_receive"
-                android:layout_width="22dp"
-                android:layout_height="2dp"
-                android:background="@drawable/select_order_line_color" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="bottom|center_horizontal"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/wait_evaluate_order"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="bottom"
-                android:paddingBottom="5dp"
-                android:text="待评价"
-                android:textColor="@drawable/select_order_color"
-                android:textSize="13sp" />
-
-            <View
-                android:id="@+id/line_wait_evaluate"
-                android:layout_width="22dp"
-                android:layout_height="2dp"
-                android:background="@drawable/select_order_line_color" />
-        </LinearLayout>
-    </LinearLayout>
 
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/refreshLayout"

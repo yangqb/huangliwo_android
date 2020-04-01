@@ -20,6 +20,7 @@ import com.feitianzhu.huangliwo.model.EvaluateMode;
 import com.feitianzhu.huangliwo.model.GoodOrderCountMode;
 import com.feitianzhu.huangliwo.model.GoodsOrderInfo;
 import com.feitianzhu.huangliwo.model.MultipleItemOrderModel;
+import com.feitianzhu.huangliwo.model.PlaneOrderTableEntity;
 import com.feitianzhu.huangliwo.model.SetMealOrderInfo;
 import com.feitianzhu.huangliwo.pushshop.bean.SetMealInfo;
 import com.feitianzhu.huangliwo.shop.SelectPayActivity;
@@ -30,6 +31,9 @@ import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.view.CustomRefundView;
+import com.flyco.tablayout.CommonTabLayout;
+import com.flyco.tablayout.listener.CustomTabEntity;
+import com.flyco.tablayout.listener.OnTabSelectListener;
 import com.google.gson.Gson;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
@@ -68,30 +72,9 @@ public class MyOrderActivity2 extends BaseActivity {
     private List<SetMealOrderInfo.SetMealOrderModel> waitPaySetMealOder = new ArrayList<>();
     private List<SetMealOrderInfo.SetMealOrderModel> waitUseSetMealOder = new ArrayList<>();
     private List<SetMealOrderInfo.SetMealOrderModel> currSetMealOder = new ArrayList<>();
+    private ArrayList<CustomTabEntity> tabs = new ArrayList<>();
     private static final int REFUND_REQUEST_CODE = 1000;
     private String[] strings = new String[]{"商品订单", "套餐订单"};
-    @BindView(R.id.all_order)
-    TextView allOrder;
-    @BindView(R.id.wait_pay_order)
-    TextView waitPayOrder;
-    @BindView(R.id.wait_sending_order)
-    TextView waitSendingOrder;
-    @BindView(R.id.wait_receive_order)
-    TextView waitReceiveOrder;
-    @BindView(R.id.ll_wait_receive_order)
-    LinearLayout llWaitReceiveOrder;
-    @BindView(R.id.wait_evaluate_order)
-    TextView waitEvaluateOrder;
-    @BindView(R.id.line_all)
-    View lineAll;
-    @BindView(R.id.line_wait_pay)
-    View lineWaitPay;
-    @BindView(R.id.line_wait_sending)
-    View lineWaitSending;
-    @BindView(R.id.line_wait_receive)
-    View lineWaitReceive;
-    @BindView(R.id.line_wait_evaluate)
-    View lineWaitEvaluate;
     @BindView(R.id.title_name)
     TextView titleName;
     @BindView(R.id.recyclerView)
@@ -102,6 +85,10 @@ public class MyOrderActivity2 extends BaseActivity {
     ImageView afterSale;
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
+    @BindView(R.id.tabLayout)
+    CommonTabLayout tabLayout;
+    @BindView(R.id.tabLayout2)
+    CommonTabLayout tabLayout2;
     private String token;
     private String userId;
 
@@ -119,16 +106,12 @@ public class MyOrderActivity2 extends BaseActivity {
         search.setBackgroundResource(R.mipmap.a01_03sousuo);
         afterSale.setVisibility(View.VISIBLE);
         search.setVisibility(View.VISIBLE);
-        allOrder.setSelected(true);
-        waitPayOrder.setSelected(false);
-        waitSendingOrder.setSelected(false);
-        waitReceiveOrder.setSelected(false);
-        waitEvaluateOrder.setSelected(false);
-        lineAll.setSelected(true);
-        lineWaitPay.setSelected(false);
-        lineWaitSending.setSelected(false);
-        lineWaitReceive.setSelected(false);
-        lineWaitEvaluate.setSelected(false);
+        tabs.add(new PlaneOrderTableEntity("全部"));
+        tabs.add(new PlaneOrderTableEntity("待付款(0)"));
+        tabs.add(new PlaneOrderTableEntity("待发货(0)"));
+        tabs.add(new PlaneOrderTableEntity("待收货(0)"));
+        tabs.add(new PlaneOrderTableEntity("待评价(0)"));
+        tabLayout.setTabData(tabs);
 
         mAdapter = new OrderAdapter(multipleItemOrderModels);
         View mEmptyView = View.inflate(this, R.layout.view_common_nodata, null);
@@ -148,6 +131,95 @@ public class MyOrderActivity2 extends BaseActivity {
     }
 
     public void initListener() {
+        tabLayout.setOnTabSelectListener(new OnTabSelectListener() {
+            @Override
+            public void onTabSelect(int position) {
+                if (position == 0) {
+                    butType = 0;
+                    status = -1;
+                    getOrderList(status);
+                } else if (position == 1) {
+                    butType = 1;
+                    status = GoodsOrderInfo.TYPE_NO_PAY;
+                    getOrderList(status);
+                } else if (position == 2) {
+                    butType = 2;
+                    status = GoodsOrderInfo.TYPE_WAIT_DELIVERY;
+                    getOrderList(status);
+                } else if (position == 3) {
+                    status = GoodsOrderInfo.TYPE_WAIT_RECEIVING;
+                    getOrderList(status);
+                } else if (position == 4) {
+                    butType = 4;
+                    status = 0;
+                    getOrderList(status);
+                }
+            }
+
+            @Override
+            public void onTabReselect(int position) {
+
+            }
+        });
+
+        tabLayout2.setOnTabSelectListener(new OnTabSelectListener() {
+            @Override
+            public void onTabSelect(int position) {
+                if (position == 0) {
+                    butType = 0;
+                    status = -1;
+                    multipleItemOrderModels.clear();
+                    currSetMealOder = allSetMealOder;
+                    for (int i = 0; i < currSetMealOder.size(); i++) {
+                        MultipleItemOrderModel multipleItemOrderModel = new MultipleItemOrderModel(MultipleItemOrderModel.SETMEAL_ORDER);
+                        multipleItemOrderModel.setSetMealOrderModel(currSetMealOder.get(i));
+                        multipleItemOrderModels.add(multipleItemOrderModel);
+                    }
+                    mAdapter.setNewData(multipleItemOrderModels);
+                    mAdapter.notifyDataSetChanged();
+                } else if (position == 1) {
+                    butType = 1;
+                    multipleItemOrderModels.clear();
+                    currSetMealOder = waitPaySetMealOder;
+                    for (int i = 0; i < currSetMealOder.size(); i++) {
+                        MultipleItemOrderModel multipleItemOrderModel = new MultipleItemOrderModel(MultipleItemOrderModel.SETMEAL_ORDER);
+                        multipleItemOrderModel.setSetMealOrderModel(currSetMealOder.get(i));
+                        multipleItemOrderModels.add(multipleItemOrderModel);
+                    }
+                    mAdapter.setNewData(multipleItemOrderModels);
+                    mAdapter.notifyDataSetChanged();
+                } else if (position == 2) {
+                    butType = 2;
+                    multipleItemOrderModels.clear();
+                    currSetMealOder = waitUseSetMealOder;
+                    for (int i = 0; i < currSetMealOder.size(); i++) {
+                        MultipleItemOrderModel multipleItemOrderModel = new MultipleItemOrderModel(MultipleItemOrderModel.SETMEAL_ORDER);
+                        multipleItemOrderModel.setSetMealOrderModel(currSetMealOder.get(i));
+                        multipleItemOrderModels.add(multipleItemOrderModel);
+                    }
+                    mAdapter.setNewData(multipleItemOrderModels);
+                    mAdapter.notifyDataSetChanged();
+                } else if (position == 3) {
+                    butType = 4;
+                    multipleItemOrderModels.clear();
+                    currSetMealOder = waitEvalSetMealOder;
+                    for (int i = 0; i < currSetMealOder.size(); i++) {
+                        MultipleItemOrderModel multipleItemOrderModel = new MultipleItemOrderModel(MultipleItemOrderModel.SETMEAL_ORDER);
+                        multipleItemOrderModel.setSetMealOrderModel(currSetMealOder.get(i));
+                        multipleItemOrderModels.add(multipleItemOrderModel);
+                    }
+                    mAdapter.setNewData(multipleItemOrderModels);
+                    mAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onTabReselect(int position) {
+
+            }
+        });
+
+
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
@@ -324,7 +396,7 @@ public class MyOrderActivity2 extends BaseActivity {
     }
 
 
-    @OnClick({R.id.left_button, R.id.all_order, R.id.wait_pay_order, R.id.wait_sending_order, R.id.wait_receive_order, R.id.wait_evaluate_order, R.id.right_button, R.id.title_name, R.id.img_collect})
+    @OnClick({R.id.left_button, R.id.right_button, R.id.title_name, R.id.img_collect})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.img_collect:
@@ -339,21 +411,29 @@ public class MyOrderActivity2 extends BaseActivity {
                                     public void onItemClick(int position) {
                                         titleName.setText(strings[position]);
                                         type = position;
+                                        tabs.clear();
                                         if (position == 0) {
-                                            llWaitReceiveOrder.setVisibility(View.VISIBLE);
-                                            waitPayOrder.setText("待付款(0)");
-                                            waitSendingOrder.setText("待发货(0)");
-                                            waitReceiveOrder.setText("待收货(0)");
-                                            waitEvaluateOrder.setText("待评价(0)");
+                                            tabLayout.setVisibility(View.VISIBLE);
+                                            tabLayout2.setVisibility(View.GONE);
+                                            tabs.add(new PlaneOrderTableEntity("全部"));
+                                            tabs.add(new PlaneOrderTableEntity("待付款(0)"));
+                                            tabs.add(new PlaneOrderTableEntity("待发货(0)"));
+                                            tabs.add(new PlaneOrderTableEntity("待收货(0)"));
+                                            tabs.add(new PlaneOrderTableEntity("待评价(0)"));
+                                            tabLayout.setTabData(tabs);
                                             status = -1;
                                             initData();
                                         } else {
-                                            llWaitReceiveOrder.setVisibility(View.GONE);
-                                            waitPayOrder.setText("待付款(0)");
-                                            waitSendingOrder.setText("待使用(0)");
-                                            waitEvaluateOrder.setText("待评价(0)");
+                                            tabLayout.setVisibility(View.GONE);
+                                            tabLayout2.setVisibility(View.VISIBLE);
+                                            tabs.add(new PlaneOrderTableEntity("全部"));
+                                            tabs.add(new PlaneOrderTableEntity("待付款(0)"));
+                                            tabs.add(new PlaneOrderTableEntity("待使用(0)"));
+                                            tabs.add(new PlaneOrderTableEntity("待评价(0)"));
+                                            tabLayout2.setTabData(tabs);
                                             getSetMealOrderList();
                                         }
+
                                     }
                                 }))
                         .show();
@@ -367,135 +447,8 @@ public class MyOrderActivity2 extends BaseActivity {
                 intent.putExtra(AfterSaleActivity.ORDER_TYPE, type);
                 startActivity(intent);
                 break;
-            case R.id.all_order:
-                butType = 0;
-                status = -1;
-                setSelect(allOrder, true);
-                setSelect(waitPayOrder, false);
-                setSelect(waitSendingOrder, false);
-                setSelect(waitReceiveOrder, false);
-                setSelect(waitEvaluateOrder, false);
-                setSelect(lineAll, true);
-                setSelect(lineWaitPay, false);
-                setSelect(lineWaitSending, false);
-                setSelect(lineWaitReceive, false);
-                setSelect(lineWaitEvaluate, false);
-                if (type == 0) {
-                    getOrderList(status);
-                } else {
-                    multipleItemOrderModels.clear();
-                    currSetMealOder = allSetMealOder;
-                    for (int i = 0; i < currSetMealOder.size(); i++) {
-                        MultipleItemOrderModel multipleItemOrderModel = new MultipleItemOrderModel(MultipleItemOrderModel.SETMEAL_ORDER);
-                        multipleItemOrderModel.setSetMealOrderModel(currSetMealOder.get(i));
-                        multipleItemOrderModels.add(multipleItemOrderModel);
-                    }
-                    mAdapter.setNewData(multipleItemOrderModels);
-                    mAdapter.notifyDataSetChanged();
-                }
-                break;
-            case R.id.wait_pay_order:
-                butType = 1;
-                setSelect(allOrder, false);
-                setSelect(waitPayOrder, true);
-                setSelect(waitSendingOrder, false);
-                setSelect(waitReceiveOrder, false);
-                setSelect(waitEvaluateOrder, false);
-                setSelect(lineAll, false);
-                setSelect(lineWaitPay, true);
-                setSelect(lineWaitSending, false);
-                setSelect(lineWaitReceive, false);
-                setSelect(lineWaitEvaluate, false);
-                if (type == 0) {
-                    status = GoodsOrderInfo.TYPE_NO_PAY;
-                    getOrderList(status);
-                } else {
-                    multipleItemOrderModels.clear();
-                    currSetMealOder = waitPaySetMealOder;
-                    for (int i = 0; i < currSetMealOder.size(); i++) {
-                        MultipleItemOrderModel multipleItemOrderModel = new MultipleItemOrderModel(MultipleItemOrderModel.SETMEAL_ORDER);
-                        multipleItemOrderModel.setSetMealOrderModel(currSetMealOder.get(i));
-                        multipleItemOrderModels.add(multipleItemOrderModel);
-                    }
-                    mAdapter.setNewData(multipleItemOrderModels);
-                    mAdapter.notifyDataSetChanged();
-                }
-                break;
-            case R.id.wait_sending_order:
-                butType = 2;
-                setSelect(allOrder, false);
-                setSelect(waitPayOrder, false);
-                setSelect(waitSendingOrder, true);
-                setSelect(waitReceiveOrder, false);
-                setSelect(waitEvaluateOrder, false);
-                setSelect(lineAll, false);
-                setSelect(lineWaitPay, false);
-                setSelect(lineWaitSending, true);
-                setSelect(lineWaitReceive, false);
-                setSelect(lineWaitEvaluate, false);
-                if (type == 0) {
-                    status = GoodsOrderInfo.TYPE_WAIT_DELIVERY;
-                    getOrderList(status);
-                } else {
-                    multipleItemOrderModels.clear();
-                    currSetMealOder = waitUseSetMealOder;
-                    for (int i = 0; i < currSetMealOder.size(); i++) {
-                        MultipleItemOrderModel multipleItemOrderModel = new MultipleItemOrderModel(MultipleItemOrderModel.SETMEAL_ORDER);
-                        multipleItemOrderModel.setSetMealOrderModel(currSetMealOder.get(i));
-                        multipleItemOrderModels.add(multipleItemOrderModel);
-                    }
-                    mAdapter.setNewData(multipleItemOrderModels);
-                    mAdapter.notifyDataSetChanged();
-                }
-                break;
-            case R.id.wait_receive_order:
-                setSelect(allOrder, false);
-                setSelect(waitPayOrder, false);
-                setSelect(waitSendingOrder, false);
-                setSelect(waitReceiveOrder, true);
-                setSelect(waitEvaluateOrder, false);
-                setSelect(lineAll, false);
-                setSelect(lineWaitPay, false);
-                setSelect(lineWaitSending, false);
-                setSelect(lineWaitReceive, true);
-                setSelect(lineWaitEvaluate, false);
-                status = GoodsOrderInfo.TYPE_WAIT_RECEIVING;
-                getOrderList(status);
-                break;
-            case R.id.wait_evaluate_order:
-                butType = 4;
-                setSelect(allOrder, false);
-                setSelect(waitPayOrder, false);
-                setSelect(waitSendingOrder, false);
-                setSelect(waitReceiveOrder, false);
-                setSelect(waitEvaluateOrder, true);
-                setSelect(lineAll, false);
-                setSelect(lineWaitPay, false);
-                setSelect(lineWaitSending, false);
-                setSelect(lineWaitReceive, false);
-                setSelect(lineWaitEvaluate, true);
-                if (type == 0) {
-                    status = 0;
-                    getOrderList(status);
-                } else {
-                    multipleItemOrderModels.clear();
-                    currSetMealOder = waitEvalSetMealOder;
-                    for (int i = 0; i < currSetMealOder.size(); i++) {
-                        MultipleItemOrderModel multipleItemOrderModel = new MultipleItemOrderModel(MultipleItemOrderModel.SETMEAL_ORDER);
-                        multipleItemOrderModel.setSetMealOrderModel(currSetMealOder.get(i));
-                        multipleItemOrderModels.add(multipleItemOrderModel);
-                    }
-                    mAdapter.setNewData(multipleItemOrderModels);
-                    mAdapter.notifyDataSetChanged();
-                }
-
-                break;
         }
 
-    }
-
-    public void setSelect(View view, boolean select) {
-        view.setSelected(select);
     }
 
     @Override
@@ -510,12 +463,13 @@ public class MyOrderActivity2 extends BaseActivity {
                         //super.onSuccess(MyOrderActivity2.this, response.body().msg, response.body().code);
                         if (response.body().code == 0 && response.body().data != null) {
                             GoodOrderCountMode orderCountMode = response.body().data;
-                            if (orderCountMode != null) {
-                                waitPayOrder.setText("待付款(" + orderCountMode.getWaitPay() + ")");
-                                waitSendingOrder.setText("待发货(" + orderCountMode.getWaitDeliver() + ")");
-                                waitReceiveOrder.setText("待收货(" + orderCountMode.getWaitReceiving() + ")");
-                                waitEvaluateOrder.setText("待评价(" + orderCountMode.getWaitEval() + ")");
-                            }
+                            tabs.clear();
+                            tabs.add(new PlaneOrderTableEntity("全部"));
+                            tabs.add(new PlaneOrderTableEntity("待付款(" + orderCountMode.getWaitPay() + ")"));
+                            tabs.add(new PlaneOrderTableEntity("待发货(" + orderCountMode.getWaitDeliver() + ")"));
+                            tabs.add(new PlaneOrderTableEntity("待收货(" + orderCountMode.getWaitReceiving() + ")"));
+                            tabs.add(new PlaneOrderTableEntity("待评价(" + orderCountMode.getWaitEval() + ")"));
+                            tabLayout.setTabData(tabs);
                         }
                     }
 
@@ -546,32 +500,33 @@ public class MyOrderActivity2 extends BaseActivity {
                         goneloadDialog();
                         refreshLayout.finishRefresh();
                         if (response.body().code == 0 && response.body().data != null) {
-                            if (response != null) {
-                                waitPayOrder.setText("待付款(" + response.body().data.getWaitPayCount() + ")");
-                                waitSendingOrder.setText("待使用(" + response.body().data.getWaitUseCount() + ")");
-                                waitEvaluateOrder.setText("待评价(" + response.body().data.getWaitEvalCount() + ")");
-                                allSetMealOder = response.body().data.getAll();
-                                waitEvalSetMealOder = response.body().data.getWaitEval();
-                                waitPaySetMealOder = response.body().data.getWaitPay();
-                                waitUseSetMealOder = response.body().data.getWaitUse();
-                                if (butType == 0) {
-                                    currSetMealOder = allSetMealOder;
-                                } else if (butType == 1) {
-                                    currSetMealOder = waitPaySetMealOder;
-                                } else if (butType == 2) {
-                                    currSetMealOder = waitUseSetMealOder;
-                                } else if (butType == 4) {
-                                    currSetMealOder = waitEvalSetMealOder;
-                                }
-                                multipleItemOrderModels.clear();
-                                for (int i = 0; i < currSetMealOder.size(); i++) {
-                                    MultipleItemOrderModel multipleItemOrderModel = new MultipleItemOrderModel(MultipleItemOrderModel.SETMEAL_ORDER);
-                                    multipleItemOrderModel.setSetMealOrderModel(currSetMealOder.get(i));
-                                    multipleItemOrderModels.add(multipleItemOrderModel);
-                                }
-                                mAdapter.setNewData(multipleItemOrderModels);
-                                mAdapter.notifyDataSetChanged();
+                            tabs.clear();
+                            tabs.add(new PlaneOrderTableEntity("全部"));
+                            tabs.add(new PlaneOrderTableEntity("待付款(" + response.body().data.getWaitPayCount() + ")"));
+                            tabs.add(new PlaneOrderTableEntity("待使用(" + response.body().data.getWaitUseCount() + ")"));
+                            tabs.add(new PlaneOrderTableEntity("待评价(" + response.body().data.getWaitEvalCount() + ")"));
+                            tabLayout2.setTabData(tabs);
+                            allSetMealOder = response.body().data.getAll();
+                            waitEvalSetMealOder = response.body().data.getWaitEval();
+                            waitPaySetMealOder = response.body().data.getWaitPay();
+                            waitUseSetMealOder = response.body().data.getWaitUse();
+                            if (butType == 0) {
+                                currSetMealOder = allSetMealOder;
+                            } else if (butType == 1) {
+                                currSetMealOder = waitPaySetMealOder;
+                            } else if (butType == 2) {
+                                currSetMealOder = waitUseSetMealOder;
+                            } else if (butType == 4) {
+                                currSetMealOder = waitEvalSetMealOder;
                             }
+                            multipleItemOrderModels.clear();
+                            for (int i = 0; i < currSetMealOder.size(); i++) {
+                                MultipleItemOrderModel multipleItemOrderModel = new MultipleItemOrderModel(MultipleItemOrderModel.SETMEAL_ORDER);
+                                multipleItemOrderModel.setSetMealOrderModel(currSetMealOder.get(i));
+                                multipleItemOrderModels.add(multipleItemOrderModel);
+                            }
+                            mAdapter.setNewData(multipleItemOrderModels);
+                            mAdapter.notifyDataSetChanged();
                         }
                     }
 

@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.home.WebViewActivity;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.PlaneResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
@@ -32,6 +33,7 @@ import com.feitianzhu.huangliwo.model.CustomPriceDetailInfo;
 import com.feitianzhu.huangliwo.model.DocBookingPriceTagInfo;
 import com.feitianzhu.huangliwo.model.DocPassengerInfo;
 import com.feitianzhu.huangliwo.model.DocResultBookingInfo;
+import com.feitianzhu.huangliwo.model.GoBackBaggageRuleInfo;
 import com.feitianzhu.huangliwo.model.GoBackBookingInfo;
 import com.feitianzhu.huangliwo.model.GoBackFlight;
 import com.feitianzhu.huangliwo.model.GoBackTripInfo;
@@ -80,7 +82,7 @@ public class EditPlaneReserveActivity extends BaseActivity {
     private List<RefundChangeInfo> refundChangeInfos;
     private SelectPassengerAdapter mAdapter;
     private BaggageRuleInfo baggageRuleInfo;
-    private List<BaggageRuleInfo> baggageRuleInfos;
+    private List<GoBackBaggageRuleInfo> baggageRuleInfos;
     private List<PassengerModel> list = new ArrayList<>();
     private CustomPriceDetailInfo priceDetailInfo = new CustomPriceDetailInfo();
     private CustomPlaneDetailInfo customPlaneDetailInfo;
@@ -221,12 +223,14 @@ public class EditPlaneReserveActivity extends BaseActivity {
                         + interBack.flightSegments.get(interBack.flightSegments.size() - 1).arrAirportName + interBack.flightSegments.get(interBack.flightSegments.size() - 1).arrTerminal);
                 price.setText("¥" + MathUtils.subZero(String.valueOf(customPlaneDetailInfo.customInterPriceInfo.price)));
                 arfAndTof.setText("机建+燃油 ¥0");
-                if ("economy".equals(customPlaneDetailInfo.customInterPriceInfo.cabinLevel)) {
-                    tvCabinType.setText("经济舱(" + customPlaneDetailInfo.customInterPriceInfo.cabin + ")");
-                } else if ("first".equals(customPlaneDetailInfo.customInterPriceInfo.cabinLevel)) {
-                    tvCabinType.setText("头等舱(" + customPlaneDetailInfo.customInterPriceInfo.cabin + ")");
-                } else if ("business".equals(customPlaneDetailInfo.customInterPriceInfo.cabinLevel)) {
-                    tvCabinType.setText("商务舱(" + customPlaneDetailInfo.customInterPriceInfo.cabin + ")");
+
+
+                if ("economy".equals(customPlaneDetailInfo.customInterPriceInfo.cabinLevel.split("/")[0])) {
+                    tvCabinType.setText("经济舱(" + customPlaneDetailInfo.customInterPriceInfo.cabin.split("/")[0] + ")");
+                } else if ("first".equals(customPlaneDetailInfo.customInterPriceInfo.cabinLevel.split("/")[0])) {
+                    tvCabinType.setText("头等舱(" + customPlaneDetailInfo.customInterPriceInfo.cabin.split("/")[0] + ")");
+                } else if ("business".equals(customPlaneDetailInfo.customInterPriceInfo.cabinLevel.split("/")[0])) {
+                    tvCabinType.setText("商务舱(" + customPlaneDetailInfo.customInterPriceInfo.cabin.split("/")[0] + ")");
                 } else {
                     tvCabinType.setText("未配置");
                 }
@@ -395,26 +399,26 @@ public class EditPlaneReserveActivity extends BaseActivity {
 
             String baggageRuleReqJson = new Gson().toJson(baggageRuleReqParamModelList);
 
-            OkGo.<PlaneResponse<List<BaggageRuleInfo>>>post(Urls.GET_GO_BACK_BAGGAGERULES)
+            OkGo.<PlaneResponse<List<GoBackBaggageRuleInfo>>>post(Urls.GET_GO_BACK_BAGGAGERULES)
                     .tag(this)
                     .params(Constant.ACCESSTOKEN, token)
                     .params(Constant.USERID, userId)
                     .params("listStr", baggageRuleReqJson)
-                    .execute(new JsonCallback<PlaneResponse<List<BaggageRuleInfo>>>() {
+                    .execute(new JsonCallback<PlaneResponse<List<GoBackBaggageRuleInfo>>>() {
                         @Override
-                        public void onSuccess(Response<PlaneResponse<List<BaggageRuleInfo>>> response) {
+                        public void onSuccess(Response<PlaneResponse<List<GoBackBaggageRuleInfo>>> response) {
                             super.onSuccess(EditPlaneReserveActivity.this, response.body().message, response.body().code);
                             if (response.body().code == 0 && response.body().result != null) {
                                 baggageRuleInfos = response.body().result;
                                 new XPopup.Builder(EditPlaneReserveActivity.this)
                                         .enableDrag(false)
                                         .asCustom(new CustomLuggageBuyTicketNoticeView(EditPlaneReserveActivity.this
-                                        ).setType(type).setGoData(baggageRuleInfos.get(0)).setBackData(baggageRuleInfos.get(1))).show();
+                                        ).setType(type).setGoData(baggageRuleInfos.get(0).baggageRuleInfo).setBackData(baggageRuleInfos.get(1).baggageRuleInfo)).show();
                             }
                         }
 
                         @Override
-                        public void onError(Response<PlaneResponse<List<BaggageRuleInfo>>> response) {
+                        public void onError(Response<PlaneResponse<List<GoBackBaggageRuleInfo>>> response) {
                             super.onError(response);
                         }
                     });
@@ -451,11 +455,16 @@ public class EditPlaneReserveActivity extends BaseActivity {
                 startActivityForResult(intent, REQUEST_CODE);
                 break;
             case R.id.tvReserveNotice:
-                Integer[] integers = new Integer[]{R.mipmap.k04_04yuding1, R.mipmap.k04_04yuding2, R.mipmap.k04_04yuding3};
+                Intent intent1 = new Intent(EditPlaneReserveActivity.this, WebViewActivity.class);
+                intent1.putExtra("url", "http://39.106.65.35:8088/fhwl/static/1.html");
+                intent1.putExtra("title", "机票预订须知");
+                startActivity(intent1);
+
+               /* Integer[] integers = new Integer[]{R.mipmap.k04_04yuding1, R.mipmap.k04_04yuding2, R.mipmap.k04_04yuding3};
                 new XPopup.Builder(EditPlaneReserveActivity.this)
                         .enableDrag(false)
                         .asCustom(new CustomPlaneProtocolView(this
-                        ).setTitle("机票预订须知").setData(Arrays.asList(integers))).show();
+                        ).setTitle("机票预订须知").setData(Arrays.asList(integers))).show();*/
                 break;
             case R.id.btn_submit:
                 if (list.size() == 0) {
@@ -474,7 +483,7 @@ public class EditPlaneReserveActivity extends BaseActivity {
                 } else {
                     new XPopup.Builder(this)
                             .enableDrag(false)
-                            .asCustom(new CustomTotalPriceInfoView(EditPlaneReserveActivity.this).setData(priceDetailInfo).setType(type)).show();
+                            .asCustom(new CustomTotalPriceInfoView(EditPlaneReserveActivity.this).setData(priceDetailInfo)).show();
                 }
                 break;
         }
@@ -653,8 +662,7 @@ public class EditPlaneReserveActivity extends BaseActivity {
                     public void onSuccess(Response<PlaneResponse> response) {
                         super.onSuccess(EditPlaneReserveActivity.this, response.body().message, response.body().code);
                         if (response.body().code == 0) {
-                            Intent intent = new Intent(EditPlaneReserveActivity.this, PlaneOrderDetailActivity.class);
-                            startActivity(intent);
+                            ToastUtils.showShortToast(response.body().message);
                         }
                     }
 
@@ -699,7 +707,7 @@ public class EditPlaneReserveActivity extends BaseActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        OkGo.<PlaneResponse>get(Urls.NET_PLANE_ORDER)
+        OkGo.<PlaneResponse>post(Urls.NET_PLANE_ORDER)
                 .tag(this)
                 .params(Constant.ACCESSTOKEN, token)
                 .params(Constant.USERID, userId)
@@ -712,6 +720,9 @@ public class EditPlaneReserveActivity extends BaseActivity {
                     @Override
                     public void onSuccess(Response<PlaneResponse> response) {
                         super.onSuccess(EditPlaneReserveActivity.this, response.body().message, response.body().code);
+                        if (response.body().code == 0) {
+                            ToastUtils.showShortToast(response.body().message);
+                        }
                     }
 
                     @Override
@@ -744,9 +755,7 @@ public class EditPlaneReserveActivity extends BaseActivity {
                     public void onSuccess(Response<PlaneResponse<CreateOrderInfo>> response) {
                         super.onSuccess(EditPlaneReserveActivity.this, response.body().message, response.body().code);
                         if (response.body().code == 0) {
-                            Intent intent = new Intent(EditPlaneReserveActivity.this, PlaneOrderDetailActivity.class);
-                            startActivity(intent);
-
+                            ToastUtils.showShortToast(response.body().message);
                         }
                     }
 

@@ -33,6 +33,7 @@ import com.feitianzhu.huangliwo.model.MultipleGoSearchFightInfo;
 import com.feitianzhu.huangliwo.model.PlaneDetailInfo;
 import com.feitianzhu.huangliwo.model.PlaneGoBackDetailInfo;
 import com.feitianzhu.huangliwo.model.PlaneInternationalDetailInfo;
+import com.feitianzhu.huangliwo.model.RefundChangeInfo;
 import com.feitianzhu.huangliwo.model.SearchFlightModel;
 import com.feitianzhu.huangliwo.model.VenDorsInfo;
 import com.feitianzhu.huangliwo.utils.DateUtils;
@@ -71,6 +72,8 @@ public class PlaneDetailActivity extends BaseActivity {
     private PlaneDetailInfo planeDetailInfo;
     private PlaneInternationalDetailInfo internationalDetailInfo;
     private CustomPlaneDetailInfo customPlaneDetailInfo = new CustomPlaneDetailInfo();
+    private RefundChangeInfo refundChangeInfo;
+    private List<RefundChangeInfo> refundChangeInfos;
     private String userId;
     private String token;
     private int type;
@@ -211,9 +214,9 @@ public class PlaneDetailActivity extends BaseActivity {
                 layoutTop1.setVisibility(View.VISIBLE);
                 layoutTop2.setVisibility(View.GONE);
                 promptContent.setText("【机场提示】该航班到达机场为北京大兴国际机场，距市区约46公里，搭乘地铁到市区约30分钟。");
-                oneWayCompanyName.setText(flightSegmentInfo.get(0).mainCarrierShortName + flightSegmentInfo.get(0).mainCode + flightSegmentInfo.get(0).planeTypeName + "无餐\n以下价格含机建燃油");
+                oneWayCompanyName.setText(flightSegmentInfo.get(0).carrierShortName + flightSegmentInfo.get(0).flightNum + flightSegmentInfo.get(0).planeTypeName + "无餐\n以下价格含机建燃油");
                 oneWayStarDate.setText(DateUtils.strToStr(flightSegmentInfo.get(0).depDate) + DateUtils.strToDate2(flightSegmentInfo.get(0).depDate));
-                oneWayEndDate.setText(DateUtils.strToStr(flightSegmentInfo.get(0).arrdate) + DateUtils.strToDate2(flightSegmentInfo.get(0).arrdate));
+                oneWayEndDate.setText(DateUtils.strToStr(flightSegmentInfo.get(0).arrDate) + DateUtils.strToDate2(flightSegmentInfo.get(0).arrDate));
                 oneWayBTime.setText(flightSegmentInfo.get(0).depTime);
                 oneWayETime.setText(flightSegmentInfo.get(0).arrTime);
                 oneWayDepAirport.setText(flightSegmentInfo.get(0).depAirportName + flightSegmentInfo.get(0).depTerminal);
@@ -274,8 +277,8 @@ public class PlaneDetailActivity extends BaseActivity {
             twoWayBackFlightTime.setText(DateUtils.minToHour(goBackSearchFlightInfo.internationalFlight.backTrip.duration));
             twoWayBackDepAirportName.setText(goBackSearchFlightInfo.internationalFlight.backTrip.flightSegments.get(0).depAirportName);
             twoWayBackArrAirportName.setText(goBackSearchFlightInfo.internationalFlight.backTrip.flightSegments.get(goBackSearchFlightInfo.internationalFlight.backTrip.flightSegments.size() - 1).arrAirportName);
-            twoWayGoCom.setText(goBackSearchFlightInfo.internationalFlight.goTrip.flightSegments.get(0).mainCarrierShortName + goBackSearchFlightInfo.internationalFlight.goTrip.flightSegments.get(0).mainCode + goBackSearchFlightInfo.internationalFlight.goTrip.flightSegments.get(0).planeTypeName + "无餐\n以下价格含机建燃油");
-            twoWayBackCom.setText(goBackSearchFlightInfo.internationalFlight.backTrip.flightSegments.get(0).mainCarrierShortName + goBackSearchFlightInfo.internationalFlight.backTrip.flightSegments.get(0).mainCode + goBackSearchFlightInfo.internationalFlight.backTrip.flightSegments.get(0).planeTypeName + "无餐\n以下价格含机建燃油");
+            twoWayGoCom.setText(goBackSearchFlightInfo.internationalFlight.goTrip.flightSegments.get(0).carrierShortName + goBackSearchFlightInfo.internationalFlight.goTrip.flightSegments.get(0).flightNum + goBackSearchFlightInfo.internationalFlight.goTrip.flightSegments.get(0).planeTypeName + "无餐\n以下价格含机建燃油");
+            twoWayBackCom.setText(goBackSearchFlightInfo.internationalFlight.backTrip.flightSegments.get(0).carrierShortName + goBackSearchFlightInfo.internationalFlight.backTrip.flightSegments.get(0).flightNum + goBackSearchFlightInfo.internationalFlight.backTrip.flightSegments.get(0).planeTypeName + "无餐\n以下价格含机建燃油");
 
             if (goBackSearchFlightInfo.internationalFlight.goTrip.crossDays == 0) {
                 twoWayGoCrossDays.setVisibility(View.GONE);
@@ -299,16 +302,31 @@ public class PlaneDetailActivity extends BaseActivity {
     }
 
     public void initListener() {
-
         mAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                 switch (view.getId()) {
                     case R.id.luggage_change_notice:
-                        new XPopup.Builder(PlaneDetailActivity.this)
-                                .enableDrag(false)
-                                .asCustom(new CustomCancelChangePopView(PlaneDetailActivity.this
-                                ).setType(type).setLuggage(true)).show();
+                        if (type == 0) {
+                            customPlaneDetailInfo.customDocGoFlightInfo = planeDetailInfo;
+                            customPlaneDetailInfo.customDocGoPriceInfo = multiPriceInfos.get(position).venDorsInfo;
+                            customPlaneDetailInfo.goDate = depDate;
+                        } else if (type == 1) {
+                            customPlaneDetailInfo.customInterFlightInfo = goSearchFightInfo.internationalFlightModel;
+                            customPlaneDetailInfo.customInterPriceInfo = multiPriceInfos.get(position).internationalPriceInfo;
+                            customPlaneDetailInfo.goDate = depDate;
+                        } else if (type == 2) {
+                            customPlaneDetailInfo.customDocGoBackFlightInfo = goBackSearchFlightInfo.domesticFlight;
+                            customPlaneDetailInfo.customDocGoBackPriceInfo = multiPriceInfos.get(position).goBackVendors;
+                            customPlaneDetailInfo.goDate = depDate;
+                            customPlaneDetailInfo.backDate = retDate;
+                        } else {
+                            customPlaneDetailInfo.customInterFlightInfo = goBackSearchFlightInfo.internationalFlight;
+                            customPlaneDetailInfo.customInterPriceInfo = multiPriceInfos.get(position).internationalPriceInfo;
+                            customPlaneDetailInfo.goDate = depDate;
+                            customPlaneDetailInfo.backDate = retDate;
+                        }
+                        getRefundChange();
                         break;
                     case R.id.btn_reserve:
                         Intent intent = new Intent(PlaneDetailActivity.this, EditPlaneReserveActivity.class);
@@ -339,6 +357,90 @@ public class PlaneDetailActivity extends BaseActivity {
                 }
             }
         });
+    }
+
+    public void getRefundChange() {
+        if (type == 0) {
+            OkGo.<PlaneResponse<RefundChangeInfo>>get(Urls.GET_TGQNEWEXPLAIN)
+                    .tag(this)
+                    .params(Constant.ACCESSTOKEN, token)
+                    .params(Constant.USERID, userId)
+                    .params("flightNum", customPlaneDetailInfo.customDocGoPriceInfo.shareShowAct ? customPlaneDetailInfo.customDocGoFlightInfo.actCode : customPlaneDetailInfo.customDocGoFlightInfo.code)
+                    .params("cabin", customPlaneDetailInfo.customDocGoPriceInfo.cabin)
+                    .params("dpt", customPlaneDetailInfo.customDocGoFlightInfo.depCode)
+                    .params("arr", customPlaneDetailInfo.customDocGoFlightInfo.arrCode)
+                    .params("dptDate", customPlaneDetailInfo.customDocGoFlightInfo.date)
+                    .params("dptTime", customPlaneDetailInfo.customDocGoFlightInfo.btime)
+                    .params("policyId", customPlaneDetailInfo.customDocGoPriceInfo.PolicyId)
+                    .params("maxSellPrice", String.valueOf(customPlaneDetailInfo.customDocGoPriceInfo.barePrice))
+                    .params("minSellPrice", String.valueOf(customPlaneDetailInfo.customDocGoPriceInfo.barePrice))
+                    .params("printPrice", String.valueOf(customPlaneDetailInfo.customDocGoPriceInfo.vppr))
+                    .params("tagName", customPlaneDetailInfo.customDocGoPriceInfo.prtag)
+                    .params("translate", false)
+                    .params("sfid", customPlaneDetailInfo.customDocGoPriceInfo.groupId)
+                    .params("needPercentTgqText", false)
+                    .params("businessExt", customPlaneDetailInfo.customDocGoPriceInfo.businessExt)
+                    .params("client", customPlaneDetailInfo.customDocGoPriceInfo.domain)
+                    //.params("childCabin")
+                    //.params("childSellPrice")
+                    .execute(new JsonCallback<PlaneResponse<RefundChangeInfo>>() {
+                        @Override
+                        public void onSuccess(Response<PlaneResponse<RefundChangeInfo>> response) {
+                            super.onSuccess(PlaneDetailActivity.this, response.body().message, response.body().code);
+                            refundChangeInfo = response.body().result;
+                            if (response.body().code == 0 && response.body().result != null) {
+                                new XPopup.Builder(PlaneDetailActivity.this)
+                                        .enableDrag(false)
+                                        .asCustom(new CustomCancelChangePopView(PlaneDetailActivity.this
+                                        ).setType(type).setGoData(refundChangeInfo).setLuggage(false)).show();
+                            }
+                        }
+
+                        @Override
+                        public void onError(Response<PlaneResponse<RefundChangeInfo>> response) {
+                            super.onError(response);
+                        }
+                    });
+
+        } else if (type == 2) {
+            OkGo.<PlaneResponse<List<RefundChangeInfo>>>post(Urls.GET_GO_BACK_TGQNEWBACK)
+                    .tag(this)
+                    .params(Constant.ACCESSTOKEN, token)
+                    .params(Constant.USERID, userId)
+                    .params("client", customPlaneDetailInfo.customDocGoBackPriceInfo.domain)
+                    .params("carrier", customPlaneDetailInfo.customDocGoBackFlightInfo.go.carrier)
+                    .params("depCode", customPlaneDetailInfo.customDocGoBackFlightInfo.go.depAirportCode)
+                    .params("arrCode", customPlaneDetailInfo.customDocGoBackFlightInfo.go.arrAirportCode)
+                    .params("goDate", customPlaneDetailInfo.goDate)
+                    .params("backDate", customPlaneDetailInfo.backDate)
+                    .params("outCabin", customPlaneDetailInfo.customDocGoBackPriceInfo.outCabin)
+                    .params("retCabin", customPlaneDetailInfo.customDocGoBackPriceInfo.retCabin)
+                    .params("businessExts", customPlaneDetailInfo.customDocGoBackPriceInfo.businessExts)
+                    .params("goFlightNum", customPlaneDetailInfo.customDocGoBackFlightInfo.go.flightCode)
+                    .params("backFlightNum", customPlaneDetailInfo.customDocGoBackFlightInfo.back.flightCode)
+                    .params("policyId", customPlaneDetailInfo.customDocGoBackPriceInfo.policyId)
+                    .params("price", customPlaneDetailInfo.customDocGoBackPriceInfo.price)
+                    .params("barePrice", customPlaneDetailInfo.customDocGoBackPriceInfo.barePrice)
+                    .params("tagName", customPlaneDetailInfo.customDocGoBackPriceInfo.tagName)
+                    .execute(new JsonCallback<PlaneResponse<List<RefundChangeInfo>>>() {
+                        @Override
+                        public void onSuccess(Response<PlaneResponse<List<RefundChangeInfo>>> response) {
+                            super.onSuccess(PlaneDetailActivity.this, response.body().message, response.body().code);
+                            if (response.body().code == 0 && response.body().result != null) {
+                                refundChangeInfos = response.body().result;
+                                new XPopup.Builder(PlaneDetailActivity.this)
+                                        .enableDrag(false)
+                                        .asCustom(new CustomCancelChangePopView(PlaneDetailActivity.this
+                                        ).setType(type).setGoData(refundChangeInfos.get(0)).setBackData(refundChangeInfos.get(1)).setLuggage(false)).show();
+                            }
+                        }
+
+                        @Override
+                        public void onError(Response<PlaneResponse<List<RefundChangeInfo>>> response) {
+                            super.onError(response);
+                        }
+                    });
+        }
     }
 
     @Override

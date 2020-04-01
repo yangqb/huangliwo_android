@@ -30,4 +30,12 @@ public class PlaneOrderModel implements Serializable {
     public int status;//(integer, optional): 订单状态 ,
     public int type;//(integer, optional): 机票类型：1国内；2往返；3国际 ,
     public int userId;// (integer, optional): 用户id
+    public String dptAirport;//":"大兴国际机场",
+    public String arrAirport;//":"虹桥机场",
+    public String dptTerminal;//":"",
+    public String arrTerminal;//":"T2",
+    public String backDptAirport;//":"虹桥机场",
+    public String backArrAirport;//":"大兴国际机场",
+    public String backDptTerminal;//":"T2",
+    public String backArrTerminal;//":""
 }

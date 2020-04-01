@@ -7,11 +7,12 @@ package com.feitianzhu.huangliwo.utils;
 public class Urls {
 
 
-    private static final String BASE_URL = "http://www.huangliwo.top:8088/"; //正式环境
-    //private static final String BASE_URL = "http://39.106.65.35:8088/"; //测试地址
+    //private static final String BASE_URL = "http://www.huangliwo.top:8088/"; //正式环境
+    private static final String BASE_URL = "http://39.106.65.35:8088/"; //测试地址
     //private static final String BASE_URL = "http://192.168.0.21:8089/";//钟工本地地址
     //private static final String BASE_URL = "http://192.168.0.15:8089/"; //周工本地地址
-    private static final String TICKET_BASE_URL = "http://39.106.65.35:8087/"; //机票测试
+    //private static final String TICKET_BASE_URL = "http://39.106.65.35:8087/"; //机票测试
+    private static final String TICKET_BASE_URL = "http://192.168.0.9:8087/"; //周工机票本地
     /**
      * 注册
      */
@@ -584,6 +585,20 @@ public class Urls {
     /*
      * 机票订单列表
      * */
-    public static final String GET_PLANE_ORDER = TICKET_BASE_URL + "getOrderList";
+    public static final String GET_PLANE_ORDER = TICKET_BASE_URL + "planeOrder/getOrderList";
+    /*
+     * 国际单程和往返订单详情
+     * */
+    public static final String GET_INTERNATIONAl_ORDER_DETAIL = TICKET_BASE_URL + "international/orderSelect";
+    /*
+     * 国内单程订单详情
+     * */
+    public static final String DOMESTIC_ORDER_DETAIL = TICKET_BASE_URL + "orderSelect";
+
+    /*
+     * 国内往返订单详细
+     * */
+    public static final String GO_BACK_ORDER_DETAIL = TICKET_BASE_URL + "goBack/selectOrder";
+
 
 }

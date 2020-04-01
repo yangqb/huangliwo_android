@@ -162,8 +162,8 @@ public class SearchPlanActivity extends BaseActivity {
                     .tag(this)
                     .params(Constant.ACCESSTOKEN, token)
                     .params(Constant.USERID, userId)
-                    .params("depCity", "PEK")
-                    .params("arrCity", "WAS")
+                    .params("depCity", "PAR")
+                    .params("arrCity", "BER")
                     .params("depDate", date)
                     //.params("retDate", "")往返必填
                     .params("source", "ICP_SELECT_open.3724")

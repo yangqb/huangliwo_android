@@ -82,7 +82,7 @@ public class CustomPlaneInfoView extends CenterPopupView {
             goDepAirport.setText(interGo.flightSegments.get(0).depAirportName + interGo.flightSegments.get(0).depTerminal);
             goArrAirport.setText(interGo.flightSegments.get(interGo.flightSegments.size() - 1).arrAirportName + interGo.flightSegments.get(interGo.flightSegments.size() - 1).arrTerminal);
             goETime.setText(interGo.flightSegments.get(interGo.flightSegments.size() - 1).arrTime);
-            tvGoCompany.setText(interGo.flightSegments.get(0).mainCarrierFullName + interGo.flightSegments.get(0).planeTypeCode + "不提供餐食");
+            tvGoCompany.setText(interGo.flightSegments.get(0).carrierShortName + interGo.flightSegments.get(0).flightNum + interGo.flightSegments.get(0).planeTypeName + "不提供餐食");
             goFlightTimes.setText(DateUtils.minToHour(interGo.duration));
         } else if (type == 2) {
             String goDate = DateUtils.strToStr(detailInfo.goDate) + DateUtils.strToDate2(detailInfo.goDate);
@@ -113,7 +113,7 @@ public class CustomPlaneInfoView extends CenterPopupView {
             goDepAirport.setText(interGo.flightSegments.get(0).depAirportName + interGo.flightSegments.get(0).depTerminal);
             goArrAirport.setText(interGo.flightSegments.get(interGo.flightSegments.size() - 1).arrAirportName + interGo.flightSegments.get(interGo.flightSegments.size() - 1).arrTerminal);
             goETime.setText(interGo.flightSegments.get(interGo.flightSegments.size() - 1).arrTime);
-            tvGoCompany.setText(interGo.flightSegments.get(0).mainCarrierFullName + interGo.flightSegments.get(0).planeTypeCode + "不提供餐食");
+            tvGoCompany.setText(interGo.flightSegments.get(0).carrierShortName + interGo.flightSegments.get(0).flightNum + interGo.flightSegments.get(0).planeTypeCode + "不提供餐食");
             goFlightTimes.setText(DateUtils.minToHour(interGo.duration));
 
             GoBackTripInfo interBack = detailInfo.customInterFlightInfo.backTrip;
@@ -123,7 +123,7 @@ public class CustomPlaneInfoView extends CenterPopupView {
             backDepAirport.setText(interBack.flightSegments.get(0).depAirportName + interBack.flightSegments.get(0).depTerminal);
             backArrAirport.setText(interBack.flightSegments.get(interBack.flightSegments.size() - 1).arrAirportName + interBack.flightSegments.get(interBack.flightSegments.size() - 1).arrTerminal);
             backETime.setText(interBack.flightSegments.get(interBack.flightSegments.size() - 1).arrTime);
-            tvBackCompany.setText(interBack.flightSegments.get(0).mainCarrierFullName + interBack.flightSegments.get(0).planeTypeCode + "不提供餐食");
+            tvBackCompany.setText(interBack.flightSegments.get(0).carrierShortName + interGo.flightSegments.get(0).flightNum + interBack.flightSegments.get(0).planeTypeCode + "不提供餐食");
             backFlightTimes.setText(DateUtils.minToHour(interBack.duration));
         }
 

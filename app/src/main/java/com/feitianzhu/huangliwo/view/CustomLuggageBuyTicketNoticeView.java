@@ -42,8 +42,10 @@ public class CustomLuggageBuyTicketNoticeView extends CenterPopupView {
         super.onCreate();
         if (type == 0 || type == 1) {
             findViewById(R.id.back_bagg).setVisibility(GONE);
+            findViewById(R.id.go_tag).setVisibility(GONE);
         } else {
             findViewById(R.id.back_bagg).setVisibility(VISIBLE);
+            findViewById(R.id.go_tag).setVisibility(VISIBLE);
         }
         TextView go_baggText = findViewById(R.id.go_baggText);
         TextView back_baggText = findViewById(R.id.back_baggText);

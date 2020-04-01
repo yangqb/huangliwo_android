@@ -13,6 +13,8 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,6 +40,7 @@ import com.feitianzhu.huangliwo.pushshop.bean.EditMerchantInfo;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsClassifyModel;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsModel;
 import com.feitianzhu.huangliwo.pushshop.bean.UpdataMechantsEvent;
+import com.feitianzhu.huangliwo.utils.KeyboardUtils;
 import com.feitianzhu.huangliwo.utils.MathUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.StringUtils;
@@ -129,6 +132,8 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
     TextView merchantsClsName;
     @BindView(R.id.llCode)
     RelativeLayout llCode;
+    @BindView(R.id.parent_view)
+    LinearLayout parentView;
     private List<MerchantsClassifyModel.ListBean> listBean;
     private double latitude;
     private double longitude;
@@ -296,6 +301,7 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
                 getSmsCode(phone);
                 break;
             case R.id.rl_merchants_type:
+                KeyboardUtils.hideKeyboard(parentView);
                 List<String> strings = new ArrayList<>();
                 if (listBean != null && listBean.size() > 0) {
                     for (int i = 0; i < listBean.size(); i++) {
@@ -320,6 +326,7 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
 
                 break;
             case R.id.rl_merchants_area:
+                KeyboardUtils.hideKeyboard(parentView);
                 setSelectAddress();
                 break;
         }
