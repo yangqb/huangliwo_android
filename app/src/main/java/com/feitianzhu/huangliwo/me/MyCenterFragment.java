@@ -354,8 +354,8 @@ public class MyCenterFragment extends SFFragment {
                         startActivity(intent);
                         break;
                     case 8: //分享
-                        intent = new Intent(getActivity(), MineQrcodeActivity.class);
-                        intent.putExtra(MineQrcodeActivity.MINE_DATA, mTempData);
+                        intent = new Intent(getActivity(), RecruitActivity.class);
+                        intent.putExtra(RecruitActivity.MINE_DATA, mTempData);
                         startActivity(intent);
                         break;
                     case 1: //购物车
@@ -418,6 +418,7 @@ public class MyCenterFragment extends SFFragment {
                 break;
             case R.id.iv_qrcode:
                 Intent intent = new Intent(getActivity(), MineQrcodeActivity.class);
+                intent.putExtra(MineQrcodeActivity.SHARE_TYPE, 1);
                 intent.putExtra(MineQrcodeActivity.MINE_DATA, mTempData);
                 startActivity(intent);
                 break;

@@ -32,7 +32,11 @@ import com.feitianzhu.huangliwo.common.base.SFFragment;
 import com.feitianzhu.huangliwo.financial.FinancialHomeActivity;
 import com.feitianzhu.huangliwo.home.adapter.HAdapter;
 import com.feitianzhu.huangliwo.home.adapter.HomeRecommendAdapter2;
+import com.feitianzhu.huangliwo.home.adapter.HotGoodsAdapter;
+import com.feitianzhu.huangliwo.home.adapter.IndicatorAdapter;
+import com.feitianzhu.huangliwo.home.adapter.OptMerchantsAdapter;
 import com.feitianzhu.huangliwo.home.entity.HomeEntity;
+import com.feitianzhu.huangliwo.home.entity.IndicatorEntity;
 import com.feitianzhu.huangliwo.home.entity.NoticeModel;
 import com.feitianzhu.huangliwo.home.entity.ShopAndMerchants;
 import com.feitianzhu.huangliwo.http.JsonCallback;
@@ -48,7 +52,9 @@ import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.Province;
 import com.feitianzhu.huangliwo.model.ShopClassify;
 import com.feitianzhu.huangliwo.plane.PlaneHomeActivity;
+import com.feitianzhu.huangliwo.pushshop.bean.MerchantsModel;
 import com.feitianzhu.huangliwo.shop.NewYearShoppingActivity;
+import com.feitianzhu.huangliwo.shop.ShopMerchantsDetailActivity;
 import com.feitianzhu.huangliwo.shop.ShopsActivity;
 import com.feitianzhu.huangliwo.shop.ShopsDetailActivity;
 import com.feitianzhu.huangliwo.shop.ui.SearchShopActivity;
@@ -68,6 +74,7 @@ import com.google.gson.Gson;
 import com.itheima.roundedimageview.RoundedImageView;
 import com.lxj.xpopup.XPopup;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.Response;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
@@ -95,7 +102,6 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import okhttp3.Call;
 import okhttp3.Request;
-import okhttp3.Response;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
@@ -109,7 +115,7 @@ import static com.feitianzhu.huangliwo.login.LoginEvent.EDITOR_INFO;
  * @email QQ:694125155
  * @Date 2019/11/16 0016 下午 4:35
  */
-public class HomeFragment2 extends SFFragment implements ProvinceCallBack {
+public class HomeFragment2 extends SFFragment implements ProvinceCallBack, PagerGridLayoutManager.PageListener {
     Unbinder unbinder;
     @BindView(R.id.recyclerview)
     RecyclerView mRecyclerview;
@@ -131,10 +137,18 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack {
     TextView tvNotice;
     @BindView(R.id.ll_notice)
     LinearLayout llNotice;
+    @BindView(R.id.indicatorRecyclerView)
+    RecyclerView indicatorRecyclerView;
+    @BindView(R.id.optRecyclerView)
+    RecyclerView optRecyclerView;
+    @BindView(R.id.hotRecyclerView)
+    RecyclerView hotRecyclerView;
     private List<ShopAndMerchants> shopAndMerchants = new ArrayList<>();
     private List<ShopClassify.GGoodsClsListBean> shopClassifyLsit = new ArrayList<>();
     private List<BaseGoodsListBean> shopsLists = new ArrayList<>();
     private HomeRecommendAdapter2 mAdapter;
+    private IndicatorAdapter indicatorAdapter;
+    private List<IndicatorEntity> indicatorEntityList = new ArrayList<>();
     private HAdapter hAdapter;
     private HomeEntity mHomeEntity;
     private List<HomeEntity.BannerListBean> mBanners = new ArrayList<>();
@@ -142,7 +156,12 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack {
     private String token;
     private String userId;
     private int pageNo = 1;
+    private PagerGridLayoutManager layoutManager;
+    private OptMerchantsAdapter optMerchantsAdapter;
+    private HotGoodsAdapter hotGoodsAdapter;
     private MineInfoModel mineInfoModel = new MineInfoModel();
+    private List<MerchantsModel> optMerchantList = new ArrayList<>();
+    private List<BaseGoodsListBean> hotGoodsList = new ArrayList<>();
 
     public HomeFragment2() {
 
@@ -153,6 +172,23 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack {
     }
 
     private CallbackBFragment mCallbackBFragment;
+
+    @Override
+    public void onPageSizeChanged(int pageSize) {
+
+    }
+
+    @Override
+    public void onPageSelect(int pageIndex) {
+        for (int i = 0; i < indicatorEntityList.size(); i++) {
+            if (i == pageIndex) {
+                indicatorEntityList.get(i).isSelect = true;
+            } else {
+                indicatorEntityList.get(i).isSelect = false;
+            }
+        }
+        indicatorAdapter.notifyDataSetChanged();
+    }
 
     public interface CallbackBFragment {
         void skipToCommodityFragment(int type, View view);
@@ -182,8 +218,8 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack {
         mRecyclerview.setLayoutManager(new LinearLayoutManager(getActivity()));
         hAdapter = new HAdapter(shopClassifyLsit);
         // 1.水平分页布局管理器
-        PagerGridLayoutManager layoutManager = new PagerGridLayoutManager(
-                2, 5, PagerGridLayoutManager.HORIZONTAL);
+        layoutManager = new PagerGridLayoutManager(
+                1, 5, PagerGridLayoutManager.HORIZONTAL);
         hList.setLayoutManager(layoutManager);
 
         // 2.设置滚动辅助工具
@@ -205,7 +241,7 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack {
 
         // 使用示例
         //layoutManager.setChangeSelectInScrolling(false);// 设置是否在滚动过程中回调页码变化
-        //layoutManager.setPageListener(this);    // 设置页面变化监听器
+        layoutManager.setPageListener(this);    // 设置页面变化监听器
         // 使用示例滚动方向
         //layoutManager.setOrientationType(PagerGridLayoutManager.HORIZONTAL);
         //设置滚动速度
@@ -224,6 +260,24 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack {
         //商家
         token = SPUtils.getString(getActivity(), Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(getActivity(), Constant.SP_LOGIN_USERID);
+
+        indicatorRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        indicatorAdapter = new IndicatorAdapter(indicatorEntityList);
+        indicatorRecyclerView.setAdapter(indicatorAdapter);
+        indicatorAdapter.notifyDataSetChanged();
+
+        optRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+        optMerchantsAdapter = new OptMerchantsAdapter(optMerchantList);
+        optRecyclerView.setAdapter(optMerchantsAdapter);
+        optMerchantsAdapter.notifyDataSetChanged();
+        optRecyclerView.setNestedScrollingEnabled(false);
+
+        hotRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        hotGoodsAdapter = new HotGoodsAdapter(hotGoodsList);
+        hotRecyclerView.setAdapter(hotGoodsAdapter);
+        hotGoodsAdapter.notifyDataSetChanged();
+        hotRecyclerView.setNestedScrollingEnabled(false);
+
         getData();
         requestData();
         getGoodsData();
@@ -252,6 +306,7 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack {
             }
         });
 
+
         mAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
@@ -267,6 +322,35 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack {
                 ShopClassify.GGoodsClsListBean goodsClsListBean = shopClassifyLsit.get(position);
                 Intent intent = new Intent(getActivity(), ShopsActivity.class);
                 intent.putExtra(ShopsActivity.CLASSES_DATA, goodsClsListBean);
+                startActivity(intent);
+            }
+        });
+
+        optMerchantsAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                Intent intent = new Intent(getContext(), VipActivity.class);
+                intent.putExtra(VipActivity.MINE_INFO, mineInfoModel);
+                startActivity(intent);
+            }
+        });
+
+        optMerchantsAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                //商铺详情页
+                Intent intent = new Intent(getActivity(), ShopMerchantsDetailActivity.class);
+                intent.putExtra(ShopMerchantsDetailActivity.MERCHANTS_ID, optMerchantList.get(position).getMerchantId());
+                startActivity(intent);
+            }
+        });
+
+        hotGoodsAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                //商品详情
+                Intent intent = new Intent(getActivity(), ShopsDetailActivity.class);
+                intent.putExtra(ShopsDetailActivity.GOODS_DETAIL_DATA, hotGoodsList.get(position).getGoodsId());
                 startActivity(intent);
             }
         });
@@ -396,6 +480,19 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack {
                             }).create(mBanners);
                             mViewpager.startLoop();
                         }
+
+                        if (mHomeEntity != null && mHomeEntity.merchantList != null) {
+                            optMerchantList = mHomeEntity.merchantList;
+                            optMerchantsAdapter.setNewData(optMerchantList);
+                            optMerchantsAdapter.notifyDataSetChanged();
+                        }
+
+                        if (mHomeEntity != null && mHomeEntity.goodsListfove != null) {
+                            hotGoodsList = mHomeEntity.goodsListfove;
+                            hotGoodsAdapter.setNewData(hotGoodsList);
+                            hotGoodsAdapter.notifyDataSetChanged();
+                        }
+
                     }
 
                     @Override
@@ -438,6 +535,7 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack {
                         HomeShops homeShops = response.body().data;
                         if (!isLoadMore) {
                             shopAndMerchants.clear();
+                            indicatorEntityList.clear();
                         }
                         //商品
                         if (homeShops != null) {
@@ -480,10 +578,22 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack {
                         ShopClassify shopClassify = response.body().data;
                         if (shopClassify != null && shopClassify.getGGoodsClsList() != null) {
                             shopClassifyLsit = shopClassify.getGGoodsClsList();
-                            shopClassifyLsit.addAll(shopClassify.getGGoodsClsList());
-                            shopClassifyLsit.addAll(shopClassify.getGGoodsClsList());
                             hAdapter.setNewData(shopClassifyLsit);
                             hAdapter.notifyDataSetChanged();
+
+                            int indicatorSize = shopClassifyLsit.size() % 5 == 0 ? (shopClassifyLsit.size() / 5) : (shopClassifyLsit.size() / 5) + 1;
+
+                            for (int i = 0; i < indicatorSize; i++) {
+                                IndicatorEntity indicatorEntity = new IndicatorEntity();
+                                if (i == 0) {
+                                    indicatorEntity.isSelect = true;
+                                } else {
+                                    indicatorEntity.isSelect = false;
+                                }
+                                indicatorEntityList.add(indicatorEntity);
+                            }
+                            indicatorAdapter.setNewData(indicatorEntityList);
+                            indicatorAdapter.notifyDataSetChanged();
                         }
                     }
 

@@ -17,6 +17,7 @@ import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.CollectionInfo;
+import com.feitianzhu.huangliwo.model.CustomPlaneDetailInfo;
 import com.feitianzhu.huangliwo.model.PassengerModel;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
@@ -33,6 +34,10 @@ import butterknife.OnClick;
 public class PassengerListActivity extends BaseActivity {
     public static final String SELECT_PASSENGER = "select_passenger";
     private static final int REQUEST_CODE = 100;
+    public static final String PRICE_DATA = "price_data";
+    public static final String PLANE_TYPE = "plane_type";
+    private int type;
+    private CustomPlaneDetailInfo customPlaneDetailInfo;
     private String userId;
     private String token;
     private List<PassengerModel> list = new ArrayList<>();
@@ -60,6 +65,9 @@ public class PassengerListActivity extends BaseActivity {
         titleName.setText("选择乘机人");
         rightText.setText("确定");
         rightText.setVisibility(View.VISIBLE);
+        customPlaneDetailInfo = (CustomPlaneDetailInfo) getIntent().getSerializableExtra(PRICE_DATA);
+        type = getIntent().getIntExtra(PLANE_TYPE, 0);
+
         mAdapter = new PassengerManagerAdapter(list);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         ItemDragAndSwipeCallback itemDragAndSwipeCallback = new ItemDragAndSwipeCallback(mAdapter);
@@ -77,8 +85,39 @@ public class PassengerListActivity extends BaseActivity {
         mAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                locModelList.get(position).isSelect = true;
+                if (type == 2) {
+                    if (locModelList.get(position).ageType == 1) {
+                        ToastUtils.showShortToast("不支持儿童购买");
+                    } else {
+                        locModelList.get(position).isSelect = !locModelList.get(position).isSelect;
+                    }
+                } else if (type == 1 || type == 3) {
+                    if (customPlaneDetailInfo.customInterPriceInfo.cPrice == 0 && locModelList.get(position).ageType == 1) {
+                        ToastUtils.showShortToast("不支持儿童购买");
+                    } else {
+                        locModelList.get(position).isSelect = !locModelList.get(position).isSelect;
+                    }
+                } else {
+                    if (customPlaneDetailInfo.customDocGoPriceInfo.businessExtMap != null) {
+                        if (!customPlaneDetailInfo.customDocGoPriceInfo.businessExtMap.supportChild && !customPlaneDetailInfo.customDocGoPriceInfo.businessExtMap.supportChildBuyAdult) {
+                            if (locModelList.get(position).ageType == 1) {
+                                ToastUtils.showShortToast("不支持儿童购买");
+                            } else {
+                                locModelList.get(position).isSelect = !locModelList.get(position).isSelect;
+                            }
+                        } else {
+                            locModelList.get(position).isSelect = !locModelList.get(position).isSelect;
+                        }
+                    } else {
+                        if (locModelList.get(position).ageType == 1) {
+                            ToastUtils.showShortToast("不支持儿童购买");
+                        } else {
+                            locModelList.get(position).isSelect = !locModelList.get(position).isSelect;
+                        }
+                    }
+                }
                 mAdapter.notifyItemChanged(position);
+
             }
         });
 
@@ -174,6 +213,8 @@ public class PassengerListActivity extends BaseActivity {
                 break;
             case R.id.addPassenger:
                 Intent intent = new Intent(PassengerListActivity.this, EditPassengerActivity.class);
+                intent.putExtra(PassengerListActivity.PRICE_DATA, customPlaneDetailInfo);
+                intent.putExtra(PassengerListActivity.PLANE_TYPE, type);
                 startActivityForResult(intent, REQUEST_CODE);
                 break;
             case R.id.right_button:

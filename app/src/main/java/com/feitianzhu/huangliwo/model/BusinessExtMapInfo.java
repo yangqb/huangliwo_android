@@ -13,8 +13,8 @@ public class BusinessExtMapInfo implements Serializable {
     public boolean supportChildBuyAdult;
     public boolean supportChild;
     public int splicingType;
-    public String childPrice;
+    public double childPrice;
     public String childCabin;
-    public String childByAdultPrice;
+    public double childByAdultPrice;
     public String childByAdultCabin;
 }

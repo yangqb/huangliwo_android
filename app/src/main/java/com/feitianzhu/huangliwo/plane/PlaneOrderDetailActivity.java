@@ -26,6 +26,7 @@ import com.feitianzhu.huangliwo.utils.MathUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.view.CustomCancelChangePopView;
+import com.feitianzhu.huangliwo.view.CustomPayView;
 import com.feitianzhu.huangliwo.view.CustomTotalPriceInfoView;
 import com.google.gson.Gson;
 import com.lxj.xpopup.XPopup;
@@ -44,8 +45,9 @@ public class PlaneOrderDetailActivity extends BaseActivity {
     private OrderPassengerAdapter mAdapter;
     private List<DocOrderDetailPassengersInfo> passengers = new ArrayList<>();
     private CustomPriceDetailInfo priceDetailInfo = new CustomPriceDetailInfo();
-    private List<DocOrderDetailPassengerTypesInfo> adultPassengerTypes = new ArrayList<>();
-    private List<DocOrderDetailPassengerTypesInfo> childPassengerTypes = new ArrayList<>();
+    private DocOrderDetailPassengerTypesInfo adultPassengerType;
+    private DocOrderDetailPassengerTypesInfo childPassengerType;
+    private DocOrderDetailInfo docOrderDetailInfo;
 
     private String userId;
     private String token;
@@ -95,6 +97,14 @@ public class PlaneOrderDetailActivity extends BaseActivity {
     TextView goDepAirportName;
     @BindView(R.id.go_arrAirportName)
     TextView goArrAirportName;
+    @BindView(R.id.back_depAirportName)
+    TextView backDepAirportName;
+    @BindView(R.id.back_arrAirportName)
+    TextView backArrAirportName;
+    @BindView(R.id.backFlightNum)
+    TextView backFlightNum;
+    @BindView(R.id.goFlightNum)
+    TextView goFlightNum;
 
     @Override
     protected int getLayoutId() {
@@ -112,7 +122,9 @@ public class PlaneOrderDetailActivity extends BaseActivity {
         mAdapter = new OrderPassengerAdapter(passengers);
         recyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
-
+        goDepAirportName.setText(orderModel.dptAirport + orderModel.dptTerminal);
+        goArrAirportName.setText(orderModel.arrAirport + orderModel.arrTerminal);
+        goFlightNum.setText(orderModel.flightNum);
         if (orderModel.type == 1 || orderModel.type == 3) {
             ll_go_bg.setVisibility(View.GONE);
             tv_go_tag.setVisibility(View.GONE);
@@ -137,6 +149,9 @@ public class PlaneOrderDetailActivity extends BaseActivity {
                 rl_refund_change.setVisibility(View.VISIBLE);
                 rl_bottom.setVisibility(View.GONE);
             }
+            backDepAirportName.setText(orderModel.backDptAirport + orderModel.backDptTerminal);
+            backArrAirportName.setText(orderModel.backArrAirport + orderModel.backArrTerminal);
+            backFlightNum.setText(orderModel.backFlightNum);
         }
     }
 
@@ -191,7 +206,7 @@ public class PlaneOrderDetailActivity extends BaseActivity {
                         public void onSuccess(Response<PlaneResponse<DocOrderDetailInfo>> response) {
                             super.onSuccess(PlaneOrderDetailActivity.this, response.body().message, response.body().code);
                             if (response.body().code == 0) {
-                                DocOrderDetailInfo docOrderDetailInfo = response.body().result;
+                                docOrderDetailInfo = response.body().result;
                                 goDate.setText(DateUtils.strToStr(docOrderDetailInfo.flightInfo.get(0).deptTime) + DateUtils.strToDate2(DateUtils.strToStr2(docOrderDetailInfo.flightInfo.get(0).deptTime)));
                                 goCity.setText(docOrderDetailInfo.flightInfo.get(0).dptCity + "-" + docOrderDetailInfo.flightInfo.get(0).arrCity);
                                 goDepTime.setText(docOrderDetailInfo.flightInfo.get(0).deptTime.split("-")[3]);
@@ -202,29 +217,39 @@ public class PlaneOrderDetailActivity extends BaseActivity {
                                 mAdapter.setNewData(docOrderDetailInfo.passengers);
                                 mAdapter.notifyDataSetChanged();
 
-                                for (int i = 0; i < docOrderDetailInfo.passengerTypes.size(); i++) {
-                                    if ("成人".equals(docOrderDetailInfo.passengerTypes.get(i).ageType)) {
-                                        adultPassengerTypes.add(docOrderDetailInfo.passengerTypes.get(i));
+                                if (docOrderDetailInfo.passengerTypes.size() > 0) {
+                                    if ("成人".equals(docOrderDetailInfo.passengerTypes.get(0).ageType)) {
+                                        adultPassengerType = docOrderDetailInfo.passengerTypes.get(0);
                                     } else {
-                                        childPassengerTypes.add(docOrderDetailInfo.passengerTypes.get(i));
+                                        childPassengerType = docOrderDetailInfo.passengerTypes.get(0);
                                     }
                                 }
 
-                                if (adultPassengerTypes.size() > 0) {
-                                    priceDetailInfo.price = adultPassengerTypes.get(0).realPrice;
+                                if (docOrderDetailInfo.passengerTypes.size() > 1) {
+                                    if ("成人".equals(docOrderDetailInfo.passengerTypes.get(1).ageType)) {
+                                        adultPassengerType = docOrderDetailInfo.passengerTypes.get(1);
+                                    } else {
+                                        childPassengerType = docOrderDetailInfo.passengerTypes.get(1);
+                                    }
+                                }
+                                if (adultPassengerType != null) {
+                                    priceDetailInfo.price = adultPassengerType.realPrice;
+                                    priceDetailInfo.arf = adultPassengerType.constructionFee; //机建加燃油
+                                    priceDetailInfo.num = adultPassengerType.Count;
                                 } else {
                                     priceDetailInfo.price = 0;
+                                    priceDetailInfo.arf = 0;
+                                    priceDetailInfo.num = 0;
+
                                 }
-                                if (childPassengerTypes.size() > 0) {
-                                    priceDetailInfo.cPrice = childPassengerTypes.get(0).realPrice;
+                                if (childPassengerType != null) {
+                                    priceDetailInfo.cPrice = childPassengerType.realPrice;
+                                    priceDetailInfo.cnum = childPassengerType.Count;
                                 } else {
                                     priceDetailInfo.cPrice = 0;
+                                    priceDetailInfo.cnum = 0;
                                 }
-                                priceDetailInfo.arf = docOrderDetailInfo.passengerTypes.get(0).constructionFee; //机建加燃油
                                 priceDetailInfo.tof = 0;
-                                priceDetailInfo.cnum = childPassengerTypes.size();
-                                priceDetailInfo.num = adultPassengerTypes.size();
-
                             }
                         }
 
@@ -246,7 +271,7 @@ public class PlaneOrderDetailActivity extends BaseActivity {
                         public void onSuccess(Response<PlaneResponse<DocOrderDetailInfo>> response) {
                             super.onSuccess(PlaneOrderDetailActivity.this, response.body().message, response.body().code);
                             if (response.body().code == 0) {
-                                DocOrderDetailInfo docOrderDetailInfo = response.body().result;
+                                docOrderDetailInfo = response.body().result;
                                 goDepDate.setText(DateUtils.strToStr(docOrderDetailInfo.flightInfo.get(0).deptTime) + DateUtils.strToDate2(DateUtils.strToStr2(docOrderDetailInfo.flightInfo.get(0).deptTime)));
                                 goCityName.setText(docOrderDetailInfo.flightInfo.get(0).dptCity + "-" + docOrderDetailInfo.flightInfo.get(0).arrCity);
                                 backDepDate.setText(DateUtils.strToStr(docOrderDetailInfo.flightInfo.get(1).deptTime) + DateUtils.strToDate2(DateUtils.strToStr2(docOrderDetailInfo.flightInfo.get(1).deptTime)));
@@ -261,28 +286,39 @@ public class PlaneOrderDetailActivity extends BaseActivity {
                                 mAdapter.setNewData(docOrderDetailInfo.passengers);
                                 mAdapter.notifyDataSetChanged();
 
-                                for (int i = 0; i < docOrderDetailInfo.passengerTypes.size(); i++) {
-                                    if ("成人".equals(docOrderDetailInfo.passengerTypes.get(i).ageType)) {
-                                        adultPassengerTypes.add(docOrderDetailInfo.passengerTypes.get(i));
+                                if (docOrderDetailInfo.passengerTypes.size() > 0) {
+                                    if ("成人".equals(docOrderDetailInfo.passengerTypes.get(0).ageType)) {
+                                        adultPassengerType = docOrderDetailInfo.passengerTypes.get(0);
                                     } else {
-                                        childPassengerTypes.add(docOrderDetailInfo.passengerTypes.get(i));
+                                        childPassengerType = docOrderDetailInfo.passengerTypes.get(0);
                                     }
                                 }
 
-                                if (adultPassengerTypes.size() > 0) {
-                                    priceDetailInfo.price = adultPassengerTypes.get(0).realPrice;
+                                if (docOrderDetailInfo.passengerTypes.size() > 1) {
+                                    if ("成人".equals(docOrderDetailInfo.passengerTypes.get(1).ageType)) {
+                                        adultPassengerType = docOrderDetailInfo.passengerTypes.get(1);
+                                    } else {
+                                        childPassengerType = docOrderDetailInfo.passengerTypes.get(1);
+                                    }
+                                }
+                                if (adultPassengerType != null) {
+                                    priceDetailInfo.price = adultPassengerType.realPrice;
+                                    priceDetailInfo.arf = adultPassengerType.constructionFee; //机建加燃油
+                                    priceDetailInfo.num = adultPassengerType.Count;
                                 } else {
                                     priceDetailInfo.price = 0;
+                                    priceDetailInfo.arf = 0;
+                                    priceDetailInfo.num = 0;
+
                                 }
-                                if (childPassengerTypes.size() > 0) {
-                                    priceDetailInfo.cPrice = childPassengerTypes.get(0).realPrice;
+                                if (childPassengerType != null) {
+                                    priceDetailInfo.cPrice = childPassengerType.realPrice;
+                                    priceDetailInfo.cnum = childPassengerType.Count;
                                 } else {
                                     priceDetailInfo.cPrice = 0;
+                                    priceDetailInfo.cnum = 0;
                                 }
-                                priceDetailInfo.arf = docOrderDetailInfo.passengerTypes.get(0).constructionFee; //机建加燃油
                                 priceDetailInfo.tof = 0;
-                                priceDetailInfo.cnum = childPassengerTypes.size();
-                                priceDetailInfo.num = adultPassengerTypes.size();
 
                             }
                         }
@@ -297,7 +333,7 @@ public class PlaneOrderDetailActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.btn_reimbursement, R.id.btn_refund, R.id.btn_change, R.id.left_button, R.id.price})
+    @OnClick({R.id.btn_reimbursement, R.id.btn_refund, R.id.btn_change, R.id.left_button, R.id.price, R.id.pay})
     public void onClick(View view) {
         Intent intent;
         switch (view.getId()) {
@@ -310,11 +346,12 @@ public class PlaneOrderDetailActivity extends BaseActivity {
                 break;
             case R.id.btn_refund:
                 intent = new Intent(PlaneOrderDetailActivity.this, RefundPlaneTicketActivity.class);
+                intent.putExtra(RefundPlaneTicketActivity.ORDER_DATA, docOrderDetailInfo);
                 startActivity(intent);
                 break;
             case R.id.btn_change:
                 intent = new Intent(PlaneOrderDetailActivity.this, PlaneChangeActivity.class);
-                intent.putExtra(PlaneChangeActivity.PLANE_TYPE, orderModel.type);
+                intent.putExtra(PlaneChangeActivity.ORDER_DATA, docOrderDetailInfo);
                 startActivity(intent);
                 break;
             case R.id.price:
@@ -322,6 +359,39 @@ public class PlaneOrderDetailActivity extends BaseActivity {
                         .enableDrag(false)
                         .asCustom(new CustomTotalPriceInfoView(PlaneOrderDetailActivity.this).setData(priceDetailInfo)).show();
                 break;
+            case R.id.pay:
+                new XPopup.Builder(this)
+                        .enableDrag(false)
+                        .asCustom(new CustomPayView(PlaneOrderDetailActivity.this)
+                                .setData(MathUtils.subZero(String.valueOf(orderModel.noPayAmount)))
+                                .setOnConfirmClickListener(new CustomPayView.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(String payChannel) {
+                                        payValidate();
+                                    }
+                                })).show();
+                break;
         }
+    }
+
+    public void payValidate() {
+        OkGo.<PlaneResponse>get(Urls.DOMESTI_PAY_VALIDATE)
+                .tag(this)
+                .params(Constant.ACCESSTOKEN, token)
+                .params(Constant.USERID, userId)
+                .params("orderNo", orderModel.sourceOrderNo)
+                .params("pmCode", "OUTDAIKOU")
+                .params("bankCode", "ALIPAY")
+                .execute(new JsonCallback<PlaneResponse>() {
+                    @Override
+                    public void onSuccess(Response<PlaneResponse> response) {
+                        super.onSuccess(PlaneOrderDetailActivity.this, response.body().message, response.body().code);
+                    }
+
+                    @Override
+                    public void onError(Response<PlaneResponse> response) {
+                        super.onError(response);
+                    }
+                });
     }
 }

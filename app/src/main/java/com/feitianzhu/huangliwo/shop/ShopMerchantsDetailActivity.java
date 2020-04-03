@@ -122,7 +122,7 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_shop_setmeal;
+        return R.layout.activity_shop_setmeal2;
     }
 
     @Override
@@ -130,7 +130,7 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
         titleName.setText("商铺详情");
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
-        shareImg.setVisibility(View.VISIBLE);
+        //shareImg.setVisibility(View.VISIBLE);
         button1.setSelected(true);
         button2.setSelected(false);
         merchantsId = getIntent().getIntExtra(MERCHANTS_ID, -1);
@@ -511,7 +511,7 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
                                     .setAutoPlay(true)
                                     .setIndicatorStyle(IndicatorStyle.CIRCLE)
                                     //.setIndicatorSlideMode(IndicatorSlideMode.SMOOTH)
-                                    .setRoundCorner(10)
+                                    // .setRoundCorner(10)
                                     .setIndicatorRadius(8)
                                     .setIndicatorColor(Color.parseColor("#CCCCCC"), Color.parseColor("#6C6D72"))
                                     .setHolderCreator(ShopMerchantsDetailActivity.DataViewHolder::new).setOnPageClickListener(new BannerViewPager.OnPageClickListener() {
@@ -572,8 +572,8 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
         @Override
         public View createView(ViewGroup viewGroup, Context context, int position) {
             // 返回页面布局文件
-            View view = LayoutInflater.from(context).inflate(R.layout.banner_item, viewGroup, false);
-            mImageView = view.findViewById(R.id.banner_image);
+            View view = LayoutInflater.from(context).inflate(R.layout.layout_banner_merchants, viewGroup, false);
+            mImageView = view.findViewById(R.id.image);
             return view;
         }
 

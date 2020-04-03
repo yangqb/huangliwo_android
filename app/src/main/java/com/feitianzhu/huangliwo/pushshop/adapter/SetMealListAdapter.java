@@ -41,8 +41,12 @@ public class SetMealListAdapter extends BaseQuickAdapter<SetMealInfo, BaseViewHo
         setSpannableString(String.format(Locale.getDefault(), "%.2f", item.getPrice()), helper.getView(R.id.setMealPrice));
         if (item.getIsShelf() == 0) {
             helper.setText(R.id.tvStatus, "上架");
+            helper.setBackgroundRes(R.id.tvStatus, R.drawable.shape_289cfe_r9);
+            helper.setTextColor(R.id.tvStatus, mContext.getResources().getColor(R.color.white));
         } else {
             helper.setText(R.id.tvStatus, "下架");
+            helper.setBackgroundRes(R.id.tvStatus, R.drawable.shape_fed428_r9);
+            helper.setTextColor(R.id.tvStatus, mContext.getResources().getColor(R.color.color_333333));
         }
         String[] imgs = item.getImgs().split(",");
         if (item.getImgs().contains(",")) {

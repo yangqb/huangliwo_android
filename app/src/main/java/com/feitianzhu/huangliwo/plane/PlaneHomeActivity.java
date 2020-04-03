@@ -8,34 +8,20 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cretin.tools.cityselect.model.CityModel;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
-import com.feitianzhu.huangliwo.http.JsonCallback;
-import com.feitianzhu.huangliwo.http.PlaneResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
-import com.feitianzhu.huangliwo.model.SearchFlightModel;
 import com.feitianzhu.huangliwo.utils.DateUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.view.CustomPlaneProtocolView;
 import com.feitianzhu.huangliwo.view.CustomRefundView;
 import com.lxj.xpopup.XPopup;
-import com.lzy.okgo.OkGo;
-import com.lzy.okgo.model.Response;
-import com.necer.enumeration.SelectedModel;
-import com.zaaach.citypicker.CityPicker;
-import com.zaaach.citypicker.adapter.OnPickListener;
-import com.zaaach.citypicker.model.City;
-import com.zaaach.citypicker.model.HotCity;
-import com.zaaach.citypicker.model.LocateState;
-import com.zaaach.citypicker.model.LocatedCity;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindView;
@@ -52,6 +38,8 @@ public class PlaneHomeActivity extends BaseActivity {
     private String tvEndCity = "上海";
     private String startDateStr = "";
     private String endDateStr = "";
+    private String depCode = "PEK";
+    private String arrCode = "SHA";
 
     private int anim;
     private boolean enable;
@@ -188,12 +176,10 @@ public class PlaneHomeActivity extends BaseActivity {
                 searchType = 2;
                 break;
             case R.id.startCityName:
-                //selectCity(1);
                 intent = new Intent(PlaneHomeActivity.this, SelectPlaneCityActivity.class);
                 startActivityForResult(intent, REQUEST_START_CODE);
                 break;
             case R.id.endCityName:
-                //selectCity(2);
                 intent = new Intent(PlaneHomeActivity.this, SelectPlaneCityActivity.class);
                 startActivityForResult(intent, REQUEST_END_CODE);
                 break;
@@ -240,10 +226,14 @@ public class PlaneHomeActivity extends BaseActivity {
                     intent.putExtra(SearchPlanActivity2.SEARCH_TYPE, searchType);
                     intent.putExtra(SearchPlanActivity2.FLIGHT_START_DATE, startDateStr);
                     intent.putExtra(SearchPlanActivity2.FLIGHT_END_DATE, endDateStr);
+                    intent.putExtra(SearchPlanActivity2.DEP_CODE, depCode);
+                    intent.putExtra(SearchPlanActivity2.ARR_CODE, arrCode);
                 } else {
                     intent = new Intent(this, SearchPlanActivity.class);
                     intent.putExtra(SearchPlanActivity.SEARCH_TYPE, searchType);
                     intent.putExtra(SearchPlanActivity.FLIGHT_DATE, startDateStr);
+                    intent.putExtra(SearchPlanActivity.DEP_CODE, depCode);
+                    intent.putExtra(SearchPlanActivity.ARR_CODE, arrCode);
                 }
                 startActivity(intent);
                 break;
@@ -341,6 +331,10 @@ public class PlaneHomeActivity extends BaseActivity {
                 }
             } else if (requestCode == REQUEST_END_CODE) {
                 startCityType = data.getIntExtra(SelectPlaneCityActivity.CITY_TYPE, 0);
+                CityModel cityModel = (CityModel) data.getSerializableExtra(SelectPlaneCityActivity.CITY_DATA);
+                tvEndCity = cityModel.getCityName();
+                endCityName.setText(tvEndCity);
+                arrCode = cityModel.getExtra().toString();
                 if (startCityType == 0 && endCityType == 0) { //国内城市
                     if (searchType == 3) {
                         searchType = 2;
@@ -356,6 +350,10 @@ public class PlaneHomeActivity extends BaseActivity {
                 }
             } else if (requestCode == REQUEST_START_CODE) {
                 endCityType = data.getIntExtra(SelectPlaneCityActivity.CITY_TYPE, 0);
+                CityModel cityModel = (CityModel) data.getSerializableExtra(SelectPlaneCityActivity.CITY_DATA);
+                tvStartCity = cityModel.getCityName();
+                startCityName.setText(tvStartCity);
+                depCode = cityModel.getExtra().toString();
                 if (startCityType == 0 && endCityType == 0) { //国内城市
                     if (searchType == 3) {
                         searchType = 2;

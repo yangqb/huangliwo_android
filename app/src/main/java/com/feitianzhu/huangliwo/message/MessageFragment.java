@@ -1,6 +1,8 @@
 package com.feitianzhu.huangliwo.message;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,9 +12,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
+import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.SFFragment;
+import com.feitianzhu.huangliwo.home.entity.ShopAndMerchants;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseFragment;
+import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
+import com.feitianzhu.huangliwo.model.HomeShops;
+import com.feitianzhu.huangliwo.shop.ShopsDetailActivity;
+import com.feitianzhu.huangliwo.utils.SPUtils;
+import com.feitianzhu.huangliwo.utils.Urls;
+import com.lzy.okgo.OkGo;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,11 +46,16 @@ import static android.support.v7.widget.RecyclerView.VERTICAL;
  * create an instance of this fragment.
  */
 public class MessageFragment extends SFFragment {
-    private DiscoverAdapter adapter;
+    private DiscoverAdapter mAdapter;
     private StaggeredGridLayoutManager staggeredGridLayoutManager;
+    private boolean isLoadMore;
+    private List<BaseGoodsListBean> goodsListBeans = new ArrayList<>();
+    private int pageNo = 1;
     Unbinder unbinder;
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
+    @BindView(R.id.refreshLayout)
+    SmartRefreshLayout refreshLayout;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -42,6 +64,8 @@ public class MessageFragment extends SFFragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private String token;
+    private String userId;
 
     public MessageFragment() {
         // Required empty public constructor
@@ -69,25 +93,18 @@ public class MessageFragment extends SFFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_message, container, false);
         unbinder = ButterKnife.bind(this, view);
-        List<String> list = new ArrayList<>();
-        list.add("https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1564154457,2160326790&fm=26&gp=0.jpg");
-        list.add("https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2934736843,1081567321&fm=26&gp=0.jpg");
-        list.add("https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2236593406,2817685553&fm=26&gp=0.jpg");
-        list.add("https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2201099226,2042030884&fm=26&gp=0.jpg");
-        list.add("https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2076376867,3176862964&fm=26&gp=0.jpg");
-        list.add("https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1082243063,3930325006&fm=26&gp=0.jpg");
-        list.add("https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1492127906,3028710124&fm=26&gp=0.jpg");
-        list.add("https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2613804385,1305898398&fm=26&gp=0.jpg");
-        list.add("https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=215830721,3293892154&fm=26&gp=0.jpg");
-        list.add("https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2275536274,3387141545&fm=26&gp=0.jpg");
+        //商家
+        token = SPUtils.getString(getActivity(), Constant.SP_ACCESS_TOKEN);
+        userId = SPUtils.getString(getActivity(), Constant.SP_LOGIN_USERID);
         staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(staggeredGridLayoutManager);
-        adapter = new DiscoverAdapter(list);
-        recyclerView.setAdapter(adapter);
+        mAdapter = new DiscoverAdapter(goodsListBeans);
+        recyclerView.setAdapter(mAdapter);
         staggeredGridLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
         recyclerView.setItemAnimator(null);
         recyclerView.addItemDecoration(new StaggeredDividerItemDecoration(getActivity(), 10));
-        adapter.notifyDataSetChanged();
+        mAdapter.notifyDataSetChanged();
+        refreshLayout.setEnableLoadMore(false);
         getData();
         initListener();
         return view;
@@ -105,10 +122,65 @@ public class MessageFragment extends SFFragment {
                 }
             }
         });
+
+        mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                //商品详情
+                Intent intent = new Intent(getActivity(), ShopsDetailActivity.class);
+                intent.putExtra(ShopsDetailActivity.GOODS_DETAIL_DATA, goodsListBeans.get(position).getGoodsId());
+                startActivity(intent);
+            }
+        });
+
+        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                getData();
+            }
+        });
     }
 
     public void getData() {
-        //adapter.notifyItemRangeInserted(0, list.size());
+        OkGo.<LzyResponse<HomeShops>>get(Urls.GET_HOME_GOODS_LIST)
+                .tag(this)
+                .params("accessToken", token)
+                .params("userId", userId)
+                .params("limitNum", "14")
+                .params("curPage", pageNo + "")
+                .execute(new JsonCallback<LzyResponse<HomeShops>>() {
+                    @Override
+                    public void onStart(com.lzy.okgo.request.base.Request<LzyResponse<HomeShops>, ? extends com.lzy.okgo.request.base.Request> request) {
+                        super.onStart(request);
+                        showloadDialog("");
+                    }
+
+                    @Override
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<HomeShops>> response) {
+                        super.onSuccess(getActivity(), "", response.body().code);
+                        goneloadDialog();
+                        refreshLayout.finishRefresh();
+                        HomeShops homeShops = response.body().data;
+                        if (!isLoadMore) {
+                            goodsListBeans.clear();
+                        }
+                        //商品
+                        if (homeShops != null) {
+                            goodsListBeans = homeShops.getGoodsList();
+                            if (goodsListBeans != null && goodsListBeans.size() > 0) {
+                                mAdapter.setNewData(goodsListBeans);
+                                mAdapter.notifyDataSetChanged();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse<HomeShops>> response) {
+                        super.onError(response);
+                        goneloadDialog();
+                        refreshLayout.finishRefresh(false);
+                    }
+                });
     }
 
     @Override

@@ -15,6 +15,7 @@ import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.http.PlaneResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
+import com.feitianzhu.huangliwo.model.CustomPlaneDetailInfo;
 import com.feitianzhu.huangliwo.model.PassengerModel;
 import com.feitianzhu.huangliwo.utils.DateUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
@@ -40,6 +41,8 @@ import butterknife.OnClick;
 public class EditPassengerActivity extends BaseActivity {
     public static final String PASSENGER_INFO = "passenger_info";
     private PassengerModel passengerModel;
+    private int type;
+    private CustomPlaneDetailInfo customPlaneDetailInfo;
     private Calendar calendar;
     private int ageType = -1;
     private String cardType;
@@ -76,6 +79,8 @@ public class EditPassengerActivity extends BaseActivity {
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         passengerModel = (PassengerModel) getIntent().getParcelableExtra(PASSENGER_INFO);
+        customPlaneDetailInfo = (CustomPlaneDetailInfo) getIntent().getSerializableExtra(PassengerListActivity.PRICE_DATA);
+        type = getIntent().getIntExtra(PassengerListActivity.PLANE_TYPE, 0);
         calendar = Calendar.getInstance();
         if (passengerModel != null) {
             ageType = passengerModel.ageType;
@@ -258,6 +263,29 @@ public class EditPassengerActivity extends BaseActivity {
             url = Urls.UPDATE_PASSENGER;
         } else {
             url = Urls.ADD_PASSENGER;
+            if (type == 2) {
+                if (ageType == 1) {
+                    ToastUtils.showShortToast("不支持儿童购买");
+                    return;
+                }
+            } else if (type == 1 || type == 3) {
+                if (ageType == 1 && customPlaneDetailInfo.customInterPriceInfo.cPrice == 0) {
+                    ToastUtils.showShortToast("不支持儿童购买");
+                    return;
+                }
+            } else {
+                if (customPlaneDetailInfo.customDocGoPriceInfo.businessExtMap == null) {
+                    if (ageType == 1) {
+                        ToastUtils.showShortToast("不支持儿童购买");
+                        return;
+                    }
+                } else {
+                    if (!customPlaneDetailInfo.customDocGoPriceInfo.businessExtMap.supportChild && !customPlaneDetailInfo.customDocGoPriceInfo.businessExtMap.supportChildBuyAdult && ageType == 1) {
+                        ToastUtils.showShortToast("不支持儿童购买");
+                        return;
+                    }
+                }
+            }
         }
         PostRequest<LzyResponse> postRequest = OkGo.<LzyResponse>post(url)
                 .tag(this);

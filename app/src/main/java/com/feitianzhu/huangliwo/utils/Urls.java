@@ -9,8 +9,8 @@ public class Urls {
 
     //private static final String BASE_URL = "http://www.huangliwo.top:8088/"; //正式环境
     private static final String BASE_URL = "http://39.106.65.35:8088/"; //测试地址
-    //private static final String BASE_URL = "http://192.168.0.21:8089/";//钟工本地地址
-    //private static final String BASE_URL = "http://192.168.0.15:8089/"; //周工本地地址
+    //private static final String BASE_URL = "http://192.168.0.12:8089/";//钟工本地地址
+    //private static final String BASE_URL = "http://192.168.0.9:8089/"; //周工本地地址
     //private static final String TICKET_BASE_URL = "http://39.106.65.35:8087/"; //机票测试
     private static final String TICKET_BASE_URL = "http://192.168.0.9:8087/"; //周工机票本地
     /**
@@ -86,6 +86,10 @@ public class Urls {
      * */
     public static final String GET_HOME_GOODS_LIST = BASE_URL + "fhwl/index/pageGoods";
 
+    /*
+     * 首页热门商品
+     * */
+    public static final String GET_HOT_GOODS = BASE_URL + "index/fourgoods";
     /*
      * 商品搜索
      * */
@@ -600,5 +604,34 @@ public class Urls {
      * */
     public static final String GO_BACK_ORDER_DETAIL = TICKET_BASE_URL + "goBack/selectOrder";
 
+    /*
+     * 国内单程支付前校验
+     * */
+    public static final String DOMESTI_PAY_VALIDATE = TICKET_BASE_URL + "payValidate";
+
+    /*
+     * 机票支付
+     * */
+    public static final String PLANE_PAY = BASE_URL + "fhwl/plane/pay";
+
+    /*
+     * 改签查询
+     * */
+    public static final String CHANGE_SEARCH = TICKET_BASE_URL + "tgq/changeSearch";
+
+    /*
+     * 退票查询
+     * */
+    public static final String REFUND_SEARCH = TICKET_BASE_URL + "tgq/refundSearch";
+
+    /*
+     * 申请改签
+     * */
+    public static final String APPLY_CHANGE = TICKET_BASE_URL + "tgq/applyChange";
+
+    /*
+     * 申请退票
+     * */
+    public static final String APPLY_REFUND = TICKET_BASE_URL + "tgq/refundExplain";
 
 }

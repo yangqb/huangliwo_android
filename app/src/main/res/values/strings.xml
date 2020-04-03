@@ -36,4 +36,9 @@
     <string name="pay_for_me_com">已通过（%s）</string>
     <string name="pay_for_me_rej">已驳回（%s）</string>
     <string name="transfer_money">转账成功后，请保留汇款凭证并用手机拍摄照片或截取转账记录，上传等待系</string>
+    <string name="cp_search_hint_text">城市中文名或拼音</string>
+    <string name="cp_cancel">取消</string>
+    <string name="cp_no_result">没有找到，换个词试试~</string>
+    <string name="cp_locate_failed">定位失败</string>
+    <string name="cp_locating">正在定位…</string>
 </resources>

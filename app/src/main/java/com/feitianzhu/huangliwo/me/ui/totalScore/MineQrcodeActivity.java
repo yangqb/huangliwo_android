@@ -60,6 +60,8 @@ import static com.feitianzhu.huangliwo.common.Constant.USERID;
 
 public class MineQrcodeActivity extends BaseActivity {
     public static final String MINE_DATA = "mine_data";
+    public static final String SHARE_TYPE = "share_type";
+    private int shareType = 1;
     @BindView(R.id.iv_QRCode)
     ImageView mQRcode;
     @BindView(R.id.civ_pic)
@@ -74,6 +76,8 @@ public class MineQrcodeActivity extends BaseActivity {
     LinearLayout shareLayout;
     @BindView(R.id.yearImg)
     ImageView imageView;
+    @BindView(R.id.tips)
+    TextView tips;
     private Bitmap bitmap;
     private String token;
     private String userId;
@@ -100,10 +104,16 @@ public class MineQrcodeActivity extends BaseActivity {
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         mineInfoModel = (MineInfoModel) getIntent().getSerializableExtra(MINE_DATA);
+        shareType = getIntent().getIntExtra(SHARE_TYPE, 1);
         tvUserId.setText("邀请码：" + mineInfoModel.getUserId());
         tvName.setText(mineInfoModel.getNickName() == null ? "" : mineInfoModel.getNickName());
         Glide.with(mContext).load(mineInfoModel.getHeadImg()).apply(RequestOptions.placeholderOf(R.mipmap.b08_01touxiang).error(R.mipmap.b08_01touxiang).dontAnimate())
                 .into(mCivPic);
+        if (shareType == 1) {
+            tips.setText("扫一扫 下载黄鹂窝优选APP 更多优惠等你来！");
+        } else {
+            tips.setText("扫一扫 分享推店给身边的商家！");
+        }
     }
 
     @Override
@@ -113,12 +123,15 @@ public class MineQrcodeActivity extends BaseActivity {
                 .tag(this)
                 .params(ACCESSTOKEN, token)//
                 .params(USERID, userId)
+                .params("type", shareType + "")
                 .execute(new JsonCallback<LzyResponse<MineQRcodeModel>>() {
                     @Override
                     public void onSuccess(Response<LzyResponse<MineQRcodeModel>> response) {
-                        super.onSuccess(MineQrcodeActivity.this,response.body().msg,response.body().code);
-                        if(response.body().data!=null){
+                        super.onSuccess(MineQrcodeActivity.this, response.body().msg, response.body().code);
+                        if (response.body().data != null) {
                             setShowData(response.body().data);
+                        } else {
+                            imageView.setBackgroundResource(R.mipmap.g10_03weijiazai);
                         }
                     }
 
@@ -156,7 +169,11 @@ public class MineQrcodeActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.bt_save:
-                ShareImageUtils.saveImg(ShareImageUtils.viewToBitmap(shareLayout), "zxing_image");
+                if (shareType == 1) {
+                    ShareImageUtils.saveImg(ShareImageUtils.viewToBitmap(shareLayout), "zxing_image");
+                } else {
+                    ShareImageUtils.saveImg(ShareImageUtils.viewToBitmap(shareLayout), "zxing_recruit_image");
+                }
                 // 通知图库更新
                 sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse(Environment.getExternalStorageDirectory().getPath())));
                 break;

@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class DocOrderDetailInfo implements Serializable {
     public String message;
-    public DocOrderDetail Detail;
+    public DocOrderDetail detail;
     public DocOrderDetailXcdInfo xcd;
     public DocOrderDetailOtherInfo other;
     public DocOrderDetailContacterInfo contacterInfo;

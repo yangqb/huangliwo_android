@@ -152,9 +152,9 @@
                     android:background="@drawable/bg_ffffff_r10"
                     android:paddingLeft="10dp"
                     android:paddingTop="15dp"
-                    android:visibility="gone"
                     android:paddingRight="10dp"
-                    android:paddingBottom="15dp">
+                    android:paddingBottom="15dp"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -330,7 +330,8 @@
                                         android:layout_height="wrap_content"
                                         android:text="2小时15分"
                                         android:textColor="@color/color_666666"
-                                        android:textSize="9sp" />
+                                        android:textSize="9sp"
+                                        android:visibility="gone" />
 
                                     <ImageView
                                         android:layout_width="wrap_content"
@@ -368,6 +369,7 @@
                             </LinearLayout>
 
                             <TextView
+                                android:id="@+id/goFlightNum"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="15dp"
@@ -465,6 +467,7 @@
                                         android:textSize="24sp" />
 
                                     <TextView
+                                        android:id="@+id/back_depAirportName"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="虹桥机场T2"
@@ -488,7 +491,8 @@
                                         android:layout_height="wrap_content"
                                         android:text="2小时15分"
                                         android:textColor="@color/color_666666"
-                                        android:textSize="9sp" />
+                                        android:textSize="9sp"
+                                        android:visibility="gone" />
 
                                     <ImageView
                                         android:layout_width="wrap_content"
@@ -514,6 +518,7 @@
                                         android:textSize="24sp" />
 
                                     <TextView
+                                        android:id="@+id/back_arrAirportName"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="虹桥机场T2"
@@ -525,6 +530,7 @@
                             </LinearLayout>
 
                             <TextView
+                                android:id="@+id/backFlightNum"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="15dp"
@@ -609,13 +615,13 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:layout_marginBottom="15dp"
-                    android:visibility="gone"
                     android:background="@drawable/bg_ffffff_r10"
                     android:orientation="vertical"
                     android:paddingLeft="10dp"
                     android:paddingTop="15dp"
                     android:paddingRight="10dp"
-                    android:paddingBottom="15dp">
+                    android:paddingBottom="15dp"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="wrap_content"

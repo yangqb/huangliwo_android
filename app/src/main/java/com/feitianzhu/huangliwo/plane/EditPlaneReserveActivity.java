@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
@@ -20,8 +21,10 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.huangliwo.home.WebViewActivity;
 import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.http.PlaneResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.BaggageRuleInfo;
@@ -41,16 +44,21 @@ import com.feitianzhu.huangliwo.model.InterContactModel;
 import com.feitianzhu.huangliwo.model.InterPassengerInfo;
 import com.feitianzhu.huangliwo.model.InterXcdInfo;
 import com.feitianzhu.huangliwo.model.PassengerModel;
+import com.feitianzhu.huangliwo.model.PayModel;
 import com.feitianzhu.huangliwo.model.RefundChangeInfo;
 import com.feitianzhu.huangliwo.model.ReimbursementModel;
 import com.feitianzhu.huangliwo.model.UserClientInfo;
+import com.feitianzhu.huangliwo.shop.ShopPayActivity;
+import com.feitianzhu.huangliwo.shop.ui.OrderDetailActivity;
 import com.feitianzhu.huangliwo.utils.DateUtils;
 import com.feitianzhu.huangliwo.utils.MathUtils;
+import com.feitianzhu.huangliwo.utils.PayUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.view.CustomCancelChangePopView;
 import com.feitianzhu.huangliwo.view.CustomLuggageBuyTicketNoticeView;
+import com.feitianzhu.huangliwo.view.CustomPayView;
 import com.feitianzhu.huangliwo.view.CustomPlaneInfoView;
 import com.feitianzhu.huangliwo.view.CustomPlaneProtocolView;
 import com.feitianzhu.huangliwo.view.CustomTicketPriceDetailView;
@@ -74,7 +82,6 @@ public class EditPlaneReserveActivity extends BaseActivity {
     private static final int REQUEST_CODE = 100;
     public static final String PLANE_TYPE = "plane_type";
     public static final String PLANE_DETAIL_DATA = "plane_detail_data";
-    public static final String PRICE_DATA = "price_data";
     private int type;
     private int count;//成人数量
     private int cCount;//儿童数量
@@ -122,6 +129,10 @@ public class EditPlaneReserveActivity extends BaseActivity {
     EditText contactName;
     @BindView(R.id.contact_phone)
     EditText contactPhone;
+    @BindView(R.id.ll_child_price)
+    LinearLayout llChildPrice;
+    @BindView(R.id.cprice)
+    TextView cprice;
 
     @Override
     protected int getLayoutId() {
@@ -144,7 +155,19 @@ public class EditPlaneReserveActivity extends BaseActivity {
             priceDetailInfo.price = customPlaneDetailInfo.customDocGoPriceInfo.barePrice;
             priceDetailInfo.arf = customPlaneDetailInfo.customDocGoFlightInfo.arf;
             priceDetailInfo.tof = customPlaneDetailInfo.customDocGoFlightInfo.tof;
-            priceDetailInfo.cPrice = 0;
+            if (customPlaneDetailInfo.customDocGoPriceInfo.businessExtMap != null) {
+                if (customPlaneDetailInfo.customDocGoPriceInfo.businessExtMap.supportChild) {
+                    priceDetailInfo.cPrice = customPlaneDetailInfo.customDocGoPriceInfo.businessExtMap.childPrice;
+                } else {
+                    if (customPlaneDetailInfo.customDocGoPriceInfo.businessExtMap.supportChildBuyAdult) {
+                        priceDetailInfo.cPrice = customPlaneDetailInfo.customDocGoPriceInfo.businessExtMap.childByAdultPrice;
+                    } else {
+                        priceDetailInfo.cPrice = 0;
+                    }
+                }
+            } else {
+                priceDetailInfo.cPrice = 0;
+            }
             centerImg.setBackgroundResource(R.mipmap.k01_12quwang);
             llGoPlane.setVisibility(View.VISIBLE);
             llBackPlane.setVisibility(View.GONE);
@@ -235,6 +258,14 @@ public class EditPlaneReserveActivity extends BaseActivity {
                     tvCabinType.setText("未配置");
                 }
             }
+        }
+
+        if (priceDetailInfo.cPrice == 0) {
+            llChildPrice.setVisibility(View.GONE);
+            cprice.setText("¥0");
+        } else {
+            llChildPrice.setVisibility(View.VISIBLE);
+            cprice.setText("¥" + MathUtils.subZero(String.valueOf(priceDetailInfo.cPrice)));
         }
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -452,6 +483,8 @@ public class EditPlaneReserveActivity extends BaseActivity {
                 break;
             case R.id.selectUser:
                 Intent intent = new Intent(EditPlaneReserveActivity.this, PassengerListActivity.class);
+                intent.putExtra(PassengerListActivity.PRICE_DATA, customPlaneDetailInfo);
+                intent.putExtra(PassengerListActivity.PLANE_TYPE, type);
                 startActivityForResult(intent, REQUEST_CODE);
                 break;
             case R.id.tvReserveNotice:
@@ -469,6 +502,20 @@ public class EditPlaneReserveActivity extends BaseActivity {
             case R.id.btn_submit:
                 if (list.size() == 0) {
                     ToastUtils.showShortToast("请选择乘机人");
+                    return;
+                }
+                if (TextUtils.isEmpty(contactName.getText().toString().trim()) || TextUtils.isEmpty(contactPhone.getText().toString().trim())) {
+                    ToastUtils.showShortToast("请填写完整的联系人信息");
+                    return;
+                }
+                if (priceDetailInfo.num == 0 && priceDetailInfo.cnum > 0) {
+                    String content = "儿童乘机须由18岁以上成人陪同，\n请请假成人";
+                    new XPopup.Builder(this)
+                            .asConfirm("提示", content, "", "确定", null, null, true)
+                            .bindLayout(R.layout.layout_dialog) //绑定已有布局
+                            .show();
+                } else if (priceDetailInfo.num > 0 && priceDetailInfo.cnum > priceDetailInfo.num * 2) {
+                    ToastUtils.showShortToast("一名成人最多携带2名儿童");
                 } else {
                     if (type == 0 || type == 2) {
                         docSubmit();
@@ -476,6 +523,7 @@ public class EditPlaneReserveActivity extends BaseActivity {
                         interSubmit();
                     }
                 }
+
                 break;
             case R.id.priceInfo:
                 if (list.size() == 0) {
@@ -754,7 +802,8 @@ public class EditPlaneReserveActivity extends BaseActivity {
                     @Override
                     public void onSuccess(Response<PlaneResponse<CreateOrderInfo>> response) {
                         super.onSuccess(EditPlaneReserveActivity.this, response.body().message, response.body().code);
-                        if (response.body().code == 0) {
+                        if (response.body().code == 0 && response.body().result != null) {
+                            payValidate(response.body().result.orderNo, response.body().result.noPayAmount);
                             ToastUtils.showShortToast(response.body().message);
                         }
                     }
@@ -765,6 +814,81 @@ public class EditPlaneReserveActivity extends BaseActivity {
                     }
                 });
 
+    }
+
+    public void payValidate(String orderNo, String noPayAmount) {
+        OkGo.<PlaneResponse>get(Urls.DOMESTI_PAY_VALIDATE)
+                .tag(this)
+                .params(Constant.ACCESSTOKEN, token)
+                .params(Constant.USERID, userId)
+                .params("orderNo", orderNo)
+                .params("pmCode", "OUTDAIKOU")
+                .params("bankCode", "ALIPAY")
+                .execute(new JsonCallback<PlaneResponse>() {
+                    @Override
+                    public void onSuccess(Response<PlaneResponse> response) {
+                        super.onSuccess(EditPlaneReserveActivity.this, response.body().message, response.body().code);
+                        if (response.body().code == 0) {
+                            new XPopup.Builder(EditPlaneReserveActivity.this)
+                                    .enableDrag(false)
+                                    .asCustom(new CustomPayView(EditPlaneReserveActivity.this)
+                                            .setData(MathUtils.subZero(noPayAmount))
+                                            .setOnConfirmClickListener(new CustomPayView.OnItemClickListener() {
+                                                @Override
+                                                public void onItemClick(String payChannel) {
+                                                    pay(orderNo, noPayAmount);
+                                                }
+                                            })).show();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<PlaneResponse> response) {
+                        super.onError(response);
+                    }
+                });
+    }
+
+    public void pay(String orderNo, String noPayAmount) {
+        OkGo.<LzyResponse<PayModel>>post(Urls.PLANE_PAY)
+                .tag(this)
+                .params(Constant.ACCESSTOKEN, token)
+                .params(Constant.USERID, userId)
+                .params("appId", "")
+                .params("orderNo", orderNo)
+                .params("channel", "alipay")
+                .params("amount", noPayAmount)
+                //.params("payPass", "")
+                .execute(new JsonCallback<LzyResponse<PayModel>>() {
+                    @Override
+                    public void onSuccess(Response<LzyResponse<PayModel>> response) {
+                        super.onSuccess(EditPlaneReserveActivity.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0 && response.body().data != null) {
+                            aliPay(response.body().data.payParam, response.body().data.orderNo);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<LzyResponse<PayModel>> response) {
+                        super.onError(response);
+                    }
+                });
+    }
+
+    private void aliPay(String payProof, String orderNo) {
+
+        PayUtils.aliPay(EditPlaneReserveActivity.this, payProof, new onConnectionFinishLinstener() {
+            @Override
+            public void onSuccess(int code, Object result) {
+                ToastUtils.showShortToast("支付成功");
+                finish();
+            }
+
+            @Override
+            public void onFail(int code, String result) {
+                ToastUtils.showShortToast("支付失败");
+            }
+        });
     }
 
     @Override
@@ -793,7 +917,7 @@ public class EditPlaneReserveActivity extends BaseActivity {
         }
         priceDetailInfo.num = count;
         priceDetailInfo.cnum = cCount;
-        String totalAmount = MathUtils.subZero(String.valueOf((priceDetailInfo.price * priceDetailInfo.num) + (priceDetailInfo.cPrice * priceDetailInfo.cnum) + (priceDetailInfo.tof + priceDetailInfo.arf) * (count + cCount)));
+        String totalAmount = MathUtils.subZero(String.valueOf((priceDetailInfo.price * priceDetailInfo.num) + (priceDetailInfo.cPrice * priceDetailInfo.cnum) + (priceDetailInfo.tof + priceDetailInfo.arf) * count));
         setSpannableString(totalAmount, totalPrice);
 
     }

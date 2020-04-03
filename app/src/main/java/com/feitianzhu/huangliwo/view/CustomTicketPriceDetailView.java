@@ -2,6 +2,7 @@ package com.feitianzhu.huangliwo.view;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.feitianzhu.huangliwo.R;
@@ -39,9 +40,15 @@ public class CustomTicketPriceDetailView extends CenterPopupView {
         TextView gocPrice = findViewById(R.id.gocPrice);
         TextView goArfAndTof = findViewById(R.id.goArfAndTof);
         TextView gocArfAndTof = findViewById(R.id.gocArfAndTof);
+        LinearLayout llChild = findViewById(R.id.ll_child);
         goPrice.setText("¥" + MathUtils.subZero(String.valueOf(priceDetailInfo.price)));
         goArfAndTof.setText("¥" + MathUtils.subZero(String.valueOf(priceDetailInfo.tof + priceDetailInfo.arf)));
         gocPrice.setText("¥" + MathUtils.subZero(String.valueOf(priceDetailInfo.cPrice)));
-        gocArfAndTof.setText("¥" + MathUtils.subZero(String.valueOf(priceDetailInfo.tof + priceDetailInfo.arf)));
+        if (priceDetailInfo.cPrice == 0) {
+            llChild.setVisibility(GONE);
+        } else {
+            llChild.setVisibility(VISIBLE);
+        }
+        gocArfAndTof.setText("¥0");
     }
 }

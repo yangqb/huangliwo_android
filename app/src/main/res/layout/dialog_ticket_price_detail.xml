@@ -75,52 +75,59 @@
 
             </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:text="儿童票价"
-                android:textColor="@color/color_333333"
-                android:textSize="15sp" />
-
             <LinearLayout
-                android:id="@+id/ll_goc"
+                android:id="@+id/ll_child"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="票价 "
+                    android:layout_marginTop="15dp"
+                    android:text="儿童票价"
                     android:textColor="@color/color_333333"
-                    android:textSize="12sp" />
+                    android:textSize="15sp" />
 
-                <TextView
-                    android:id="@+id/gocPrice"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/ll_goc"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="25dp"
-                    android:text="¥1650"
-                    android:textColor="@color/color_333333"
-                    android:textSize="12sp" />
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="燃油 "
-                    android:textColor="@color/color_333333"
-                    android:textSize="12sp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="票价 "
+                        android:textColor="@color/color_333333"
+                        android:textSize="12sp" />
 
-                <TextView
-                    android:id="@+id/gocArfAndTof"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="¥1650"
-                    android:textColor="@color/color_333333"
-                    android:textSize="12sp" />
+                    <TextView
+                        android:id="@+id/gocPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="25dp"
+                        android:text="¥1650"
+                        android:textColor="@color/color_333333"
+                        android:textSize="12sp" />
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="燃油 "
+                        android:textColor="@color/color_333333"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/gocArfAndTof"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="¥1650"
+                        android:textColor="@color/color_333333"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
 

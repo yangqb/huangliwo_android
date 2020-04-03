@@ -212,7 +212,7 @@ dependencies {
     implementation 'com.google.android:flexbox:1.0.0'
     implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0'
     //implementation 'com.github.xuexiangjys:XUpdate:1.1.1'
-    implementation 'com.zaaach:citypicker:2.0.3'    //必选
+    //implementation 'com.zaaach:citypicker:2.0.3'    //必选
     implementation 'com.necer.ncalendar:ncalendar:4.3.8'
     implementation 'com.haibin:calendarview:3.6.6'
     implementation 'com.github.MZCretin:CitySelect:1.0.4'

@@ -27,6 +27,6 @@ public class HAdapter extends BaseQuickAdapter<ShopClassify.GGoodsClsListBean, B
     @Override
     protected void convert(BaseViewHolder helper, ShopClassify.GGoodsClsListBean item) {
         helper.setText(R.id.name, item.getClsName());
-        Glide.with(mContext).load(item.getClsImg()).into((ImageView) helper.getView(R.id.image));
+        Glide.with(mContext).load(item.getClsImg()).into((CircleImageView) helper.getView(R.id.image));
     }
 }

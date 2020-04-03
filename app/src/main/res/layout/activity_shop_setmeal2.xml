@@ -23,24 +23,23 @@
                 app:layout_scrollFlags="scroll|exitUntilCollapsed"
                 app:statusBarScrim="@android:color/transparent">
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/color_f7f7f7"
-                    android:orientation="vertical"
-                    android:paddingLeft="@dimen/dp_10"
-                    android:paddingTop="10dp"
-                    android:paddingRight="@dimen/dp_10">
+                    android:orientation="vertical">
 
                     <com.zhpan.bannerview.BannerViewPager
                         android:id="@+id/viewpager"
                         android:layout_width="match_parent"
-                        android:layout_height="143dp" />
+                        android:layout_height="250dp" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="210dp"
+                        android:layout_marginRight="10dp"
                         android:background="@drawable/bg_ffffff_r5"
                         android:paddingLeft="@dimen/dp_10"
                         android:paddingTop="15dp"
@@ -136,52 +135,58 @@
                             android:layout_alignParentEnd="true"
                             android:src="@mipmap/e01_11dianhua" />
                     </RelativeLayout>
-                </LinearLayout>
+                </RelativeLayout>
             </android.support.design.widget.CollapsingToolbarLayout>
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:background="@color/white"
-                android:gravity="center_vertical"
+                android:layout_height="60dp"
+                android:background="@color/color_f7f7f7"
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/dp_10">
 
-                <TextView
-                    android:id="@+id/button1"
-                    android:layout_width="58dp"
-                    android:layout_height="22dp"
-                    android:background="@drawable/button_selecter_shopdetail"
-                    android:gravity="center"
-                    android:text="套餐"
-                    android:textColor="@color/color_333333"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/button2"
-                    android:layout_width="58dp"
-                    android:layout_height="22dp"
-                    android:background="@drawable/button_selecter_shopdetail"
-                    android:gravity="center"
-                    android:text="评价"
-                    android:textColor="@color/color_333333"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/button1"
+                        android:layout_width="70dp"
+                        android:layout_height="27dp"
+                        android:background="@drawable/button_selecter_shopdetail"
+                        android:gravity="center"
+                        android:text="套餐"
+                        android:textColor="@color/color_333333"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/button2"
+                        android:layout_width="70dp"
+                        android:layout_height="27dp"
+                        android:background="@drawable/button_selecter_shopdetail"
+                        android:gravity="center"
+                        android:text="评价"
+                        android:textColor="@color/color_333333"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
                     android:layout_marginLeft="30dp"
+                    android:layout_marginRight="10dp"
                     android:text="套餐购买后需到店消费"
                     android:textColor="@color/color_289cef"
                     android:textSize="14sp"
                     android:textStyle="bold" />
 
-            </LinearLayout>
+            </RelativeLayout>
         </android.support.design.widget.AppBarLayout>
 
         <android.support.v4.widget.NestedScrollView

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="2.5dp"
+    android:layout_marginRight="2.5dp"
+    android:background="@drawable/shape_f7f7f7_r5"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingLeft="5dp"
+    android:paddingTop="5dp"
+    android:paddingRight="5dp"
+    android:paddingBottom="10dp">
+
+    <ImageView
+        android:id="@+id/merchants_img"
+        android:layout_width="95dp"
+        android:layout_height="80dp"
+        android:background="@color/color_cccccc"
+        android:scaleType="centerCrop" />
+
+    <TextView
+        android:id="@+id/merchants_Name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="盛阳海鲜自助"
+        android:textColor="@color/color_333333"
+        android:textSize="14sp" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/ll_rebate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:visibility="visible">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="25dp"
+                android:background="@drawable/shape_rebate_left_vip"
+                android:gravity="end|center_vertical"
+                android:paddingLeft="8dp"
+                android:paddingRight="2dp"
+                android:text="成为会员"
+                android:textColor="@color/color_333333"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/tv_rebate"
+                android:layout_width="wrap_content"
+                android:layout_height="25dp"
+                android:background="@drawable/shape_rebate_right_vip"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:paddingLeft="2dp"
+                android:paddingRight="8dp"
+                android:text="返20.5%"
+                android:textColor="@color/color_333333"
+                android:textSize="10sp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/vip_rebate"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:background="@drawable/shape_rebate"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:text="省¥0.00"
+            android:textColor="@color/color_333333"
+            android:textSize="10sp"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+</LinearLayout>

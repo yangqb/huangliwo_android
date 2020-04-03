@@ -295,7 +295,7 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 if (rightAdapter.getItemViewType(position) == MultipleItem.MERCHANTS) {
-                    //套餐详情页
+                    //商铺详情页
                     Intent intent = new Intent(getActivity(), ShopMerchantsDetailActivity.class);
                     intent.putExtra(ShopMerchantsDetailActivity.MERCHANTS_ID, merchantsList.get(position).getMerchantId());
                     startActivity(intent);

@@ -134,7 +134,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:gravity="center"
-                                android:text="机票/火车票"
+                                android:text="出行"
                                 android:textColor="@color/color_333333"
                                 android:textSize="12sp" />
 
@@ -161,16 +161,33 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/dp_10"
+                            android:layout_marginTop="15dp"
                             android:layout_marginRight="@dimen/dp_10"
                             android:background="@color/color_f7f7f7">
 
                             <android.support.v7.widget.RecyclerView
                                 android:id="@+id/hList"
                                 android:layout_width="match_parent"
-                                android:layout_height="150dp">
+                                android:layout_height="80dp">
 
                             </android.support.v7.widget.RecyclerView>
 
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:background="@color/color_f7f7f7">
+
+                            <android.support.v7.widget.RecyclerView
+                                android:id="@+id/indicatorRecyclerView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content">
+
+                            </android.support.v7.widget.RecyclerView>
                         </RelativeLayout>
 
                         <com.zhpan.bannerview.BannerViewPager
@@ -207,6 +224,106 @@
                                 android:text=""
                                 android:textColor="@color/color_333333"
                                 android:textSize="12sp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/dp_10"
+                            android:layout_marginTop="@dimen/dp_10"
+                            android:layout_marginRight="@dimen/dp_10"
+                            android:background="@drawable/shape_ffffff_r5"
+                            android:orientation="vertical"
+                            android:paddingLeft="7.5dp"
+                            android:paddingTop="20dp"
+                            android:paddingRight="7.5dp"
+                            android:paddingBottom="15dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginRight="10dp"
+                                    android:text="优选商家"
+                                    android:textColor="@color/color_333333"
+                                    android:textSize="17sp" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="为您推选优质商家"
+                                    android:textColor="@color/color_999999"
+                                    android:textSize="12sp" />
+                            </LinearLayout>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="0.5dp"
+                                android:layout_marginTop="10dp"
+                                android:layout_marginBottom="10dp"
+                                android:background="@color/color_eeeeee" />
+
+                            <android.support.v7.widget.RecyclerView
+                                android:id="@+id/optRecyclerView"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                            </android.support.v7.widget.RecyclerView>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/dp_10"
+                            android:layout_marginTop="@dimen/dp_10"
+                            android:layout_marginRight="@dimen/dp_10"
+                            android:background="@drawable/shape_ffffff_r5"
+                            android:orientation="vertical"
+                            android:paddingLeft="7.5dp"
+                            android:paddingTop="20dp"
+                            android:paddingRight="7.5dp"
+                            android:paddingBottom="10dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginRight="10dp"
+                                    android:text="热门商品"
+                                    android:textColor="@color/color_333333"
+                                    android:textSize="17sp" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="为您推选实惠商品"
+                                    android:textColor="@color/color_999999"
+                                    android:textSize="12sp" />
+                            </LinearLayout>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="0.5dp"
+                                android:layout_marginTop="10dp"
+                                android:layout_marginBottom="10dp"
+                                android:background="@color/color_eeeeee" />
+
+                            <android.support.v7.widget.RecyclerView
+                                android:id="@+id/hotRecyclerView"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                            </android.support.v7.widget.RecyclerView>
 
                         </LinearLayout>
 

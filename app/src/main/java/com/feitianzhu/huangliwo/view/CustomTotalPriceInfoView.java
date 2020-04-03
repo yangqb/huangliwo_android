@@ -2,6 +2,7 @@ package com.feitianzhu.huangliwo.view;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.feitianzhu.huangliwo.R;
@@ -43,6 +44,12 @@ public class CustomTotalPriceInfoView extends BottomPopupView {
         TextView goCprice = findViewById(R.id.go_cprice);
         TextView goCArfTof = findViewById(R.id.go_cArfTof);
         goCprice.setText("¥" + MathUtils.subZero(String.valueOf(priceDetailInfo.cPrice)) + "x" + priceDetailInfo.cnum);
-        goCArfTof.setText("¥" + MathUtils.subZero(String.valueOf(priceDetailInfo.arf + priceDetailInfo.tof)) + "x" + priceDetailInfo.cnum);
+        goCArfTof.setText("¥0" + "x" + priceDetailInfo.cnum);
+        RelativeLayout rlChildPrice = findViewById(R.id.rl_child_price);
+        if (priceDetailInfo.cPrice == 0 || priceDetailInfo.cnum == 0) {
+            rlChildPrice.setVisibility(GONE);
+        } else {
+            rlChildPrice.setVisibility(VISIBLE);
+        }
     }
 }

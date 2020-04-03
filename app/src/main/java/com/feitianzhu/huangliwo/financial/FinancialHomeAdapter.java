@@ -1,11 +1,11 @@
 package com.feitianzhu.huangliwo.financial;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.feitianzhu.huangliwo.R;
+import com.feitianzhu.huangliwo.financial.bean.MultiFinancialInfo;
 
 import java.util.List;
 
@@ -16,13 +16,21 @@ import java.util.List;
  * time: 14:43
  * email: 694125155@qq.com
  */
-public class FinancialHomeAdapter extends BaseQuickAdapter<Integer, BaseViewHolder> {
-    public FinancialHomeAdapter(@Nullable List<Integer> data) {
-        super(R.layout.item_financial, data);
+public class FinancialHomeAdapter extends BaseMultiItemQuickAdapter<MultiFinancialInfo, BaseViewHolder> {
+    /**
+     * Same as QuickAdapter#QuickAdapter(Context,int) but with
+     * some initialization data.
+     *
+     * @param data A new list is created out of this one to avoid mutable list
+     */
+    public FinancialHomeAdapter(List<MultiFinancialInfo> data) {
+        super(data);
+        addItemType(MultiFinancialInfo.All_FINANCIAL, R.layout.item_financial);
+        addItemType(MultiFinancialInfo.MY_FINANCIAL, R.layout.item_my_financial);
     }
 
     @Override
-    protected void convert(@NonNull BaseViewHolder helper, Integer item) {
+    protected void convert(@NonNull BaseViewHolder helper, MultiFinancialInfo item) {
         //禁用状态
         /*seekBar.setClickable(false);
         seekBar.setEnabled(false);

@@ -15,11 +15,8 @@ import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.LazyWebActivity;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.me.helper.ImageUtil;
-import com.feitianzhu.huangliwo.me.ui.totalScore.MineQrcodeActivity;
 import com.feitianzhu.huangliwo.pushshop.MyPaymentActivity;
 import com.feitianzhu.huangliwo.pushshop.RecordOrderActivity;
-import com.feitianzhu.huangliwo.pushshop.bean.PaymentInfo;
-import com.feitianzhu.huangliwo.shop.ShopDao;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.gyf.immersionbar.ImmersionBar;
 import com.uuzuche.lib_zxing.activity.CaptureFragment;
@@ -220,8 +217,6 @@ public class ScannerActivity extends BaseActivity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.textview:
-                Intent intent = new Intent(ScannerActivity.this, MineQrcodeActivity.class);
-                startActivity(intent);
                 break;
             case R.id.fl_back:
                 finish();

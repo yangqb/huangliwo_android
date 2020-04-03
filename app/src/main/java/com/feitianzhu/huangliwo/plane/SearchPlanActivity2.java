@@ -38,8 +38,12 @@ public class SearchPlanActivity2 extends BaseActivity {
     public static final String SEARCH_TYPE = "search_type";
     public static final String FLIGHT_START_DATE = "flight_start_date";
     public static final String FLIGHT_END_DATE = "flight_end_date";
+    public static final String DEP_CODE = "depCode";
+    public static final String ARR_CODE = "arrCode";
     private List<MultiGoBackFlightInfo> goBackFlightList = new ArrayList<>();
     private SearchResultAdapter2 mAdapter;
+    private String depCode;
+    private String arrCode;
     private int searchType = 2;
     private String goDate;
     private String backDate;
@@ -76,6 +80,8 @@ public class SearchPlanActivity2 extends BaseActivity {
         searchType = getIntent().getIntExtra(SEARCH_TYPE, 2);
         goDate = getIntent().getStringExtra(FLIGHT_START_DATE);
         backDate = getIntent().getStringExtra(FLIGHT_END_DATE);
+        depCode = getIntent().getStringExtra(DEP_CODE);
+        arrCode = getIntent().getStringExtra(ARR_CODE);
         startCity.setText("北京");
         endCity.setText("上海");
         centerImg.setBackgroundResource(R.mipmap.k01_13wangfan);
@@ -111,8 +117,8 @@ public class SearchPlanActivity2 extends BaseActivity {
                     .tag(this)
                     .params(Constant.ACCESSTOKEN, token)
                     .params(Constant.USERID, userId)
-                    .params("depCity", "PEK")
-                    .params("arrCity", "SHA")
+                    .params("depCity", depCode)
+                    .params("arrCity", arrCode)
                     .params("goDate", goDate)
                     .params("backDate", backDate)
                     .params("exTrack", "retehui")

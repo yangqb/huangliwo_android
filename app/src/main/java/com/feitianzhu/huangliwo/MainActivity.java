@@ -210,7 +210,6 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
                     mTransaction.show(mMessageFragment);
                 }
                 mTransaction.commit();
-                ToastUtils.showShortToast("敬请期待");
                 break;
 
             case R.id.ly_me:

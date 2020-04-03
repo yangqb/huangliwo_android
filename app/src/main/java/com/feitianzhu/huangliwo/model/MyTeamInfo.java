@@ -17,5 +17,8 @@ public class MyTeamInfo implements Serializable {
     public int registerNum;// (integer, optional): 注册人总数 ,
     public String teamAgent;// (string, optional): 代理区域 ,
     public String teamImg;// (string, optional): 团队长头像 ,
-    public int  teamNum;// (integer, optional): 团队数量
+    public int teamNum;// (integer, optional): 团队数量
+    public int yesdayAddCount;//@ApiModelProperty("昨日新增人数")
+    public double monthIncome;//@ApiModelProperty("本月团队业绩")
+    public double yesdayIncome;//@ApiModelProperty("昨日团队业绩")
 }

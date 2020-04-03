@@ -63,8 +63,8 @@ public class ShopSetMealDetailActivity extends BaseActivity {
     @Override
     protected void initView() {
         titleName.setText("套餐详情");
-        rightImg.setVisibility(View.VISIBLE);
-        collectImg.setVisibility(View.VISIBLE);
+        //rightImg.setVisibility(View.VISIBLE);
+        //collectImg.setVisibility(View.VISIBLE);
         setMealInfo = (SetMealInfo) getIntent().getSerializableExtra(SETMEAL_INFO);
         if (setMealInfo != null) {
             setMealName.setText(setMealInfo.getSmName());

@@ -216,24 +216,24 @@
                     android:textColor="@color/color_333333"
                     android:textSize="16sp" />
 
-                <LinearLayout
+                <EditText
+                    android:id="@+id/edit_rules"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:background="@drawable/shape_edit">
+                    android:background="@null"
+                    android:gravity="start"
+                    android:hint="请输入套餐使用规则"
+                    android:minHeight="100dp"
+                    android:textColor="@color/color_333333"
+                    android:textColorHint="@color/color_666666"
+                    android:textSize="16sp" />
 
-                    <EditText
-                        android:id="@+id/edit_rules"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@null"
-                        android:gravity="start"
-                        android:hint="请输入套餐使用规则"
-                        android:minHeight="100dp"
-                        android:textColor="@color/color_333333"
-                        android:textColorHint="@color/color_666666"
-                        android:textSize="16sp" />
-                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/color_eeeeee" />
+
             </LinearLayout>
 
             <RelativeLayout

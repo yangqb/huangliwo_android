@@ -1,5 +1,8 @@
 package com.feitianzhu.huangliwo.home.entity;
 
+import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
+import com.feitianzhu.huangliwo.pushshop.bean.MerchantsModel;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -15,6 +18,15 @@ public class HomeEntity {
     public List<BannerListBean> bannerList;
     public List<RecommendListBean> recommendList;
     public List<ServiceRecommendListBean> serviceRecommendList;
+    /**
+     * 推广商城 3个
+     */
+    public List<MerchantsModel> merchantList;
+
+    /**
+     * 热门商品  4个
+     */
+    public List<BaseGoodsListBean> goodsListfove;
 
     public static class BannerListBean implements Serializable {
         /**

@@ -37,6 +37,8 @@ import butterknife.OnClick;
 public class SearchPlanActivity extends BaseActivity {
     public static final String SEARCH_TYPE = "search_type";
     public static final String FLIGHT_DATE = "flight_date";
+    public static final String DEP_CODE = "depCode";
+    public static final String ARR_CODE = "arrCode";
     private List<MultipleGoSearchFightInfo> goSearchFightInfoList = new ArrayList<>();
     private List<SearchFlightModel.FlightModel> flightInfos = new ArrayList<>();
     private List<SearchInternationalFlightModel> internationalFlightModels = new ArrayList<>();
@@ -45,6 +47,8 @@ public class SearchPlanActivity extends BaseActivity {
     private String userId;
     private String token;
     private int searchType;
+    private String depCode;
+    private String arrCode;
     @BindView(R.id.title_name)
     TextView titleName;
     @BindView(R.id.right_img)
@@ -75,6 +79,8 @@ public class SearchPlanActivity extends BaseActivity {
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         date = getIntent().getStringExtra(FLIGHT_DATE);
         searchType = getIntent().getIntExtra(SEARCH_TYPE, 0);
+        depCode = getIntent().getStringExtra(DEP_CODE);
+        arrCode = getIntent().getStringExtra(ARR_CODE);
         planeTitle.setVisibility(View.VISIBLE);
         titleName.setVisibility(View.GONE);
         startCity.setText("北京");
@@ -125,8 +131,8 @@ public class SearchPlanActivity extends BaseActivity {
         if (searchType == 0) {
             OkGo.<PlaneResponse<SearchFlightModel>>get(Urls.SEARCH_FLIGHT)
                     .tag(this)
-                    .params("dpt", "PEK")
-                    .params("arr", "SHA")
+                    .params("dpt", depCode)
+                    .params("arr", arrCode)
                     .params(Constant.ACCESSTOKEN, token)
                     .params(Constant.USERID, userId)
                     .params("date", date)

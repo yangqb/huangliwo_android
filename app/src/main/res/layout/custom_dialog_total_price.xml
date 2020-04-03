@@ -74,6 +74,7 @@
             android:background="@color/color_eeeeee" />
 
         <RelativeLayout
+            android:id="@+id/rl_child_price"
             android:layout_width="match_parent"
             android:layout_height="66dp">
 

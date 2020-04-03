@@ -1,92 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/shareLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
     android:layout_marginLeft="42dp"
     android:layout_marginRight="42dp"
+    android:background="@color/white"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/shareLayout"
+    <ImageView
+        android:id="@+id/yearImg"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:background="@color/white"
-        android:orientation="vertical">
+        android:layout_height="wrap_content" />
 
-        <ImageView
-            android:id="@+id/yearImg"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:background="@color/color_F5F3F3">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:background="@color/color_F5F3F3">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="105dp"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="105dp"
-                android:orientation="vertical">
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <com.feitianzhu.huangliwo.view.CircleImageView
+                    android:id="@+id/civ_pic"
+                    android:layout_width="52dp"
+                    android:layout_height="52dp"
+                    android:src="@mipmap/b08_01touxiang" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
-                    <com.feitianzhu.huangliwo.view.CircleImageView
-                        android:id="@+id/civ_pic"
-                        android:layout_width="52dp"
-                        android:layout_height="52dp"
-                        android:src="@mipmap/b08_01touxiang" />
-
-                    <LinearLayout
+                    <TextView
+                        android:id="@+id/tv_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:gravity="center_vertical"
-                        android:orientation="vertical">
+                        android:textColor="@color/color_000000"
+                        android:textSize="12sp" />
 
-                        <TextView
-                            android:id="@+id/tv_name"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/color_000000"
-                            android:textSize="12sp" />
-
-                        <TextView
-                            android:id="@+id/tv_userId"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/dp_4"
-                            android:text="扫一扫，加入黄鹂窝"
-                            android:textColor="@color/color_000000"
-                            android:textSize="12sp" />
-                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/tv_userId"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_4"
+                        android:text="扫一扫，加入黄鹂窝"
+                        android:textColor="@color/color_000000"
+                        android:textSize="12sp" />
                 </LinearLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:text="扫一扫 下载黄鹂窝优选APP 更多优惠等你来！"
-                    android:textColor="@color/color_000000"
-                    android:textSize="10sp" />
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/iv_QRCode"
-                android:layout_width="85dp"
-                android:layout_height="85dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="15dp"
-                android:scaleType="fitXY"
-                android:src="@mipmap/g10_04weijiazai" />
-        </RelativeLayout>
-    </LinearLayout>
+            <TextView
+                android:id="@+id/tips"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="扫一扫 下载黄鹂窝优选APP 更多优惠等你来！"
+                android:textColor="@color/color_000000"
+                android:textSize="10sp" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_QRCode"
+            android:layout_width="85dp"
+            android:layout_height="85dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="15dp"
+            android:scaleType="fitXY"
+            android:src="@mipmap/g10_04weijiazai" />
+    </RelativeLayout>
 </LinearLayout>

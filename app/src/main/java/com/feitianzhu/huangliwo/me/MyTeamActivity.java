@@ -1,7 +1,15 @@
 package com.feitianzhu.huangliwo.me;
 
+import android.annotation.SuppressLint;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.AbsoluteSizeSpan;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,6 +25,7 @@ import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.MyTeamInfo;
 import com.feitianzhu.huangliwo.model.TeamModel;
+import com.feitianzhu.huangliwo.utils.MathUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.utils.UserInfoUtils;
@@ -57,6 +66,10 @@ public class MyTeamActivity extends BaseActivity {
     TextView areaCount;
     @BindView(R.id.tv_level)
     TextView tvLevel;
+    @BindView(R.id.addCount)
+    TextView addCount;
+    @BindView(R.id.addAmount)
+    TextView addAmount;
 
     @Override
     protected int getLayoutId() {
@@ -113,8 +126,20 @@ public class MyTeamActivity extends BaseActivity {
                         if (response.body().code == 0 && response.body().data != null) {
                             teamInfo = response.body().data;
                             Glide.with(MyTeamActivity.this).load(teamInfo.teamImg).apply(new RequestOptions().error(R.mipmap.b08_01touxiang).placeholder(R.mipmap.b08_01touxiang)).into(headImg);
-                            teamCount.setText(teamInfo.teamNum + "人");
-                            areaCount.setText(teamInfo.teamAgent + "人");
+                            teamCount.setText(teamInfo.teamNum + "");
+                            if (teamInfo.monthIncome == 0) {
+                                areaCount.setText("0");
+                            } else {
+                                areaCount.setText(MathUtils.subZero(String.valueOf(teamInfo.monthIncome)));
+                            }
+
+                            setSpannableString(String.valueOf(teamInfo.yesdayAddCount), addCount);
+                            if (teamInfo.yesdayIncome == 0) {
+                                setSpannableString("0", addAmount);
+                            } else {
+                                setSpannableString(MathUtils.subZero(String.valueOf(teamInfo.yesdayIncome)), addAmount);
+                            }
+
                             teamModelList = teamInfo.listUser;
                             teamAdapter.setNewData(teamModelList);
                             teamAdapter.notifyDataSetChanged();
@@ -129,29 +154,28 @@ public class MyTeamActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.left_button, R.id.checkArea})
+    @OnClick({R.id.left_button})
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.left_button:
-                finish();
-                break;
-            case R.id.checkArea:
-                MineInfoModel infoModel = UserInfoUtils.getUserInfo(this);
-                if (infoModel.getAccountType() == 1 || infoModel.getAccountType() == 2 || infoModel.getAccountType() == 7) {
-                    String content = "您所代理的区域为" + teamInfo.addrName + "\n会员总数" + teamInfo.memberNum + "人\n注册总数" + teamInfo.registerNum + "人";
-                    new XPopup.Builder(MyTeamActivity.this)
-                            .asConfirm("", content, "关闭", "确定", null, null, true)
-                            .bindLayout(R.layout.layout_dialog) //绑定已有布局
-                            .show();
-                } else {
-                    String content = "您还不是区域代理\n" + "申请成为区域代理可查看更多";
-                    new XPopup.Builder(MyTeamActivity.this)
-                            .asConfirm("", content, "关闭", "确定", null, null, true)
-                            .bindLayout(R.layout.layout_dialog) //绑定已有布局
-                            .show();
-                }
-                break;
-        }
+        finish();
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void setSpannableString(String str3, TextView view) {
+        String str1 = "昨日+";
+        view.setText("");
+        SpannableString span1 = new SpannableString(str1);
+        SpannableString span3 = new SpannableString(str3);
+        ForegroundColorSpan colorSpan1 = new ForegroundColorSpan(Color.parseColor("#333333"));
+        span1.setSpan(new AbsoluteSizeSpan(12, true), 0, str1.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        span1.setSpan(colorSpan1, 0, str1.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+
+        ForegroundColorSpan colorSpan3 = new ForegroundColorSpan(Color.parseColor("#FF0000"));
+        span3.setSpan(new AbsoluteSizeSpan(12, true), 0, str3.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        span3.setSpan(colorSpan3, 0, str3.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+
+        view.append(span1);
+        view.append(span3);
 
     }
+
 }

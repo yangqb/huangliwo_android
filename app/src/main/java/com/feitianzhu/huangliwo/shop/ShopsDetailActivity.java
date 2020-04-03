@@ -347,7 +347,7 @@ public class ShopsDetailActivity extends BaseActivity {
                 break;
             case R.id.tv_pay:
                 if (specifications.size() > 0 && (sb == null || TextUtils.isEmpty(sb.toString()))) {
-                    ToastUtils.showShortToast("请选择商品规格");
+                    showSpeDialog();
                     return;
                 }
                 Intent intent = new Intent(ShopsDetailActivity.this, ShopPayActivity.class);
@@ -400,36 +400,7 @@ public class ShopsDetailActivity extends BaseActivity {
             case R.id.select_specifications:
                 /* //商品规格
                  */
-                new CustomSpecificationDialog(this).setData(specifications)
-                        .setNegativeButton(new CustomSpecificationDialog.OnOkClickListener() {
-                            @Override
-                            public void onOkClick(List<ProductParameters.GoodsSpecifications> data) {
-                                sb = new StringBuffer();
-                                valueId = new StringBuffer();
-                                speciName = new StringBuffer();
-                                List<ProductParameters.GoodsSpecifications.SkuValueListBean> selectSpec = new ArrayList<>();
-                                for (int i = 0; i < data.size(); i++) {
-                                    for (int j = 0; j < data.get(i).getSkuValueList().size(); j++) {
-                                        if (data.get(i).getSkuValueList().get(j).isSelect()) {
-                                            sb.append("\"" + data.get(i).getSkuValueList().get(j).getAttributeVal() + "\" ");
-                                            selectSpec.add(data.get(i).getSkuValueList().get(j));
-                                        }
-                                    }
-                                }
-                                if (selectSpec.size() > 0) {
-                                    for (int i = 0; i < selectSpec.size(); i++) {
-                                        if (i == selectSpec.size() - 1) {
-                                            valueId.append(selectSpec.get(i).getValueId());
-                                            speciName.append(selectSpec.get(i).getAttributeVal());
-                                        } else {
-                                            valueId.append(selectSpec.get(i).getValueId() + ",");
-                                            speciName.append(selectSpec.get(i).getAttributeVal() + ",");
-                                        }
-                                    }
-                                }
-                                specificationsName.setText("选择了：" + sb.toString());
-                            }
-                        }).show();
+                showSpeDialog();
                 break;
             case R.id.ll_rebate:
                 intent = new Intent(ShopsDetailActivity.this, VipActivity.class);
@@ -440,9 +411,43 @@ public class ShopsDetailActivity extends BaseActivity {
 
     }
 
+
+    public void showSpeDialog() {
+        new CustomSpecificationDialog(this).setData(specifications)
+                .setNegativeButton(new CustomSpecificationDialog.OnOkClickListener() {
+                    @Override
+                    public void onOkClick(List<ProductParameters.GoodsSpecifications> data) {
+                        sb = new StringBuffer();
+                        valueId = new StringBuffer();
+                        speciName = new StringBuffer();
+                        List<ProductParameters.GoodsSpecifications.SkuValueListBean> selectSpec = new ArrayList<>();
+                        for (int i = 0; i < data.size(); i++) {
+                            for (int j = 0; j < data.get(i).getSkuValueList().size(); j++) {
+                                if (data.get(i).getSkuValueList().get(j).isSelect()) {
+                                    sb.append("\"" + data.get(i).getSkuValueList().get(j).getAttributeVal() + "\" ");
+                                    selectSpec.add(data.get(i).getSkuValueList().get(j));
+                                }
+                            }
+                        }
+                        if (selectSpec.size() > 0) {
+                            for (int i = 0; i < selectSpec.size(); i++) {
+                                if (i == selectSpec.size() - 1) {
+                                    valueId.append(selectSpec.get(i).getValueId());
+                                    speciName.append(selectSpec.get(i).getAttributeVal());
+                                } else {
+                                    valueId.append(selectSpec.get(i).getValueId() + ",");
+                                    speciName.append(selectSpec.get(i).getAttributeVal() + ",");
+                                }
+                            }
+                        }
+                        specificationsName.setText("选择了：" + sb.toString());
+                    }
+                }).show();
+    }
+
     public void addShoppingCart() {
         if (specifications.size() > 0 && (sb == null || TextUtils.isEmpty(sb.toString()))) {
-            ToastUtils.showShortToast("请选择商品规格");
+            showSpeDialog();
             return;
         }
         AddShoppingCartBody model = new AddShoppingCartBody();
