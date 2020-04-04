@@ -18,7 +18,7 @@ public class NationalPassengerInfo implements Serializable {
     public String birthday;
     public int gender;
     public RefundSearchResultInfo refundSearchResult;// Object
-    //public refundApplyResult;//Object
+    public RefundApplyResultInfo refundApplyResult;//Object
     public ChangeSearchResultInfo changeSearchResult;// Object
-    //public changeApplyResult;// Object
+    public ChangeApplyResultInfo changeApplyResult;// Object
 }

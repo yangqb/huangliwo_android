@@ -64,9 +64,7 @@ public class PlaneCalendarActivity extends BaseActivity {
         tv_desc = findViewById(R.id.tv_desc);
         int selectType = getIntent().getIntExtra(SELECT_MODEL, 0);
 
-        List<String> pointList = Arrays.asList("2018-10-01", "2018-11-19", "2018-11-20", "2018-05-23", "2019-01-01", "2018-12-23");
-        List<String> multiDay = Arrays.asList("2020-03-18", "2020-03-25");
-        List<String> singerDay = Arrays.asList("2020-03-18");
+       // List<String> pointList = Arrays.asList("2018-10-01", "2018-11-19", "2018-11-20", "2018-05-23", "2019-01-01", "2018-12-23");
         CustomPainter innerPainter = new CustomPainter(miui10Calendar);
         miui10Calendar = findViewById(R.id.miui10Calendar);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);// HH:mm:ss
@@ -85,26 +83,25 @@ public class PlaneCalendarActivity extends BaseActivity {
             miui10Calendar.getAllSelectDateList().addAll(localDateList); //设置默认选中多个日期
         } else {
             miui10Calendar.setSelectedMode(SelectedModel.SINGLE_SELECTED);
-            innerPainter.setMultiSelectDay(singerDay);
         }
 
 
         //InnerPainter innerPainter = (InnerPainter) miui10Calendar.getCalendarPainter();
-        innerPainter.setPointList(pointList);
+       // innerPainter.setPointList(pointList);
 
-        Map<String, String> strMap = new HashMap<>();
-        strMap.put("2019-01-25", "测试");
-        strMap.put("2019-01-23", "测试1");
-        strMap.put("2019-01-24", "测试2");
-        innerPainter.setReplaceLunarStrMap(strMap);
+        /*Map<String, String> strMap = new HashMap<>();
+        strMap.put("2019-01-25", "");
+        strMap.put("2019-01-23", "");
+        strMap.put("2019-01-24", "");
+        innerPainter.setReplaceLunarStrMap(strMap);*/
 
-        Map<String, Integer> colorMap = new HashMap<>();
+        /*Map<String, Integer> colorMap = new HashMap<>();
         colorMap.put("2019-08-25", Color.RED);
 
         colorMap.put("2019-08-5", Color.parseColor("#000000"));
-        innerPainter.setReplaceLunarColorMap(colorMap);
+        innerPainter.setReplaceLunarColorMap(colorMap);*/
 
-
+/*
         List<String> holidayList = new ArrayList<>();
         holidayList.add("2019-7-20");
         holidayList.add("2019-7-21");
@@ -113,9 +110,9 @@ public class PlaneCalendarActivity extends BaseActivity {
         List<String> workdayList = new ArrayList<>();
         workdayList.add("2019-7-23");
         workdayList.add("2019-7-24");
-        workdayList.add("2019-7-25");
+        workdayList.add("2019-7-25");*/
 
-        innerPainter.setLegalHolidayList(holidayList, workdayList);
+        //innerPainter.setLegalHolidayList(holidayList, workdayList);
 
         miui10Calendar.setCalendarPainter(innerPainter);
 
@@ -152,7 +149,11 @@ public class PlaneCalendarActivity extends BaseActivity {
                 }*/
 
                 if (allSelectList.size() == 2) {
-                    startDate = allSelectList.get(0).toString() + "=" + allSelectList.get(1).toString();
+                    if (allSelectList.get(0).isBefore(allSelectList.get(1))) {
+                        startDate = allSelectList.get(0).toString() + "=" + allSelectList.get(1).toString();
+                    } else {
+                        startDate = allSelectList.get(1).toString() + "=" + allSelectList.get(0).toString();
+                    }
                 } else if (allSelectList.size() == 1) {
                     startDate = allSelectList.get(0).toString() + "=" + allSelectList.get(0).toString();
                 } else {

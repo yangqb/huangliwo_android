@@ -1,8 +1,16 @@
 package com.feitianzhu.huangliwo.plane;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.AbsoluteSizeSpan;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -40,6 +48,8 @@ public class SearchPlanActivity2 extends BaseActivity {
     public static final String FLIGHT_END_DATE = "flight_end_date";
     public static final String DEP_CODE = "depCode";
     public static final String ARR_CODE = "arrCode";
+    private static final int DATE_REQUEST_CODE = 100;
+    private int sortType = 1;
     private List<MultiGoBackFlightInfo> goBackFlightList = new ArrayList<>();
     private SearchResultAdapter2 mAdapter;
     private String depCode;
@@ -65,6 +75,14 @@ public class SearchPlanActivity2 extends BaseActivity {
     TextView depDate;
     @BindView(R.id.arrDate)
     TextView arrDate;
+    @BindView(R.id.tvTimeTitle)
+    TextView tvTimeTitle;
+    @BindView(R.id.tvPriceTitle)
+    TextView tvPriceTitle;
+    @BindView(R.id.line1)
+    View line1;
+    @BindView(R.id.line2)
+    View line2;
 
     @Override
     protected int getLayoutId() {
@@ -122,7 +140,7 @@ public class SearchPlanActivity2 extends BaseActivity {
                     .params("goDate", goDate)
                     .params("backDate", backDate)
                     .params("exTrack", "retehui")
-                    .params("sort", "1") //排序：1为价格最低 2为时间最早
+                    .params("sort", sortType) //排序：1为价格最低 2为时间最早
                     .execute(new JsonCallback<PlaneResponse<GoBackFlightInfo>>() {
                         @Override
                         public void onSuccess(Response<PlaneResponse<GoBackFlightInfo>> response) {
@@ -188,15 +206,48 @@ public class SearchPlanActivity2 extends BaseActivity {
         }
     }
 
-    @OnClick({R.id.left_button, R.id.btn_next})
+    @OnClick({R.id.left_button, R.id.depDate, R.id.arrDate, R.id.sortTime, R.id.sortPrice})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.left_button:
                 finish();
                 break;
-            case R.id.btn_next:
-
+            case R.id.depDate:
+            case R.id.arrDate:
+                Intent intent = new Intent(SearchPlanActivity2.this, PlaneCalendarActivity.class);
+                intent.putExtra(PlaneCalendarActivity.SELECT_MODEL, searchType);
+                startActivityForResult(intent, DATE_REQUEST_CODE);
                 break;
+            case R.id.sortTime:
+                tvTimeTitle.setTextColor(getResources().getColor(R.color.color_ff8300));
+                line2.setBackgroundColor(getResources().getColor(R.color.color_ff8300));
+                tvPriceTitle.setTextColor(getResources().getColor(R.color.color_333333));
+                line1.setBackgroundColor(getResources().getColor(R.color.white));
+                sortType = 2;
+                initData();
+                break;
+            case R.id.sortPrice:
+                tvTimeTitle.setTextColor(getResources().getColor(R.color.color_333333));
+                line2.setBackgroundColor(getResources().getColor(R.color.white));
+                tvPriceTitle.setTextColor(getResources().getColor(R.color.color_ff8300));
+                line1.setBackgroundColor(getResources().getColor(R.color.color_ff8300));
+                sortType = 1;
+                initData();
+                break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == DATE_REQUEST_CODE) {
+                goDate = data.getStringExtra(PlaneCalendarActivity.SELECT_DATE).split("=")[0];
+                backDate = data.getStringExtra(PlaneCalendarActivity.SELECT_DATE).split("=")[1];
+                depDate.setText(DateUtils.strToStr(goDate) + DateUtils.strToDate2(goDate));
+                arrDate.setText(DateUtils.strToStr(backDate) + DateUtils.strToDate2(backDate));
+                initData();
+            }
         }
     }
 }

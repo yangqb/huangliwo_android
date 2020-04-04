@@ -1,19 +1,20 @@
 package com.feitianzhu.huangliwo.plane;
 
 import android.content.Intent;
-import android.os.Handler;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cretin.tools.cityselect.model.CityModel;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.common.base.LazyWebActivity;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.utils.DateUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
+import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.view.CustomPlaneProtocolView;
 import com.feitianzhu.huangliwo.view.CustomRefundView;
 import com.lxj.xpopup.XPopup;
@@ -40,6 +41,8 @@ public class PlaneHomeActivity extends BaseActivity {
     private String endDateStr = "";
     private String depCode = "PEK";
     private String arrCode = "SHA";
+    private String depCodeData = "PEK";
+    private String arrCodeData = "SHA";
 
     private int anim;
     private boolean enable;
@@ -146,6 +149,10 @@ public class PlaneHomeActivity extends BaseActivity {
                 trainSelect.setSelected(true);
                 break;
             case R.id.btn_domestic:
+                tvEndCity = "上海";
+                arrCode = "SHA";
+                arrCodeData = "SHA";
+                endCityName.setText(tvEndCity);
                 btnDomestic.setTextColor(getResources().getColor(R.color.color_333333));
                 btnInternational.setTextColor(getResources().getColor(R.color.color_666666));
                 btnComeAndGo.setTextColor(getResources().getColor(R.color.color_666666));
@@ -156,6 +163,10 @@ public class PlaneHomeActivity extends BaseActivity {
                 searchType = 0;
                 break;
             case R.id.btn_international:
+                tvEndCity = "请选择";
+                arrCode = "";
+                arrCodeData = "";
+                endCityName.setText(tvEndCity);
                 btnDomestic.setTextColor(getResources().getColor(R.color.color_666666));
                 btnInternational.setTextColor(getResources().getColor(R.color.color_333333));
                 btnComeAndGo.setTextColor(getResources().getColor(R.color.color_666666));
@@ -166,6 +177,10 @@ public class PlaneHomeActivity extends BaseActivity {
                 searchType = 1;
                 break;
             case R.id.btn_come_go:
+                tvEndCity = "上海";
+                arrCode = "SHA";
+                arrCodeData = "SHA";
+                endCityName.setText(tvEndCity);
                 btnDomestic.setTextColor(getResources().getColor(R.color.color_666666));
                 btnInternational.setTextColor(getResources().getColor(R.color.color_666666));
                 btnComeAndGo.setTextColor(getResources().getColor(R.color.color_333333));
@@ -187,9 +202,13 @@ public class PlaneHomeActivity extends BaseActivity {
                 if (reversal) {
                     endCityName.setText(tvEndCity);
                     startCityName.setText(tvStartCity);
+                    depCodeData = depCode;
+                    arrCodeData = arrCode;
                 } else {
                     startCityName.setText(tvEndCity);
                     endCityName.setText(tvStartCity);
+                    depCodeData = arrCode;
+                    arrCodeData = depCode;
                 }
                 reversal = !reversal;
                 break;
@@ -221,19 +240,27 @@ public class PlaneHomeActivity extends BaseActivity {
 
                 break;
             case R.id.search:
+                if (TextUtils.isEmpty(arrCode) || TextUtils.isEmpty(depCode)) {
+                    ToastUtils.showShortToast("请选择城市");
+                    return;
+                }
+                if (searchType == 1 || searchType == 3) {
+                    ToastUtils.showShortToast("暂不支持国际业务");
+                    return;
+                }
                 if (searchType == 2 || searchType == 3) {
                     intent = new Intent(this, SearchPlanActivity2.class);
                     intent.putExtra(SearchPlanActivity2.SEARCH_TYPE, searchType);
                     intent.putExtra(SearchPlanActivity2.FLIGHT_START_DATE, startDateStr);
                     intent.putExtra(SearchPlanActivity2.FLIGHT_END_DATE, endDateStr);
-                    intent.putExtra(SearchPlanActivity2.DEP_CODE, depCode);
-                    intent.putExtra(SearchPlanActivity2.ARR_CODE, arrCode);
+                    intent.putExtra(SearchPlanActivity2.DEP_CODE, depCodeData);
+                    intent.putExtra(SearchPlanActivity2.ARR_CODE, arrCodeData);
                 } else {
                     intent = new Intent(this, SearchPlanActivity.class);
                     intent.putExtra(SearchPlanActivity.SEARCH_TYPE, searchType);
                     intent.putExtra(SearchPlanActivity.FLIGHT_DATE, startDateStr);
-                    intent.putExtra(SearchPlanActivity.DEP_CODE, depCode);
-                    intent.putExtra(SearchPlanActivity.ARR_CODE, arrCode);
+                    intent.putExtra(SearchPlanActivity.DEP_CODE, depCodeData);
+                    intent.putExtra(SearchPlanActivity.ARR_CODE, arrCodeData);
                 }
                 startActivity(intent);
                 break;
@@ -242,7 +269,9 @@ public class PlaneHomeActivity extends BaseActivity {
                 startActivity(intent);
                 break;
             case R.id.select_seat:
-                intent = new Intent(PlaneHomeActivity.this, PlaneSeatSelectionActivity.class);
+                intent = new Intent(PlaneHomeActivity.this, LazyWebActivity.class);
+                intent.putExtra(Constant.URL, "http://touch.qunar.com/flight/seat/?isDistribution=true&theme=pure&distributorKey=8e0e4887-6aee-491a-a829-19bb72b47162&channel=web.batour.demo");
+                intent.putExtra(Constant.H5_TITLE, "值机选座");
                 startActivity(intent);
                 break;
             case R.id.ll_goDate:
@@ -335,6 +364,7 @@ public class PlaneHomeActivity extends BaseActivity {
                 tvEndCity = cityModel.getCityName();
                 endCityName.setText(tvEndCity);
                 arrCode = cityModel.getExtra().toString();
+                arrCodeData = cityModel.getExtra().toString();
                 if (startCityType == 0 && endCityType == 0) { //国内城市
                     if (searchType == 3) {
                         searchType = 2;
@@ -354,6 +384,7 @@ public class PlaneHomeActivity extends BaseActivity {
                 tvStartCity = cityModel.getCityName();
                 startCityName.setText(tvStartCity);
                 depCode = cityModel.getExtra().toString();
+                depCodeData = cityModel.getExtra().toString();
                 if (startCityType == 0 && endCityType == 0) { //国内城市
                     if (searchType == 3) {
                         searchType = 2;

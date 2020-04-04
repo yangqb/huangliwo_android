@@ -1,6 +1,7 @@
 package com.feitianzhu.huangliwo.plane;
 
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -10,6 +11,7 @@ import com.cretin.tools.cityselect.callback.OnLocationListener;
 import com.cretin.tools.cityselect.model.CityModel;
 import com.cretin.tools.cityselect.view.CitySelectView;
 import com.feitianzhu.huangliwo.R;
+import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.CustomCityModel;
 import com.feitianzhu.huangliwo.model.Province;
@@ -40,10 +42,20 @@ public class SelectPlaneCityActivity extends BaseActivity {
     public static final String CITY_TYPE = "search_type";
     public static final String CITY_DATA = "CITY_DATA";
     public int type = 0;//国内0,国际1
-    private List<CustomCityModel> statusLs;
-    private CityModel currentCity;
-    @BindView(R.id.city_view)
-    CitySelectView citySelectView;
+    private List<CustomCityModel> cnStatusLs = new ArrayList<>();
+    private List<CustomCityModel> interStatusLs = new ArrayList<>();
+    private List<CityModel> cnHotCitys = new ArrayList<>();
+    private List<CityModel> interHotCitys = new ArrayList<>();
+    private String cnJson;
+    private String interJson;
+    private List<CityModel> cnAllCitys = new ArrayList<>();
+    private List<CityModel> interAllCitys = new ArrayList<>();
+    private CityModel cnCurrentCity;
+    private CityModel interCurrentCity;
+    @BindView(R.id.cn_city_view)
+    CitySelectView cnCitySelectView;
+    @BindView(R.id.inter_city_view)
+    CitySelectView interCitySelectView;
     @BindView(R.id.btn_domestic)
     TextView btnDomestic;
     @BindView(R.id.btn_international)
@@ -64,36 +76,14 @@ public class SelectPlaneCityActivity extends BaseActivity {
     protected void initView() {
         rightText.setText("确定");
         rightText.setVisibility(View.GONE);
-        //设置所有城市数据
-        final List<CityModel> allCitys = new ArrayList<>();
         try {
-            String json = readString(mContext.getAssets().open("cn.json"));
-            Type type = new TypeToken<List<CustomCityModel>>() {
-            }.getType();
-            statusLs = new Gson().fromJson(json, type);
+            cnJson = readString(mContext.getAssets().open("cn.json"));
+            interJson = readString(mContext.getAssets().open("internation.json"));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //设置热门城市列表 这都是瞎写的 哈哈哈
-        final List<CityModel> hotCitys = new ArrayList<>();
-        for (int i = 0; i < statusLs.size(); i++) {
-            CityModel cityModel = new CityModel(statusLs.get(i).city, statusLs.get(i).szm);
-            allCitys.add(cityModel);
-            if ("北京".equals(statusLs.get(i).city) || "上海".equals(statusLs.get(i).city) || "广州".equals(statusLs.get(i).city) || "深圳".equals(statusLs.get(i).city) || "武汉".equals(statusLs.get(i).city)) {
-                hotCitys.add(cityModel);
-            }
-            if ("深圳".equals(statusLs.get(i).city)) {
-                //设置当前城市数据
-                currentCity = cityModel;
-                //绑定数据到视图 需要 所有城市列表 热门城市列表 和 当前城市列表 其中 所有城市列表是必传的 热门城市和当前城市是选填的 不传就不会显示对应的视图
-            }
-        }
-        citySelectView.bindData(allCitys, hotCitys, currentCity);
-        //设置搜索框的文案提示
-        citySelectView.setSearchTips("请输入城市名称或者拼音");
-
         //设置城市选择之后的事件监听
-        citySelectView.setOnCitySelectListener(new OnCitySelectListener() {
+        cnCitySelectView.setOnCitySelectListener(new OnCitySelectListener() {
             @Override
             public void onCitySelect(CityModel cityModel) {
                 Toast.makeText(SelectPlaneCityActivity.this, "你点击了：" + cityModel.getCityName() + ":" + cityModel.getExtra().toString(), Toast.LENGTH_SHORT).show();
@@ -110,19 +100,108 @@ public class SelectPlaneCityActivity extends BaseActivity {
             }
         });
 
+        //设置城市选择之后的事件监听
+        interCitySelectView.setOnCitySelectListener(new OnCitySelectListener() {
+            @Override
+            public void onCitySelect(CityModel cityModel) {
+                Toast.makeText(SelectPlaneCityActivity.this, "你点击了：" + cityModel.getCityName() + ":" + cityModel.getExtra().toString(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent();
+                intent.putExtra(CITY_TYPE, type);
+                intent.putExtra(CITY_DATA, cityModel);
+                setResult(RESULT_OK, intent);
+                finish();
+            }
+
+            @Override
+            public void onSelectCancel() {
+                Toast.makeText(SelectPlaneCityActivity.this, "你取消了城市选择", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
         //设置点击重新定位之后的事件监听
-        citySelectView.setOnLocationListener(new OnLocationListener() {
+        cnCitySelectView.setOnLocationListener(new OnLocationListener() {
             @Override
             public void onLocation() {
                 //这里模拟定位 两秒后给个随便的定位数据
-                citySelectView.postDelayed(new Runnable() {
+                cnCitySelectView.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        citySelectView.reBindCurrentCity(new CityModel("广州", "10000001"));
+                        cnCitySelectView.reBindCurrentCity(new CityModel("广州", "10000001"));
                     }
                 }, 2000);
             }
         });
+
+        //设置点击重新定位之后的事件监听
+        interCitySelectView.setOnLocationListener(new OnLocationListener() {
+            @Override
+            public void onLocation() {
+                //这里模拟定位 两秒后给个随便的定位数据
+                interCitySelectView.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        interCitySelectView.reBindCurrentCity(new CityModel("广州", "10000001"));
+                    }
+                }, 2000);
+            }
+        });
+    }
+
+    public void initCnCity() {
+        //设置所有城市数据
+        Type jsonType = new TypeToken<List<CustomCityModel>>() {
+        }.getType();
+        cnStatusLs = new Gson().fromJson(cnJson, jsonType);
+        //设置热门城市列表 这都是瞎写的 哈哈哈
+        for (int i = 0; i < cnStatusLs.size(); i++) {
+            CityModel cityModel = new CityModel(cnStatusLs.get(i).city, cnStatusLs.get(i).szm);
+            cnAllCitys.add(cityModel);
+            if ("北京".equals(cnStatusLs.get(i).city) || "上海".equals(cnStatusLs.get(i).city) || "广州".equals(cnStatusLs.get(i).city) || "深圳".equals(cnStatusLs.get(i).city) || "武汉".equals(cnStatusLs.get(i).city)) {
+                cnHotCitys.add(cityModel);
+            }
+
+            /*if (!TextUtils.isEmpty(Constant.mCity)) {
+                if (Constant.mCity.equals(statusLs.get(i).city)) {
+                    //设置当前城市数据
+                    currentCity = cityModel;
+                    //绑定数据到视图 需要 所有城市列表 热门城市列表 和 当前城市列表 其中 所有城市列表是必传的 热门城市和当前城市是选填的 不传就不会显示对应的视图
+                }
+            }*/
+        }
+
+        cnCitySelectView.bindData(cnAllCitys, cnHotCitys, cnCurrentCity);
+        //设置搜索框的文案提示
+        cnCitySelectView.setSearchTips("请输入城市名称或者拼音");
+    }
+
+    public void initInterCity() {
+        //设置所有城市数据
+        Type jsonType = new TypeToken<List<CustomCityModel>>() {
+        }.getType();
+        interStatusLs = new Gson().fromJson(interJson, jsonType);
+        //设置热门城市列表 这都是瞎写的 哈哈哈
+        for (int i = 0; i < interStatusLs.size(); i++) {
+            CityModel cityModel = new CityModel(interStatusLs.get(i).city, interStatusLs.get(i).szm);
+            interAllCitys.add(cityModel);
+
+            if (interStatusLs.get(i).id == 5391 || interStatusLs.get(i).id == 47 ||
+                    interStatusLs.get(i).id == 111 || interStatusLs.get(i).id == 5387 || (interStatusLs.get(i).id == 31 || interStatusLs.get(i).id == 789)) {
+                interHotCitys.add(cityModel);
+
+            }
+            /*if (!TextUtils.isEmpty(Constant.mCity)) {
+                if (Constant.mCity.equals(statusLs.get(i).city)) {
+                    //设置当前城市数据
+                    currentCity = cityModel;
+                    //绑定数据到视图 需要 所有城市列表 热门城市列表 和 当前城市列表 其中 所有城市列表是必传的 热门城市和当前城市是选填的 不传就不会显示对应的视图
+                }
+            }*/
+        }
+
+        interCitySelectView.bindData(interAllCitys, interHotCitys, interCurrentCity);
+        //设置搜索框的文案提示
+        interCitySelectView.setSearchTips("请输入城市名称或者拼音");
     }
 
     @OnClick({R.id.btn_domestic, R.id.left_button, R.id.btn_international, R.id.right_button})
@@ -130,13 +209,16 @@ public class SelectPlaneCityActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.btn_domestic:
                 type = 0;
+                cnCitySelectView.setVisibility(View.VISIBLE);
+                interCitySelectView.setVisibility(View.GONE);
                 btnDomestic.setTextColor(getResources().getColor(R.color.color_333333));
                 btnInternational.setTextColor(getResources().getColor(R.color.color_666666));
                 line1.setBackgroundColor(getResources().getColor(R.color.color_fed228));
                 line2.setBackgroundColor(getResources().getColor(R.color.white));
                 break;
             case R.id.btn_international:
-                ToastUtils.showShortToast("暂不支持国际");
+                cnCitySelectView.setVisibility(View.GONE);
+                interCitySelectView.setVisibility(View.VISIBLE);
                 type = 1;
                 btnDomestic.setTextColor(getResources().getColor(R.color.color_666666));
                 btnInternational.setTextColor(getResources().getColor(R.color.color_433D36));
@@ -154,7 +236,8 @@ public class SelectPlaneCityActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-
+        initCnCity();
+        initInterCity();
     }
 
     private String readString(InputStream in) {

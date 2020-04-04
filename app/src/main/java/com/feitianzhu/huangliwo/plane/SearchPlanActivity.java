@@ -20,6 +20,7 @@ import com.feitianzhu.huangliwo.model.MultipleGoSearchFightInfo;
 import com.feitianzhu.huangliwo.model.SearchFlightModel;
 import com.feitianzhu.huangliwo.model.SearchInternationalFlightModel;
 import com.feitianzhu.huangliwo.model.TransitCityInfo;
+import com.feitianzhu.huangliwo.utils.DateUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.lzy.okgo.OkGo;
@@ -39,6 +40,7 @@ public class SearchPlanActivity extends BaseActivity {
     public static final String FLIGHT_DATE = "flight_date";
     public static final String DEP_CODE = "depCode";
     public static final String ARR_CODE = "arrCode";
+    private static final int DATE_REQUEST_CODE = 100;
     private List<MultipleGoSearchFightInfo> goSearchFightInfoList = new ArrayList<>();
     private List<SearchFlightModel.FlightModel> flightInfos = new ArrayList<>();
     private List<SearchInternationalFlightModel> internationalFlightModels = new ArrayList<>();
@@ -212,7 +214,21 @@ public class SearchPlanActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.right_button:
+                Intent intent = new Intent(SearchPlanActivity.this, PlaneCalendarActivity.class);
+                intent.putExtra(PlaneCalendarActivity.SELECT_MODEL, searchType);
+                startActivityForResult(intent, DATE_REQUEST_CODE);
                 break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == DATE_REQUEST_CODE) {
+                date = data.getStringExtra(PlaneCalendarActivity.SELECT_DATE);
+                initData();
+            }
         }
     }
 }

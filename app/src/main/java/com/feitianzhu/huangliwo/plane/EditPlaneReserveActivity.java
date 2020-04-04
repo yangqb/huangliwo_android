@@ -858,7 +858,7 @@ public class EditPlaneReserveActivity extends BaseActivity {
                 .params("orderNo", orderNo)
                 .params("channel", "alipay")
                 .params("amount", noPayAmount)
-                //.params("payPass", "")
+                .params("type", "1")
                 .execute(new JsonCallback<LzyResponse<PayModel>>() {
                     @Override
                     public void onSuccess(Response<LzyResponse<PayModel>> response) {

@@ -1,7 +1,16 @@
 package com.feitianzhu.huangliwo.plane;
 
+import android.annotation.SuppressLint;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextUtils;
+import android.text.style.AbsoluteSizeSpan;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.TextView;
 
@@ -15,7 +24,9 @@ import com.feitianzhu.huangliwo.model.ApplyRefundParams;
 import com.feitianzhu.huangliwo.model.DocOrderDetailInfo;
 import com.feitianzhu.huangliwo.model.DocOrderDetailPassengersInfo;
 import com.feitianzhu.huangliwo.model.NationalPassengerInfo;
+import com.feitianzhu.huangliwo.utils.MathUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
+import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.view.CustomPassengerNameView;
 import com.feitianzhu.huangliwo.view.CustomRefundView;
@@ -30,6 +41,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 
 public class RefundPlaneTicketActivity extends BaseActivity {
     private RefundPlaneTicketPassengerAdapter mAdapter;
@@ -45,6 +58,12 @@ public class RefundPlaneTicketActivity extends BaseActivity {
     RecyclerView recyclerView;
     @BindView(R.id.tvReason)
     TextView tvReason;
+    @BindView(R.id.serviceAmount)
+    TextView serviceAmount;
+    @BindView(R.id.refundAmount)
+    TextView refundAmount;
+    @BindView(R.id.totalAmount)
+    TextView totalAmount;
 
     @Override
     protected int getLayoutId() {
@@ -79,8 +98,10 @@ public class RefundPlaneTicketActivity extends BaseActivity {
                         if (response.body().code == 0) {
                             passengerInfo = response.body().result.get(0);
                             reasonList.clear();
-                            for (int i = 0; i < passengerInfo.refundSearchResult.tgqReasons.size(); i++) {
-                                reasonList.add(passengerInfo.refundSearchResult.tgqReasons.get(i).msg);
+                            if (passengerInfo.refundSearchResult.tgqReasons != null) {
+                                for (int i = 0; i < passengerInfo.refundSearchResult.tgqReasons.size(); i++) {
+                                    reasonList.add(passengerInfo.refundSearchResult.tgqReasons.get(i).msg);
+                                }
                             }
                         }
                     }
@@ -137,12 +158,23 @@ public class RefundPlaneTicketActivity extends BaseActivity {
                             public void onItemClick(int position) {
                                 tvReason.setText(reasonList.get(position));
                                 index = position;
+                                serviceAmount.setText("¥" + MathUtils.subZero(String.valueOf(passengerInfo.refundSearchResult.tgqReasons.get(index).refundPassengerPriceInfoList.get(0).refundFeeInfo.refundFee)));
+                                refundAmount.setText("¥" + MathUtils.subZero(String.valueOf(passengerInfo.refundSearchResult.tgqReasons.get(index).refundPassengerPriceInfoList.get(0).refundFeeInfo.returnRefundFee)));
+                                totalAmount.setText("¥" + MathUtils.subZero(String.valueOf(docOrderDetailInfo.passengerTypes.get(0).allPrices)));
                             }
                         }))
                 .show();
     }
 
     public void apply() {
+        if (TextUtils.isEmpty(tvReason.getText().toString())) {
+            ToastUtils.showShortToast("请选择退票原因");
+            return;
+        }
+        if (!passengerInfo.refundSearchResult.canRefund) {
+            ToastUtils.showShortToast(passengerInfo.refundSearchResult.reason);
+            return;
+        }
 
         ApplyRefundParams params = new ApplyRefundParams();
         params.applyRemarks = passengerInfo.refundSearchResult.tgqReasons.get(index).msg;
@@ -160,21 +192,26 @@ public class RefundPlaneTicketActivity extends BaseActivity {
         params.startTime = passengerInfo.refundSearchResult.tgqReasons.get(index).changeFlightSegmentList.get(0).startTime;
         params.uniqKey = passengerInfo.refundSearchResult.tgqReasons.get(index).changeFlightSegmentList.get(0).uniqKey;
         params.upgradeFee = passengerInfo.refundSearchResult.tgqReasons.get(index).changeFlightSegmentList.get(0).upgradeFee;
-
-        OkGo.<PlaneResponse>post(Urls.APPLY_REFUND)
+        String json = new Gson().toJson(params);
+        MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
+        RequestBody body = RequestBody.create(mediaType, json);
+        OkGo.<PlaneResponse<List<NationalPassengerInfo>>>post(Urls.APPLY_REFUND)
                 .tag(this)
                 .params(Constant.ACCESSTOKEN, token)
                 .params(Constant.USERID, userId)
-                .params("refundRequest", docOrderDetailInfo.detail.orderNo)
-                .execute(new JsonCallback<PlaneResponse>() {
+                .upRequestBody(body)
+                .execute(new JsonCallback<PlaneResponse<List<NationalPassengerInfo>>>() {
                     @Override
-                    public void onSuccess(Response<PlaneResponse> response) {
+                    public void onSuccess(Response<PlaneResponse<List<NationalPassengerInfo>>> response) {
                         super.onSuccess(RefundPlaneTicketActivity.this, response.body().message, response.body().code);
-
+                        if (response.body().code == 0 && response.body().result != null && response.body().result.get(0).refundApplyResult.success) {
+                            ToastUtils.showShortToast("申请成功");
+                            finish();
+                        }
                     }
 
                     @Override
-                    public void onError(Response<PlaneResponse> response) {
+                    public void onError(Response<PlaneResponse<List<NationalPassengerInfo>>> response) {
                         super.onError(response);
                     }
                 });

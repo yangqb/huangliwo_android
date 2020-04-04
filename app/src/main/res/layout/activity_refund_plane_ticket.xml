@@ -60,7 +60,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="第一步：选择乘机人"
+                        android:text="乘机人"
                         android:textColor="@color/color_333333"
                         android:textSize="16sp" />
 
@@ -85,7 +85,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="第二步：选择退票原因"
+                        android:text="选择退票原因"
                         android:textColor="@color/color_333333"
                         android:textSize="16sp" />
 
@@ -111,7 +111,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:text="我要改变行程"
+                        android:text=""
                         android:textColor="@color/color_333333"
                         android:textSize="16sp" />
 
@@ -141,11 +141,12 @@
                         android:textSize="16sp" />
 
                     <TextView
+                        android:id="@+id/refundAmount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        android:text="￥1000"
+                        android:text="￥0"
                         android:textColor="@color/color_ff8300"
                         android:textSize="16sp" />
 
@@ -174,11 +175,12 @@
                         android:textSize="16sp" />
 
                     <TextView
+                        android:id="@+id/totalAmount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        android:text="￥1000"
+                        android:text="￥0"
                         android:textColor="@color/color_ff8300"
                         android:textSize="16sp" />
 
@@ -207,11 +209,12 @@
                         android:textSize="16sp" />
 
                     <TextView
+                        android:id="@+id/serviceAmount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        android:text="￥1000"
+                        android:text="￥0"
                         android:textColor="@color/color_ff8300"
                         android:textSize="16sp" />
 
@@ -223,7 +226,8 @@
                     android:layout_marginTop="10dp"
                     android:background="@color/white"
                     android:paddingLeft="10dp"
-                    android:paddingRight="10dp">
+                    android:paddingRight="10dp"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -247,7 +251,8 @@
                     android:background="@color/white"
                     android:orientation="vertical"
                     android:paddingLeft="10dp"
-                    android:paddingRight="10dp">
+                    android:paddingRight="10dp"
+                    android:visibility="gone">
 
                     <View
                         android:layout_width="match_parent"

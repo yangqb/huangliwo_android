@@ -38,6 +38,7 @@
                 android:layout_height="40dp"
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@id/pay"
+                android:visibility="gone"
                 android:background="@drawable/shape_fed428_r5"
                 android:gravity="center"
                 android:text="取消订单"
@@ -80,6 +81,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_toRightOf="@id/tvStatus"
+                        android:visibility="gone"
                         android:text="剩 05:50:68 自动取消订单"
                         android:textColor="@color/white"
                         android:textSize="13sp" />
@@ -92,7 +94,7 @@
                         android:layout_centerVertical="true"
                         android:drawableRight="@mipmap/k03_10tanhao"
                         android:drawablePadding="5dp"
-                        android:text="￥560"
+                        android:text="￥0"
                         android:textColor="@color/white"
                         android:textSize="21sp" />
 
@@ -105,6 +107,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:layout_marginBottom="10dp"
+                    android:visibility="gone"
                     android:orientation="horizontal">
 
                     <TextView
@@ -160,7 +163,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:text="退改签规则、行李说明"
+                        android:text="改签详情"
                         android:textColor="@color/color_333333"
                         android:textSize="13sp" />
 
@@ -590,7 +593,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
-                            android:text="小黄鹂"
+                            android:text=""
                             android:textColor="@color/color_333333"
                             android:textSize="14sp" />
 
@@ -601,7 +604,7 @@
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
                             android:layout_marginTop="15dp"
-                            android:text="13666666666"
+                            android:text=""
                             android:textColor="@color/color_333333"
                             android:textSize="14sp" />
 

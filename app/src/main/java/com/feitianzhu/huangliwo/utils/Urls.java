@@ -634,4 +634,24 @@ public class Urls {
      * */
     public static final String APPLY_REFUND = TICKET_BASE_URL + "tgq/refundExplain";
 
+    /*
+     * 行程单报销数据
+     * */
+    public static final String ITINERARY_SEARCH = TICKET_BASE_URL + "itinerary/search";
+
+    /*
+     * 行程单报销信息提交
+     * */
+    public static final String ITINERARY_ASKFOR = TICKET_BASE_URL + "itinerary/askFor";
+
+    /*
+     *退票差额索要数据
+     *
+     * */
+    public static final String REFUND_XCD_SEARCH = TICKET_BASE_URL + "refundxcdSearch";
+
+    /*
+     *退票差额信息提交
+     * */
+    public static final String REFUND_ASKFOR = TICKET_BASE_URL + "askFor";
 }

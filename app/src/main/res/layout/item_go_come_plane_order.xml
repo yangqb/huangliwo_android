@@ -141,6 +141,7 @@
             android:layout_marginTop="15dp">
 
             <TextView
+                android:id="@+id/btn_pay"
                 android:layout_width="75dp"
                 android:layout_height="26dp"
                 android:layout_alignParentEnd="true"

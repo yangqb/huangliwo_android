@@ -29,7 +29,7 @@ public class FlightAlterSearchResultWithText implements Serializable {
     public String extraPrice;
     public String gqFee;
     public String upgradeFee;
-    public String allFee;
+    public double allFee;
     public String cabinStatus;
     public String actFlightNo;
     public boolean share;

@@ -87,7 +87,7 @@ public class WebViewActivity extends BaseActivity {
         mUrl = getIntent().getStringExtra("url");
         mTitle = getIntent().getStringExtra("title");
 
-        mTitle = TextUtils.isEmpty(mTitle) ? "网页" : mTitle;
+        mTitle = TextUtils.isEmpty(mTitle) ? "" : mTitle;
         titleName.setText(mTitle);
         initWebView(mUrl);
     }

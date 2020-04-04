@@ -1,17 +1,27 @@
 package com.feitianzhu.huangliwo.plane;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.AbsoluteSizeSpan;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.http.PlaneResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.ApplyChangeParams;
@@ -20,9 +30,12 @@ import com.feitianzhu.huangliwo.model.DocOrderDetailInfo;
 import com.feitianzhu.huangliwo.model.DocOrderDetailPassengerTypesInfo;
 import com.feitianzhu.huangliwo.model.DocOrderDetailPassengersInfo;
 import com.feitianzhu.huangliwo.model.NationalPassengerInfo;
+import com.feitianzhu.huangliwo.model.PayModel;
 import com.feitianzhu.huangliwo.model.PlaneOrderModel;
 import com.feitianzhu.huangliwo.model.TimePointChargsInfo;
 import com.feitianzhu.huangliwo.utils.DateUtils;
+import com.feitianzhu.huangliwo.utils.MathUtils;
+import com.feitianzhu.huangliwo.utils.PayUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
@@ -57,6 +70,7 @@ public class PlaneChangeActivity extends BaseActivity {
     private List<String> reasonList = new ArrayList<>();
     private PlaneChangeServiceAdapter serviceAdapter;
     private List<TimePointChargsInfo> timePointChargesList = new ArrayList<>();
+    private String changePrice = "0";
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     @BindView(R.id.title_name)
@@ -71,6 +85,8 @@ public class PlaneChangeActivity extends BaseActivity {
     TextView tvShippingSpace;
     @BindView(R.id.tvDate)
     TextView tvDate;
+    @BindView(R.id.price)
+    TextView tvPrice;
 
     @Override
     protected int getLayoutId() {
@@ -85,7 +101,6 @@ public class PlaneChangeActivity extends BaseActivity {
         docOrderDetailInfo = (DocOrderDetailInfo) getIntent().getSerializableExtra(ORDER_DATA);
         String[] strings = docOrderDetailInfo.flightInfo.get(0).deptTime.split("-");
         startDateStr = strings[0] + "-" + strings[1] + "-" + strings[2];
-        changeDate = startDateStr;
         List<DocOrderDetailPassengersInfo> passengerTypes = docOrderDetailInfo.passengers;
         mAdapter = new RefundPlaneTicketPassengerAdapter(passengerTypes);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -99,10 +114,11 @@ public class PlaneChangeActivity extends BaseActivity {
 
         recyclerView.setNestedScrollingEnabled(false);
         serviceRecyclerView.setNestedScrollingEnabled(false);
+
+        setSpannableString(changePrice, tvPrice);
     }
 
-    @Override
-    protected void initData() {
+    public void checkChange() {
         OkGo.<PlaneResponse<List<NationalPassengerInfo>>>get(Urls.CHANGE_SEARCH)
                 .tag(this)
                 .params(Constant.ACCESSTOKEN, token)
@@ -114,17 +130,22 @@ public class PlaneChangeActivity extends BaseActivity {
                     public void onSuccess(Response<PlaneResponse<List<NationalPassengerInfo>>> response) {
                         super.onSuccess(PlaneChangeActivity.this, response.body().message, response.body().code);
                         if (response.body().code == 0 && response.body().result != null) {
-                            timePointChargesList = response.body().result.get(0).changeSearchResult.changeRuleInfo.timePointChargesList;
-                            passengerInfo = response.body().result.get(0);
-                            serviceAdapter.setNewData(timePointChargesList);
-                            serviceAdapter.notifyDataSetChanged();
+                            if (response.body().result.get(0).changeSearchResult.changeRuleInfo.timePointChargesList != null) {
+                                timePointChargesList = response.body().result.get(0).changeSearchResult.changeRuleInfo.timePointChargesList;
+                                passengerInfo = response.body().result.get(0);
+                                serviceAdapter.setNewData(timePointChargesList);
+                                serviceAdapter.notifyDataSetChanged();
+                            }
                            /* String json = new Gson().toJson(response.body().result);
                             Intent intent = new Intent(PlaneChangeActivity.this, PlaneChangeDetailActivity.class);
                             intent.putExtra(PlaneChangeDetailActivity.PLANE_TYPE, planeType);
                             startActivity(intent);*/
                             reasonList.clear();
-                            for (int i = 0; i < passengerInfo.changeSearchResult.tgqReasons.size(); i++) {
-                                reasonList.add(passengerInfo.changeSearchResult.tgqReasons.get(i).msg);
+                            tvShippingSpace.setText("");
+                            if (passengerInfo.changeSearchResult.tgqReasons != null) {
+                                for (int i = 0; i < passengerInfo.changeSearchResult.tgqReasons.size(); i++) {
+                                    reasonList.add(passengerInfo.changeSearchResult.tgqReasons.get(i).msg);
+                                }
                             }
                         }
                     }
@@ -134,6 +155,12 @@ public class PlaneChangeActivity extends BaseActivity {
                         super.onError(response);
                     }
                 });
+    }
+
+
+    @Override
+    protected void initData() {
+
     }
 
     @OnClick({R.id.left_button, R.id.btn_bottom, R.id.rl_shippingSpace, R.id.select_date})
@@ -172,6 +199,11 @@ public class PlaneChangeActivity extends BaseActivity {
             ToastUtils.showShortToast("请选择改签原因");
             return;
         }
+        if (!passengerInfo.changeSearchResult.canChange) {
+            ToastUtils.showShortToast(passengerInfo.changeSearchResult.reason);
+            return;
+        }
+
         ApplyChangeParams params = new ApplyChangeParams();
         params.applyRemarks = passengerInfo.changeSearchResult.tgqReasons.get(index).msg;
         params.cabinCode = passengerInfo.changeSearchResult.tgqReasons.get(index).changeFlightSegmentList.get(0).cabinCode;
@@ -190,24 +222,75 @@ public class PlaneChangeActivity extends BaseActivity {
         params.upgradeFee = passengerInfo.changeSearchResult.tgqReasons.get(index).changeFlightSegmentList.get(0).upgradeFee;
 
         String json = new Gson().toJson(params);
-        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-        RequestBody body = RequestBody.create(JSON, json);
-        OkGo.<PlaneResponse>post(Urls.APPLY_CHANGE)
+        MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
+        RequestBody body = RequestBody.create(mediaType, json);
+        OkGo.<PlaneResponse<List<NationalPassengerInfo>>>post(Urls.APPLY_CHANGE)
                 .tag(this)
                 .params(Constant.ACCESSTOKEN, token)
                 .params(Constant.USERID, userId)
                 .upRequestBody(body)
-                .execute(new JsonCallback<PlaneResponse>() {
+                .execute(new JsonCallback<PlaneResponse<List<NationalPassengerInfo>>>() {
                     @Override
-                    public void onSuccess(Response<PlaneResponse> response) {
+                    public void onSuccess(Response<PlaneResponse<List<NationalPassengerInfo>>> response) {
                         super.onSuccess(PlaneChangeActivity.this, response.body().message, response.body().code);
+                        if (response.body().code == 0 && response.body().result != null && response.body().result.get(0).changeApplyResult.success) {
+                            if (passengerInfo.changeSearchResult.tgqReasons.get(index).changeFlightSegmentList.get(0).allFee == 0) {
+                                ToastUtils.showShortToast("申请成功");
+                            } else {
+                                pay(docOrderDetailInfo.detail.orderNo, MathUtils.subZero(String.valueOf(passengerInfo.changeSearchResult.tgqReasons.get(index).changeFlightSegmentList.get(0).allFee)));
+                            }
+                        }
                     }
 
                     @Override
-                    public void onError(Response<PlaneResponse> response) {
+                    public void onError(Response<PlaneResponse<List<NationalPassengerInfo>>> response) {
                         super.onError(response);
                     }
                 });
+    }
+
+    public void pay(String orderNo, String noPayAmount) {
+        OkGo.<LzyResponse<PayModel>>post(Urls.PLANE_PAY)
+                .tag(this)
+                .params(Constant.ACCESSTOKEN, token)
+                .params(Constant.USERID, userId)
+                .params("appId", "")
+                .params("orderNo", orderNo)
+                .params("channel", "alipay")
+                .params("amount", noPayAmount)
+                .params("type", "2")
+                .params("gqId", passengerInfo.changeApplyResult.gqId)
+                .params("passengerIds", passengerInfo.id + "")
+                .execute(new JsonCallback<LzyResponse<PayModel>>() {
+                    @Override
+                    public void onSuccess(Response<LzyResponse<PayModel>> response) {
+                        super.onSuccess(PlaneChangeActivity.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0 && response.body().data != null) {
+                            aliPay(response.body().data.payParam, response.body().data.orderNo);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<LzyResponse<PayModel>> response) {
+                        super.onError(response);
+                    }
+                });
+    }
+
+    private void aliPay(String payProof, String orderNo) {
+
+        PayUtils.aliPay(PlaneChangeActivity.this, payProof, new onConnectionFinishLinstener() {
+            @Override
+            public void onSuccess(int code, Object result) {
+                ToastUtils.showShortToast("申请成功");
+                finish();
+            }
+
+            @Override
+            public void onFail(int code, String result) {
+                ToastUtils.showShortToast("支付失败");
+            }
+        });
     }
 
     public void selectShoppingSpaceDialog() {
@@ -219,6 +302,8 @@ public class PlaneChangeActivity extends BaseActivity {
                             public void onItemClick(int position) {
                                 tvShippingSpace.setText(reasonList.get(position));
                                 index = position;
+                                changePrice = MathUtils.subZero(String.valueOf(passengerInfo.changeSearchResult.tgqReasons.get(index).changeFlightSegmentList.get(0).allFee));
+                                setSpannableString(changePrice, tvPrice);
                             }
                         }))
                 .show();
@@ -231,8 +316,28 @@ public class PlaneChangeActivity extends BaseActivity {
             if (requestCode == DATE_REQUEST_CODE) {
                 changeDate = data.getStringExtra(PlaneCalendarActivity.SELECT_DATE);
                 tvDate.setText(changeDate);
-                initData();
+                checkChange();
             }
         }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void setSpannableString(String str3, TextView view) {
+        String str1 = "¥";
+        view.setText("");
+        SpannableString span1 = new SpannableString(str1);
+        SpannableString span3 = new SpannableString(str3);
+        ForegroundColorSpan colorSpan1 = new ForegroundColorSpan(Color.parseColor("#FF8300"));
+        span1.setSpan(new AbsoluteSizeSpan(15, true), 0, str1.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        span1.setSpan(colorSpan1, 0, str1.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+
+        ForegroundColorSpan colorSpan3 = new ForegroundColorSpan(Color.parseColor("#FF8300"));
+        span3.setSpan(new AbsoluteSizeSpan(21, true), 0, str3.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        span3.setSpan(new StyleSpan(Typeface.BOLD), 0, str3.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        span3.setSpan(colorSpan3, 0, str3.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+
+        view.append(span1);
+        view.append(span3);
+
     }
 }

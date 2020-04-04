@@ -23,6 +23,7 @@ import com.just.agentweb.WebViewClient;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by jiangdikai on 2017/9/24.
@@ -50,7 +51,6 @@ public class LazyWebActivity extends AppCompatActivity {
                 .init();
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         String url = getIntent().getStringExtra(Constant.URL);
-        url = url + "?accessToken=" + token;
         //url = "https://www.baidu.com/";
         String title = getIntent().getStringExtra(Constant.H5_TITLE);
         if (TextUtils.isEmpty(title)) {
@@ -121,6 +121,18 @@ public class LazyWebActivity extends AppCompatActivity {
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @OnClick(R.id.left_button)
+    public void onClick() {
+        // 返回上一页面
+        WebView mWebView = mAgentWeb.getWebCreator().getWebView();
+        if (mWebView.canGoBack()) {
+            mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+            mWebView.goBack();
+        } else {
+            finish();
+        }
     }
 
     protected void back() {
