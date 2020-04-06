@@ -55,13 +55,15 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="115dp">
+            android:layout_height="115dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="115dp"
                 android:layout_alignParentBottom="true"
-                android:src="@mipmap/f01_04taitou" />
+                android:background="@mipmap/f01_04taitou" />
 
         </RelativeLayout>
     </LinearLayout>

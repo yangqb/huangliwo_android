@@ -43,6 +43,7 @@ import com.feitianzhu.huangliwo.model.ProductParameters;
 import com.feitianzhu.huangliwo.model.AddShoppingCartBody;
 import com.feitianzhu.huangliwo.shop.ui.ShoppingCartActivity;
 import com.feitianzhu.huangliwo.utils.GlideUtils;
+import com.feitianzhu.huangliwo.utils.MathUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
@@ -254,8 +255,8 @@ public class ShopsDetailActivity extends BaseActivity {
             goodsName.setText(goodsListBean.getGoodsName());
             goodsSummary.setText(goodsListBean.getSummary());
             String rebatePv = String.format(Locale.getDefault(), "%.2f", goodsListBean.getRebatePv());
-            tvRebate.setText("返¥" + rebatePv);
-            vipRebate.setText("返¥" + rebatePv);
+            tvRebate.setText("返¥" + MathUtils.subZero(rebatePv));
+            vipRebate.setText("返¥" + MathUtils.subZero(rebatePv));
             evalList = goodsListBean.getEvalList();
             if (evalList != null && evalList.size() > 0) {
                 llEvaluate.setVisibility(View.VISIBLE);

@@ -148,6 +148,7 @@ public class ShareMerchantActivity extends BaseActivity {
                 .tag(this)
                 .params(ACCESSTOKEN, token)//
                 .params(USERID, userId)
+                .params("type", "1")
                 .execute(new JsonCallback<LzyResponse<MineQRcodeModel>>() {
                     @Override
                     public void onSuccess(Response<LzyResponse<MineQRcodeModel>> response) {

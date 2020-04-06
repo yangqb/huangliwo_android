@@ -48,6 +48,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="15dp"
                 android:text=""
+                android:visibility="gone"
                 android:textColor="@color/color_666666"
                 android:textSize="11sp" />
 

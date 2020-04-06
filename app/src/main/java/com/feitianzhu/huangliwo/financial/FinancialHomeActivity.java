@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -65,12 +66,21 @@ public class FinancialHomeActivity extends BaseActivity {
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         titleName.setText("金融");
-        for (int i = 0; i < 10; i++) {
+        /*for (int i = 0; i < 10; i++) {
             MultiFinancialInfo multiFinancialInfo = new MultiFinancialInfo(MultiFinancialInfo.All_FINANCIAL);
             multiFinancialInfoList.add(multiFinancialInfo);
-        }
+        }*/
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         financialHomeAdapter = new FinancialHomeAdapter(multiFinancialInfoList);
+        View mEmptyView = View.inflate(this, R.layout.view_common_nodata, null);
+        ImageView img_empty = (ImageView) mEmptyView.findViewById(R.id.img_empty);
+        img_empty.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        financialHomeAdapter.setEmptyView(mEmptyView);
         recyclerView.setAdapter(financialHomeAdapter);
         financialHomeAdapter.notifyDataSetChanged();
         recyclerView.setNestedScrollingEnabled(false);
@@ -117,6 +127,8 @@ public class FinancialHomeActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.ll_all_financial:
+                llAllFinancial.setBackgroundResource(R.color.bg_yellow);
+                llMyFinancial.setBackgroundResource(R.color.white);
                 List<String> strings = new ArrayList<>();
                 if (listBean != null && listBean.size() > 0) {
                     for (int i = 0; i < listBean.size(); i++) {
@@ -137,10 +149,10 @@ public class FinancialHomeActivity extends BaseActivity {
                                                 tvTitle.setText(listBean.get(position - 1).getClsName());
                                             }
                                             multiFinancialInfoList.clear();
-                                            for (int i = 0; i < 10; i++) {
+                                            /*for (int i = 0; i < 10; i++) {
                                                 MultiFinancialInfo multiFinancialInfo = new MultiFinancialInfo(MultiFinancialInfo.All_FINANCIAL);
                                                 multiFinancialInfoList.add(multiFinancialInfo);
-                                            }
+                                            }*/
                                             financialHomeAdapter.setNewData(multiFinancialInfoList);
                                             financialHomeAdapter.notifyDataSetChanged();
                                             //getVipGif(clsId);
@@ -151,11 +163,13 @@ public class FinancialHomeActivity extends BaseActivity {
                 break;
 
             case R.id.ll_my_financial:
+                llAllFinancial.setBackgroundResource(R.color.white);
+                llMyFinancial.setBackgroundResource(R.color.bg_yellow);
                 multiFinancialInfoList.clear();
-                for (int i = 0; i < 10; i++) {
+               /* for (int i = 0; i < 10; i++) {
                     MultiFinancialInfo multiFinancialInfo = new MultiFinancialInfo(MultiFinancialInfo.MY_FINANCIAL);
                     multiFinancialInfoList.add(multiFinancialInfo);
-                }
+                }*/
                 financialHomeAdapter.setNewData(multiFinancialInfoList);
                 financialHomeAdapter.notifyDataSetChanged();
                 break;

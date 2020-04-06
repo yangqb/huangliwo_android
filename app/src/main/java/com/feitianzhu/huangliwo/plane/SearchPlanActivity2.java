@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
@@ -22,19 +23,27 @@ import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.PlaneResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
+import com.feitianzhu.huangliwo.model.CustomFightCityInfo;
 import com.feitianzhu.huangliwo.model.GoBackFlight;
 import com.feitianzhu.huangliwo.model.GoBackFlightInfo;
 import com.feitianzhu.huangliwo.model.GoBackFlightList;
 import com.feitianzhu.huangliwo.model.GoBackTripInfo;
+import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.MultiGoBackFlightInfo;
 import com.feitianzhu.huangliwo.model.PassengerModel;
 import com.feitianzhu.huangliwo.model.SearchInternationalFlightModel;
 import com.feitianzhu.huangliwo.utils.DateUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
+import com.feitianzhu.huangliwo.utils.UserInfoUtils;
+import com.feitianzhu.huangliwo.vip.VipActivity;
 import com.google.gson.Gson;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.base.Request;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,19 +53,13 @@ import butterknife.OnClick;
 
 public class SearchPlanActivity2 extends BaseActivity {
     public static final String SEARCH_TYPE = "search_type";
-    public static final String FLIGHT_START_DATE = "flight_start_date";
-    public static final String FLIGHT_END_DATE = "flight_end_date";
-    public static final String DEP_CODE = "depCode";
-    public static final String ARR_CODE = "arrCode";
     private static final int DATE_REQUEST_CODE = 100;
+    public static final String FLIGHT_INFO = "flight_info";
     private int sortType = 1;
     private List<MultiGoBackFlightInfo> goBackFlightList = new ArrayList<>();
     private SearchResultAdapter2 mAdapter;
-    private String depCode;
-    private String arrCode;
+    private CustomFightCityInfo customFightCityInfo;
     private int searchType = 2;
-    private String goDate;
-    private String backDate;
     private String userId;
     private String token;
     @BindView(R.id.title_name)
@@ -83,6 +86,12 @@ public class SearchPlanActivity2 extends BaseActivity {
     View line1;
     @BindView(R.id.line2)
     View line2;
+    @BindView(R.id.back_city_title)
+    TextView backCityTitle;
+    @BindView(R.id.go_city_title)
+    TextView goCityTitle;
+    @BindView(R.id.refreshLayout)
+    SmartRefreshLayout refreshLayout;
 
     @Override
     protected int getLayoutId() {
@@ -96,33 +105,59 @@ public class SearchPlanActivity2 extends BaseActivity {
         planeTitle.setVisibility(View.VISIBLE);
         titleName.setVisibility(View.GONE);
         searchType = getIntent().getIntExtra(SEARCH_TYPE, 2);
-        goDate = getIntent().getStringExtra(FLIGHT_START_DATE);
-        backDate = getIntent().getStringExtra(FLIGHT_END_DATE);
-        depCode = getIntent().getStringExtra(DEP_CODE);
-        arrCode = getIntent().getStringExtra(ARR_CODE);
-        startCity.setText("北京");
-        endCity.setText("上海");
+        customFightCityInfo = (CustomFightCityInfo) getIntent().getSerializableExtra(FLIGHT_INFO);
+        startCity.setText(customFightCityInfo.depCityName);
+        endCity.setText(customFightCityInfo.arrCityName);
+        goCityTitle.setText(customFightCityInfo.depCityName + "-" + customFightCityInfo.arrCityName);
+        backCityTitle.setText(customFightCityInfo.arrCityName + "-" + customFightCityInfo.depCityName);
         centerImg.setBackgroundResource(R.mipmap.k01_13wangfan);
-        depDate.setText(DateUtils.strToStr(goDate) + DateUtils.strToDate2(goDate));
-        arrDate.setText(DateUtils.strToStr(backDate) + DateUtils.strToDate2(backDate));
+        depDate.setText(DateUtils.strToStr(customFightCityInfo.goDate) + DateUtils.strToDate2(customFightCityInfo.goDate));
+        arrDate.setText(DateUtils.strToStr(customFightCityInfo.backDate) + DateUtils.strToDate2(customFightCityInfo.backDate));
         mAdapter = new SearchResultAdapter2(goBackFlightList);
+        View mEmptyView = View.inflate(this, R.layout.view_common_nodata, null);
+        ImageView img_empty = (ImageView) mEmptyView.findViewById(R.id.img_empty);
+        img_empty.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        mAdapter.setEmptyView(mEmptyView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
+
+        refreshLayout.setEnableLoadMore(false);
 
         initListener();
     }
 
     public void initListener() {
 
+        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                initData();
+            }
+        });
+
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Intent intent = new Intent(SearchPlanActivity2.this, PlaneDetailActivity.class);
                 intent.putExtra(PlaneDetailActivity.DETAIL_TYPE, searchType);
-                intent.putExtra(PlaneDetailActivity.FLIGHT_START_DATE, goDate);
-                intent.putExtra(PlaneDetailActivity.FLIGHT_END_DATE, backDate);
+                intent.putExtra(PlaneDetailActivity.FLIGHT_INFO, customFightCityInfo);
                 intent.putExtra(PlaneDetailActivity.FLIGHT_DATA, goBackFlightList.get(position));
+                startActivity(intent);
+            }
+        });
+
+        mAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                MineInfoModel userInfo = UserInfoUtils.getUserInfo(mContext);
+                Intent intent = new Intent(SearchPlanActivity2.this, VipActivity.class);
+                intent.putExtra(VipActivity.MINE_INFO, userInfo);
                 startActivity(intent);
             }
         });
@@ -135,17 +170,26 @@ public class SearchPlanActivity2 extends BaseActivity {
                     .tag(this)
                     .params(Constant.ACCESSTOKEN, token)
                     .params(Constant.USERID, userId)
-                    .params("depCity", depCode)
-                    .params("arrCity", arrCode)
-                    .params("goDate", goDate)
-                    .params("backDate", backDate)
+                    .params("depCity", customFightCityInfo.depAirPortCode)
+                    .params("arrCity", customFightCityInfo.arrAirPortCode)
+                    .params("goDate", customFightCityInfo.goDate)
+                    .params("backDate", customFightCityInfo.backDate)
                     .params("exTrack", "retehui")
                     .params("sort", sortType) //排序：1为价格最低 2为时间最早
                     .execute(new JsonCallback<PlaneResponse<GoBackFlightInfo>>() {
                         @Override
+                        public void onStart(Request<PlaneResponse<GoBackFlightInfo>, ? extends Request> request) {
+                            super.onStart(request);
+                            showloadDialog("");
+                        }
+
+                        @Override
                         public void onSuccess(Response<PlaneResponse<GoBackFlightInfo>> response) {
                             super.onSuccess(SearchPlanActivity2.this, response.body().message, response.body().code);
+                            goneloadDialog();
+                            refreshLayout.finishRefresh();
                             if (response.body().code == 0 && response.body().result != null) {
+                                goBackFlightList.clear();
                                 List<GoBackFlightList> flightList = response.body().result.flightList;
                                 if (flightList != null && flightList.size() > 0) {
                                     for (int i = 0; i < flightList.size(); i++) {
@@ -162,6 +206,8 @@ public class SearchPlanActivity2 extends BaseActivity {
                         @Override
                         public void onError(Response<PlaneResponse<GoBackFlightInfo>> response) {
                             super.onError(response);
+                            goneloadDialog();
+                            refreshLayout.finishRefresh(false);
                         }
                     });
 
@@ -172,18 +218,28 @@ public class SearchPlanActivity2 extends BaseActivity {
                     .params(Constant.USERID, userId)
                     .params("depCity", "PAR")
                     .params("arrCity", "BER")
-                    .params("depDate", goDate)
-                    .params("retDate", backDate)//往返必填
+                    .params("depDate", customFightCityInfo.goDate)
+                    .params("retDate", customFightCityInfo.backDate)//往返必填
                     .params("source", "ICP_SELECT_open.3724")
                     //.params("sort", "1") //排序：1为价格最低 2为时间最早
                     //.params("adultNum", "")成人数量
                     //.params("childNum", "")儿童数量
                     //.params("cabinLevel", "")舱位等级
                     .execute(new JsonCallback<PlaneResponse<List<SearchInternationalFlightModel>>>() {
+
+                        @Override
+                        public void onStart(Request<PlaneResponse<List<SearchInternationalFlightModel>>, ? extends Request> request) {
+                            super.onStart(request);
+                            showloadDialog("");
+                        }
+
                         @Override
                         public void onSuccess(Response<PlaneResponse<List<SearchInternationalFlightModel>>> response) {
                             super.onSuccess(SearchPlanActivity2.this, response.body().message, response.body().code);
+                            goneloadDialog();
+                            refreshLayout.finishRefresh();
                             if (response.body().code == 0 && response.body().result != null) {
+                                goBackFlightList.clear();
                                 List<SearchInternationalFlightModel> internationalFlightModelList = response.body().result;
                                 if (internationalFlightModelList.size() > 0) {
                                     for (int i = 0; i < internationalFlightModelList.size(); i++) {
@@ -200,7 +256,8 @@ public class SearchPlanActivity2 extends BaseActivity {
                         @Override
                         public void onError(Response<PlaneResponse<List<SearchInternationalFlightModel>>> response) {
                             super.onError(response);
-
+                            goneloadDialog();
+                            refreshLayout.finishRefresh(false);
                         }
                     });
         }
@@ -242,10 +299,10 @@ public class SearchPlanActivity2 extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == DATE_REQUEST_CODE) {
-                goDate = data.getStringExtra(PlaneCalendarActivity.SELECT_DATE).split("=")[0];
-                backDate = data.getStringExtra(PlaneCalendarActivity.SELECT_DATE).split("=")[1];
-                depDate.setText(DateUtils.strToStr(goDate) + DateUtils.strToDate2(goDate));
-                arrDate.setText(DateUtils.strToStr(backDate) + DateUtils.strToDate2(backDate));
+                customFightCityInfo.goDate = data.getStringExtra(PlaneCalendarActivity.SELECT_DATE).split("=")[0];
+                customFightCityInfo.backDate = data.getStringExtra(PlaneCalendarActivity.SELECT_DATE).split("=")[1];
+                depDate.setText(DateUtils.strToStr(customFightCityInfo.goDate) + DateUtils.strToDate2(customFightCityInfo.goDate));
+                arrDate.setText(DateUtils.strToStr(customFightCityInfo.backDate) + DateUtils.strToDate2(customFightCityInfo.backDate));
                 initData();
             }
         }

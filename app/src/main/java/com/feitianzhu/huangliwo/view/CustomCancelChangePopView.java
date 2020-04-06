@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -78,6 +79,14 @@ public class CustomCancelChangePopView extends CenterPopupView {
             findViewById(R.id.goTitle).setVisibility(VISIBLE);
             findViewById(R.id.llComeBack).setVisibility(VISIBLE);
         }
+
+        TextView btnSubmit = findViewById(R.id.btn_submit);
+        btnSubmit.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
 
         TextView go_signText = findViewById(R.id.go_signText);
         go_signText.setText(goRefundChangeInfo.signText);
@@ -156,5 +165,14 @@ public class CustomCancelChangePopView extends CenterPopupView {
         mAdapter6.notifyDataSetChanged();
         mAdapter7.notifyDataSetChanged();
         mAdapter8.notifyDataSetChanged();
+
+        recyclerView1.setNestedScrollingEnabled(false);
+        recyclerView2.setNestedScrollingEnabled(false);
+        recyclerView3.setNestedScrollingEnabled(false);
+        recyclerView4.setNestedScrollingEnabled(false);
+        recyclerView5.setNestedScrollingEnabled(false);
+        recyclerView6.setNestedScrollingEnabled(false);
+        recyclerView7.setNestedScrollingEnabled(false);
+        recyclerView8.setNestedScrollingEnabled(false);
     }
 }

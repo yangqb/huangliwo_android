@@ -16,9 +16,11 @@ import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.feitianzhu.huangliwo.R;
+import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.MultiPriceInfo;
 import com.feitianzhu.huangliwo.model.VenDorsInfo;
 import com.feitianzhu.huangliwo.utils.MathUtils;
+import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 
 import java.util.List;
 
@@ -33,7 +35,18 @@ public class PlaneDetailAdapter extends BaseMultiItemQuickAdapter<MultiPriceInfo
     @Override
     protected void convert(@NonNull BaseViewHolder helper, MultiPriceInfo item) {
         helper.addOnClickListener(R.id.btn_reserve)
+                .addOnClickListener(R.id.ll_rebate)
                 .addOnClickListener(R.id.luggage_change_notice);
+
+        MineInfoModel userInfo = UserInfoUtils.getUserInfo(mContext);
+        if (userInfo.getAccountType() != 0) {
+            helper.setGone(R.id.ll_rebate, false);
+            helper.setGone(R.id.vip_rebate, true);
+        } else {
+            helper.setGone(R.id.ll_rebate, true);
+            helper.setGone(R.id.vip_rebate, false);
+        }
+
         if (helper.getItemViewType() == MultiPriceInfo.DOMESTIC_TYPE) {
             setSpannableString(MathUtils.subZero(String.valueOf(item.venDorsInfo.barePrice)), helper.getView(R.id.price));
             if ("A".equals(item.venDorsInfo.cabinCount)) {
@@ -63,11 +76,13 @@ public class PlaneDetailAdapter extends BaseMultiItemQuickAdapter<MultiPriceInfo
                 helper.setText(R.id.luggage_change_notice, "未配置舱位  退改详情>");
             }
             helper.setText(R.id.tv_rebate, "返¥" + MathUtils.subZero(String.valueOf(item.venDorsInfo.zk)));
+            helper.setText(R.id.vip_rebate, "返¥" + MathUtils.subZero(String.valueOf(item.venDorsInfo.zk)));
         } else if (helper.getItemViewType() == MultiPriceInfo.INTERNATIONAL_TYPE) {
             setSpannableString(MathUtils.subZero(String.valueOf(item.internationalPriceInfo.price)), helper.getView(R.id.price));
             helper.setText(R.id.cabinCount, "");
             helper.setGone(R.id.cabinCount, false);
             helper.setText(R.id.tv_rebate, "返¥" + MathUtils.subZero(String.valueOf(item.internationalPriceInfo.zk)));
+            helper.setText(R.id.vip_rebate, "返¥" + MathUtils.subZero(String.valueOf(item.internationalPriceInfo.zk)));
             if (item.internationalPriceInfo.cPrice == 0) {
                 if ("economy".equals(item.internationalPriceInfo.cabinLevel)) {
                     helper.setText(R.id.luggage_change_notice, "儿童婴儿不可订经济舱退改¥111>");
@@ -95,6 +110,7 @@ public class PlaneDetailAdapter extends BaseMultiItemQuickAdapter<MultiPriceInfo
             helper.setGone(R.id.cabinCount, false);
             helper.setText(R.id.luggage_change_notice, item.goBackVendors.cabinDesc + "  退改详情>");
             helper.setText(R.id.tv_rebate, "返¥" + MathUtils.subZero(String.valueOf(item.goBackVendors.zk)));
+            helper.setText(R.id.vip_rebate, "返¥" + MathUtils.subZero(String.valueOf(item.goBackVendors.zk)));
         }
     }
 

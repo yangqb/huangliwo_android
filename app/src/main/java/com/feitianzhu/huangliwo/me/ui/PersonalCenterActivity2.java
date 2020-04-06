@@ -94,7 +94,7 @@ public class PersonalCenterActivity2 extends BaseTakePhotoActivity {
     protected void initView() {
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
-        rightImg.setVisibility(View.VISIBLE);
+        //rightImg.setVisibility(View.VISIBLE);
         titleName.setText("个人信息");
         getSharedInfo();
         requestData();

@@ -15,6 +15,7 @@ import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -24,9 +25,11 @@ import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.PlaneResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
+import com.feitianzhu.huangliwo.model.CustomFightCityInfo;
 import com.feitianzhu.huangliwo.model.CustomPlaneDetailInfo;
 import com.feitianzhu.huangliwo.model.FlightSegmentInfo;
 import com.feitianzhu.huangliwo.model.InternationalPriceInfo;
+import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.MultiGoBackFlightInfo;
 import com.feitianzhu.huangliwo.model.MultiPriceInfo;
 import com.feitianzhu.huangliwo.model.MultipleGoSearchFightInfo;
@@ -35,21 +38,19 @@ import com.feitianzhu.huangliwo.model.PlaneGoBackDetailInfo;
 import com.feitianzhu.huangliwo.model.PlaneInternationalDetailInfo;
 import com.feitianzhu.huangliwo.model.RefundChangeInfo;
 import com.feitianzhu.huangliwo.model.SearchFlightModel;
-import com.feitianzhu.huangliwo.model.VenDorsInfo;
 import com.feitianzhu.huangliwo.utils.DateUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
+import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 import com.feitianzhu.huangliwo.view.CustomCancelChangePopView;
-import com.feitianzhu.huangliwo.view.CustomPlaneProtocolView;
 import com.feitianzhu.huangliwo.view.CustomPlaneTransferView;
-import com.google.gson.Gson;
+import com.feitianzhu.huangliwo.vip.VipActivity;
 import com.lxj.xpopup.XPopup;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.GetRequest;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -58,10 +59,7 @@ import butterknife.OnClick;
 public class PlaneDetailActivity extends BaseActivity {
     public static final String DETAIL_TYPE = "detail_type";
     public static final String FLIGHT_DATA = "flight_data";
-    public static final String FLIGHT_START_DATE = "flight_start_date";
-    public static final String FLIGHT_END_DATE = "flight_end_date";
-    private String depDate;
-    private String retDate;
+    public static final String FLIGHT_INFO = "flight_info";
     private PlaneDetailAdapter mAdapter;
     private TransitAdapter transitAdapter;
     private List<MultiPriceInfo> multiPriceInfos = new ArrayList<>();
@@ -74,6 +72,7 @@ public class PlaneDetailActivity extends BaseActivity {
     private CustomPlaneDetailInfo customPlaneDetailInfo = new CustomPlaneDetailInfo();
     private RefundChangeInfo refundChangeInfo;
     private List<RefundChangeInfo> refundChangeInfos;
+    private CustomFightCityInfo customFightCityInfo;
     private String userId;
     private String token;
     private int type;
@@ -147,6 +146,14 @@ public class PlaneDetailActivity extends BaseActivity {
     TextView twoWayBackCom;
     @BindView(R.id.twoWay_go_com)
     TextView twoWayGoCom;
+    @BindView(R.id.center_img)
+    ImageView centerImg;
+    @BindView(R.id.startCity)
+    TextView tvStartCity;
+    @BindView(R.id.endCity)
+    TextView tvEndCity;
+    @BindView(R.id.plane_title)
+    LinearLayout planeTitle;
 
     @Override
     protected int getLayoutId() {
@@ -157,18 +164,24 @@ public class PlaneDetailActivity extends BaseActivity {
     protected void initView() {
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
-        titleName.setText("");
+        planeTitle.setVisibility(View.VISIBLE);
+        titleName.setVisibility(View.GONE);
         type = getIntent().getIntExtra(DETAIL_TYPE, 0);
         if (type == 0 || type == 1) {
             //单程
+            centerImg.setBackgroundResource(R.mipmap.k01_12quwang);
             goSearchFightInfo = (MultipleGoSearchFightInfo) getIntent().getSerializableExtra(FLIGHT_DATA);
         } else {
             //往返
+            centerImg.setBackgroundResource(R.mipmap.k01_13wangfan);
             goBackSearchFlightInfo = (MultiGoBackFlightInfo) getIntent().getSerializableExtra(FLIGHT_DATA);
         }
 
-        depDate = getIntent().getStringExtra(FLIGHT_START_DATE);
-        retDate = getIntent().getStringExtra(FLIGHT_END_DATE);
+        customFightCityInfo = (CustomFightCityInfo) getIntent().getSerializableExtra(FLIGHT_INFO);
+
+        tvStartCity.setText(customFightCityInfo.depCityName);
+        tvEndCity.setText(customFightCityInfo.arrCityName);
+
         if (type == 0) {
             flightModel = goSearchFightInfo.flightModel;
             //国内单程直达
@@ -177,8 +190,9 @@ public class PlaneDetailActivity extends BaseActivity {
             oneWayCrossDays.setVisibility(View.GONE);
             transitRecyclerView.setVisibility(View.GONE);
             promptContent.setText("【机场提示】该航班到达机场为北京大兴国际机场，距市区约46公里，搭乘地铁到市区约30分钟。");
-            oneWayStarDate.setText(depDate + DateUtils.strToDate2(depDate));
-            oneWayEndDate.setText(depDate + DateUtils.strToDate2(depDate));
+            oneWayStarDate.setText(customFightCityInfo.goDate + DateUtils.strToDate2(customFightCityInfo.goDate));
+            //oneWayEndDate.setText(customFightCityInfo.goDate + DateUtils.strToDate2(customFightCityInfo.goDate));
+            oneWayEndDate.setVisibility(View.INVISIBLE);
             oneWayBTime.setText(flightModel.dptTime);
             oneWayETime.setText(flightModel.arrTime);
             oneWayDepAirport.setText(flightModel.dptAirport + flightModel.dptTerminal);
@@ -242,10 +256,10 @@ public class PlaneDetailActivity extends BaseActivity {
             twoWayGoDepAirportName.setText(goBackSearchFlightInfo.domesticFlight.go.depAirport + goBackSearchFlightInfo.domesticFlight.go.depTerminal);
             twoWayGoArrAirportName.setText(goBackSearchFlightInfo.domesticFlight.go.arrAirport + goBackSearchFlightInfo.domesticFlight.go.arrTerminal);
             twoWayGoFlightTime.setText(goBackSearchFlightInfo.domesticFlight.go.flightTimes);
-            twoWayGoDate.setText(DateUtils.strToStr(depDate) + DateUtils.strToDate2(depDate));
-            twoWayGoCityName.setText(goBackSearchFlightInfo.domesticFlight.go.depAirportCode + "-" + goBackSearchFlightInfo.domesticFlight.go.arrAirportCode);
-            twoWayBackDate.setText(DateUtils.strToStr(retDate) + DateUtils.strToDate2(retDate));
-            twoWayBackCityName.setText(goBackSearchFlightInfo.domesticFlight.back.depAirportCode + "-" + goBackSearchFlightInfo.domesticFlight.back.arrAirportCode);
+            twoWayGoDate.setText(DateUtils.strToStr(customFightCityInfo.goDate) + DateUtils.strToDate2(customFightCityInfo.goDate));
+            twoWayGoCityName.setText(customFightCityInfo.depCityName + "-" + customFightCityInfo.arrCityName);
+            twoWayBackDate.setText(DateUtils.strToStr(customFightCityInfo.backDate) + DateUtils.strToDate2(customFightCityInfo.backDate));
+            twoWayBackCityName.setText(customFightCityInfo.arrCityName + "-" + customFightCityInfo.depCityName);
             twoWayBackDepTime.setText(goBackSearchFlightInfo.domesticFlight.back.depTime);
             twoWayBackArrTime.setText(goBackSearchFlightInfo.domesticFlight.back.arrTime);
             twoWayBackFlightTime.setText(goBackSearchFlightInfo.domesticFlight.back.flightTimes);
@@ -268,9 +282,9 @@ public class PlaneDetailActivity extends BaseActivity {
             twoWayGoDepAirportName.setText(goBackSearchFlightInfo.internationalFlight.goTrip.flightSegments.get(0).depAirportName);
             twoWayGoArrAirportName.setText(goBackSearchFlightInfo.internationalFlight.goTrip.flightSegments.get(goBackSearchFlightInfo.internationalFlight.goTrip.flightSegments.size() - 1).arrAirportName);
             twoWayGoFlightTime.setText(DateUtils.minToHour(goBackSearchFlightInfo.internationalFlight.goTrip.duration));
-            twoWayGoDate.setText(DateUtils.strToStr(depDate) + DateUtils.strToDate2(depDate));
+            twoWayGoDate.setText(DateUtils.strToStr(customFightCityInfo.goDate) + DateUtils.strToDate2(customFightCityInfo.goDate));
             twoWayGoCityName.setText(goBackSearchFlightInfo.internationalFlight.goTrip.flightSegments.get(0).depCityName + "-" + goBackSearchFlightInfo.internationalFlight.goTrip.flightSegments.get(goBackSearchFlightInfo.internationalFlight.goTrip.flightSegments.size() - 1).arrCityName);
-            twoWayBackDate.setText(DateUtils.strToStr(retDate) + DateUtils.strToDate2(retDate));
+            twoWayBackDate.setText(DateUtils.strToStr(customFightCityInfo.backDate) + DateUtils.strToDate2(customFightCityInfo.backDate));
             twoWayBackCityName.setText(goBackSearchFlightInfo.internationalFlight.backTrip.flightSegments.get(0).depCityName + "-" + goBackSearchFlightInfo.internationalFlight.backTrip.flightSegments.get(goBackSearchFlightInfo.internationalFlight.backTrip.flightSegments.size() - 1).arrCityName);
             twoWayBackDepTime.setText(goBackSearchFlightInfo.internationalFlight.backTrip.flightSegments.get(0).depTime);
             twoWayBackArrTime.setText(goBackSearchFlightInfo.internationalFlight.backTrip.flightSegments.get(goBackSearchFlightInfo.internationalFlight.backTrip.flightSegments.size() - 1).arrTime);
@@ -295,6 +309,15 @@ public class PlaneDetailActivity extends BaseActivity {
         }
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new PlaneDetailAdapter(multiPriceInfos);
+        View mEmptyView = View.inflate(this, R.layout.view_common_nodata, null);
+        ImageView img_empty = (ImageView) mEmptyView.findViewById(R.id.img_empty);
+        img_empty.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        mAdapter.setEmptyView(mEmptyView);
         recyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
         recyclerView.setNestedScrollingEnabled(false);
@@ -305,51 +328,48 @@ public class PlaneDetailActivity extends BaseActivity {
         mAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                Intent intent;
                 switch (view.getId()) {
+                    case R.id.ll_rebate:
+                        MineInfoModel userInfo = UserInfoUtils.getUserInfo(mContext);
+                        intent = new Intent(PlaneDetailActivity.this, VipActivity.class);
+                        intent.putExtra(VipActivity.MINE_INFO, userInfo);
+                        startActivity(intent);
+                        break;
                     case R.id.luggage_change_notice:
                         if (type == 0) {
                             customPlaneDetailInfo.customDocGoFlightInfo = planeDetailInfo;
                             customPlaneDetailInfo.customDocGoPriceInfo = multiPriceInfos.get(position).venDorsInfo;
-                            customPlaneDetailInfo.goDate = depDate;
                         } else if (type == 1) {
                             customPlaneDetailInfo.customInterFlightInfo = goSearchFightInfo.internationalFlightModel;
                             customPlaneDetailInfo.customInterPriceInfo = multiPriceInfos.get(position).internationalPriceInfo;
-                            customPlaneDetailInfo.goDate = depDate;
                         } else if (type == 2) {
                             customPlaneDetailInfo.customDocGoBackFlightInfo = goBackSearchFlightInfo.domesticFlight;
                             customPlaneDetailInfo.customDocGoBackPriceInfo = multiPriceInfos.get(position).goBackVendors;
-                            customPlaneDetailInfo.goDate = depDate;
-                            customPlaneDetailInfo.backDate = retDate;
                         } else {
                             customPlaneDetailInfo.customInterFlightInfo = goBackSearchFlightInfo.internationalFlight;
                             customPlaneDetailInfo.customInterPriceInfo = multiPriceInfos.get(position).internationalPriceInfo;
-                            customPlaneDetailInfo.goDate = depDate;
-                            customPlaneDetailInfo.backDate = retDate;
                         }
+                        customPlaneDetailInfo.customFightCityInfo = customFightCityInfo;
                         getRefundChange();
                         break;
                     case R.id.btn_reserve:
-                        Intent intent = new Intent(PlaneDetailActivity.this, EditPlaneReserveActivity.class);
+                        intent = new Intent(PlaneDetailActivity.this, EditPlaneReserveActivity.class);
                         intent.putExtra(EditPlaneReserveActivity.PLANE_TYPE, type);
                         if (type == 0) {
                             customPlaneDetailInfo.customDocGoFlightInfo = planeDetailInfo;
                             customPlaneDetailInfo.customDocGoPriceInfo = multiPriceInfos.get(position).venDorsInfo;
-                            customPlaneDetailInfo.goDate = depDate;
                         } else if (type == 1) {
                             customPlaneDetailInfo.customInterFlightInfo = goSearchFightInfo.internationalFlightModel;
                             customPlaneDetailInfo.customInterPriceInfo = multiPriceInfos.get(position).internationalPriceInfo;
-                            customPlaneDetailInfo.goDate = depDate;
                         } else if (type == 2) {
                             customPlaneDetailInfo.customDocGoBackFlightInfo = goBackSearchFlightInfo.domesticFlight;
                             customPlaneDetailInfo.customDocGoBackPriceInfo = multiPriceInfos.get(position).goBackVendors;
-                            customPlaneDetailInfo.goDate = depDate;
-                            customPlaneDetailInfo.backDate = retDate;
                         } else {
                             customPlaneDetailInfo.customInterFlightInfo = goBackSearchFlightInfo.internationalFlight;
                             customPlaneDetailInfo.customInterPriceInfo = multiPriceInfos.get(position).internationalPriceInfo;
-                            customPlaneDetailInfo.goDate = depDate;
-                            customPlaneDetailInfo.backDate = retDate;
                         }
+                        customPlaneDetailInfo.customFightCityInfo = customFightCityInfo;
                         intent.putExtra(EditPlaneReserveActivity.PLANE_DETAIL_DATA, customPlaneDetailInfo);
                         // intent.putExtra(EditPlaneReserveActivity.PRICE_DATA, multiPriceInfos.get(position));
                         startActivity(intent);
@@ -390,7 +410,6 @@ public class PlaneDetailActivity extends BaseActivity {
                             refundChangeInfo = response.body().result;
                             if (response.body().code == 0 && response.body().result != null) {
                                 new XPopup.Builder(PlaneDetailActivity.this)
-                                        .enableDrag(false)
                                         .asCustom(new CustomCancelChangePopView(PlaneDetailActivity.this
                                         ).setType(type).setGoData(refundChangeInfo).setLuggage(false)).show();
                             }
@@ -411,8 +430,8 @@ public class PlaneDetailActivity extends BaseActivity {
                     .params("carrier", customPlaneDetailInfo.customDocGoBackFlightInfo.go.carrier)
                     .params("depCode", customPlaneDetailInfo.customDocGoBackFlightInfo.go.depAirportCode)
                     .params("arrCode", customPlaneDetailInfo.customDocGoBackFlightInfo.go.arrAirportCode)
-                    .params("goDate", customPlaneDetailInfo.goDate)
-                    .params("backDate", customPlaneDetailInfo.backDate)
+                    .params("goDate", customFightCityInfo.goDate)
+                    .params("backDate", customFightCityInfo.backDate)
                     .params("outCabin", customPlaneDetailInfo.customDocGoBackPriceInfo.outCabin)
                     .params("retCabin", customPlaneDetailInfo.customDocGoBackPriceInfo.retCabin)
                     .params("businessExts", customPlaneDetailInfo.customDocGoBackPriceInfo.businessExts)
@@ -452,7 +471,7 @@ public class PlaneDetailActivity extends BaseActivity {
                     .params("arr", flightModel.arr)
                     .params(Constant.ACCESSTOKEN, token)
                     .params(Constant.USERID, userId)
-                    .params("date", depDate)
+                    .params("date", customFightCityInfo.goDate)
                     .params("carrier", flightModel.carrier)
                     .params("flightNum", flightModel.flightNum)
                     .params("cabin", flightModel.cabin)
@@ -489,8 +508,8 @@ public class PlaneDetailActivity extends BaseActivity {
                     .params(Constant.USERID, userId)
                     .params("depCity", goBackSearchFlightInfo.domesticFlight.go.depAirportCode)
                     .params("arrCity", goBackSearchFlightInfo.domesticFlight.go.arrAirportCode)
-                    .params("goDate", depDate)
-                    .params("backDate", retDate)
+                    .params("goDate", customFightCityInfo.goDate)
+                    .params("backDate", customFightCityInfo.backDate)
                     .params("flightCodes", goBackSearchFlightInfo.domesticFlight.flightCodes)
                     .params("exTrack", "retehui")
                     .execute(new JsonCallback<PlaneResponse<PlaneGoBackDetailInfo>>() {
@@ -521,7 +540,7 @@ public class PlaneDetailActivity extends BaseActivity {
                     .tag(this);
             if (type != 1) {
                 //国际往返
-                getRequest.params("retDate", retDate)
+                getRequest.params("retDate", customFightCityInfo.backDate)
                         .params("depCity", goBackSearchFlightInfo.internationalFlight.goTrip.flightSegments.get(0).depCityCode)
                         .params("arrCity", goBackSearchFlightInfo.internationalFlight.goTrip.flightSegments.get(goBackSearchFlightInfo.internationalFlight.goTrip.flightSegments.size() - 1).arrCityCode)
                         .params("flightCode", goBackSearchFlightInfo.internationalFlight.flightCode);
@@ -534,7 +553,7 @@ public class PlaneDetailActivity extends BaseActivity {
             getRequest
                     .params(Constant.ACCESSTOKEN, token)
                     .params(Constant.USERID, userId)
-                    .params("depDate", depDate)
+                    .params("depDate", customFightCityInfo.goDate)
                     .params("source", "ICP_SELECT_open.3724")
                     //.params("adultNum")
                     //.params("childNum")

@@ -12,10 +12,11 @@ import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.LazyWebActivity;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
+import com.feitianzhu.huangliwo.model.CustomFightCityInfo;
 import com.feitianzhu.huangliwo.utils.DateUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
-import com.feitianzhu.huangliwo.view.CustomPlaneProtocolView;
+import com.feitianzhu.huangliwo.view.CustomPlaneProtocolDialog;
 import com.feitianzhu.huangliwo.view.CustomRefundView;
 import com.lxj.xpopup.XPopup;
 
@@ -232,12 +233,9 @@ public class PlaneHomeActivity extends BaseActivity {
                 }
                 break;
             case R.id.reserve_explain:
-                Integer[] integers = new Integer[]{R.mipmap.k01_07yuding};
-                new XPopup.Builder(PlaneHomeActivity.this)
-                        .enableDrag(false)
-                        .asCustom(new CustomPlaneProtocolView(this
-                        ).setTitle("儿童/婴儿票预订说明").setData(Arrays.asList(integers))).show();
-
+                /*new CustomPlaneProtocolDialog(PlaneHomeActivity.this)
+                        .setData("http://39.106.65.35:8088/fhwl/static/1.html")
+                        .show();*/
                 break;
             case R.id.search:
                 if (TextUtils.isEmpty(arrCode) || TextUtils.isEmpty(depCode)) {
@@ -248,19 +246,32 @@ public class PlaneHomeActivity extends BaseActivity {
                     ToastUtils.showShortToast("暂不支持国际业务");
                     return;
                 }
+                CustomFightCityInfo customFightCityInfo = new CustomFightCityInfo();
+                customFightCityInfo.depCityName = tvStartCity;
+                customFightCityInfo.depAirPortCode = depCodeData;
+                customFightCityInfo.goDate = startDateStr;
+                customFightCityInfo.arrCityName = tvEndCity;
+                customFightCityInfo.arrAirPortCode = arrCodeData;
+                customFightCityInfo.backDate = endDateStr;
                 if (searchType == 2 || searchType == 3) {
                     intent = new Intent(this, SearchPlanActivity2.class);
                     intent.putExtra(SearchPlanActivity2.SEARCH_TYPE, searchType);
-                    intent.putExtra(SearchPlanActivity2.FLIGHT_START_DATE, startDateStr);
+                    /*intent.putExtra(SearchPlanActivity2.FLIGHT_START_DATE, startDateStr);
                     intent.putExtra(SearchPlanActivity2.FLIGHT_END_DATE, endDateStr);
+                    intent.putExtra(SearchPlanActivity2.DEP_CITY, tvStartCity);
+                    intent.putExtra(SearchPlanActivity2.ARR_CITY, tvEndCity);
                     intent.putExtra(SearchPlanActivity2.DEP_CODE, depCodeData);
-                    intent.putExtra(SearchPlanActivity2.ARR_CODE, arrCodeData);
+                    intent.putExtra(SearchPlanActivity2.ARR_CODE, arrCodeData);*/
+                    intent.putExtra(SearchPlanActivity2.FLIGHT_INFO, customFightCityInfo);
                 } else {
                     intent = new Intent(this, SearchPlanActivity.class);
                     intent.putExtra(SearchPlanActivity.SEARCH_TYPE, searchType);
-                    intent.putExtra(SearchPlanActivity.FLIGHT_DATE, startDateStr);
+                    intent.putExtra(SearchPlanActivity.FLIGHT_INFO, customFightCityInfo);
+                  /*  intent.putExtra(SearchPlanActivity.FLIGHT_DATE, startDateStr);
+                    intent.putExtra(SearchPlanActivity2.DEP_CITY, tvStartCity);
+                    intent.putExtra(SearchPlanActivity2.ARR_CITY, tvEndCity);
                     intent.putExtra(SearchPlanActivity.DEP_CODE, depCodeData);
-                    intent.putExtra(SearchPlanActivity.ARR_CODE, arrCodeData);
+                    intent.putExtra(SearchPlanActivity.ARR_CODE, arrCodeData);*/
                 }
                 startActivity(intent);
                 break;

@@ -86,7 +86,7 @@ public class SelectPlaneCityActivity extends BaseActivity {
         cnCitySelectView.setOnCitySelectListener(new OnCitySelectListener() {
             @Override
             public void onCitySelect(CityModel cityModel) {
-                Toast.makeText(SelectPlaneCityActivity.this, "你点击了：" + cityModel.getCityName() + ":" + cityModel.getExtra().toString(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(SelectPlaneCityActivity.this, "你点击了：" + cityModel.getCityName() + ":" + cityModel.getExtra().toString(), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent();
                 intent.putExtra(CITY_TYPE, type);
                 intent.putExtra(CITY_DATA, cityModel);
@@ -96,7 +96,8 @@ public class SelectPlaneCityActivity extends BaseActivity {
 
             @Override
             public void onSelectCancel() {
-                Toast.makeText(SelectPlaneCityActivity.this, "你取消了城市选择", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(SelectPlaneCityActivity.this, "你取消了城市选择", Toast.LENGTH_SHORT).show();
+                finish();
             }
         });
 
@@ -104,7 +105,7 @@ public class SelectPlaneCityActivity extends BaseActivity {
         interCitySelectView.setOnCitySelectListener(new OnCitySelectListener() {
             @Override
             public void onCitySelect(CityModel cityModel) {
-                Toast.makeText(SelectPlaneCityActivity.this, "你点击了：" + cityModel.getCityName() + ":" + cityModel.getExtra().toString(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(SelectPlaneCityActivity.this, "你点击了：" + cityModel.getCityName() + ":" + cityModel.getExtra().toString(), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent();
                 intent.putExtra(CITY_TYPE, type);
                 intent.putExtra(CITY_DATA, cityModel);
@@ -114,7 +115,8 @@ public class SelectPlaneCityActivity extends BaseActivity {
 
             @Override
             public void onSelectCancel() {
-                Toast.makeText(SelectPlaneCityActivity.this, "你取消了城市选择", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(SelectPlaneCityActivity.this, "你取消了城市选择", Toast.LENGTH_SHORT).show();
+                finish();
             }
         });
 

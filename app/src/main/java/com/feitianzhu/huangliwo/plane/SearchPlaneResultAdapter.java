@@ -16,10 +16,12 @@ import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.feitianzhu.huangliwo.R;
+import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.MultipleGoSearchFightInfo;
 import com.feitianzhu.huangliwo.model.SearchFlightModel;
 import com.feitianzhu.huangliwo.utils.DateUtils;
 import com.feitianzhu.huangliwo.utils.MathUtils;
+import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 
 import java.util.List;
 
@@ -39,6 +41,16 @@ public class SearchPlaneResultAdapter extends BaseMultiItemQuickAdapter<Multiple
 
     @Override
     protected void convert(@NonNull BaseViewHolder helper, MultipleGoSearchFightInfo item) {
+        helper.addOnClickListener(R.id.ll_rebate);
+        MineInfoModel userInfo = UserInfoUtils.getUserInfo(mContext);
+        if (userInfo.getAccountType() != 0) {
+            helper.setGone(R.id.ll_rebate, false);
+            helper.setGone(R.id.vip_rebate, true);
+        } else {
+            helper.setGone(R.id.ll_rebate, true);
+            helper.setGone(R.id.vip_rebate, false);
+        }
+
         if (helper.getItemViewType() == MultipleGoSearchFightInfo.DOMESTIC_TYPE) {
             helper.setText(R.id.arrAirport, item.flightModel.arrAirport + item.flightModel.arrTerminal);
             helper.setText(R.id.dptAirport, item.flightModel.dptAirport + item.flightModel.dptTerminal);
@@ -64,8 +76,10 @@ public class SearchPlaneResultAdapter extends BaseMultiItemQuickAdapter<Multiple
             }
 
             helper.setText(R.id.tv_rebate, "返¥" + MathUtils.subZero(String.valueOf(item.flightModel.zk)));
+            helper.setText(R.id.vip_rebate, "返¥" + MathUtils.subZero(String.valueOf(item.flightModel.zk)));
         } else {
             helper.setText(R.id.tv_rebate, "返¥" + MathUtils.subZero(String.valueOf(item.internationalFlightModel.zk)));
+            helper.setText(R.id.vip_rebate, "返¥" + MathUtils.subZero(String.valueOf(item.internationalFlightModel.zk)));
             if (item.internationalFlightModel.goTrip.transitCities != null && item.internationalFlightModel.goTrip.transitCities.size() > 0) {
                 helper.setVisible(R.id.stopCity, true);
                 setSpannableString2(item.internationalFlightModel.goTrip.transitCities.get(0).transitCityName, helper.getView(R.id.stopCity));

@@ -254,7 +254,15 @@ public class MyOrderActivity2 extends BaseActivity {
                                 startActivityForResult(intent, REFUND_REQUEST_CODE);
                             } else if (goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_COMPLETED) {
                                 //删除订单，
-                                delete(goodsOrderList.get(position).getOrderNo());
+                                new XPopup.Builder(MyOrderActivity2.this)
+                                        .asConfirm("确定要删除该订单？", "", "关闭", "确定", new OnConfirmListener() {
+                                            @Override
+                                            public void onConfirm() {
+                                                delete(goodsOrderList.get(position).getOrderNo());
+                                            }
+                                        }, null, false)
+                                        .bindLayout(R.layout.layout_dialog) //绑定已有布局
+                                        .show();
                             }
                             break;
                         case R.id.btn_logistics:
@@ -314,7 +322,15 @@ public class MyOrderActivity2 extends BaseActivity {
                                 startActivity(intent);
                             } else if (goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_WAIT_RECEIVING) {
                                 //确认收货
-                                confirm(goodsOrderList.get(position).getOrderNo());
+                                new XPopup.Builder(MyOrderActivity2.this)
+                                        .asConfirm("您已确认商品已收到", "", "关闭", "确定", new OnConfirmListener() {
+                                            @Override
+                                            public void onConfirm() {
+                                                confirm(goodsOrderList.get(position).getOrderNo());
+                                            }
+                                        }, null, false)
+                                        .bindLayout(R.layout.layout_dialog) //绑定已有布局
+                                        .show();
                             } else if (goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_REFUND
                                     || goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_REFUNDED
                                     || goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_CANCEL) {
@@ -332,7 +348,15 @@ public class MyOrderActivity2 extends BaseActivity {
                         case R.id.btn_logistics:
                             if (currSetMealOder.get(position).getStatus() == SetMealOrderInfo.WAIT_PAY) {
                                 //取消订单
-                                cancelSetMealOrder(currSetMealOder.get(position).getOrderNo(), "5");
+                                new XPopup.Builder(MyOrderActivity2.this)
+                                        .asConfirm("确定要取消该订单？", "", "关闭", "确定", new OnConfirmListener() {
+                                            @Override
+                                            public void onConfirm() {
+                                                cancelSetMealOrder(currSetMealOder.get(position).getOrderNo(), "5");
+                                            }
+                                        }, null, false)
+                                        .bindLayout(R.layout.layout_dialog) //绑定已有布局
+                                        .show();
                             } else if (currSetMealOder.get(position).getStatus() == SetMealOrderInfo.HAVE_USED) {
                                 if (currSetMealOder.get(position).getIsConsume() == 1) {
                                     if (currSetMealOder.get(position).getIsEval() == 0) {

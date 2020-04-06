@@ -15,7 +15,9 @@ import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.PlaneResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
+import com.feitianzhu.huangliwo.model.CustomFightCityInfo;
 import com.feitianzhu.huangliwo.model.FlightSegmentInfo;
+import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.MultipleGoSearchFightInfo;
 import com.feitianzhu.huangliwo.model.SearchFlightModel;
 import com.feitianzhu.huangliwo.model.SearchInternationalFlightModel;
@@ -23,8 +25,11 @@ import com.feitianzhu.huangliwo.model.TransitCityInfo;
 import com.feitianzhu.huangliwo.utils.DateUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
+import com.feitianzhu.huangliwo.utils.UserInfoUtils;
+import com.feitianzhu.huangliwo.vip.VipActivity;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.base.Request;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -37,20 +42,16 @@ import butterknife.OnClick;
 
 public class SearchPlanActivity extends BaseActivity {
     public static final String SEARCH_TYPE = "search_type";
-    public static final String FLIGHT_DATE = "flight_date";
-    public static final String DEP_CODE = "depCode";
-    public static final String ARR_CODE = "arrCode";
+    public static final String FLIGHT_INFO = "flight_info";
     private static final int DATE_REQUEST_CODE = 100;
     private List<MultipleGoSearchFightInfo> goSearchFightInfoList = new ArrayList<>();
     private List<SearchFlightModel.FlightModel> flightInfos = new ArrayList<>();
     private List<SearchInternationalFlightModel> internationalFlightModels = new ArrayList<>();
     private SearchPlaneResultAdapter mAdapter;
-    private String date;
+    private CustomFightCityInfo customFightCityInfo;
     private String userId;
     private String token;
     private int searchType;
-    private String depCode;
-    private String arrCode;
     @BindView(R.id.title_name)
     TextView titleName;
     @BindView(R.id.right_img)
@@ -79,20 +80,27 @@ public class SearchPlanActivity extends BaseActivity {
     protected void initView() {
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
-        date = getIntent().getStringExtra(FLIGHT_DATE);
+        customFightCityInfo = (CustomFightCityInfo) getIntent().getSerializableExtra(FLIGHT_INFO);
         searchType = getIntent().getIntExtra(SEARCH_TYPE, 0);
-        depCode = getIntent().getStringExtra(DEP_CODE);
-        arrCode = getIntent().getStringExtra(ARR_CODE);
         planeTitle.setVisibility(View.VISIBLE);
         titleName.setVisibility(View.GONE);
-        startCity.setText("北京");
-        endCity.setText("上海");
+        startCity.setText(customFightCityInfo.depCityName);
+        endCity.setText(customFightCityInfo.arrCityName);
         centerImg.setBackgroundResource(R.mipmap.k01_12quwang);
         rightImg.setBackgroundResource(R.mipmap.k01_10gengduo);
         rightText.setText("更多日期");
         rightText.setVisibility(View.VISIBLE);
         rightImg.setVisibility(View.VISIBLE);
         mAdapter = new SearchPlaneResultAdapter(goSearchFightInfoList);
+        View mEmptyView = View.inflate(this, R.layout.view_common_nodata, null);
+        ImageView img_empty = (ImageView) mEmptyView.findViewById(R.id.img_empty);
+        img_empty.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        mAdapter.setEmptyView(mEmptyView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
@@ -108,11 +116,11 @@ public class SearchPlanActivity extends BaseActivity {
                 Intent intent = new Intent(SearchPlanActivity.this, PlaneDetailActivity.class);
                 if (searchType == 0) {
                     intent.putExtra(PlaneDetailActivity.DETAIL_TYPE, searchType);
-                    intent.putExtra(PlaneDetailActivity.FLIGHT_START_DATE, date);
+                    intent.putExtra(PlaneDetailActivity.FLIGHT_INFO, customFightCityInfo);
                     intent.putExtra(PlaneDetailActivity.FLIGHT_DATA, goSearchFightInfoList.get(position));
                 } else if (searchType == 1) {
                     intent.putExtra(PlaneDetailActivity.DETAIL_TYPE, searchType);
-                    intent.putExtra(PlaneDetailActivity.FLIGHT_START_DATE, date);
+                    intent.putExtra(PlaneDetailActivity.FLIGHT_INFO, customFightCityInfo);
                     intent.putExtra(PlaneDetailActivity.FLIGHT_DATA, goSearchFightInfoList.get(position));
                 } else {
 
@@ -120,6 +128,17 @@ public class SearchPlanActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
+
+        mAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                MineInfoModel userInfo = UserInfoUtils.getUserInfo(mContext);
+                Intent intent = new Intent(SearchPlanActivity.this, VipActivity.class);
+                intent.putExtra(VipActivity.MINE_INFO, userInfo);
+                startActivity(intent);
+            }
+        });
+
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
@@ -133,19 +152,26 @@ public class SearchPlanActivity extends BaseActivity {
         if (searchType == 0) {
             OkGo.<PlaneResponse<SearchFlightModel>>get(Urls.SEARCH_FLIGHT)
                     .tag(this)
-                    .params("dpt", depCode)
-                    .params("arr", arrCode)
+                    .params("dpt", customFightCityInfo.depAirPortCode)
+                    .params("arr", customFightCityInfo.arrAirPortCode)
                     .params(Constant.ACCESSTOKEN, token)
                     .params(Constant.USERID, userId)
-                    .params("date", date)
+                    .params("date", customFightCityInfo.goDate)
                     .params("ex_track", "tehui")
                     .execute(new JsonCallback<PlaneResponse<SearchFlightModel>>() {
                         @Override
+                        public void onStart(Request<PlaneResponse<SearchFlightModel>, ? extends Request> request) {
+                            super.onStart(request);
+                            showloadDialog("");
+                        }
+
+                        @Override
                         public void onSuccess(Response<PlaneResponse<SearchFlightModel>> response) {
                             super.onSuccess(SearchPlanActivity.this, response.body().message, response.body().code);
+                            goneloadDialog();
                             refreshLayout.finishRefresh();
                             SearchFlightModel searchFlightModel = response.body().result;
-                            if (response.body().code == 0 && response.body().result.flightInfos != null) {
+                            if (response.body().code == 0 && searchFlightModel != null && response.body().result.flightInfos != null) {
                                 flightInfos = searchFlightModel.flightInfos;
                                 goSearchFightInfoList.clear();
                                 for (int i = 0; i < flightInfos.size(); i++) {
@@ -162,6 +188,7 @@ public class SearchPlanActivity extends BaseActivity {
                         @Override
                         public void onError(Response<PlaneResponse<SearchFlightModel>> response) {
                             super.onError(response);
+                            goneloadDialog();
                             refreshLayout.finishRefresh(false);
                         }
                     });
@@ -172,16 +199,24 @@ public class SearchPlanActivity extends BaseActivity {
                     .params(Constant.USERID, userId)
                     .params("depCity", "PAR")
                     .params("arrCity", "BER")
-                    .params("depDate", date)
+                    .params("depDate", customFightCityInfo.goDate)
                     //.params("retDate", "")往返必填
                     .params("source", "ICP_SELECT_open.3724")
                     //.params("adultNum", "")成人数量
                     //.params("childNum", "")儿童数量
                     //.params("cabinLevel", "")舱位等级
                     .execute(new JsonCallback<PlaneResponse<List<SearchInternationalFlightModel>>>() {
+
+                        @Override
+                        public void onStart(Request<PlaneResponse<List<SearchInternationalFlightModel>>, ? extends Request> request) {
+                            super.onStart(request);
+                            showloadDialog("");
+                        }
+
                         @Override
                         public void onSuccess(Response<PlaneResponse<List<SearchInternationalFlightModel>>> response) {
                             super.onSuccess(SearchPlanActivity.this, response.body().message, response.body().code);
+                            goneloadDialog();
                             refreshLayout.finishRefresh();
                             if (response.body().code == 0 && response.body().result != null) {
                                 goSearchFightInfoList.clear();
@@ -199,6 +234,7 @@ public class SearchPlanActivity extends BaseActivity {
                         @Override
                         public void onError(Response<PlaneResponse<List<SearchInternationalFlightModel>>> response) {
                             super.onError(response);
+                            goneloadDialog();
                             refreshLayout.finishRefresh(false);
                         }
                     });
@@ -226,7 +262,7 @@ public class SearchPlanActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == DATE_REQUEST_CODE) {
-                date = data.getStringExtra(PlaneCalendarActivity.SELECT_DATE);
+                customFightCityInfo.goDate = data.getStringExtra(PlaneCalendarActivity.SELECT_DATE);
                 initData();
             }
         }

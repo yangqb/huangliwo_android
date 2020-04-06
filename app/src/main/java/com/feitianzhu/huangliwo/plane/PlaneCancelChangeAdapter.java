@@ -8,6 +8,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.model.CustomTgqChangeModel;
 import com.feitianzhu.huangliwo.model.TgqPointCharges;
+import com.feitianzhu.huangliwo.utils.MathUtils;
 
 import java.util.List;
 
@@ -20,6 +21,6 @@ public class PlaneCancelChangeAdapter extends BaseQuickAdapter<CustomTgqChangeMo
     @Override
     protected void convert(@NonNull BaseViewHolder helper, CustomTgqChangeModel item) {
         helper.setText(R.id.timeText, item.timeText);
-        helper.setText(R.id.amount, "¥" + item.amount + "/人");
+        helper.setText(R.id.amount, "¥" + MathUtils.subZero(String.valueOf(item.amount)) + "/人");
     }
 }

@@ -231,7 +231,7 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, Pager
         layoutManager.smoothPrePage();// 平滑滚动到上一页
         layoutManager.smoothNextPage();// 平滑滚动到下一页*/
         // 使用示例
-        layoutManager.isAllowContinuousScroll();//设置是否允许连续滚动
+        //layoutManager.isAllowContinuousScroll();//设置是否允许连续滚动
         layoutManager.setAllowContinuousScroll(false);//设置是否允许连续滚动
         hList.setAdapter(hAdapter);
         hAdapter.notifyDataSetChanged();
@@ -398,12 +398,10 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, Pager
                 mCallbackBFragment.skipToCommodityFragment(1, view);
                 break;
             case R.id.rl_ticket:
-                ToastUtils.showShortToast("敬请期待");
                 intent = new Intent(getActivity(), PlaneHomeActivity.class);
                 startActivity(intent);
                 break;
             case R.id.rl_financial:
-                ToastUtils.showShortToast("敬请期待");
                 intent = new Intent(getActivity(), FinancialHomeActivity.class);
                 startActivity(intent);
                 break;
@@ -582,7 +580,9 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, Pager
                             hAdapter.notifyDataSetChanged();
 
                             int indicatorSize = shopClassifyLsit.size() % 5 == 0 ? (shopClassifyLsit.size() / 5) : (shopClassifyLsit.size() / 5) + 1;
-
+                            if (!isLoadMore) {
+                                layoutManager.scrollToPage(0);
+                            }
                             for (int i = 0; i < indicatorSize; i++) {
                                 IndicatorEntity indicatorEntity = new IndicatorEntity();
                                 if (i == 0) {

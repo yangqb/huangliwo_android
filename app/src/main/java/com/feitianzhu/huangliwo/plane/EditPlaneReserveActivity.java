@@ -22,7 +22,6 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
-import com.feitianzhu.huangliwo.home.WebViewActivity;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.http.PlaneResponse;
@@ -34,6 +33,8 @@ import com.feitianzhu.huangliwo.model.CreateOrderInfo;
 import com.feitianzhu.huangliwo.model.CustomPlaneDetailInfo;
 import com.feitianzhu.huangliwo.model.CustomPriceDetailInfo;
 import com.feitianzhu.huangliwo.model.DocBookingPriceTagInfo;
+import com.feitianzhu.huangliwo.model.DocGoBackCreateOrderInfo;
+import com.feitianzhu.huangliwo.model.DocGoBackCreateOrderModel;
 import com.feitianzhu.huangliwo.model.DocPassengerInfo;
 import com.feitianzhu.huangliwo.model.DocResultBookingInfo;
 import com.feitianzhu.huangliwo.model.GoBackBaggageRuleInfo;
@@ -48,8 +49,6 @@ import com.feitianzhu.huangliwo.model.PayModel;
 import com.feitianzhu.huangliwo.model.RefundChangeInfo;
 import com.feitianzhu.huangliwo.model.ReimbursementModel;
 import com.feitianzhu.huangliwo.model.UserClientInfo;
-import com.feitianzhu.huangliwo.shop.ShopPayActivity;
-import com.feitianzhu.huangliwo.shop.ui.OrderDetailActivity;
 import com.feitianzhu.huangliwo.utils.DateUtils;
 import com.feitianzhu.huangliwo.utils.MathUtils;
 import com.feitianzhu.huangliwo.utils.PayUtils;
@@ -60,19 +59,19 @@ import com.feitianzhu.huangliwo.view.CustomCancelChangePopView;
 import com.feitianzhu.huangliwo.view.CustomLuggageBuyTicketNoticeView;
 import com.feitianzhu.huangliwo.view.CustomPayView;
 import com.feitianzhu.huangliwo.view.CustomPlaneInfoView;
-import com.feitianzhu.huangliwo.view.CustomPlaneProtocolView;
+import com.feitianzhu.huangliwo.view.CustomPlaneProtocolDialog;
 import com.feitianzhu.huangliwo.view.CustomTicketPriceDetailView;
 import com.feitianzhu.huangliwo.view.CustomTotalPriceInfoView;
 import com.google.gson.Gson;
 import com.lxj.xpopup.XPopup;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.base.Request;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -149,8 +148,8 @@ public class EditPlaneReserveActivity extends BaseActivity {
 
         planeTitle.setVisibility(View.VISIBLE);
         titleName.setVisibility(View.GONE);
-        startCity.setText("北京");
-        endCity.setText("上海");
+        startCity.setText(customPlaneDetailInfo.customFightCityInfo.depCityName);
+        endCity.setText(customPlaneDetailInfo.customFightCityInfo.arrCityName);
         if (type == 0) {
             priceDetailInfo.price = customPlaneDetailInfo.customDocGoPriceInfo.barePrice;
             priceDetailInfo.arf = customPlaneDetailInfo.customDocGoFlightInfo.arf;
@@ -226,8 +225,8 @@ public class EditPlaneReserveActivity extends BaseActivity {
                 priceDetailInfo.cPrice = 0;
                 GoBackFlight docGoFlight = customPlaneDetailInfo.customDocGoBackFlightInfo.go;
                 GoBackFlight docBackFlight = customPlaneDetailInfo.customDocGoBackFlightInfo.back;
-                tvGoInfo.setText(DateUtils.strToStr(customPlaneDetailInfo.goDate) + DateUtils.strToDate2(customPlaneDetailInfo.goDate) + docGoFlight.depTime + docGoFlight.depAirport + docGoFlight.depTerminal + "-" + docGoFlight.arrAirport + docGoFlight.arrTerminal);
-                tvBackInfo.setText(DateUtils.strToStr(customPlaneDetailInfo.backDate) + DateUtils.strToDate2(customPlaneDetailInfo.backDate) + docBackFlight.depTime + docBackFlight.depAirport + docBackFlight.depTerminal + "-" + docBackFlight.arrAirport + docBackFlight.arrTerminal);
+                tvGoInfo.setText(DateUtils.strToStr(customPlaneDetailInfo.customFightCityInfo.goDate) + DateUtils.strToDate2(customPlaneDetailInfo.customFightCityInfo.goDate) + docGoFlight.depTime + docGoFlight.depAirport + docGoFlight.depTerminal + "-" + docGoFlight.arrAirport + docGoFlight.arrTerminal);
+                tvBackInfo.setText(DateUtils.strToStr(customPlaneDetailInfo.customFightCityInfo.backDate) + DateUtils.strToDate2(customPlaneDetailInfo.customFightCityInfo.backDate) + docBackFlight.depTime + docBackFlight.depAirport + docBackFlight.depTerminal + "-" + docBackFlight.arrAirport + docBackFlight.arrTerminal);
                 price.setText("¥" + MathUtils.subZero(String.valueOf(customPlaneDetailInfo.customDocGoBackPriceInfo.barePrice)));
                 arfAndTof.setText("机建+燃油 ¥" + MathUtils.subZero(String.valueOf(customPlaneDetailInfo.customDocGoBackFlightInfo.tof + customPlaneDetailInfo.customDocGoBackFlightInfo.arf)));
                 tvCabinType.setText(customPlaneDetailInfo.customDocGoBackPriceInfo.cabinDesc);
@@ -323,7 +322,6 @@ public class EditPlaneReserveActivity extends BaseActivity {
                             refundChangeInfo = response.body().result;
                             if (response.body().code == 0 && response.body().result != null) {
                                 new XPopup.Builder(EditPlaneReserveActivity.this)
-                                        .enableDrag(false)
                                         .asCustom(new CustomCancelChangePopView(EditPlaneReserveActivity.this
                                         ).setType(type).setGoData(refundChangeInfo).setLuggage(false)).show();
                             }
@@ -344,8 +342,8 @@ public class EditPlaneReserveActivity extends BaseActivity {
                     .params("carrier", customPlaneDetailInfo.customDocGoBackFlightInfo.go.carrier)
                     .params("depCode", customPlaneDetailInfo.customDocGoBackFlightInfo.go.depAirportCode)
                     .params("arrCode", customPlaneDetailInfo.customDocGoBackFlightInfo.go.arrAirportCode)
-                    .params("goDate", customPlaneDetailInfo.goDate)
-                    .params("backDate", customPlaneDetailInfo.backDate)
+                    .params("goDate", customPlaneDetailInfo.customFightCityInfo.goDate)
+                    .params("backDate", customPlaneDetailInfo.customFightCityInfo.backDate)
                     .params("outCabin", customPlaneDetailInfo.customDocGoBackPriceInfo.outCabin)
                     .params("retCabin", customPlaneDetailInfo.customDocGoBackPriceInfo.retCabin)
                     .params("businessExts", customPlaneDetailInfo.customDocGoBackPriceInfo.businessExts)
@@ -362,7 +360,6 @@ public class EditPlaneReserveActivity extends BaseActivity {
                             if (response.body().code == 0 && response.body().result != null) {
                                 refundChangeInfos = response.body().result;
                                 new XPopup.Builder(EditPlaneReserveActivity.this)
-                                        .enableDrag(false)
                                         .asCustom(new CustomCancelChangePopView(EditPlaneReserveActivity.this
                                         ).setType(type).setGoData(refundChangeInfos.get(0)).setBackData(refundChangeInfos.get(1)).setLuggage(false)).show();
                             }
@@ -396,7 +393,6 @@ public class EditPlaneReserveActivity extends BaseActivity {
                             if (response.body().code == 0 && response.body().result != null) {
                                 baggageRuleInfo = response.body().result;
                                 new XPopup.Builder(EditPlaneReserveActivity.this)
-                                        .enableDrag(false)
                                         .asCustom(new CustomLuggageBuyTicketNoticeView(EditPlaneReserveActivity.this
                                         ).setType(type).setGoData(baggageRuleInfo)).show();
                             }
@@ -413,16 +409,16 @@ public class EditPlaneReserveActivity extends BaseActivity {
             goBaggageRuleReqParamModel.arrCode = customPlaneDetailInfo.customDocGoBackFlightInfo.go.depAirportCode;
             goBaggageRuleReqParamModel.cabin = customPlaneDetailInfo.customDocGoBackPriceInfo.cabin;
             goBaggageRuleReqParamModel.depCode = customPlaneDetailInfo.customDocGoBackFlightInfo.go.arrAirportCode;
-            goBaggageRuleReqParamModel.depDate = customPlaneDetailInfo.goDate;
-            goBaggageRuleReqParamModel.saleDate = customPlaneDetailInfo.goDate;
+            goBaggageRuleReqParamModel.depDate = customPlaneDetailInfo.customFightCityInfo.goDate;
+            goBaggageRuleReqParamModel.saleDate = customPlaneDetailInfo.customFightCityInfo.goDate;
 
             BaggageRuleReqParamModel backBaggageRuleReqParamModel = new BaggageRuleReqParamModel();
             backBaggageRuleReqParamModel.airlineCode = customPlaneDetailInfo.customDocGoBackFlightInfo.back.codeShare ? customPlaneDetailInfo.customDocGoBackFlightInfo.back.mainCarrier : customPlaneDetailInfo.customDocGoBackFlightInfo.back.carrier;
             backBaggageRuleReqParamModel.arrCode = customPlaneDetailInfo.customDocGoBackFlightInfo.back.depAirportCode;
             backBaggageRuleReqParamModel.cabin = customPlaneDetailInfo.customDocGoBackPriceInfo.cabin;
             backBaggageRuleReqParamModel.depCode = customPlaneDetailInfo.customDocGoBackFlightInfo.back.arrAirportCode;
-            backBaggageRuleReqParamModel.depDate = customPlaneDetailInfo.backDate;
-            backBaggageRuleReqParamModel.saleDate = customPlaneDetailInfo.backDate;
+            backBaggageRuleReqParamModel.depDate = customPlaneDetailInfo.customFightCityInfo.backDate;
+            backBaggageRuleReqParamModel.saleDate = customPlaneDetailInfo.customFightCityInfo.backDate;
 
             List<BaggageRuleReqParamModel> baggageRuleReqParamModelList = new ArrayList<>();
             baggageRuleReqParamModelList.add(goBaggageRuleReqParamModel);
@@ -442,7 +438,6 @@ public class EditPlaneReserveActivity extends BaseActivity {
                             if (response.body().code == 0 && response.body().result != null) {
                                 baggageRuleInfos = response.body().result;
                                 new XPopup.Builder(EditPlaneReserveActivity.this)
-                                        .enableDrag(false)
                                         .asCustom(new CustomLuggageBuyTicketNoticeView(EditPlaneReserveActivity.this
                                         ).setType(type).setGoData(baggageRuleInfos.get(0).baggageRuleInfo).setBackData(baggageRuleInfos.get(1).baggageRuleInfo)).show();
                             }
@@ -477,7 +472,6 @@ public class EditPlaneReserveActivity extends BaseActivity {
                 break;
             case R.id.ticketPrice_detail:
                 new XPopup.Builder(EditPlaneReserveActivity.this)
-                        .enableDrag(false)
                         .asCustom(new CustomTicketPriceDetailView(this
                         ).setType(type).setData(priceDetailInfo)).show();
                 break;
@@ -488,16 +482,10 @@ public class EditPlaneReserveActivity extends BaseActivity {
                 startActivityForResult(intent, REQUEST_CODE);
                 break;
             case R.id.tvReserveNotice:
-                Intent intent1 = new Intent(EditPlaneReserveActivity.this, WebViewActivity.class);
-                intent1.putExtra("url", "http://39.106.65.35:8088/fhwl/static/1.html");
-                intent1.putExtra("title", "机票预订须知");
-                startActivity(intent1);
-
-               /* Integer[] integers = new Integer[]{R.mipmap.k04_04yuding1, R.mipmap.k04_04yuding2, R.mipmap.k04_04yuding3};
-                new XPopup.Builder(EditPlaneReserveActivity.this)
-                        .enableDrag(false)
-                        .asCustom(new CustomPlaneProtocolView(this
-                        ).setTitle("机票预订须知").setData(Arrays.asList(integers))).show();*/
+                new CustomPlaneProtocolDialog(EditPlaneReserveActivity.this)
+                        .setTitle("机票预订须知")
+                        .setData("http://39.106.65.35:8088/fhwl/static/1.html")
+                        .show();
                 break;
             case R.id.btn_submit:
                 if (list.size() == 0) {
@@ -559,16 +547,27 @@ public class EditPlaneReserveActivity extends BaseActivity {
                     .params("btime", btime)
                     .execute(new JsonCallback<PlaneResponse>() {
                         @Override
+                        public void onStart(Request<PlaneResponse, ? extends Request> request) {
+                            super.onStart(request);
+                            showloadDialog("");
+                        }
+
+                        @Override
                         public void onSuccess(Response<PlaneResponse> response) {
                             super.onSuccess(EditPlaneReserveActivity.this, response.body().message, response.body().code);
                             //BookingInfo
-                            String json = new Gson().toJson(response.body().result);
-                            createOrder(json);
+                            if (response.body().code == 0 && response.body().result != null) {
+                                String json = new Gson().toJson(response.body().result);
+                                createOrder(json);
+                            } else {
+                                goneloadDialog();
+                            }
                         }
 
                         @Override
                         public void onError(Response<PlaneResponse> response) {
                             super.onError(response);
+                            goneloadDialog();
                         }
                     });
         } else if (type == 2) {
@@ -579,14 +578,25 @@ public class EditPlaneReserveActivity extends BaseActivity {
                     .params("bookingParamKey", customPlaneDetailInfo.customDocGoBackPriceInfo.bookingParamKey)
                     .execute(new JsonCallback<PlaneResponse<DocResultBookingInfo>>() {
                         @Override
+                        public void onStart(Request<PlaneResponse<DocResultBookingInfo>, ? extends Request> request) {
+                            super.onStart(request);
+                            showloadDialog("");
+                        }
+
+                        @Override
                         public void onSuccess(Response<PlaneResponse<DocResultBookingInfo>> response) {
                             super.onSuccess(EditPlaneReserveActivity.this, response.body().message, response.body().code);
-                            createOrder3(response.body().result);
+                            if (response.body().code == 0 && response.body().result != null) {
+                                createOrder3(response.body().result);
+                            } else {
+                                goneloadDialog();
+                            }
                         }
 
                         @Override
                         public void onError(Response<PlaneResponse<DocResultBookingInfo>> response) {
                             super.onError(response);
+                            goneloadDialog();
                         }
                     });
         }
@@ -602,15 +612,26 @@ public class EditPlaneReserveActivity extends BaseActivity {
                 .params("priceKey", customPlaneDetailInfo.customInterPriceInfo.priceKey)
                 .execute(new JsonCallback<PlaneResponse>() {
                     @Override
+                    public void onStart(Request<PlaneResponse, ? extends Request> request) {
+                        super.onStart(request);
+                        showloadDialog("");
+                    }
+
+                    @Override
                     public void onSuccess(Response<PlaneResponse> response) {
                         super.onSuccess(EditPlaneReserveActivity.this, response.body().message, response.body().code);
-                        String json = new Gson().toJson(response.body().result);
-                        createOrder2(json);
+                        if (response.body().code == 0 && response.body().result != null) {
+                            String json = new Gson().toJson(response.body().result);
+                            createOrder2(json);
+                        } else {
+                            goneloadDialog();
+                        }
                     }
 
                     @Override
                     public void onError(Response<PlaneResponse> response) {
                         super.onError(response);
+                        goneloadDialog();
                     }
                 });
     }
@@ -695,7 +716,7 @@ public class EditPlaneReserveActivity extends BaseActivity {
         UserClientInfo userClientInfo = new UserClientInfo();
         String userClientInfoJson = new Gson().toJson(userClientInfo);
 
-        OkGo.<PlaneResponse>post(Urls.CREATE_PLANE_GO_BACK_ORDER)
+        OkGo.<PlaneResponse<DocGoBackCreateOrderInfo>>post(Urls.CREATE_PLANE_GO_BACK_ORDER)
                 .tag(this)
                 .params(Constant.ACCESSTOKEN, token)
                 .params(Constant.USERID, userId)
@@ -705,18 +726,21 @@ public class EditPlaneReserveActivity extends BaseActivity {
                 .params("contact", contactJson)
                 .params("tripItems", tripItemsJson)
                 .params("reimbursement", reimbursementJson)
-                .execute(new JsonCallback<PlaneResponse>() {
+                .execute(new JsonCallback<PlaneResponse<DocGoBackCreateOrderInfo>>() {
                     @Override
-                    public void onSuccess(Response<PlaneResponse> response) {
+                    public void onSuccess(Response<PlaneResponse<DocGoBackCreateOrderInfo>> response) {
                         super.onSuccess(EditPlaneReserveActivity.this, response.body().message, response.body().code);
-                        if (response.body().code == 0) {
-                            ToastUtils.showShortToast(response.body().message);
+                        if (response.body().code == 0 && response.body().result != null) {
+                            payValidate(response.body().result.orders.get(0).orderNo, response.body().result.noPayAmount);
+                        } else {
+                            goneloadDialog();
                         }
                     }
 
                     @Override
-                    public void onError(Response<PlaneResponse> response) {
+                    public void onError(Response<PlaneResponse<DocGoBackCreateOrderInfo>> response) {
                         super.onError(response);
+                        goneloadDialog();
                     }
                 });
 
@@ -778,8 +802,6 @@ public class EditPlaneReserveActivity extends BaseActivity {
                         super.onError(response);
                     }
                 });
-
-
     }
 
     /*
@@ -804,13 +826,15 @@ public class EditPlaneReserveActivity extends BaseActivity {
                         super.onSuccess(EditPlaneReserveActivity.this, response.body().message, response.body().code);
                         if (response.body().code == 0 && response.body().result != null) {
                             payValidate(response.body().result.orderNo, response.body().result.noPayAmount);
-                            ToastUtils.showShortToast(response.body().message);
+                        } else {
+                            goneloadDialog();
                         }
                     }
 
                     @Override
                     public void onError(Response<PlaneResponse<CreateOrderInfo>> response) {
                         super.onError(response);
+                        goneloadDialog();
                     }
                 });
 
@@ -828,6 +852,7 @@ public class EditPlaneReserveActivity extends BaseActivity {
                     @Override
                     public void onSuccess(Response<PlaneResponse> response) {
                         super.onSuccess(EditPlaneReserveActivity.this, response.body().message, response.body().code);
+                        goneloadDialog();
                         if (response.body().code == 0) {
                             new XPopup.Builder(EditPlaneReserveActivity.this)
                                     .enableDrag(false)
@@ -845,6 +870,7 @@ public class EditPlaneReserveActivity extends BaseActivity {
                     @Override
                     public void onError(Response<PlaneResponse> response) {
                         super.onError(response);
+                        goneloadDialog();
                     }
                 });
     }

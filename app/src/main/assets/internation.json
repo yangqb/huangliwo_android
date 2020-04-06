@@ -1836,15 +1836,6 @@
     "szm": "DUT"
   },
   {
-    "city": "Springfield-BransonNational",
-    "country": "美国",
-    "countryCode": "US",
-    "egName": "SPRINGFIELD",
-    "id": 511,
-    "name": "斯普林菲尔德机场",
-    "szm": "SGF"
-  },
-  {
     "city": "塔布克",
     "country": "沙特阿拉伯",
     "countryCode": "SA",
@@ -23607,15 +23598,6 @@
     "szm": "KHV"
   },
   {
-    "city": "RyanField",
-    "country": "法国",
-    "countryCode": "FR",
-    "egName": "RYANFIELD",
-    "id": 5615,
-    "name": "RyanField机场",
-    "szm": "RYN"
-  },
-  {
     "city": "莫林",
     "country": "美国",
     "countryCode": "US",
@@ -23713,15 +23695,6 @@
     "id": 5639,
     "name": "朱利安娜公主机场",
     "szm": "SXM"
-  },
-  {
-    "city": "Pinal",
-    "country": "美国",
-    "countryCode": "US",
-    "egName": "PINALCOUNTY",
-    "id": 5641,
-    "name": "皮纳尔飞机坟场机场",
-    "szm": "MZJ"
   },
   {
     "city": "古德伊尔",
@@ -23875,15 +23848,6 @@
     "id": 5745,
     "name": "魁那伐克机场",
     "szm": "CVJ"
-  },
-  {
-    "city": "HUATULCO",
-    "country": "墨西哥",
-    "countryCode": "MX",
-    "egName": "HUATULCO",
-    "id": 5747,
-    "name": "HUATULCO机场",
-    "szm": "HUX"
   },
   {
     "city": "阿瓜斯卡连特斯",
@@ -24064,15 +24028,6 @@
     "id": 5789,
     "name": "夏洛特城机场",
     "szm": "YYG"
-  },
-  {
-    "city": "TALOYOAK",
-    "country": "加拿大",
-    "countryCode": "CA",
-    "egName": "TALOYOAK",
-    "id": 5791,
-    "name": "TALOYOAK机场",
-    "szm": "YYH"
   },
   {
     "city": "斯威夫特卡伦特",
@@ -24750,15 +24705,6 @@
     "szm": "MIR"
   },
   {
-    "city": "ULAN-UDE",
-    "country": "俄罗斯",
-    "countryCode": "RU",
-    "egName": "ULAN-UDE",
-    "id": 5951,
-    "name": "ULAN-UDE机场",
-    "szm": "UUD"
-  },
-  {
     "city": "圣诞岛",
     "country": "圣诞岛",
     "countryCode": "CX",
@@ -24829,15 +24775,6 @@
     "id": 5969,
     "name": "阿尔汉格尔斯克机场",
     "szm": "ARH"
-  },
-  {
-    "city": "AMDERMA",
-    "country": "俄罗斯",
-    "countryCode": "RU",
-    "egName": "AMDERMA",
-    "id": 5971,
-    "name": "AMDERMA机场",
-    "szm": "AMV"
   },
   {
     "city": "摩尔曼斯科",
@@ -25182,15 +25119,6 @@
     "szm": "PNQ"
   },
   {
-    "city": "Shimkent",
-    "country": "哈萨克斯坦",
-    "countryCode": "KZ",
-    "egName": "SHIMKEN",
-    "id": 6061,
-    "name": "什姆肯特机场",
-    "szm": "CIT"
-  },
-  {
     "city": "圣芭芭拉",
     "country": "美国",
     "countryCode": "US",
@@ -25333,15 +25261,6 @@
     "id": 6095,
     "name": "巴淡岛机场",
     "szm": "BTH"
-  },
-  {
-    "city": "Tucson",
-    "country": "美国",
-    "countryCode": "US",
-    "egName": "TUCSON",
-    "id": 6097,
-    "name": "图森机场",
-    "szm": "TUS"
   },
   {
     "city": "马略卡岛帕尔马",
@@ -26262,24 +26181,6 @@
     "szm": "YZW"
   },
   {
-    "city": "HavreST.Pierre",
-    "country": "加拿大",
-    "countryCode": "CA",
-    "egName": "HAVREST.PIERRE",
-    "id": 6333,
-    "name": "HavreST.Pierre机场",
-    "szm": "YGV"
-  },
-  {
-    "city": "Kimmirut",
-    "country": "加拿大",
-    "countryCode": "CA",
-    "egName": "KIMMIRUT",
-    "id": 6335,
-    "name": "今米鲁特机场",
-    "szm": "YLC"
-  },
-  {
     "city": "瑟佛罗里达基斯",
     "country": "加拿大",
     "countryCode": "CA",
@@ -27090,15 +26991,6 @@
     "szm": "AXN"
   },
   {
-    "city": "PittstonTownship",
-    "country": "美国",
-    "countryCode": "US",
-    "egName": "PITTSTONTOWNSHIP",
-    "id": 6527,
-    "name": "威尔克斯-巴里机场",
-    "szm": "AVP"
-  },
-  {
     "city": "阿什维尔",
     "country": "美国",
     "countryCode": "US",
@@ -27214,15 +27106,6 @@
     "id": 6555,
     "name": "默特尔比奇机场",
     "szm": "MYR"
-  },
-  {
-    "city": "MosesLake",
-    "country": "美国",
-    "countryCode": "US",
-    "egName": "MOSESLAKE",
-    "id": 6557,
-    "name": "格兰特郡立机场",
-    "szm": "MWH"
   },
   {
     "city": "马里兰",
@@ -27412,15 +27295,6 @@
     "id": 6601,
     "name": "福特奇佩恩机场",
     "szm": "YPY"
-  },
-  {
-    "city": "Povungnituk",
-    "country": "加拿大",
-    "countryCode": "CA",
-    "egName": "POVUNGNITUK",
-    "id": 6603,
-    "name": "Povungnituk机场",
-    "szm": "YPX"
   },
   {
     "city": "鲍威尔河",
@@ -27646,15 +27520,6 @@
     "id": 6653,
     "name": "卡蒂机场",
     "szm": "YOA"
-  },
-  {
-    "city": "Tasiujaq",
-    "country": "加拿大",
-    "countryCode": "CA",
-    "egName": "TASIUJAQ",
-    "id": 6655,
-    "name": "Tasiujaq机场",
-    "szm": "YTQ"
   },
   {
     "city": "岱斯",

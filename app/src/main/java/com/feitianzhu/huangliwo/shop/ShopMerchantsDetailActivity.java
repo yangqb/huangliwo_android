@@ -35,6 +35,7 @@ import com.feitianzhu.huangliwo.pushshop.bean.MerchantsModel;
 import com.feitianzhu.huangliwo.pushshop.bean.SetMealInfo;
 import com.feitianzhu.huangliwo.pushshop.bean.SetMealListInfo;
 import com.feitianzhu.huangliwo.shop.adapter.ShopDetailAdapter;
+import com.feitianzhu.huangliwo.utils.MathUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
@@ -502,8 +503,8 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
                             shopName.setText(merchantsBean.getMerchantName());
                             address.setText(merchantsBean.getCityName() + merchantsBean.getAreaName() + merchantsBean.getDtlAddr());
                             String discount = String.valueOf((100 - merchantsBean.getDiscount() * 100));
-                            tvRebate.setText("返" + discount + "%");
-                            vipRebate.setText("返" + discount + "%");
+                            tvRebate.setText("返" + MathUtils.subZero(discount) + "%");
+                            vipRebate.setText("返" + MathUtils.subZero(discount) + "%");
                             getSetMealList(merchantsId);
                             String urlLogo = merchantsBean.getShopFrontImg() == null ? "" : merchantsBean.getShopFrontImg();
                             imgs.add(urlLogo);

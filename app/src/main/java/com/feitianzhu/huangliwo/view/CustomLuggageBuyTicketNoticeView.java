@@ -2,6 +2,7 @@ package com.feitianzhu.huangliwo.view;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.view.View;
 import android.widget.TextView;
 
 import com.feitianzhu.huangliwo.R;
@@ -47,6 +48,13 @@ public class CustomLuggageBuyTicketNoticeView extends CenterPopupView {
             findViewById(R.id.back_bagg).setVisibility(VISIBLE);
             findViewById(R.id.go_tag).setVisibility(VISIBLE);
         }
+        TextView btnSubmit = findViewById(R.id.btn_submit);
+        btnSubmit.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
         TextView go_baggText = findViewById(R.id.go_baggText);
         TextView back_baggText = findViewById(R.id.back_baggText);
         if (goBaggageRuleInfo != null) {

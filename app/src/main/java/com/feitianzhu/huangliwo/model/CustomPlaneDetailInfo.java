@@ -18,10 +18,5 @@ public class CustomPlaneDetailInfo implements Serializable {
     public SearchInternationalFlightModel customInterFlightInfo;//国外单程和往返信息
     public InternationalPriceInfo customInterPriceInfo;//国外单程和往返报价
 
-    public String goDate;
-    public String backDate;
-    public String goCityName;
-    public String backCityName;
-    public String depCode;
-    public String arrCode;
+    public CustomFightCityInfo customFightCityInfo;
 }

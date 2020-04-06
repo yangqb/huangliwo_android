@@ -9,13 +9,16 @@ import android.text.Spanned;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
+import android.view.View;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.feitianzhu.huangliwo.R;
+import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.MultiGoBackFlightInfo;
 import com.feitianzhu.huangliwo.utils.MathUtils;
+import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 
 import java.util.List;
 
@@ -41,6 +44,15 @@ public class SearchResultAdapter2 extends BaseMultiItemQuickAdapter<MultiGoBackF
 
     @Override
     protected void convert(@NonNull BaseViewHolder helper, MultiGoBackFlightInfo item) {
+        MineInfoModel userInfo = UserInfoUtils.getUserInfo(mContext);
+        helper.addOnClickListener(R.id.ll_rebate);
+        if (userInfo.getAccountType() != 0) {
+            helper.setGone(R.id.ll_rebate, false);
+            helper.setGone(R.id.vip_rebate, true);
+        } else {
+            helper.setGone(R.id.ll_rebate, true);
+            helper.setGone(R.id.vip_rebate, false);
+        }
         if (helper.getItemViewType() == MultiGoBackFlightInfo.DOMESTIC) {
             helper.setText(R.id.go_depTime, item.domesticFlight.go.depTime);
             helper.setText(R.id.go_arrTime, item.domesticFlight.go.arrTime);
@@ -53,6 +65,7 @@ public class SearchResultAdapter2 extends BaseMultiItemQuickAdapter<MultiGoBackF
             helper.setText(R.id.back_arrAirportName, item.domesticFlight.back.arrAirport + item.domesticFlight.back.arrTerminal);
             helper.setText(R.id.back_flightNum, item.domesticFlight.back.carrierName + item.domesticFlight.back.flightCode);
             helper.setText(R.id.tv_rebate, "返¥" + MathUtils.subZero(String.valueOf(item.domesticFlight.zk)));
+            helper.setText(R.id.vip_rebate, "返¥" + MathUtils.subZero(String.valueOf(item.domesticFlight.zk)));
             setSpannableString(MathUtils.subZero(String.valueOf(item.domesticFlight.minBarePrice)), helper.getView(R.id.price));
         } else {
             helper.setText(R.id.go_depTime, item.internationalFlight.goTrip.flightSegments.get(0).depTime);
@@ -66,6 +79,7 @@ public class SearchResultAdapter2 extends BaseMultiItemQuickAdapter<MultiGoBackF
             helper.setText(R.id.back_arrAirportName, item.internationalFlight.backTrip.flightSegments.get(item.internationalFlight.backTrip.flightSegments.size() - 1).arrAirportName);
             helper.setText(R.id.back_flightNum, item.internationalFlight.backTrip.flightSegments.get(0).carrierShortName + item.internationalFlight.backTrip.flightSegments.get(0).flightNum);
             helper.setText(R.id.tv_rebate, "返¥" + MathUtils.subZero(String.valueOf(item.internationalFlight.zk)));
+            helper.setText(R.id.vip_rebate, "返¥" + MathUtils.subZero(String.valueOf(item.internationalFlight.zk)));
             setSpannableString(MathUtils.subZero(String.valueOf(item.internationalFlight.price)), helper.getView(R.id.price));
         }
 

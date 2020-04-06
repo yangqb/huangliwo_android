@@ -11,8 +11,8 @@ public class Urls {
     private static final String BASE_URL = "http://39.106.65.35:8088/"; //测试地址
     //private static final String BASE_URL = "http://192.168.0.12:8089/";//钟工本地地址
     //private static final String BASE_URL = "http://192.168.0.9:8089/"; //周工本地地址
-    //private static final String TICKET_BASE_URL = "http://39.106.65.35:8087/"; //机票测试
-    private static final String TICKET_BASE_URL = "http://192.168.0.9:8087/"; //周工机票本地
+    private static final String TICKET_BASE_URL = "http://39.106.65.35:8087/"; //机票测试
+    //private static final String TICKET_BASE_URL = "http://192.168.0.9:8087/"; //周工机票本地
     /**
      * 注册
      */

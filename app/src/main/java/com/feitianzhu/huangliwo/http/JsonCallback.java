@@ -174,7 +174,7 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
         } else if (response.getException() instanceof SocketException) {
             ToastUtils.showShortToast("服务器异常");
         } else {
-            ToastUtils.showShortToast(response.message());
+            //ToastUtils.showShortToast(response.message());
         }
     }
 }

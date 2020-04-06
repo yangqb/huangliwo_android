@@ -63,7 +63,7 @@ public class CustomPlaneInfoView extends CenterPopupView {
         }
         if (type == 0) {
             String date = DateUtils.strToStr(detailInfo.customDocGoFlightInfo.date) + DateUtils.strToDate2(detailInfo.customDocGoFlightInfo.date);
-            tvGoPlaneInfo.setText(date + detailInfo.customDocGoFlightInfo.depCode + "-" + detailInfo.customDocGoFlightInfo.arrCode);
+            tvGoPlaneInfo.setText(date + detailInfo.customFightCityInfo.depCityName + "-" + detailInfo.customFightCityInfo.arrCityName);
             goBTime.setText(detailInfo.customDocGoFlightInfo.btime);
             goDepAirport.setText(detailInfo.customDocGoFlightInfo.depAirport + detailInfo.customDocGoFlightInfo.depTerminal);
             goArrAirport.setText(detailInfo.customDocGoFlightInfo.arrAirport + detailInfo.customDocGoFlightInfo.arrTerminal);
@@ -85,11 +85,11 @@ public class CustomPlaneInfoView extends CenterPopupView {
             tvGoCompany.setText(interGo.flightSegments.get(0).carrierShortName + interGo.flightSegments.get(0).flightNum + interGo.flightSegments.get(0).planeTypeName + "不提供餐食");
             goFlightTimes.setText(DateUtils.minToHour(interGo.duration));
         } else if (type == 2) {
-            String goDate = DateUtils.strToStr(detailInfo.goDate) + DateUtils.strToDate2(detailInfo.goDate);
-            String backDate = DateUtils.strToStr(detailInfo.backDate) + DateUtils.strToDate2(detailInfo.backDate);
+            String goDate = DateUtils.strToStr(detailInfo.customFightCityInfo.goDate) + DateUtils.strToDate2(detailInfo.customFightCityInfo.goDate);
+            String backDate = DateUtils.strToStr(detailInfo.customFightCityInfo.backDate) + DateUtils.strToDate2(detailInfo.customFightCityInfo.backDate);
 
 
-            tvGoPlaneInfo.setText(goDate + detailInfo.customDocGoBackFlightInfo.go.depAirportCode + "-" + detailInfo.customDocGoBackFlightInfo.go.arrAirportCode);
+            tvGoPlaneInfo.setText(goDate + detailInfo.customFightCityInfo.depCityName + "-" + detailInfo.customFightCityInfo.arrCityName);
             goBTime.setText(detailInfo.customDocGoBackFlightInfo.go.depTime);
             goDepAirport.setText(detailInfo.customDocGoBackFlightInfo.go.depAirport + detailInfo.customDocGoBackFlightInfo.go.depTerminal);
             goArrAirport.setText(detailInfo.customDocGoBackFlightInfo.go.arrAirport + detailInfo.customDocGoBackFlightInfo.go.arrTerminal);
@@ -98,7 +98,7 @@ public class CustomPlaneInfoView extends CenterPopupView {
             goFlightTimes.setText(detailInfo.customDocGoBackFlightInfo.go.flightTimes);
 
 
-            tvBackPlaneInfo.setText(backDate + detailInfo.customDocGoBackFlightInfo.back.depAirportCode + "-" + detailInfo.customDocGoBackFlightInfo.back.arrAirportCode);
+            tvBackPlaneInfo.setText(backDate + detailInfo.customFightCityInfo.arrCityName + "-" + detailInfo.customFightCityInfo.depCityName);
             backBTime.setText(detailInfo.customDocGoBackFlightInfo.back.depTime);
             backDepAirport.setText(detailInfo.customDocGoBackFlightInfo.back.depAirport + detailInfo.customDocGoBackFlightInfo.back.depTerminal);
             backArrAirport.setText(detailInfo.customDocGoBackFlightInfo.back.arrAirport + detailInfo.customDocGoBackFlightInfo.back.arrTerminal);
