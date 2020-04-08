@@ -95,6 +95,7 @@
                                 android:id="@+id/rl_financial"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
+                                android:visibility="gone"
                                 android:layout_weight="1">
 
                                 <ImageView
@@ -102,6 +103,19 @@
                                     android:layout_height="wrap_content"
                                     android:layout_centerInParent="true"
                                     android:src="@mipmap/a02_04jinrong" />
+                            </RelativeLayout>
+
+                            <RelativeLayout
+                                android:id="@+id/rl_travel"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1">
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerInParent="true"
+                                    android:src="@mipmap/a02_05lvyou" />
                             </RelativeLayout>
                         </LinearLayout>
 
@@ -144,8 +158,19 @@
                                 android:layout_weight="1"
                                 android:gravity="center"
                                 android:text="金融"
+                                android:visibility="gone"
                                 android:textColor="@color/color_333333"
                                 android:textSize="13sp" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="旅行"
+                                android:textColor="@color/color_333333"
+                                android:textSize="13sp" />
+
                         </LinearLayout>
 
                     </LinearLayout>

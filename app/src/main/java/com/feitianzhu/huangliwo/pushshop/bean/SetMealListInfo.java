@@ -1,5 +1,7 @@
 package com.feitianzhu.huangliwo.pushshop.bean;
 
+import com.feitianzhu.huangliwo.model.VipGifListInfo;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -12,6 +14,16 @@ import java.util.List;
  */
 public class SetMealListInfo implements Serializable {
     private List<SetMealInfo> list;
+    private List<VipGifListInfo.VipGifModel> merchantGiftList;
+
+    public List<VipGifListInfo.VipGifModel> getMerchantGiftList() {
+        return merchantGiftList;
+    }
+
+    public void setMerchantGiftList(List<VipGifListInfo.VipGifModel> merchantGiftList) {
+        this.merchantGiftList = merchantGiftList;
+    }
+
     public List<SetMealInfo> getList() {
         return list;
     }

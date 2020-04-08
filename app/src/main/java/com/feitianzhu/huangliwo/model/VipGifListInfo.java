@@ -5,7 +5,9 @@ import java.util.List;
 
 public class VipGifListInfo implements Serializable {
     public List<VipGifModel> list;
+    public List<VipPresentsModel> shopGiftList;
     public double totalPrice;
+    public String title;
 
 
     public static class VipGifModel implements Serializable {
@@ -19,5 +21,15 @@ public class VipGifListInfo implements Serializable {
         public int merchantId;//":0,
         public String merchantName;//":"string",
         public double price;//":0
+    }
+
+    public class VipPresentsModel implements Serializable {
+        public String giftId;
+        public String giftImg;
+        public String giftName;
+        public String giftTitle;
+        public double giftExhibition;
+        public String giftExplain;
+        public int isGet;
     }
 }

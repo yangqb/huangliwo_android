@@ -9,9 +9,13 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.itheima.roundedimageview.RoundedImageView;
 import com.tencent.mm.opensdk.utils.Log;
 
 public class GlideUtils {
@@ -61,8 +65,13 @@ public class GlideUtils {
     }
 
 
-    public static ImageView getImageView3(Activity mContext, String url, ImageView imgDetail) {
-        Glide.with(mContext).asBitmap().load(url).into(new SimpleTarget<Bitmap>() {
+    public static RoundedImageView getImageView3(Activity mContext, String url, RoundedImageView imgDetail) {
+        Glide.with(mContext).asBitmap().load(url).apply(new RequestOptions()
+                .fitCenter()
+                .error(R.mipmap.g10_04weijiazai)
+                .placeholder(R.mipmap.g10_04weijiazai)
+                .skipMemoryCache(false)
+                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)).into(new SimpleTarget<Bitmap>() {
             @Override
             public void onResourceReady(Bitmap bitmap, Transition<? super Bitmap> transition) {
                 int bWidth = bitmap.getWidth();
@@ -76,6 +85,7 @@ public class GlideUtils {
                 ViewGroup.LayoutParams para = imgDetail.getLayoutParams();
                 para.height = height;
                 imgDetail.setLayoutParams(para);
+                imgDetail.setImageBitmap(bitmap);
             }
         });
         return imgDetail;

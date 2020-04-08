@@ -73,4 +73,9 @@
     <attr name="cpOverlayTextSize" format="dimension|reference" />
     <attr name="cpOverlayTextColor" format="color|reference" />
     <attr name="cpOverlayBackground" format="color|reference" />
+
+    <declare-styleable name="StickyScrollView">
+        <attr name="stuckShadowHeight" format="dimension" />
+        <attr name="stuckShadowDrawable" format="reference" />
+    </declare-styleable>
 </resources>

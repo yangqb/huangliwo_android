@@ -3,16 +3,16 @@ package com.feitianzhu.huangliwo.message;
 import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
 import com.feitianzhu.huangliwo.utils.GlideUtils;
+import com.itheima.roundedimageview.RoundedImageView;
 
 import java.util.List;
 
@@ -30,8 +30,9 @@ public class DiscoverAdapter extends BaseQuickAdapter<BaseGoodsListBean, BaseVie
 
     @Override
     protected void convert(@NonNull BaseViewHolder helper, BaseGoodsListBean item) {
-        ImageView imageView = helper.getView(R.id.imageView);
-        Glide.with(mContext).load(item.getGoodsImg()).apply(new RequestOptions().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai)).into(GlideUtils.getImageView3((Activity) mContext, item.getGoodsImg(), imageView));
+        RoundedImageView imageView = helper.getView(R.id.imageView);
+        GlideUtils.getImageView3((Activity) mContext, item.getGoodsImg(), imageView);
+        //Glide.with(mContext).load(item.getGoodsImg()).apply(new RequestOptions().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai)).into();
         helper.setText(R.id.goodsName, item.getGoodsName());
     }
 }

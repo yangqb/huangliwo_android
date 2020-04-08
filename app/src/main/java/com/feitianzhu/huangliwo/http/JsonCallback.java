@@ -150,7 +150,7 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
                                     ChangePasswordActivity.startActivity(context, true);
                                 }
                             }, null, false)
-                            .bindLayout(R.layout.layout_dialog);
+                            .bindLayout(R.layout.layout_dialog_login);
                     confirmPopupView.show();//绑定已有布局
                 } else {
                     if (!confirmPopupView.isShow()) {

@@ -23,12 +23,13 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@mipmap/f01_02beijing" />
+                    android:background="@mipmap/f01_01beijing" />
 
                 <LinearLayout
                     android:id="@+id/ll_top"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     android:padding="15dp">
 
                     <LinearLayout
@@ -82,7 +83,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/ll_top"
+                    android:layout_marginTop="85dp"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
                     android:background="@color/color_f7f7f7"

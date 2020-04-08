@@ -15,10 +15,20 @@ import java.util.List;
 public class MultipleMerchantsItem implements MultiItemEntity {
     public static final int SETMEAL_TYPE = 1;
     public static final int COMMENTS_TYPE = 2;
+    public static final int GIFT_TYPE = 3;
     private int type;
 
     private SetMealInfo setMealInfo;
     private SetMealEvalDetailInfo.SetMealEvalDetailModel evalDetailModel;
+    private VipGifListInfo.VipGifModel gifModel;
+
+    public VipGifListInfo.VipGifModel getGifModel() {
+        return gifModel;
+    }
+
+    public void setGifModel(VipGifListInfo.VipGifModel gifModel) {
+        this.gifModel = gifModel;
+    }
 
     public SetMealEvalDetailInfo.SetMealEvalDetailModel getEvalDetailModel() {
         return evalDetailModel;

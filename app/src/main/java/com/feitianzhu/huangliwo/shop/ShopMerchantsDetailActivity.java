@@ -30,6 +30,7 @@ import com.feitianzhu.huangliwo.model.CollectionBody;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.MultipleMerchantsItem;
 import com.feitianzhu.huangliwo.model.SetMealEvalDetailInfo;
+import com.feitianzhu.huangliwo.model.VipGifListInfo;
 import com.feitianzhu.huangliwo.pushshop.MyPaymentActivity;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsModel;
 import com.feitianzhu.huangliwo.pushshop.bean.SetMealInfo;
@@ -39,13 +40,16 @@ import com.feitianzhu.huangliwo.utils.MathUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
+import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 import com.feitianzhu.huangliwo.view.CustomRefundView;
 import com.feitianzhu.huangliwo.vip.VipActivity;
+import com.feitianzhu.huangliwo.vip.VipGiftDetailActivity;
 import com.google.gson.Gson;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.base.Request;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
 import com.yanzhenjie.permission.Rationale;
@@ -66,6 +70,7 @@ import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
 import static com.feitianzhu.huangliwo.common.Constant.POST_MINE_INFO;
 import static com.feitianzhu.huangliwo.common.Constant.USERID;
+import static com.feitianzhu.huangliwo.vip.VipGiftDetailActivity.GIFT_ID;
 
 /**
  * @class name：com.feitianzhu.fu700.shop
@@ -91,6 +96,7 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
     private MineInfoModel mineInfoModel = new MineInfoModel();
     private List<MultipleMerchantsItem> multipleItemList = new ArrayList<>();
     private List<SetMealInfo> setMealInfoList = new ArrayList<>();
+    private List<VipGifListInfo.VipGifModel> gifModelList = new ArrayList<>();
     private List<SetMealEvalDetailInfo.SetMealEvalDetailModel> setMealEvalDetailModelList = new ArrayList<>();
     private List<String> imgs = new ArrayList<>();
     @BindView(R.id.right_img)
@@ -101,6 +107,8 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
     TextView button1;
     @BindView(R.id.button2)
     TextView button2;
+    @BindView(R.id.button3)
+    TextView button3;
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
     @BindView(R.id.viewpager)
@@ -134,6 +142,7 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
         //shareImg.setVisibility(View.VISIBLE);
         button1.setSelected(true);
         button2.setSelected(false);
+        button3.setSelected(false);
         merchantsId = getIntent().getIntExtra(MERCHANTS_ID, -1);
         collectImg.setVisibility(View.VISIBLE);
 
@@ -156,12 +165,13 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
         initListener();
     }
 
-    @OnClick({R.id.button1, R.id.button2, R.id.left_button, R.id.img_collect, R.id.call_phone, R.id.address, R.id.ll_rebate})
+    @OnClick({R.id.button1, R.id.button2, R.id.button3, R.id.left_button, R.id.img_collect, R.id.call_phone, R.id.address, R.id.ll_rebate})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.button1:
                 button1.setSelected(true);
                 button2.setSelected(false);
+                button3.setSelected(false);
                 getSetMealList(merchantsId);
                 /*multipleItemList.clear();
                 mAdapter.notifyDataSetChanged();*/
@@ -169,7 +179,14 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
             case R.id.button2:
                 button1.setSelected(false);
                 button2.setSelected(true);
+                button3.setSelected(false);
                 getSetMealEvaList();
+                break;
+            case R.id.button3:
+                button1.setSelected(false);
+                button2.setSelected(false);
+                button3.setSelected(true);
+                getSetMealList(merchantsId);
                 break;
             case R.id.left_button:
                 finish();
@@ -371,9 +388,32 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
                     Intent intent = new Intent(ShopMerchantsDetailActivity.this, ShopSetMealDetailActivity.class);
                     intent.putExtra(ShopSetMealDetailActivity.SETMEAL_INFO, setMealInfoList.get(position));
                     startActivity(intent);
+                } else if (mAdapter.getItemViewType(position) == MultipleMerchantsItem.GIFT_TYPE) {
+                    //礼品详情页
+                    if (multipleItemList.get(position).getGifModel().isGet == 1) {
+                        Intent intent = new Intent(ShopMerchantsDetailActivity.this, VipGiftDetailActivity.class);
+                        intent.putExtra(GIFT_ID, multipleItemList.get(position).getGifModel().giftId);
+                        startActivity(intent);
+                    }
                 }
             }
         });
+
+        mAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                if (mAdapter.getItemViewType(position) == MultipleMerchantsItem.GIFT_TYPE) {
+                    if (mineInfoModel.getAccountType() != 0) {
+                        if (multipleItemList.get(position).getGifModel().isGet == 0) {
+                            receiveGif(multipleItemList.get(position).getGifModel().giftId, multipleItemList.get(position).getGifModel().merchantId, position);
+                        }
+                    } else {
+                        ToastUtils.showShortToast("您还不是会员");
+                    }
+                }
+            }
+        });
+
         mAdapter.setOnChildPositionListener(new ShopDetailAdapter.OnChildClickListener() {
             @Override
             public void success(int index, int pos) {
@@ -414,6 +454,32 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
         });
     }
 
+    public void receiveGif(int giftId, int merchantId, int position) {
+        OkGo.<LzyResponse>get(Urls.GET_GIFT)
+                .tag(this)
+                .params("giftId", "" + giftId)
+                .params("merchantId", "" + merchantId)
+                .params(ACCESSTOKEN, token)
+                .params(USERID, userId)
+                .execute(new JsonCallback<LzyResponse>() {
+                    @Override
+                    public void onSuccess(Response<LzyResponse> response) {
+                        super.onSuccess(ShopMerchantsDetailActivity.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0) {
+                            ToastUtils.showShortToast("领取成功");
+                            multipleItemList.get(position).getGifModel().isGet = 1;
+                            mAdapter.setNewData(multipleItemList);
+                            mAdapter.notifyItemChanged(position);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<LzyResponse> response) {
+                        super.onError(response);
+                    }
+                });
+    }
+
     public void getSetMealEvaList() {
 
         OkGo.<LzyResponse<SetMealEvalDetailInfo>>get(Urls.GET_SETMEAL_EVALIST)
@@ -423,9 +489,16 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
                 .params("merchantId", merchantsId + "")
                 .execute(new JsonCallback<LzyResponse<SetMealEvalDetailInfo>>() {
                     @Override
+                    public void onStart(Request<LzyResponse<SetMealEvalDetailInfo>, ? extends Request> request) {
+                        super.onStart(request);
+                        showloadDialog("");
+                    }
+
+                    @Override
                     public void onSuccess(Response<LzyResponse<SetMealEvalDetailInfo>> response) {
-                        super.onSuccess(ShopMerchantsDetailActivity.this, "", response.body().code);
-                        if (response.body().data != null) {
+                        super.onSuccess(ShopMerchantsDetailActivity.this, response.body().msg, response.body().code);
+                        goneloadDialog();
+                        if (response.body().code == 0 && response.body().data != null) {
                             setMealEvalDetailModelList = response.body().data.getList();
                             multipleItemList.clear();
                             for (int i = 0; i < setMealEvalDetailModelList.size(); i++) {
@@ -441,6 +514,7 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
                     @Override
                     public void onError(Response<LzyResponse<SetMealEvalDetailInfo>> response) {
                         super.onError(response);
+                        goneloadDialog();
                     }
                 });
     }
@@ -455,15 +529,35 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
                 .params("merchantId", merchantsId + "")
                 .execute(new JsonCallback<LzyResponse<SetMealListInfo>>() {
                     @Override
+                    public void onStart(Request<LzyResponse<SetMealListInfo>, ? extends Request> request) {
+                        super.onStart(request);
+                        showloadDialog("");
+                    }
+
+                    @Override
                     public void onSuccess(Response<LzyResponse<SetMealListInfo>> response) {
-                        super.onSuccess(ShopMerchantsDetailActivity.this, "", response.body().code);
-                        if (response.body().data != null) {
-                            setMealInfoList = response.body().data.getList();
-                            multipleItemList.clear();
-                            for (int i = 0; i < setMealInfoList.size(); i++) {
-                                MultipleMerchantsItem multipleMerchantsItem = new MultipleMerchantsItem(MultipleMerchantsItem.SETMEAL_TYPE);
-                                multipleMerchantsItem.setSetMealInfo(setMealInfoList.get(i));
-                                multipleItemList.add(multipleMerchantsItem);
+                        super.onSuccess(ShopMerchantsDetailActivity.this, response.body().msg, response.body().code);
+                        goneloadDialog();
+                        multipleItemList.clear();
+                        if (response.body().code == 0 && response.body().data != null) {
+                            if (button3.isSelected()) {
+                                if (response.body().data.getMerchantGiftList() != null) {
+                                    gifModelList = response.body().data.getMerchantGiftList();
+                                    for (int i = 0; i < gifModelList.size(); i++) {
+                                        MultipleMerchantsItem multipleMerchantsItem = new MultipleMerchantsItem(MultipleMerchantsItem.GIFT_TYPE);
+                                        multipleMerchantsItem.setGifModel(gifModelList.get(i));
+                                        multipleItemList.add(multipleMerchantsItem);
+                                    }
+                                }
+                            } else {
+                                if (response.body().data.getList() != null) {
+                                    setMealInfoList = response.body().data.getList();
+                                    for (int i = 0; i < setMealInfoList.size(); i++) {
+                                        MultipleMerchantsItem multipleMerchantsItem = new MultipleMerchantsItem(MultipleMerchantsItem.SETMEAL_TYPE);
+                                        multipleMerchantsItem.setSetMealInfo(setMealInfoList.get(i));
+                                        multipleItemList.add(multipleMerchantsItem);
+                                    }
+                                }
                             }
                             mAdapter.setNewData(multipleItemList);
                             mAdapter.notifyDataSetChanged();
@@ -474,6 +568,7 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
                     @Override
                     public void onError(Response<LzyResponse<SetMealListInfo>> response) {
                         super.onError(response);
+                        goneloadDialog();
                     }
                 });
     }
@@ -540,8 +635,8 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
                 .execute(new JsonCallback<LzyResponse<MineInfoModel>>() {
                     @Override
                     public void onSuccess(Response<LzyResponse<MineInfoModel>> response) {
-                        super.onSuccess(ShopMerchantsDetailActivity.this, "", response.body().code);
-                        if (response.body().data != null) {
+                        super.onSuccess(ShopMerchantsDetailActivity.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0 && response.body().data != null) {
                             mineInfoModel = response.body().data;
                             if (mineInfoModel.getAccountType() != 0) {
                                 llRebate.setVisibility(View.GONE);

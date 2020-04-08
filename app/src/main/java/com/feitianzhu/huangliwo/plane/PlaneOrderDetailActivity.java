@@ -385,7 +385,7 @@ public class PlaneOrderDetailActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.btn_reimbursement:
-               /* if (orderModel.status == PlaneOrderStatus.BOOK_OK || orderModel.status == PlaneOrderStatus.PAY_OK ||
+               /* if (orderModel.status == PlaneOrderStatus.PAY_OK ||
                         orderModel.status == PlaneOrderStatus.TICKET_OK || orderModel.status == PlaneOrderStatus.TICKET_LOCK ||
                         orderModel.status == PlaneOrderStatus.WAIT_CONFIRM || orderModel.status == PlaneOrderStatus.CHANGE_OK) {
                     intent = new Intent(PlaneOrderDetailActivity.this, PlaneReimbursementActivity.class);

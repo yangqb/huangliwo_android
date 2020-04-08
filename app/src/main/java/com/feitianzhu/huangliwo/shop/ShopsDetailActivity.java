@@ -335,8 +335,8 @@ public class ShopsDetailActivity extends BaseActivity {
 
         @Override
         public void onBind(final Context context, BaseGoodsListBean.GoodsImgsListBean data, final int position, final int size) {
-            //Glide.with(context).load(data.getGoodsImg()).apply(new RequestOptions().error(R.mipmap.g10_03weijiazai).placeholder(R.mipmap.g10_03weijiazai)).into(mImageView);
-            Glide.with(context).load(data.getGoodsImg()).apply(new RequestOptions().error(R.mipmap.g10_03weijiazai).placeholder(R.mipmap.g10_03weijiazai)).into(GlideUtils.getImageView((Activity) context, data.getGoodsImg(), mImageView));
+            Glide.with(context).load(data.getGoodsImg()).apply(new RequestOptions().error(R.mipmap.g10_03weijiazai).placeholder(R.mipmap.g10_03weijiazai)).into(mImageView);
+            //Glide.with(context).load(data.getGoodsImg()).apply(new RequestOptions().error(R.mipmap.g10_03weijiazai).placeholder(R.mipmap.g10_03weijiazai)).into(GlideUtils.getImageView((Activity) context, data.getGoodsImg(), mImageView));
         }
     }
 

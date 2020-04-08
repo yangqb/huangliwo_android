@@ -163,6 +163,17 @@
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/button3"
+                        android:layout_width="70dp"
+                        android:layout_height="27dp"
+                        android:background="@drawable/button_selecter_shopdetail"
+                        android:gravity="center"
+                        android:text="赠品"
+                        android:textColor="@color/color_333333"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
                         android:id="@+id/button2"
                         android:layout_width="70dp"
                         android:layout_height="27dp"

@@ -52,7 +52,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="115dp"
                 android:layout_alignParentBottom="true"
-                android:background="@mipmap/f01_04taitou" />
+                android:background="@mipmap/more_vip" />
 
         </RelativeLayout>
     </LinearLayout>
@@ -65,9 +65,10 @@
         <LinearLayout
             android:id="@+id/parent_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
+            android:layout_marginBottom="50dp"
             android:background="@drawable/shape_ffffff_r10"
             android:orientation="vertical"
             android:paddingLeft="10dp"

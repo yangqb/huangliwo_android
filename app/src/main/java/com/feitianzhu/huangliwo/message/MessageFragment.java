@@ -22,10 +22,13 @@ import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseFragment;
 import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
 import com.feitianzhu.huangliwo.model.HomeShops;
+import com.feitianzhu.huangliwo.model.NewYearGoodsModel;
+import com.feitianzhu.huangliwo.shop.NewYearShoppingActivity;
 import com.feitianzhu.huangliwo.shop.ShopsDetailActivity;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.Response;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -142,42 +145,25 @@ public class MessageFragment extends SFFragment {
     }
 
     public void getData() {
-        OkGo.<LzyResponse<HomeShops>>get(Urls.GET_HOME_GOODS_LIST)
+        OkGo.<LzyResponse<NewYearGoodsModel>>get(Urls.GET_NEW_YEAR)
                 .tag(this)
                 .params("accessToken", token)
                 .params("userId", userId)
-                .params("limitNum", "14")
-                .params("curPage", pageNo + "")
-                .execute(new JsonCallback<LzyResponse<HomeShops>>() {
+                .execute(new JsonCallback<LzyResponse<NewYearGoodsModel>>() {
                     @Override
-                    public void onStart(com.lzy.okgo.request.base.Request<LzyResponse<HomeShops>, ? extends com.lzy.okgo.request.base.Request> request) {
-                        super.onStart(request);
-                        showloadDialog("");
-                    }
-
-                    @Override
-                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<HomeShops>> response) {
+                    public void onSuccess(Response<LzyResponse<NewYearGoodsModel>> response) {
                         super.onSuccess(getActivity(), "", response.body().code);
-                        goneloadDialog();
                         refreshLayout.finishRefresh();
-                        HomeShops homeShops = response.body().data;
-                        if (!isLoadMore) {
-                            goodsListBeans.clear();
-                        }
-                        //商品
-                        if (homeShops != null) {
-                            goodsListBeans = homeShops.getGoodsList();
-                            if (goodsListBeans != null && goodsListBeans.size() > 0) {
-                                mAdapter.setNewData(goodsListBeans);
-                                mAdapter.notifyDataSetChanged();
-                            }
+                        if (response.body().data != null && response.body().data.getActivityList() != null) {
+                            goodsListBeans = response.body().data.getActivityList();
+                            mAdapter.setNewData(goodsListBeans);
+                            mAdapter.notifyDataSetChanged();
                         }
                     }
 
                     @Override
-                    public void onError(com.lzy.okgo.model.Response<LzyResponse<HomeShops>> response) {
+                    public void onError(Response<LzyResponse<NewYearGoodsModel>> response) {
                         super.onError(response);
-                        goneloadDialog();
                         refreshLayout.finishRefresh(false);
                     }
                 });

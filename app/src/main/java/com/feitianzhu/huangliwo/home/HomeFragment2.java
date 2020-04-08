@@ -376,7 +376,7 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, Pager
         });
     }
 
-    @OnClick({R.id.ll_location, R.id.iv_head, R.id.rl_ticket, R.id.rl_financial, R.id.rl_mall, R.id.rl_merchants, R.id.search, R.id.iv_home_nv_right})
+    @OnClick({R.id.ll_location, R.id.iv_head, R.id.rl_ticket, R.id.rl_financial, R.id.rl_travel, R.id.rl_mall, R.id.rl_merchants, R.id.search, R.id.iv_home_nv_right})
     public void onViewClicked(View view) {
         Intent intent;
         switch (view.getId()) {
@@ -404,6 +404,8 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, Pager
             case R.id.rl_financial:
                 intent = new Intent(getActivity(), FinancialHomeActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.rl_travel:
                 break;
             case R.id.search:
                 JumpActivity(getActivity(), SearchShopActivity.class);

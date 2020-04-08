@@ -21,6 +21,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.model.MultipleItem;
 import com.feitianzhu.huangliwo.model.MultipleMerchantsItem;
+import com.feitianzhu.huangliwo.utils.MathUtils;
 import com.feitianzhu.huangliwo.view.CircleImageView;
 import com.itheima.roundedimageview.RoundedImageView;
 
@@ -54,6 +55,7 @@ public class ShopDetailAdapter extends BaseMultiItemQuickAdapter<MultipleMerchan
         super(data);
         addItemType(MultipleMerchantsItem.SETMEAL_TYPE, R.layout.shop_detail_between_item);
         addItemType(MultipleMerchantsItem.COMMENTS_TYPE, R.layout.commodity_valuate_item);
+        addItemType(MultipleMerchantsItem.GIFT_TYPE, R.layout.commodity_gift_item);
     }
 
     @Override
@@ -76,9 +78,9 @@ public class ShopDetailAdapter extends BaseMultiItemQuickAdapter<MultipleMerchan
             case MultipleMerchantsItem.COMMENTS_TYPE:
                 Glide.with(mContext).load(item.getEvalDetailModel().getHeadImg())
                         .apply(new RequestOptions().placeholder(R.mipmap.b08_01touxiang).error(R.mipmap.b08_01touxiang).dontAnimate()).into((CircleImageView) helper.getView(R.id.iv_head));
-                 helper.setText(R.id.userName, item.getEvalDetailModel().getNickName());
-                 helper.setText(R.id.tvContent, item.getEvalDetailModel().getContent());
-                 helper.setText(R.id.tvDate, item.getEvalDetailModel().getEvalDate());
+                helper.setText(R.id.userName, item.getEvalDetailModel().getNickName());
+                helper.setText(R.id.tvContent, item.getEvalDetailModel().getContent());
+                helper.setText(R.id.tvDate, item.getEvalDetailModel().getEvalDate());
                 RecyclerView recyclerView = helper.getView(R.id.recyclerView);
                 recyclerView.setLayoutManager(new GridLayoutManager(mContext, 3));
                 recyclerView.setNestedScrollingEnabled(false);
@@ -97,6 +99,20 @@ public class ShopDetailAdapter extends BaseMultiItemQuickAdapter<MultipleMerchan
                         onItemClickListener.success(position, helper.getAdapterPosition());
                     }
                 });
+                break;
+            case MultipleMerchantsItem.GIFT_TYPE:
+                helper.addOnClickListener(R.id.button);
+                helper.setText(R.id.giftName, item.getGifModel().giftName);
+                helper.setText(R.id.giftPrice, MathUtils.subZero(String.valueOf(item.getGifModel().price)));
+                if (item.getGifModel().isGet == 0) {
+                    helper.setBackgroundRes(R.id.button, R.drawable.shape_fed428_r5);
+                    helper.setText(R.id.button, "领取");
+                    helper.setTextColor(R.id.button, mContext.getResources().getColor(R.color.color_333333));
+                } else {
+                    helper.setText(R.id.button, "已领取");
+                    helper.setBackgroundRes(R.id.button, R.drawable.shape_999999_r5);
+                    helper.setTextColor(R.id.button, mContext.getResources().getColor(R.color.white));
+                }
                 break;
         }
     }

@@ -130,7 +130,7 @@ public class WXBindingActivity extends BaseActivity {
                 .execute(new JsonCallback<LzyResponse<WXLoginInfo>>() {
                     @Override
                     public void onSuccess(Response<LzyResponse<WXLoginInfo>> response) {
-                        if (response.body().code == 0) {
+                        if (response.body().code == 0 && response.body().data != null) {
                             Constant.PHONE = phone;
                             SPUtils.putString(WXBindingActivity.this, Constant.SP_PHONE, phone);
                             Constant.ACCESS_TOKEN = response.body().data.accessToken;
@@ -162,7 +162,7 @@ public class WXBindingActivity extends BaseActivity {
 
                     @Override
                     public void onSuccess(Response<LzyResponse<MineInfoModel>> response) {
-                        if (response.body().data != null) {
+                        if (response.body().code == 0 && response.body().data != null) {
                             UserInfoUtils.saveUserInfo(WXBindingActivity.this, response.body().data);
                             Intent intent = new Intent(WXBindingActivity.this, MainActivity.class);
                             startActivity(intent);

@@ -70,6 +70,7 @@
     <color name="color_ff0800">#ff0800</color>
     <color name="color_DDDDDD">#DDDDDD</color>
     <color name="color_FF0101">#FF0101</color>
+    <color name="color_fde29a">#FDE29A</color>
 
     <color name="color_wheel_sel">#1c1c1d</color>
     <color name="color_wheel_unsel">#4d4f54</color>
