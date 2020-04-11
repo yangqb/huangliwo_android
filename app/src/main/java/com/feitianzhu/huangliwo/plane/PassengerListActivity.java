@@ -223,10 +223,14 @@ public class PassengerListActivity extends BaseActivity {
                         selectPassenger.add(locModelList.get(i));
                     }
                 }
-                Intent data = new Intent();
-                data.putParcelableArrayListExtra(SELECT_PASSENGER, selectPassenger);
-                setResult(RESULT_OK, data);
-                finish();
+                if (selectPassenger.size() <= 0) {
+                    ToastUtils.showShortToast("请选择乘机人");
+                } else {
+                    Intent data = new Intent();
+                    data.putParcelableArrayListExtra(SELECT_PASSENGER, selectPassenger);
+                    setResult(RESULT_OK, data);
+                    finish();
+                }
                 break;
         }
     }

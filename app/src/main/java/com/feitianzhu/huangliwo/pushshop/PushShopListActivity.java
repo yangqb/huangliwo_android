@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.common.base.WebActivity;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
@@ -260,8 +261,10 @@ public class PushShopListActivity extends BaseActivity {
                     intent = new Intent(PushShopListActivity.this, EditMerchantsActivity.class);
                     startActivity(intent);
                 } else {
-                    intent = new Intent(PushShopListActivity.this, PushShopProtocolActivity.class);
-                    intent.putExtra(PushShopProtocolActivity.PUSH_PROTOCOL, false);
+                    intent = new Intent(PushShopListActivity.this, WebActivity.class);
+                    intent.putExtra(Constant.URL, Urls.BASE_URL + "fhwl/static/html/tuidianguize.html");
+                    intent.putExtra(Constant.H5_TITLE, "推店规则和收益说明");
+                    intent.putExtra(WebActivity.PUSH_PROTOCOL, false);
                     startActivity(intent);
                 }
                 break;

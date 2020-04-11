@@ -257,7 +257,7 @@ public class MyCenterFragment extends SFFragment {
                 .load(response.getHeadImg())
                 .apply(RequestOptions.placeholderOf(R.mipmap.b08_01touxiang).error(R.mipmap.b08_01touxiang).dontAnimate())
                 .into(civHead);
-        nickName.setText(response.getNickName() == null ? "小黄鹂" : response.getNickName());
+        nickName.setText(response.getNickName() == null ? "" : response.getNickName());
         if (response.getAccountType() == 0) {
             gradeName.setText("消费者");
         } else if (response.getAccountType() == 1) {

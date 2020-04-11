@@ -110,7 +110,7 @@ public class MineQrcodeActivity extends BaseActivity {
         Glide.with(mContext).load(mineInfoModel.getHeadImg()).apply(RequestOptions.placeholderOf(R.mipmap.b08_01touxiang).error(R.mipmap.b08_01touxiang).dontAnimate())
                 .into(mCivPic);
         if (shareType == 1) {
-            tips.setText("扫一扫 下载黄鹂窝优选APP 更多优惠等你来！");
+            tips.setText("扫一扫 下载便利大本营APP 更多优惠等你来！");
         } else {
             tips.setText("扫一扫 分享推店给身边的商家！");
         }
@@ -189,7 +189,7 @@ public class MineQrcodeActivity extends BaseActivity {
         //关闭sso授权
         // oks.disableSSOWhenAuthorize();
         oks.setImageData(bitmap);
-        oks.setTitle("黄鹂窝优选");  //最顶部的Title
+        oks.setTitle("便利大本营");  //最顶部的Title
         //oks.setImagePath(imgPath);
         oks.setCallback(new PlatformActionListener() {
             @Override

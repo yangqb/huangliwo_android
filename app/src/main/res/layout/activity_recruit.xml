@@ -75,7 +75,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="和身边的商家分享黄鹂窝，\n大家一起加入！"
+            android:text="和身边的商家分享便利大本营，\n大家一起加入！"
             android:textColor="@color/color_666666"
             android:textSize="14sp" />
 

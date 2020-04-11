@@ -133,8 +133,7 @@ public class StringUtils {
         String check = "^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
         Pattern regex = Pattern.compile(check);
         Matcher matcher = regex.matcher(email);
-        boolean isMatched = matcher.matches();
-        return isMatched;
+        return matcher.matches();
     }
 
     public static boolean isPhone(String phone) {
@@ -144,8 +143,7 @@ public class StringUtils {
         } else {
             Pattern p = Pattern.compile(regex);
             Matcher m = p.matcher(phone);
-            boolean isMatch = m.matches();
-            return isMatch;
+            return m.matches();
         }
     }
 
@@ -156,18 +154,43 @@ public class StringUtils {
         String regex = "^(([1][1-5])|([2][1-3])|([3][1-7])|([4][1-6])|([5][0-4])|([6][1-5])|([7][1])|([8][1-2]))\\d{4}(([1][9]\\d{2})|([2]\\d{3}))(([0][1-9])|([1][0-2]))(([0][1-9])|([1-2][0-9])|([3][0-1]))\\d{3}[0-9xX]$";//身份证
         Pattern p = Pattern.compile(regex);
         Matcher m = p.matcher(idCard);
-        boolean isMatch = m.matches();
-        return isMatch;
+        return m.matches();
     }
 
     /*
      * 护照
      * */
     public static boolean isPassport(String passport) {
-        String regex = "^([a-zA-z]|[0-9]){5,17}$";
+        String regex = "^1[45][0-9]{7}$|(^[P|p|S|s]\\d{7}$)|(^[S|s|G|g|E|e]\\d{8}$)|(^[Gg|Tt|Ss|Ll|Qq|Dd|Aa|Ff]\\d{8}$)|(^[H|h|M|m]\\d{8,10}$)";
         Pattern p = Pattern.compile(regex);
         Matcher m = p.matcher(passport);
-        boolean isMatch = m.matches();
-        return isMatch;
+        return m.matches();
+    }
+
+    /*
+    港澳通行证
+    * */
+    public static boolean isHMCard(String str) {
+        String regex = "^[HMhm]{1}([0-9]{10}|[0-9]{8})$";
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(str);
+        return m.matches();
+    }
+
+    // 回乡证
+    public static boolean checkReturnHome(String str) {
+        return false;
+    }
+
+    //台湾通行证验证
+    public static boolean checkTaiwan() {
+        String regex = "^[a-zA-Z][0-9]{9}$";
+        return false;
+    }
+
+    // 台胞证
+    public static boolean checkIdTaiwan(String str) {
+        String regex = "^([0-9]{8}|[0-9]{10})$";
+        return false;
     }
 }

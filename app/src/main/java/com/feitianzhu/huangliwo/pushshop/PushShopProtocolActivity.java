@@ -54,7 +54,7 @@ public class PushShopProtocolActivity extends BaseActivity {
         isPushProtocol = getIntent().getBooleanExtra(PUSH_PROTOCOL, false);
         isChecked = getIntent().getBooleanExtra(CHECK_PROTOCOL, false);
         if (isPushProtocol) {
-            titleName.setText("黄鹂窝优选推店协议");
+            titleName.setText("便利大本营推店协议");
             integers = Arrays.asList(integers1);
         } else {
             titleName.setText("推店规则和收益说明");
@@ -82,7 +82,11 @@ public class PushShopProtocolActivity extends BaseActivity {
         Intent intent;
         switch (view.getId()) {
             case R.id.not_agreed:
-                SPUtils.putBoolean(this, Constant.SP_PUSH_SHOP_PROTOCOL, false);
+                if (isPushProtocol) {
+                    SPUtils.putBoolean(this, Constant.SP_PUSH_SHOP_PROTOCOL, false);
+                } else {
+                    SPUtils.putBoolean(this, Constant.SP_PUSH_SHOP_INSTRUCTIONS, true);
+                }
                 finish();
                 break;
             case R.id.agreed:

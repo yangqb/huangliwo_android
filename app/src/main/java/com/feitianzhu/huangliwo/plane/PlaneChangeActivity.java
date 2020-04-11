@@ -45,6 +45,7 @@ import com.google.gson.reflect.TypeToken;
 import com.lxj.xpopup.XPopup;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.base.Request;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -61,7 +62,6 @@ public class PlaneChangeActivity extends BaseActivity {
     private DocOrderDetailInfo docOrderDetailInfo;
     private String userId;
     private String token;
-    private String startDateStr;
     private String changeDate;
     private int index = -1;
     public static final String ORDER_DATA = "order_data";
@@ -100,7 +100,7 @@ public class PlaneChangeActivity extends BaseActivity {
         titleName.setText("申请改签");
         docOrderDetailInfo = (DocOrderDetailInfo) getIntent().getSerializableExtra(ORDER_DATA);
         String[] strings = docOrderDetailInfo.flightInfo.get(0).deptTime.split("-");
-        startDateStr = strings[0] + "-" + strings[1] + "-" + strings[2];
+        changeDate = strings[0] + "-" + strings[1] + "-" + strings[2];
         List<DocOrderDetailPassengersInfo> passengerTypes = docOrderDetailInfo.passengers;
         mAdapter = new RefundPlaneTicketPassengerAdapter(passengerTypes);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -127,25 +127,32 @@ public class PlaneChangeActivity extends BaseActivity {
                 .params("changeDate", changeDate)
                 .execute(new JsonCallback<PlaneResponse<List<NationalPassengerInfo>>>() {
                     @Override
+                    public void onStart(Request<PlaneResponse<List<NationalPassengerInfo>>, ? extends Request> request) {
+                        super.onStart(request);
+                        showloadDialog("");
+                    }
+
+                    @Override
                     public void onSuccess(Response<PlaneResponse<List<NationalPassengerInfo>>> response) {
                         super.onSuccess(PlaneChangeActivity.this, response.body().message, response.body().code);
+                        goneloadDialog();
                         if (response.body().code == 0 && response.body().result != null) {
-                            if (response.body().result.get(0).changeSearchResult.changeRuleInfo.timePointChargesList != null) {
-                                timePointChargesList = response.body().result.get(0).changeSearchResult.changeRuleInfo.timePointChargesList;
-                                passengerInfo = response.body().result.get(0);
-                                serviceAdapter.setNewData(timePointChargesList);
-                                serviceAdapter.notifyDataSetChanged();
-                            }
-                           /* String json = new Gson().toJson(response.body().result);
-                            Intent intent = new Intent(PlaneChangeActivity.this, PlaneChangeDetailActivity.class);
-                            intent.putExtra(PlaneChangeDetailActivity.PLANE_TYPE, planeType);
-                            startActivity(intent);*/
-                            reasonList.clear();
-                            tvShippingSpace.setText("");
-                            if (passengerInfo.changeSearchResult.tgqReasons != null) {
-                                for (int i = 0; i < passengerInfo.changeSearchResult.tgqReasons.size(); i++) {
-                                    reasonList.add(passengerInfo.changeSearchResult.tgqReasons.get(i).msg);
+                            if (response.body().result.get(0).changeSearchResult.canChange && response.body().result.get(0).changeSearchResult.tgqReasons.get(0).changeFlightSegmentList != null) {
+                                if (response.body().result.get(0).changeSearchResult.changeRuleInfo.timePointChargesList != null) {
+                                    timePointChargesList = response.body().result.get(0).changeSearchResult.changeRuleInfo.timePointChargesList;
+                                    passengerInfo = response.body().result.get(0);
+                                    serviceAdapter.setNewData(timePointChargesList);
+                                    serviceAdapter.notifyDataSetChanged();
+                                    reasonList.clear();
+                                    tvShippingSpace.setText("");
+                                    if (passengerInfo.changeSearchResult.tgqReasons != null) {
+                                        for (int i = 0; i < passengerInfo.changeSearchResult.tgqReasons.size(); i++) {
+                                            reasonList.add(passengerInfo.changeSearchResult.tgqReasons.get(i).msg);
+                                        }
+                                    }
                                 }
+                            } else {
+                                ToastUtils.showShortToast(response.body().result.get(0).changeSearchResult.reason == null ? "当前日期没有可改签的航班" : response.body().result.get(0).changeSearchResult.reason);
                             }
                         }
                     }
@@ -153,6 +160,7 @@ public class PlaneChangeActivity extends BaseActivity {
                     @Override
                     public void onError(Response<PlaneResponse<List<NationalPassengerInfo>>> response) {
                         super.onError(response);
+                        goneloadDialog();
                     }
                 });
     }
@@ -171,7 +179,13 @@ public class PlaneChangeActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.rl_shippingSpace:
-                selectShoppingSpaceDialog();
+                if (TextUtils.isEmpty(tvDate.getText().toString())) {
+                    ToastUtils.showShortToast("请先选择要改签的日期");
+                } else {
+                    if (reasonList != null && reasonList.size() > 0) {
+                        selectShoppingSpaceDialog();
+                    }
+                }
                 break;
             case R.id.btn_bottom:
                 apply();
@@ -190,11 +204,6 @@ public class PlaneChangeActivity extends BaseActivity {
             ToastUtils.showShortToast("请选择改签日期");
             return;
         }
-        if (startDateStr.equals(tvDate.getText().toString())) {
-            ToastUtils.showShortToast("不能改签同一天");
-            return;
-        }
-
         if (TextUtils.isEmpty(tvShippingSpace.getText().toString())) {
             ToastUtils.showShortToast("请选择改签原因");
             return;
@@ -209,17 +218,17 @@ public class PlaneChangeActivity extends BaseActivity {
         params.cabinCode = passengerInfo.changeSearchResult.tgqReasons.get(index).changeFlightSegmentList.get(0).cabinCode;
         params.callbackUrl = "";
         params.changeCauseId = passengerInfo.changeSearchResult.tgqReasons.get(index).code + "";
-        params.childExtraPrice = passengerInfo.changeSearchResult.tgqReasons.get(index).changeFlightSegmentList.get(0).childUpgradeFee;
-        params.childUseFee = passengerInfo.changeSearchResult.tgqReasons.get(index).changeFlightSegmentList.get(0).childGqFee;
+        params.childExtraPrice = MathUtils.subZero(String.valueOf(passengerInfo.changeSearchResult.tgqReasons.get(index).changeFlightSegmentList.get(0).childUpgradeFee));
+        params.childUseFee = MathUtils.subZero(String.valueOf(passengerInfo.changeSearchResult.tgqReasons.get(index).changeFlightSegmentList.get(0).childGqFee));
         params.endTime = passengerInfo.changeSearchResult.tgqReasons.get(index).changeFlightSegmentList.get(0).endTime;
         params.flightNo = passengerInfo.changeSearchResult.tgqReasons.get(index).changeFlightSegmentList.get(0).flightNo;
-        params.gqFee = passengerInfo.changeSearchResult.tgqReasons.get(index).changeFlightSegmentList.get(0).gqFee;
+        params.gqFee = MathUtils.subZero(String.valueOf(passengerInfo.changeSearchResult.tgqReasons.get(index).changeFlightSegmentList.get(0).gqFee));
         params.orderNo = docOrderDetailInfo.detail.orderNo;
         params.passengerIds = passengerInfo.id + "";
         params.startDate = changeDate;
         params.startTime = passengerInfo.changeSearchResult.tgqReasons.get(index).changeFlightSegmentList.get(0).startTime;
         params.uniqKey = passengerInfo.changeSearchResult.tgqReasons.get(index).changeFlightSegmentList.get(0).uniqKey;
-        params.upgradeFee = passengerInfo.changeSearchResult.tgqReasons.get(index).changeFlightSegmentList.get(0).upgradeFee;
+        params.upgradeFee = MathUtils.subZero(String.valueOf(passengerInfo.changeSearchResult.tgqReasons.get(index).changeFlightSegmentList.get(0).upgradeFee));
 
         String json = new Gson().toJson(params);
         MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
@@ -231,25 +240,34 @@ public class PlaneChangeActivity extends BaseActivity {
                 .upRequestBody(body)
                 .execute(new JsonCallback<PlaneResponse<List<NationalPassengerInfo>>>() {
                     @Override
+                    public void onStart(Request<PlaneResponse<List<NationalPassengerInfo>>, ? extends Request> request) {
+                        super.onStart(request);
+                        showloadDialog("");
+                    }
+
+                    @Override
                     public void onSuccess(Response<PlaneResponse<List<NationalPassengerInfo>>> response) {
                         super.onSuccess(PlaneChangeActivity.this, response.body().message, response.body().code);
                         if (response.body().code == 0 && response.body().result != null && response.body().result.get(0).changeApplyResult.success) {
                             if (passengerInfo.changeSearchResult.tgqReasons.get(index).changeFlightSegmentList.get(0).allFee == 0) {
                                 ToastUtils.showShortToast("申请成功");
                             } else {
-                                pay(docOrderDetailInfo.detail.orderNo, MathUtils.subZero(String.valueOf(passengerInfo.changeSearchResult.tgqReasons.get(index).changeFlightSegmentList.get(0).allFee)));
+                                pay(docOrderDetailInfo.detail.orderNo, MathUtils.subZero(String.valueOf(passengerInfo.changeSearchResult.tgqReasons.get(index).changeFlightSegmentList.get(0).allFee)), response.body().result.get(0).changeApplyResult.gqId);
                             }
+                        } else {
+                            goneloadDialog();
                         }
                     }
 
                     @Override
                     public void onError(Response<PlaneResponse<List<NationalPassengerInfo>>> response) {
                         super.onError(response);
+                        goneloadDialog();
                     }
                 });
     }
 
-    public void pay(String orderNo, String noPayAmount) {
+    public void pay(String orderNo, String noPayAmount, String gpId) {
         OkGo.<LzyResponse<PayModel>>post(Urls.PLANE_PAY)
                 .tag(this)
                 .params(Constant.ACCESSTOKEN, token)
@@ -259,12 +277,13 @@ public class PlaneChangeActivity extends BaseActivity {
                 .params("channel", "alipay")
                 .params("amount", noPayAmount)
                 .params("type", "2")
-                .params("gqId", passengerInfo.changeApplyResult.gqId)
+                .params("gqId", gpId)
                 .params("passengerIds", passengerInfo.id + "")
                 .execute(new JsonCallback<LzyResponse<PayModel>>() {
                     @Override
                     public void onSuccess(Response<LzyResponse<PayModel>> response) {
                         super.onSuccess(PlaneChangeActivity.this, response.body().msg, response.body().code);
+                        goneloadDialog();
                         if (response.body().code == 0 && response.body().data != null) {
                             aliPay(response.body().data.payParam, response.body().data.orderNo);
                         }
@@ -273,6 +292,7 @@ public class PlaneChangeActivity extends BaseActivity {
                     @Override
                     public void onError(Response<LzyResponse<PayModel>> response) {
                         super.onError(response);
+                        goneloadDialog();
                     }
                 });
     }

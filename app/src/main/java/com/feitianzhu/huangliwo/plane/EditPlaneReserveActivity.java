@@ -13,9 +13,11 @@ import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -25,7 +27,9 @@ import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.http.PlaneResponse;
+import com.feitianzhu.huangliwo.me.AddressManagementActivity;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
+import com.feitianzhu.huangliwo.model.AddressInfo;
 import com.feitianzhu.huangliwo.model.BaggageRuleInfo;
 import com.feitianzhu.huangliwo.model.BaggageRuleReqParamModel;
 import com.feitianzhu.huangliwo.model.ContactModel;
@@ -49,29 +53,36 @@ import com.feitianzhu.huangliwo.model.PayModel;
 import com.feitianzhu.huangliwo.model.RefundChangeInfo;
 import com.feitianzhu.huangliwo.model.ReimbursementModel;
 import com.feitianzhu.huangliwo.model.UserClientInfo;
+import com.feitianzhu.huangliwo.shop.SettlementShoppingCartActivity;
 import com.feitianzhu.huangliwo.utils.DateUtils;
 import com.feitianzhu.huangliwo.utils.MathUtils;
 import com.feitianzhu.huangliwo.utils.PayUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
+import com.feitianzhu.huangliwo.utils.SoftKeyBoardListener;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.view.CustomCancelChangePopView;
 import com.feitianzhu.huangliwo.view.CustomLuggageBuyTicketNoticeView;
+import com.feitianzhu.huangliwo.view.CustomPassengerNameView;
 import com.feitianzhu.huangliwo.view.CustomPayView;
 import com.feitianzhu.huangliwo.view.CustomPlaneInfoView;
 import com.feitianzhu.huangliwo.view.CustomPlaneProtocolDialog;
+import com.feitianzhu.huangliwo.view.CustomRefundView;
 import com.feitianzhu.huangliwo.view.CustomTicketPriceDetailView;
 import com.feitianzhu.huangliwo.view.CustomTotalPriceInfoView;
+import com.feitianzhu.huangliwo.view.SwitchButton;
 import com.google.gson.Gson;
 import com.lxj.xpopup.XPopup;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.PostRequest;
 import com.lzy.okgo.request.base.Request;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -79,6 +90,7 @@ import butterknife.OnClick;
 
 public class EditPlaneReserveActivity extends BaseActivity {
     private static final int REQUEST_CODE = 100;
+    private static final int REQUEST_ADDRESS_CODE = 101;
     public static final String PLANE_TYPE = "plane_type";
     public static final String PLANE_DETAIL_DATA = "plane_detail_data";
     private int type;
@@ -94,6 +106,9 @@ public class EditPlaneReserveActivity extends BaseActivity {
     private CustomPlaneDetailInfo customPlaneDetailInfo;
     private String userId;
     private String token;
+    private int invoicePosition;
+    private AddressInfo.ShopAddressListBean addressBean;
+    private List<AddressInfo.ShopAddressListBean> addressInfos = new ArrayList<>();
     @BindView(R.id.title_name)
     TextView titleName;
     @BindView(R.id.plane_title)
@@ -132,6 +147,36 @@ public class EditPlaneReserveActivity extends BaseActivity {
     LinearLayout llChildPrice;
     @BindView(R.id.cprice)
     TextView cprice;
+    @BindView(R.id.switchButton)
+    SwitchButton switchButton;
+    @BindView(R.id.ll_reimbursement)
+    LinearLayout llReimbursement;
+    @BindView(R.id.tvInvoice)
+    TextView tvInvoice;
+    @BindView(R.id.editInvoiceTitle)
+    EditText editInvoiceTitle;
+    @BindView(R.id.edit_num)
+    EditText editNum;
+    @BindView(R.id.name)
+    TextView name;
+    @BindView(R.id.phone)
+    TextView phone;
+    @BindView(R.id.address)
+    TextView tvAddress;
+    @BindView(R.id.ll_InvoiceTitle)
+    LinearLayout llInvoiceTitle;
+    @BindView(R.id.ll_identification_num)
+    LinearLayout llIdentificationNum;
+    @BindView(R.id.line1)
+    View invoiceTitleLine1;
+    @BindView(R.id.line2)
+    View identificationNumLine2;
+    @BindView(R.id.root_view)
+    LinearLayout rootView;
+    @BindView(R.id.rl_bottom)
+    RelativeLayout rlBottom;
+    @BindView(R.id.postagePrice)
+    TextView postagePrice;
 
     @Override
     protected int getLayoutId() {
@@ -146,11 +191,17 @@ public class EditPlaneReserveActivity extends BaseActivity {
         setSpannableString("0", totalPrice);
         customPlaneDetailInfo = (CustomPlaneDetailInfo) getIntent().getSerializableExtra(PLANE_DETAIL_DATA);
 
+        switchButton.setBackgroundColorChecked(getResources().getColor(R.color.bg_yellow));
+        switchButton.setBackgroundColorUnchecked(getResources().getColor(R.color.color_F1EFEF));
+        switchButton.setAnimateDuration(300);
+        switchButton.setButtonColor(getResources().getColor(R.color.white));
+
         planeTitle.setVisibility(View.VISIBLE);
         titleName.setVisibility(View.GONE);
         startCity.setText(customPlaneDetailInfo.customFightCityInfo.depCityName);
         endCity.setText(customPlaneDetailInfo.customFightCityInfo.arrCityName);
         if (type == 0) {
+            postagePrice.setText("¥20");
             priceDetailInfo.price = customPlaneDetailInfo.customDocGoPriceInfo.barePrice;
             priceDetailInfo.arf = customPlaneDetailInfo.customDocGoFlightInfo.arf;
             priceDetailInfo.tof = customPlaneDetailInfo.customDocGoFlightInfo.tof;
@@ -219,6 +270,7 @@ public class EditPlaneReserveActivity extends BaseActivity {
             llBackPlane.setVisibility(View.VISIBLE);
             goTitle.setVisibility(View.VISIBLE);
             if (type == 2) {
+                postagePrice.setText("¥0");
                 priceDetailInfo.price = customPlaneDetailInfo.customDocGoBackPriceInfo.barePrice;
                 priceDetailInfo.arf = customPlaneDetailInfo.customDocGoBackFlightInfo.arf;
                 priceDetailInfo.tof = customPlaneDetailInfo.customDocGoBackFlightInfo.tof;
@@ -276,6 +328,41 @@ public class EditPlaneReserveActivity extends BaseActivity {
     }
 
     public void initListener() {
+
+        SoftKeyBoardListener.setListener(EditPlaneReserveActivity.this, new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
+            @Override
+            public void keyBoardShow(int height) {
+                //Toast.makeText(AppActivity.this, "键盘显示 高度" + height, Toast.LENGTH_SHORT).show();
+                rlBottom.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void keyBoardHide(int height) {
+                //Toast.makeText(AppActivity.this, "键盘隐藏 高度" + height, Toast.LENGTH_SHORT).show();
+                rlBottom.setVisibility(View.VISIBLE);
+            }
+        });
+
+        switchButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    llReimbursement.setVisibility(View.VISIBLE);
+                    if (type == 2) {
+                        priceDetailInfo.postage = 0;
+                    } else {
+                        priceDetailInfo.postage = 20;
+                    }
+                } else {
+                    llReimbursement.setVisibility(View.GONE);
+                    priceDetailInfo.postage = 0;
+                }
+                if (list != null && list.size() > 0) {
+                    calculationPrice(list);
+                }
+            }
+        });
+
         mAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
@@ -288,6 +375,40 @@ public class EditPlaneReserveActivity extends BaseActivity {
 
     @Override
     protected void initData() {
+        /*
+         * 获取默认收货地址
+         * */
+        OkGo.<LzyResponse<AddressInfo>>post(Urls.GET_ADDRESS)
+                .tag(this)
+                .params("accessToken", token)
+                .params("userId", userId)
+                .execute(new JsonCallback<LzyResponse<AddressInfo>>() {
+                    @Override
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<AddressInfo>> response) {
+                        super.onSuccess(EditPlaneReserveActivity.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0 && response.body().data != null) {
+                            AddressInfo addressInfo = response.body().data;
+                            addressInfos = addressInfo.getShopAddressList();
+                            if (addressInfos.size() > 0) {
+                                for (AddressInfo.ShopAddressListBean address : addressInfos
+                                ) {
+                                    if (address.getIsDefalt() == 1) {
+                                        addressBean = address;
+                                        name.setText(addressBean.getUserName());
+                                        tvAddress.setText(addressBean.getProvinceName() + addressBean.getCityName() + addressBean.getAreaName() + addressBean.getDetailAddress());
+                                        phone.setText(addressBean.getPhone());
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse<AddressInfo>> response) {
+                        super.onError(response);
+                    }
+                });
 
     }
 
@@ -452,7 +573,8 @@ public class EditPlaneReserveActivity extends BaseActivity {
         }
     }
 
-    @OnClick({R.id.left_button, R.id.cancel_change, R.id.rl_plane_info, R.id.luggage_buyTicket_notice, R.id.ticketPrice_detail, R.id.selectUser, R.id.tvReserveNotice, R.id.btn_submit, R.id.priceInfo})
+    @OnClick({R.id.left_button, R.id.cancel_change, R.id.rl_plane_info, R.id.luggage_buyTicket_notice, R.id.ticketPrice_detail,
+            R.id.selectUser, R.id.tvReserveNotice, R.id.btn_submit, R.id.priceInfo, R.id.invoiceType, R.id.rl_address, R.id.identification_num_explain})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.left_button:
@@ -484,7 +606,7 @@ public class EditPlaneReserveActivity extends BaseActivity {
             case R.id.tvReserveNotice:
                 new CustomPlaneProtocolDialog(EditPlaneReserveActivity.this)
                         .setTitle("机票预订须知")
-                        .setData("http://39.106.65.35:8088/fhwl/static/1.html")
+                        .setData(Urls.BASE_URL + "fhwl/static/html/jipiaoyuding.html")
                         .show();
                 break;
             case R.id.btn_submit:
@@ -496,6 +618,20 @@ public class EditPlaneReserveActivity extends BaseActivity {
                     ToastUtils.showShortToast("请填写完整的联系人信息");
                     return;
                 }
+
+                if ((invoicePosition == 1 || invoicePosition == 3 || invoicePosition == 4) && TextUtils.isEmpty(editInvoiceTitle.getText().toString().trim())) {
+                    ToastUtils.showShortToast("请填写发票抬头");
+                    return;
+                }
+                if (invoicePosition == 1 || invoicePosition == 3 && TextUtils.isEmpty(editNum.getText().toString().trim())) {
+                    ToastUtils.showShortToast("请填写纳税人识别号");
+                    return;
+                }
+                if (addressBean == null) {
+                    ToastUtils.showShortToast("请选择收货地址");
+                    return;
+                }
+
                 if (priceDetailInfo.num == 0 && priceDetailInfo.cnum > 0) {
                     String content = "儿童乘机须由18岁以上成人陪同，\n请请假成人";
                     new XPopup.Builder(this)
@@ -521,6 +657,51 @@ public class EditPlaneReserveActivity extends BaseActivity {
                             .enableDrag(false)
                             .asCustom(new CustomTotalPriceInfoView(EditPlaneReserveActivity.this).setData(priceDetailInfo)).show();
                 }
+                break;
+            case R.id.invoiceType:
+                String[] strings1 = new String[]{"单位", "个人", "企业", "政府机关行政单位"};
+                new XPopup.Builder(this)
+                        .asCustom(new CustomRefundView(EditPlaneReserveActivity.this)
+                                .setData(Arrays.asList(strings1))
+                                .setOnItemClickListener(new CustomRefundView.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(int position) {
+                                        tvInvoice.setText(strings1[position]);
+                                        if (position == 2 || position == 0) {
+                                            invoicePosition = 3;
+                                        } else {
+                                            invoicePosition = position + 1;
+                                        }
+                                        if (invoicePosition == 1 || invoicePosition == 3 || invoicePosition == 4) {
+                                            llInvoiceTitle.setVisibility(View.VISIBLE);
+                                            invoiceTitleLine1.setVisibility(View.VISIBLE);
+                                        } else {
+                                            llInvoiceTitle.setVisibility(View.GONE);
+                                            invoiceTitleLine1.setVisibility(View.GONE);
+                                        }
+                                        if (invoicePosition == 1 || invoicePosition == 3) {
+                                            llIdentificationNum.setVisibility(View.VISIBLE);
+                                            identificationNumLine2.setVisibility(View.VISIBLE);
+                                        } else {
+                                            llIdentificationNum.setVisibility(View.GONE);
+                                            identificationNumLine2.setVisibility(View.GONE);
+                                        }
+                                    }
+                                }))
+                        .show();
+                break;
+            case R.id.rl_address:
+                intent = new Intent(EditPlaneReserveActivity.this, AddressManagementActivity.class);
+                intent.putExtra(AddressManagementActivity.IS_SELECT, true);
+                startActivityForResult(intent, REQUEST_ADDRESS_CODE);
+                break;
+            case R.id.identification_num_explain:
+                String content = "纳税人识别号是企业税务登记证上唯一识别企业的税号，由15/18或20位数码组成。根据国家税务局规定，自2017年7月1日起，开具增值税普通发票必须有纳税人识别号或统一社会信用代码，否则该发票为不符合规定的发票，不得作为税收凭证。纳税人识别号可登录纳税人信息查询网www.yibannashuiren.com 查询，或向公司财务人员咨询。";
+
+                new XPopup.Builder(EditPlaneReserveActivity.this)
+                        .enableDrag(false)
+                        .asCustom(new CustomPassengerNameView(this
+                        ).setContent(content)).show();
                 break;
         }
     }
@@ -700,15 +881,46 @@ public class EditPlaneReserveActivity extends BaseActivity {
         }
 
         String passengerJson = new Gson().toJson(docPassengerInfoList);
-
-
         ContactModel contactModel = new ContactModel();
         contactModel.mobile = contactPhone.getText().toString().trim();
         contactModel.mobilePreNum = "86";
         contactModel.name = contactName.getText().toString().trim();
         String contactJson = new Gson().toJson(contactModel);
+
+        if (switchButton.isChecked()) {
+            sjr = addressBean.getUserName();
+            sjrPhone = addressBean.getPhone();
+            address = tvAddress.getText().toString().trim();
+            if (invoicePosition == 2) {
+                receiverTitle = "";
+                taxpayerId = "";
+            } else if (invoicePosition == 1 || invoicePosition == 3) {
+                receiverTitle = editInvoiceTitle.getText().toString().trim();
+                taxpayerId = editNum.getText().toString().trim();
+            } else {
+                receiverTitle = editInvoiceTitle.getText().toString().trim();
+                taxpayerId = "";
+            }
+        } else {
+            sjr = "";
+            sjrPhone = "";
+            address = "";
+            receiverTitle = "";
+            taxpayerId = "";
+        }
+
         ReimbursementModel reimbursementModel = new ReimbursementModel();
-        reimbursementModel.xcd = false;
+        reimbursementModel.xcd = switchButton.isChecked();
+        if (switchButton.isChecked()) {
+            reimbursementModel.receiverType = invoicePosition + "";
+        }
+        reimbursementModel.receiverTitle = receiverTitle;
+        reimbursementModel.sjr = sjr;
+        reimbursementModel.sjrPhone = sjrPhone;
+        reimbursementModel.sjrAddress = address;
+        reimbursementModel.taxPayerID = taxpayerId;
+        reimbursementModel.xcdEmail = "";
+
         String reimbursementJson = new Gson().toJson(reimbursementModel);
 
         String tripItemsJson = new Gson().toJson(docResultBookingInfo.tripInfos.get(0).tripItems);
@@ -807,19 +1019,56 @@ public class EditPlaneReserveActivity extends BaseActivity {
     /*
      * 国内单程生单
      * */
+    private String sjr = "";
+    private String sjrPhone = "";
+    private String address = "";
+    private String receiverTitle = "";
+    private String taxpayerId = "";
+
     public void createOrder(String bkResult) {
         String passengerJson = new Gson().toJson(list);
-        OkGo.<PlaneResponse<CreateOrderInfo>>post(Urls.CREATE_PLANE_ORDER)
-                .tag(this)
-                .params(Constant.ACCESSTOKEN, token)
+
+        if (switchButton.isChecked()) {
+            sjr = addressBean.getUserName();
+            sjrPhone = addressBean.getPhone();
+            address = tvAddress.getText().toString().trim();
+            if (invoicePosition == 2) {
+                receiverTitle = "";
+                taxpayerId = "";
+            } else if (invoicePosition == 3) {
+                receiverTitle = editInvoiceTitle.getText().toString().trim();
+                taxpayerId = editNum.getText().toString().trim();
+            } else {
+                receiverTitle = editInvoiceTitle.getText().toString().trim();
+                taxpayerId = "";
+            }
+        } else {
+            sjr = "";
+            sjrPhone = "";
+            address = "";
+            receiverTitle = "";
+            taxpayerId = "";
+        }
+
+        PostRequest<PlaneResponse<CreateOrderInfo>> postRequest = OkGo.<PlaneResponse<CreateOrderInfo>>post(Urls.CREATE_PLANE_ORDER)
+                .tag(this);
+        if (switchButton.isChecked()) {
+            postRequest
+                    .params("receiverType", invoicePosition);
+        }
+        postRequest.params(Constant.ACCESSTOKEN, token)
                 .params(Constant.USERID, userId)
                 .params("contact", contactName.getText().toString().trim())
                 .params("contactMob", contactPhone.getText().toString().trim())
                 .params("cardNo", list.get(0).cardNo)
                 .params("bookingResult", bkResult)
-                .params("needXcd", false)
-                //.params("address", "深圳市固戍梧桐岛6A栋")
+                .params("needXcd", switchButton.isChecked())
+                .params("address", address)
                 .params("passengerStr", passengerJson)
+                .params("receiverTitle", receiverTitle)
+                .params("taxpayerId", taxpayerId)
+                .params("sjr", sjr)
+                .params("sjrPhone", sjrPhone)
                 .execute(new JsonCallback<PlaneResponse<CreateOrderInfo>>() {
                     @Override
                     public void onSuccess(Response<PlaneResponse<CreateOrderInfo>> response) {
@@ -927,6 +1176,13 @@ public class EditPlaneReserveActivity extends BaseActivity {
                 removeDuplicate(list);
                 mAdapter.notifyDataSetChanged();
                 calculationPrice(list);
+            } else if (requestCode == REQUEST_ADDRESS_CODE) {
+                addressBean = (AddressInfo.ShopAddressListBean) data.getSerializableExtra(AddressManagementActivity.ADDRESS_DATA);
+                if (addressBean != null) {
+                    name.setText(addressBean.getUserName());
+                    tvAddress.setText(addressBean.getProvinceName() + addressBean.getCityName() + addressBean.getAreaName() + addressBean.getDetailAddress());
+                    phone.setText(addressBean.getPhone());
+                }
             }
         }
     }
@@ -943,7 +1199,7 @@ public class EditPlaneReserveActivity extends BaseActivity {
         }
         priceDetailInfo.num = count;
         priceDetailInfo.cnum = cCount;
-        String totalAmount = MathUtils.subZero(String.valueOf((priceDetailInfo.price * priceDetailInfo.num) + (priceDetailInfo.cPrice * priceDetailInfo.cnum) + (priceDetailInfo.tof + priceDetailInfo.arf) * count));
+        String totalAmount = MathUtils.subZero(String.valueOf((priceDetailInfo.price * priceDetailInfo.num) + (priceDetailInfo.cPrice * priceDetailInfo.cnum) + (priceDetailInfo.tof + priceDetailInfo.arf) * count + priceDetailInfo.postage));
         setSpannableString(totalAmount, totalPrice);
 
     }

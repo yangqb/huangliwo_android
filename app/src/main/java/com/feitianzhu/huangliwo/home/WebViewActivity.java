@@ -3,6 +3,7 @@ package com.feitianzhu.huangliwo.home;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -10,6 +11,7 @@ import android.webkit.WebViewClient;
 import android.widget.TextView;
 
 import com.feitianzhu.huangliwo.R;
+import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 
 import butterknife.BindView;
@@ -79,13 +81,29 @@ public class WebViewActivity extends BaseActivity {
 
     @OnClick(R.id.left_button)
     public void onClick() {
-        finish();
+        if (mWbShow.canGoBack()) {
+            mWbShow.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+            mWbShow.goBack();
+        } else {
+            finish();
+        }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && mWbShow.canGoBack()) {
+            // 返回上一页面
+            mWbShow.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+            mWbShow.goBack();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override
     protected void initData() {
-        mUrl = getIntent().getStringExtra("url");
-        mTitle = getIntent().getStringExtra("title");
+        mUrl = getIntent().getStringExtra(Constant.URL);
+        mTitle = getIntent().getStringExtra(Constant.H5_TITLE);
 
         mTitle = TextUtils.isEmpty(mTitle) ? "" : mTitle;
         titleName.setText(mTitle);
@@ -94,8 +112,8 @@ public class WebViewActivity extends BaseActivity {
 
     public static void startActivity(Context context, String url, String title) {
         Intent intent = new Intent(context, WebViewActivity.class);
-        intent.putExtra("url", url);
-        intent.putExtra("title", title);
+        intent.putExtra(Constant.URL, url);
+        intent.putExtra(Constant.H5_TITLE, title);
         context.startActivity(intent);
     }
 }

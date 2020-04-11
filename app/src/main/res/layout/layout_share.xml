@@ -58,7 +58,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dp_4"
-                        android:text="扫一扫，加入黄鹂窝"
+                        android:text="扫一扫，加入便利大本营"
                         android:textColor="@color/color_000000"
                         android:textSize="12sp" />
                 </LinearLayout>
@@ -69,7 +69,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="扫一扫 下载黄鹂窝优选APP 更多优惠等你来！"
+                android:text="扫一扫 下载便利大本营APP 更多优惠等你来！"
                 android:textColor="@color/color_000000"
                 android:textSize="10sp" />
         </LinearLayout>

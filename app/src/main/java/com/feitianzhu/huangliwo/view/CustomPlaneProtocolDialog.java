@@ -10,12 +10,14 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.feitianzhu.huangliwo.R;
 import com.just.agentweb.AgentWeb;
+import com.just.agentweb.AgentWebConfig;
 import com.just.agentweb.DefaultWebClient;
 import com.just.agentweb.WebChromeClient;
 import com.just.agentweb.WebViewClient;
@@ -75,10 +77,23 @@ public class CustomPlaneProtocolDialog extends Dialog {
 //                .go("http://www.jd.com");
                 .go(url);
 
+        mAgentWeb.getWebCreator().getWebView().setVerticalScrollBarEnabled(false); //垂直不显示
+        //支持屏幕缩放
+        WebSettings webSettings = mAgentWeb.getAgentWebSettings().getWebSettings();
+        webSettings.setSupportZoom(true);
+        webSettings.setBuiltInZoomControls(true);
+        //不显示webview缩放按钮
+        webSettings.setDisplayZoomControls(false);
+        //设置自适应屏幕
+        webSettings.setUseWideViewPort(true);
+        webSettings.setLoadWithOverviewMode(true);
+
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dismiss();
+                AgentWebConfig.clearDiskCache(context);
+                mAgentWeb.getWebLifeCycle().onDestroy();
             }
         });
     }

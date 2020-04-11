@@ -20,6 +20,8 @@ import android.widget.Toast;
 import com.feitianzhu.huangliwo.App;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.common.base.LazyWebActivity;
+import com.feitianzhu.huangliwo.common.base.WebActivity;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.login.LoginEvent;
@@ -183,8 +185,8 @@ public class MySelfMerchantsActivity extends BaseActivity {
                         if (response.body().code == 0) {
                             new QBadgeView(MySelfMerchantsActivity.this)
                                     .bindTarget(llMerchantsOrder).setGravityOffset(15, 15, true)
-                                    //.setBadgeNumber(response.body().data);
-                                    .setBadgeNumber(16);
+                                    .setBadgeNumber(response.body().data);
+
                         }
                     }
 
@@ -272,9 +274,9 @@ public class MySelfMerchantsActivity extends BaseActivity {
                 startActivity(intent);
                 break;
             case R.id.protocol:
-                intent = new Intent(MySelfMerchantsActivity.this, PushShopProtocolActivity.class);
-                intent.putExtra(PushShopProtocolActivity.CHECK_PROTOCOL, true);
-                intent.putExtra(PushShopProtocolActivity.PUSH_PROTOCOL, false);
+                intent = new Intent(MySelfMerchantsActivity.this, LazyWebActivity.class);
+                intent.putExtra(Constant.URL, Urls.BASE_URL + "fhwl/static/html/tuidianxieyi.html");
+                intent.putExtra(Constant.H5_TITLE, "便利大本营推店协议");
                 startActivity(intent);
                 break;
         }

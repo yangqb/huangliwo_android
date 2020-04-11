@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.common.base.LazyWebActivity;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
@@ -21,12 +22,16 @@ import com.feitianzhu.huangliwo.me.ui.VerificationActivity2;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.PresentsModel;
 import com.feitianzhu.huangliwo.model.VipGifListInfo;
+import com.feitianzhu.huangliwo.plane.EditPlaneReserveActivity;
 import com.feitianzhu.huangliwo.pushshop.EditMerchantsActivity;
+import com.feitianzhu.huangliwo.pushshop.MySelfMerchantsActivity;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsClassifyModel;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.utils.UserInfoUtils;
+import com.feitianzhu.huangliwo.view.CustomImgViewDialog;
+import com.feitianzhu.huangliwo.view.CustomPlaneProtocolDialog;
 import com.feitianzhu.huangliwo.view.CustomRefundView;
 import com.google.gson.Gson;
 import com.gyf.immersionbar.ImmersionBar;
@@ -182,7 +187,9 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
                 }
                 break;
             case R.id.tv_protocol:
-                intent = new Intent(VipActivity.this, ProtocolActivity.class);
+                intent = new Intent(VipActivity.this, LazyWebActivity.class);
+                intent.putExtra(Constant.URL, Urls.BASE_URL + "fhwl/static/html/huiyuanfuwu.html");
+                intent.putExtra(Constant.H5_TITLE, "便利大本营会员服务协议");
                 startActivity(intent);
                 break;
             case R.id.all_gif:
@@ -249,9 +256,10 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
             }
         });
 
-        adapter2.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+        adapter2.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+
                 if (UserInfoUtils.getUserInfo(VipActivity.this).getAccountType() != 0) {
                     ToastUtils.showShortToast("您已是会员");
                 } else {
@@ -265,6 +273,16 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
                     selectPresentPos = position;
                     adapter2.notifyDataSetChanged();
                 }
+            }
+        });
+
+        adapter2.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                new CustomImgViewDialog(VipActivity.this)
+                        .setTitle("")
+                        .setData(presentsList.get(position).giftDetailsImg)
+                        .show();
             }
         });
     }

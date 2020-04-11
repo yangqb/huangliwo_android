@@ -155,10 +155,10 @@ public class WithdrawActivity extends BaseActivity {
             return;
         }
         double amount = Double.valueOf(editAmount.getText().toString());
-       /* if (amount < 10) {
-            ToastUtils.showShortToast("提现金额必须大于10元");
+        if (amount < 10) {
+            ToastUtils.showShortToast("提现金额不能少于10元");
             return;
-        }*/
+        }
         if (amount > balance) {
             ToastUtils.showShortToast("当前余额不足");
             return;

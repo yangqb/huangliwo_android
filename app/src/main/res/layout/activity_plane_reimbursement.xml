@@ -37,6 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
+                android:visibility="invisible"
                 android:background="@mipmap/k01_11genduo" />
 
             <TextView
@@ -136,6 +137,7 @@
                 android:background="@color/color_eeeeee" />
 
             <LinearLayout
+                android:id="@+id/ll_taxpayerId"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:gravity="center_vertical"
@@ -163,7 +165,7 @@
                     android:layout_height="wrap_content"
                     android:background="@null"
                     android:gravity="center_vertical"
-                    android:hint="请填写纳税人识别号"
+                    android:hint="请填写纳税人识别号(企业必填)"
                     android:text=""
                     android:textColor="@color/color_333333"
                     android:textColorHint="@color/color_999999"
@@ -193,7 +195,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="以邮件方式发送至电子邮箱"
+                    android:text="以邮寄方式寄出到您的地址"
                     android:textColor="@color/color_333333"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -284,7 +286,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginRight="5dp"
-                                android:text="小黄鹂"
+                                android:text=""
                                 android:textColor="@color/color_333333"
                                 android:textSize="12sp" />
 
@@ -294,7 +296,7 @@
                                 android:layout_height="wrap_content"
                                 android:ellipsize="end"
                                 android:lines="1"
-                                android:text="13666666666"
+                                android:text=""
                                 android:textColor="@color/color_333333"
                                 android:textSize="12sp" />
                         </LinearLayout>
@@ -306,7 +308,7 @@
                             android:layout_marginTop="5dp"
                             android:ellipsize="end"
                             android:lines="1"
-                            android:text="深圳市 宝安区 泰华梧桐岛6A 502泰华梧桐岛6A泰华梧桐岛6A泰华梧桐岛6A"
+                            android:text=""
                             android:textColor="@color/color_333333"
                             android:textSize="12sp" />
 
@@ -339,6 +341,7 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/postagePrice"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="¥0"

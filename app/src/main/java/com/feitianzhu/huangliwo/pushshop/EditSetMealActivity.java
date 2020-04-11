@@ -345,6 +345,12 @@ public class EditSetMealActivity extends BaseActivity {
             ToastUtils.showShortToast("请输入套餐使用规则");
             return;
         }
+
+        if (list == null || list.size() <= 0) {
+            ToastUtils.showShortToast("请添加套餐单品");
+            return;
+        }
+
         SetMealInfo info = new SetMealInfo();
         info.setSingleList(list);
         info.setSmName(setMealName);

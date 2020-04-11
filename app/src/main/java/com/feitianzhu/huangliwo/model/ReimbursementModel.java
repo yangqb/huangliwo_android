@@ -11,7 +11,7 @@ import java.io.Serializable;
  */
 public class ReimbursementModel implements Serializable {
     public boolean xcd;
-    //public int receiverType;
+    public String receiverType;
     public String receiverTitle;
     public String taxPayerID;
     public String sjr;

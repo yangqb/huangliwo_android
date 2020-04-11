@@ -683,7 +683,6 @@ public class MyOrderActivity2 extends BaseActivity {
     }
 
     public void confirm(String orderNo) {
-
         OkGo.<LzyResponse>get(Urls.CONFIRM_ORDER)
                 .tag(this)
                 .params(ACCESSTOKEN, token)

@@ -17,6 +17,7 @@ import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.gyf.immersionbar.ImmersionBar;
 import com.just.agentweb.AgentWeb;
+import com.just.agentweb.AgentWebConfig;
 import com.just.agentweb.DefaultWebClient;
 import com.just.agentweb.WebChromeClient;
 import com.just.agentweb.WebViewClient;
@@ -53,7 +54,7 @@ public class LazyWebActivity extends AppCompatActivity {
         String url = getIntent().getStringExtra(Constant.URL);
         //url = "https://www.baidu.com/";
         String title = getIntent().getStringExtra(Constant.H5_TITLE);
-        if (TextUtils.isEmpty(title)) {
+        if (TextUtils.isEmpty(title) || title == null) {
             head.setVisibility(View.GONE);
         } else {
             head.setVisibility(View.VISIBLE);
@@ -69,18 +70,29 @@ public class LazyWebActivity extends AppCompatActivity {
                 .ready()
 //                .go("http://www.jd.com");
                 .go(url);
+        mAgentWeb.getWebCreator().getWebView().setVerticalScrollBarEnabled(false); //垂直不显示
+        //支持屏幕缩放
+        WebSettings webSettings = mAgentWeb.getAgentWebSettings().getWebSettings();
+        webSettings.setSupportZoom(true);
+        webSettings.setBuiltInZoomControls(true);
+        //不显示webview缩放按钮
+        webSettings.setDisplayZoomControls(false);
+        //设置自适应屏幕
+        webSettings.setUseWideViewPort(true);
+        webSettings.setLoadWithOverviewMode(true);
     }
 
     private WebChromeClient chromeClient = new WebChromeClient() {
 
         @Override
         public void onReceivedTitle(WebView view, String title) {
-            titleName.setText(title);
+            //titleName.setText(title);
             super.onReceivedTitle(view, title);
         }
 
         @Override
         public void onProgressChanged(WebView view, int newProgress) {
+            view.loadUrl("javascript:function setTop(){document.querySelector('.brand-footer').style.display=\"none\";}setTop();"); //去掉去哪儿的标签
             super.onProgressChanged(view, newProgress);
         }
     };
@@ -88,6 +100,12 @@ public class LazyWebActivity extends AppCompatActivity {
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
+        }
+
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            view.loadUrl("javascript:function setTop(){document.querySelector('.brand-footer').style.display=\"none\";}setTop();");
+            super.onPageFinished(view, url);
         }
     };
 
@@ -107,6 +125,7 @@ public class LazyWebActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         mAgentWeb.getWebLifeCycle().onDestroy();
+        AgentWebConfig.clearDiskCache(this);
         super.onDestroy();
     }
 
@@ -134,17 +153,4 @@ public class LazyWebActivity extends AppCompatActivity {
             finish();
         }
     }
-
-    protected void back() {
-//        WebView mWebView=mAgentWeb.getWebCreator().get();
-//        if (mWebView.canGoBack()){
-//            // 返回上一页面
-//            mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
-//            mWebView.goBack();
-//        }else{
-//        }
-        finish();
-
-    }
-
 }

@@ -398,7 +398,7 @@
                     android:id="@+id/protocol"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="《门店入驻黄鹂窝优选平台协议》"
+                    android:text="《门店入驻便利大本营平台协议》"
                     android:textColor="@color/color_289cef"
                     android:textSize="12sp" />
 

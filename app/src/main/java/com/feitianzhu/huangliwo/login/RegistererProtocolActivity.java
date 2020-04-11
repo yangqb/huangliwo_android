@@ -22,7 +22,7 @@ import butterknife.OnClick;
  */
 public class RegistererProtocolActivity extends BaseActivity {
     private PushShopProtocolAdapter adapter;
-    Integer[] integers = new Integer[]{R.mipmap.g11_02xieyi, R.mipmap.g11_03xieyi,R.mipmap.g11_04xieyi};
+    Integer[] integers = new Integer[]{R.mipmap.g11_02xieyi, R.mipmap.g11_03xieyi, R.mipmap.g11_04xieyi};
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     @BindView(R.id.title_name)
@@ -35,7 +35,7 @@ public class RegistererProtocolActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        titleName.setText("《黄鹂窝优选用户注册协议》");
+        titleName.setText("《便利大本营用户注册协议》");
         adapter = new PushShopProtocolAdapter(Arrays.asList(integers));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setNestedScrollingEnabled(false);

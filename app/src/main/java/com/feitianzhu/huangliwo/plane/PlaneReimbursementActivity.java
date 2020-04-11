@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.feitianzhu.huangliwo.R;
@@ -21,6 +22,7 @@ import com.feitianzhu.huangliwo.model.AskForResultInfo;
 import com.feitianzhu.huangliwo.model.DocOrderDetailInfo;
 import com.feitianzhu.huangliwo.model.ItineraryInfo;
 import com.feitianzhu.huangliwo.model.PayModel;
+import com.feitianzhu.huangliwo.model.PlaneOrderStatus;
 import com.feitianzhu.huangliwo.model.RefundAskForParams;
 import com.feitianzhu.huangliwo.model.RefundServiceInfo;
 import com.feitianzhu.huangliwo.shop.ShopPayActivity;
@@ -34,6 +36,7 @@ import com.google.gson.Gson;
 import com.lxj.xpopup.XPopup;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.base.Request;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,8 +49,14 @@ import okhttp3.RequestBody;
 
 public class PlaneReimbursementActivity extends BaseActivity {
     public static final String ORDER_DATA = "order_data";
+    public static final String ORDER_STATUS = "order_status";
     private static final int REQUEST_CODE = 1000;
     private int reimbursementPosition = -1;
+    private int invoicePosition = -1;
+    private int orderStatus;
+    private boolean canApply;
+    private String invoiceStringType;
+    private int expressFee;
     private AddressInfo.ShopAddressListBean addressBean;
     private List<AddressInfo.ShopAddressListBean> addressInfos = new ArrayList<>();
     private String userId;
@@ -71,6 +80,10 @@ public class PlaneReimbursementActivity extends BaseActivity {
     TextView phone;
     @BindView(R.id.address)
     TextView tvAddress;
+    @BindView(R.id.reimbursementType)
+    RelativeLayout reimbursementType;
+    @BindView(R.id.postagePrice)
+    TextView postagePrice;
 
     @Override
     protected int getLayoutId() {
@@ -83,6 +96,11 @@ public class PlaneReimbursementActivity extends BaseActivity {
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         docOrderDetailInfo = (DocOrderDetailInfo) getIntent().getSerializableExtra(ORDER_DATA);
+        orderStatus = getIntent().getIntExtra(ORDER_STATUS, -1);
+        refundXcd();
+        reimbursementPosition = 2;
+        tvReimbursement.setText("差额发票");
+        //reimbursementType.setVisibility(View.GONE);
     }
 
     @Override
@@ -130,7 +148,7 @@ public class PlaneReimbursementActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.invoiceType:
-                String[] strings1 = new String[]{"企业", "个人", "政府机关行政单位"};
+                String[] strings1 = new String[]{"个人", "企业", "政府机关行政单位"};
                 new XPopup.Builder(this)
                         .asCustom(new CustomRefundView(PlaneReimbursementActivity.this)
                                 .setData(Arrays.asList(strings1))
@@ -138,6 +156,12 @@ public class PlaneReimbursementActivity extends BaseActivity {
                                     @Override
                                     public void onItemClick(int position) {
                                         tvInvoice.setText(strings1[position]);
+                                        invoicePosition = position + 2;
+                                        if (invoicePosition == 3) {
+
+                                        } else {
+
+                                        }
                                     }
                                 }))
                         .show();
@@ -157,7 +181,7 @@ public class PlaneReimbursementActivity extends BaseActivity {
                 break;
 
             case R.id.reimbursementType:
-                String[] strings2 = new String[]{"行程单", "全额发票", "行程单和差额发票"};
+               /* String[] strings2 = new String[]{"全额发票", "行程单", "行程单和差额发票"};
                 new XPopup.Builder(this)
                         .asCustom(new CustomRefundView(PlaneReimbursementActivity.this)
                                 .setData(Arrays.asList(strings2))
@@ -168,7 +192,7 @@ public class PlaneReimbursementActivity extends BaseActivity {
                                         reimbursementPosition = position;
                                     }
                                 }))
-                        .show();
+                        .show();*/
                 break;
             case R.id.submit:
                 onSubmit();
@@ -177,19 +201,20 @@ public class PlaneReimbursementActivity extends BaseActivity {
     }
 
     public void onSubmit() {
-        if (TextUtils.isEmpty(tvReimbursement.getText().toString())) {
+       /* if (TextUtils.isEmpty(tvReimbursement.getText().toString())) {
             ToastUtils.showShortToast("请选择凭证类型");
             return;
-        }
+        }*/
         if (TextUtils.isEmpty(tvReimbursement.getText().toString())) {
             ToastUtils.showShortToast("请选择发票类型");
             return;
         }
-        if (TextUtils.isEmpty(editInvoiceTitle.getText().toString())) {
+
+        if ((reimbursementPosition == 0 || reimbursementPosition == 2) && TextUtils.isEmpty(editInvoiceTitle.getText().toString().trim())) {
             ToastUtils.showShortToast("请填写发票抬头");
             return;
         }
-        if (TextUtils.isEmpty(editNum.getText().toString())) {
+        if (invoicePosition == 3 && TextUtils.isEmpty(editNum.getText().toString().trim())) {
             ToastUtils.showShortToast("请填写纳税人识别号");
             return;
         }
@@ -197,31 +222,29 @@ public class PlaneReimbursementActivity extends BaseActivity {
             ToastUtils.showShortToast("请选择收货地址");
             return;
         }
-
-        if (reimbursementPosition == 0) {
-            itinerarySearch();
-        } else if (reimbursementPosition == 1) {
-            itinerarySearch();
+        if (canApply && invoiceStringType != null) {
+            refundAskFor();
         } else {
-            refundXcd();
+            ToastUtils.showShortToast("当前订单不可报销");
         }
     }
 
     public void itinerarySearch() {
-        OkGo.<ItineraryInfo>get(Urls.ITINERARY_SEARCH)
+        OkGo.get(Urls.ITINERARY_SEARCH)
                 .tag(this)
                 .params("accessToken", token)
                 .params("userId", userId)
                 .params("orderNo", docOrderDetailInfo.detail.orderNo)
-                .execute(new JsonCallback<ItineraryInfo>() {
+                .execute(new JsonCallback<Object>() {
                     @Override
-                    public void onSuccess(Response<ItineraryInfo> response) {
-                        super.onSuccess(PlaneReimbursementActivity.this, response.body().message, response.body().code);
-                        itineraryAskFor();
+                    public void onSuccess(Response response) {
+                        //super.onSuccess(PlaneReimbursementActivity.this, response.body().message, response.body().code);
+                        String json = response.body().toString();
+
                     }
 
                     @Override
-                    public void onError(Response<ItineraryInfo> response) {
+                    public void onError(Response response) {
                         super.onError(response);
                     }
                 });
@@ -263,20 +286,46 @@ public class PlaneReimbursementActivity extends BaseActivity {
                 .params("orderNo", docOrderDetailInfo.detail.orderNo)
                 .execute(new JsonCallback<RefundServiceInfo>() {
                     @Override
+                    public void onStart(Request<RefundServiceInfo, ? extends Request> request) {
+                        super.onStart(request);
+                        showloadDialog("");
+                    }
+
+                    @Override
                     public void onSuccess(Response<RefundServiceInfo> response) {
                         super.onSuccess(PlaneReimbursementActivity.this, response.body().message, response.body().code);
-                        refundAskFor();
+                        goneloadDialog();
+                        canApply = response.body().canApply;
+                        invoiceStringType = response.body().invoiceType;
+                        if (response.body().code == 0 && response.body().canApply && response.body().invoiceType != null) {
+                            postagePrice.setText("¥" + response.body().expressFee);
+                            expressFee = response.body().expressFee;
+                        } else {
+                            ToastUtils.showShortToast("当前订单不可报销");
+                        }
                     }
 
                     @Override
                     public void onError(Response<RefundServiceInfo> response) {
                         super.onError(response);
+                        goneloadDialog();
                     }
                 });
     }
 
     public void refundAskFor() {
         RefundAskForParams params = new RefundAskForParams();
+        params.orderNo = docOrderDetailInfo.detail.orderNo;
+        params.receiptTitle = editInvoiceTitle.getText().toString().trim();
+        params.receiptTitleTypeCode = invoicePosition + "";
+        params.receiverCity = addressBean.getCityName();
+        params.receiverDistrict = addressBean.getAreaName();
+        params.receiverName = addressBean.getUserName();
+        params.receiverPhone = addressBean.getPhone();
+        params.receiverProvince = addressBean.getProvinceName();
+        params.receiverStreet = addressBean.getDetailAddress();
+        params.reimburseType = reimbursementPosition + "";
+        params.taxpayerId = editNum.getText().toString();
         String json = new Gson().toJson(params);
         MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
         RequestBody body = RequestBody.create(mediaType, json);
@@ -287,13 +336,25 @@ public class PlaneReimbursementActivity extends BaseActivity {
                 .upRequestBody(body)
                 .execute(new JsonCallback<PlaneResponse<AskForResultInfo>>() {
                     @Override
+                    public void onStart(Request<PlaneResponse<AskForResultInfo>, ? extends Request> request) {
+                        super.onStart(request);
+                        showloadDialog("");
+                    }
+
+                    @Override
                     public void onSuccess(Response<PlaneResponse<AskForResultInfo>> response) {
                         super.onSuccess(PlaneReimbursementActivity.this, response.body().message, response.body().code);
+                        if (response.body().code == 0 && response.body().result.needPay) {
+                            pay(docOrderDetailInfo.detail.orderNo, String.valueOf(expressFee));
+                        } else {
+                            goneloadDialog();
+                        }
                     }
 
                     @Override
                     public void onError(Response<PlaneResponse<AskForResultInfo>> response) {
                         super.onError(response);
+                        goneloadDialog();
                     }
                 });
     }
@@ -312,6 +373,7 @@ public class PlaneReimbursementActivity extends BaseActivity {
                     @Override
                     public void onSuccess(Response<LzyResponse<PayModel>> response) {
                         super.onSuccess(PlaneReimbursementActivity.this, response.body().msg, response.body().code);
+                        goneloadDialog();
                         if (response.body().code == 0 && response.body().data != null) {
                             aliPay(response.body().data.payParam, response.body().data.orderNo);
                         }
@@ -320,16 +382,16 @@ public class PlaneReimbursementActivity extends BaseActivity {
                     @Override
                     public void onError(Response<LzyResponse<PayModel>> response) {
                         super.onError(response);
+                        goneloadDialog();
                     }
                 });
     }
 
     private void aliPay(String payProof, String orderNo) {
-
         PayUtils.aliPay(PlaneReimbursementActivity.this, payProof, new onConnectionFinishLinstener() {
             @Override
             public void onSuccess(int code, Object result) {
-                ToastUtils.showShortToast("报销成功");
+                ToastUtils.showShortToast("申请成功");
                 finish();
             }
 

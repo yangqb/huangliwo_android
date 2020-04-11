@@ -16,4 +16,5 @@ public class CustomPriceDetailInfo implements Serializable {
     public double cPrice;
     public int num; //成人数
     public int cnum;//儿童数
+    public int postage;
 }

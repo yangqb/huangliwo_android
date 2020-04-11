@@ -3,6 +3,7 @@ package com.feitianzhu.huangliwo.plane;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -37,6 +38,7 @@ import com.google.gson.Gson;
 import com.lxj.xpopup.XPopup;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.base.Request;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -128,13 +130,13 @@ public class PlaneOrderDetailActivity extends BaseActivity {
         price.setText("¥" + MathUtils.subZero(String.valueOf(orderModel.noPayAmount)));
         if (orderModel.status == PlaneOrderStatus.BOOK_OK) {
             tvStatus.setText("等待付款");
-        } else if (orderModel.status == PlaneOrderStatus.TICKET_LOCK) {
+        } else if (orderModel.status == PlaneOrderStatus.PAY_OK || orderModel.status == PlaneOrderStatus.TICKET_LOCK) {
             tvStatus.setText("等待出票");
         } else if (orderModel.status == PlaneOrderStatus.TICKET_OK) {
             tvStatus.setText("出票完成");
         } else if (orderModel.status == PlaneOrderStatus.CANCEL_OK) {
             tvStatus.setText("订单取消");
-        } else if (orderModel.status == PlaneOrderStatus.WAIT_REFUNDMENT || orderModel.status == PlaneOrderStatus.APPLY_RETURN_PAY) {
+        } else if (orderModel.status == PlaneOrderStatus.WAIT_REFUNDMENT || orderModel.status == PlaneOrderStatus.APPLY_RETURN_PAY || orderModel.status == PlaneOrderStatus.APPLY_REFUNDMENT) {
             tvStatus.setText("等待退款");
         } else if (orderModel.status == PlaneOrderStatus.REFUND_OK) {
             tvStatus.setText("退款完成");
@@ -161,11 +163,11 @@ public class PlaneOrderDetailActivity extends BaseActivity {
             } else {
                 rl_refund_change.setVisibility(View.VISIBLE);
             }
-            if (orderModel.status == PlaneOrderStatus.CHANGE_OK || orderModel.status == PlaneOrderStatus.APPLY_CHANGE) {
+           /* if (orderModel.status == PlaneOrderStatus.CHANGE_OK || orderModel.status == PlaneOrderStatus.APPLY_CHANGE) {
                 rlLuggageChangeNotice.setVisibility(View.VISIBLE);
             } else {
                 rlLuggageChangeNotice.setVisibility(View.GONE);
-            }
+            }*/
 
             if (orderModel.status == PlaneOrderStatus.BOOK_OK) {
                 rl_bottom.setVisibility(View.VISIBLE);
@@ -182,11 +184,11 @@ public class PlaneOrderDetailActivity extends BaseActivity {
             } else {
                 rl_refund_change.setVisibility(View.VISIBLE);
             }
-            if (orderModel.status == PlaneOrderStatus.CHANGE_OK || orderModel.status == PlaneOrderStatus.APPLY_CHANGE) {
+            /*if (orderModel.status == PlaneOrderStatus.CHANGE_OK || orderModel.status == PlaneOrderStatus.APPLY_CHANGE) {
                 rlLuggageChangeNotice.setVisibility(View.VISIBLE);
             } else {
                 rlLuggageChangeNotice.setVisibility(View.GONE);
-            }
+            }*/
 
             if (orderModel.status == PlaneOrderStatus.BOOK_OK) {
                 rl_bottom.setVisibility(View.VISIBLE);
@@ -247,8 +249,15 @@ public class PlaneOrderDetailActivity extends BaseActivity {
                     .params("orderNo", orderModel.sourceOrderNo)
                     .execute(new JsonCallback<PlaneResponse<DocOrderDetailInfo>>() {
                         @Override
+                        public void onStart(Request<PlaneResponse<DocOrderDetailInfo>, ? extends Request> request) {
+                            super.onStart(request);
+                            showloadDialog("");
+                        }
+
+                        @Override
                         public void onSuccess(Response<PlaneResponse<DocOrderDetailInfo>> response) {
                             super.onSuccess(PlaneOrderDetailActivity.this, response.body().message, response.body().code);
+                            goneloadDialog();
                             if (response.body().code == 0) {
                                 docOrderDetailInfo = response.body().result;
                                 goDate.setText(DateUtils.strToStr(docOrderDetailInfo.flightInfo.get(0).deptTime) + DateUtils.strToDate2(DateUtils.strToStr2(docOrderDetailInfo.flightInfo.get(0).deptTime)));
@@ -294,12 +303,16 @@ public class PlaneOrderDetailActivity extends BaseActivity {
                                     priceDetailInfo.cnum = 0;
                                 }
                                 priceDetailInfo.tof = 0;
+                                if (!TextUtils.isEmpty(docOrderDetailInfo.xcd.sjr)) {
+                                    priceDetailInfo.postage = 20;
+                                }
                             }
                         }
 
                         @Override
                         public void onError(Response<PlaneResponse<DocOrderDetailInfo>> response) {
                             super.onError(response);
+                            goneloadDialog();
                         }
                     });
 
@@ -312,8 +325,15 @@ public class PlaneOrderDetailActivity extends BaseActivity {
                     .params("orderNo", orderModel.sourceOrderNo)
                     .execute(new JsonCallback<PlaneResponse<DocOrderDetailInfo>>() {
                         @Override
+                        public void onStart(Request<PlaneResponse<DocOrderDetailInfo>, ? extends Request> request) {
+                            super.onStart(request);
+                            showloadDialog("");
+                        }
+
+                        @Override
                         public void onSuccess(Response<PlaneResponse<DocOrderDetailInfo>> response) {
                             super.onSuccess(PlaneOrderDetailActivity.this, response.body().message, response.body().code);
+                            goneloadDialog();
                             if (response.body().code == 0) {
                                 docOrderDetailInfo = response.body().result;
                                 goDepDate.setText(DateUtils.strToStr(docOrderDetailInfo.flightInfo.get(0).deptTime) + DateUtils.strToDate2(DateUtils.strToStr2(docOrderDetailInfo.flightInfo.get(0).deptTime)));
@@ -325,7 +345,7 @@ public class PlaneOrderDetailActivity extends BaseActivity {
                                 backDepTime.setText(docOrderDetailInfo.flightInfo.get(1).deptTime.split("-")[3]);
                                 backArrTime.setText(docOrderDetailInfo.flightInfo.get(1).deptTime.split("-")[4]);
                                 contactName.setText(docOrderDetailInfo.contacterInfo.name);
-                                contactPhone.setText(docOrderDetailInfo.contacterInfo.mobile);
+                                contactPhone.setText(docOrderDetailInfo.contacterInfo.mobile.substring(0, 3) + "****" + docOrderDetailInfo.contacterInfo.mobile.substring(8, 11));
 
                                 mAdapter.setNewData(docOrderDetailInfo.passengers);
                                 mAdapter.notifyDataSetChanged();
@@ -363,13 +383,17 @@ public class PlaneOrderDetailActivity extends BaseActivity {
                                     priceDetailInfo.cnum = 0;
                                 }
                                 priceDetailInfo.tof = 0;
-
+                                priceDetailInfo.postage = 0;
+                              /*  if (!TextUtils.isEmpty(docOrderDetailInfo.xcd.sjr)) {
+                                    priceDetailInfo.postage = 20;
+                                }*/
                             }
                         }
 
                         @Override
                         public void onError(Response<PlaneResponse<DocOrderDetailInfo>> response) {
                             super.onError(response);
+                            goneloadDialog();
                         }
                     });
 
@@ -385,23 +409,19 @@ public class PlaneOrderDetailActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.btn_reimbursement:
-               /* if (orderModel.status == PlaneOrderStatus.PAY_OK ||
-                        orderModel.status == PlaneOrderStatus.TICKET_OK || orderModel.status == PlaneOrderStatus.TICKET_LOCK ||
-                        orderModel.status == PlaneOrderStatus.WAIT_CONFIRM || orderModel.status == PlaneOrderStatus.CHANGE_OK) {
+                if (orderModel.status == PlaneOrderStatus.REFUND_OK || orderModel.status == PlaneOrderStatus.WAIT_REFUNDMENT
+                        || orderModel.status == PlaneOrderStatus.APPLY_RETURN_PAY || orderModel.status == PlaneOrderStatus.APPLY_REFUNDMENT) {
                     intent = new Intent(PlaneOrderDetailActivity.this, PlaneReimbursementActivity.class);
+                    intent.putExtra(PlaneReimbursementActivity.ORDER_STATUS, orderModel.status);
                     intent.putExtra(PlaneReimbursementActivity.ORDER_DATA, docOrderDetailInfo);
                     startActivity(intent);
                 } else {
-                    ToastUtils.showShortToast("当前订单状态不可报销");
-                }*/
-                intent = new Intent(PlaneOrderDetailActivity.this, PlaneReimbursementActivity.class);
-                intent.putExtra(PlaneReimbursementActivity.ORDER_DATA, docOrderDetailInfo);
-                startActivity(intent);
+                    ToastUtils.showShortToast("当前订单状态报销请联系客服");
+                }
                 break;
             case R.id.btn_refund:
-                if (orderModel.status == PlaneOrderStatus.PAY_OK || orderModel.status == PlaneOrderStatus.TICKET_OK ||
-                        orderModel.status == PlaneOrderStatus.TICKET_LOCK || orderModel.status == PlaneOrderStatus.WAIT_CONFIRM ||
-                        orderModel.status == PlaneOrderStatus.CHANGE_OK || orderModel.status == PlaneOrderStatus.APPLY_RETURN_PAY) {
+                if (orderModel.status == PlaneOrderStatus.TICKET_OK ||
+                        orderModel.status == PlaneOrderStatus.CHANGE_OK) {
                     intent = new Intent(PlaneOrderDetailActivity.this, RefundPlaneTicketActivity.class);
                     intent.putExtra(RefundPlaneTicketActivity.ORDER_DATA, docOrderDetailInfo);
                     startActivity(intent);
@@ -410,13 +430,9 @@ public class PlaneOrderDetailActivity extends BaseActivity {
                 }
                 break;
             case R.id.btn_change:
-                if (orderModel.status == PlaneOrderStatus.TICKET_OK || orderModel.status == PlaneOrderStatus.WAIT_CONFIRM || orderModel.status == PlaneOrderStatus.CHANGE_OK) {
-                    intent = new Intent(PlaneOrderDetailActivity.this, PlaneChangeActivity.class);
-                    intent.putExtra(PlaneChangeActivity.ORDER_DATA, docOrderDetailInfo);
-                    startActivity(intent);
-                } else {
-                    ToastUtils.showShortToast("当前订单状态不可改签");
-                }
+                intent = new Intent(PlaneOrderDetailActivity.this, PlaneChangeActivity.class);
+                intent.putExtra(PlaneChangeActivity.ORDER_DATA, docOrderDetailInfo);
+                startActivity(intent);
 
                 break;
             case R.id.price:
@@ -425,16 +441,7 @@ public class PlaneOrderDetailActivity extends BaseActivity {
                         .asCustom(new CustomTotalPriceInfoView(PlaneOrderDetailActivity.this).setData(priceDetailInfo)).show();
                 break;
             case R.id.pay:
-                new XPopup.Builder(this)
-                        .enableDrag(false)
-                        .asCustom(new CustomPayView(PlaneOrderDetailActivity.this)
-                                .setData(MathUtils.subZero(String.valueOf(orderModel.noPayAmount)))
-                                .setOnConfirmClickListener(new CustomPayView.OnItemClickListener() {
-                                    @Override
-                                    public void onItemClick(String payChannel) {
-                                        payValidate();
-                                    }
-                                })).show();
+                payValidate();
                 break;
         }
     }

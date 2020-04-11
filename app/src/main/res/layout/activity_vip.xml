@@ -80,13 +80,69 @@
             android:layout_height="match_parent"
             android:background="@color/color_f7f7f7">
 
+            <LinearLayout
+                android:id="@+id/ll_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="95dp"
+                android:layout_alignParentBottom="true"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="7dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        android:id="@+id/cb_protocol"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_marginRight="5dp"
+                        android:background="@mipmap/f01_06xuanzhong5"
+                        android:button="@null"
+                        android:checked="true" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="您已阅读并同意"
+                        android:textColor="@color/color_333333"
+                        android:textSize="@dimen/sp_12" />
+
+                    <TextView
+                        android:id="@+id/tv_protocol"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="《便利大本营会员服务协议》"
+                        android:textColor="@color/color_289cef"
+                        android:textSize="@dimen/sp_12" />
+
+                </LinearLayout>
+
+
+                <TextView
+                    android:id="@+id/btn_submit"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginLeft="60dp"
+                    android:layout_marginRight="60dp"
+                    android:background="@drawable/shape_fed428_r5"
+                    android:gravity="center"
+                    android:text="立即升级成为会员"
+                    android:textColor="@color/color_333333"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
             <com.feitianzhu.huangliwo.view.StickyScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="10dp"
-                android:layout_marginBottom="125dp"
+               android:layout_above="@id/ll_bottom"
                 android:overScrollMode="never"
                 android:scrollbars="none">
 
@@ -200,7 +256,7 @@
                                 android:layout_alignParentEnd="true"
                                 android:layout_centerVertical="true"
                                 android:gravity="center"
-                                android:text="￥9998.00"
+                                android:text="￥0.00"
                                 android:textColor="@color/color_333333"
                                 android:textSize="13sp" />
                         </RelativeLayout>
@@ -221,62 +277,6 @@
                     </RelativeLayout>
                 </LinearLayout>
             </com.feitianzhu.huangliwo.view.StickyScrollView>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="120dp"
-                android:layout_alignParentBottom="true"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <CheckBox
-                        android:id="@+id/cb_protocol"
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:layout_marginRight="5dp"
-                        android:background="@mipmap/f01_06xuanzhong5"
-                        android:button="@null"
-                        android:checked="true" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="您已阅读并同意"
-                        android:textColor="@color/color_333333"
-                        android:textSize="@dimen/sp_12" />
-
-                    <TextView
-                        android:id="@+id/tv_protocol"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="《黄鹂窝优选会员服务协议》"
-                        android:textColor="@color/color_289cef"
-                        android:textSize="@dimen/sp_12" />
-
-                </LinearLayout>
-
-
-                <TextView
-                    android:id="@+id/btn_submit"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginLeft="60dp"
-                    android:layout_marginTop="@dimen/dp_10"
-                    android:layout_marginRight="60dp"
-                    android:layout_marginBottom="10dp"
-                    android:background="@drawable/shape_fed428_r5"
-                    android:gravity="center"
-                    android:text="立即升级成为会员"
-                    android:textColor="@color/color_333333"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
         </RelativeLayout>
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 </LinearLayout>

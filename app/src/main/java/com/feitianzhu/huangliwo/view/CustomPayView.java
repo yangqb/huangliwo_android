@@ -33,7 +33,7 @@ public class CustomPayView extends BottomPopupView implements View.OnClickListen
     private TextView btnConfirm;
     private ImageView weixinPayIcon;
     private ImageView alipayIcon;
-    private String payChannel = "wx";
+    private String payChannel = "alipay";
     private ImageView balancePayIcon;
     private String data;
 
@@ -95,7 +95,7 @@ public class CustomPayView extends BottomPopupView implements View.OnClickListen
         weixinPayIcon = findViewById(R.id.weixinPay_icon);
         alipayIcon = findViewById(R.id.alipay_icon);
         balancePayIcon = findViewById(R.id.balancePay_icon);
-        weixinPayIcon.setBackgroundResource(R.mipmap.e01_23xuanzhong);
+        alipayIcon.setBackgroundResource(R.mipmap.e01_23xuanzhong);
         weixinPayIcon.setOnClickListener(this);
         alipayIcon.setOnClickListener(this);
         balancePayIcon.setOnClickListener(this);

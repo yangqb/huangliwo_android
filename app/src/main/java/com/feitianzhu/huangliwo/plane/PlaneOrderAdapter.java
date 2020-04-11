@@ -36,7 +36,7 @@ public class PlaneOrderAdapter extends BaseQuickAdapter<PlaneOrderModel, BaseVie
         if (item.status == PlaneOrderStatus.BOOK_OK) {
             helper.setText(R.id.tvStatus, "等待付款");
             helper.setVisible(R.id.btn_pay, true);
-        } else if (item.status == PlaneOrderStatus.TICKET_LOCK) {
+        } else if (item.status == PlaneOrderStatus.PAY_OK || item.status == PlaneOrderStatus.TICKET_LOCK) {
             helper.setText(R.id.tvStatus, "等待出票");
             helper.setVisible(R.id.btn_pay, false);
         } else if (item.status == PlaneOrderStatus.TICKET_OK) {
@@ -45,7 +45,7 @@ public class PlaneOrderAdapter extends BaseQuickAdapter<PlaneOrderModel, BaseVie
         } else if (item.status == PlaneOrderStatus.CANCEL_OK) {
             helper.setText(R.id.tvStatus, "订单取消");
             helper.setVisible(R.id.btn_pay, false);
-        } else if (item.status == PlaneOrderStatus.WAIT_REFUNDMENT || item.status == PlaneOrderStatus.APPLY_RETURN_PAY) {
+        } else if (item.status == PlaneOrderStatus.WAIT_REFUNDMENT || item.status == PlaneOrderStatus.APPLY_RETURN_PAY || item.status == PlaneOrderStatus.APPLY_REFUNDMENT) {
             helper.setText(R.id.tvStatus, "等待退款");
             helper.setVisible(R.id.btn_pay, false);
         } else if (item.status == PlaneOrderStatus.REFUND_OK) {

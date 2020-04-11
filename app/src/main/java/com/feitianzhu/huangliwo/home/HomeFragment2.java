@@ -60,6 +60,7 @@ import com.feitianzhu.huangliwo.shop.ShopsDetailActivity;
 import com.feitianzhu.huangliwo.shop.ui.SearchShopActivity;
 import com.feitianzhu.huangliwo.shop.ui.dialog.ProvinceCallBack;
 import com.feitianzhu.huangliwo.shop.ui.dialog.ProvinceDialog2;
+import com.feitianzhu.huangliwo.travel.TravelHomeActivity;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
@@ -406,6 +407,8 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, Pager
                 startActivity(intent);
                 break;
             case R.id.rl_travel:
+                intent = new Intent(getActivity(), TravelHomeActivity.class);
+                startActivity(intent);
                 break;
             case R.id.search:
                 JumpActivity(getActivity(), SearchShopActivity.class);

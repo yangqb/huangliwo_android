@@ -38,8 +38,8 @@
         android:id="@+id/image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="150dp"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="150dp"
         android:src="@mipmap/g02_01qidong" />
 
     <TextView
@@ -48,7 +48,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="50dp"
-        android:text="©盛和郁金中德联合投资（深圳）有限公司"
+        android:text="©便利大本营（北京）国际网络科技有限公司"
         android:textColor="@color/color_29261B"
         android:textSize="10sp" />
 

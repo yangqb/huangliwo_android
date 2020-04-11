@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.common.base.LazyWebActivity;
 import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.huangliwo.dao.NetworkDao;
 import com.feitianzhu.huangliwo.http.JsonCallback;
@@ -26,6 +27,7 @@ import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.StringUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
+import com.feitianzhu.huangliwo.vip.VipActivity;
 import com.gyf.immersionbar.ImmersionBar;
 import com.lzy.okgo.OkGo;
 import com.socks.library.KLog;
@@ -206,7 +208,9 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 //                startActivity(new Intent(this, ForgetPasswordActivity.class));
 //                break;
             case R.id.tv_protocol:
-                Intent intent = new Intent(RegisterActivity.this, RegistererProtocolActivity.class);
+                Intent intent = new Intent(RegisterActivity.this, LazyWebActivity.class);
+                intent.putExtra(Constant.URL, Urls.BASE_URL + "fhwl/static/html/yonghuxieyi.html");
+                intent.putExtra(Constant.H5_TITLE, "便利大本营用户注册协议");
                 startActivity(intent);
                 break;
 

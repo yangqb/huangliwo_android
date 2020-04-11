@@ -256,22 +256,11 @@ public class PlaneHomeActivity extends BaseActivity {
                 if (searchType == 2 || searchType == 3) {
                     intent = new Intent(this, SearchPlanActivity2.class);
                     intent.putExtra(SearchPlanActivity2.SEARCH_TYPE, searchType);
-                    /*intent.putExtra(SearchPlanActivity2.FLIGHT_START_DATE, startDateStr);
-                    intent.putExtra(SearchPlanActivity2.FLIGHT_END_DATE, endDateStr);
-                    intent.putExtra(SearchPlanActivity2.DEP_CITY, tvStartCity);
-                    intent.putExtra(SearchPlanActivity2.ARR_CITY, tvEndCity);
-                    intent.putExtra(SearchPlanActivity2.DEP_CODE, depCodeData);
-                    intent.putExtra(SearchPlanActivity2.ARR_CODE, arrCodeData);*/
                     intent.putExtra(SearchPlanActivity2.FLIGHT_INFO, customFightCityInfo);
                 } else {
                     intent = new Intent(this, SearchPlanActivity.class);
                     intent.putExtra(SearchPlanActivity.SEARCH_TYPE, searchType);
                     intent.putExtra(SearchPlanActivity.FLIGHT_INFO, customFightCityInfo);
-                  /*  intent.putExtra(SearchPlanActivity.FLIGHT_DATE, startDateStr);
-                    intent.putExtra(SearchPlanActivity2.DEP_CITY, tvStartCity);
-                    intent.putExtra(SearchPlanActivity2.ARR_CITY, tvEndCity);
-                    intent.putExtra(SearchPlanActivity.DEP_CODE, depCodeData);
-                    intent.putExtra(SearchPlanActivity.ARR_CODE, arrCodeData);*/
                 }
                 startActivity(intent);
                 break;
@@ -369,45 +358,69 @@ public class PlaneHomeActivity extends BaseActivity {
                     startDate.setText(startDateStr);
                     startWeek.setText(DateUtils.strToDate2(startDateStr));
                 }
-            } else if (requestCode == REQUEST_END_CODE) {
-                startCityType = data.getIntExtra(SelectPlaneCityActivity.CITY_TYPE, 0);
-                CityModel cityModel = (CityModel) data.getSerializableExtra(SelectPlaneCityActivity.CITY_DATA);
-                tvEndCity = cityModel.getCityName();
-                endCityName.setText(tvEndCity);
-                arrCode = cityModel.getExtra().toString();
-                arrCodeData = cityModel.getExtra().toString();
-                if (startCityType == 0 && endCityType == 0) { //国内城市
-                    if (searchType == 3) {
-                        searchType = 2;
-                    } else if (searchType == 1) {
-                        searchType = 0;
+            } else {
+                if (requestCode == REQUEST_END_CODE) {
+                    startCityType = data.getIntExtra(SelectPlaneCityActivity.CITY_TYPE, 0);
+                    CityModel cityModel = (CityModel) data.getSerializableExtra(SelectPlaneCityActivity.CITY_DATA);
+                    tvEndCity = cityModel.getCityName();
+                    endCityName.setText(tvEndCity);
+                    arrCode = cityModel.getExtra().toString();
+                    arrCodeData = cityModel.getExtra().toString();
+                    if (startCityType == 0 && endCityType == 0) { //国内城市
+                        if (searchType == 3) {
+                            searchType = 2;
+                        } else if (searchType == 1) {
+                            searchType = 0;
+                        }
+                    } else {
+                        if (searchType == 2) {
+                            searchType = 3;
+                        } else if (searchType == 0) {
+                            searchType = 1;
+                        }
                     }
-                } else {
-                    if (searchType == 2) {
-                        searchType = 3;
-                    } else if (searchType == 0) {
-                        searchType = 1;
+                } else if (requestCode == REQUEST_START_CODE) {
+                    endCityType = data.getIntExtra(SelectPlaneCityActivity.CITY_TYPE, 0);
+                    CityModel cityModel = (CityModel) data.getSerializableExtra(SelectPlaneCityActivity.CITY_DATA);
+                    tvStartCity = cityModel.getCityName();
+                    startCityName.setText(tvStartCity);
+                    depCode = cityModel.getExtra().toString();
+                    depCodeData = cityModel.getExtra().toString();
+                    if (startCityType == 0 && endCityType == 0) { //国内城市
+                        if (searchType == 3) {
+                            searchType = 2;
+                        } else if (searchType == 1) {
+                            searchType = 0;
+                        }
+                    } else {
+                        if (searchType == 2) {
+                            searchType = 3;
+                        } else if (searchType == 0) {
+                            searchType = 1;
+                        }
                     }
                 }
-            } else if (requestCode == REQUEST_START_CODE) {
-                endCityType = data.getIntExtra(SelectPlaneCityActivity.CITY_TYPE, 0);
-                CityModel cityModel = (CityModel) data.getSerializableExtra(SelectPlaneCityActivity.CITY_DATA);
-                tvStartCity = cityModel.getCityName();
-                startCityName.setText(tvStartCity);
-                depCode = cityModel.getExtra().toString();
-                depCodeData = cityModel.getExtra().toString();
-                if (startCityType == 0 && endCityType == 0) { //国内城市
-                    if (searchType == 3) {
-                        searchType = 2;
-                    } else if (searchType == 1) {
-                        searchType = 0;
-                    }
+                if (searchType == 0) {
+                    btnDomestic.setTextColor(getResources().getColor(R.color.color_333333));
+                    btnInternational.setTextColor(getResources().getColor(R.color.color_666666));
+                    btnComeAndGo.setTextColor(getResources().getColor(R.color.color_666666));
+                    line1.setBackgroundColor(getResources().getColor(R.color.color_fed228));
+                    line2.setBackgroundColor(getResources().getColor(R.color.white));
+                    line3.setBackgroundColor(getResources().getColor(R.color.white));
+                } else if (searchType == 1) {
+                    btnDomestic.setTextColor(getResources().getColor(R.color.color_666666));
+                    btnInternational.setTextColor(getResources().getColor(R.color.color_333333));
+                    btnComeAndGo.setTextColor(getResources().getColor(R.color.color_666666));
+                    line1.setBackgroundColor(getResources().getColor(R.color.white));
+                    line2.setBackgroundColor(getResources().getColor(R.color.color_fed228));
+                    line3.setBackgroundColor(getResources().getColor(R.color.white));
                 } else {
-                    if (searchType == 2) {
-                        searchType = 3;
-                    } else if (searchType == 0) {
-                        searchType = 1;
-                    }
+                    btnDomestic.setTextColor(getResources().getColor(R.color.color_666666));
+                    btnInternational.setTextColor(getResources().getColor(R.color.color_666666));
+                    btnComeAndGo.setTextColor(getResources().getColor(R.color.color_333333));
+                    line1.setBackgroundColor(getResources().getColor(R.color.white));
+                    line2.setBackgroundColor(getResources().getColor(R.color.white));
+                    line3.setBackgroundColor(getResources().getColor(R.color.color_fed228));
                 }
             }
         }

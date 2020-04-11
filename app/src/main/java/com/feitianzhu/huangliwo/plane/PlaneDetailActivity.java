@@ -49,6 +49,10 @@ import com.lxj.xpopup.XPopup;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.GetRequest;
+import com.lzy.okgo.request.base.Request;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -154,6 +158,8 @@ public class PlaneDetailActivity extends BaseActivity {
     TextView tvEndCity;
     @BindView(R.id.plane_title)
     LinearLayout planeTitle;
+    @BindView(R.id.refreshLayout)
+    SmartRefreshLayout refreshLayout;
 
     @Override
     protected int getLayoutId() {
@@ -164,6 +170,7 @@ public class PlaneDetailActivity extends BaseActivity {
     protected void initView() {
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
+        refreshLayout.setEnableLoadMore(false);
         planeTitle.setVisibility(View.VISIBLE);
         titleName.setVisibility(View.GONE);
         type = getIntent().getIntExtra(DETAIL_TYPE, 0);
@@ -325,6 +332,14 @@ public class PlaneDetailActivity extends BaseActivity {
     }
 
     public void initListener() {
+
+        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                initData();
+            }
+        });
+
         mAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
@@ -478,27 +493,40 @@ public class PlaneDetailActivity extends BaseActivity {
                     .params("ex_track", "tehui")
                     .execute(new JsonCallback<PlaneResponse<PlaneDetailInfo>>() {
                         @Override
+                        public void onStart(Request<PlaneResponse<PlaneDetailInfo>, ? extends Request> request) {
+                            super.onStart(request);
+                            showloadDialog("");
+                        }
+
+                        @Override
                         public void onSuccess(Response<PlaneResponse<PlaneDetailInfo>> response) {
                             super.onSuccess(PlaneDetailActivity.this, response.body().message, response.body().code);
-                            //SearchFlightModel searchFlightModel = response.body().result;
-                            planeDetailInfo = response.body().result;
-                            planeDetailInfo.flightTimes = flightModel.flightTimes;
-                            oneWayCompanyName.setText(planeDetailInfo.com + planeDetailInfo.code + flightModel.flightTypeFullName + (planeDetailInfo.meal ? "有餐" : "无餐") + "\n以下价格不含机建燃油");
+                            goneloadDialog();
+                            refreshLayout.finishRefresh();
                             multiPriceInfos.clear();
-                            if (planeDetailInfo.vendors != null && planeDetailInfo.vendors.size() > 0) {
-                                for (int i = 0; i < planeDetailInfo.vendors.size(); i++) {
-                                    MultiPriceInfo priceInfo = new MultiPriceInfo(MultiPriceInfo.DOMESTIC_TYPE);
-                                    priceInfo.venDorsInfo = planeDetailInfo.vendors.get(i);
-                                    multiPriceInfos.add(priceInfo);
+                            //SearchFlightModel searchFlightModel = response.body().result;
+                            if (response.body().code == 0 && response.body().result != null) {
+                                planeDetailInfo = response.body().result;
+                                planeDetailInfo.flightTimes = flightModel.flightTimes;
+                                oneWayCompanyName.setText(planeDetailInfo.com + planeDetailInfo.code + flightModel.flightTypeFullName + (planeDetailInfo.meal ? "有餐" : "无餐") + "\n以下价格不含机建燃油");
+                                if (planeDetailInfo.vendors != null && planeDetailInfo.vendors.size() > 0) {
+                                    for (int i = 0; i < planeDetailInfo.vendors.size(); i++) {
+                                        MultiPriceInfo priceInfo = new MultiPriceInfo(MultiPriceInfo.DOMESTIC_TYPE);
+                                        priceInfo.venDorsInfo = planeDetailInfo.vendors.get(i);
+                                        multiPriceInfos.add(priceInfo);
+                                    }
+                                    mAdapter.setNewData(multiPriceInfos);
+                                    mAdapter.notifyDataSetChanged();
                                 }
-                                mAdapter.setNewData(multiPriceInfos);
-                                mAdapter.notifyDataSetChanged();
                             }
+
                         }
 
                         @Override
                         public void onError(Response<PlaneResponse<PlaneDetailInfo>> response) {
                             super.onError(response);
+                            goneloadDialog();
+                            refreshLayout.finishRefresh(false);
                         }
                     });
         } else if (type == 2) {
@@ -514,8 +542,17 @@ public class PlaneDetailActivity extends BaseActivity {
                     .params("exTrack", "retehui")
                     .execute(new JsonCallback<PlaneResponse<PlaneGoBackDetailInfo>>() {
                         @Override
+                        public void onStart(Request<PlaneResponse<PlaneGoBackDetailInfo>, ? extends Request> request) {
+                            super.onStart(request);
+                            showloadDialog("");
+                        }
+
+                        @Override
                         public void onSuccess(Response<PlaneResponse<PlaneGoBackDetailInfo>> response) {
                             super.onSuccess(PlaneDetailActivity.this, response.body().message, response.body().code);
+                            goneloadDialog();
+                            refreshLayout.finishRefresh();
+                            multiPriceInfos.clear();
                             if (response.body().code == 0 && response.body().result != null) {
                                 PlaneGoBackDetailInfo goBackDetailInfo = response.body().result;
                                 if (goBackDetailInfo.packVendors != null && goBackDetailInfo.packVendors.size() > 0) {
@@ -533,6 +570,8 @@ public class PlaneDetailActivity extends BaseActivity {
                         @Override
                         public void onError(Response<PlaneResponse<PlaneGoBackDetailInfo>> response) {
                             super.onError(response);
+                            goneloadDialog();
+                            refreshLayout.finishRefresh(false);
                         }
                     });
         } else {
@@ -560,24 +599,36 @@ public class PlaneDetailActivity extends BaseActivity {
                     //.params("cabinLevel")
                     .execute(new JsonCallback<PlaneResponse<PlaneInternationalDetailInfo>>() {
                         @Override
+                        public void onStart(Request<PlaneResponse<PlaneInternationalDetailInfo>, ? extends Request> request) {
+                            super.onStart(request);
+                            showloadDialog("");
+                        }
+
+                        @Override
                         public void onSuccess(Response<PlaneResponse<PlaneInternationalDetailInfo>> response) {
                             super.onSuccess(PlaneDetailActivity.this, response.body().message, response.body().code);
-                            internationalDetailInfo = response.body().result;
+                            goneloadDialog();
+                            refreshLayout.finishRefresh();
                             multiPriceInfos.clear();
-                            if (internationalDetailInfo.priceInfo != null && internationalDetailInfo.priceInfo.size() > 0) {
-                                for (int i = 0; i < internationalDetailInfo.priceInfo.size(); i++) {
-                                    MultiPriceInfo priceInfo = new MultiPriceInfo(MultiPriceInfo.INTERNATIONAL_TYPE);
-                                    priceInfo.internationalPriceInfo = internationalDetailInfo.priceInfo.get(i);
-                                    multiPriceInfos.add(priceInfo);
+                            if (response.body().code == 0 && response.body().result != null) {
+                                internationalDetailInfo = response.body().result;
+                                if (internationalDetailInfo.priceInfo != null && internationalDetailInfo.priceInfo.size() > 0) {
+                                    for (int i = 0; i < internationalDetailInfo.priceInfo.size(); i++) {
+                                        MultiPriceInfo priceInfo = new MultiPriceInfo(MultiPriceInfo.INTERNATIONAL_TYPE);
+                                        priceInfo.internationalPriceInfo = internationalDetailInfo.priceInfo.get(i);
+                                        multiPriceInfos.add(priceInfo);
+                                    }
+                                    mAdapter.setNewData(multiPriceInfos);
+                                    mAdapter.notifyDataSetChanged();
                                 }
-                                mAdapter.setNewData(multiPriceInfos);
-                                mAdapter.notifyDataSetChanged();
                             }
                         }
 
                         @Override
                         public void onError(Response<PlaneResponse<PlaneInternationalDetailInfo>> response) {
                             super.onError(response);
+                            refreshLayout.finishRefresh(false);
+                            goneloadDialog();
                         }
                     });
         }

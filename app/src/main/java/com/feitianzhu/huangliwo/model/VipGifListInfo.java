@@ -31,5 +31,10 @@ public class VipGifListInfo implements Serializable {
         public double giftExhibition;
         public String giftExplain;
         public int isGet;
+        //@ApiModelProperty("商品原价格")
+        public double originalPrice;
+        //@ApiModelProperty("商品折扣价")
+        public double discountPrice;
+        public String giftDetailsImg;
     }
 }

@@ -163,7 +163,7 @@ public class ShareShopActivity extends BaseActivity {
         //关闭sso授权
         // oks.disableSSOWhenAuthorize();
         oks.setImageData(bitmap);
-        oks.setTitle("黄鹂窝优选");  //最顶部的Title
+        oks.setTitle("便利大本营");  //最顶部的Title
         //oks.setImagePath(imgPath);
         oks.setCallback(new PlatformActionListener() {
             @Override

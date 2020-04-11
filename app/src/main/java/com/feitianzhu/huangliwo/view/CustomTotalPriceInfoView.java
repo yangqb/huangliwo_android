@@ -46,10 +46,17 @@ public class CustomTotalPriceInfoView extends BottomPopupView {
         goCprice.setText("¥" + MathUtils.subZero(String.valueOf(priceDetailInfo.cPrice)) + "x" + priceDetailInfo.cnum);
         goCArfTof.setText("¥0" + "x" + priceDetailInfo.cnum);
         RelativeLayout rlChildPrice = findViewById(R.id.rl_child_price);
+        RelativeLayout rlPostage = findViewById(R.id.rl_postage);
         if (priceDetailInfo.cPrice == 0 || priceDetailInfo.cnum == 0) {
             rlChildPrice.setVisibility(GONE);
         } else {
             rlChildPrice.setVisibility(VISIBLE);
+        }
+
+        if (priceDetailInfo.postage == 0) {
+            rlPostage.setVisibility(GONE);
+        } else {
+            rlPostage.setVisibility(VISIBLE);
         }
     }
 }

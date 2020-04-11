@@ -27,8 +27,8 @@ public class FlightAlterSearchResultWithText implements Serializable {
     public String uniqKey;
     public String carrier;
     public String extraPrice;
-    public String gqFee;
-    public String upgradeFee;
+    public double gqFee;
+    public double upgradeFee;
     public double allFee;
     public String cabinStatus;
     public String actFlightNo;
@@ -38,9 +38,9 @@ public class FlightAlterSearchResultWithText implements Serializable {
     public String gqFeeText;
     public String upgradeFeeText;
     public String allFeeText;
-    public String childGqFee;
-    public String childUpgradeFee;
-    public String childAllFee;
+    public double childGqFee;
+    public double childUpgradeFee;
+    public double childAllFee;
     public String adultUFeeText;
     public String cabinStatusText;
 }

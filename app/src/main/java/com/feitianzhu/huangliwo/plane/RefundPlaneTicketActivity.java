@@ -34,6 +34,7 @@ import com.google.gson.Gson;
 import com.lxj.xpopup.XPopup;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.base.Request;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -93,15 +94,28 @@ public class RefundPlaneTicketActivity extends BaseActivity {
                 .params("orderNo", docOrderDetailInfo.detail.orderNo)
                 .execute(new JsonCallback<PlaneResponse<List<NationalPassengerInfo>>>() {
                     @Override
+                    public void onStart(Request<PlaneResponse<List<NationalPassengerInfo>>, ? extends Request> request) {
+                        super.onStart(request);
+                        showloadDialog("");
+                    }
+
+                    @Override
                     public void onSuccess(Response<PlaneResponse<List<NationalPassengerInfo>>> response) {
                         super.onSuccess(RefundPlaneTicketActivity.this, response.body().message, response.body().code);
-                        if (response.body().code == 0) {
+                        goneloadDialog();
+                        if (response.body().code == 0 && response.body().result != null) {
                             passengerInfo = response.body().result.get(0);
-                            reasonList.clear();
-                            if (passengerInfo.refundSearchResult.tgqReasons != null) {
-                                for (int i = 0; i < passengerInfo.refundSearchResult.tgqReasons.size(); i++) {
-                                    reasonList.add(passengerInfo.refundSearchResult.tgqReasons.get(i).msg);
+                            if (passengerInfo.refundSearchResult.canRefund) {
+                                reasonList.clear();
+                                if (passengerInfo.refundSearchResult.tgqReasons != null) {
+                                    for (int i = 0; i < passengerInfo.refundSearchResult.tgqReasons.size(); i++) {
+                                        if (passengerInfo.refundSearchResult.tgqReasons.get(i).code != 19) { //去掉身体原因且有二级甲等医院<含>以上的医院证明）
+                                            reasonList.add(passengerInfo.refundSearchResult.tgqReasons.get(i).msg);
+                                        }
+                                    }
                                 }
+                            } else {
+                                ToastUtils.showShortToast(passengerInfo.refundSearchResult.reason);
                             }
                         }
                     }
@@ -109,6 +123,7 @@ public class RefundPlaneTicketActivity extends BaseActivity {
                     @Override
                     public void onError(Response<PlaneResponse<List<NationalPassengerInfo>>> response) {
                         super.onError(response);
+                        goneloadDialog();
                     }
                 });
     }
@@ -120,7 +135,9 @@ public class RefundPlaneTicketActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.refund_reason:
-                selectShoppingSpaceDialog();
+                if (reasonList != null && reasonList.size() > 0) {
+                    selectShoppingSpaceDialog();
+                }
                 break;
             case R.id.invoiceType:
                 String[] strings1 = new String[]{"企业", "个人", "政府机关行政单位"};
@@ -177,21 +194,11 @@ public class RefundPlaneTicketActivity extends BaseActivity {
         }
 
         ApplyRefundParams params = new ApplyRefundParams();
-        params.applyRemarks = passengerInfo.refundSearchResult.tgqReasons.get(index).msg;
-        params.cabinCode = passengerInfo.refundSearchResult.tgqReasons.get(index).changeFlightSegmentList.get(0).cabinCode;
         params.callbackUrl = "";
-        params.changeCauseId = passengerInfo.refundSearchResult.tgqReasons.get(index).code + "";
-        params.childExtraPrice = passengerInfo.refundSearchResult.tgqReasons.get(index).changeFlightSegmentList.get(0).childUpgradeFee;
-        params.childUseFee = passengerInfo.refundSearchResult.tgqReasons.get(index).changeFlightSegmentList.get(0).childGqFee;
-        params.endTime = passengerInfo.refundSearchResult.tgqReasons.get(index).changeFlightSegmentList.get(0).endTime;
-        params.flightNo = passengerInfo.refundSearchResult.tgqReasons.get(index).changeFlightSegmentList.get(0).flightNo;
-        params.gqFee = passengerInfo.refundSearchResult.tgqReasons.get(index).changeFlightSegmentList.get(0).gqFee;
         params.orderNo = docOrderDetailInfo.detail.orderNo;
         params.passengerIds = passengerInfo.id + "";
-        params.startDate = startDateStr;
-        params.startTime = passengerInfo.refundSearchResult.tgqReasons.get(index).changeFlightSegmentList.get(0).startTime;
-        params.uniqKey = passengerInfo.refundSearchResult.tgqReasons.get(index).changeFlightSegmentList.get(0).uniqKey;
-        params.upgradeFee = passengerInfo.refundSearchResult.tgqReasons.get(index).changeFlightSegmentList.get(0).upgradeFee;
+        params.refundCause = passengerInfo.refundSearchResult.tgqReasons.get(index).msg;
+        params.refundCauseId = passengerInfo.refundSearchResult.tgqReasons.get(index).code + "";
         String json = new Gson().toJson(params);
         MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
         RequestBody body = RequestBody.create(mediaType, json);
@@ -202,8 +209,15 @@ public class RefundPlaneTicketActivity extends BaseActivity {
                 .upRequestBody(body)
                 .execute(new JsonCallback<PlaneResponse<List<NationalPassengerInfo>>>() {
                     @Override
+                    public void onStart(Request<PlaneResponse<List<NationalPassengerInfo>>, ? extends Request> request) {
+                        super.onStart(request);
+                        showloadDialog("");
+                    }
+
+                    @Override
                     public void onSuccess(Response<PlaneResponse<List<NationalPassengerInfo>>> response) {
                         super.onSuccess(RefundPlaneTicketActivity.this, response.body().message, response.body().code);
+                        goneloadDialog();
                         if (response.body().code == 0 && response.body().result != null && response.body().result.get(0).refundApplyResult.success) {
                             ToastUtils.showShortToast("申请成功");
                             finish();
@@ -213,6 +227,7 @@ public class RefundPlaneTicketActivity extends BaseActivity {
                     @Override
                     public void onError(Response<PlaneResponse<List<NationalPassengerInfo>>> response) {
                         super.onError(response);
+                        goneloadDialog();
                     }
                 });
     }

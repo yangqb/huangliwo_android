@@ -171,8 +171,8 @@
                 android:id="@+id/tv_protocol"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="《黄鹂窝优选用户协议》"
-                android:textColor="@color/color_FEA811"
+                android:text="《便利大本营用户协议》"
+                android:textColor="@color/color_289cef"
                 android:textSize="@dimen/sp_12" />
         </LinearLayout>
 

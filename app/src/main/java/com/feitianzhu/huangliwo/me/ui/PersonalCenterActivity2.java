@@ -165,7 +165,7 @@ public class PersonalCenterActivity2 extends BaseTakePhotoActivity {
                     .into(ivHead);
         }
 
-        tvNick.setText(response.getNickName() == null ? "小黄鹂" : response.getNickName().toString());
+        tvNick.setText(response.getNickName() == null ? "" : response.getNickName().toString());
         tvSign.setText(response.getPersonSign() == null ? "" : response.getPersonSign().toString());
         tvPersonId.setText(String.valueOf(response.getUserId()));
         if (response.getAccountType() == 0) {

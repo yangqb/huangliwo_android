@@ -147,7 +147,9 @@ public class PlaneOrderListActivity extends BaseActivity {
                     public void onSuccess(Response<LzyResponse<PlaneOrderInfo>> response) {
                         super.onSuccess(PlaneOrderListActivity.this, response.body().msg, response.body().code);
                         refreshLayout.finishRefresh();
-                        currOrder.clear();
+                        if (currOrder != null) {
+                            currOrder.clear();
+                        }
                         if (response.body().code == 0 && response.body().data != null) {
                             PlaneOrderInfo planeOrderInfo = response.body().data;
                             tabs.clear();
@@ -157,11 +159,24 @@ public class PlaneOrderListActivity extends BaseActivity {
                             tabs.add(new PlaneOrderTableEntity("已出票(" + planeOrderInfo.ticketedCount + ")"));
                             tabs.add(new PlaneOrderTableEntity("退改单(" + planeOrderInfo.refundOrUpdateCount + ")"));
                             tabLayout.setTabData(tabs);
-                            allOrder = planeOrderInfo.all;
-                            refundOrUpdateList = planeOrderInfo.refundOrUpdateList;
-                            ticketedList = planeOrderInfo.ticketedList;
-                            waiPayList = planeOrderInfo.waiPayList;
-                            waitTicketedList = planeOrderInfo.waitTicketedList;
+                            if (planeOrderInfo.all != null) {
+                                allOrder = planeOrderInfo.all;
+                            }
+                            if (planeOrderInfo.refundOrUpdateList != null) {
+                                refundOrUpdateList = planeOrderInfo.refundOrUpdateList;
+                            }
+
+                            if (planeOrderInfo.ticketedList != null) {
+                                ticketedList = planeOrderInfo.ticketedList;
+                            }
+
+                            if (planeOrderInfo.waiPayList != null) {
+                                waiPayList = planeOrderInfo.waiPayList;
+                            }
+
+                            if (planeOrderInfo.waitTicketedList != null) {
+                                waitTicketedList = planeOrderInfo.waitTicketedList;
+                            }
                             if (btnType == 0) {
                                 currOrder = allOrder;
                             } else if (btnType == 1) {
@@ -173,8 +188,10 @@ public class PlaneOrderListActivity extends BaseActivity {
                             } else {
                                 currOrder = refundOrUpdateList;
                             }
-                            mAdapter.setNewData(currOrder);
-                            mAdapter.notifyDataSetChanged();
+                            if (currOrder != null) {
+                                mAdapter.setNewData(currOrder);
+                                mAdapter.notifyDataSetChanged();
+                            }
                         }
                     }
 

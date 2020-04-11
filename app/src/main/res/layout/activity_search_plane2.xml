@@ -7,267 +7,210 @@
 
     <include layout="@layout/layout_head" />
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <RelativeLayout
-            android:id="@+id/ll_bottom"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_alignParentBottom="true"
-            android:background="@color/white"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:visibility="gone">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="5dp"
-                    android:includeFontPadding="false"
-                    android:text="2100"
-                    android:textColor="@color/color_ff8300"
-                    android:textSize="21sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="往返总价"
-                    android:textColor="@color/color_666666"
-                    android:textSize="13sp" />
-
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/btn_next"
-                android:layout_width="137dp"
-                android:layout_height="36dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:background="@drawable/shape_fed428_r5"
-                android:gravity="center"
-                android:text="下一步"
-                android:textColor="@color/color_333333"
-                android:textSize="17sp" />
-
-        </RelativeLayout>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@id/ll_bottom"
-            android:orientation="vertical">
+            android:layout_marginTop="1dp"
+            android:orientation="horizontal"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="1dp"
-                android:orientation="horizontal"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:orientation="vertical"
                 android:paddingLeft="5dp"
-                android:paddingRight="5dp">
+                android:paddingTop="8dp"
+                android:paddingRight="5dp"
+                android:paddingBottom="2dp">
 
                 <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@color/white"
-                    android:orientation="vertical"
-                    android:paddingLeft="5dp"
-                    android:paddingTop="8dp"
-                    android:paddingRight="5dp"
-                    android:paddingBottom="2dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="28dp"
-                        android:background="@drawable/shape_f7f7f7_r14"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="46dp"
-                            android:layout_height="20dp"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="8dp"
-                            android:background="@drawable/shape_28b5fe_r10"
-                            android:gravity="center"
-                            android:text="去程"
-                            android:textColor="@color/white"
-                            android:textSize="13sp" />
-
-                        <TextView
-                            android:id="@+id/depDate"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:drawableRight="@mipmap/k01_11genduo"
-                            android:drawablePadding="8dp"
-                            android:text="02-18 周二"
-                            android:textColor="@color/color_333333"
-                            android:textSize="12sp">
-
-                        </TextView>
-
-                    </LinearLayout>
+                    android:layout_width="match_parent"
+                    android:layout_height="28dp"
+                    android:background="@drawable/shape_f7f7f7_r14"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/go_city_title"
+                        android:layout_width="46dp"
+                        android:layout_height="20dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="8dp"
+                        android:background="@drawable/shape_28b5fe_r10"
+                        android:gravity="center"
+                        android:text="去程"
+                        android:textColor="@color/white"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/depDate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="8dp"
-                        android:text="上海-北京"
+                        android:drawableRight="@mipmap/k01_11genduo"
+                        android:drawablePadding="8dp"
+                        android:text="02-18 周二"
                         android:textColor="@color/color_333333"
-                        android:textSize="14sp" />
+                        android:textSize="12sp">
 
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="8dp">
-
-                        <LinearLayout
-                            android:id="@+id/sortPrice"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:layout_marginRight="10dp"
-                            android:gravity="center"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:id="@+id/tvPriceTitle"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="价格最低"
-                                android:textColor="@color/color_ff8300"
-                                android:textSize="12sp" />
-
-                            <View
-                                android:id="@+id/line1"
-                                android:layout_width="21.5dp"
-                                android:layout_height="1.5dp"
-                                android:layout_marginTop="3dp"
-                                android:background="@color/color_ff8300" />
-
-                        </LinearLayout>
-
-                    </RelativeLayout>
-
+                    </TextView>
 
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="0dp"
+                <TextView
+                    android:id="@+id/go_city_title"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@color/white"
-                    android:orientation="vertical"
-                    android:paddingLeft="5dp"
-                    android:paddingTop="8dp"
-                    android:paddingRight="5dp"
-                    android:paddingBottom="2dp">
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="8dp"
+                    android:text="上海-北京"
+                    android:textColor="@color/color_333333"
+                    android:textSize="14sp" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="8dp">
 
                     <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="28dp"
-                        android:background="@drawable/shape_f7f7f7_r14"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                        android:id="@+id/sortPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginRight="10dp"
+                        android:gravity="center"
+                        android:orientation="vertical">
 
                         <TextView
-                            android:layout_width="46dp"
-                            android:layout_height="20dp"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="8dp"
-                            android:background="@drawable/shape_9b65ff_r10"
-                            android:gravity="center"
-                            android:text="返程"
-                            android:textColor="@color/white"
-                            android:textSize="13sp" />
-
-                        <TextView
-                            android:id="@+id/arrDate"
+                            android:id="@+id/tvPriceTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:drawableRight="@mipmap/k01_11genduo"
-                            android:drawablePadding="8dp"
-                            android:text="02-18 周二"
-                            android:textColor="@color/color_333333"
-                            android:textSize="12sp">
+                            android:text="价格最低"
+                            android:textColor="@color/color_ff8300"
+                            android:textSize="12sp" />
 
-                        </TextView>
+                        <View
+                            android:id="@+id/line1"
+                            android:layout_width="21.5dp"
+                            android:layout_height="1.5dp"
+                            android:layout_marginTop="3dp"
+                            android:background="@color/color_ff8300" />
 
                     </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/back_city_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="8dp"
-                        android:text="上海-北京"
-                        android:textColor="@color/color_333333"
-                        android:textSize="14sp" />
+                </RelativeLayout>
 
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="8dp">
 
-                        <LinearLayout
-                            android:id="@+id/sortTime"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:gravity="center"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:id="@+id/tvTimeTitle"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="时间最早"
-                                android:textColor="@color/color_333333"
-                                android:textSize="12sp" />
-
-                            <View
-                                android:id="@+id/line2"
-                                android:layout_width="21.5dp"
-                                android:layout_height="1.5dp"
-                                android:layout_marginTop="3dp"
-                                android:background="@color/white" />
-
-                        </LinearLayout>
-                    </RelativeLayout>
-                </LinearLayout>
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="@color/color_eeeeee" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:paddingLeft="5dp"
+                android:paddingTop="8dp"
+                android:paddingRight="5dp"
+                android:paddingBottom="2dp">
 
-            <com.scwang.smartrefresh.layout.SmartRefreshLayout
-                android:id="@+id/refreshLayout"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="28dp"
+                    android:background="@drawable/shape_f7f7f7_r14"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="46dp"
+                        android:layout_height="20dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="8dp"
+                        android:background="@drawable/shape_9b65ff_r10"
+                        android:gravity="center"
+                        android:text="返程"
+                        android:textColor="@color/white"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/arrDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableRight="@mipmap/k01_11genduo"
+                        android:drawablePadding="8dp"
+                        android:text="02-18 周二"
+                        android:textColor="@color/color_333333"
+                        android:textSize="12sp">
+
+                    </TextView>
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/back_city_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="8dp"
+                    android:text="上海-北京"
+                    android:textColor="@color/color_333333"
+                    android:textSize="14sp" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="8dp">
+
+                    <LinearLayout
+                        android:id="@+id/sortTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tvTimeTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="时间最早"
+                            android:textColor="@color/color_333333"
+                            android:textSize="12sp" />
+
+                        <View
+                            android:id="@+id/line2"
+                            android:layout_width="21.5dp"
+                            android:layout_height="1.5dp"
+                            android:layout_marginTop="3dp"
+                            android:background="@color/white" />
+
+                    </LinearLayout>
+                </RelativeLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/color_eeeeee" />
+
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:id="@+id/refreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                </android.support.v7.widget.RecyclerView>
-            </com.scwang.smartrefresh.layout.SmartRefreshLayout>
-        </LinearLayout>
-
-    </RelativeLayout>
-
-
+            </android.support.v7.widget.RecyclerView>
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+    </LinearLayout>
 </LinearLayout>

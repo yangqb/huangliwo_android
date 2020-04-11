@@ -26,7 +26,7 @@ public class ProtocolActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        titleName.setText("黄鹂窝优选会员服务协议");
+        titleName.setText("便利大本营会员服务协议");
     }
 
     @OnClick(R.id.left_button)

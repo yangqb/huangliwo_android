@@ -4,16 +4,21 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.TextView;
 
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.common.base.LazyWebActivity;
+import com.feitianzhu.huangliwo.common.base.WebActivity;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
+import com.feitianzhu.huangliwo.plane.PlaneHomeActivity;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
+import com.feitianzhu.huangliwo.utils.Urls;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -115,8 +120,11 @@ public class PushShopHomeActivity extends BaseActivity {
                         intent = new Intent(PushShopHomeActivity.this, PushShopListActivity.class);
                         startActivity(intent);
                     } else {
-                        intent = new Intent(PushShopHomeActivity.this, PushShopProtocolActivity.class);
-                        intent.putExtra(PushShopProtocolActivity.PUSH_PROTOCOL, true);
+                        //推店协议
+                        intent = new Intent(PushShopHomeActivity.this, WebActivity.class);
+                        intent.putExtra(Constant.URL, Urls.BASE_URL + "fhwl/static/html/tuidianxieyi.html");
+                        intent.putExtra(Constant.H5_TITLE, "便利大本营推店协议");
+                        intent.putExtra(WebActivity.PUSH_PROTOCOL, true);
                         startActivity(intent);
                     }
                 } else {
