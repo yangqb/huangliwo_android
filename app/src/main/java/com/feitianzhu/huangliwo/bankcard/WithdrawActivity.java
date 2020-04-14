@@ -130,7 +130,7 @@ public class WithdrawActivity extends BaseActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rl_card:
-                startActivityForResult(new Intent(mContext, SelectBankCardActivity.class), REQUESTCODE);
+                //startActivityForResult(new Intent(mContext, SelectBankCardActivity.class), REQUESTCODE);
                 break;
             case R.id.button:
 

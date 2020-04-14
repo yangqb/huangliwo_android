@@ -8,9 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.yanzhenjie.loading.dialog.LoadingDialog;
-
-
 /**
  * <pre>
  * 若把初始化内容放到initData实现
@@ -38,7 +35,6 @@ import com.yanzhenjie.loading.dialog.LoadingDialog;
  * </pre>
  */
 public abstract class LazyFragment extends Fragment {
-    protected LoadingDialog mLoadingDialog=null;
     /**
      * Fragment title
      */

@@ -80,7 +80,7 @@ android {
         applicationId "com.feitianzhu.huangliwo"
         minSdkVersion androidMinSdkVersion
         targetSdkVersion androidTargetSdkVersion
-        versionCode 16
+        versionCode 17
         multiDexEnabled true
         versionName "1.1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -146,6 +146,7 @@ dependencies {
     //  compile(name: 'takephoto-release', ext: 'aar')
     implementation project(':takephoto')
     implementation project(':okhttputils')
+    implementation project(':cityselect')
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.50'
     //必须使用
     implementation 'com.lzy.net:okgo:3.0.4'
@@ -171,7 +172,8 @@ dependencies {
     implementation 'com.afollestad.material-dialogs:core:0.9.4.3'
     implementation 'com.github.pinguo-zhouwei:CustomPopwindow:2.1.1'
     implementation 'me.zhanghai.android.materialratingbar:library:1.0.2'
-    implementation 'com.yanzhenjie:recyclerview-swipe:1.1.2'
+    //implementation 'com.yanzhenjie.recyclerview:support:1.3.2'
+    implementation 'com.github.anzaizai:EasySwipeMenuLayout:1.1.4'//侧滑删除
     //百分比布局
     implementation 'com.zhy:percent-support-extends:1.1.1'
     implementation 'com.jungly:gridPasswordView:0.3'
@@ -215,7 +217,7 @@ dependencies {
     //implementation 'com.zaaach:citypicker:2.0.3'    //必选
     implementation 'com.necer.ncalendar:ncalendar:4.3.8'
     implementation 'com.haibin:calendarview:3.6.6'
-    implementation 'com.github.MZCretin:CitySelect:1.0.4'
+   // implementation 'com.github.MZCretin:CitySelect:1.0.4'
     implementation 'com.contrarywind:Android-PickerView:4.1.9'
     implementation 'com.gcssloop.recyclerview:pagerlayoutmanager:2.3.8'
 }

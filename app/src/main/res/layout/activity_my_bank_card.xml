@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_normal"
-    android:orientation="vertical"
-    tools:context="com.feitianzhu.huangliwo.bankcard.MyBankCardActivity">
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/ll_no_card"
@@ -49,7 +48,7 @@
             />
     </LinearLayout>
 
-    <com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView
+    <com.yanzhenjie.recyclerview.SwipeRecyclerView
         android:id="@+id/recyclerview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -97,7 +97,7 @@ public class SelectPlaneCityActivity extends BaseActivity {
             @Override
             public void onSelectCancel() {
                 //Toast.makeText(SelectPlaneCityActivity.this, "你取消了城市选择", Toast.LENGTH_SHORT).show();
-                finish();
+                //finish();
             }
         });
 
@@ -116,7 +116,7 @@ public class SelectPlaneCityActivity extends BaseActivity {
             @Override
             public void onSelectCancel() {
                 //Toast.makeText(SelectPlaneCityActivity.this, "你取消了城市选择", Toast.LENGTH_SHORT).show();
-                finish();
+                //finish();
             }
         });
 
@@ -175,6 +175,7 @@ public class SelectPlaneCityActivity extends BaseActivity {
         cnCitySelectView.bindData(cnAllCitys, cnHotCitys, cnCurrentCity);
         //设置搜索框的文案提示
         cnCitySelectView.setSearchTips("请输入城市名称或者拼音");
+        cnCitySelectView.setShowCityCode(false);
     }
 
     public void initInterCity() {
@@ -204,6 +205,7 @@ public class SelectPlaneCityActivity extends BaseActivity {
         interCitySelectView.bindData(interAllCitys, interHotCitys, interCurrentCity);
         //设置搜索框的文案提示
         interCitySelectView.setSearchTips("请输入城市名称或者拼音");
+        interCitySelectView.setShowCityCode(false);
     }
 
     @OnClick({R.id.btn_domestic, R.id.left_button, R.id.btn_international, R.id.right_button})

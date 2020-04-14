@@ -20,8 +20,11 @@ import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.model.CollectionInfo;
+import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.MultiCollectionModel;
 import com.feitianzhu.huangliwo.model.MultipleItem;
+import com.feitianzhu.huangliwo.utils.MathUtils;
+import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 import com.itheima.roundedimageview.RoundedImageView;
 
 import java.util.List;
@@ -34,19 +37,29 @@ public class CollectionAdapter extends BaseItemDraggableAdapter<CollectionInfo.C
 
     @Override
     protected void convert(@NonNull BaseViewHolder helper, CollectionInfo.CollectionModel item) {
+        MineInfoModel userInfo = UserInfoUtils.getUserInfo(mContext);
         Glide.with(mContext).load(item.goodsImg)
                 .apply(new RequestOptions().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai).dontAnimate()).into((RoundedImageView) helper.getView(R.id.goodsImg));
         helper.setText(R.id.goodsName, item.title);
         helper.setText(R.id.describe, item.goodsName);
+        if (userInfo.getAccountType() != 0) {
+            helper.setVisible(R.id.ll_rebate, false);
+            helper.setVisible(R.id.vip_rebate, true);
+        } else {
+            helper.setVisible(R.id.ll_rebate, true);
+            helper.setVisible(R.id.vip_rebate, false);
+        }
         if (item.type == 1) {
             String discount = String.valueOf((100 - item.rebatePv * 100));
-            helper.setText(R.id.tv_rebate, "返" + discount + "%");
-            helper.getView(R.id.price).setVisibility(View.GONE);
+            helper.setText(R.id.tv_rebate, "返" + MathUtils.subZero(discount) + "%");
+            helper.setText(R.id.vip_rebate, "返" + MathUtils.subZero(discount) + "%");
+            helper.setGone(R.id.price,false);
         } else {
             String rebatePv = String.format(Locale.getDefault(), "%.2f", item.rebatePv);
-            helper.setText(R.id.tv_rebate, "返¥" + rebatePv);
-            setSpannableString(String.format(Locale.getDefault(), "%.2f", item.price), helper.getView(R.id.price));
-            helper.getView(R.id.price).setVisibility(View.VISIBLE);
+            helper.setText(R.id.tv_rebate, "返¥" + MathUtils.subZero(rebatePv));
+            helper.setText(R.id.vip_rebate, "返" + MathUtils.subZero(rebatePv));
+            setSpannableString(MathUtils.subZero(String.valueOf(item.price)), helper.getView(R.id.price));
+            helper.setGone(R.id.price,true);
         }
         helper.addOnClickListener(R.id.ll_rebate);
     }

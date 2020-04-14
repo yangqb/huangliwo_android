@@ -1,1 +1,1 @@
-include ':app', ':okhttputils', ':takephoto'
+include ':app', ':okhttputils', ':takephoto','cityselect'

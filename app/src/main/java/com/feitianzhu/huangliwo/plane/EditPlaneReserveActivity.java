@@ -21,6 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.cretin.tools.cityselect.model.CityModel;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
@@ -54,6 +55,7 @@ import com.feitianzhu.huangliwo.model.RefundChangeInfo;
 import com.feitianzhu.huangliwo.model.ReimbursementModel;
 import com.feitianzhu.huangliwo.model.UserClientInfo;
 import com.feitianzhu.huangliwo.shop.SettlementShoppingCartActivity;
+import com.feitianzhu.huangliwo.sidebar.AreaSelectActivity;
 import com.feitianzhu.huangliwo.utils.DateUtils;
 import com.feitianzhu.huangliwo.utils.MathUtils;
 import com.feitianzhu.huangliwo.utils.PayUtils;
@@ -91,8 +93,10 @@ import butterknife.OnClick;
 public class EditPlaneReserveActivity extends BaseActivity {
     private static final int REQUEST_CODE = 100;
     private static final int REQUEST_ADDRESS_CODE = 101;
+    private static final int REQUEST_PHONE_CODE = 102;
     public static final String PLANE_TYPE = "plane_type";
     public static final String PLANE_DETAIL_DATA = "plane_detail_data";
+    private CityModel cityModel;
     private int type;
     private int count;//成人数量
     private int cCount;//儿童数量
@@ -177,6 +181,8 @@ public class EditPlaneReserveActivity extends BaseActivity {
     RelativeLayout rlBottom;
     @BindView(R.id.postagePrice)
     TextView postagePrice;
+    @BindView(R.id.phoneAreaCode)
+    TextView phoneAreaCode;
 
     @Override
     protected int getLayoutId() {
@@ -574,7 +580,7 @@ public class EditPlaneReserveActivity extends BaseActivity {
     }
 
     @OnClick({R.id.left_button, R.id.cancel_change, R.id.rl_plane_info, R.id.luggage_buyTicket_notice, R.id.ticketPrice_detail,
-            R.id.selectUser, R.id.tvReserveNotice, R.id.btn_submit, R.id.priceInfo, R.id.invoiceType, R.id.rl_address, R.id.identification_num_explain})
+            R.id.selectUser, R.id.tvReserveNotice, R.id.btn_submit, R.id.priceInfo, R.id.invoiceType, R.id.rl_address, R.id.identification_num_explain, R.id.phoneAreaCode})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.left_button:
@@ -702,6 +708,12 @@ public class EditPlaneReserveActivity extends BaseActivity {
                         .enableDrag(false)
                         .asCustom(new CustomPassengerNameView(this
                         ).setContent(content)).show();
+                break;
+            case R.id.phoneAreaCode:
+                /*intent = new Intent(EditPlaneReserveActivity.this, AreaSelectActivity.class);
+                startActivity(intent);*/
+                intent = new Intent(EditPlaneReserveActivity.this, SelectPhoneCodeActivity.class);
+                startActivityForResult(intent, REQUEST_PHONE_CODE);
                 break;
         }
     }
@@ -867,7 +879,7 @@ public class EditPlaneReserveActivity extends BaseActivity {
             docPassengerInfo.ageType = list.get(i).ageType;
             docPassengerInfo.birthday = list.get(i).birthday;
             docPassengerInfo.cardNo = list.get(i).cardNo;
-            docPassengerInfo.mobile = "13100680321";
+            docPassengerInfo.mobile = "";
             docPassengerInfo.mobilePreNum = "86";
             docPassengerInfo.name = list.get(i).name;
             docPassengerInfo.sex = list.get(i).sex;
@@ -883,7 +895,7 @@ public class EditPlaneReserveActivity extends BaseActivity {
         String passengerJson = new Gson().toJson(docPassengerInfoList);
         ContactModel contactModel = new ContactModel();
         contactModel.mobile = contactPhone.getText().toString().trim();
-        contactModel.mobilePreNum = "86";
+        contactModel.mobilePreNum = cityModel == null ? "86" : cityModel.getExtra().toString();
         contactModel.name = contactName.getText().toString().trim();
         String contactJson = new Gson().toJson(contactModel);
 
@@ -1060,6 +1072,7 @@ public class EditPlaneReserveActivity extends BaseActivity {
                 .params(Constant.USERID, userId)
                 .params("contact", contactName.getText().toString().trim())
                 .params("contactMob", contactPhone.getText().toString().trim())
+                //.params("contactPreNum", cityModel == null ? "86" : cityModel.getExtra().toString())
                 .params("cardNo", list.get(0).cardNo)
                 .params("bookingResult", bkResult)
                 .params("needXcd", switchButton.isChecked())
@@ -1183,6 +1196,9 @@ public class EditPlaneReserveActivity extends BaseActivity {
                     tvAddress.setText(addressBean.getProvinceName() + addressBean.getCityName() + addressBean.getAreaName() + addressBean.getDetailAddress());
                     phone.setText(addressBean.getPhone());
                 }
+            } else if (requestCode == REQUEST_PHONE_CODE) {
+                cityModel = (CityModel) data.getSerializableExtra(SelectPlaneCityActivity.CITY_DATA);
+                phoneAreaCode.setText("+" + cityModel.getExtra().toString());
             }
         }
     }
