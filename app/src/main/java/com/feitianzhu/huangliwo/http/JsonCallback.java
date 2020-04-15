@@ -19,13 +19,16 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.feitianzhu.huangliwo.R;
+import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.login.ForgetPasswordActivity;
 import com.feitianzhu.huangliwo.settings.ChangePasswordActivity;
+import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.impl.ConfirmPopupView;
+import com.lxj.xpopup.interfaces.OnCancelListener;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.lzy.okgo.callback.AbsCallback;
 import com.lzy.okgo.request.base.Request;
@@ -141,21 +144,26 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
     public void onSuccess(Context context, String string, int errorCode) {
         if (errorCode != 0) {
             if (errorCode == 100021105) {
-                if (confirmPopupView == null) {
-                    confirmPopupView = new XPopup.Builder(context)
-                            .asConfirm("", "您的账号已在其他设备登陆，如果这不是您的操作，请及时修改密码并重新登陆。", "忽略", "修改密码", new OnConfirmListener() {
-                                @Override
-                                public void onConfirm() {
-                                    //context.startActivity(new Intent(context, ForgetPasswordActivity.class));
-                                    ChangePasswordActivity.startActivity(context, true);
-                                }
-                            }, null, false)
-                            .bindLayout(R.layout.layout_dialog_login);
-                    confirmPopupView.show();//绑定已有布局
-                } else {
-                    if (!confirmPopupView.isShow()) {
-                        confirmPopupView.show();
+                boolean loginDialog = SPUtils.getBoolean(context, Constant.LOGIN_DIALOG);
+                if (loginDialog) {
+                    if (confirmPopupView == null) {
+                        confirmPopupView = new XPopup.Builder(context)
+                                .asConfirm("", "您的账号已在其他设备登陆，如果这不是您的操作，请及时修改密码并重新登陆。", "忽略", "修改密码", new OnConfirmListener() {
+                                    @Override
+                                    public void onConfirm() {
+                                        //context.startActivity(new Intent(context, ForgetPasswordActivity.class));
+                                        ChangePasswordActivity.startActivity(context, true);
+                                    }
+                                }, new OnCancelListener() {
+                                    @Override
+                                    public void onCancel() {
+
+                                    }
+                                }, false)
+                                .bindLayout(R.layout.layout_dialog_login);
+                        confirmPopupView.show();//绑定已有布局
                     }
+                    SPUtils.putBoolean(context, Constant.LOGIN_DIALOG, false);
                 }
             } else {
                 ToastUtils.showShortToast(string);

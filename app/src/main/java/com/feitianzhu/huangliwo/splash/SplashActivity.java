@@ -67,6 +67,7 @@ public class SplashActivity extends AppCompatActivity {
                 .statusBarColor(R.color.bg_yellow)
                 .init();
         initPermision();
+        SPUtils.putBoolean(this, Constant.LOGIN_DIALOG, true);//重新进入APP才弹出异地登录的弹框
     }
 
     private void doLogin() {

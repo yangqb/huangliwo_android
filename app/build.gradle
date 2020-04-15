@@ -19,7 +19,7 @@ MobSDK {
                 BypassApproval = "false"
                 Enable = "true"
             }
-            QQ {
+            /*QQ {
                 Id = "7"
                 SortId = "4"
                 AppId = "1110085823"
@@ -27,7 +27,7 @@ MobSDK {
                 BypassApproval = "false"
                 ShareByAppClient = "true"
                 Enable = "true"
-            }
+            }*/
             WechatMoments {
                 Id = "5"
                 SortId = "2"
@@ -36,14 +36,14 @@ MobSDK {
                 BypassApproval = "false"
                 Enable = "true"
             }
-            QZone {
+           /* QZone {
                 Id = "3"
                 SortId = "5"
                 AppId = "1110085823"
                 AppKey = "osnroqSxxckkJOdI"
                 BypassApproval = "false"
                 Enable = "true"
-            }
+            }*/
         }
     }
 }
@@ -80,9 +80,9 @@ android {
         applicationId "com.feitianzhu.huangliwo"
         minSdkVersion androidMinSdkVersion
         targetSdkVersion androidTargetSdkVersion
-        versionCode 17
+        versionCode 18
         multiDexEnabled true
-        versionName "1.1.0"
+        versionName "1.2.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             //设置支持的SO库架构
@@ -113,10 +113,10 @@ android {
                 output ->
                     def outputFile = output.outputFile
                     if (outputFile != null && outputFile.name.contains('release')) {
-                        def fileName = "huangliwo-${variant.name}-v${variant.versionName}-v${variant.versionCode}.apk"
+                        def fileName = "bldby-${variant.name}-v${variant.versionName}-v${variant.versionCode}.apk"
                         outputFileName = fileName
                     } else if (outputFile != null && outputFile.name.contains('debug')) {
-                        def fileName = "huangliwo-${variant.name}-v${variant.versionName}-v${variant.versionCode}.apk"
+                        def fileName = "bldby-${variant.name}-v${variant.versionName}-v${variant.versionCode}.apk"
                         outputFileName = fileName
                     }
             }

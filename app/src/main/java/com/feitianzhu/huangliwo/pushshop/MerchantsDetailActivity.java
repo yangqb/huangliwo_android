@@ -41,6 +41,7 @@ import com.feitianzhu.huangliwo.shop.ShopDao;
 import com.feitianzhu.huangliwo.utils.KeyboardUtils;
 import com.feitianzhu.huangliwo.utils.MathUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
+import com.feitianzhu.huangliwo.utils.SoftKeyBoardListener;
 import com.feitianzhu.huangliwo.utils.StringUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
@@ -57,6 +58,7 @@ import com.lljjcoder.bean.ProvinceBean;
 import com.lljjcoder.style.cityjd.JDCityConfig;
 import com.lljjcoder.style.cityjd.JDCityPicker;
 import com.lxj.xpopup.XPopup;
+import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.request.PostRequest;
 import com.socks.library.KLog;
@@ -96,6 +98,7 @@ import static com.feitianzhu.huangliwo.common.Constant.USERID;
 public class MerchantsDetailActivity extends BaseTakePhotoActivity implements BusinessHoursDialog.OnTimePickListener, BusinessWeekDayDialog.OnWeekPickListener, OnGetGeoCoderResultListener {
     public static final String IS_MY_MERCHANTS = "is_my_merchants";
     public static final String MERCHANTS_DETAIL_DATA = "merchants_detail_data";
+    private boolean isConfirm = false;
     private String userId;
     private String token;
     private int clsId;
@@ -341,6 +344,54 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
                 }
             }
         });
+
+        SoftKeyBoardListener.setListener(MerchantsDetailActivity.this, new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
+            @Override
+            public void keyBoardShow(int height) {
+                //Toast.makeText(AppActivity.this, "键盘显示 高度" + height, Toast.LENGTH_SHORT).show();
+
+            }
+
+            @Override
+            public void keyBoardHide(int height) {
+                if (!isConfirm && !TextUtils.isEmpty(editMerchantsDiscount.getText().toString().trim()) && Double.valueOf(editMerchantsDiscount.getText().toString().trim()) <= 40) {
+                    isConfirm = true;
+                    new XPopup.Builder(MerchantsDetailActivity.this)
+                            .asConfirm("", "当前商品折扣过低，请认真查看商家折扣说明再做填写", "", "确定", new OnConfirmListener() {
+                                @Override
+                                public void onConfirm() {
+
+                                }
+                            }, null, true)
+                            .bindLayout(R.layout.layout_dialog_login) //绑定已有布局
+                            .show();
+                }
+            }
+        });
+
+        editMerchantsDiscount.setOnFocusChangeListener(new android.view.View.
+                OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    // 此处为得到焦点时的处理内容
+                } else {
+                    if (!isConfirm && !TextUtils.isEmpty(editMerchantsDiscount.getText().toString().trim()) && Double.valueOf(editMerchantsDiscount.getText().toString().trim()) <= 40) {
+                        isConfirm = true;
+                        new XPopup.Builder(MerchantsDetailActivity.this)
+                                .asConfirm("", "当前商品折扣过低，请认真查看商家折扣说明再做填写", "", "确定", new OnConfirmListener() {
+                                    @Override
+                                    public void onConfirm() {
+
+                                    }
+                                }, null, true)
+                                .bindLayout(R.layout.layout_dialog_login) //绑定已有布局
+                                .show();
+                    }
+                }
+            }
+        });
+
     }
 
     @OnClick({R.id.left_button, R.id.right_button, R.id.tvCode, R.id.tv_business_hours, R.id.tv_business_day, R.id.imageView1, R.id.imageView2, R.id.imageView3, R.id.imageView4, R.id.imageView5, R.id.imageView6, R.id.imageView7

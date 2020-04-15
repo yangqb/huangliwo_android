@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -61,6 +62,8 @@ public class SearchShopActivity extends BaseActivity {
     RecyclerView recyclerView;
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout mSwipeLayout;
+    @BindView(R.id.emptyView)
+    LinearLayout emptyView;
     private String token;
     private String userId;
     private int pageNo = 1;
@@ -84,21 +87,9 @@ public class SearchShopActivity extends BaseActivity {
                 .init();
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
-        View mEmptyView = View.inflate(this, R.layout.view_common_nodata, null);
-        TextView noData = mEmptyView.findViewById(R.id.no_data);
-        noData.setText("暂无搜索结果");
-        ImageView img_empty = (ImageView) mEmptyView.findViewById(R.id.img_empty);
-        img_empty.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new HomeRecommendAdapter2(shopAndMerchants);
-        mAdapter.setEmptyView(mEmptyView);
         recyclerView.setAdapter(mAdapter);
-        mAdapter.notifyDataSetChanged();
         initListener();
     }
 
@@ -130,13 +121,14 @@ public class SearchShopActivity extends BaseActivity {
                             mSwipeLayout.finishLoadMore();
                         }
                         if (response.body().data != null) {
-                            SearchGoodsMode goodsMode = response.body().data;
-                            goodsListBeans = goodsMode.getList();
+                            emptyView.setVisibility(View.GONE);
+                            goodsListBeans = response.body().data.getList();
                             if (!isLoadMore) {
                                 shopAndMerchants.clear();
                             }
                             //商品
                             if (goodsListBeans != null && goodsListBeans.size() > 0) {
+                                emptyView.setVisibility(View.GONE);
                                 for (int i = 0; i < goodsListBeans.size(); i++) {
                                     ShopAndMerchants entity = new ShopAndMerchants(ShopAndMerchants.TYPE_GOODS);
                                     entity.setShopsList(goodsListBeans.get(i));
@@ -144,7 +136,11 @@ public class SearchShopActivity extends BaseActivity {
                                 }
                                 mAdapter.setNewData(shopAndMerchants);
                                 mAdapter.notifyDataSetChanged();
+                            } else {
+                                emptyView.setVisibility(View.VISIBLE);
                             }
+                        } else {
+                            emptyView.setVisibility(View.VISIBLE);
                         }
                     }
 

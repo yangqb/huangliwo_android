@@ -95,8 +95,8 @@
                                 android:id="@+id/rl_financial"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:visibility="gone"
-                                android:layout_weight="1">
+                                android:layout_weight="1"
+                                android:visibility="gone">
 
                                 <ImageView
                                     android:layout_width="wrap_content"
@@ -158,9 +158,9 @@
                                 android:layout_weight="1"
                                 android:gravity="center"
                                 android:text="金融"
-                                android:visibility="gone"
                                 android:textColor="@color/color_333333"
-                                android:textSize="13sp" />
+                                android:textSize="13sp"
+                                android:visibility="gone" />
 
                             <TextView
                                 android:layout_width="0dp"
@@ -324,7 +324,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginRight="10dp"
-                                    android:text="热门商品"
+                                    android:text="便利爆品"
                                     android:textColor="@color/color_333333"
                                     android:textSize="17sp" />
 

@@ -6,12 +6,16 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.support.annotation.DrawableRes;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -36,13 +40,16 @@ import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.login.ForgetPasswordActivity;
 import com.feitianzhu.huangliwo.me.EditAddressActivity;
 import com.feitianzhu.huangliwo.me.base.BaseTakePhotoActivity;
+import com.feitianzhu.huangliwo.plane.EditPlaneReserveActivity;
 import com.feitianzhu.huangliwo.pushshop.bean.EditMerchantInfo;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsClassifyModel;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsModel;
 import com.feitianzhu.huangliwo.pushshop.bean.UpdataMechantsEvent;
+import com.feitianzhu.huangliwo.shop.ui.MyOrderActivity2;
 import com.feitianzhu.huangliwo.utils.KeyboardUtils;
 import com.feitianzhu.huangliwo.utils.MathUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
+import com.feitianzhu.huangliwo.utils.SoftKeyBoardListener;
 import com.feitianzhu.huangliwo.utils.StringUtils;
 import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
@@ -57,6 +64,7 @@ import com.lljjcoder.bean.ProvinceBean;
 import com.lljjcoder.style.cityjd.JDCityConfig;
 import com.lljjcoder.style.cityjd.JDCityPicker;
 import com.lxj.xpopup.XPopup;
+import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.request.PostRequest;
 import com.socks.library.KLog;
@@ -92,6 +100,7 @@ import static com.feitianzhu.huangliwo.common.Constant.USERID;
  * 编辑商铺
  */
 public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGetGeoCoderResultListener {
+    private boolean isConfirm = false;
     public static final String MERCHANTS_DETAIL_DATA = "merchants_detail_data";
     private MerchantsModel merchantsModel;
     private String mProvinceId;
@@ -262,6 +271,52 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
             }
         });
 
+        SoftKeyBoardListener.setListener(EditMerchantsActivity.this, new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
+            @Override
+            public void keyBoardShow(int height) {
+                //Toast.makeText(AppActivity.this, "键盘显示 高度" + height, Toast.LENGTH_SHORT).show();
+
+            }
+
+            @Override
+            public void keyBoardHide(int height) {
+                if (!isConfirm && !TextUtils.isEmpty(editPercentage.getText().toString().trim()) && Double.valueOf(editPercentage.getText().toString().trim()) <= 40) {
+                    isConfirm = true;
+                    new XPopup.Builder(EditMerchantsActivity.this)
+                            .asConfirm("", "当前商品折扣过低，请认真查看商家折扣说明再做填写", "", "确定", new OnConfirmListener() {
+                                @Override
+                                public void onConfirm() {
+
+                                }
+                            }, null, true)
+                            .bindLayout(R.layout.layout_dialog_login) //绑定已有布局
+                            .show();
+                }
+            }
+        });
+
+        editPercentage.setOnFocusChangeListener(new android.view.View.
+                OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    // 此处为得到焦点时的处理内容
+                } else {
+                    if (!isConfirm && !TextUtils.isEmpty(editPercentage.getText().toString().trim()) && Double.valueOf(editPercentage.getText().toString().trim()) <= 40) {
+                        isConfirm = true;
+                        new XPopup.Builder(EditMerchantsActivity.this)
+                                .asConfirm("", "当前商品折扣过低，请认真查看商家折扣说明再做填写", "", "确定", new OnConfirmListener() {
+                                    @Override
+                                    public void onConfirm() {
+
+                                    }
+                                }, null, true)
+                                .bindLayout(R.layout.layout_dialog_login) //绑定已有布局
+                                .show();
+                    }
+                }
+            }
+        });
     }
 
     @OnClick({R.id.left_button, R.id.imageView1, R.id.imageView2, R.id.ll_discount, R.id.submit, R.id.tvCode, R.id.rl_merchants_type, R.id.rl_merchants_area})
@@ -409,7 +464,6 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
             ToastUtils.showShortToast("折扣比例不能大于100小于0");
             return;
         }
-
         EditMerchantInfo merchantInfo = new EditMerchantInfo();
         if (merchantsModel != null) {
             merchantInfo.setStatus(0);

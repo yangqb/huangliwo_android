@@ -84,6 +84,8 @@ import static com.feitianzhu.huangliwo.shop.ShareShopActivity.GOODS_DATA;
  * 商品详情页面
  */
 public class ShopsDetailActivity extends BaseActivity {
+    private boolean isAddShoppingCart = false;
+    private boolean isBuyGoods = false;
     public static final String GOODS_DETAIL_DATA = "goods_detail_data";
     private StringBuffer sb;
     private StringBuffer valueId;
@@ -342,24 +344,27 @@ public class ShopsDetailActivity extends BaseActivity {
 
     @OnClick({R.id.left_button, R.id.tv_pay, R.id.rl_more_evaluation, R.id.add_shopping_cart, R.id.shopping_cart, R.id.call_phone, R.id.collect, R.id.select_specifications, R.id.right_img, R.id.ll_rebate})
     public void onClick(View view) {
+        Intent intent;
         switch (view.getId()) {
             case R.id.left_button:
                 finish();
                 break;
             case R.id.tv_pay:
+                isBuyGoods = true;
                 if (specifications.size() > 0 && (sb == null || TextUtils.isEmpty(sb.toString()))) {
                     showSpeDialog();
                     return;
+                } else {
+                    intent = new Intent(ShopsDetailActivity.this, ShopPayActivity.class);
+                    if (valueId != null) {
+                        intent.putExtra(ShopPayActivity.GOODS_VALUE_ID, valueId.toString());
+                    }
+                    intent.putExtra(ShopPayActivity.IS_SHOW_ADDRESS, true);
+                    if (goodsListBean != null) {
+                        intent.putExtra(ShopPayActivity.PAY_DATA, goodsListBean);
+                    }
+                    startActivity(intent);
                 }
-                Intent intent = new Intent(ShopsDetailActivity.this, ShopPayActivity.class);
-                if (valueId != null) {
-                    intent.putExtra(ShopPayActivity.GOODS_VALUE_ID, valueId.toString());
-                }
-                intent.putExtra(ShopPayActivity.IS_SHOW_ADDRESS, true);
-                if (goodsListBean != null) {
-                    intent.putExtra(ShopPayActivity.PAY_DATA, goodsListBean);
-                }
-                startActivity(intent);
                 break;
             case R.id.rl_more_evaluation: //更多评论
                 intent = new Intent(ShopsDetailActivity.this, CommentsDetailActivity.class);
@@ -369,7 +374,13 @@ public class ShopsDetailActivity extends BaseActivity {
                 startActivity(intent);
                 break;
             case R.id.add_shopping_cart:
-                addShoppingCart();
+                isAddShoppingCart = true;
+                if (specifications.size() > 0) {
+                    showSpeDialog();
+                    return;
+                } else {
+                    addShoppingCart();
+                }
                 break;
             case R.id.shopping_cart:
                 intent = new Intent(ShopsDetailActivity.this, ShoppingCartActivity.class);
@@ -442,15 +453,27 @@ public class ShopsDetailActivity extends BaseActivity {
                             }
                         }
                         specificationsName.setText("选择了：" + sb.toString());
+                        if (isAddShoppingCart) {
+                            isAddShoppingCart = false;
+                            addShoppingCart();
+                        }
+                        if (isBuyGoods) {
+                            isBuyGoods = false;
+                            Intent intent = new Intent(ShopsDetailActivity.this, ShopPayActivity.class);
+                            if (valueId != null) {
+                                intent.putExtra(ShopPayActivity.GOODS_VALUE_ID, valueId.toString());
+                            }
+                            intent.putExtra(ShopPayActivity.IS_SHOW_ADDRESS, true);
+                            if (goodsListBean != null) {
+                                intent.putExtra(ShopPayActivity.PAY_DATA, goodsListBean);
+                            }
+                            startActivity(intent);
+                        }
                     }
                 }).show();
     }
 
     public void addShoppingCart() {
-        if (specifications.size() > 0 && (sb == null || TextUtils.isEmpty(sb.toString()))) {
-            showSpeDialog();
-            return;
-        }
         AddShoppingCartBody model = new AddShoppingCartBody();
         model.goodsId = goodsId;
         if (valueId != null) {

@@ -75,14 +75,14 @@ public class PlaneDetailAdapter extends BaseMultiItemQuickAdapter<MultiPriceInfo
             } else {
                 helper.setText(R.id.luggage_change_notice, "未配置舱位  退改详情>");
             }
-            helper.setText(R.id.tv_rebate, "返¥" + MathUtils.subZero(String.valueOf(item.venDorsInfo.zk)));
-            helper.setText(R.id.vip_rebate, "返¥" + MathUtils.subZero(String.valueOf(item.venDorsInfo.zk)));
+            helper.setText(R.id.tv_rebate, "返¥" + MathUtils.subZero(String.valueOf(item.venDorsInfo.zk * item.venDorsInfo.barePrice)));
+            helper.setText(R.id.vip_rebate, "返¥" + MathUtils.subZero(String.valueOf(item.venDorsInfo.zk * item.venDorsInfo.barePrice)));
         } else if (helper.getItemViewType() == MultiPriceInfo.INTERNATIONAL_TYPE) {
             setSpannableString(MathUtils.subZero(String.valueOf(item.internationalPriceInfo.price)), helper.getView(R.id.price));
             helper.setText(R.id.cabinCount, "");
             helper.setGone(R.id.cabinCount, false);
-            helper.setText(R.id.tv_rebate, "返¥" + MathUtils.subZero(String.valueOf(item.internationalPriceInfo.zk)));
-            helper.setText(R.id.vip_rebate, "返¥" + MathUtils.subZero(String.valueOf(item.internationalPriceInfo.zk)));
+            helper.setText(R.id.tv_rebate, "返¥" + MathUtils.subZero(String.valueOf(item.internationalPriceInfo.zk * item.internationalPriceInfo.price)));
+            helper.setText(R.id.vip_rebate, "返¥" + MathUtils.subZero(String.valueOf(item.internationalPriceInfo.zk * item.internationalPriceInfo.price)));
             if (item.internationalPriceInfo.cPrice == 0) {
                 if ("economy".equals(item.internationalPriceInfo.cabinLevel)) {
                     helper.setText(R.id.luggage_change_notice, "儿童婴儿不可订经济舱退改¥111>");
@@ -109,8 +109,8 @@ public class PlaneDetailAdapter extends BaseMultiItemQuickAdapter<MultiPriceInfo
             helper.setText(R.id.cabinCount, "");
             helper.setGone(R.id.cabinCount, false);
             helper.setText(R.id.luggage_change_notice, item.goBackVendors.cabinDesc + "  退改详情>");
-            helper.setText(R.id.tv_rebate, "返¥" + MathUtils.subZero(String.valueOf(item.goBackVendors.zk)));
-            helper.setText(R.id.vip_rebate, "返¥" + MathUtils.subZero(String.valueOf(item.goBackVendors.zk)));
+            helper.setText(R.id.tv_rebate, "返¥" + MathUtils.subZero(String.valueOf(item.goBackVendors.zk * item.goBackVendors.barePrice)));
+            helper.setText(R.id.vip_rebate, "返¥" + MathUtils.subZero(String.valueOf(item.goBackVendors.zk * item.goBackVendors.barePrice)));
         }
     }
 

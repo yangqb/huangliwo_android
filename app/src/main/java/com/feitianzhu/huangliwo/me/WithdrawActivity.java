@@ -155,10 +155,10 @@ public class WithdrawActivity extends BaseActivity {
             return;
         }
         double amount = Double.valueOf(editAmount.getText().toString());
-        if (amount < 10) {
+       /* if (amount < 10) {
             ToastUtils.showShortToast("提现金额不能少于10元");
             return;
-        }
+        }*/
         if (amount > balance) {
             ToastUtils.showShortToast("当前余额不足");
             return;
@@ -171,20 +171,24 @@ public class WithdrawActivity extends BaseActivity {
                 /*
                  * 提现
                  * */
-                if (infoModel != null && infoModel.getIsBind() == 1) {
+                if ("wx".equals(channel)) {
                     submit(result.toString());
                 } else {
-                    new XPopup.Builder(WithdrawActivity.this)
-                            .asConfirm("提示", "您未绑定支付宝账号是否现在去绑定？", "关闭", "确定", new OnConfirmListener() {
-                                @Override
-                                public void onConfirm() {
-                                    Intent intent = new Intent(WithdrawActivity.this, BindingAccountActivity.class);
-                                    intent.putExtra(BindingAccountActivity.MINE_INFO, infoModel);
-                                    startActivityForResult(intent, REQUEST_CODE);
-                                }
-                            }, null, false)
-                            .bindLayout(R.layout.layout_dialog) //绑定已有布局
-                            .show();
+                    if (infoModel != null && infoModel.getIsBind() == 1) {
+                        submit(result.toString());
+                    } else {
+                        new XPopup.Builder(WithdrawActivity.this)
+                                .asConfirm("提示", "您未绑定支付宝账号是否现在去绑定？", "关闭", "确定", new OnConfirmListener() {
+                                    @Override
+                                    public void onConfirm() {
+                                        Intent intent = new Intent(WithdrawActivity.this, BindingAccountActivity.class);
+                                        intent.putExtra(BindingAccountActivity.MINE_INFO, infoModel);
+                                        startActivityForResult(intent, REQUEST_CODE);
+                                    }
+                                }, null, false)
+                                .bindLayout(R.layout.layout_dialog) //绑定已有布局
+                                .show();
+                    }
                 }
             }
 

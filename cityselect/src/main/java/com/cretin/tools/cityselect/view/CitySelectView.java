@@ -8,7 +8,9 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -20,6 +22,7 @@ import com.cretin.tools.cityselect.callback.OnLocationListener;
 import com.cretin.tools.cityselect.item.CustomItemDecoration;
 import com.cretin.tools.cityselect.model.CityInfoModel;
 import com.cretin.tools.cityselect.model.CityModel;
+import com.cretin.tools.cityselect.utils.KeyboardUtils;
 import com.github.stuxuhai.jpinyin.ChineseHelper;
 import com.github.stuxuhai.jpinyin.PinyinException;
 import com.github.stuxuhai.jpinyin.PinyinFormat;
@@ -46,6 +49,7 @@ public class CitySelectView extends ConstraintLayout {
     private FastIndexView indexSideView;
     private TextView indexView;
     private String tips;
+    private TextView tvNoDataTips;
     private boolean isShowCityCode;
 
     //data and model
@@ -108,6 +112,7 @@ public class CitySelectView extends ConstraintLayout {
         mainRecyclerView = findViewById(R.id.recyclerView);
         indexSideView = findViewById(R.id.fastIndexView);
         indexView = findViewById(R.id.tv_index);
+        tvNoDataTips = findViewById(R.id.tips);
     }
 
     private void initAdapter() {
@@ -187,6 +192,18 @@ public class CitySelectView extends ConstraintLayout {
                 };
                 timer = new Timer();
                 timer.schedule(timerTask, 500);
+            }
+        });
+
+        edSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    KeyboardUtils.hideKeyboard(edSearch);
+                    search(v.getText().toString());
+                    return true;
+                }
+                return false;
             }
         });
 
@@ -347,6 +364,11 @@ public class CitySelectView extends ConstraintLayout {
                     searchList.add(cityInfoModel);
                 }
             }
+        }
+        if (searchList.size() <= 0) {
+            tvNoDataTips.setVisibility(VISIBLE);
+        } else {
+            tvNoDataTips.setVisibility(GONE);
         }
         list.clear();
         list.addAll(searchList);

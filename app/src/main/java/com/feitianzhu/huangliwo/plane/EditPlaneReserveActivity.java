@@ -633,7 +633,7 @@ public class EditPlaneReserveActivity extends BaseActivity {
                     ToastUtils.showShortToast("请填写纳税人识别号");
                     return;
                 }
-                if (addressBean == null) {
+                if (switchButton.isChecked() && addressBean == null) {
                     ToastUtils.showShortToast("请选择收货地址");
                     return;
                 }

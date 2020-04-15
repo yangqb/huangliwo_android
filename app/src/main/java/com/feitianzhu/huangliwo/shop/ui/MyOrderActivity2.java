@@ -323,13 +323,13 @@ public class MyOrderActivity2 extends BaseActivity {
                             } else if (goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_WAIT_RECEIVING) {
                                 //确认收货
                                 new XPopup.Builder(MyOrderActivity2.this)
-                                        .asConfirm("您已确认商品已收到", "", "关闭", "确定", new OnConfirmListener() {
+                                        .asConfirm("", "请检查货品无破损后点击\"确认收货\"，确认收货后将不能退货", "关闭", "确定", new OnConfirmListener() {
                                             @Override
                                             public void onConfirm() {
                                                 confirm(goodsOrderList.get(position).getOrderNo());
                                             }
                                         }, null, false)
-                                        .bindLayout(R.layout.layout_dialog) //绑定已有布局
+                                        .bindLayout(R.layout.layout_dialog_login) //绑定已有布局
                                         .show();
                             } else if (goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_REFUND
                                     || goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_REFUNDED

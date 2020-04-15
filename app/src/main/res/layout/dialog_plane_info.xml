@@ -159,7 +159,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
-                android:text="去程/第二程"
+                android:text="返程/第二程"
                 android:textColor="@color/color_289cef"
                 android:textSize="15sp" />
 
