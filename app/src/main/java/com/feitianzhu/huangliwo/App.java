@@ -13,6 +13,7 @@ import com.lzy.okgo.cookie.store.DBCookieStore;
 import com.lzy.okgo.https.HttpsUtils;
 import com.mob.MobApplication;
 
+import com.mob.MobSDK;
 import com.scwang.smartrefresh.header.MaterialHeader;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.DefaultRefreshFooterCreator;
@@ -84,6 +85,7 @@ public class App extends MobApplication {
         initOkUtils();
         initOkgo();
         initPush();
+        MobSDK.submitPolicyGrantResult(true, null); //调用位置开发者可以自己制定，只需要在使用SDK功能之前调用即可。该接口必须接入，否则可能造成无法使用MobTech各SDK提供的相关服务。
         AutoSizeConfig.getInstance().setCustomFragment(true);
         CrashReport.initCrashReport(getApplicationContext(), "ad4dea9550", false); //正式发布改为false
         SDKInitializer.initialize(this);

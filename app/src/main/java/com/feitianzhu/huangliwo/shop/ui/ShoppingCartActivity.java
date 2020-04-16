@@ -162,7 +162,7 @@ public class ShoppingCartActivity extends BaseActivity {
                 switch (view.getId()) {
                     case R.id.delete: //删除购物车商品
                         new XPopup.Builder(ShoppingCartActivity.this)
-                                .asConfirm("确定要删除该订单？", "", "取消", "确定", new OnConfirmListener() {
+                                .asConfirm("确定要删除该商品吗？", "", "取消", "确定", new OnConfirmListener() {
                                     @Override
                                     public void onConfirm() {
                                         deleteShoppingCart(shoppingCartModels.get(position).carId);

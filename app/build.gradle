@@ -80,7 +80,7 @@ android {
         applicationId "com.feitianzhu.huangliwo"
         minSdkVersion androidMinSdkVersion
         targetSdkVersion androidTargetSdkVersion
-        versionCode 18
+        versionCode 19
         multiDexEnabled true
         versionName "1.2.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"

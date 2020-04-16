@@ -19,6 +19,7 @@ import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.google.gson.Gson;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.request.base.Request;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -108,6 +109,8 @@ public class DetailedRulesActivity extends BaseActivity {
                 btnBonus.setSelected(true);
                 btnDiscount.setSelected(false);
                 btnEarnings.setSelected(false);
+                resultBeans.clear();
+                adapter.notifyDataSetChanged();
                 initData();
                 break;
             case R.id.btn_discount:
@@ -115,6 +118,8 @@ public class DetailedRulesActivity extends BaseActivity {
                 btnBonus.setSelected(false);
                 btnDiscount.setSelected(true);
                 btnEarnings.setSelected(false);
+                resultBeans.clear();
+                adapter.notifyDataSetChanged();
                 initData();
                 break;
             case R.id.btn_earnings:
@@ -136,7 +141,6 @@ public class DetailedRulesActivity extends BaseActivity {
             adapter.notifyDataSetChanged();
             refreshLayout.finishRefresh();
         } else {
-
             OkGo.<LzyResponse<UserGoodVo>>get(Urls.GET_DETAIL_RULES)
                     .tag(this)
                     .params(Constant.ACCESSTOKEN, token)
@@ -144,8 +148,15 @@ public class DetailedRulesActivity extends BaseActivity {
                     .params("type", type + "")
                     .execute(new JsonCallback<LzyResponse<UserGoodVo>>() {
                         @Override
+                        public void onStart(Request<LzyResponse<UserGoodVo>, ? extends Request> request) {
+                            super.onStart(request);
+                            showloadDialog("");
+                        }
+
+                        @Override
                         public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<UserGoodVo>> response) {
                             super.onSuccess(DetailedRulesActivity.this, response.body().msg, response.body().code);
+                            goneloadDialog();
                             refreshLayout.finishRefresh();
                             if (response.body().code == 0 && response.body().data != null) {
                                 UserGoodVo userGoodVo = response.body().data;
@@ -161,6 +172,7 @@ public class DetailedRulesActivity extends BaseActivity {
                         public void onError(com.lzy.okgo.model.Response<LzyResponse<UserGoodVo>> response) {
                             super.onError(response);
                             refreshLayout.finishRefresh(false);
+                            goneloadDialog();
                         }
                     });
         }

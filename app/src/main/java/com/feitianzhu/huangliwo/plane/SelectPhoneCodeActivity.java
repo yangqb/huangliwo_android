@@ -80,7 +80,7 @@ public class SelectPhoneCodeActivity extends BaseActivity {
                 cnCitySelectView.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        cnCitySelectView.reBindCurrentCity(new CityModel("广州", "10000001"));
+                        cnCitySelectView.reBindCurrentCity(new CityModel("广州", "中国", "10000001"));
                     }
                 }, 2000);
             }
@@ -95,7 +95,7 @@ public class SelectPhoneCodeActivity extends BaseActivity {
         cnStatusLs = new Gson().fromJson(cnJson, jsonType);
         //设置热门城市列表 这都是瞎写的 哈哈哈
         for (int i = 0; i < cnStatusLs.size(); i++) {
-            CityModel cityModel = new CityModel(cnStatusLs.get(i).zh, cnStatusLs.get(i).code);
+            CityModel cityModel = new CityModel(cnStatusLs.get(i).zh, "", cnStatusLs.get(i).code);
             cnAllCitys.add(cityModel);
             /*if (!TextUtils.isEmpty(Constant.mCity)) {
                 if (Constant.mCity.equals(statusLs.get(i).city)) {

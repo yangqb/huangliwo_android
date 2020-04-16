@@ -3,14 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/bg_ffffff_r5"
-    android:paddingLeft="22.5dp"
-    android:paddingRight="22.5dp"
     android:gravity="bottom"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingLeft="22.5dp"
+    android:paddingRight="22.5dp">
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="400dp">
 
     </android.support.v7.widget.RecyclerView>
 

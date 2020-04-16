@@ -19,6 +19,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
+import com.feitianzhu.huangliwo.utils.DoubleUtil;
 import com.feitianzhu.huangliwo.utils.MathUtils;
 import com.itheima.roundedimageview.RoundedImageView;
 
@@ -41,7 +42,7 @@ public class HotGoodsAdapter extends BaseQuickAdapter<BaseGoodsListBean, BaseVie
         Glide.with(mContext).load(item.getGoodsImg())
                 .apply(new RequestOptions().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai).dontAnimate()).into((ImageView) helper.getView(R.id.goodsImg));
         helper.setText(R.id.goodsName, item.getGoodsName());
-        setSpannableString(MathUtils.subZero(String.valueOf(item.getPrice() - item.getRebatePv())), helper.getView(R.id.vip_price));
+        setSpannableString(MathUtils.subZero(String.valueOf(DoubleUtil.sub(item.getPrice(), item.getRebatePv()))), helper.getView(R.id.vip_price));
     }
 
     @SuppressLint("SetTextI18n")

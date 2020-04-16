@@ -64,7 +64,7 @@
   },
   {
     "city": "香港",
-    "country": "香港",
+    "country": "中国香港",
     "countryCode": "HK",
     "egName": "HONG KONG",
     "id": 81,
@@ -289,7 +289,7 @@
   },
   {
     "city": "澳门",
-    "country": "澳门",
+    "country": "中国澳门",
     "countryCode": "MO",
     "egName": "MACAU",
     "id": 357,
@@ -565,15 +565,6 @@
     "id": 755,
     "name": "厦门高崎机场",
     "szm": "XMN"
-  },
-  {
-    "city": "香港(香港直升机场)",
-    "country": "香港",
-    "countryCode": "HK",
-    "egName": "HongKong(HongKongHeliport)",
-    "id": 2059,
-    "name": "香港(香港直升机场)",
-    "szm": "HHP"
   },
   {
     "city": "台中",

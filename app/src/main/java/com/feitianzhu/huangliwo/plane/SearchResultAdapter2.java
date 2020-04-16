@@ -17,6 +17,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.MultiGoBackFlightInfo;
+import com.feitianzhu.huangliwo.utils.DoubleUtil;
 import com.feitianzhu.huangliwo.utils.MathUtils;
 import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 
@@ -64,8 +65,8 @@ public class SearchResultAdapter2 extends BaseMultiItemQuickAdapter<MultiGoBackF
             helper.setText(R.id.back_depAirportName, item.domesticFlight.back.depAirport + item.domesticFlight.back.depTerminal);
             helper.setText(R.id.back_arrAirportName, item.domesticFlight.back.arrAirport + item.domesticFlight.back.arrTerminal);
             helper.setText(R.id.back_flightNum, item.domesticFlight.back.carrierName + item.domesticFlight.back.flightCode);
-            helper.setText(R.id.tv_rebate, "返¥" + MathUtils.subZero(String.valueOf(item.domesticFlight.zk * item.domesticFlight.minBarePrice)));
-            helper.setText(R.id.vip_rebate, "返¥" + MathUtils.subZero(String.valueOf(item.domesticFlight.zk * item.domesticFlight.minBarePrice)));
+            helper.setText(R.id.tv_rebate, "返¥" + MathUtils.subZero(String.valueOf(DoubleUtil.mul(item.domesticFlight.zk, item.domesticFlight.minBarePrice))));
+            helper.setText(R.id.vip_rebate, "返¥" + MathUtils.subZero(String.valueOf(DoubleUtil.mul(item.domesticFlight.zk, item.domesticFlight.minBarePrice))));
             setSpannableString(MathUtils.subZero(String.valueOf(item.domesticFlight.minBarePrice)), helper.getView(R.id.price));
         } else {
             helper.setText(R.id.go_depTime, item.internationalFlight.goTrip.flightSegments.get(0).depTime);
@@ -78,8 +79,8 @@ public class SearchResultAdapter2 extends BaseMultiItemQuickAdapter<MultiGoBackF
             helper.setText(R.id.back_depAirportName, item.internationalFlight.backTrip.flightSegments.get(0).depAirportName);
             helper.setText(R.id.back_arrAirportName, item.internationalFlight.backTrip.flightSegments.get(item.internationalFlight.backTrip.flightSegments.size() - 1).arrAirportName);
             helper.setText(R.id.back_flightNum, item.internationalFlight.backTrip.flightSegments.get(0).carrierShortName + item.internationalFlight.backTrip.flightSegments.get(0).flightNum);
-            helper.setText(R.id.tv_rebate, "返¥" + MathUtils.subZero(String.valueOf(item.internationalFlight.zk * item.internationalFlight.price)));
-            helper.setText(R.id.vip_rebate, "返¥" + MathUtils.subZero(String.valueOf(item.internationalFlight.zk * item.internationalFlight.price)));
+            helper.setText(R.id.tv_rebate, "返¥" + MathUtils.subZero(String.valueOf(DoubleUtil.mul(item.internationalFlight.zk, item.internationalFlight.price))));
+            helper.setText(R.id.vip_rebate, "返¥" + MathUtils.subZero(String.valueOf(DoubleUtil.mul(item.internationalFlight.zk, item.internationalFlight.price))));
             setSpannableString(MathUtils.subZero(String.valueOf(item.internationalFlight.price)), helper.getView(R.id.price));
         }
 

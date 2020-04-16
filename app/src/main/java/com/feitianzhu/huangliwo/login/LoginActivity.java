@@ -24,6 +24,7 @@ import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.PayInfo;
 import com.feitianzhu.huangliwo.model.WXLoginInfo;
 import com.feitianzhu.huangliwo.model.WXLoginModel;
+import com.feitianzhu.huangliwo.model.WXUserInfo;
 import com.feitianzhu.huangliwo.shop.ShopPayActivity;
 import com.feitianzhu.huangliwo.shop.ui.OrderDetailActivity;
 import com.feitianzhu.huangliwo.utils.EncryptUtils;
@@ -256,7 +257,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 .execute(new JsonCallback<WXLoginModel>() {
                     @Override
                     public void onSuccess(Response<WXLoginModel> response) {
-                        wxLogin(response.body());
+                        if (response.body().errcode == null) {
+                            getWXUserInfo(response.body());
+                        } else {
+                            ToastUtils.showShortToast(response.body().errmsg);
+                        }
                     }
 
                     @Override
@@ -267,14 +272,38 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     }
 
-    public void wxLogin(WXLoginModel loginModel) {
-        String json = new Gson().toJson(loginModel);
+    public void getWXUserInfo(WXLoginModel wxLoginModel) {
+        OkGo.<WXUserInfo>get("https://api.weixin.qq.com/sns/userinfo")
+                .tag(this)
+                .params("access_token", wxLoginModel.access_token)
+                .params("openid", wxLoginModel.openid)
+                // .params("lang")//国家地区语言版本，zh_CN 简体，zh_TW 繁体，en 英语，默认为 zh-CN
+                .execute(new JsonCallback<WXUserInfo>() {
+                    @Override
+                    public void onSuccess(Response<WXUserInfo> response) {
+                        if (response.body().errcode == null) {
+                            wxLogin(response.body());
+                        } else {
+                            ToastUtils.showShortToast(response.body().errmsg);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<WXUserInfo> response) {
+                        super.onError(response);
+                    }
+                });
+    }
+
+    public void wxLogin(WXUserInfo userInfo) {
+        String json = new Gson().toJson(userInfo);
         OkGo.<LzyResponse<WXLoginInfo>>post(Urls.WX_LOGIN)
                 .tag(this)
                 .params("loginUserInfo", json)
                 .execute(new JsonCallback<LzyResponse<WXLoginInfo>>() {
                     @Override
                     public void onSuccess(Response<LzyResponse<WXLoginInfo>> response) {
+                        super.onSuccess(LoginActivity.this, response.body().msg, response.body().code);
                         if (response.body().code == 0) {
                             if (response.body().data.isBindPhone == 0) {
                                 Intent intent = new Intent(LoginActivity.this, WXBindingActivity.class);

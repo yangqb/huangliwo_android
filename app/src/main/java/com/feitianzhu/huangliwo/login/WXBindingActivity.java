@@ -130,6 +130,7 @@ public class WXBindingActivity extends BaseActivity {
                 .execute(new JsonCallback<LzyResponse<WXLoginInfo>>() {
                     @Override
                     public void onSuccess(Response<LzyResponse<WXLoginInfo>> response) {
+                        super.onSuccess(WXBindingActivity.this, response.body().msg, response.body().code);
                         if (response.body().code == 0 && response.body().data != null) {
                             Constant.PHONE = phone;
                             SPUtils.putString(WXBindingActivity.this, Constant.SP_PHONE, phone);

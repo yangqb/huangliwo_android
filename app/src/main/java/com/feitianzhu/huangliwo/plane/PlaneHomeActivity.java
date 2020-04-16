@@ -243,7 +243,7 @@ public class PlaneHomeActivity extends BaseActivity {
                     return;
                 }
                 if (searchType == 1 || searchType == 3) {
-                    ToastUtils.showShortToast("暂不支持国际业务");
+                    ToastUtils.showShortToast("疫情期间暂不支持国际/中国港澳台业务");
                     return;
                 }
                 CustomFightCityInfo customFightCityInfo = new CustomFightCityInfo();

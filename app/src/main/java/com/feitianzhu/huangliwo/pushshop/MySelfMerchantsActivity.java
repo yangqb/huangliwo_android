@@ -185,7 +185,8 @@ public class MySelfMerchantsActivity extends BaseActivity {
                         if (response.body().code == 0) {
                             new QBadgeView(MySelfMerchantsActivity.this)
                                     .bindTarget(llMerchantsOrder).setGravityOffset(15, 15, true)
-                                    .setBadgeNumber(response.body().data);
+                                    //.setBadgeNumber(response.body().data);
+                                    .setBadgeNumber(18);
 
                         }
                     }
@@ -200,7 +201,7 @@ public class MySelfMerchantsActivity extends BaseActivity {
     }
 
     @OnClick({R.id.left_button, R.id.right_button, R.id.myMerchantDetail, R.id.merchants_order, R.id.myMerchantList, R.id.feedback, R.id.detailed_rules, R.id.btn_withdrawal, R.id.protocol, R.id.withdrawCount
-            , R.id.up_SetMeal, R.id.up_gift, R.id.ll_investment, R.id.ll_propaganda})
+            , R.id.up_SetMeal, R.id.up_gift})
     public void onClick(View view) {
         Intent intent;
         switch (view.getId()) {
@@ -237,12 +238,12 @@ public class MySelfMerchantsActivity extends BaseActivity {
                 intent.putExtra(SetMealListActivity.MERCHANTS_ID, merchantsList.get(selectPos).getMerchantId());
                 startActivity(intent);
                 break;
-            case R.id.ll_investment:
+            /*case R.id.ll_investment:
                 ToastUtils.showShortToast("敬请期待");
                 break;
             case R.id.ll_propaganda:
                 ToastUtils.showShortToast("敬请期待");
-                break;
+                break;*/
             case R.id.feedback:
                 startActivity(new Intent(MySelfMerchantsActivity.this, ProblemFeedbackActivity.class));
                 break;

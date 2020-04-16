@@ -351,7 +351,7 @@ public class ShopsDetailActivity extends BaseActivity {
                 break;
             case R.id.tv_pay:
                 isBuyGoods = true;
-                if (specifications.size() > 0 && (sb == null || TextUtils.isEmpty(sb.toString()))) {
+                if (specifications.size() > 0) {
                     showSpeDialog();
                     return;
                 } else {

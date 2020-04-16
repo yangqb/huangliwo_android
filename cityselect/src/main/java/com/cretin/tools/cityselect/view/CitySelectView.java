@@ -145,7 +145,7 @@ public class CitySelectView extends ConstraintLayout {
             @Override
             public void onItemClick(CityInfoModel cityInfoModel) {
                 if (citySelectListener != null) {
-                    citySelectListener.onCitySelect(new CityModel(cityInfoModel.getCityName(), cityInfoModel.getExtra()));
+                    citySelectListener.onCitySelect(new CityModel(cityInfoModel.getCityName(), cityInfoModel.getCountry(), cityInfoModel.getExtra()));
                 }
             }
         });
@@ -263,7 +263,7 @@ public class CitySelectView extends ConstraintLayout {
             for (CityModel cityModel : allCity) {
                 try {
                     String pingYin = PinyinHelper.convertToPinyinString(cityModel.getCityName(), " ", PinyinFormat.WITHOUT_TONE);
-                    cacheList.add(new CityInfoModel(CityInfoModel.TYPE_NORMAL, cityModel.getCityName(), pingYin.substring(0, 1), pingYin, cityModel.getExtra()));
+                    cacheList.add(new CityInfoModel(CityInfoModel.TYPE_NORMAL, cityModel.getCityName(), cityModel.getCountryName(), pingYin.substring(0, 1), pingYin, cityModel.getExtra()));
                 } catch (PinyinException e) {
                     e.printStackTrace();
                 }
@@ -279,15 +279,15 @@ public class CitySelectView extends ConstraintLayout {
             if (hotCity != null) {
                 List<CityInfoModel> hotList = new ArrayList<>();
                 for (CityModel cityModel : hotCity) {
-                    hotList.add(new CityInfoModel(0, cityModel.getCityName(), "", "", cityModel.getExtra()));
+                    hotList.add(new CityInfoModel(0, cityModel.getCityName(), cityModel.getCountryName(), "", "", cityModel.getExtra()));
                 }
 
                 mainAdapter.bindHotCity(hotList);
-                cacheList.add(0, new CityInfoModel(CityInfoModel.TYPE_HOT, "", "#", "热门城市", "hot"));
+                cacheList.add(0, new CityInfoModel(CityInfoModel.TYPE_HOT, "", "", "#", "热门城市", "hot"));
             }
 
             if (currentCity != null)
-                cacheList.add(0, new CityInfoModel(CityInfoModel.TYPE_CURRENT, currentCity.getCityName(), "*", "当前定位城市", currentCity.getExtra()));
+                cacheList.add(0, new CityInfoModel(CityInfoModel.TYPE_CURRENT, currentCity.getCityName(), currentCity.getCountryName(), "*", "当前定位城市", currentCity.getExtra()));
 
             this.list.clear();
             this.list.addAll(cacheList);

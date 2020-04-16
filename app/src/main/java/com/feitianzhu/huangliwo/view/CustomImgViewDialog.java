@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -34,6 +35,7 @@ import butterknife.BindView;
  */
 public class CustomImgViewDialog extends Dialog {
     private Context context;
+    protected MaterialDialog mDialog;
     private String url;
     private String title = "";
 

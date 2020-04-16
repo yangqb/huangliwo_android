@@ -14,13 +14,23 @@ import java.io.Serializable;
 public class CityModel implements Serializable {
     private String cityName;
     private Object extra;
+    private String countryName;
+
+    public String getCountryName() {
+        return countryName;
+    }
+
+    public void setCountryName(String countryName) {
+        this.countryName = countryName;
+    }
 
     public CityModel() {
     }
 
-    public CityModel(String cityName, Object extra) {
+    public CityModel(String cityName, String countryName, Object extra) {
         this.cityName = cityName;
         this.extra = extra;
+        this.countryName = countryName;
     }
 
     public String getCityName() {

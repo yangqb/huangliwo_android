@@ -10,6 +10,8 @@ import java.io.Serializable;
  * email: 694125155@qq.com
  */
 public class WXLoginModel implements Serializable {
+    public String errcode;//": 40029,
+    public String errmsg;//": "invalid code"
     public String access_token;//": "ACCESS_TOKEN",
     public String expires_in;//": 7200,
     public String refresh_token;//": "REFRESH_TOKEN",

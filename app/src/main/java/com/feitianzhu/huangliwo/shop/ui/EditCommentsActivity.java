@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -246,7 +248,7 @@ public class EditCommentsActivity extends BaseActivity {
                         .tag(this);
                 if (fileList.size() > 0) {
                     postRequest.addFileParams("files", fileList);
-                }else {
+                } else {
                     postRequest.isMultipart(true);
                 }
                 postRequest.params(ACCESSTOKEN, token)

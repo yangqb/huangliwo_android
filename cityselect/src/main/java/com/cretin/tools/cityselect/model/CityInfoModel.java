@@ -13,6 +13,7 @@ public class CityInfoModel {
 
     private int type;
     private String cityName;//用于显示的城市的名字
+    private String country; //用于显示的国家的名字
     private String sortId;//用于排序的id 在这里是城市拼音的首字母
     private String sortName;//用于排序的全拼音 这个是用于后面的排序以及搜索
     private Object extra;//附加参数 比如 一般来说 城市都有对应的一个id 可以存储在这里
@@ -21,12 +22,21 @@ public class CityInfoModel {
 
     }
 
-    public CityInfoModel(int type, String cityName, String sortId, String sortName, Object extra) {
+    public CityInfoModel(int type, String cityName, String country, String sortId, String sortName, Object extra) {
         this.type = type;
         this.cityName = cityName;
         this.sortId = sortId;
         this.sortName = sortName;
         this.extra = extra;
+        this.country = country;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 
     public CityInfoModel(int type) {

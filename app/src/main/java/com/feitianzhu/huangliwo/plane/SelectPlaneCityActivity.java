@@ -87,6 +87,9 @@ public class SelectPlaneCityActivity extends BaseActivity {
             @Override
             public void onCitySelect(CityModel cityModel) {
                 //Toast.makeText(SelectPlaneCityActivity.this, "你点击了：" + cityModel.getCityName() + ":" + cityModel.getExtra().toString(), Toast.LENGTH_SHORT).show();
+                if ("中国香港".equals(cityModel.getCountryName()) || "中国澳门".equals(cityModel.getCountryName()) || "中国台湾".equals(cityModel.getCountryName())) {
+                    type = 1;
+                }
                 Intent intent = new Intent();
                 intent.putExtra(CITY_TYPE, type);
                 intent.putExtra(CITY_DATA, cityModel);
@@ -106,6 +109,9 @@ public class SelectPlaneCityActivity extends BaseActivity {
             @Override
             public void onCitySelect(CityModel cityModel) {
                 //Toast.makeText(SelectPlaneCityActivity.this, "你点击了：" + cityModel.getCityName() + ":" + cityModel.getExtra().toString(), Toast.LENGTH_SHORT).show();
+                if ("中国香港".equals(cityModel.getCountryName()) || "中国澳门".equals(cityModel.getCountryName()) || "中国台湾".equals(cityModel.getCountryName())) {
+                    type = 1;
+                }
                 Intent intent = new Intent();
                 intent.putExtra(CITY_TYPE, type);
                 intent.putExtra(CITY_DATA, cityModel);
@@ -129,7 +135,7 @@ public class SelectPlaneCityActivity extends BaseActivity {
                 cnCitySelectView.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        cnCitySelectView.reBindCurrentCity(new CityModel("广州", "10000001"));
+                        cnCitySelectView.reBindCurrentCity(new CityModel("广州", "中国", "10000001"));
                     }
                 }, 2000);
             }
@@ -143,7 +149,7 @@ public class SelectPlaneCityActivity extends BaseActivity {
                 interCitySelectView.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        interCitySelectView.reBindCurrentCity(new CityModel("广州", "10000001"));
+                        interCitySelectView.reBindCurrentCity(new CityModel("广州", "中国", "10000001"));
                     }
                 }, 2000);
             }
@@ -157,7 +163,7 @@ public class SelectPlaneCityActivity extends BaseActivity {
         cnStatusLs = new Gson().fromJson(cnJson, jsonType);
         //设置热门城市列表 这都是瞎写的 哈哈哈
         for (int i = 0; i < cnStatusLs.size(); i++) {
-            CityModel cityModel = new CityModel(cnStatusLs.get(i).city, cnStatusLs.get(i).szm);
+            CityModel cityModel = new CityModel(cnStatusLs.get(i).city, cnStatusLs.get(i).country, cnStatusLs.get(i).szm);
             cnAllCitys.add(cityModel);
             if ("北京".equals(cnStatusLs.get(i).city) || "上海".equals(cnStatusLs.get(i).city) || "广州".equals(cnStatusLs.get(i).city) || "深圳".equals(cnStatusLs.get(i).city) || "武汉".equals(cnStatusLs.get(i).city)) {
                 cnHotCitys.add(cityModel);
@@ -185,7 +191,7 @@ public class SelectPlaneCityActivity extends BaseActivity {
         interStatusLs = new Gson().fromJson(interJson, jsonType);
         //设置热门城市列表 这都是瞎写的 哈哈哈
         for (int i = 0; i < interStatusLs.size(); i++) {
-            CityModel cityModel = new CityModel(interStatusLs.get(i).city, interStatusLs.get(i).szm);
+            CityModel cityModel = new CityModel(interStatusLs.get(i).city, interStatusLs.get(i).country, interStatusLs.get(i).szm);
             interAllCitys.add(cityModel);
 
             if (interStatusLs.get(i).id == 5391 || interStatusLs.get(i).id == 47 ||

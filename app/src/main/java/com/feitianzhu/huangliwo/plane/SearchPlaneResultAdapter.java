@@ -20,6 +20,7 @@ import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.MultipleGoSearchFightInfo;
 import com.feitianzhu.huangliwo.model.SearchFlightModel;
 import com.feitianzhu.huangliwo.utils.DateUtils;
+import com.feitianzhu.huangliwo.utils.DoubleUtil;
 import com.feitianzhu.huangliwo.utils.MathUtils;
 import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 
@@ -75,11 +76,11 @@ public class SearchPlaneResultAdapter extends BaseMultiItemQuickAdapter<Multiple
                 helper.setText(R.id.cprice, "儿童¥" + MathUtils.subZero(String.valueOf(item.flightModel.childPrice)));
             }
 
-            helper.setText(R.id.tv_rebate, "返¥" + MathUtils.subZero(String.valueOf(item.flightModel.zk * item.flightModel.barePrice)));
-            helper.setText(R.id.vip_rebate, "返¥" + MathUtils.subZero(String.valueOf(item.flightModel.zk * item.flightModel.barePrice)));
+            helper.setText(R.id.tv_rebate, "返¥" + MathUtils.subZero(String.valueOf(DoubleUtil.mul(item.flightModel.zk, item.flightModel.barePrice))));
+            helper.setText(R.id.vip_rebate, "返¥" + MathUtils.subZero(String.valueOf(DoubleUtil.mul(item.flightModel.zk, item.flightModel.barePrice))));
         } else {
-            helper.setText(R.id.tv_rebate, "返¥" + MathUtils.subZero(String.valueOf(item.internationalFlightModel.zk * item.internationalFlightModel.price)));
-            helper.setText(R.id.vip_rebate, "返¥" + MathUtils.subZero(String.valueOf(item.internationalFlightModel.zk * item.internationalFlightModel.price)));
+            helper.setText(R.id.tv_rebate, "返¥" + MathUtils.subZero(String.valueOf(DoubleUtil.mul(item.internationalFlightModel.zk, item.internationalFlightModel.price))));
+            helper.setText(R.id.vip_rebate, "返¥" + MathUtils.subZero(String.valueOf(DoubleUtil.mul(item.internationalFlightModel.zk, item.internationalFlightModel.price))));
             if (item.internationalFlightModel.goTrip.transitCities != null && item.internationalFlightModel.goTrip.transitCities.size() > 0) {
                 helper.setVisible(R.id.stopCity, true);
                 setSpannableString2(item.internationalFlightModel.goTrip.transitCities.get(0).transitCityName, helper.getView(R.id.stopCity));
