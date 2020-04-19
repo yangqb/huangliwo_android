@@ -24,17 +24,15 @@ import com.feitianzhu.huangliwo.model.InterOrderDetailInfo;
 import com.feitianzhu.huangliwo.model.PayModel;
 import com.feitianzhu.huangliwo.model.PlaneOrderModel;
 import com.feitianzhu.huangliwo.model.PlaneOrderStatus;
-import com.feitianzhu.huangliwo.model.RefundChangeInfo;
 import com.feitianzhu.huangliwo.utils.DateUtils;
 import com.feitianzhu.huangliwo.utils.MathUtils;
 import com.feitianzhu.huangliwo.utils.PayUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
-import com.feitianzhu.huangliwo.view.CustomCancelChangePopView;
 import com.feitianzhu.huangliwo.view.CustomPayView;
 import com.feitianzhu.huangliwo.view.CustomTotalPriceInfoView;
 import com.google.gson.Gson;
+import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
@@ -416,7 +414,7 @@ public class PlaneOrderDetailActivity extends BaseActivity {
                     intent.putExtra(PlaneReimbursementActivity.ORDER_DATA, docOrderDetailInfo);
                     startActivity(intent);
                 } else {
-                    ToastUtils.showShortToast("当前订单状态报销请联系客服");
+                    ToastUtils.show("当前订单状态报销请联系客服");
                 }
                 break;
             case R.id.btn_refund:
@@ -426,7 +424,7 @@ public class PlaneOrderDetailActivity extends BaseActivity {
                     intent.putExtra(RefundPlaneTicketActivity.ORDER_DATA, docOrderDetailInfo);
                     startActivity(intent);
                 } else {
-                    ToastUtils.showShortToast("当前订单状态不可退票");
+                    ToastUtils.show("当前订单状态不可退票");
                 }
                 break;
             case R.id.btn_change:
@@ -510,13 +508,13 @@ public class PlaneOrderDetailActivity extends BaseActivity {
         PayUtils.aliPay(PlaneOrderDetailActivity.this, payProof, new onConnectionFinishLinstener() {
             @Override
             public void onSuccess(int code, Object result) {
-                ToastUtils.showShortToast("支付成功");
+                ToastUtils.show("支付成功");
                 finish();
             }
 
             @Override
             public void onFail(int code, String result) {
-                ToastUtils.showShortToast("支付失败");
+                ToastUtils.show("支付失败");
             }
         });
     }

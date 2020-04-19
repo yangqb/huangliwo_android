@@ -43,6 +43,15 @@ public class HotGoodsAdapter extends BaseQuickAdapter<BaseGoodsListBean, BaseVie
                 .apply(new RequestOptions().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai).dontAnimate()).into((ImageView) helper.getView(R.id.goodsImg));
         helper.setText(R.id.goodsName, item.getGoodsName());
         setSpannableString(MathUtils.subZero(String.valueOf(DoubleUtil.sub(item.getPrice(), item.getRebatePv()))), helper.getView(R.id.vip_price));
+        if (helper.getAdapterPosition() == 0) {
+            helper.setBackgroundRes(R.id.item, R.drawable.shape_hot_one);
+        } else if (helper.getAdapterPosition() == 1) {
+            helper.setBackgroundRes(R.id.item, R.drawable.shape_hot_two);
+        } else if (helper.getAdapterPosition() == 2) {
+            helper.setBackgroundRes(R.id.item, R.drawable.shape_hot_three);
+        } else {
+            helper.setBackgroundRes(R.id.item, R.drawable.shape_hot_four);
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -51,11 +60,11 @@ public class HotGoodsAdapter extends BaseQuickAdapter<BaseGoodsListBean, BaseVie
         view.setText("");
         SpannableString span1 = new SpannableString(str1);
         SpannableString span3 = new SpannableString(str3);
-        ForegroundColorSpan colorSpan1 = new ForegroundColorSpan(Color.parseColor("#F88D03"));
+        ForegroundColorSpan colorSpan1 = new ForegroundColorSpan(Color.parseColor("#FE522B"));
         span1.setSpan(new AbsoluteSizeSpan(11, true), 0, str1.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         span1.setSpan(colorSpan1, 0, str1.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 
-        ForegroundColorSpan colorSpan3 = new ForegroundColorSpan(Color.parseColor("#F88D03"));
+        ForegroundColorSpan colorSpan3 = new ForegroundColorSpan(Color.parseColor("#FE522B"));
         span3.setSpan(new AbsoluteSizeSpan(14, true), 0, str3.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         span3.setSpan(new StyleSpan(Typeface.BOLD), 0, str3.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         span3.setSpan(colorSpan3, 0, str3.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);

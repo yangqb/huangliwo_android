@@ -24,7 +24,7 @@ import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.huangliwo.model.ShopsInfo;
 import com.feitianzhu.huangliwo.shop.ShopDao;
 import com.feitianzhu.huangliwo.utils.MapUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
+import com.hjq.toast.ToastUtils;
 import com.socks.library.KLog;
 
 import static com.feitianzhu.huangliwo.common.Constant.FailCode;
@@ -148,7 +148,7 @@ public class ShopsSellerFragment extends Fragment {
 
             @Override
             public void onFail(int code, String result) {
-                ToastUtils.showShortToast(result);
+                ToastUtils.show(result);
             }
         });
     }
@@ -196,12 +196,12 @@ public class ShopsSellerFragment extends Fragment {
                                 + "&dev=0");
                         startActivity(intent);
                     } catch (Exception e) {
-                        ToastUtils.showShortToast("您尚未安装高德地图");
+                        ToastUtils.show("您尚未安装高德地图");
 //            e.printStackTrace();
                     }
                 } else {
                     try {
-                        ToastUtils.showShortToast("您尚未安装高德地图");
+                        ToastUtils.show("您尚未安装高德地图");
                         Uri uri = Uri.parse("market://details?id=com.autonavi.minimap");
                         intent = new Intent(Intent.ACTION_VIEW, uri);
                         startActivity(intent);
@@ -244,14 +244,14 @@ public class ShopsSellerFragment extends Fragment {
                                 + "#Intent;scheme=bdapp;package=com.baidu.BaiduMap;end");
                         getActivity().startActivity(intent); //启动调用
                     } catch (Exception e) {
-                        ToastUtils.showShortToast("您尚未安装百度地图");
+                        ToastUtils.show("您尚未安装百度地图");
                         Log.e("intent", e.getMessage());
                     }
                 } else {//未安装
                     //market为路径，id为包名
                     //显示手机上所有的market商店
                     try {
-                        ToastUtils.showShortToast("您尚未安装百度地图");
+                        ToastUtils.show("您尚未安装百度地图");
                         Uri uri = Uri.parse("market://details?id=com.baidu.BaiduMap");
                         intent = new Intent(Intent.ACTION_VIEW, uri);
                         startActivity(intent);

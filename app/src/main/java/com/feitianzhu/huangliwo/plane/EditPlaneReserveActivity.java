@@ -39,7 +39,6 @@ import com.feitianzhu.huangliwo.model.CustomPlaneDetailInfo;
 import com.feitianzhu.huangliwo.model.CustomPriceDetailInfo;
 import com.feitianzhu.huangliwo.model.DocBookingPriceTagInfo;
 import com.feitianzhu.huangliwo.model.DocGoBackCreateOrderInfo;
-import com.feitianzhu.huangliwo.model.DocGoBackCreateOrderModel;
 import com.feitianzhu.huangliwo.model.DocPassengerInfo;
 import com.feitianzhu.huangliwo.model.DocResultBookingInfo;
 import com.feitianzhu.huangliwo.model.GoBackBaggageRuleInfo;
@@ -54,14 +53,12 @@ import com.feitianzhu.huangliwo.model.PayModel;
 import com.feitianzhu.huangliwo.model.RefundChangeInfo;
 import com.feitianzhu.huangliwo.model.ReimbursementModel;
 import com.feitianzhu.huangliwo.model.UserClientInfo;
-import com.feitianzhu.huangliwo.shop.SettlementShoppingCartActivity;
-import com.feitianzhu.huangliwo.sidebar.AreaSelectActivity;
 import com.feitianzhu.huangliwo.utils.DateUtils;
 import com.feitianzhu.huangliwo.utils.MathUtils;
 import com.feitianzhu.huangliwo.utils.PayUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.SoftKeyBoardListener;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
+import com.feitianzhu.huangliwo.utils.StringUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.view.CustomCancelChangePopView;
 import com.feitianzhu.huangliwo.view.CustomLuggageBuyTicketNoticeView;
@@ -74,6 +71,7 @@ import com.feitianzhu.huangliwo.view.CustomTicketPriceDetailView;
 import com.feitianzhu.huangliwo.view.CustomTotalPriceInfoView;
 import com.feitianzhu.huangliwo.view.SwitchButton;
 import com.google.gson.Gson;
+import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
@@ -617,24 +615,33 @@ public class EditPlaneReserveActivity extends BaseActivity {
                 break;
             case R.id.btn_submit:
                 if (list.size() == 0) {
-                    ToastUtils.showShortToast("请选择乘机人");
+                    ToastUtils.show("请选择乘机人");
                     return;
                 }
-                if (TextUtils.isEmpty(contactName.getText().toString().trim()) || TextUtils.isEmpty(contactPhone.getText().toString().trim())) {
-                    ToastUtils.showShortToast("请填写完整的联系人信息");
+                if (TextUtils.isEmpty(contactName.getText().toString().trim())) {
+                    ToastUtils.show("请填写联系人姓名");
                     return;
+                }
+                if (TextUtils.isEmpty(contactPhone.getText().toString().trim())) {
+                    ToastUtils.show("请填写联系人电话");
+                    return;
+                } else {
+                    if (!StringUtils.isPhone(contactPhone.getText().toString().trim())) {
+                        ToastUtils.show("请填写正确的联系人电话");
+                        return;
+                    }
                 }
 
                 if ((invoicePosition == 1 || invoicePosition == 3 || invoicePosition == 4) && TextUtils.isEmpty(editInvoiceTitle.getText().toString().trim())) {
-                    ToastUtils.showShortToast("请填写发票抬头");
+                    ToastUtils.show("请填写发票抬头");
                     return;
                 }
                 if (invoicePosition == 1 || invoicePosition == 3 && TextUtils.isEmpty(editNum.getText().toString().trim())) {
-                    ToastUtils.showShortToast("请填写纳税人识别号");
+                    ToastUtils.show("请填写纳税人识别号");
                     return;
                 }
                 if (switchButton.isChecked() && addressBean == null) {
-                    ToastUtils.showShortToast("请选择收货地址");
+                    ToastUtils.show("请选择收货地址");
                     return;
                 }
 
@@ -645,7 +652,7 @@ public class EditPlaneReserveActivity extends BaseActivity {
                             .bindLayout(R.layout.layout_dialog) //绑定已有布局
                             .show();
                 } else if (priceDetailInfo.num > 0 && priceDetailInfo.cnum > priceDetailInfo.num * 2) {
-                    ToastUtils.showShortToast("一名成人最多携带2名儿童");
+                    ToastUtils.show("一名成人最多携带2名儿童");
                 } else {
                     if (type == 0 || type == 2) {
                         docSubmit();
@@ -657,7 +664,7 @@ public class EditPlaneReserveActivity extends BaseActivity {
                 break;
             case R.id.priceInfo:
                 if (list.size() == 0) {
-                    ToastUtils.showShortToast("请选择乘机人");
+                    ToastUtils.show("请选择乘机人");
                 } else {
                     new XPopup.Builder(this)
                             .enableDrag(false)
@@ -869,7 +876,7 @@ public class EditPlaneReserveActivity extends BaseActivity {
         }
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).ageType == 1 && babyTagInfo == null) {
-                ToastUtils.showShortToast("不支持儿童生单");
+                ToastUtils.show("不支持儿童生单");
                 return;
             }
         }
@@ -1017,7 +1024,7 @@ public class EditPlaneReserveActivity extends BaseActivity {
                     public void onSuccess(Response<PlaneResponse> response) {
                         super.onSuccess(EditPlaneReserveActivity.this, response.body().message, response.body().code);
                         if (response.body().code == 0) {
-                            ToastUtils.showShortToast(response.body().message);
+                            ToastUtils.show(response.body().message);
                         }
                     }
 
@@ -1168,13 +1175,13 @@ public class EditPlaneReserveActivity extends BaseActivity {
         PayUtils.aliPay(EditPlaneReserveActivity.this, payProof, new onConnectionFinishLinstener() {
             @Override
             public void onSuccess(int code, Object result) {
-                ToastUtils.showShortToast("支付成功");
+                ToastUtils.show("支付成功");
                 finish();
             }
 
             @Override
             public void onFail(int code, String result) {
-                ToastUtils.showShortToast("支付失败");
+                ToastUtils.show("支付失败");
             }
         });
     }

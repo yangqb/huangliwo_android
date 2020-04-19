@@ -1,17 +1,28 @@
 package com.feitianzhu.huangliwo.vip;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.FutureTarget;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.SizeReadyCallback;
+import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.transition.Transition;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.LazyWebActivity;
@@ -20,38 +31,32 @@ import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.me.ui.VerificationActivity2;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
-import com.feitianzhu.huangliwo.model.PresentsModel;
 import com.feitianzhu.huangliwo.model.VipGifListInfo;
-import com.feitianzhu.huangliwo.plane.EditPlaneReserveActivity;
-import com.feitianzhu.huangliwo.pushshop.EditMerchantsActivity;
-import com.feitianzhu.huangliwo.pushshop.MySelfMerchantsActivity;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsClassifyModel;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.utils.UserInfoUtils;
+import com.feitianzhu.huangliwo.view.CustomClassificationView;
 import com.feitianzhu.huangliwo.view.CustomImgViewDialog;
-import com.feitianzhu.huangliwo.view.CustomPlaneProtocolDialog;
-import com.feitianzhu.huangliwo.view.CustomRefundView;
-import com.google.gson.Gson;
 import com.gyf.immersionbar.ImmersionBar;
+import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
+import com.lxj.xpopup.impl.LoadingPopupView;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.base.Request;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.Callback;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
+import java.util.concurrent.ExecutionException;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import okhttp3.Call;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.huangliwo.common.Constant.USERID;
@@ -91,9 +96,12 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
     RecyclerView recyclerView2;
     @BindView(R.id.presentsTitle)
     TextView presentsTitle;
+    @BindView(R.id.ll_gifts_presents)
+    LinearLayout llGiftsPresents;
     private String token;
     private String userId;
     private List<MerchantsClassifyModel.ListBean> listBean;
+    private Dialog dialog;
 
     @Override
     protected int getLayoutId() {
@@ -154,7 +162,7 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
                 String content = "赠品项目不断增加，所有新增赠品项目新老会员均可领取一次，到店消费。";
                 new XPopup.Builder(this)
                         .asConfirm("", content, "", "确定", null, null, true)
-                        .bindLayout(R.layout.layout_dialog) //绑定已有布局
+                        .bindLayout(R.layout.layout_dialog_login) //绑定已有布局
                         .show();
                 break;
             case R.id.more_vip:
@@ -178,7 +186,7 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
                     startActivityForResult(intent, REQUEST_CODE);
                 }*/
                 if (selectPresentPos == -1) {
-                    ToastUtils.showShortToast("请选择您想要的赠品");
+                    ToastUtils.show("请选择您想要的赠品");
                 } else {
                     intent = new Intent(VipActivity.this, VipUpgradeActivity.class);
                     intent.putExtra(VipUpgradeActivity.PRESENT_ID, presentsList.get(selectPresentPos).giftId);
@@ -200,9 +208,9 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
                     }
                     strings.add(0, "全部");
                     new XPopup.Builder(this)
-                            .asCustom(new CustomRefundView(VipActivity.this)
+                            .asCustom(new CustomClassificationView(VipActivity.this)
                                     .setData(strings)
-                                    .setOnItemClickListener(new CustomRefundView.OnItemClickListener() {
+                                    .setOnItemClickListener(new CustomClassificationView.OnItemClickListener() {
                                         @Override
                                         public void onItemClick(int position) {
                                             if (position == 0) {
@@ -236,10 +244,15 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
             public void onItemChildClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
                 if (UserInfoUtils.getUserInfo(VipActivity.this).getAccountType() != 0) {
                     if (shopGiftList.get(i).isGet == 0) {
+                        shopGiftList.get(i).isGet = 1;
+                        //adapter.setNewData(shopGiftList);
+                        adapter.notifyItemChanged(i);
+                        ToastUtils.show("领取成功");
                         receiveGif(shopGiftList.get(i).giftId, shopGiftList.get(i).merchantId, i);
+
                     }
                 } else {
-                    ToastUtils.showShortToast("您还不是会员");
+                    ToastUtils.show("您还不是会员");
                 }
             }
         });
@@ -261,7 +274,7 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
 
                 if (UserInfoUtils.getUserInfo(VipActivity.this).getAccountType() != 0) {
-                    ToastUtils.showShortToast("您已是会员");
+                    ToastUtils.show("您已是会员");
                 } else {
                     for (int i = 0; i < presentsList.size(); i++) {
                         if (position == i) {
@@ -298,12 +311,8 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
                     @Override
                     public void onSuccess(Response<LzyResponse> response) {
                         super.onSuccess(VipActivity.this, response.body().msg, response.body().code);
-                        if (response.body().code == 0) {
-                            ToastUtils.showShortToast("领取成功");
-                            shopGiftList.get(position).isGet = 1;
-                            adapter.setNewData(shopGiftList);
-                            adapter.notifyItemChanged(position);
-                        }
+                       /* if (response.body().code == 0) {
+                        }*/
                     }
 
                     @Override
@@ -361,6 +370,12 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
                 .params("latitude", Constant.mPoint.latitude)
                 .execute(new JsonCallback<LzyResponse<VipGifListInfo>>() {
                     @Override
+                    public void onStart(Request<LzyResponse<VipGifListInfo>, ? extends Request> request) {
+                        super.onStart(request);
+                        showloadDialog("");
+                    }
+
+                    @Override
                     public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<VipGifListInfo>> response) {
                         super.onSuccess(VipActivity.this, response.body().msg, response.body().code);
                         refreshLayout.finishRefresh();
@@ -370,23 +385,28 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
                             VipGifListInfo presentsModel = response.body().data;
                             presentsTitle.setText(presentsModel.title);
                             totalAmount.setText("¥" + response.body().data.totalPrice);
-                            if (presentsModel.list != null) {
+                            if (presentsModel.list != null && presentsModel.list.size() > 0) {
                                 shopGiftList = presentsModel.list;
                                 adapter.setNewData(shopGiftList);
                                 adapter.notifyDataSetChanged();
                             }
-                            if (presentsModel.shopGiftList != null) {
+                            if (presentsModel.shopGiftList != null && presentsModel.shopGiftList.size() > 0) {
                                 presentsList = presentsModel.shopGiftList;
                                 adapter2.setNewData(presentsList);
                                 adapter2.notifyDataSetChanged();
                             }
+                            llGiftsPresents.setVisibility(View.VISIBLE);
+                        } else {
+                            llGiftsPresents.setVisibility(View.GONE);
                         }
+                        goneloadDialog();
                     }
 
                     @Override
                     public void onError(com.lzy.okgo.model.Response<LzyResponse<VipGifListInfo>> response) {
                         super.onError(response);
                         refreshLayout.finishRefresh(false);
+                        goneloadDialog();
                     }
                 });
     }

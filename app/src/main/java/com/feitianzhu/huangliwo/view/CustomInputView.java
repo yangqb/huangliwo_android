@@ -2,12 +2,15 @@ package com.feitianzhu.huangliwo.view;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.feitianzhu.huangliwo.R;
+import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.core.CenterPopupView;
 
 /**
@@ -93,6 +96,25 @@ public class CustomInputView extends CenterPopupView {
             @Override
             public void onClick(View v) {
                 dismiss();
+            }
+        });
+
+        editContent.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!TextUtils.isEmpty(s.toString()) && Integer.valueOf(s.toString()) > 10) {
+                    editContent.setText("10");
+                }
             }
         });
 

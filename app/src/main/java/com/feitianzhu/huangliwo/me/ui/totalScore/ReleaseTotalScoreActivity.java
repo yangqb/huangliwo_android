@@ -14,7 +14,7 @@ import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.me.adapter.ReleaseTotalDetailAdapter;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.ReleaseTotalDetailModel;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
+import com.hjq.toast.ToastUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
 
@@ -90,7 +90,7 @@ public class ReleaseTotalScoreActivity extends BaseActivity implements BaseQuick
                 Log.e("Test", "--Error-->" + e.getMessage());
                 goneloadDialog();
                 mAdapter.loadMoreFail();
-                ToastUtils.showShortToast(e.getMessage());
+                ToastUtils.show(e.getMessage());
             }
 
             @Override

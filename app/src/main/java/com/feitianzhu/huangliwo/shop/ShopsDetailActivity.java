@@ -2,7 +2,6 @@ package com.feitianzhu.huangliwo.shop;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -31,8 +30,6 @@ import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.feitianzhu.huangliwo.App;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
-import com.feitianzhu.huangliwo.home.HomeFragment2;
-import com.feitianzhu.huangliwo.home.entity.HomeEntity;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
@@ -42,17 +39,15 @@ import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.ProductParameters;
 import com.feitianzhu.huangliwo.model.AddShoppingCartBody;
 import com.feitianzhu.huangliwo.shop.ui.ShoppingCartActivity;
-import com.feitianzhu.huangliwo.utils.GlideUtils;
 import com.feitianzhu.huangliwo.utils.MathUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 import com.feitianzhu.huangliwo.view.CircleImageView;
 import com.feitianzhu.huangliwo.view.CustomSpecificationDialog;
 import com.feitianzhu.huangliwo.vip.VipActivity;
 import com.google.gson.Gson;
-import com.itheima.roundedimageview.RoundedImageView;
+import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.lzy.okgo.OkGo;
@@ -257,8 +252,8 @@ public class ShopsDetailActivity extends BaseActivity {
             goodsName.setText(goodsListBean.getGoodsName());
             goodsSummary.setText(goodsListBean.getSummary());
             String rebatePv = String.format(Locale.getDefault(), "%.2f", goodsListBean.getRebatePv());
-            tvRebate.setText("返¥" + MathUtils.subZero(rebatePv));
-            vipRebate.setText("返¥" + MathUtils.subZero(rebatePv));
+            tvRebate.setText("奖励¥" + MathUtils.subZero(rebatePv));
+            vipRebate.setText("奖励¥" + MathUtils.subZero(rebatePv));
             evalList = goodsListBean.getEvalList();
             if (evalList != null && evalList.size() > 0) {
                 llEvaluate.setVisibility(View.VISIBLE);
@@ -494,7 +489,7 @@ public class ShopsDetailActivity extends BaseActivity {
                     public void onSuccess(Response<LzyResponse> response) {
                         super.onSuccess(ShopsDetailActivity.this, response.body().msg, response.body().code);
                         if (response.body().code == 0) {
-                            ToastUtils.showShortToast("添加成功");
+                            ToastUtils.show("添加成功");
                         }
                     }
 
@@ -520,7 +515,7 @@ public class ShopsDetailActivity extends BaseActivity {
                     public void onSuccess(Response<LzyResponse> response) {
                         super.onSuccess(ShopsDetailActivity.this, response.body().msg, response.body().code);
                         if (response.body().code == 0) {
-                            ToastUtils.showShortToast("收藏成功");
+                            ToastUtils.show("收藏成功");
                             imgCollect.setSelected(true);
                         }
                     }
@@ -546,7 +541,7 @@ public class ShopsDetailActivity extends BaseActivity {
                     public void onSuccess(Response<LzyResponse> response) {
                         super.onSuccess(ShopsDetailActivity.this, response.body().msg, response.body().code);
                         if (response.body().code == 0) {
-                            ToastUtils.showShortToast("取消收藏");
+                            ToastUtils.show("取消收藏");
                             imgCollect.setSelected(false);
                         }
                     }

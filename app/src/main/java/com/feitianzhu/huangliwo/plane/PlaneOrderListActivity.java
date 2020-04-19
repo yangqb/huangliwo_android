@@ -67,15 +67,15 @@ public class PlaneOrderListActivity extends BaseActivity {
         titleName.setText("机票订单");
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new PlaneOrderAdapter(currOrder);
-        View mEmptyView = View.inflate(this, R.layout.view_common_nodata, null);
+       /* View mEmptyView = View.inflate(this, R.layout.view_common_nodata, null);
         ImageView img_empty = (ImageView) mEmptyView.findViewById(R.id.img_empty);
         img_empty.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
             }
-        });
-        mAdapter.setEmptyView(mEmptyView);
+        });*/
+        //mAdapter.setEmptyView(mEmptyView);
         recyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
         tabs.add(new PlaneOrderTableEntity("全部"));

@@ -13,9 +13,10 @@ import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.AddressInfo;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
+import com.feitianzhu.huangliwo.utils.StringUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.view.SwitchButton;
+import com.hjq.toast.ToastUtils;
 import com.lljjcoder.Interface.OnCityItemClickListener;
 import com.lljjcoder.bean.CityBean;
 import com.lljjcoder.bean.DistrictBean;
@@ -27,12 +28,9 @@ import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.PostRequest;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.Callback;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import okhttp3.Call;
 
 public class EditAddressActivity extends BaseActivity {
     public static final String ADDRESS_DATA = "address_data";
@@ -115,16 +113,27 @@ public class EditAddressActivity extends BaseActivity {
                 break;
             case R.id.right_button: //保存地址
                 if (checkText(editName.getText().toString().trim())) {
-                    ToastUtils.showShortToast("请填写收货人姓名");
-                } else if (checkText(editPhone.getText().toString().trim())) {
-                    ToastUtils.showShortToast("请填写收货人电话");
-                } else if (checkText(tvAddress.getText().toString().trim())) {
-                    ToastUtils.showShortToast("请选择收货人地址");
-                } else if (checkText(editAddressDetail.getText().toString().trim())) {
-                    ToastUtils.showShortToast("请填写收货人详细地址");
-                } else {
-                    submit();
+                    ToastUtils.show("请填写收货人姓名");
+                    return;
                 }
+                if (checkText(editPhone.getText().toString().trim())) {
+                    ToastUtils.show("请填写正确的收货人电话");
+                    return;
+                } else {
+                    if (!StringUtils.isPhone(editPhone.getText().toString().trim())) {
+                        ToastUtils.show("请填写正确的收货人电话");
+                        return;
+                    }
+                }
+                if (checkText(tvAddress.getText().toString().trim())) {
+                    ToastUtils.show("请选择收货人地址");
+                    return;
+                }
+                if (checkText(editAddressDetail.getText().toString().trim())) {
+                    ToastUtils.show("请填写收货人详细地址");
+                    return;
+                }
+                submit();
                 break;
             case R.id.delete_address:
                 new XPopup.Builder(this)
@@ -158,7 +167,7 @@ public class EditAddressActivity extends BaseActivity {
                         super.onSuccess(EditAddressActivity.this, response.body().msg, response.body().code);
                         if (response.body().code == 0) {
                             setResult(RESULT_OK);
-                            ToastUtils.showShortToast("删除成功");
+                            ToastUtils.show("删除成功");
                             finish();
                         }
                     }
@@ -180,7 +189,7 @@ public class EditAddressActivity extends BaseActivity {
         String url;
         //新增地址
         if ("710000".equals(mProvince.getId()) || "810000".equals(mProvince.getId()) || "820000".equals(mProvince.getId())) {
-            ToastUtils.showShortToast("暂不支持港澳台地区配送");
+            ToastUtils.show("暂不支持港澳台地区配送");
             return;
         }
         if (isAdd) {
@@ -210,9 +219,9 @@ public class EditAddressActivity extends BaseActivity {
                         super.onSuccess(EditAddressActivity.this, response.body().msg, response.body().code);
                         if (response.body().code == 0) {
                             if (isAdd) {
-                                ToastUtils.showShortToast("添加成功");
+                                ToastUtils.show("添加成功");
                             } else {
-                                ToastUtils.showShortToast("修改成功");
+                                ToastUtils.show("修改成功");
                             }
                             setResult(RESULT_OK);
                             finish();

@@ -2,13 +2,11 @@ package com.feitianzhu.huangliwo.shop;
 
 import android.Manifest;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,23 +44,20 @@ import com.feitianzhu.huangliwo.shop.ui.SearchShopActivity;
 import com.feitianzhu.huangliwo.shop.ui.dialog.ProvinceCallBack;
 import com.feitianzhu.huangliwo.shop.ui.dialog.ProvinceDialog2;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.view.CircleImageView;
 import com.feitianzhu.huangliwo.vip.VipActivity;
-import com.google.gson.Gson;
+import com.hjq.toast.ToastUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.base.Request;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.socks.library.KLog;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
 import com.yanzhenjie.permission.Rationale;
 import com.yanzhenjie.permission.RationaleListener;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.Callback;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -75,8 +70,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-import okhttp3.Call;
-import okhttp3.Request;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
@@ -209,6 +202,11 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                 .params(USERID, userId)
                 .execute(new JsonCallback<LzyResponse<MerchantsClassifyModel>>() {
                     @Override
+                    public void onStart(Request<LzyResponse<MerchantsClassifyModel>, ? extends Request> request) {
+                        super.onStart(request);
+                    }
+
+                    @Override
                     public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<MerchantsClassifyModel>> response) {
                         super.onSuccess(getActivity(), response.body().msg, response.body().code);
                         if (response.body().data != null) {
@@ -242,7 +240,6 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                     @Override
                     public void onStart(com.lzy.okgo.request.base.Request<LzyResponse<ShopClassify>, ? extends com.lzy.okgo.request.base.Request> request) {
                         super.onStart(request);
-                        showloadDialog("");
                     }
 
                     @Override
@@ -268,7 +265,6 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                     @Override
                     public void onError(com.lzy.okgo.model.Response<LzyResponse<ShopClassify>> response) {
                         super.onError(response);
-                        goneloadDialog();
                     }
                 });
     }
@@ -338,6 +334,12 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                 .params("cls_id", clsId + "")
                 .execute(new JsonCallback<LzyResponse<Shops>>() {
                     @Override
+                    public void onStart(Request<LzyResponse<Shops>, ? extends Request> request) {
+                        super.onStart(request);
+                        showloadDialog("");
+                    }
+
+                    @Override
                     public void onSuccess(Response<LzyResponse<Shops>> response) {
                         super.onSuccess(getActivity(), "", response.body().code);
                         mSwipeLayout.finishRefresh();
@@ -361,7 +363,7 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                     public void onError(Response<LzyResponse<Shops>> response) {
                         super.onError(response);
                         mSwipeLayout.finishRefresh(false);
-                        ToastUtils.showShortToast(response.body().msg);
+                        ToastUtils.show(response.body().msg);
                         multipleItemList.clear();
                         goodsListBeans.clear();
                         rightAdapter.setNewData(multipleItemList);
@@ -387,6 +389,12 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                 .params("latitude", latitude + "")
                 .execute(new JsonCallback<LzyResponse<MerchantsInfo>>() {
                     @Override
+                    public void onStart(Request<LzyResponse<MerchantsInfo>, ? extends Request> request) {
+                        super.onStart(request);
+                        showloadDialog("");
+                    }
+
+                    @Override
                     public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<MerchantsInfo>> response) {
                         super.onSuccess(getActivity(), "", response.body().code);
                         goneloadDialog();
@@ -410,7 +418,7 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                     public void onError(com.lzy.okgo.model.Response<LzyResponse<MerchantsInfo>> response) {
                         super.onError(response);
                         mSwipeLayout.finishRefresh(false);
-                        ToastUtils.showShortToast(response.body().msg);
+                        ToastUtils.show(response.body().msg);
                         multipleItemList.clear();
                         merchantsList.clear();
                         rightAdapter.setNewData(multipleItemList);

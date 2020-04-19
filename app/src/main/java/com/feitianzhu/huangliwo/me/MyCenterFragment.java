@@ -43,7 +43,6 @@ import com.feitianzhu.huangliwo.shop.ShopDao;
 import com.feitianzhu.huangliwo.shop.ui.MyOrderActivity2;
 import com.feitianzhu.huangliwo.shop.ui.ShoppingCartActivity;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 import com.feitianzhu.huangliwo.view.CircleImageView;
@@ -68,7 +67,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-import static android.support.v4.provider.FontsContractCompat.FontRequestCallback.RESULT_OK;
 import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
 import static com.feitianzhu.huangliwo.common.Constant.POST_MINE_INFO;
 
@@ -309,7 +307,7 @@ public class MyCenterFragment extends SFFragment {
                         intent.putExtra(BindingAccountActivity.MINE_INFO, mTempData);
                         startActivity(intent);
                         /*if (!Constant.loadUserAuth) {
-                            ToastUtils.showShortToast("正在获取授权信息，稍候进入");
+                            ToastUtils.show("正在获取授权信息，稍候进入");
                             ShopDao.loadUserAuthImpl();
                             return;
                         } else {
@@ -321,7 +319,7 @@ public class MyCenterFragment extends SFFragment {
 
                                 @Override
                                 public void onFail(int code, String result) {
-                                    ToastUtils.showShortToast(result);
+                                    ToastUtils.show(result);
                                 }
                             });
                         }*/
@@ -363,7 +361,7 @@ public class MyCenterFragment extends SFFragment {
                         startActivity(intent);
                         break;
                     case 9:
-                        //ToastUtils.showShortToast("敬请期待");
+                        //ToastUtils.show("敬请期待");
                         if (mTempData.getAccountType() == 0) {
                             String content = "您还不是会员无法查看我的团队，请尽快开通！";
                             new XPopup.Builder(getActivity())

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
@@ -15,7 +14,6 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
@@ -25,31 +23,24 @@ import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.http.PlaneResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.ApplyChangeParams;
-import com.feitianzhu.huangliwo.model.CustomCityModel;
 import com.feitianzhu.huangliwo.model.DocOrderDetailInfo;
-import com.feitianzhu.huangliwo.model.DocOrderDetailPassengerTypesInfo;
 import com.feitianzhu.huangliwo.model.DocOrderDetailPassengersInfo;
 import com.feitianzhu.huangliwo.model.NationalPassengerInfo;
 import com.feitianzhu.huangliwo.model.PayModel;
-import com.feitianzhu.huangliwo.model.PlaneOrderModel;
 import com.feitianzhu.huangliwo.model.TimePointChargsInfo;
-import com.feitianzhu.huangliwo.utils.DateUtils;
 import com.feitianzhu.huangliwo.utils.MathUtils;
 import com.feitianzhu.huangliwo.utils.PayUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.view.CustomRefundView;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.base.Request;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -152,7 +143,7 @@ public class PlaneChangeActivity extends BaseActivity {
                                     }
                                 }
                             } else {
-                                ToastUtils.showShortToast(response.body().result.get(0).changeSearchResult.reason == null ? "当前日期没有可改签的航班" : response.body().result.get(0).changeSearchResult.reason);
+                                ToastUtils.show(response.body().result.get(0).changeSearchResult.reason == null ? "当前日期没有可改签的航班" : response.body().result.get(0).changeSearchResult.reason);
                             }
                         }
                     }
@@ -180,7 +171,7 @@ public class PlaneChangeActivity extends BaseActivity {
                 break;
             case R.id.rl_shippingSpace:
                 if (TextUtils.isEmpty(tvDate.getText().toString())) {
-                    ToastUtils.showShortToast("请先选择要改签的日期");
+                    ToastUtils.show("请先选择要改签的日期");
                 } else {
                     if (reasonList != null && reasonList.size() > 0) {
                         selectShoppingSpaceDialog();
@@ -201,15 +192,15 @@ public class PlaneChangeActivity extends BaseActivity {
 
     public void apply() {
         if (TextUtils.isEmpty(tvDate.getText().toString())) {
-            ToastUtils.showShortToast("请选择改签日期");
+            ToastUtils.show("请选择改签日期");
             return;
         }
         if (TextUtils.isEmpty(tvShippingSpace.getText().toString())) {
-            ToastUtils.showShortToast("请选择改签原因");
+            ToastUtils.show("请选择改签原因");
             return;
         }
         if (!passengerInfo.changeSearchResult.canChange) {
-            ToastUtils.showShortToast(passengerInfo.changeSearchResult.reason);
+            ToastUtils.show(passengerInfo.changeSearchResult.reason);
             return;
         }
 
@@ -250,7 +241,7 @@ public class PlaneChangeActivity extends BaseActivity {
                         super.onSuccess(PlaneChangeActivity.this, response.body().message, response.body().code);
                         if (response.body().code == 0 && response.body().result != null && response.body().result.get(0).changeApplyResult.success) {
                             if (passengerInfo.changeSearchResult.tgqReasons.get(index).changeFlightSegmentList.get(0).allFee == 0) {
-                                ToastUtils.showShortToast("申请成功");
+                                ToastUtils.show("申请成功");
                             } else {
                                 pay(docOrderDetailInfo.detail.orderNo, MathUtils.subZero(String.valueOf(passengerInfo.changeSearchResult.tgqReasons.get(index).changeFlightSegmentList.get(0).allFee)), response.body().result.get(0).changeApplyResult.gqId);
                             }
@@ -302,13 +293,13 @@ public class PlaneChangeActivity extends BaseActivity {
         PayUtils.aliPay(PlaneChangeActivity.this, payProof, new onConnectionFinishLinstener() {
             @Override
             public void onSuccess(int code, Object result) {
-                ToastUtils.showShortToast("申请成功");
+                ToastUtils.show("申请成功");
                 finish();
             }
 
             @Override
             public void onFail(int code, String result) {
-                ToastUtils.showShortToast("支付失败");
+                ToastUtils.show("支付失败");
             }
         });
     }

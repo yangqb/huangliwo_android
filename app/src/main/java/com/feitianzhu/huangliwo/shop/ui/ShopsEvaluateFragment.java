@@ -19,7 +19,7 @@ import com.feitianzhu.huangliwo.common.impl.onNetFinishLinstenerT;
 import com.feitianzhu.huangliwo.model.ShopsEvali;
 import com.feitianzhu.huangliwo.shop.ShopDao;
 import com.feitianzhu.huangliwo.shop.adapter.ShopsEvaluateAdapter;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
+import com.hjq.toast.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -120,7 +120,7 @@ public class ShopsEvaluateFragment extends LazyFragment
                 if (isLoadMore)
                     mAdapter.loadMoreFail();
                 //goneloadDialog();
-                ToastUtils.showShortToast(result);
+                ToastUtils.show(result);
             }
         });
     }

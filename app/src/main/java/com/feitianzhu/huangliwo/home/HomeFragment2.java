@@ -9,16 +9,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,12 +38,10 @@ import com.feitianzhu.huangliwo.home.entity.NoticeModel;
 import com.feitianzhu.huangliwo.home.entity.ShopAndMerchants;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
-import com.feitianzhu.huangliwo.login.LoginActivity;
 import com.feitianzhu.huangliwo.login.LoginEvent;
 import com.feitianzhu.huangliwo.me.ui.PersonalCenterActivity2;
 import com.feitianzhu.huangliwo.me.ui.ScannerActivity;
 import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
-import com.feitianzhu.huangliwo.model.HomePopModel;
 import com.feitianzhu.huangliwo.model.HomeShops;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.Province;
@@ -62,24 +57,17 @@ import com.feitianzhu.huangliwo.shop.ui.dialog.ProvinceCallBack;
 import com.feitianzhu.huangliwo.shop.ui.dialog.ProvinceDialog2;
 import com.feitianzhu.huangliwo.travel.TravelHomeActivity;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
-import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 import com.feitianzhu.huangliwo.view.CircleImageView;
-import com.feitianzhu.huangliwo.view.CustomNerYearPopView;
 import com.feitianzhu.huangliwo.vip.VipActivity;
-import com.gcssloop.widget.PagerConfig;
 import com.gcssloop.widget.PagerGridLayoutManager;
 import com.gcssloop.widget.PagerGridSnapHelper;
-import com.google.gson.Gson;
+import com.hjq.toast.ToastUtils;
 import com.itheima.roundedimageview.RoundedImageView;
-import com.lxj.xpopup.XPopup;
 import com.lzy.okgo.OkGo;
-import com.lzy.okgo.model.Response;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
-import com.socks.library.KLog;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
 import com.yanzhenjie.permission.Rationale;
@@ -87,8 +75,6 @@ import com.yanzhenjie.permission.RationaleListener;
 import com.zhpan.bannerview.BannerViewPager;
 import com.zhpan.bannerview.enums.IndicatorStyle;
 import com.zhpan.bannerview.holder.ViewHolder;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.Callback;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -101,8 +87,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-import okhttp3.Call;
-import okhttp3.Request;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
@@ -368,6 +352,8 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, Pager
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                 isLoadMore = false;
                 pageNo = 1;
+                token = SPUtils.getString(getActivity(), Constant.SP_ACCESS_TOKEN);
+                userId = SPUtils.getString(getActivity(), Constant.SP_LOGIN_USERID);
                 getData();
                 getNotice();
                 requestData();
@@ -523,7 +509,13 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, Pager
                     @Override
                     public void onStart(com.lzy.okgo.request.base.Request<LzyResponse<HomeShops>, ? extends com.lzy.okgo.request.base.Request> request) {
                         super.onStart(request);
-                        showloadDialog("");
+                        if (isLoadMore) {
+                            if (shopsLists.size() == 10) {
+                                showloadDialog("");
+                            }
+                        } else {
+                            showloadDialog("");
+                        }
                     }
 
                     @Override
@@ -551,6 +543,12 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, Pager
                                 }
                                 mAdapter.setNewData(shopAndMerchants);
                                 mAdapter.notifyDataSetChanged();
+                            }
+                        }
+
+                        if (isLoadMore) {
+                            if (shopsLists != null && shopsLists.size() == 0) {
+                                ToastUtils.show("没有更多数据了");
                             }
                         }
                     }
@@ -654,7 +652,7 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, Pager
 
     public void onClickBanner(int i) {
         if (mHomeEntity == null || mHomeEntity.bannerList == null || mHomeEntity.bannerList.isEmpty()) {
-            ToastUtils.showShortToast("数据加载失败，请重新获取");
+            ToastUtils.show("数据加载失败，请重新获取");
             return;
         }
         //链接类型（1：VIP，2：商品详情，3：文章，4：外部链接）
@@ -671,7 +669,7 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, Pager
                 startActivity(intent);
                 break;
             case 3:
-                // ToastUtils.showShortToast("敬请期待");
+                // ToastUtils.show("敬请期待");
                 //WebViewActivity.startActivity(getActivity(), mHomeEntity.bannerList.get(i).outUrl, "");
                 break;
             case 4:

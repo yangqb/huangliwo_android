@@ -1,23 +1,15 @@
 package com.feitianzhu.huangliwo.pushshop;
 
-import android.content.ContentResolver;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.CountDownTimer;
-import android.os.Handler;
-import android.support.annotation.DrawableRes;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -33,29 +25,23 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
-import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
-import com.feitianzhu.huangliwo.dao.NetworkDao;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
-import com.feitianzhu.huangliwo.login.ForgetPasswordActivity;
-import com.feitianzhu.huangliwo.me.EditAddressActivity;
 import com.feitianzhu.huangliwo.me.base.BaseTakePhotoActivity;
-import com.feitianzhu.huangliwo.plane.EditPlaneReserveActivity;
 import com.feitianzhu.huangliwo.pushshop.bean.EditMerchantInfo;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsClassifyModel;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsModel;
 import com.feitianzhu.huangliwo.pushshop.bean.UpdataMechantsEvent;
-import com.feitianzhu.huangliwo.shop.ui.MyOrderActivity2;
 import com.feitianzhu.huangliwo.utils.KeyboardUtils;
 import com.feitianzhu.huangliwo.utils.MathUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.SoftKeyBoardListener;
 import com.feitianzhu.huangliwo.utils.StringUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
-import com.feitianzhu.huangliwo.view.CustomRefundView;
+import com.feitianzhu.huangliwo.view.CustomClassificationView;
 import com.feitianzhu.huangliwo.view.CustomSelectPhotoView;
 import com.google.gson.Gson;
+import com.hjq.toast.ToastUtils;
 import com.itheima.roundedimageview.RoundedImageView;
 import com.lljjcoder.Interface.OnCityItemClickListener;
 import com.lljjcoder.bean.CityBean;
@@ -68,8 +54,6 @@ import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.request.PostRequest;
 import com.socks.library.KLog;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.Callback;
 
 import org.devio.takephoto.model.TResult;
 import org.greenrobot.eventbus.EventBus;
@@ -77,16 +61,10 @@ import org.greenrobot.eventbus.EventBus;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import okhttp3.Call;
-import okhttp3.Request;
-import okhttp3.Response;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.huangliwo.common.Constant.USERID;
@@ -363,9 +341,9 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
                         strings.add(listBean.get(i).getClsName());
                     }
                     new XPopup.Builder(this)
-                            .asCustom(new CustomRefundView(EditMerchantsActivity.this)
+                            .asCustom(new CustomClassificationView(EditMerchantsActivity.this)
                                     .setData(strings)
-                                    .setOnItemClickListener(new CustomRefundView.OnItemClickListener() {
+                                    .setOnItemClickListener(new CustomClassificationView.OnItemClickListener() {
                                         @Override
                                         public void onItemClick(int position) {
                                             clsId = listBean.get(position).getClsId();
@@ -376,7 +354,7 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
                                     }))
                             .show();
                 } else {
-                    ToastUtils.showShortToast("商铺类型获取失败");
+                    ToastUtils.show("商铺类型获取失败");
                 }
 
                 break;
@@ -402,7 +380,7 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
                     public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
                         super.onSuccess(EditMerchantsActivity.this, response.body().msg, response.body().code);
                         if (response.body().code == 0) {
-                            ToastUtils.showShortToast("验证码已发送至您的手机");
+                            ToastUtils.show("验证码已发送至您的手机");
                         }
                     }
 
@@ -449,19 +427,19 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
         if (merchantsModel != null) {
             if (TextUtils.isEmpty(merchantsName) || clsName == null || TextUtils.isEmpty(phone) || (llCode.getVisibility() == View.VISIBLE && TextUtils.isEmpty(smsCode))
                     || mProvinceName == null || mCityName == null || mAreaName == null || TextUtils.isEmpty(address) || TextUtils.isEmpty(percentage)) {
-                ToastUtils.showShortToast("您的资料填写不完整");
+                ToastUtils.show("您的资料填写不完整");
                 return;
             }
         } else {
             if (TextUtils.isEmpty(merchantsName) || clsName == null || TextUtils.isEmpty(phone) || TextUtils.isEmpty(smsCode)
                     || mProvinceName == null || mCityName == null || mAreaName == null || TextUtils.isEmpty(address) || TextUtils.isEmpty(percentage) || TextUtils.isEmpty(photo1) || TextUtils.isEmpty(photo2)) {
-                ToastUtils.showShortToast("您的资料填写不完整");
+                ToastUtils.show("您的资料填写不完整");
                 return;
             }
         }
 
         if (Double.valueOf(percentage) > 100 || Double.valueOf(percentage) < 0) {
-            ToastUtils.showShortToast("折扣比例不能大于100小于0");
+            ToastUtils.show("折扣比例不能大于100小于0");
             return;
         }
         EditMerchantInfo merchantInfo = new EditMerchantInfo();
@@ -516,7 +494,7 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
                             goneloadDialog();
                             if (response.body().code == 0) {
                                 EventBus.getDefault().post(UpdataMechantsEvent.SUCCESS);
-                                ToastUtils.showShortToast("修改成功");
+                                ToastUtils.show("修改成功");
                                 finish();
                             }
                         }
@@ -546,7 +524,7 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
                             super.onSuccess(EditMerchantsActivity.this, response.body().msg, response.body().code);
                             goneloadDialog();
                             if (response.body().code == 0) {
-                                ToastUtils.showShortToast("创建成功等待审核");
+                                ToastUtils.show("创建成功等待审核");
                                 EventBus.getDefault().post(UpdataMechantsEvent.SUCCESS);
                                 finish();
                             }
@@ -658,7 +636,7 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
     public void onGetGeoCodeResult(GeoCodeResult geoCodeResult) {
         if (null != geoCodeResult && null != geoCodeResult.getLocation()) {
             if (geoCodeResult.error != SearchResult.ERRORNO.NO_ERROR) {
-                ToastUtils.showShortToast("没有获取到当前商铺地址坐标");
+                ToastUtils.show("没有获取到当前商铺地址坐标");
                 return;
             } else {
                 latitude = geoCodeResult.getLocation().latitude;

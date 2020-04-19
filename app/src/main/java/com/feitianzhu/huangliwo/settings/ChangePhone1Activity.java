@@ -8,21 +8,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
-import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
-import com.feitianzhu.huangliwo.dao.NetworkDao;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
-import com.feitianzhu.huangliwo.login.ForgetPasswordActivity;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
+import com.hjq.toast.ToastUtils;
 import com.lzy.okgo.OkGo;
-import com.socks.library.KLog;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -92,17 +87,17 @@ public class ChangePhone1Activity extends BaseActivity {
             case R.id.button:
 
                 if (TextUtils.isEmpty(phone)) {
-                    ToastUtils.showShortToast("手机号不能为空");
+                    ToastUtils.show("手机号不能为空");
                     return;
                 }
 
                 if (TextUtils.isEmpty(mEdtCode.getText().toString().trim())) {
-                    ToastUtils.showShortToast("验证码不能为空");
+                    ToastUtils.show("验证码不能为空");
                     return;
                 }
 
                 ChangePhone2Activity.startActivity(this, phone, mEdtCode.getText().toString().trim());
-
+                finish();
                 break;
             case R.id.rl_code:
 
@@ -133,7 +128,7 @@ public class ChangePhone1Activity extends BaseActivity {
                     public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
                         super.onSuccess(ChangePhone1Activity.this, response.body().msg, response.body().code);
                         if (response.body().code == 0) {
-                            ToastUtils.showShortToast("验证码已发送至您的手机");
+                            ToastUtils.show("验证码已发送至您的手机");
                         }
                     }
 

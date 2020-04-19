@@ -1,16 +1,11 @@
 package com.feitianzhu.huangliwo.me.ui.totalScore;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -25,22 +20,16 @@ import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.MineQRcodeModel;
-import com.feitianzhu.huangliwo.utils.GlideUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ShareImageUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.view.CircleImageView;
+import com.hjq.toast.ToastUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.socks.library.KLog;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.Callback;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.util.HashMap;
 
 import butterknife.BindView;
@@ -48,7 +37,6 @@ import butterknife.OnClick;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.onekeyshare.OnekeyShare;
-import okhttp3.Call;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
@@ -148,7 +136,7 @@ public class MineQrcodeActivity extends BaseActivity {
         Glide.with(this).load(response.getYearImg()).apply(new RequestOptions().placeholder(R.mipmap.g10_03weijiazai).error(R.mipmap.g10_03weijiazai)).into(imageView);
         String qrUrl = response.getLink();
         if (TextUtils.isEmpty(qrUrl)) {
-            ToastUtils.showShortToast("未获取到分享地址");
+            ToastUtils.show("未获取到分享地址");
             return;
         }
         Log.e("Test", "-------->" + qrUrl);
@@ -170,12 +158,12 @@ public class MineQrcodeActivity extends BaseActivity {
                 break;
             case R.id.bt_save:
                 if (shareType == 1) {
-                    ShareImageUtils.saveImg(ShareImageUtils.viewToBitmap(shareLayout), "zxing_image");
+                    ShareImageUtils.saveImg(this, ShareImageUtils.viewToBitmap(shareLayout), "zxing_image");
                 } else {
-                    ShareImageUtils.saveImg(ShareImageUtils.viewToBitmap(shareLayout), "zxing_recruit_image");
+                    ShareImageUtils.saveImg(this, ShareImageUtils.viewToBitmap(shareLayout), "zxing_recruit_image");
                 }
                 // 通知图库更新
-                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse(Environment.getExternalStorageDirectory().getPath())));
+                //sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse(Environment.getExternalStorageDirectory().getPath())));
                 break;
             case R.id.bt_shared:
                 showShare();

@@ -51,13 +51,13 @@ public class CollectionAdapter extends BaseItemDraggableAdapter<CollectionInfo.C
         }
         if (item.type == 1) {
             String discount = String.valueOf((100 - item.rebatePv * 100));
-            helper.setText(R.id.tv_rebate, "返" + MathUtils.subZero(discount) + "%");
-            helper.setText(R.id.vip_rebate, "返" + MathUtils.subZero(discount) + "%");
+            helper.setText(R.id.tv_rebate, "奖励" + MathUtils.subZero(discount) + "%");
+            helper.setText(R.id.vip_rebate, "奖励" + MathUtils.subZero(discount) + "%");
             helper.setGone(R.id.price,false);
         } else {
             String rebatePv = String.format(Locale.getDefault(), "%.2f", item.rebatePv);
-            helper.setText(R.id.tv_rebate, "返¥" + MathUtils.subZero(rebatePv));
-            helper.setText(R.id.vip_rebate, "返" + MathUtils.subZero(rebatePv));
+            helper.setText(R.id.tv_rebate, "奖励¥" + MathUtils.subZero(rebatePv));
+            helper.setText(R.id.vip_rebate, "奖励" + MathUtils.subZero(rebatePv));
             setSpannableString(MathUtils.subZero(String.valueOf(item.price)), helper.getView(R.id.price));
             helper.setGone(R.id.price,true);
         }

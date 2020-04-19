@@ -20,32 +20,24 @@ import com.feitianzhu.huangliwo.model.MultiItemComment;
 import com.feitianzhu.huangliwo.shop.adapter.EditCommentAdapter;
 import com.feitianzhu.huangliwo.utils.Glide4Engine;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.view.CustomRefundView;
+import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.request.PostRequest;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.builder.PostFormBuilder;
-import com.zhy.http.okhttp.callback.Callback;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import cc.shinichi.library.ImagePreview;
-import okhttp3.Call;
-import okhttp3.Response;
 
 /**
  * package name: com.feitianzhu.fu700.pushshop
@@ -205,11 +197,11 @@ public class ProblemFeedbackActivity extends BaseActivity {
                 break;
             case R.id.btn_submit:
                 if (TextUtils.isEmpty(editContent.getText().toString().trim())) {
-                    ToastUtils.showShortToast("请输入反馈内容");
+                    ToastUtils.show("请输入反馈内容");
                     return;
                 }
                 if (TextUtils.isEmpty(problem)) {
-                    ToastUtils.showShortToast("请选择问题类型");
+                    ToastUtils.show("请选择问题类型");
                     return;
                 }
                 submit();
@@ -257,7 +249,7 @@ public class ProblemFeedbackActivity extends BaseActivity {
                     public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
                         super.onSuccess(ProblemFeedbackActivity.this, response.body().msg, response.body().code);
                         if (response.body().code == 0) {
-                            ToastUtils.showShortToast("提交成功");
+                            ToastUtils.show("提交成功");
                             finish();
                         }
                     }

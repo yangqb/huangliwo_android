@@ -23,7 +23,6 @@ import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
-import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
 import com.feitianzhu.huangliwo.model.ProductParameters;
 import com.feitianzhu.huangliwo.model.ShoppingCartModel;
 import com.feitianzhu.huangliwo.model.UpdateShoppingCartBody;
@@ -31,12 +30,11 @@ import com.feitianzhu.huangliwo.shop.SettlementShoppingCartActivity;
 import com.feitianzhu.huangliwo.shop.ShopsDetailActivity;
 import com.feitianzhu.huangliwo.shop.adapter.ShoppingCartAdapter;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.view.CustomInputView;
 import com.feitianzhu.huangliwo.view.CustomSpecificationDialog;
-import com.feitianzhu.huangliwo.vip.VipUpgradeActivity;
 import com.google.gson.Gson;
+import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.lzy.okgo.OkGo;
@@ -101,6 +99,8 @@ public class ShoppingCartActivity extends BaseActivity {
         mAdapter = new ShoppingCartAdapter(shoppingCartModels);
         View mEmptyView = View.inflate(this, R.layout.view_common_nodata, null);
         ImageView img_empty = (ImageView) mEmptyView.findViewById(R.id.img_empty);
+        TextView noData = mEmptyView.findViewById(R.id.no_data);
+        noData.setText("购物车空空如也，快去下单吧");
         img_empty.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -203,7 +203,9 @@ public class ShoppingCartActivity extends BaseActivity {
                         upDateShoppingCart();
                         break;
                     case R.id.btnIncrease:
-                        if (shoppingCartModels.get(position).goodsCount != 50) {
+                        if (shoppingCartModels.get(position).goodsCount >= 10) {
+                            shoppingCartModels.get(position).goodsCount = 10;
+                        } else {
                             shoppingCartModels.get(position).goodsCount = shoppingCartModels.get(position).goodsCount + 1;
                         }
                         mAdapter.notifyItemChanged(position);
@@ -435,7 +437,7 @@ public class ShoppingCartActivity extends BaseActivity {
                     intent.putParcelableArrayListExtra(SettlementShoppingCartActivity.CART_DATA, selectCartModels);
                     startActivityForResult(intent, REQUEST_CODE);
                 } else {
-                    ToastUtils.showShortToast("没有要结算的商品");
+                    ToastUtils.show("没有要结算的商品");
                 }
                 break;
         }

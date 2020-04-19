@@ -32,7 +32,7 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:src="@mipmap/j01_002hlw" />
+                    android:background="@mipmap/j01_002hlw" />
 
                 <TextView
                     android:id="@+id/tvInstruction"
@@ -78,36 +78,36 @@
                                 android:id="@+id/ll_rebate"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
                                 android:layout_centerVertical="true"
-                                android:layout_marginLeft="10dp"
                                 android:layout_toRightOf="@id/tv_amount"
                                 android:gravity="center_vertical"
                                 android:orientation="horizontal">
 
                                 <TextView
                                     android:layout_width="wrap_content"
-                                    android:layout_height="30dp"
+                                    android:layout_height="18dp"
                                     android:background="@drawable/shape_detail_left_vip"
                                     android:gravity="end|center_vertical"
-                                    android:paddingLeft="15dp"
+                                    android:paddingLeft="5dp"
                                     android:paddingRight="5dp"
                                     android:text="成为会员"
                                     android:textColor="@color/color_333333"
-                                    android:textSize="12sp" />
+                                    android:textSize="10sp" />
 
                                 <TextView
                                     android:id="@+id/tv_rebate"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="30dp"
+                                    android:layout_height="18dp"
                                     android:background="@drawable/shape_detail_right_vip"
                                     android:ellipsize="end"
                                     android:gravity="center_vertical"
                                     android:maxLines="1"
                                     android:paddingLeft="5dp"
-                                    android:paddingRight="15dp"
+                                    android:paddingRight="5dp"
                                     android:text="省¥0.00"
                                     android:textColor="@color/color_333333"
-                                    android:textSize="12sp" />
+                                    android:textSize="10sp" />
 
                             </LinearLayout>
                         </RelativeLayout>

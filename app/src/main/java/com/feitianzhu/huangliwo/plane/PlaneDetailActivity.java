@@ -319,7 +319,7 @@ public class PlaneDetailActivity extends BaseActivity {
         View mEmptyView = View.inflate(this, R.layout.view_common_nodata, null);
         ImageView img_empty = (ImageView) mEmptyView.findViewById(R.id.img_empty);
         TextView noData = mEmptyView.findViewById(R.id.no_data);
-        noData.setText("当前搜索无航线");
+        noData.setText("当前搜索无直飞航线");
         img_empty.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

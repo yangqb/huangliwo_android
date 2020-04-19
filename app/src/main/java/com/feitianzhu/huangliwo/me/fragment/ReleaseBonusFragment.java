@@ -23,7 +23,7 @@ import com.feitianzhu.huangliwo.me.ui.totalScore.ReleaseTotalScoreActivity;
 import com.feitianzhu.huangliwo.model.GetMoneyModel;
 import com.feitianzhu.huangliwo.model.TotalScoreModel;
 import com.feitianzhu.huangliwo.shop.ShopHelp;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
+import com.hjq.toast.ToastUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
 
@@ -142,7 +142,7 @@ public class ReleaseBonusFragment extends LazyFragment {
             public void onError(Call call, Exception e, int id) {
                 Log.e("Test", "--Error-->" + e.getMessage());
                 goneloadDialog();
-                ToastUtils.showShortToast(e.getMessage());
+                ToastUtils.show(e.getMessage());
             }
 
             @Override
@@ -169,7 +169,7 @@ public class ReleaseBonusFragment extends LazyFragment {
         switch (ItemIndex) {
             case 1: //消费积分
                 if(response==null||response.getRebateRecords()==null||response.getRebateRecords().getConsumePointsRecord() == null){
-                    ToastUtils.showShortToast("获取服务数据失败!");
+                    ToastUtils.show("获取服务数据失败!");
                     return;
                 }
                 mList.addAll(response.getRebateRecords().getConsumePointsRecord());
@@ -191,7 +191,7 @@ public class ReleaseBonusFragment extends LazyFragment {
                 break;
             case 2: //汇联积分
                 if(response==null||response.getRebateRecords()==null||response.getRebateRecords().getMerchantPointRecord() == null){
-                    ToastUtils.showShortToast("获取服务数据失败!");
+                    ToastUtils.show("获取服务数据失败!");
                     return;
                 }
                 mList.addAll(response.getRebateRecords().getMerchantPointRecord());
@@ -213,7 +213,7 @@ public class ReleaseBonusFragment extends LazyFragment {
                 break;
             case 3: //黄花梨
                 if(response==null||response.getRebateRecords()==null||response.getRebateRecords().getYellowPearPointsRecord() == null){
-                    ToastUtils.showShortToast("获取服务数据失败!");
+                    ToastUtils.show("获取服务数据失败!");
                     return;
                 }
                 mList.addAll(response.getRebateRecords().getYellowPearPointsRecord());
@@ -334,7 +334,7 @@ public class ReleaseBonusFragment extends LazyFragment {
 
             @Override
             public void onFail(int code, String result) {
-                ToastUtils.showShortToast(result);
+                ToastUtils.show(result);
             }
         });
     }

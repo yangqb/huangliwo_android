@@ -24,32 +24,25 @@ import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.PayInfo;
 import com.feitianzhu.huangliwo.model.PayModel;
 import com.feitianzhu.huangliwo.model.SetMealPayInfo;
-import com.feitianzhu.huangliwo.model.WXModel;
 import com.feitianzhu.huangliwo.pushshop.bean.SetMealInfo;
 import com.feitianzhu.huangliwo.utils.PayUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.google.gson.Gson;
+import com.hjq.toast.ToastUtils;
 import com.lzy.okgo.OkGo;
 import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.Callback;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import okhttp3.Call;
-import okhttp3.Response;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.huangliwo.common.Constant.USERID;
@@ -235,7 +228,7 @@ public class SetMealPayActivity extends BaseActivity {
         mPayReq.timeStamp = result.timestamp + "";
         mPayReq.sign = result.sign;
         api.sendReq(mPayReq);
-        ToastUtils.showShortToast("正在打开微信中");
+        ToastUtils.show("正在打开微信中");
     }
 
 
@@ -244,7 +237,7 @@ public class SetMealPayActivity extends BaseActivity {
         PayUtils.aliPay(SetMealPayActivity.this, payProof, new onConnectionFinishLinstener() {
             @Override
             public void onSuccess(int code, Object result) {
-                ToastUtils.showShortToast("支付成功");
+                ToastUtils.show("支付成功");
                 Intent intent = new Intent(SetMealPayActivity.this, SetMealOrderDetailActivity.class);
                 intent.putExtra(SetMealOrderDetailActivity.ORDER_NO, orderNo);
                 startActivity(intent);
@@ -253,7 +246,7 @@ public class SetMealPayActivity extends BaseActivity {
 
             @Override
             public void onFail(int code, String result) {
-                ToastUtils.showShortToast("支付失败");
+                ToastUtils.show("支付失败");
                 if ("".equals(alreadyOrderNo)) {
                     //跳到订单详情
                     Intent intent = new Intent(SetMealPayActivity.this, SetMealOrderDetailActivity.class);
@@ -269,13 +262,13 @@ public class SetMealPayActivity extends BaseActivity {
     public void onPayMessageCall(PayInfo msg) {
         if (msg.getCurrentInfo() == PayInfo.SETMEAL_PAY) {
             if (msg.getIsSuccess() == PayInfo.SUCCESS) {
-                ToastUtils.showShortToast("支付成功");
+                ToastUtils.show("支付成功");
                 Intent intent = new Intent(SetMealPayActivity.this, SetMealOrderDetailActivity.class);
                 intent.putExtra(SetMealOrderDetailActivity.ORDER_NO, orderNo);
                 startActivity(intent);
                 finish();
             } else {
-                ToastUtils.showShortToast("支付失败");
+                ToastUtils.show("支付失败");
                 if ("".equals(alreadyOrderNo)) {
                     //跳到订单详情
                     Intent intent = new Intent(SetMealPayActivity.this, SetMealOrderDetailActivity.class);

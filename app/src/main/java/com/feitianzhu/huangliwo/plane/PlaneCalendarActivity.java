@@ -1,14 +1,13 @@
 package com.feitianzhu.huangliwo.plane;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
+import com.feitianzhu.huangliwo.utils.PayUtils;
+import com.hjq.toast.ToastUtils;
 import com.necer.calendar.BaseCalendar;
 import com.necer.calendar.Miui10Calendar;
 import com.necer.entity.CalendarDate;
@@ -17,20 +16,15 @@ import com.necer.enumeration.MultipleNumModel;
 import com.necer.enumeration.SelectedModel;
 import com.necer.listener.OnCalendarChangedListener;
 import com.necer.listener.OnCalendarMultipleChangedListener;
-import com.necer.listener.OnClickDisableDateListener;
-import com.necer.painter.InnerPainter;
 import com.necer.utils.CalendarUtil;
 
 import org.joda.time.LocalDate;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -38,6 +32,8 @@ import butterknife.OnClick;
 public class PlaneCalendarActivity extends BaseActivity {
     public static final String SELECT_MODEL = "select_model";
     public static final String SELECT_DATE = "select_date";
+    public static final String START_DATE = "start_date";
+    public static final String END_DATE = "end_date";
     public String startDate;
     @BindView(R.id.tv_result)
     TextView tv_result;
@@ -64,7 +60,7 @@ public class PlaneCalendarActivity extends BaseActivity {
         tv_desc = findViewById(R.id.tv_desc);
         int selectType = getIntent().getIntExtra(SELECT_MODEL, 0);
 
-       // List<String> pointList = Arrays.asList("2018-10-01", "2018-11-19", "2018-11-20", "2018-05-23", "2019-01-01", "2018-12-23");
+        // List<String> pointList = Arrays.asList("2018-10-01", "2018-11-19", "2018-11-20", "2018-05-23", "2019-01-01", "2018-12-23");
         CustomPainter innerPainter = new CustomPainter(miui10Calendar);
         miui10Calendar = findViewById(R.id.miui10Calendar);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);// HH:mm:ss
@@ -75,19 +71,26 @@ public class PlaneCalendarActivity extends BaseActivity {
         //利用Calendar的getTime方法，将时间转化为Date对象
         //利用SimpleDateFormat对象 把Date对象格式化
         if (selectType == 2 || selectType == 3) {
+
+            String startDate = getIntent().getStringExtra(START_DATE);
+            String endDate = getIntent().getStringExtra(END_DATE);
+
             miui10Calendar.getAllSelectDateList().remove(0);
             miui10Calendar.setMultipleNum(2, MultipleNumModel.FULL_REMOVE_FIRST);
             List<LocalDate> localDateList = new ArrayList<>();
-            localDateList.add(new LocalDate(simpleDateFormat.format((Calendar.getInstance().getTime()))));
-            localDateList.add(new LocalDate(simpleDateFormat.format(rightNow.getTime())));
+            localDateList.add(new LocalDate(startDate));
+            localDateList.add(new LocalDate(endDate));
             miui10Calendar.getAllSelectDateList().addAll(localDateList); //设置默认选中多个日期
         } else {
-            miui10Calendar.setSelectedMode(SelectedModel.SINGLE_SELECTED);
+            String startDate = getIntent().getStringExtra(START_DATE);
+            miui10Calendar.setMultipleNum(1, MultipleNumModel.FULL_REMOVE_FIRST);
+            miui10Calendar.getAllSelectDateList().remove(0);
+            miui10Calendar.getAllSelectDateList().add(new LocalDate(startDate));
         }
 
 
         //InnerPainter innerPainter = (InnerPainter) miui10Calendar.getCalendarPainter();
-       // innerPainter.setPointList(pointList);
+        // innerPainter.setPointList(pointList);
 
         /*Map<String, String> strMap = new HashMap<>();
         strMap.put("2019-01-25", "");
@@ -172,7 +175,7 @@ public class PlaneCalendarActivity extends BaseActivity {
                 break;
             case R.id.right_button:
                 if (startDate == null) {
-                    ToastUtils.showShortToast("请选择日期");
+                    ToastUtils.show("请选择日期");
                 } else {
                     Intent intent = new Intent();
                     intent.putExtra(SELECT_DATE, startDate);

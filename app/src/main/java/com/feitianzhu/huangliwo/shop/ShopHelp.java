@@ -21,7 +21,7 @@ import com.feitianzhu.huangliwo.model.UserAuth;
 import com.feitianzhu.huangliwo.model.WXModel;
 import com.feitianzhu.huangliwo.settings.GetPasswordActivity;
 import com.feitianzhu.huangliwo.utils.EncryptUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
+import com.hjq.toast.ToastUtils;
 import com.jungly.gridpasswordview.GridPasswordView;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
@@ -265,7 +265,7 @@ public class ShopHelp {
                                 mMaterialDialog.dismiss();
                             }
                         });
-                        //ToastUtils.showShortToast(mGridPasswordView.getPassWord());
+                        //ToastUtils.show(mGridPasswordView.getPassWord());
                     }
                 })
                 .negativeText("取消")
@@ -290,11 +290,11 @@ public class ShopHelp {
         Activity wActivity = mReference.get();
         if (!Constant.loadUserAuth) {
             ShopDao.loadUserAuthImpl(mActivity);
-            ToastUtils.showShortToast("正在获取你的信息，请稍候点击");
+            ToastUtils.show("正在获取你的信息，请稍候点击");
         } else {
             if (Constant.mUserAuth.isPaypass == 0) {
                 //没有设置二级密码
-                ToastUtils.showShortToast("当前没有设置支付密码，请设置后再进行操作");
+                ToastUtils.show("当前没有设置支付密码，请设置后再进行操作");
                 GetPasswordActivity.startActivity(mActivity, GetPasswordActivity.TYPE_SET_PAY_PASSWORD_PWD);
             } else {
                 showVeringPassword(wActivity, mListener);
@@ -332,13 +332,13 @@ public class ShopHelp {
                 mPayReq.sign = result.sign;
                 api.sendReq(mPayReq);
                 goneloadDialog();
-                ToastUtils.showShortToast("正在打开微信中");
+                ToastUtils.show("正在打开微信中");
             }
 
             @Override
             public void onFail(int code, String result) {
                 goneloadDialog();
-                ToastUtils.showShortToast(result);
+                ToastUtils.show(result);
             }
         });
     }

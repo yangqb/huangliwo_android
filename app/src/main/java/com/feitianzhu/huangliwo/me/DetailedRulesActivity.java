@@ -15,24 +15,19 @@ import com.feitianzhu.huangliwo.me.adapter.DetailedRulesAdapter;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.UserGoodVo;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
-import com.google.gson.Gson;
+import com.hjq.toast.ToastUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.request.base.Request;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.Callback;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import okhttp3.Call;
-import okhttp3.Response;
 
 /**
  * @class name：com.feitianzhu.fu700.me
@@ -123,7 +118,7 @@ public class DetailedRulesActivity extends BaseActivity {
                 initData();
                 break;
             case R.id.btn_earnings:
-                ToastUtils.showShortToast("敬请期待");
+                ToastUtils.show("敬请期待");
                 btnBonus.setSelected(false);
                 btnDiscount.setSelected(false);
                 btnEarnings.setSelected(true);

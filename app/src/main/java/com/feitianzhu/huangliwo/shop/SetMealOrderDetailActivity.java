@@ -19,20 +19,17 @@ import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.SetMealOrderDetailInfo;
 import com.feitianzhu.huangliwo.pushshop.bean.SetMealInfo;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
+import com.hjq.toast.ToastUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.Callback;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import okhttp3.Call;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.huangliwo.common.Constant.USERID;
@@ -157,7 +154,7 @@ public class SetMealOrderDetailActivity extends BaseActivity {
 
     public void createQrcode(String setMealCode) {
         if (TextUtils.isEmpty(setMealCode)) {
-            ToastUtils.showShortToast("未获取到套餐码");
+            ToastUtils.show("未获取到套餐码");
             return;
         }
         Log.e("Test", "-------->" + setMealCode);

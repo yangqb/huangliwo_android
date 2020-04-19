@@ -34,8 +34,8 @@ public class OptMerchantsAdapter extends BaseQuickAdapter<MerchantsModel, BaseVi
         Glide.with(mContext).load(item.getLogo()).apply(new RequestOptions().placeholder(R.mipmap.g10_04weijiazai).placeholder(R.mipmap.g10_04weijiazai)).into((ImageView) helper.getView(R.id.merchants_img));
         helper.setText(R.id.merchants_Name, item.getMerchantName());
         String discount = String.valueOf((100 - item.getDiscount() * 100));
-        helper.setText(R.id.tv_rebate, "返" + MathUtils.subZero(discount) + "%");
-        helper.setText(R.id.vip_rebate, "返" + MathUtils.subZero(discount) + "%");
+        helper.setText(R.id.tv_rebate, "奖励" + MathUtils.subZero(discount) + "%");
+        helper.setText(R.id.vip_rebate, "奖励" + MathUtils.subZero(discount) + "%");
         if (userInfo.getAccountType() != 0) {
             helper.setGone(R.id.ll_rebate, false);
             helper.setGone(R.id.vip_rebate, true);
@@ -44,5 +44,12 @@ public class OptMerchantsAdapter extends BaseQuickAdapter<MerchantsModel, BaseVi
             helper.setGone(R.id.vip_rebate, false);
         }
         helper.addOnClickListener(R.id.ll_rebate);
+        if (helper.getAdapterPosition() == 0) {
+            helper.setBackgroundRes(R.id.item, R.drawable.shape_opt_one);
+        } else if (helper.getAdapterPosition() == 1) {
+            helper.setBackgroundRes(R.id.item, R.drawable.shape_opt_two);
+        } else {
+            helper.setBackgroundRes(R.id.item, R.drawable.shape_opt_three);
+        }
     }
 }

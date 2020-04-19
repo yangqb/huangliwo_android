@@ -95,7 +95,7 @@ public class SearchPlanActivity extends BaseActivity {
         View mEmptyView = View.inflate(this, R.layout.view_common_nodata, null);
         ImageView img_empty = (ImageView) mEmptyView.findViewById(R.id.img_empty);
         TextView noData = mEmptyView.findViewById(R.id.no_data);
-        noData.setText("当前搜索无航线");
+        noData.setText("当前搜索无直飞航线");
         img_empty.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -254,6 +254,7 @@ public class SearchPlanActivity extends BaseActivity {
             case R.id.right_button:
                 Intent intent = new Intent(SearchPlanActivity.this, PlaneCalendarActivity.class);
                 intent.putExtra(PlaneCalendarActivity.SELECT_MODEL, searchType);
+                intent.putExtra(PlaneCalendarActivity.START_DATE, customFightCityInfo.goDate);
                 startActivityForResult(intent, DATE_REQUEST_CODE);
                 break;
         }

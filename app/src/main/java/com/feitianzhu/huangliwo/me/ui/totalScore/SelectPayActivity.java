@@ -26,8 +26,8 @@ import com.feitianzhu.huangliwo.payforme.PayForMeRecordActivity;
 import com.feitianzhu.huangliwo.shop.ShopDao;
 import com.feitianzhu.huangliwo.shop.ShopHelp;
 import com.feitianzhu.huangliwo.utils.PayUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.google.gson.Gson;
+import com.hjq.toast.ToastUtils;
 import com.socks.library.KLog;
 import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
@@ -300,7 +300,7 @@ public class SelectPayActivity extends BaseActivity {
             return;
         }
         if (ll_protocol.getVisibility() == View.VISIBLE && !cb_protocol.isChecked()) {
-            ToastUtils.showLongToast("请勾选协议声明!");
+            ToastUtils.show("请勾选协议声明!");
             return;
         }
 
@@ -312,7 +312,7 @@ public class SelectPayActivity extends BaseActivity {
                 final String mPayChanel = mSelectModel.getPayChannel();
                 if (mSelectModel.getType() == SelectPayNeedModel.TYPE_SHOP_RECORD) {
                     if (TextUtils.isEmpty(mSelectModel.getPlaceImgFile()) || TextUtils.isEmpty(mSelectModel.getObjImgFile()) || TextUtils.isEmpty(mSelectModel.getRcptImgFile())) {
-                        ToastUtils.showLongToast("您未上传图片信息，请上传后重试");
+                        ToastUtils.show("您未上传图片信息，请上传后重试");
                         return;
                     }
                     NetworkDao.PayShopRecord(SelectPayActivity.this, mSelectModel.getMemberId(), mSelectModel.getConsumeAmount() + "", mSelectModel.getHandleFee() + ""
@@ -322,13 +322,13 @@ public class SelectPayActivity extends BaseActivity {
                                 public void onSuccess(int code, Object result) {
                                     goneloadDialog();
                                     if (mPayChanel.equals("balance")) {
-                                                                               ToastUtils.showLongToast("支付成功");
+                                                                               ToastUtils.show("支付成功");
                                         finish();
                                     }
 
                                     if (mPayChanel.equals("wx")) {
                                         if (result == null) {
-                                            ToastUtils.showShortToast("微信支付失败");
+                                            ToastUtils.show("微信支付失败");
                                             return;
                                         }
                                         Constant.PayFlag = PayInfo.SHOPRECORDER;
@@ -341,14 +341,14 @@ public class SelectPayActivity extends BaseActivity {
                                         PayUtils.aliPay(SelectPayActivity.this, orderInfo, new onConnectionFinishLinstener() {
                                             @Override
                                             public void onSuccess(int code, Object result) {
-                                                ToastUtils.showShortToast("支付成功");
+                                                ToastUtils.show("支付成功");
                                                 finish();
 
                                             }
 
                                             @Override
                                             public void onFail(int code, String result) {
-                                                ToastUtils.showShortToast("支付失败");
+                                                ToastUtils.show("支付失败");
                                                 EventBus.getDefault().post(PayForMeEvent.PAY_FAILURE);
                                                 goneloadDialog();
                                             }
@@ -358,7 +358,7 @@ public class SelectPayActivity extends BaseActivity {
 
                                 @Override
                                 public void onFail(int code, String result) {
-                                    ToastUtils.showLongToast(result);
+                                    ToastUtils.show(result);
                                     goneloadDialog();
                                 }
                             });
@@ -377,7 +377,7 @@ public class SelectPayActivity extends BaseActivity {
                                         PayUtils.aliPay(SelectPayActivity.this, orderInfo, new onConnectionFinishLinstener() {
                                             @Override
                                             public void onSuccess(int code, Object result) {
-                                                ToastUtils.showShortToast("支付成功");
+                                                ToastUtils.show("支付成功");
                                                 EventBus.getDefault().post(PayForMeEvent.PAY_SUCCESS);
                                                 finish();
                                                 startActivity(new Intent(SelectPayActivity.this, PayForMeRecordActivity.class));
@@ -385,7 +385,7 @@ public class SelectPayActivity extends BaseActivity {
 
                                             @Override
                                             public void onFail(int code, String result) {
-                                                ToastUtils.showShortToast("支付失败");
+                                                ToastUtils.show("支付失败");
                                                 EventBus.getDefault().post(PayForMeEvent.PAY_FAILURE);
                                                 goneloadDialog();
                                             }
@@ -393,7 +393,7 @@ public class SelectPayActivity extends BaseActivity {
                                     } else if ("wx".equals(mSelectModel.getPayChannel())) {
                                         if (mPayChanel.equals("wx")) {
                                             if (result == null) {
-                                                ToastUtils.showShortToast("微信支付失败");
+                                                ToastUtils.show("微信支付失败");
                                                 return;
                                             }
                                             Constant.PayFlag = PayInfo.PAY_FORME;
@@ -401,7 +401,7 @@ public class SelectPayActivity extends BaseActivity {
 
                                         }
                                     } else {
-                                        ToastUtils.showShortToast("支付成功");
+                                        ToastUtils.show("支付成功");
                                         KLog.e(result);
                                         EventBus.getDefault().post(PayForMeEvent.PAY_SUCCESS);
                                         finish();
@@ -412,7 +412,7 @@ public class SelectPayActivity extends BaseActivity {
                                 @Override
                                 public void onFail(int code, String result) {
                                     goneloadDialog();
-                                    ToastUtils.showShortToast(result);
+                                    ToastUtils.show(result);
                                     EventBus.getDefault().post(PayForMeEvent.PAY_FAILURE);
                                 }
                             });
@@ -424,7 +424,7 @@ public class SelectPayActivity extends BaseActivity {
                         gradeid = "";
                     }
                     if ("2".equals(mSelectModel.agentType) && TextUtils.isEmpty(mCityModel.cityId)) {
-                        ToastUtils.showShortToast("必须要选择省份");
+                        ToastUtils.show("必须要选择省份");
                         return;
                     }
                     NetworkDao.PayUnionLevel(SelectPayActivity.this, gradeid, result.toString(), mSelectModel.getPayChannel(), mCityModel, new onConnectionFinishLinstener() {
@@ -437,26 +437,26 @@ public class SelectPayActivity extends BaseActivity {
                                 PayUtils.aliPay(SelectPayActivity.this, orderInfo, new onConnectionFinishLinstener() {
                                     @Override
                                     public void onSuccess(int code, Object result) {
-                                        ToastUtils.showShortToast("支付成功");
+                                        ToastUtils.show("支付成功");
                                         EventBus.getDefault().post(PayForMeEvent.PAY_SUCCESS);
                                         finish();
                                                                          }
 
                                     @Override
                                     public void onFail(int code, String result) {
-                                        ToastUtils.showShortToast("支付失败");
+                                        ToastUtils.show("支付失败");
                                         EventBus.getDefault().post(PayForMeEvent.PAY_FAILURE);
                                     }
                                 });
                             } else if ("wx".equals(mSelectModel.getPayChannel())) {
                                 if (result == null) {
-                                    ToastUtils.showShortToast("微信支付失败");
+                                    ToastUtils.show("微信支付失败");
                                     return;
                                 }
                                 Constant.PayFlag = PayInfo.UNIONLEVEL;
                                 CallWxPay(result.toString());
                             } else {
-                                ToastUtils.showShortToast("支付成功");
+                                ToastUtils.show("支付成功");
                                 KLog.e(result);
                                 EventBus.getDefault().post(PayForMeEvent.PAY_SUCCESS);
                                 finish();
@@ -466,7 +466,7 @@ public class SelectPayActivity extends BaseActivity {
                         @Override
                         public void onFail(int code, String result) {
                             goneloadDialog();
-                            ToastUtils.showShortToast(result);
+                            ToastUtils.show(result);
                             EventBus.getDefault().post(PayForMeEvent.PAY_FAILURE);
                         }
                     });
@@ -476,7 +476,7 @@ public class SelectPayActivity extends BaseActivity {
             @Override
             public void onFail(int code, String result) {
                 goneloadDialog();
-                ToastUtils.showShortToast(result);
+                ToastUtils.show(result);
             }
         });
 
@@ -520,7 +520,7 @@ public class SelectPayActivity extends BaseActivity {
         mPayReq.timeStamp = mResult.getTimestamp() + "";
         mPayReq.sign = mResult.getSign();
         api.sendReq(mPayReq);
-        ToastUtils.showShortToast("正在打开微信中");
+        ToastUtils.show("正在打开微信中");
     }
 
     public void initCheckPic() {

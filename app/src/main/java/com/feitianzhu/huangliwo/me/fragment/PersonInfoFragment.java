@@ -10,7 +10,7 @@ import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.me.adapter.PersonInfoAdapter;
 import com.feitianzhu.huangliwo.me.base.BaseFragment;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
+import com.hjq.toast.ToastUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
 
@@ -70,7 +70,7 @@ public class PersonInfoFragment extends BaseFragment {
                     @Override
                     public void onError(Call call, Exception e, int id) {
                         Log.e("wangyan","onError---->"+e.getMessage());
-                        ToastUtils.showShortToast(e.getMessage());
+                        ToastUtils.show(e.getMessage());
                     }
 
                     @Override

@@ -15,7 +15,8 @@ import com.feitianzhu.huangliwo.model.PayInfo;
 import com.feitianzhu.huangliwo.shop.ShopDao;
 import com.feitianzhu.huangliwo.shop.ShopHelp;
 import com.feitianzhu.huangliwo.utils.PayUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
+import com.hjq.toast.ToastUtils;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -76,7 +77,7 @@ public class WalletPayActivity extends LazyBaseActivity {
       case R.id.rl_bottomContainer:
         String money = mEdtMoney.getText().toString().trim();
         if (TextUtils.isEmpty(money)) {
-          ToastUtils.showShortToast("金额还没有填写");
+          ToastUtils.show("金额还没有填写");
           return;
         }
         if (mIvCheck1.isSelected()) {
@@ -96,18 +97,18 @@ public class WalletPayActivity extends LazyBaseActivity {
         String str = result.toString();
         PayUtils.aliPay(WalletPayActivity.this, str, new onConnectionFinishLinstener() {
           @Override public void onSuccess(int code, Object result) {
-            ToastUtils.showShortToast("充值成功");
+            ToastUtils.show("充值成功");
             finish();
           }
 
           @Override public void onFail(int code, String result) {
-            ToastUtils.showShortToast("充值失败");
+            ToastUtils.show("充值失败");
           }
         });
       }
 
       @Override public void onFail(int code, String result) {
-        ToastUtils.showShortToast(result);
+        ToastUtils.show(result);
       }
     });
   }

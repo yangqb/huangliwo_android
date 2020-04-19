@@ -1,16 +1,8 @@
 package com.feitianzhu.huangliwo.plane;
 
-import android.annotation.SuppressLint;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.SpannableString;
-import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.style.AbsoluteSizeSpan;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.TextView;
 
@@ -19,18 +11,17 @@ import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.PlaneResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
-import com.feitianzhu.huangliwo.model.ApplyChangeParams;
 import com.feitianzhu.huangliwo.model.ApplyRefundParams;
 import com.feitianzhu.huangliwo.model.DocOrderDetailInfo;
 import com.feitianzhu.huangliwo.model.DocOrderDetailPassengersInfo;
 import com.feitianzhu.huangliwo.model.NationalPassengerInfo;
 import com.feitianzhu.huangliwo.utils.MathUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.view.CustomPassengerNameView;
 import com.feitianzhu.huangliwo.view.CustomRefundView;
 import com.google.gson.Gson;
+import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
@@ -115,7 +106,7 @@ public class RefundPlaneTicketActivity extends BaseActivity {
                                     }
                                 }
                             } else {
-                                ToastUtils.showShortToast(passengerInfo.refundSearchResult.reason);
+                                ToastUtils.show(passengerInfo.refundSearchResult.reason);
                             }
                         }
                     }
@@ -185,11 +176,11 @@ public class RefundPlaneTicketActivity extends BaseActivity {
 
     public void apply() {
         if (TextUtils.isEmpty(tvReason.getText().toString())) {
-            ToastUtils.showShortToast("请选择退票原因");
+            ToastUtils.show("请选择退票原因");
             return;
         }
         if (!passengerInfo.refundSearchResult.canRefund) {
-            ToastUtils.showShortToast(passengerInfo.refundSearchResult.reason);
+            ToastUtils.show(passengerInfo.refundSearchResult.reason);
             return;
         }
 
@@ -219,7 +210,7 @@ public class RefundPlaneTicketActivity extends BaseActivity {
                         super.onSuccess(RefundPlaneTicketActivity.this, response.body().message, response.body().code);
                         goneloadDialog();
                         if (response.body().code == 0 && response.body().result != null && response.body().result.get(0).refundApplyResult.success) {
-                            ToastUtils.showShortToast("申请成功");
+                            ToastUtils.show("申请成功");
                             finish();
                         }
                     }

@@ -23,8 +23,8 @@ import com.feitianzhu.huangliwo.me.base.BaseTakePhotoActivity;
 import com.feitianzhu.huangliwo.me.ui.totalScore.SelectPayActivity;
 import com.feitianzhu.huangliwo.model.SelectPayNeedModel;
 import com.feitianzhu.huangliwo.utils.MathUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.view.CustomSelectPhotoView;
+import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
 import com.socks.library.KLog;
 
@@ -115,7 +115,7 @@ public class PayForMeActivity extends BaseTakePhotoActivity {
             @Override
             public void onFail(int code, String result) {
                 mRate = 0.0;
-                ToastUtils.showShortToast("手续费获取失败，请重试");
+                ToastUtils.show("手续费获取失败，请重试");
                 mButton.setEnabled(false);
                 mButton.setBackgroundResource(R.color.sf_hint_color);
                 mTvTips.setText(String.format(getString(R.string.helpful_hints), mRate + "%"));
@@ -137,7 +137,7 @@ public class PayForMeActivity extends BaseTakePhotoActivity {
                 KLog.i("mSparseArray: " + mSparseArray.toString());
 
                 if (mSparseArray.size() < 3) {
-                    ToastUtils.showShortToast("请上传完整凭证");
+                    ToastUtils.show("请上传完整凭证");
                     return;
                 }
 //                merchantName	是	string	商户名称

@@ -1,13 +1,11 @@
 package com.feitianzhu.huangliwo.shop.ui;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -28,13 +26,12 @@ import com.feitianzhu.huangliwo.shop.SetMealOrderDetailActivity;
 import com.feitianzhu.huangliwo.shop.SetMealPayActivity;
 import com.feitianzhu.huangliwo.shop.adapter.OrderAdapter;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.view.CustomRefundView;
 import com.flyco.tablayout.CommonTabLayout;
 import com.flyco.tablayout.listener.CustomTabEntity;
 import com.flyco.tablayout.listener.OnTabSelectListener;
-import com.google.gson.Gson;
+import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.lzy.okgo.OkGo;
@@ -42,8 +39,6 @@ import com.lzy.okgo.model.Response;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.Callback;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,8 +46,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import okhttp3.Call;
-import okhttp3.Request;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.huangliwo.common.Constant.USERID;
@@ -114,16 +107,16 @@ public class MyOrderActivity2 extends BaseActivity {
         tabLayout.setTabData(tabs);
 
         mAdapter = new OrderAdapter(multipleItemOrderModels);
-        View mEmptyView = View.inflate(this, R.layout.view_common_nodata, null);
+        /*View mEmptyView = View.inflate(this, R.layout.view_common_nodata, null);
         ImageView img_empty = (ImageView) mEmptyView.findViewById(R.id.img_empty);
         img_empty.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
             }
-        });
+        });*/
         refreshLayout.setEnableLoadMore(false);
-        mAdapter.setEmptyView(mEmptyView);
+        //mAdapter.setEmptyView(mEmptyView);
         mAdapter.notifyDataSetChanged();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(mAdapter);
@@ -424,7 +417,7 @@ public class MyOrderActivity2 extends BaseActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.img_collect:
-                ToastUtils.showShortToast("待开发");
+                ToastUtils.show("待开发");
                 break;
             case R.id.title_name:
                 new XPopup.Builder(this)
@@ -577,13 +570,11 @@ public class MyOrderActivity2 extends BaseActivity {
                     @Override
                     public void onStart(com.lzy.okgo.request.base.Request<LzyResponse<GoodsOrderInfo>, ? extends com.lzy.okgo.request.base.Request> request) {
                         super.onStart(request);
-                        showloadDialog("");
                     }
 
                     @Override
                     public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<GoodsOrderInfo>> response) {
                         super.onSuccess(MyOrderActivity2.this, response.body().msg, response.body().code);
-                        goneloadDialog();
                         refreshLayout.finishRefresh();
                         if (response.body().code == 0 && response.body().data != null) {
                             goodsOrderInfo = response.body().data;
@@ -604,7 +595,6 @@ public class MyOrderActivity2 extends BaseActivity {
                     @Override
                     public void onError(com.lzy.okgo.model.Response<LzyResponse<GoodsOrderInfo>> response) {
                         super.onError(response);
-                        goneloadDialog();
                         refreshLayout.finishRefresh(false);
                     }
                 });
@@ -621,7 +611,7 @@ public class MyOrderActivity2 extends BaseActivity {
                     public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
                         super.onSuccess(MyOrderActivity2.this, response.body().msg, response.body().code);
                         if (response.body().code == 0) {
-                            ToastUtils.showShortToast("删除成功");
+                            ToastUtils.show("删除成功");
                             initData();
                         }
                     }
@@ -645,7 +635,7 @@ public class MyOrderActivity2 extends BaseActivity {
                     public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
                         super.onSuccess(MyOrderActivity2.this, response.body().msg, response.body().code);
                         if (response.body().code == 0) {
-                            ToastUtils.showShortToast("取消成功");
+                            ToastUtils.show("取消成功");
                             initData();
                         }
                     }
@@ -670,7 +660,7 @@ public class MyOrderActivity2 extends BaseActivity {
                     public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
                         super.onSuccess(MyOrderActivity2.this, response.body().msg, response.body().code);
                         if (response.body().code == 0) {
-                            ToastUtils.showShortToast("取消成功");
+                            ToastUtils.show("取消成功");
                             getSetMealOrderList();
                         }
                     }
@@ -693,7 +683,7 @@ public class MyOrderActivity2 extends BaseActivity {
                     public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
                         super.onSuccess(MyOrderActivity2.this, response.body().msg, response.body().code);
                         if (response.body().code == 0) {
-                            ToastUtils.showShortToast("确认收货");
+                            ToastUtils.show("确认收货");
                             initData();
                         }
                     }

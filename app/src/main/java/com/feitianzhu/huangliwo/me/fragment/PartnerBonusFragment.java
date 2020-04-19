@@ -22,7 +22,7 @@ import com.feitianzhu.huangliwo.me.ui.totalScore.ReleaseTotalScoreActivity;
 import com.feitianzhu.huangliwo.model.GetMoneyModel;
 import com.feitianzhu.huangliwo.model.TotalScoreModel;
 import com.feitianzhu.huangliwo.shop.ShopHelp;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
+import com.hjq.toast.ToastUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
 
@@ -201,7 +201,7 @@ public class PartnerBonusFragment extends LazyFragment {
 
             @Override
             public void onFail(int code, String result) {
-                ToastUtils.showShortToast(result);
+                ToastUtils.show(result);
             }
         });
     }
@@ -216,7 +216,7 @@ public class PartnerBonusFragment extends LazyFragment {
             @Override
             public void onError(Call call, Exception e, int id) {
                 goneloadDialog();
-                ToastUtils.showShortToast(e.getMessage());
+                ToastUtils.show(e.getMessage());
             }
 
             @Override
@@ -236,7 +236,7 @@ public class PartnerBonusFragment extends LazyFragment {
         switch (ItemIndex) {
             case 2: //合伙人
                 if(response==null||response.getRebateRecords()==null||response.getRebateRecords().getPartnerPointRecord()==null){
-                    ToastUtils.showShortToast("获取服务数据失败!");
+                    ToastUtils.show("获取服务数据失败!");
                     return;
                 }
                 mList.addAll(response.getRebateRecords().getPartnerPointRecord());
@@ -258,7 +258,7 @@ public class PartnerBonusFragment extends LazyFragment {
                 break;
             case 1: //志愿者
                 if(response==null||response.getRebateRecords()==null||response.getRebateRecords().getVolunteerPointRecord()==null){
-                    ToastUtils.showShortToast("获取服务数据失败!");
+                    ToastUtils.show("获取服务数据失败!");
                     return;
                 }
                 mList.addAll(response.getRebateRecords().getVolunteerPointRecord());

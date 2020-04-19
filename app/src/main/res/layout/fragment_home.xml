@@ -3,27 +3,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <include layout="@layout/layer_home_head_nav2" />
+    <include layout="@layout/layer_classification_head_nav" />
 
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/swipeLayout"
         android:layout_width="match_parent"
+        android:background="@color/white"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
         <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/color_f7f7f7"
             android:focusableInTouchMode="true">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/bg_yellow"
                 android:descendantFocusability="blocksDescendants"
                 android:orientation="vertical">
 
@@ -178,42 +178,50 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
-                        android:background="@drawable/bg_f7f7f7_r15"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/shape_fffae5_r10_top"
                         android:orientation="vertical">
 
-                        <RelativeLayout
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/dp_10"
-                            android:layout_marginTop="15dp"
+                            android:layout_marginTop="10dp"
                             android:layout_marginRight="@dimen/dp_10"
-                            android:background="@color/color_f7f7f7">
+                            android:orientation="vertical">
 
-                            <android.support.v7.widget.RecyclerView
-                                android:id="@+id/hList"
+                            <RelativeLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="80dp">
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="5dp">
 
-                            </android.support.v7.widget.RecyclerView>
+                                <android.support.v7.widget.RecyclerView
+                                    android:id="@+id/hList"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="70dp">
 
-                        </RelativeLayout>
+                                </android.support.v7.widget.RecyclerView>
 
-                        <RelativeLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginRight="10dp"
-                            android:background="@color/color_f7f7f7">
+                            </RelativeLayout>
 
-                            <android.support.v7.widget.RecyclerView
-                                android:id="@+id/indicatorRecyclerView"
+                            <RelativeLayout
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content">
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginRight="10dp"
+                                android:layout_marginBottom="5dp"
+                                android:background="@color/color_f7f7f7">
 
-                            </android.support.v7.widget.RecyclerView>
-                        </RelativeLayout>
+                                <android.support.v7.widget.RecyclerView
+                                    android:id="@+id/indicatorRecyclerView"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content">
+
+                                </android.support.v7.widget.RecyclerView>
+                            </RelativeLayout>
+                        </LinearLayout>
 
                         <com.zhpan.bannerview.BannerViewPager
                             android:id="@+id/viewpager"
@@ -349,18 +357,20 @@
                                 android:layout_height="wrap_content">
 
                             </android.support.v7.widget.RecyclerView>
-
                         </LinearLayout>
 
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <android.support.v7.widget.RecyclerView
+                                android:id="@+id/recyclerview"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingBottom="15dp" />
+                        </RelativeLayout>
                     </LinearLayout>
                 </LinearLayout>
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recyclerview"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@android:color/white"
-                    android:paddingBottom="15dp" />
             </LinearLayout>
 
 

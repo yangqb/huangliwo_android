@@ -13,8 +13,8 @@ import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.MineCollectionMoneyModel;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.view.CircleImageView;
+import com.hjq.toast.ToastUtils;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
@@ -70,7 +70,7 @@ public class CollectMoneyActivity extends BaseActivity {
                     @Override
                     public void onError(Call call, Exception e, int id) {
                         Log.e("wangyan", "onError---->" + e.getMessage());
-                        ToastUtils.showShortToast(e.getMessage());
+                        ToastUtils.show(e.getMessage());
                     }
 
                     @Override

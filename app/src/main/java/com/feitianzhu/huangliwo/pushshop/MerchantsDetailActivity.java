@@ -2,14 +2,12 @@ package com.feitianzhu.huangliwo.pushshop;
 
 import android.annotation.SuppressLint;
 import android.os.CountDownTimer;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -25,31 +23,25 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
-import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
-import com.feitianzhu.huangliwo.dao.NetworkDao;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
-import com.feitianzhu.huangliwo.login.ForgetPasswordActivity;
-import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.me.base.BaseTakePhotoActivity;
-import com.feitianzhu.huangliwo.me.ui.AuthEvent;
 import com.feitianzhu.huangliwo.pushshop.bean.EditMerchantInfo;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsClassifyModel;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsModel;
 import com.feitianzhu.huangliwo.pushshop.bean.UpdataMechantsEvent;
-import com.feitianzhu.huangliwo.shop.ShopDao;
 import com.feitianzhu.huangliwo.utils.KeyboardUtils;
 import com.feitianzhu.huangliwo.utils.MathUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.SoftKeyBoardListener;
 import com.feitianzhu.huangliwo.utils.StringUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.view.BusinessHoursDialog;
 import com.feitianzhu.huangliwo.view.BusinessWeekDayDialog;
-import com.feitianzhu.huangliwo.view.CustomRefundView;
+import com.feitianzhu.huangliwo.view.CustomClassificationView;
 import com.feitianzhu.huangliwo.view.CustomSelectPhotoView;
 import com.google.gson.Gson;
+import com.hjq.toast.ToastUtils;
 import com.itheima.roundedimageview.RoundedImageView;
 import com.lljjcoder.Interface.OnCityItemClickListener;
 import com.lljjcoder.bean.CityBean;
@@ -62,26 +54,16 @@ import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.request.PostRequest;
 import com.socks.library.KLog;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.builder.PostFormBuilder;
-import com.zhy.http.okhttp.callback.Callback;
 
 import org.devio.takephoto.model.TResult;
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import okhttp3.Call;
-import okhttp3.Request;
-import okhttp3.Response;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.huangliwo.common.Constant.USERID;
@@ -458,9 +440,9 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
                         strings.add(listBean.get(i).getClsName());
                     }
                     new XPopup.Builder(this)
-                            .asCustom(new CustomRefundView(MerchantsDetailActivity.this)
+                            .asCustom(new CustomClassificationView(MerchantsDetailActivity.this)
                                     .setData(strings)
-                                    .setOnItemClickListener(new CustomRefundView.OnItemClickListener() {
+                                    .setOnItemClickListener(new CustomClassificationView.OnItemClickListener() {
                                         @Override
                                         public void onItemClick(int position) {
                                             clsId = listBean.get(position).getClsId();
@@ -470,7 +452,7 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
                                     }))
                             .show();
                 } else {
-                    ToastUtils.showShortToast("商铺类型获取失败");
+                    ToastUtils.show("商铺类型获取失败");
                 }
                 break;
             case R.id.ll_discount:
@@ -569,7 +551,7 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
                     public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
                         super.onSuccess(MerchantsDetailActivity.this, response.body().msg, response.body().code);
                         if (response.body().code == 0) {
-                            ToastUtils.showShortToast("验证码已发送至您的手机");
+                            ToastUtils.show("验证码已发送至您的手机");
                         }
                     }
 
@@ -607,11 +589,11 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
             editMerchantsAddress.setHintTextColor(getResources().getColor(R.color.color_ff0000));
         }
         /*if (TextUtils.isEmpty(email)) {
-            ToastUtils.showShortToast("请填写邮箱地址");
+            ToastUtils.show("请填写邮箱地址");
             return;
         }*/
         /*if (!StringUtils.isEmail(email)) {
-            ToastUtils.showShortToast("请填写正确的邮箱地址");
+            ToastUtils.show("请填写正确的邮箱地址");
             return;
         }*/
 
@@ -633,19 +615,19 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
 
         if (TextUtils.isEmpty(merchantsName) || TextUtils.isEmpty(phone)
                 || TextUtils.isEmpty(address) || TextUtils.isEmpty(percentage) || (!isTimes || !isWeek)) {
-            ToastUtils.showShortToast("您的资料填写不完整");
+            ToastUtils.show("您的资料填写不完整");
             return;
         }
 
         if (!TextUtils.isEmpty(businessLicenseNo)) {
             if (!(businessLicenseNo.length() == 15 || businessLicenseNo.length() == 18)) {
-                ToastUtils.showShortToast("请输入正确的营业执照号");
+                ToastUtils.show("请输入正确的营业执照号");
                 return;
             }
         }
 
         if (Double.valueOf(percentage) > 100 || Double.valueOf(percentage) < 0) {
-            ToastUtils.showShortToast("折扣比例不能大于100小于0");
+            ToastUtils.show("折扣比例不能大于100小于0");
             return;
         }
 
@@ -721,7 +703,7 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
                         goneloadDialog();
                         if (response.body().code == 0) {
                             EventBus.getDefault().post(UpdataMechantsEvent.SUCCESS);
-                            ToastUtils.showShortToast("修改成功");
+                            ToastUtils.show("修改成功");
                             finish();
                         }
                     }
@@ -804,7 +786,7 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
     public void onGetGeoCodeResult(GeoCodeResult geoCodeResult) {
         if (null != geoCodeResult && null != geoCodeResult.getLocation()) {
             if (geoCodeResult.error != SearchResult.ERRORNO.NO_ERROR) {
-                ToastUtils.showShortToast("没有获取到当前商铺地址坐标");
+                ToastUtils.show("没有获取到当前商铺地址坐标");
                 return;
             } else {
                 latitude = geoCodeResult.getLocation().latitude;

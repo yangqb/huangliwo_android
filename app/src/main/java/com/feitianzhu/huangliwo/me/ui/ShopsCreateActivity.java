@@ -23,8 +23,8 @@ import com.feitianzhu.huangliwo.shop.ShopDao;
 import com.feitianzhu.huangliwo.shop.ui.dialog.ProvinceCallBack;
 import com.feitianzhu.huangliwo.shop.ui.dialog.ProvincehAreaDialog;
 import com.feitianzhu.huangliwo.utils.LocationUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.view.CustomSelectPhotoView;
+import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
 import com.socks.library.KLog;
 
@@ -82,7 +82,7 @@ public class ShopsCreateActivity extends BaseTakePhotoActivity {
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true) //在ui线程执行
     public void onLocationDataSynEvent(LocationPost mMoel) {
         if (!mMoel.isLocationed || null == Constant.mPoint || 0 == Constant.mPoint.longitude) {
-            ToastUtils.showShortToast("当前无法定位，选择城市为北京");
+            ToastUtils.show("当前无法定位，选择城市为北京");
             Constant.mPoint = new MyPoint(116.232934, 39.541997);
             Constant.mCity = "北京";
         } else {
@@ -194,38 +194,38 @@ public class ShopsCreateActivity extends BaseTakePhotoActivity {
             case R.id.btn_create:
                 String shopname = mTxtShopName.getText().toString().trim();
                 if (TextUtils.isEmpty(shopname)) {
-                    ToastUtils.showShortToast("还没有填写商铺名称");
+                    ToastUtils.show("还没有填写商铺名称");
                     return;
                 }
                 String shopaddress = mTxtAddress.getText().toString().trim();
                 if (TextUtils.isEmpty(shopname)) {
-                    ToastUtils.showShortToast("还没有填写商铺详细地址");
+                    ToastUtils.show("还没有填写商铺详细地址");
                     return;
                 }
                 String shopPhone = mTxtPhone.getText().toString().trim();
                 if (TextUtils.isEmpty(shopPhone)) {
-                    ToastUtils.showShortToast("还没有填写商铺电话");
+                    ToastUtils.show("还没有填写商铺电话");
                     return;
                 }
                 String shopIntro = mEditIntro.getText().toString().trim();
                 if (TextUtils.isEmpty(shopIntro)) {
-                    ToastUtils.showShortToast("还没有填写介绍");
+                    ToastUtils.show("还没有填写介绍");
                     return;
                 }
                 if (TextUtils.isEmpty(photo_file_one)) {
-                    ToastUtils.showShortToast("还没有店铺头像");
+                    ToastUtils.show("还没有店铺头像");
                     return;
                 }
                 if (TextUtils.isEmpty(photo_file_two)) {
-                    ToastUtils.showShortToast("还没有店铺封面");
+                    ToastUtils.show("还没有店铺封面");
                     return;
                 }
                 if ("请选择地区".equals(mTxtSelectAddress.getText().toString().trim())) {
-                    ToastUtils.showShortToast("还没有选择商铺地区");
+                    ToastUtils.show("还没有选择商铺地区");
                     return;
                 }
                 if ("请输入类型".equals(mTxtShopTypes.getText().toString().trim())) {
-                    ToastUtils.showShortToast("还没有选择商铺类型");
+                    ToastUtils.show("还没有选择商铺类型");
                     return;
                 }
                 showloadDialog("");
@@ -233,7 +233,7 @@ public class ShopsCreateActivity extends BaseTakePhotoActivity {
                                           @Override
                                           public void onSuccess(int code, Object result) {
                                               goneloadDialog();
-                                              ToastUtils.showShortToast(result.toString());
+                                              ToastUtils.show(result.toString());
 
                                               finish();
                                           }
@@ -241,7 +241,7 @@ public class ShopsCreateActivity extends BaseTakePhotoActivity {
                                           @Override
                                           public void onFail(int code, String result) {
                                               goneloadDialog();
-                                              ToastUtils.showShortToast("创建失败" + result);
+                                              ToastUtils.show("创建失败" + result);
                                           }
                                       }, photo_file_one, photo_file_two, shopname, shopaddress, shopPhone, mOnSelectProvince,
                         mList.get(selectIndex - 1).clsId + "", shopIntro, Constant.mPoint);

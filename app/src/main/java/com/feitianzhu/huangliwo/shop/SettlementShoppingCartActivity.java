@@ -25,20 +25,18 @@ import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.AddressManagementActivity;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.AddressInfo;
-import com.feitianzhu.huangliwo.model.GoodsOrderInfo;
 import com.feitianzhu.huangliwo.model.PayInfo;
 import com.feitianzhu.huangliwo.model.PayModel;
 import com.feitianzhu.huangliwo.model.ShoppingCartModel;
 import com.feitianzhu.huangliwo.model.ShoppingCartPayInfo;
 import com.feitianzhu.huangliwo.shop.adapter.SettlementShoppingAdapter;
 import com.feitianzhu.huangliwo.shop.ui.MyOrderActivity2;
-import com.feitianzhu.huangliwo.shop.ui.OrderDetailActivity;
 import com.feitianzhu.huangliwo.utils.PayUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.SoftKeyBoardListener;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.google.gson.Gson;
+import com.hjq.toast.ToastUtils;
 import com.lzy.okgo.OkGo;
 import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
@@ -207,7 +205,7 @@ public class SettlementShoppingCartActivity extends BaseActivity {
                 break;
             case R.id.tv_pay:
                 if (addressBean == null) {
-                    ToastUtils.showShortToast("请添加收货地址");
+                    ToastUtils.show("请添加收货地址");
                     return;
                 }
                 pay2();
@@ -309,7 +307,7 @@ public class SettlementShoppingCartActivity extends BaseActivity {
         mPayReq.timeStamp = result.timestamp + "";
         mPayReq.sign = result.sign;
         api.sendReq(mPayReq);
-        ToastUtils.showShortToast("正在打开微信中");
+        ToastUtils.show("正在打开微信中");
     }
 
 
@@ -318,14 +316,14 @@ public class SettlementShoppingCartActivity extends BaseActivity {
         PayUtils.aliPay(SettlementShoppingCartActivity.this, payProof, new onConnectionFinishLinstener() {
             @Override
             public void onSuccess(int code, Object result) {
-                ToastUtils.showShortToast("支付成功");
+                ToastUtils.show("支付成功");
                 setResult(RESULT_OK);
                 finish();
             }
 
             @Override
             public void onFail(int code, String result) {
-                ToastUtils.showShortToast("支付失败");
+                ToastUtils.show("支付失败");
                 Intent intent = new Intent(SettlementShoppingCartActivity.this, MyOrderActivity2.class);
                 startActivity(intent);
                 finish();
@@ -342,11 +340,11 @@ public class SettlementShoppingCartActivity extends BaseActivity {
     public void onPayMessageCall(PayInfo msg) {
         if (msg.getCurrentInfo() == PayInfo.SHOPPING_CART_PAY) {
             if (msg.getIsSuccess() == PayInfo.SUCCESS) {
-                ToastUtils.showShortToast("支付成功");
+                ToastUtils.show("支付成功");
                 setResult(RESULT_OK);
                 finish();
             } else {
-                ToastUtils.showShortToast("支付失败");
+                ToastUtils.show("支付失败");
                 Intent intent = new Intent(SettlementShoppingCartActivity.this, MyOrderActivity2.class);
                 startActivity(intent);
                 finish();

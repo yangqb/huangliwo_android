@@ -19,7 +19,6 @@ import com.feitianzhu.huangliwo.home.HomeFragment2;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.MyCenterFragment;
-import com.feitianzhu.huangliwo.me.ui.ScannerActivity;
 import com.feitianzhu.huangliwo.message.MessageFragment;
 import com.feitianzhu.huangliwo.model.HomePopModel;
 import com.feitianzhu.huangliwo.model.LocationPost;
@@ -27,19 +26,16 @@ import com.feitianzhu.huangliwo.model.MyPoint;
 import com.feitianzhu.huangliwo.model.UpdateAppModel;
 import com.feitianzhu.huangliwo.shop.CommodityClassificationFragment;
 import com.feitianzhu.huangliwo.shop.NewYearShoppingActivity;
-import com.feitianzhu.huangliwo.utils.HProgressDialogUtils;
 import com.feitianzhu.huangliwo.utils.LocationUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.UpdateAppHttpUtil;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.utils.VersionManagementUtil;
 import com.feitianzhu.huangliwo.view.CustomNerYearPopView;
 import com.google.gson.Gson;
 import com.gyf.immersionbar.ImmersionBar;
+import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
-import com.lxj.xpopup.interfaces.OnCancelListener;
-import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.socks.library.KLog;
@@ -47,25 +43,19 @@ import com.vector.update_app.UpdateAppBean;
 import com.vector.update_app.UpdateAppManager;
 import com.vector.update_app.UpdateCallback;
 import com.vector.update_app.listener.IUpdateDialogFragmentListener;
-import com.vector.update_app.service.DownloadService;
 import com.vector.update_app.utils.AppUpdateUtils;
-import com.vector.update_app.view.NumberProgressBar;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
 import com.yanzhenjie.permission.Rationale;
 import com.yanzhenjie.permission.RationaleListener;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.Callback;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.io.File;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import okhttp3.Call;
 
 import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
 import static com.feitianzhu.huangliwo.common.Constant.UAPDATE;
@@ -140,7 +130,7 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
     public void onLocationDataSynEvent(LocationPost mMoel) {
         KLog.e("onLocationDataSynEvent" + Constant.mPoint);
         if (!mMoel.isLocationed || null == Constant.mPoint || 0 == Constant.mPoint.longitude) {
-            ToastUtils.showShortToast("当前无法定位，选择城市为北京");
+            ToastUtils.show("当前无法定位，选择城市为北京");
             Constant.mPoint = new MyPoint(116.232934, 39.541997);
             Constant.mCity = "北京";
         } else {
@@ -163,10 +153,6 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
                     mTransaction.show(mHomeFragment);
                 }
                 mTransaction.commit();
-                /*ImmersionBar.with(this)
-                        .statusBarDarkFont(true, 0.2f)
-                        .statusBarColor(R.color.bg_yellow)
-                        .init();*/
                 break;
 
             case R.id.ly_shop:
@@ -348,7 +334,7 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
                 .execute(new JsonCallback<LzyResponse<HomePopModel>>() {
                     @Override
                     public void onSuccess(Response<LzyResponse<HomePopModel>> response) {
-                        super.onSuccess(MainActivity.this,"",response.body().code);
+                        super.onSuccess(MainActivity.this, "", response.body().code);
                         if (response.body().data != null && response.body().data.getPopup() != null) {
                             popupBean = response.body().data.getPopup();
                             isShow = response.body().data.getPopup().getStatus();

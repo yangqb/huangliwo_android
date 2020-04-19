@@ -15,12 +15,13 @@ import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.CustomFightCityInfo;
 import com.feitianzhu.huangliwo.utils.DateUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
-import com.feitianzhu.huangliwo.view.CustomPlaneProtocolDialog;
 import com.feitianzhu.huangliwo.view.CustomRefundView;
+import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -50,7 +51,7 @@ public class PlaneHomeActivity extends BaseActivity {
     private boolean reversal;
     private boolean isChildren;
     private boolean isBaby;
-    private int searchType; //0国内1国际2国内往返3国际往返
+    private int searchType = 0; //0国内1国际2国内往返3国际往返
     private String userId;
     private String token;
     @BindView(R.id.title_name)
@@ -107,16 +108,6 @@ public class PlaneHomeActivity extends BaseActivity {
         //获取当前时间
         Date curDate = new Date(System.currentTimeMillis());
         startDateStr = simpleDateFormat.format(curDate);
-
-        Calendar rightNow = Calendar.getInstance();
-        //当前时间 加10天
-        rightNow.add(Calendar.DAY_OF_YEAR, 2);
-        //new SimgpleDateFormat 进行格式化
-        //利用Calendar的getTime方法，将时间转化为Date对象
-        //利用SimpleDateFormat对象 把Date对象格式化
-        endDateStr = simpleDateFormat.format(rightNow.getTime());
-        endDate.setText(endDateStr);
-        endWeek.setText(DateUtils.strToDate2(endDateStr));
         startDate.setText(startDateStr);
         startWeek.setText(DateUtils.strToDate2(startDateStr));
     }
@@ -150,10 +141,6 @@ public class PlaneHomeActivity extends BaseActivity {
                 trainSelect.setSelected(true);
                 break;
             case R.id.btn_domestic:
-                tvEndCity = "上海";
-                arrCode = "SHA";
-                arrCodeData = "SHA";
-                endCityName.setText(tvEndCity);
                 btnDomestic.setTextColor(getResources().getColor(R.color.color_333333));
                 btnInternational.setTextColor(getResources().getColor(R.color.color_666666));
                 btnComeAndGo.setTextColor(getResources().getColor(R.color.color_666666));
@@ -164,10 +151,6 @@ public class PlaneHomeActivity extends BaseActivity {
                 searchType = 0;
                 break;
             case R.id.btn_international:
-                tvEndCity = "请选择";
-                arrCode = "";
-                arrCodeData = "";
-                endCityName.setText(tvEndCity);
                 btnDomestic.setTextColor(getResources().getColor(R.color.color_666666));
                 btnInternational.setTextColor(getResources().getColor(R.color.color_333333));
                 btnComeAndGo.setTextColor(getResources().getColor(R.color.color_666666));
@@ -178,10 +161,16 @@ public class PlaneHomeActivity extends BaseActivity {
                 searchType = 1;
                 break;
             case R.id.btn_come_go:
-                tvEndCity = "上海";
-                arrCode = "SHA";
-                arrCodeData = "SHA";
-                endCityName.setText(tvEndCity);
+                String[] strings = startDateStr.split("-");
+                Calendar calendar = Calendar.getInstance();//创建一个实例
+                calendar.set(Integer.valueOf(strings[0]), Integer.valueOf(strings[1]) - 1, Integer.valueOf(strings[2]));//实例化一个Calendar。 年、月、日、时、分、秒
+                calendar.add(Calendar.DAY_OF_YEAR, 2);//给当前日期加上指定天数，这里加答的是2天
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);// HH:mm:ss
+                if (TextUtils.isEmpty(endDateStr)) {
+                    endDateStr = simpleDateFormat.format(calendar.getTime());
+                    endDate.setText(endDateStr);
+                    endWeek.setText(DateUtils.strToDate2(endDateStr));
+                }
                 btnDomestic.setTextColor(getResources().getColor(R.color.color_666666));
                 btnInternational.setTextColor(getResources().getColor(R.color.color_666666));
                 btnComeAndGo.setTextColor(getResources().getColor(R.color.color_333333));
@@ -239,11 +228,11 @@ public class PlaneHomeActivity extends BaseActivity {
                 break;
             case R.id.search:
                 if (TextUtils.isEmpty(arrCode) || TextUtils.isEmpty(depCode)) {
-                    ToastUtils.showShortToast("请选择城市");
+                    ToastUtils.show("请选择城市");
                     return;
                 }
                 if (searchType == 1 || searchType == 3) {
-                    ToastUtils.showShortToast("疫情期间暂不支持国际/中国港澳台业务");
+                    ToastUtils.show("疫情期间暂不支持国际/中国港澳台业务");
                     return;
                 }
                 CustomFightCityInfo customFightCityInfo = new CustomFightCityInfo();
@@ -277,6 +266,8 @@ public class PlaneHomeActivity extends BaseActivity {
             case R.id.ll_goDate:
             case R.id.ll_comeDate:
                 intent = new Intent(PlaneHomeActivity.this, PlaneCalendarActivity.class);
+                intent.putExtra(PlaneCalendarActivity.START_DATE, startDateStr);
+                intent.putExtra(PlaneCalendarActivity.END_DATE, endDateStr);
                 intent.putExtra(PlaneCalendarActivity.SELECT_MODEL, searchType);
                 startActivityForResult(intent, DATE_REQUEST_CODE);
                 break;
@@ -354,7 +345,7 @@ public class PlaneHomeActivity extends BaseActivity {
                     endDate.setText(endDateStr);
                     endWeek.setText(DateUtils.strToDate2(endDateStr));
                 } else {
-                    startDateStr = data.getStringExtra(PlaneCalendarActivity.SELECT_DATE);
+                    startDateStr = data.getStringExtra(PlaneCalendarActivity.SELECT_DATE).split("=")[0];
                     startDate.setText(startDateStr);
                     startWeek.setText(DateUtils.strToDate2(startDateStr));
                 }

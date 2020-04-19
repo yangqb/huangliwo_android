@@ -17,8 +17,8 @@ import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.me.helper.ImageUtil;
 import com.feitianzhu.huangliwo.pushshop.MyPaymentActivity;
 import com.feitianzhu.huangliwo.pushshop.RecordOrderActivity;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.gyf.immersionbar.ImmersionBar;
+import com.hjq.toast.ToastUtils;
 import com.uuzuche.lib_zxing.activity.CaptureFragment;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 
@@ -138,7 +138,7 @@ public class ScannerActivity extends BaseActivity {
                录单页面
               * */
                 if (isMerchants != 2) {
-                    ToastUtils.showShortToast("您不是商户不可录单");
+                    ToastUtils.show("您不是商户不可录单");
                     finish();
                 } else {
                     intent = new Intent(ScannerActivity.this, RecordOrderActivity.class);
@@ -159,7 +159,7 @@ public class ScannerActivity extends BaseActivity {
             } else if (result.contains("record")) {
                 //赠品录单
                 if (isMerchants != 2) {
-                    ToastUtils.showShortToast("您不是商户不可录单");
+                    ToastUtils.show("您不是商户不可录单");
                     finish();
                 } else {
                     intent = new Intent(ScannerActivity.this, RecordOrderActivity.class);
@@ -170,7 +170,7 @@ public class ScannerActivity extends BaseActivity {
                 }
 
             } else {
-                ToastUtils.showShortToast("无法识别此二维码!!");
+                ToastUtils.show("无法识别此二维码!!");
             }
         }
     }

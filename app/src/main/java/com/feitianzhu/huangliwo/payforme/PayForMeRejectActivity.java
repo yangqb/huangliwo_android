@@ -17,8 +17,8 @@ import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.huangliwo.dao.NetworkDao;
 import com.feitianzhu.huangliwo.me.base.BaseTakePhotoActivity;
 import com.feitianzhu.huangliwo.payforme.entity.PayForMeEntity;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.view.CustomSelectPhotoView;
+import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
 import com.socks.library.KLog;
 
@@ -115,7 +115,7 @@ public class PayForMeRejectActivity extends BaseTakePhotoActivity {
                 KLog.i("mSparseArray: " + mSparseArray.toString());
 
                 if (mSparseArray.size() < 3) {
-                    ToastUtils.showShortToast("请上传完整凭证");
+                    ToastUtils.show("请上传完整凭证");
                     return;
                 }
                 showloadDialog("正在提交...");
@@ -123,7 +123,7 @@ public class PayForMeRejectActivity extends BaseTakePhotoActivity {
                         mSparseArray.get(0), mSparseArray.get(1), mSparseArray.get(2), new onConnectionFinishLinstener() {
                             @Override
                             public void onSuccess(int code, Object result) {
-                                ToastUtils.showShortToast("提交成功");
+                                ToastUtils.show("提交成功");
                                 goneloadDialog();
                                 finish();
                                 startActivity(new Intent(mContext, MainActivity.class));
@@ -132,7 +132,7 @@ public class PayForMeRejectActivity extends BaseTakePhotoActivity {
                             @Override
                             public void onFail(int code, String result) {
                                 goneloadDialog();
-                                ToastUtils.showShortToast(result);
+                                ToastUtils.show(result);
                             }
                         });
 

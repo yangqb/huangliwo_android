@@ -17,23 +17,18 @@ import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
-import com.feitianzhu.huangliwo.model.GoodsOrderInfo;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.view.CustomRefundView;
+import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
 import com.lzy.okgo.OkGo;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.Callback;
 
 import java.util.Arrays;
 import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import okhttp3.Call;
-import okhttp3.Response;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.huangliwo.common.Constant.USERID;
@@ -104,7 +99,7 @@ public class EditApplyRefundActivity extends BaseActivity {
                 break;
             case R.id.right_button:
                 if (TextUtils.isEmpty(tvReason.getText().toString())) {
-                    ToastUtils.showShortToast("请选择退款原因");
+                    ToastUtils.show("请选择退款原因");
                 } else {
                     if (type == 0) {
                         refundGoodsOrder(orderNo, tvReason.getText().toString());
@@ -131,7 +126,7 @@ public class EditApplyRefundActivity extends BaseActivity {
                     public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
                         super.onSuccess(EditApplyRefundActivity.this, response.body().msg, response.body().code);
                         if (response.body().code == 0) {
-                            ToastUtils.showShortToast("申请成功");
+                            ToastUtils.show("申请成功");
                             setResult(RESULT_OK);
                             finish();
                         }
@@ -157,7 +152,7 @@ public class EditApplyRefundActivity extends BaseActivity {
                     public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
                         super.onSuccess(EditApplyRefundActivity.this, response.body().msg, response.body().code);
                         if (response.body().code == 0) {
-                            ToastUtils.showShortToast("退款成功");
+                            ToastUtils.show("退款成功");
                             setResult(RESULT_OK);
                             finish();
                         }

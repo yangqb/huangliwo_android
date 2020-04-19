@@ -7,7 +7,7 @@ import android.util.Log;
 
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.model.PayInfo;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
+import com.hjq.toast.ToastUtils;
 import com.socks.library.KLog;
 import com.tencent.mm.opensdk.constants.ConstantsAPI;
 import com.tencent.mm.opensdk.modelbase.BaseReq;
@@ -106,7 +106,7 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
 
             }
         } else {
-            ToastUtils.showShortToast(resp.getType() + "");
+            ToastUtils.show(resp.getType() + "");
 
         }
         finish();

@@ -1,23 +1,19 @@
 package com.feitianzhu.huangliwo.plane;
 
 import android.content.Intent;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cretin.tools.cityselect.callback.OnCitySelectListener;
 import com.cretin.tools.cityselect.callback.OnLocationListener;
 import com.cretin.tools.cityselect.model.CityModel;
 import com.cretin.tools.cityselect.view.CitySelectView;
 import com.feitianzhu.huangliwo.R;
-import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.CustomCityModel;
-import com.feitianzhu.huangliwo.model.Province;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.hjq.toast.ToastUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -89,6 +85,8 @@ public class SelectPlaneCityActivity extends BaseActivity {
                 //Toast.makeText(SelectPlaneCityActivity.this, "你点击了：" + cityModel.getCityName() + ":" + cityModel.getExtra().toString(), Toast.LENGTH_SHORT).show();
                 if ("中国香港".equals(cityModel.getCountryName()) || "中国澳门".equals(cityModel.getCountryName()) || "中国台湾".equals(cityModel.getCountryName())) {
                     type = 1;
+                    ToastUtils.show("疫情期间暂不支持国际/中国港澳台业务");
+                    return;
                 }
                 Intent intent = new Intent();
                 intent.putExtra(CITY_TYPE, type);
@@ -109,14 +107,16 @@ public class SelectPlaneCityActivity extends BaseActivity {
             @Override
             public void onCitySelect(CityModel cityModel) {
                 //Toast.makeText(SelectPlaneCityActivity.this, "你点击了：" + cityModel.getCityName() + ":" + cityModel.getExtra().toString(), Toast.LENGTH_SHORT).show();
-                if ("中国香港".equals(cityModel.getCountryName()) || "中国澳门".equals(cityModel.getCountryName()) || "中国台湾".equals(cityModel.getCountryName())) {
+              /*  if ("中国香港".equals(cityModel.getCountryName()) || "中国澳门".equals(cityModel.getCountryName()) || "中国台湾".equals(cityModel.getCountryName())) {
                     type = 1;
+                    return;
                 }
                 Intent intent = new Intent();
                 intent.putExtra(CITY_TYPE, type);
                 intent.putExtra(CITY_DATA, cityModel);
                 setResult(RESULT_OK, intent);
-                finish();
+                finish();*/
+                ToastUtils.show("疫情期间暂不支持国际/中国港澳台业务");
             }
 
             @Override

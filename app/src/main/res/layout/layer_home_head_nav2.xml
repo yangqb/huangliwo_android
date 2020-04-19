@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/bg_yellow"
+    android:id="@+id/headRootView"
+    android:background="@color/color_ff3528"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="@color/bg_yellow"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -38,10 +38,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="6dp"
-                android:drawableRight="@mipmap/xiala"
+                android:drawableRight="@mipmap/a01_02xiala"
                 android:drawablePadding="3dp"
                 android:text="北京"
-                android:textColor="@color/color_333333"
+                android:textColor="@color/white"
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
@@ -88,7 +88,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:scaleType="centerInside"
-            android:src="@mipmap/a01_0saoyisao" />
+            android:src="@mipmap/b01_01saoyisao" />
 
     </LinearLayout>
 

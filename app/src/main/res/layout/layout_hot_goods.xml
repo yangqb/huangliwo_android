@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="2.5dp"
     android:layout_marginRight="2.5dp"
     android:layout_marginBottom="5dp"
     android:background="@drawable/shape_f7f7f7_r5"
-    android:gravity="center"
+    android:gravity="center_vertical"
     android:orientation="horizontal"
     android:padding="5dp">
 
@@ -31,7 +32,7 @@
             android:ellipsize="end"
             android:maxLines="2"
             android:text="李佳琦推荐咚熊草原绿李佳琦推荐咚熊草原绿李佳琦推荐咚熊草原绿"
-            android:textColor="@color/color_333333"
+            android:textColor="@color/white"
             android:textSize="13sp" />
 
         <TextView
@@ -39,14 +40,18 @@
             android:layout_height="wrap_content"
             android:paddingTop="6dp"
             android:text="会员价"
-            android:textColor="@color/color_999999"
+            android:textColor="@color/white"
             android:textSize="12sp" />
 
         <TextView
             android:id="@+id/vip_price"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingTop="6dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="3dp"
+            android:background="@drawable/shape_ffffff_r10_all"
+            android:gravity="center"
+            android:paddingLeft="3dp"
+            android:paddingRight="3dp"
             android:text="63458.00"
             android:textColor="@color/color_F88D03"
             android:textSize="14sp" />

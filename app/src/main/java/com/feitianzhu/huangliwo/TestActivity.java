@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.utils.EncryptUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
+import com.hjq.toast.ToastUtils;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -58,7 +58,7 @@ public class TestActivity extends BaseActivity {
                 ClipData clip = ClipData.newPlainText("simple text", tvPass.getText().toString().trim());
                 //传入clipdata对象.
                 clipboard.setPrimaryClip(clip);
-                ToastUtils.showShortToast("已复制");
+                ToastUtils.show("已复制");
                 break;
         }
 

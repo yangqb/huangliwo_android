@@ -29,30 +29,22 @@ import com.feitianzhu.huangliwo.shop.adapter.EditCommentAdapter;
 import com.feitianzhu.huangliwo.utils.EditTextUtils;
 import com.feitianzhu.huangliwo.utils.Glide4Engine;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.view.AddSetMealView;
 import com.google.gson.Gson;
+import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
 import com.lzy.okgo.OkGo;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.builder.PostFormBuilder;
-import com.zhy.http.okhttp.callback.Callback;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import cc.shinichi.library.ImagePreview;
-import okhttp3.Call;
-import okhttp3.Request;
-import okhttp3.Response;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.huangliwo.common.Constant.USERID;
@@ -227,13 +219,13 @@ public class EditSetMealActivity extends BaseActivity {
                             @Override
                             public void onConfirm(String name, String num, String price) {
                                 if (TextUtils.isEmpty(name)) {
-                                    ToastUtils.showShortToast("请输入商品名称");
+                                    ToastUtils.show("请输入商品名称");
                                     return;
                                 } else if (TextUtils.isEmpty(num)) {
-                                    ToastUtils.showShortToast("请输入商品数量");
+                                    ToastUtils.show("请输入商品数量");
                                     return;
                                 } else if (TextUtils.isEmpty(price)) {
-                                    ToastUtils.showShortToast("请输入商品价格");
+                                    ToastUtils.show("请输入商品价格");
                                     return;
                                 }
                                 if (singleGoodsModel == null) {  //添加
@@ -318,36 +310,36 @@ public class EditSetMealActivity extends BaseActivity {
         String percentage = editSetMealDiscount.getText().toString().trim();
         String rules = editRules.getText().toString().trim();
         if (allSelect.size() <= 0) {
-            ToastUtils.showShortToast("请上传套餐图片");
+            ToastUtils.show("请上传套餐图片");
             return;
         }
         if (TextUtils.isEmpty(setMealName)) {
-            ToastUtils.showShortToast("请输入套餐名称");
+            ToastUtils.show("请输入套餐名称");
             return;
         }
         /*if (TextUtils.isEmpty(setMealDescription)) {
-            ToastUtils.showShortToast("请输入套餐描述");
+            ToastUtils.show("请输入套餐描述");
             return;
         }*/
         if (TextUtils.isEmpty(setMealPrice)) {
-            ToastUtils.showShortToast("请输入套餐价格");
+            ToastUtils.show("请输入套餐价格");
             return;
         }
         if (TextUtils.isEmpty(percentage)) {
-            ToastUtils.showShortToast("请输入套餐折扣比例");
+            ToastUtils.show("请输入套餐折扣比例");
             return;
         }
         if (Double.valueOf(percentage) > 100 || Double.valueOf(percentage) < 0) {
-            ToastUtils.showShortToast("折扣比例不能大于100小于0");
+            ToastUtils.show("折扣比例不能大于100小于0");
             return;
         }
         if (TextUtils.isEmpty(rules)) {
-            ToastUtils.showShortToast("请输入套餐使用规则");
+            ToastUtils.show("请输入套餐使用规则");
             return;
         }
 
         if (list == null || list.size() <= 0) {
-            ToastUtils.showShortToast("请添加套餐单品");
+            ToastUtils.show("请添加套餐单品");
             return;
         }
 
@@ -379,7 +371,7 @@ public class EditSetMealActivity extends BaseActivity {
                         super.onSuccess(EditSetMealActivity.this, response.body().msg, response.body().code);
                         goneloadDialog();
                         if (response.body().code == 0) {
-                            ToastUtils.showShortToast("添加成功");
+                            ToastUtils.show("添加成功");
                             setResult(RESULT_OK);
                             finish();
                         }

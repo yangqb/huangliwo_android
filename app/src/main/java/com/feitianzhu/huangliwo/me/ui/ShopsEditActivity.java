@@ -21,8 +21,8 @@ import com.feitianzhu.huangliwo.model.ShopsType;
 import com.feitianzhu.huangliwo.shop.ShopDao;
 import com.feitianzhu.huangliwo.shop.ui.dialog.ProvinceCallBack;
 import com.feitianzhu.huangliwo.shop.ui.dialog.ProvincehAreaDialog;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.view.CustomSelectPhotoView;
+import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
 import com.socks.library.KLog;
 
@@ -111,7 +111,7 @@ public class ShopsEditActivity extends BaseTakePhotoActivity {
 
             @Override
             public void onFail(int code, String result) {
-                ToastUtils.showShortToast(result);
+                ToastUtils.show(result);
             }
         });
     }
@@ -156,30 +156,30 @@ public class ShopsEditActivity extends BaseTakePhotoActivity {
             case R.id.btn_create:
                 String shopname = mTxtShopName.getText().toString().trim();
                 if (TextUtils.isEmpty(shopname)) {
-                    ToastUtils.showShortToast("还没有填写商铺名称");
+                    ToastUtils.show("还没有填写商铺名称");
                     return;
                 }
                 String shopaddress = mTxtAddress.getText().toString().trim();
                 if (TextUtils.isEmpty(shopname)) {
-                    ToastUtils.showShortToast("还没有填写商铺详细地址");
+                    ToastUtils.show("还没有填写商铺详细地址");
                     return;
                 }
                 String shopPhone = mTxtPhone.getText().toString().trim();
                 if (TextUtils.isEmpty(shopPhone)) {
-                    ToastUtils.showShortToast("还没有填写商铺电话");
+                    ToastUtils.show("还没有填写商铺电话");
                     return;
                 }
                 String shopIntro = mEditIntro.getText().toString().trim();
                 if (TextUtils.isEmpty(shopIntro)) {
-                    ToastUtils.showShortToast("还没有填写介绍");
+                    ToastUtils.show("还没有填写介绍");
                     return;
                 }
                 if ("请选择地区".equals(mTxtSelectAddress.getText().toString().trim())) {
-                    ToastUtils.showShortToast("还没有选择商铺地区");
+                    ToastUtils.show("还没有选择商铺地区");
                     return;
                 }
                 if ("请输入类型".equals(mTxtShopTypes.getText().toString().trim())) {
-                    ToastUtils.showShortToast("还没有选择商铺类型");
+                    ToastUtils.show("还没有选择商铺类型");
                     return;
                 }
                 ShopDao.updateShopsInfo(this, new onConnectionFinishLinstener() {
@@ -190,7 +190,7 @@ public class ShopsEditActivity extends BaseTakePhotoActivity {
 
                             @Override
                             public void onFail(int code, String result) {
-                                ToastUtils.showShortToast(result);
+                                ToastUtils.show(result);
                             }
                         }, photo_file_one, photo_file_two, shopname, shopaddress, shopPhone, mOnSelectProvince,
                         selectIndex, shopIntro, mList, mShopsInfo.merchantId);

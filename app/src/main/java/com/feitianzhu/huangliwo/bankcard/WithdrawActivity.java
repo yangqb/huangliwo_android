@@ -21,7 +21,7 @@ import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.shop.ShopDao;
 import com.feitianzhu.huangliwo.shop.ShopHelp;
 import com.feitianzhu.huangliwo.utils.MathUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
+import com.hjq.toast.ToastUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -104,7 +104,7 @@ public class WithdrawActivity extends BaseActivity {
 
             @Override
             public void onFail(int code, String result) {
-                ToastUtils.showShortToast(result);
+                ToastUtils.show(result);
             }
         });
 
@@ -120,7 +120,7 @@ public class WithdrawActivity extends BaseActivity {
 
             @Override
             public void onFail(int code, String result) {
-                ToastUtils.showShortToast(result);
+                ToastUtils.show(result);
                 mTvTips.setText(String.format(getString(R.string.withdraw_tips), mBalance + "", mFee + ""));
             }
         });
@@ -135,7 +135,7 @@ public class WithdrawActivity extends BaseActivity {
             case R.id.button:
 
                 if (mUserBankCardEntity == null) {
-                    ToastUtils.showShortToast("请选择银行卡");
+                    ToastUtils.show("请选择银行卡");
                     return;
                 }
                 if (checkTextView(mTvBankName, "请选择提现银行卡")) return;
@@ -149,7 +149,7 @@ public class WithdrawActivity extends BaseActivity {
                         NetworkDao.withdraw(WithdrawActivity.this, result.toString(), mInputMoney + "", mUserBankCardEntity.bankCardId + "", mType + "", new onConnectionFinishLinstener() {
                             @Override
                             public void onSuccess(int code, Object result) {
-                                ToastUtils.showShortToast("提现成功");
+                                ToastUtils.show("提现成功");
                                 EventBus.getDefault().post(BankCardEvent.WITHDRAW_SUCCESS);
                                 startActivity(new Intent(mContext, WithdrawResultActivity.class));
                                 finish();
@@ -157,14 +157,14 @@ public class WithdrawActivity extends BaseActivity {
 
                             @Override
                             public void onFail(int code, String result) {
-                                ToastUtils.showShortToast(result);
+                                ToastUtils.show(result);
                             }
                         });
                     }
 
                     @Override
                     public void onFail(int code, String result) {
-                        ToastUtils.showShortToast(result);
+                        ToastUtils.show(result);
                     }
                 });
                 break;

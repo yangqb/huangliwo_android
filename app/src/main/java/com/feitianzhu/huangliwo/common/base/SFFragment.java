@@ -8,6 +8,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.lxj.xpopup.XPopup;
+import com.lxj.xpopup.impl.LoadingPopupView;
 
 /**
  * Created by dicallc on 2017/9/8 0008.
@@ -23,23 +25,27 @@ public class SFFragment extends Fragment {
         mContext = getActivity();
     }
 
-    private MaterialDialog mDialog;
+    LoadingPopupView loadingPopup;
 
     protected void showloadDialog(String title) {
-        mDialog = new MaterialDialog.Builder(getActivity())
-                .content("加载中,请稍等")
-                .progress(true, 0)
-                .progressIndeterminateStyle(false)
+        loadingPopup = (LoadingPopupView) new XPopup.Builder(getContext())
+                .asLoading("正在加载中")
                 .show();
     }
 
     protected void goneloadDialog() {
-        if (null != mDialog && mDialog.isShowing()) mDialog.dismiss();
+        if (null != loadingPopup) {
+            loadingPopup.delayDismissWith(1000, new Runnable() {
+                @Override
+                public void run() {
+                }
+            });
+        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mDialog = null;
+        loadingPopup = null;
     }
 }

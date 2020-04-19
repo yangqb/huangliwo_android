@@ -1,5 +1,4 @@
 package com.feitianzhu.huangliwo.view;
-
 import android.app.Dialog;
 import android.content.Context;
 import android.net.Uri;
@@ -9,22 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
-
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.feitianzhu.huangliwo.R;
-import com.feitianzhu.huangliwo.utils.DensityUtil;
-import com.feitianzhu.huangliwo.utils.RoundedCornersTransform;
-import com.itheima.roundedimageview.RoundedImageView;
-
 import java.io.File;
-
-import butterknife.BindView;
 
 /**
  * package name: com.feitianzhu.huangliwo.view
@@ -35,8 +25,7 @@ import butterknife.BindView;
  */
 public class CustomImgViewDialog extends Dialog {
     private Context context;
-    protected MaterialDialog mDialog;
-    private String url;
+    private String resource;
     private String title = "";
 
     public CustomImgViewDialog(Context context) {
@@ -49,8 +38,8 @@ public class CustomImgViewDialog extends Dialog {
         return this;
     }
 
-    public CustomImgViewDialog setData(String url) {
-        this.url = url;
+    public CustomImgViewDialog setData(String resource) {
+        this.resource = resource;
         return this;
     }
 
@@ -59,11 +48,7 @@ public class CustomImgViewDialog extends Dialog {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_imgview);
         SubsamplingScaleImageView imageView = findViewById(R.id.imageView);
-
-       /* RoundedCornersTransform transform = new RoundedCornersTransform(context, DensityUtil.dp2px(context, 10));
-        transform.setNeedCorner(true, true, true, true);
-        RequestOptions options = new RequestOptions().transform(transform);*/
-        Glide.with(context).load(url).downloadOnly(new SimpleTarget<File>() {
+        Glide.with(context).load(resource).downloadOnly(new SimpleTarget<File>() {
             @Override
             public void onStart() {
                 super.onStart();

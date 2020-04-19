@@ -28,9 +28,8 @@ import com.feitianzhu.huangliwo.shop.SelectPayActivity;
 import com.feitianzhu.huangliwo.shop.ShopsDetailActivity;
 import com.feitianzhu.huangliwo.utils.DateUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
-import com.google.gson.Gson;
+import com.hjq.toast.ToastUtils;
 import com.itheima.roundedimageview.RoundedImageView;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
@@ -39,16 +38,12 @@ import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
 import com.yanzhenjie.permission.Rationale;
 import com.yanzhenjie.permission.RationaleListener;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.Callback;
 
 import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import okhttp3.Call;
-import okhttp3.Response;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.huangliwo.common.Constant.USERID;
@@ -149,7 +144,7 @@ public class OrderDetailActivity extends BaseActivity {
                 ClipData clip = ClipData.newPlainText("simple text", tvOrderNo.getText().toString());
                 //传入clipdata对象.
                 clipboard.setPrimaryClip(clip);
-                ToastUtils.showShortToast("已复制");
+                ToastUtils.show("已复制");
                 break;
             case R.id.call_phone:
                 new XPopup.Builder(this)
@@ -164,7 +159,7 @@ public class OrderDetailActivity extends BaseActivity {
                 break;
             case R.id.cancel_order: //取消订单
                 if (time <= 0) {
-                    ToastUtils.showShortToast("订单已失效");
+                    ToastUtils.show("订单已失效");
                 } else {
                     //取消订单，
                     new XPopup.Builder(OrderDetailActivity.this)
@@ -180,7 +175,7 @@ public class OrderDetailActivity extends BaseActivity {
                 break;
             case R.id.shopPay: //支付
                 if (time <= 0) {
-                    ToastUtils.showShortToast("订单已失效");
+                    ToastUtils.show("订单已失效");
                 } else {
                     Intent intent = new Intent(OrderDetailActivity.this, SelectPayActivity.class);
                     intent.putExtra(SelectPayActivity.ORDER_DATA, goodsOrderBean);
@@ -209,7 +204,7 @@ public class OrderDetailActivity extends BaseActivity {
                     public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
                         super.onSuccess(OrderDetailActivity.this, response.body().msg, response.body().code);
                         if (response.body().code == 0) {
-                            ToastUtils.showShortToast("取消成功");
+                            ToastUtils.show("取消成功");
                             initData();
                         }
                     }

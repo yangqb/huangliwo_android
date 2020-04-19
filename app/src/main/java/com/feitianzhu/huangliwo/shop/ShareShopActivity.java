@@ -1,6 +1,5 @@
 package com.feitianzhu.huangliwo.shop;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -32,9 +31,9 @@ import com.feitianzhu.huangliwo.model.MineQRcodeModel;
 import com.feitianzhu.huangliwo.utils.GlideUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ShareImageUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 import com.feitianzhu.huangliwo.view.CircleImageView;
+import com.hjq.toast.ToastUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.socks.library.KLog;
@@ -112,7 +111,7 @@ public class ShareShopActivity extends BaseActivity {
             if (goodsListBean.getRebatePv() == 0) {
                 llRebate.setVisibility(View.GONE);
             }
-            tvRebate.setText("返¥" + rebatePv);
+            tvRebate.setText("奖励¥" + rebatePv);
 
             SpannableString span2 = new SpannableString(str2);
             SpannableString span3 = new SpannableString(str3);
@@ -146,9 +145,9 @@ public class ShareShopActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.bt_save:
-                ShareImageUtils.saveImg(ShareImageUtils.viewToBitmap(shareLayout), "zxing_goods_image");
+                ShareImageUtils.saveImg(this, ShareImageUtils.viewToBitmap(shareLayout), "zxing_goods_image");
                 // 通知图库更新
-                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse(Environment.getExternalStorageDirectory().getPath())));
+                // sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse(Environment.getExternalStorageDirectory().getPath())));
                 break;
             case R.id.bt_shared:
                 showShare();
@@ -211,7 +210,7 @@ public class ShareShopActivity extends BaseActivity {
     private void setShowData(MineQRcodeModel response) {
         String qrUrl = response.getLink();
         if (TextUtils.isEmpty(qrUrl)) {
-            ToastUtils.showShortToast("未获取到分享地址");
+            ToastUtils.show("未获取到分享地址");
             return;
         }
         Log.e("Test", "-------->" + qrUrl);

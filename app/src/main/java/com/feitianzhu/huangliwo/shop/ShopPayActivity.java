@@ -30,27 +30,22 @@ import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
 import com.feitianzhu.huangliwo.model.GoodsOrderInfo;
 import com.feitianzhu.huangliwo.model.PayInfo;
 import com.feitianzhu.huangliwo.model.PayModel;
-import com.feitianzhu.huangliwo.model.WXModel;
 import com.feitianzhu.huangliwo.shop.ui.OrderDetailActivity;
 import com.feitianzhu.huangliwo.utils.PayUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.utils.doubleclick.SingleClick;
 import com.feitianzhu.huangliwo.view.AmountView;
 import com.google.gson.Gson;
+import com.hjq.toast.ToastUtils;
 import com.lzy.okgo.OkGo;
 import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.Callback;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,8 +53,6 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import okhttp3.Call;
-import okhttp3.Response;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.huangliwo.common.Constant.USERID;
@@ -198,7 +191,7 @@ public class ShopPayActivity extends BaseActivity {
         }
 
         mAmountView = (AmountView) findViewById(R.id.amount_view);
-        mAmountView.setGoods_storage(50);
+        mAmountView.setGoods_storage(10);
         mAmountView.setOnAmountChangeListener(new AmountView.OnAmountChangeListener() {
             @SuppressLint("SetTextI18n")
             @Override
@@ -218,7 +211,7 @@ public class ShopPayActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.tv_pay:
                 if (isShow && !isAddress) {
-                    ToastUtils.showShortToast("请添加收货地址");
+                    ToastUtils.show("请添加收货地址");
                     return;
                 }
                 pay2();
@@ -317,7 +310,7 @@ public class ShopPayActivity extends BaseActivity {
         mPayReq.timeStamp = result.timestamp + "";
         mPayReq.sign = result.sign;
         api.sendReq(mPayReq);
-        ToastUtils.showShortToast("正在打开微信中");
+        ToastUtils.show("正在打开微信中");
     }
 
 
@@ -326,13 +319,13 @@ public class ShopPayActivity extends BaseActivity {
         PayUtils.aliPay(ShopPayActivity.this, payProof, new onConnectionFinishLinstener() {
             @Override
             public void onSuccess(int code, Object result) {
-                ToastUtils.showShortToast("支付成功");
+                ToastUtils.show("支付成功");
                 finish();
             }
 
             @Override
             public void onFail(int code, String result) {
-                ToastUtils.showShortToast("支付失败");
+                ToastUtils.show("支付失败");
                 //跳到订单详情
                 Intent intent = new Intent(ShopPayActivity.this, OrderDetailActivity.class);
                 intent.putExtra(OrderDetailActivity.ORDER_NO, orderNo);
@@ -346,10 +339,10 @@ public class ShopPayActivity extends BaseActivity {
     public void onPayMessageCall(PayInfo msg) {
         if (msg.getCurrentInfo() == PayInfo.ShopPay) {
             if (msg.getIsSuccess() == PayInfo.SUCCESS) {
-                ToastUtils.showShortToast("支付成功");
+                ToastUtils.show("支付成功");
                 finish();
             } else {
-                ToastUtils.showShortToast("支付失败");
+                ToastUtils.show("支付失败");
                 //跳到订单详情
                 Intent intent = new Intent(ShopPayActivity.this, OrderDetailActivity.class);
                 intent.putExtra(OrderDetailActivity.ORDER_NO, orderNo);

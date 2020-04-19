@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.model.ProductParameters;
 import com.feitianzhu.huangliwo.shop.adapter.ProductParametersAdapter;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
+import com.hjq.toast.ToastUtils;
 
 import java.util.List;
 
@@ -80,7 +80,7 @@ public class CustomSpecificationDialog extends Dialog {
                     }
                 }
                 if (count != data.size()) {
-                    ToastUtils.showShortToast("请选择商品规格");
+                    ToastUtils.show("请选择商品规格");
                 } else {
                     if (negativeButtonClickListener != null) {
                         negativeButtonClickListener.onOkClick(data);

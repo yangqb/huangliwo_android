@@ -50,9 +50,9 @@ public class HomeRecommendAdapter2 extends BaseMultiItemQuickAdapter<ShopAndMerc
                 holder.setText(R.id.summary, shopsList.getSummary());
                 setSpannableString(MathUtils.subZero(String.valueOf(shopsList.getPrice())), holder.getView(R.id.price));
                 holder.setVisible(R.id.ll_price, true);
-                String rebatePv = String.format(Locale.getDefault(), "%.2f", shopsList.getRebatePv());
-                holder.setText(R.id.tv_rebate, "返¥" + MathUtils.subZero(rebatePv));
-                holder.setText(R.id.vip_rebate, "返¥" + MathUtils.subZero(rebatePv));
+                String rebatePv = String.valueOf(shopsList.getRebatePv());
+                holder.setText(R.id.tv_rebate, "奖励¥" + MathUtils.subZero(rebatePv));
+                holder.setText(R.id.vip_rebate, "奖励¥" + MathUtils.subZero(rebatePv));
                 MineInfoModel userInfo = UserInfoUtils.getUserInfo(mContext);
                 if (userInfo.getAccountType() != 0) {
                     holder.setVisible(R.id.ll_rebate, false);

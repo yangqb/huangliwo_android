@@ -23,16 +23,14 @@ import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.CollectionBody;
 import com.feitianzhu.huangliwo.model.CollectionInfo;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
-import com.feitianzhu.huangliwo.model.MultiCollectionModel;
-import com.feitianzhu.huangliwo.model.MultipleItem;
 import com.feitianzhu.huangliwo.shop.ShopMerchantsDetailActivity;
 import com.feitianzhu.huangliwo.shop.ShopsDetailActivity;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 import com.feitianzhu.huangliwo.vip.VipActivity;
 import com.google.gson.Gson;
+import com.hjq.toast.ToastUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -177,7 +175,7 @@ public class MyCollectionActivity extends BaseActivity {
                     public void onSuccess(Response<LzyResponse> response) {
                         super.onSuccess(MyCollectionActivity.this, response.body().msg, response.body().code);
                         if (response.body().code == 0) {
-                            ToastUtils.showShortToast("取消收藏");
+                            ToastUtils.show("取消收藏");
                         }
                     }
 
@@ -217,9 +215,9 @@ public class MyCollectionActivity extends BaseActivity {
                             if (response.body().data.collectList != null && response.body().data.collectList.size() > 0) {
                                 locModelList.addAll(response.body().data.collectList);
                                 collectionModelList.addAll(response.body().data.collectList);
-                                mAdapter.setNewData(collectionModelList);
-                                mAdapter.notifyDataSetChanged();
                             }
+                            mAdapter.setNewData(collectionModelList);
+                            mAdapter.notifyDataSetChanged();
                         }
                     }
 

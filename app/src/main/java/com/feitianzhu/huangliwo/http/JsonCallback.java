@@ -20,12 +20,13 @@ import android.content.Intent;
 
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
-import com.feitianzhu.huangliwo.login.ForgetPasswordActivity;
+import com.feitianzhu.huangliwo.settings.ChangeLoginPassword;
 import com.feitianzhu.huangliwo.settings.ChangePasswordActivity;
+import com.feitianzhu.huangliwo.settings.SettingsActivity;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
+import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.impl.ConfirmPopupView;
 import com.lxj.xpopup.interfaces.OnCancelListener;
@@ -39,8 +40,6 @@ import java.net.ConnectException;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
-import cc.shinichi.library.tool.ui.ToastUtil;
-import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 /**
@@ -152,7 +151,8 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
                                     @Override
                                     public void onConfirm() {
                                         //context.startActivity(new Intent(context, ForgetPasswordActivity.class));
-                                        ChangePasswordActivity.startActivity(context, true);
+                                        Intent intent = new Intent(context, ChangeLoginPassword.class);
+                                        context.startActivity(intent);
                                     }
                                 }, new OnCancelListener() {
                                     @Override
@@ -166,7 +166,7 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
                     SPUtils.putBoolean(context, Constant.LOGIN_DIALOG, false);
                 }
             } else {
-                ToastUtils.showShortToast(string);
+                ToastUtils.show(string);
             }
         }
     }
@@ -176,13 +176,13 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
         super.onError(response);
         int code = response.code();
         if (response.getException() instanceof ConnectException) {
-            ToastUtils.showShortToast("网络连接请求失败");
+            ToastUtils.show("网络连接请求失败");
         } else if (response.getException() instanceof SocketTimeoutException) {
-            ToastUtils.showShortToast("请求超时，请检查网络");
+            ToastUtils.show("请求超时，请检查网络");
         } else if (response.getException() instanceof SocketException) {
-            ToastUtils.showShortToast("服务器异常");
+            ToastUtils.show("服务器异常");
         } else {
-            //ToastUtils.showShortToast(response.message());
+            //ToastUtils.show(response.message());
         }
     }
 }

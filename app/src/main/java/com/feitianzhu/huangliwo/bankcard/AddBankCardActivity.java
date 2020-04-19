@@ -14,7 +14,7 @@ import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.me.helper.DialogHelper;
 import com.feitianzhu.huangliwo.shop.ShopDao;
 import com.feitianzhu.huangliwo.shop.ShopHelp;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
+import com.hjq.toast.ToastUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -73,11 +73,11 @@ public class AddBankCardActivity extends BaseActivity {
                 if (checkEditText(mEtZhihang, "请输入开户支行")) return;
                 if (checkEditText(mEtNumber, "请输入银行卡号")) return;
                 if (mTvBankName.getText().equals("请选择银行")) {
-                    ToastUtils.showShortToast("请选择银行");
+                    ToastUtils.show("请选择银行");
                     return;
                 }
                 if (mEtNumber.getText().toString().trim().length() < 16) {
-                    ToastUtils.showShortToast("请输入正确的银行卡号");
+                    ToastUtils.show("请输入正确的银行卡号");
                     return;
                 }
 
@@ -87,21 +87,21 @@ public class AddBankCardActivity extends BaseActivity {
                         NetworkDao.addBankCard(mEtName.getText().toString().trim(), mBankList.get(mDialogSelectedPos).bankId + "", mEtZhihang.getText().toString().trim(), mEtNumber.getText().toString().trim(), result.toString(), new onConnectionFinishLinstener() {
                             @Override
                             public void onSuccess(int code, Object result) {
-                                ToastUtils.showShortToast("添加成功");
+                                ToastUtils.show("添加成功");
                                 finish();
                                 EventBus.getDefault().postSticky(BankCardEvent.ADD_BANKCARD);
                             }
 
                             @Override
                             public void onFail(int code, String result) {
-                                ToastUtils.showShortToast(result);
+                                ToastUtils.show(result);
                             }
                         });
                     }
 
                     @Override
                     public void onFail(int code, String result) {
-                        ToastUtils.showShortToast(result);
+                        ToastUtils.show(result);
                     }
                 });
 
@@ -117,7 +117,7 @@ public class AddBankCardActivity extends BaseActivity {
                             List<BankCardEntity> list = (List<BankCardEntity>) result;
 
                             if (list == null || list.isEmpty()) {
-                                ToastUtils.showShortToast("获取银行卡列表失败，请重试");
+                                ToastUtils.show("获取银行卡列表失败，请重试");
                                 return;
                             }
 
@@ -138,7 +138,7 @@ public class AddBankCardActivity extends BaseActivity {
 
                         @Override
                         public void onFail(int code, String result) {
-                            ToastUtils.showShortToast(result);
+                            ToastUtils.show(result);
                         }
                     });
                 } else {

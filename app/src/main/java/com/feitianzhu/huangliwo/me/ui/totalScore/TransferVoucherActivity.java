@@ -17,8 +17,8 @@ import com.feitianzhu.huangliwo.model.OfflineModel;
 import com.feitianzhu.huangliwo.model.SelectPayNeedModel;
 import com.feitianzhu.huangliwo.shop.ShopDao;
 import com.feitianzhu.huangliwo.shop.ShopHelp;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.view.CustomSelectPhotoView;
+import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.builder.PostFormBuilder;
@@ -139,11 +139,11 @@ public class TransferVoucherActivity extends BaseTakePhotoActivity {
      */
     private void sendRequest() {
         if (mModel == null) {
-            ToastUtils.showShortToast("获取的参数异常，请重试!");
+            ToastUtils.show("获取的参数异常，请重试!");
             return;
         }
         if (TextUtils.isEmpty(mModel.getPayProofFile())) {
-            ToastUtils.showShortToast("线下支付必须要上传凭证，请重试!");
+            ToastUtils.show("线下支付必须要上传凭证，请重试!");
             return;
         }
 
@@ -179,13 +179,13 @@ public class TransferVoucherActivity extends BaseTakePhotoActivity {
                                 @Override
                                 public void onError(Call call, Exception e, int id) {
                                     goneloadDialog();
-                                    ToastUtils.showShortToast("支付失败");
+                                    ToastUtils.show("支付失败");
                                 }
 
                                 @Override
                                 public void onResponse(Object response, int id) {
                                     goneloadDialog();
-                                    ToastUtils.showShortToast("支付成功");
+                                    ToastUtils.show("支付成功");
                                     finish();
                                 }
                             });
@@ -197,14 +197,14 @@ public class TransferVoucherActivity extends BaseTakePhotoActivity {
                                 @Override
                                 public void onSuccess(int code, Object result) {
                                     goneloadDialog();
-                                    ToastUtils.showShortToast("支付成功");
+                                    ToastUtils.show("支付成功");
                                     finish();
                                 }
 
                                 @Override
                                 public void onFail(int code, String result) {
                                     goneloadDialog();
-                                    ToastUtils.showShortToast(result);
+                                    ToastUtils.show(result);
                                 }
                             });
                 } else if (mModel.getType() == SelectPayNeedModel.TYPE_UNION_LEVEL) {
@@ -233,13 +233,13 @@ public class TransferVoucherActivity extends BaseTakePhotoActivity {
                                 @Override
                                 public void onError(Call call, Exception e, int id) {
                                     goneloadDialog();
-                                    ToastUtils.showShortToast("支付失败");
+                                    ToastUtils.show("支付失败");
                                 }
 
                                 @Override
                                 public void onResponse(Object response, int id) {
                                     goneloadDialog();
-                                    ToastUtils.showShortToast("支付成功");
+                                    ToastUtils.show("支付成功");
                                     finish();
                                 }
                             });
@@ -250,7 +250,7 @@ public class TransferVoucherActivity extends BaseTakePhotoActivity {
 
             @Override
             public void onFail(int code, String result) {
-                ToastUtils.showShortToast(result);
+                ToastUtils.show(result);
             }
         });
     }

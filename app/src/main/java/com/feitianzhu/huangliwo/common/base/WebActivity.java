@@ -128,6 +128,7 @@ public class WebActivity extends AppCompatActivity {
     protected void onDestroy() {
         mAgentWeb.getWebLifeCycle().onDestroy();
         AgentWebConfig.clearDiskCache(this);
+        AgentWebConfig.removeAllCookies();
         super.onDestroy();
     }
 

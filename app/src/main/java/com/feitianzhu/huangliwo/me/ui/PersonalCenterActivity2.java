@@ -3,7 +3,6 @@ package com.feitianzhu.huangliwo.me.ui;
 
 import android.content.Intent;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -20,14 +19,12 @@ import com.feitianzhu.huangliwo.me.base.BaseTakePhotoActivity;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.SharedInfoModel;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.view.CircleImageView;
 import com.feitianzhu.huangliwo.view.CustomSelectPhotoView;
+import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
 import com.lzy.okgo.OkGo;
 import com.socks.library.KLog;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.Callback;
 
 import org.devio.takephoto.model.TResult;
 import org.greenrobot.eventbus.EventBus;
@@ -41,8 +38,6 @@ import butterknife.OnClick;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.onekeyshare.OnekeyShare;
-import okhttp3.Call;
-import okhttp3.Response;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
@@ -124,7 +119,7 @@ public class PersonalCenterActivity2 extends BaseTakePhotoActivity {
                 break;
             case R.id.right_button: //分享名片
                 // showShare();
-                ToastUtils.showShortToast("敬请期待");
+                ToastUtils.show("敬请期待");
                 break;
             case R.id.left_button:
                 finish();
@@ -234,11 +229,11 @@ public class PersonalCenterActivity2 extends BaseTakePhotoActivity {
         //关闭sso授权
         oks.disableSSOWhenAuthorize();
         if (mSharedInfo == null) {
-            ToastUtils.showShortToast("分享的资料信息未完善，无法分享");
+            ToastUtils.show("分享的资料信息未完善，无法分享");
             return;
         }
         if (TextUtils.isEmpty(mSharedInfo.getNickName()) || TextUtils.isEmpty(mSharedInfo.getLink()) || TextUtils.isEmpty(mSharedInfo.getCompany())) {
-            ToastUtils.showShortToast("分享的资料信息未完善，无法分享");
+            ToastUtils.show("分享的资料信息未完善，无法分享");
             return;
         }
         // 分享时Notification的图标和文字  2.5.9以后的版本不     调用此方法
@@ -309,7 +304,7 @@ public class PersonalCenterActivity2 extends BaseTakePhotoActivity {
                     public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
                         super.onSuccess(PersonalCenterActivity2.this, response.body().msg, response.body().code);
                         if (response.body().code == 0) {
-                            ToastUtils.showShortToast("上传成功!");
+                            ToastUtils.show("上传成功!");
                             EventBus.getDefault().postSticky(LoginEvent.EDITOR_INFO);
                         }
                     }

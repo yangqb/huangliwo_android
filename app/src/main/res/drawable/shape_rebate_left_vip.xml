@@ -1,79 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- 边 -->
-    <item>
-        <shape android:shape="rectangle">
-            <padding
-                android:bottom="1dp"
-                android:left="1dp"
-                android:top="1dp" />
-            <solid android:color="#00d8d7d7" />
-            <corners
-                android:topLeftRadius="8dp"
-                android:bottomLeftRadius="8dp" />
-        </shape>
-    </item>
-    <item>
-        <shape android:shape="rectangle">
-            <padding
-                android:bottom="1dp"
-                android:left="1dp"
-                android:top="1dp" />
-            <solid android:color="#10d8d7d7" />
-            <corners
-                android:topLeftRadius="8dp"
-                android:bottomLeftRadius="8dp" />
-        </shape>
-    </item>
-    <item>
-        <shape android:shape="rectangle">
-            <padding
-                android:bottom="1dp"
-                android:left="1dp"
-                android:top="1dp" />
-            <solid android:color="#20d8d7d7" />
-            <corners
-                android:topLeftRadius="8dp"
-                android:bottomLeftRadius="8dp" />
-        </shape>
-    </item>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
 
-    <item>
-        <shape android:shape="rectangle">
-            <padding
-                android:bottom="1dp"
-                android:left="1dp"
-                android:top="1dp" />
-            <solid android:color="#30d8d7d7" />
-            <corners
-                android:topLeftRadius="8dp"
-                android:bottomLeftRadius="8dp" />
-        </shape>
-    </item>
+    <solid android:color="#ededed" />
+    <corners
+        android:bottomLeftRadius="9dp"
+        android:topLeftRadius="9dp" />
 
-    <item>
-        <shape android:shape="rectangle">
-            <padding
-                android:bottom="1dp"
-                android:left="1dp"
-                android:top="1dp" />
-            <solid android:color="#40d8d7d7" />
-            <corners
-                android:topLeftRadius="8dp"
-                android:bottomLeftRadius="8dp" />
-        </shape>
-    </item>
-
-    <!-- 中心背景 -->
-    <item>
-        <shape
-            android:shape="rectangle"
-            android:useLevel="false">
-            <!-- 实心 -->
-            <solid android:color="#ffffff" />
-            <corners
-                android:topLeftRadius="8dp"
-                android:bottomLeftRadius="8dp" />
-        </shape>
-    </item>
-</layer-list>
+</shape>

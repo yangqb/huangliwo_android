@@ -139,17 +139,19 @@
             <com.feitianzhu.huangliwo.view.StickyScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_above="@id/ll_bottom"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="10dp"
-               android:layout_above="@id/ll_bottom"
                 android:overScrollMode="never"
                 android:scrollbars="none">
 
                 <LinearLayout
+                    android:id="@+id/ll_gifts_presents"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/color_f7f7f7"
+                    android:visibility="gone"
                     android:orientation="vertical">
 
                     <RelativeLayout
@@ -171,7 +173,7 @@
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                               android:layout_marginEnd="15dp"
+                                android:layout_marginEnd="15dp"
                                 android:background="@mipmap/f01_09liping" />
 
                             <TextView

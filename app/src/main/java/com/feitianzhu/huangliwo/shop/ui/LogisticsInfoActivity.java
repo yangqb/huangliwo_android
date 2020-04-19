@@ -17,20 +17,15 @@ import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.LogisticsModel;
 import com.feitianzhu.huangliwo.shop.adapter.LogisticsAdapter;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
-import com.google.gson.Gson;
+import com.hjq.toast.ToastUtils;
 import com.lzy.okgo.OkGo;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.Callback;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import okhttp3.Call;
-import okhttp3.Response;
 
 /*
  * 物流详情
@@ -135,7 +130,7 @@ public class LogisticsInfoActivity extends BaseActivity {
                 ClipData clip = ClipData.newPlainText("simple text", logisticsNo);
                 //传入clipdata对象.
                 clipboard.setPrimaryClip(clip);
-                ToastUtils.showShortToast("已复制");
+                ToastUtils.show("已复制");
                 break;
         }
     }

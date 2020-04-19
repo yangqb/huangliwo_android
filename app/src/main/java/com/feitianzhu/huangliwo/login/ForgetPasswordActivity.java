@@ -5,28 +5,24 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.feitianzhu.huangliwo.MainActivity;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
-import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
-import com.feitianzhu.huangliwo.dao.NetworkDao;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
+import com.feitianzhu.huangliwo.settings.ChangeLoginPassword;
 import com.feitianzhu.huangliwo.utils.EncryptUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.gyf.immersionbar.ImmersionBar;
+import com.hjq.toast.ToastUtils;
 import com.lzy.okgo.OkGo;
-import com.socks.library.KLog;
 
 import butterknife.BindView;
 
@@ -38,7 +34,7 @@ public class ForgetPasswordActivity extends BaseActivity implements View.OnClick
     @BindView(R.id.password1)
     EditText mPasswordEditText1;
     @BindView(R.id.sign_in_button)
-    Button mSignInButton;
+    TextView mSignInButton;
     @BindView(R.id.edt_code)
     EditText mEditTextCode;
     @BindView(R.id.tv_code)
@@ -127,7 +123,7 @@ public class ForgetPasswordActivity extends BaseActivity implements View.OnClick
                     return;
                 }
                 if (!password1.equals(password2)) {
-                    ToastUtils.showShortToast(getString(R.string.please_input_check_password));
+                    ToastUtils.show(getString(R.string.please_input_check_password));
                     return;
                 }
 
@@ -141,9 +137,11 @@ public class ForgetPasswordActivity extends BaseActivity implements View.OnClick
                             @Override
                             public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
                                 if (response.body().code == 0) {
-                                    ToastUtils.showShortToast(mContext, R.string.change_ok);
+                                    ToastUtils.show(R.string.change_ok);
                                     SPUtils.putString(ForgetPasswordActivity.this, Constant.SP_PHONE, phone);
-                                    startActivity(new Intent(mContext, LoginActivity.class));
+                                    Intent intent = new Intent(ForgetPasswordActivity.this, LoginActivity.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    startActivity(intent);
                                     finish();
                                 }
                             }
@@ -191,7 +189,7 @@ public class ForgetPasswordActivity extends BaseActivity implements View.OnClick
                     public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
                         super.onSuccess(ForgetPasswordActivity.this, response.body().msg, response.body().code);
                         if (response.body().code == 0) {
-                            ToastUtils.showShortToast("验证码已发送至您的手机");
+                            ToastUtils.show("验证码已发送至您的手机");
                         }
                     }
 

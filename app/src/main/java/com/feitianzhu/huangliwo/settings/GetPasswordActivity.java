@@ -17,27 +17,19 @@ import android.widget.Toast;
 import com.feitianzhu.huangliwo.MainActivity;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
-import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
-import com.feitianzhu.huangliwo.dao.NetworkDao;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
-import com.feitianzhu.huangliwo.login.ForgetPasswordActivity;
+import com.feitianzhu.huangliwo.login.LoginActivity;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.utils.EncryptUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
+import com.hjq.toast.ToastUtils;
 import com.lzy.okgo.OkGo;
 import com.socks.library.KLog;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.Callback;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import okhttp3.Call;
-import okhttp3.Response;
-
-import static com.feitianzhu.huangliwo.common.Constant.FailCode;
 
 
 public class GetPasswordActivity extends BaseActivity implements View.OnClickListener {
@@ -69,10 +61,6 @@ public class GetPasswordActivity extends BaseActivity implements View.OnClickLis
     private String userId;
     private String token;
 
-    /**
-     * 找回登录密码
-     */
-    public static final int TYPE_GET_LOGIN_PWD = 0;
     /**
      * 找回支付密码密码
      */
@@ -121,14 +109,10 @@ public class GetPasswordActivity extends BaseActivity implements View.OnClickLis
         mTvCurrentPhone.setText(String.format(getString(R.string.current_phone), phone));
         Intent intent = getIntent();
         if (intent != null) {
-            mType = intent.getIntExtra(Constant.INTENT_GET_SET_PSW_TYPE, 0);
+            mType = intent.getIntExtra(Constant.INTENT_GET_SET_PSW_TYPE, 2);
         }
         KLog.i("mType: %d", mType);
-        if (mType == TYPE_GET_LOGIN_PWD) { //找回登录密码
-            titleName.setText("找回登录密码");
-            mPasswordEditText1.setHint(R.string.hint_input_login_pwd);
-            mTvSecondPwdTips.setVisibility(View.GONE);
-        } else if (mType == TYPE_GET_PAY_PASSWORD_PWD) { //找回二级密码
+        if (mType == TYPE_GET_PAY_PASSWORD_PWD) { //找回二级密码
             mPasswordEditText1.setHint(R.string.hint_input_second_pwd);
             mTvSecondPwdTips.setVisibility(View.GONE);
             titleName.setText("找回支付密码");
@@ -152,19 +136,19 @@ public class GetPasswordActivity extends BaseActivity implements View.OnClickLis
                 String newPassword2 = mPasswordEditText2.getText().toString();
 
                 if (TextUtils.isEmpty(smsCode)) {
-                    ToastUtils.showShortToast(getString(R.string.please_input_code));
+                    ToastUtils.show(getString(R.string.please_input_code));
                     return;
                 }
                 if (TextUtils.isEmpty(newPassword1)) {
-                    ToastUtils.showShortToast(getString(R.string.please_input_newpassword));
+                    ToastUtils.show(getString(R.string.please_input_newpassword));
                     return;
                 }
                 if (TextUtils.isEmpty(newPassword2)) {
-                    ToastUtils.showShortToast(getString(R.string.please_input_newpassword2));
+                    ToastUtils.show(getString(R.string.please_input_newpassword2));
                     return;
                 }
                 if (!newPassword1.equals(newPassword2)) {
-                    ToastUtils.showShortToast(getString(R.string.please_input_check_password));
+                    ToastUtils.show(getString(R.string.please_input_check_password));
                     return;
                 }
                 if (newPassword1.length() < 6) {
@@ -174,33 +158,7 @@ public class GetPasswordActivity extends BaseActivity implements View.OnClickLis
                 final String encryptPssword1 = EncryptUtils.encodePassword(newPassword1);
                 String encryptPssword2 = EncryptUtils.encodePassword(newPassword2);
                 String phone = SPUtils.getString(this, Constant.SP_PHONE, "");
-                if (mType == TYPE_GET_LOGIN_PWD) { //找回登录密码
-                    OkGo.<LzyResponse>post(Urls.GET_MYPASSWORD)
-                            .tag(this)
-                            .params("phone", phone)
-                            .params("smsCode", smsCode)
-                            .params("newPassword", encryptPssword1)
-                            .params("confirmPassword", encryptPssword2)
-                            .execute(new JsonCallback<LzyResponse>() {
-                                @Override
-                                public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
-                                    super.onSuccess(GetPasswordActivity.this, response.body().msg, response.body().code);
-                                    if (response.body().code == 0) {
-                                        ToastUtils.showShortToast(mContext, R.string.change_ok);
-                                        SPUtils.putString(mContext, Constant.SP_PHONE, phone);
-                                        SPUtils.putString(mContext, Constant.SP_PASSWORD, encryptPssword1);
-
-                                        startActivity(new Intent(mContext, MainActivity.class));
-                                        finish();
-                                    }
-                                }
-
-                                @Override
-                                public void onError(com.lzy.okgo.model.Response<LzyResponse> response) {
-                                    super.onError(response);
-                                }
-                            });
-                } else if (mType == TYPE_GET_PAY_PASSWORD_PWD) { //找回二级密码
+                if (mType == TYPE_GET_PAY_PASSWORD_PWD) { //找回二级密码
 
                     OkGo.<LzyResponse>post(Urls.GET_UPAYPASS)
                             .tag(this)
@@ -218,7 +176,9 @@ public class GetPasswordActivity extends BaseActivity implements View.OnClickLis
                                         if (Constant.mUserAuth != null) {
                                             Constant.mUserAuth.isPaypass = 1;
                                         }
-                                        ToastUtils.showShortToast(mContext, R.string.change_ok);
+                                        ToastUtils.show(R.string.change_ok);
+                                        Intent intent = new Intent(mContext, SettingsActivity.class);
+                                        startActivity(intent);
                                         finish();
                                     }
                                 }
@@ -247,7 +207,7 @@ public class GetPasswordActivity extends BaseActivity implements View.OnClickLis
                                         if (Constant.mUserAuth != null) {
                                             Constant.mUserAuth.isPaypass = 1;
                                         }
-                                        ToastUtils.showShortToast("设置成功");
+                                        ToastUtils.show("设置成功");
                                         finish();
                                     }
                                 }
@@ -286,13 +246,11 @@ public class GetPasswordActivity extends BaseActivity implements View.OnClickLis
     private void getValicationCode(String phone) {
 
         if (TextUtils.isEmpty(phone)) {
-            ToastUtils.showShortToast(mContext, R.string.please_input_phone);
+            ToastUtils.show(R.string.please_input_phone);
             return;
         }
 
-        if (mType == TYPE_GET_LOGIN_PWD) { //找回登录密码
-            getSmsCode(phone, "4");
-        } else if (mType == TYPE_GET_PAY_PASSWORD_PWD) { //找回二级密码
+        if (mType == TYPE_GET_PAY_PASSWORD_PWD) { //找回二级密码
             getSmsCode(phone, "6");
         } else if (mType == TYPE_SET_PAY_PASSWORD_PWD) {//设置二级密码
             getSmsCode(phone, "5");
@@ -312,7 +270,7 @@ public class GetPasswordActivity extends BaseActivity implements View.OnClickLis
                     public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
                         super.onSuccess(GetPasswordActivity.this, response.body().msg, response.body().code);
                         if (response.body().code == 0) {
-                            ToastUtils.showShortToast("验证码已发送至您的手机");
+                            ToastUtils.show("验证码已发送至您的手机");
                         }
                     }
 

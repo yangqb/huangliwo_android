@@ -2,35 +2,27 @@ package com.feitianzhu.huangliwo.pushshop;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.TextView;
 
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
-import com.feitianzhu.huangliwo.common.base.LazyWebActivity;
 import com.feitianzhu.huangliwo.common.base.WebActivity;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
-import com.feitianzhu.huangliwo.plane.PlaneHomeActivity;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
+import com.hjq.toast.ToastUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.Callback;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import okhttp3.Call;
-import okhttp3.Request;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
@@ -128,7 +120,7 @@ public class PushShopHomeActivity extends BaseActivity {
                         startActivity(intent);
                     }
                 } else {
-                    ToastUtils.showShortToast("您还不是会员无法推荐店铺");
+                    ToastUtils.show("您还不是会员无法推荐店铺");
                 }
                 break;
             case R.id.oneself_merchants:
@@ -136,7 +128,7 @@ public class PushShopHomeActivity extends BaseActivity {
                     intent = new Intent(PushShopHomeActivity.this, MySelfMerchantsActivity.class);
                     startActivity(intent);
                 } else {
-                    ToastUtils.showShortToast("您的商铺还未被推荐至平台请联系会员推荐");
+                    ToastUtils.show("您的商铺还未被推荐至平台请联系会员推荐");
                 }
                 break;
         }

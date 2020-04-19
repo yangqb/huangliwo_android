@@ -11,7 +11,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -28,10 +27,10 @@ import com.feitianzhu.huangliwo.model.SearchGoodsMode;
 import com.feitianzhu.huangliwo.shop.ShopMerchantsDetailActivity;
 import com.feitianzhu.huangliwo.shop.ShopsDetailActivity;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.google.gson.Gson;
 import com.gyf.immersionbar.ImmersionBar;
+import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.util.KeyboardUtils;
 import com.lzy.okgo.OkGo;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -100,7 +99,7 @@ public class SearchShopActivity extends BaseActivity {
 
     public void searchData(String searchText) {
         if (TextUtils.isEmpty(searchText)) {
-            ToastUtils.showShortToast("请输入关键字进行搜索");
+            ToastUtils.show("请输入关键字进行搜索");
             return;
         }
 
@@ -171,7 +170,7 @@ public class SearchShopActivity extends BaseActivity {
 
                     @Override
                     public void onError(Call call, Exception e, int id) {
-                        ToastUtils.showShortToast(e.getMessage());
+                        ToastUtils.show(e.getMessage());
                         if (!isLoadMore) {
                             mSwipeLayout.finishRefresh(false);
                         } else {
@@ -267,7 +266,7 @@ public class SearchShopActivity extends BaseActivity {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     searchText = editText.getText().toString().trim();
                     if (TextUtils.isEmpty(searchText)) {
-                        ToastUtils.showShortToast("请输入关键字查询");
+                        ToastUtils.show("请输入关键字查询");
                         return true;
                     }
                     //  下面就是业务逻辑

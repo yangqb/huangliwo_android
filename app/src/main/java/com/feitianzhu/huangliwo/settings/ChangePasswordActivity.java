@@ -13,27 +13,19 @@ import android.widget.Toast;
 import com.feitianzhu.huangliwo.MainActivity;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
-import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
-import com.feitianzhu.huangliwo.dao.NetworkDao;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
+import com.feitianzhu.huangliwo.login.ForgetPasswordActivity;
 import com.feitianzhu.huangliwo.login.LoginActivity;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.utils.EncryptUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
+import com.hjq.toast.ToastUtils;
 import com.lzy.okgo.OkGo;
-import com.socks.library.KLog;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.Callback;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import okhttp3.Call;
-import okhttp3.Response;
-
-import static com.feitianzhu.huangliwo.common.Constant.FailCode;
 
 
 public class ChangePasswordActivity extends BaseActivity implements View.OnClickListener {
@@ -53,7 +45,6 @@ public class ChangePasswordActivity extends BaseActivity implements View.OnClick
     Button mSignInButton;
     @BindView(R.id.title_name)
     TextView titleName;
-    private boolean mIsChangeLoginPwd;
     private String token;
     private String userId;
 
@@ -69,28 +60,14 @@ public class ChangePasswordActivity extends BaseActivity implements View.OnClick
 
     @Override
     protected void initView() {
-        Intent intent = getIntent();
         token = SPUtils.getString(ChangePasswordActivity.this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(ChangePasswordActivity.this, Constant.SP_LOGIN_USERID);
-        if (intent != null) {
-            mIsChangeLoginPwd = intent.getBooleanExtra(Constant.INTENT_IS_CHANGE_LOGIN_PWD, true);
-        }
-        if (mIsChangeLoginPwd) {
-            titleName.setText("修改登录密码");
-        } else {
-            titleName.setText("修改支付密码");
-        }
-
+        titleName.setText("修改支付密码");
     }
 
     @Override
     protected void initData() {
-        if (mIsChangeLoginPwd) { //修改登录密码
-            mPassword1.setHint(R.string.hint_input_login_pwd);
-        } else { //修改二级密码
-            mPassword1.setHint(R.string.hint_input_second_pwd);
-        }
-
+        mPassword1.setHint(R.string.hint_input_second_pwd);
     }
 
 
@@ -105,19 +82,19 @@ public class ChangePasswordActivity extends BaseActivity implements View.OnClick
                 String newPassword2 = mPassword2.getText().toString();
 
                 if (TextUtils.isEmpty(oldPassWord)) {
-                    ToastUtils.showShortToast(getString(R.string.please_input_oldpassword));
+                    ToastUtils.show(getString(R.string.please_input_oldpassword));
                     return;
                 }
                 if (TextUtils.isEmpty(newPassword1)) {
-                    ToastUtils.showShortToast(getString(R.string.please_input_newpassword));
+                    ToastUtils.show(getString(R.string.please_input_newpassword));
                     return;
                 }
                 if (TextUtils.isEmpty(newPassword2)) {
-                    ToastUtils.showShortToast(getString(R.string.please_input_newpassword2));
+                    ToastUtils.show(getString(R.string.please_input_newpassword2));
                     return;
                 }
                 if (!newPassword1.equals(newPassword2)) {
-                    ToastUtils.showShortToast(getString(R.string.please_input_check_password));
+                    ToastUtils.show(getString(R.string.please_input_check_password));
                     return;
                 }
                 if (newPassword1.length() < 6) {
@@ -130,62 +107,35 @@ public class ChangePasswordActivity extends BaseActivity implements View.OnClick
 
                 final String finalNewPassword = newPassword1;
 
-                if (mIsChangeLoginPwd) {
 
-                    OkGo.<LzyResponse>post(Urls.UPDATE_ULPASS)
-                            .tag(this)
-                            .params("oldPassword", oldPassWord)
-                            .params("newPassword", newPassword1)
-                            .params("confirmPassword", newPassword2)
-                            .params("userId", userId)
-                            .execute(new JsonCallback<LzyResponse>() {
-                                @Override
-                                public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
-                                    super.onSuccess(ChangePasswordActivity.this, response.body().msg, response.body().code);
-                                    if (response.body().code == 0) {
-                                        ToastUtils.showShortToast(mContext, R.string.change_ok);
-                                        SPUtils.putString(mContext, Constant.SP_PASSWORD, finalNewPassword);
-                                        Intent intent = new Intent(ChangePasswordActivity.this, LoginActivity.class);
-                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                        startActivity(intent);
-                                        finish();
-                                    }
+                OkGo.<LzyResponse>post(Urls.UPDATE_UPAYPASS)
+                        .tag(this)
+                        .params("oldPassword", oldPassWord)
+                        .params("newPassword", newPassword1)
+                        .params("confirmPassword", newPassword2)
+                        .params("accessToken", token)
+                        .params("userId", userId)
+                        .execute(new JsonCallback<LzyResponse>() {
+                            @Override
+                            public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
+                                super.onSuccess(ChangePasswordActivity.this, response.body().msg, response.body().code);
+                                if (response.body().code == 0) {
+                                    ToastUtils.show(R.string.change_ok);
+                                    startActivity(new Intent(mContext, MainActivity.class));
+                                    finish();
                                 }
+                            }
 
-                                @Override
-                                public void onError(com.lzy.okgo.model.Response<LzyResponse> response) {
-                                    super.onError(response);
-                                }
-                            });
-                } else {
+                            @Override
+                            public void onError(com.lzy.okgo.model.Response<LzyResponse> response) {
+                                super.onError(response);
+                            }
+                        });
 
-                    OkGo.<LzyResponse>post(Urls.UPDATE_UPAYPASS)
-                            .tag(this)
-                            .params("oldPassword", oldPassWord)
-                            .params("newPassword", newPassword1)
-                            .params("confirmPassword", newPassword2)
-                            .params("accessToken", token)
-                            .params("userId", userId)
-                            .execute(new JsonCallback<LzyResponse>() {
-                                @Override
-                                public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
-                                    super.onSuccess(ChangePasswordActivity.this, response.body().msg, response.body().code);
-                                    if (response.body().code == 0) {
-                                        ToastUtils.showShortToast(mContext, R.string.change_ok);
-                                        startActivity(new Intent(mContext, MainActivity.class));
-                                        finish();
-                                    }
-                                }
-
-                                @Override
-                                public void onError(com.lzy.okgo.model.Response<LzyResponse> response) {
-                                    super.onError(response);
-                                }
-                            });
-                }
                 break;
             case R.id.tv_forget_password:
-                GetPasswordActivity.startActivity(this, mIsChangeLoginPwd ? GetPasswordActivity.TYPE_GET_LOGIN_PWD : GetPasswordActivity.TYPE_GET_PAY_PASSWORD_PWD);
+                GetPasswordActivity.startActivity(this, GetPasswordActivity.TYPE_GET_PAY_PASSWORD_PWD);
+                finish();
                 break;
             case R.id.left_button:
                 finish();
@@ -200,9 +150,8 @@ public class ChangePasswordActivity extends BaseActivity implements View.OnClick
         super.onDestroy();
     }
 
-    public static void startActivity(Context context, boolean isChangeLoginPwd) {
+    public static void startActivity(Context context) {
         Intent intent = new Intent(context, ChangePasswordActivity.class);
-        intent.putExtra(Constant.INTENT_IS_CHANGE_LOGIN_PWD, isChangeLoginPwd);
         context.startActivity(intent);
     }
 }

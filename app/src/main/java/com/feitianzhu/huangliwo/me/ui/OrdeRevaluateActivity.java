@@ -14,7 +14,7 @@ import com.feitianzhu.huangliwo.common.base.LazyBaseActivity;
 import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.huangliwo.model.ShopOrderModel;
 import com.feitianzhu.huangliwo.shop.ShopDao;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
+import com.hjq.toast.ToastUtils;
 import com.socks.library.KLog;
 import me.zhanghai.android.materialratingbar.MaterialRatingBar;
 
@@ -66,7 +66,7 @@ public class OrdeRevaluateActivity extends LazyBaseActivity {
   @OnClick(R.id.rl_bottomContainer) public void onViewClicked() {
     String content = mEditPx.getText().toString().trim();
     if (TextUtils.isEmpty(content)) {
-      ToastUtils.showShortToast("评论不能为空");
+      ToastUtils.show("评论不能为空");
       return;
     }
     showloadDialog("");
@@ -75,13 +75,13 @@ public class OrdeRevaluateActivity extends LazyBaseActivity {
         new onConnectionFinishLinstener() {
           @Override public void onSuccess(int code, Object result) {
             goneloadDialog();
-            ToastUtils.showShortToast("评论成功");
+            ToastUtils.show("评论成功");
             finish();
           }
 
           @Override public void onFail(int code, String result) {
             goneloadDialog();
-            ToastUtils.showShortToast(result);
+            ToastUtils.show(result);
           }
         });
   }

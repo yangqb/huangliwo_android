@@ -25,31 +25,24 @@ import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.GoodsOrderInfo;
 import com.feitianzhu.huangliwo.model.PayInfo;
 import com.feitianzhu.huangliwo.model.PayModel;
-import com.feitianzhu.huangliwo.model.WXModel;
 import com.feitianzhu.huangliwo.utils.PayUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.google.gson.Gson;
+import com.hjq.toast.ToastUtils;
 import com.lzy.okgo.OkGo;
 import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.Callback;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import okhttp3.Call;
-import okhttp3.Response;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.huangliwo.common.Constant.USERID;
@@ -240,21 +233,21 @@ public class SelectPayActivity extends BaseActivity {
         mPayReq.timeStamp = result.timestamp + "";
         mPayReq.sign = result.sign;
         api.sendReq(mPayReq);
-        ToastUtils.showShortToast("正在打开微信中");
+        ToastUtils.show("正在打开微信中");
     }
 
     private void aliPay(String orderInfo) {
         PayUtils.aliPay(SelectPayActivity.this, orderInfo, new onConnectionFinishLinstener() {
             @Override
             public void onSuccess(int code, Object result) {
-                ToastUtils.showShortToast("支付成功");
+                ToastUtils.show("支付成功");
                 setResult(RESULT_OK);
                 finish();
             }
 
             @Override
             public void onFail(int code, String result) {
-                ToastUtils.showShortToast("支付失败");
+                ToastUtils.show("支付失败");
             }
         });
     }
@@ -263,11 +256,11 @@ public class SelectPayActivity extends BaseActivity {
     public void onPayMessageCall(PayInfo msg) {
         if (msg.getCurrentInfo() == PayInfo.ShopPay) {
             if (msg.getIsSuccess() == PayInfo.SUCCESS) {
-                ToastUtils.showShortToast("支付成功");
+                ToastUtils.show("支付成功");
                 setResult(RESULT_OK);
                 finish();
             } else {
-                ToastUtils.showShortToast("支付失败");
+                ToastUtils.show("支付失败");
             }
         }
     }

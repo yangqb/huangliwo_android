@@ -17,9 +17,7 @@ import com.feitianzhu.huangliwo.pushshop.adapter.SelfMerchantsOrderAdapter;
 import com.feitianzhu.huangliwo.pushshop.bean.SelfMerchantsModel;
 import com.feitianzhu.huangliwo.utils.DateUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
-import com.feitianzhu.huangliwo.view.BusinessWeekDayDialog;
 import com.feitianzhu.huangliwo.view.DatePickDialog;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
@@ -27,16 +25,12 @@ import com.lzy.okgo.request.base.Request;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.Callback;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import okhttp3.Call;
 
 /**
  * package name: com.feitianzhu.huangliwo.pushshop

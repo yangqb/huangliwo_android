@@ -9,7 +9,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
-import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -30,9 +29,9 @@ import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.GiftDetailModel;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.view.CustomRefundView;
+import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
@@ -170,7 +169,7 @@ public class VipGiftDetailActivity extends BaseActivity {
 
     private void createCode(String url) {
         if (TextUtils.isEmpty(url)) {
-            ToastUtils.showShortToast("未获取到二维码");
+            ToastUtils.show("未获取到二维码");
             return;
         }
         Log.e("Test", "-------->" + url);
@@ -192,7 +191,7 @@ public class VipGiftDetailActivity extends BaseActivity {
                 break;
             case R.id.address:
                 if (mapList.size() <= 0) {
-                    ToastUtils.showShortToast("请先安装百度地图或高德地图");
+                    ToastUtils.show("请先安装百度地图或高德地图");
                     return;
                 } else {
                     new XPopup.Builder(this)

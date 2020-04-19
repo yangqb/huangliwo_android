@@ -9,7 +9,6 @@ import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -28,36 +27,28 @@ import com.feitianzhu.huangliwo.me.helper.CityModel;
 import com.feitianzhu.huangliwo.model.AddressInfo;
 import com.feitianzhu.huangliwo.model.PayInfo;
 import com.feitianzhu.huangliwo.model.PayModel;
-import com.feitianzhu.huangliwo.model.ShopRecordWxModel;
 import com.feitianzhu.huangliwo.shop.ShopDao;
 import com.feitianzhu.huangliwo.utils.PayUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.utils.doubleclick.SingleClick;
 import com.feitianzhu.huangliwo.view.CustomInputView;
-import com.google.gson.Gson;
+import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
 import com.lzy.okgo.OkGo;
 import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.Callback;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import okhttp3.Call;
-import okhttp3.Response;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
@@ -200,7 +191,7 @@ public class VipUpgradeActivity extends BaseActivity {
                 break;
             case R.id.tv_pay:
                 if (addressBean == null) {
-                    ToastUtils.showShortToast("请选择收货地址");
+                    ToastUtils.show("请选择收货地址");
                 } else {
                     showInputDialog();
                 }
@@ -233,7 +224,7 @@ public class VipUpgradeActivity extends BaseActivity {
                             @Override
                             public void onConfirm(String account) {
                                 if (TextUtils.isEmpty(account)) {
-                                    ToastUtils.showShortToast("请输入邀请人ID");
+                                    ToastUtils.show("请输入邀请人ID");
                                     return;
                                 }
                                 pay(account);
@@ -287,7 +278,7 @@ public class VipUpgradeActivity extends BaseActivity {
             @Override
             public void onSuccess(int code, Object result) {
                 setResult(RESULT_OK);
-                ToastUtils.showShortToast("支付成功");
+                ToastUtils.show("支付成功");
                 EventBus.getDefault().postSticky(LoginEvent.BUY_VIP);
                 //弹框
                 showDialog();
@@ -295,7 +286,7 @@ public class VipUpgradeActivity extends BaseActivity {
 
             @Override
             public void onFail(int code, String result) {
-                ToastUtils.showShortToast("支付失败");
+                ToastUtils.show("支付失败");
             }
         });
 
@@ -338,7 +329,7 @@ public class VipUpgradeActivity extends BaseActivity {
         mPayReq.timeStamp = mResult.timestamp + "";
         mPayReq.sign = mResult.sign;
         api.sendReq(mPayReq);
-        ToastUtils.showShortToast("正在打开微信中");
+        ToastUtils.show("正在打开微信中");
     }
 
     @Override

@@ -23,7 +23,7 @@ import com.feitianzhu.huangliwo.me.ui.totalScore.ReleaseTotalScoreActivity;
 import com.feitianzhu.huangliwo.model.GetMoneyModel;
 import com.feitianzhu.huangliwo.model.TotalScoreModel;
 import com.feitianzhu.huangliwo.shop.ShopHelp;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
+import com.hjq.toast.ToastUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
 
@@ -137,7 +137,7 @@ public class PromotionBonusFragment extends LazyFragment {
             public void onError(Call call, Exception e, int id) {
                 Log.e("Test", "--Error-->" + e.getMessage());
                 goneloadDialog();
-                ToastUtils.showShortToast(e.getMessage());
+                ToastUtils.show(e.getMessage());
             }
 
             @Override
@@ -157,7 +157,7 @@ public class PromotionBonusFragment extends LazyFragment {
         switch (ItemIndex) {
             case 1: //推广
                 if(response ==null||response.getRebateRecords()==null||response.getRebateRecords().getExtendPointRecord()==null){
-                    ToastUtils.showShortToast("获取服务数据失败!");
+                    ToastUtils.show("获取服务数据失败!");
                     return;
                 }
                 mList.addAll(response.getRebateRecords().getExtendPointRecord());
@@ -179,7 +179,7 @@ public class PromotionBonusFragment extends LazyFragment {
                 break;
             case 2: //分红
                 if(response ==null||response.getRebateRecords()==null||response.getRebateRecords().getBonusPointsRecord()==null){
-                    ToastUtils.showShortToast("获取服务数据失败!");
+                    ToastUtils.show("获取服务数据失败!");
                     return;
                 }
                 mList.addAll(response.getRebateRecords().getBonusPointsRecord());
@@ -282,7 +282,7 @@ public class PromotionBonusFragment extends LazyFragment {
 
             @Override
             public void onFail(int code, String result) {
-                ToastUtils.showShortToast(result);
+                ToastUtils.show(result);
             }
         });
     }

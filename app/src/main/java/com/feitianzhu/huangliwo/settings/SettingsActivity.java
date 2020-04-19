@@ -10,37 +10,28 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.feitianzhu.huangliwo.MainActivity;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
-import com.feitianzhu.huangliwo.common.impl.onNetFinishLinstenerT;
+import com.feitianzhu.huangliwo.common.base.LazyWebActivity;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.login.LoginActivity;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.UpdateAppModel;
 import com.feitianzhu.huangliwo.model.UserAuth;
-import com.feitianzhu.huangliwo.pushshop.MySelfMerchantsActivity;
 import com.feitianzhu.huangliwo.pushshop.ProblemFeedbackActivity;
-import com.feitianzhu.huangliwo.shop.ShopDao;
 import com.feitianzhu.huangliwo.utils.DataCleanUtils;
-import com.feitianzhu.huangliwo.utils.HProgressDialogUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.UpdateAppHttpUtil;
+import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.utils.VersionManagementUtil;
 import com.google.gson.Gson;
-import com.lxj.xpopup.XPopup;
-import com.lxj.xpopup.interfaces.OnCancelListener;
-import com.lxj.xpopup.interfaces.OnConfirmListener;
+import com.hjq.toast.ToastUtils;
 import com.lzy.okgo.OkGo;
 import com.vector.update_app.UpdateAppBean;
 import com.vector.update_app.UpdateAppManager;
 import com.vector.update_app.UpdateCallback;
-import com.vector.update_app.service.DownloadService;
 import com.vector.update_app.utils.AppUpdateUtils;
-
-import java.io.File;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -162,14 +153,13 @@ public class SettingsActivity extends BaseActivity {
                 intent.putExtra(Constant.URL, Urls.H5_ABOUT_ME);
                 intent.putExtra(Constant.H5_TITLE, "关于我们");
                 startActivity(intent);*/
-                ToastUtils.showShortToast("敬请期待");
+                ToastUtils.show("敬请期待");
                 break;
             case R.id.rl_help:
-                /*intent = new Intent(this, LazyWebActivity.class);
-                intent.putExtra(Constant.URL, Urls.H5_HELPER);
-                intent.putExtra(Constant.H5_TITLE, "帮助");
-                startActivity(intent);*/
-                ToastUtils.showShortToast("敬请期待");
+                intent = new Intent(SettingsActivity.this, LazyWebActivity.class);
+                intent.putExtra(Constant.URL, Urls.BASE_URL + "fhwl/static/html/bangzhu.html");
+                intent.putExtra(Constant.H5_TITLE, "\"便利大本营\"百问百答");
+                startActivity(intent);
                 break;
             case R.id.rl_update:
                 updateDiy();
@@ -178,12 +168,13 @@ public class SettingsActivity extends BaseActivity {
                 startActivity(new Intent(this, ChangePhone1Activity.class));
                 break;
             case R.id.rl_change_password:
-                ChangePasswordActivity.startActivity(this, true);
+                intent = new Intent(SettingsActivity.this, ChangeLoginPassword.class);
+                startActivity(intent);
+                //ChangePasswordActivity.startActivity(this, true);
                 break;
             case R.id.rl_change_second_password:
-
                 if (isPayPassword) {
-                    ChangePasswordActivity.startActivity(this, false);
+                    ChangePasswordActivity.startActivity(this);
                 } else {
                     GetPasswordActivity.startActivity(mContext, GetPasswordActivity.TYPE_SET_PAY_PASSWORD_PWD);
                 }
@@ -291,7 +282,7 @@ public class SettingsActivity extends BaseActivity {
                     protected void noNewApp(String error) {
                         super.noNewApp(error);
                         // goneloadDialog();
-                        ToastUtils.showShortToast("没有新版本");
+                        ToastUtils.show("没有新版本");
                     }
                 });
     }

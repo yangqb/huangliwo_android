@@ -16,12 +16,11 @@ import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
-import com.feitianzhu.huangliwo.model.CollectionInfo;
 import com.feitianzhu.huangliwo.model.CustomPlaneDetailInfo;
 import com.feitianzhu.huangliwo.model.PassengerModel;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
+import com.hjq.toast.ToastUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 
@@ -87,13 +86,13 @@ public class PassengerListActivity extends BaseActivity {
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                 if (type == 2) {
                     if (locModelList.get(position).ageType == 1) {
-                        ToastUtils.showShortToast("不支持儿童购买");
+                        ToastUtils.show("不支持儿童购买");
                     } else {
                         locModelList.get(position).isSelect = !locModelList.get(position).isSelect;
                     }
                 } else if (type == 1 || type == 3) {
                     if (customPlaneDetailInfo.customInterPriceInfo.cPrice == 0 && locModelList.get(position).ageType == 1) {
-                        ToastUtils.showShortToast("不支持儿童购买");
+                        ToastUtils.show("不支持儿童购买");
                     } else {
                         locModelList.get(position).isSelect = !locModelList.get(position).isSelect;
                     }
@@ -101,7 +100,7 @@ public class PassengerListActivity extends BaseActivity {
                     if (customPlaneDetailInfo.customDocGoPriceInfo.businessExtMap != null) {
                         if (!customPlaneDetailInfo.customDocGoPriceInfo.businessExtMap.supportChild && !customPlaneDetailInfo.customDocGoPriceInfo.businessExtMap.supportChildBuyAdult) {
                             if (locModelList.get(position).ageType == 1) {
-                                ToastUtils.showShortToast("不支持儿童购买");
+                                ToastUtils.show("不支持儿童购买");
                             } else {
                                 locModelList.get(position).isSelect = !locModelList.get(position).isSelect;
                             }
@@ -110,7 +109,7 @@ public class PassengerListActivity extends BaseActivity {
                         }
                     } else {
                         if (locModelList.get(position).ageType == 1) {
-                            ToastUtils.showShortToast("不支持儿童购买");
+                            ToastUtils.show("不支持儿童购买");
                         } else {
                             locModelList.get(position).isSelect = !locModelList.get(position).isSelect;
                         }
@@ -165,7 +164,7 @@ public class PassengerListActivity extends BaseActivity {
                     public void onSuccess(Response<LzyResponse> response) {
                         super.onSuccess(PassengerListActivity.this, response.body().msg, response.body().code);
                         if (response.body().code == 0) {
-                            ToastUtils.showShortToast("删除成功");
+                            ToastUtils.show("删除成功");
                         }
                     }
 
@@ -224,7 +223,7 @@ public class PassengerListActivity extends BaseActivity {
                     }
                 }
                 if (selectPassenger.size() <= 0) {
-                    ToastUtils.showShortToast("请选择乘机人");
+                    ToastUtils.show("请选择乘机人");
                 } else {
                     Intent data = new Intent();
                     data.putParcelableArrayListExtra(SELECT_PASSENGER, selectPassenger);

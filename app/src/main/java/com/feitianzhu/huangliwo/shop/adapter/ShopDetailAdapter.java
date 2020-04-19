@@ -19,9 +19,11 @@ import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.feitianzhu.huangliwo.R;
+import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.MultipleItem;
 import com.feitianzhu.huangliwo.model.MultipleMerchantsItem;
 import com.feitianzhu.huangliwo.utils.MathUtils;
+import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 import com.feitianzhu.huangliwo.view.CircleImageView;
 import com.itheima.roundedimageview.RoundedImageView;
 
@@ -62,9 +64,10 @@ public class ShopDetailAdapter extends BaseMultiItemQuickAdapter<MultipleMerchan
     protected void convert(BaseViewHolder helper, MultipleMerchantsItem item) {
         switch (helper.getItemViewType()) {
             case MultipleMerchantsItem.SETMEAL_TYPE:
+                MineInfoModel userInfo = UserInfoUtils.getUserInfo(mContext);
                 helper.setText(R.id.tvSetMealName, item.getSetMealInfo().getSmName());
                 helper.setText(R.id.setMealDescription, item.getSetMealInfo().getRemark());
-                setSpannableString(String.format(Locale.getDefault(), "%.2f", item.getSetMealInfo().getPrice()), helper.getView(R.id.setMealPrice));
+                setSpannableString(MathUtils.subZero(String.valueOf(item.getSetMealInfo().getPrice())), helper.getView(R.id.setMealPrice));
                 String[] imgUrls = item.getSetMealInfo().getImgs().split(",");
                 if (item.getSetMealInfo().getImgs().contains(",")) {
                     Glide.with(mContext).load(imgUrls[0])
@@ -73,6 +76,17 @@ public class ShopDetailAdapter extends BaseMultiItemQuickAdapter<MultipleMerchan
                     Glide.with(mContext).load(item.getSetMealInfo().getImgs())
                             .apply(new RequestOptions().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai).dontAnimate()).into((RoundedImageView) helper.getView(R.id.image));
                 }
+
+                if (userInfo.getAccountType() != 0) {
+                    helper.setGone(R.id.ll_rebate, false);
+                    helper.setGone(R.id.vip_rebate, true);
+                } else {
+                    helper.setGone(R.id.ll_rebate, true);
+                    helper.setGone(R.id.vip_rebate, false);
+                }
+                helper.setText(R.id.tv_rebate, "奖励" + MathUtils.subZero(String.valueOf(100 - item.getSetMealInfo().getDiscount() * 100)) + "%");
+                helper.setText(R.id.vip_rebate, "奖励" + MathUtils.subZero(String.valueOf(100 - item.getSetMealInfo().getDiscount() * 100)) + "%");
+                helper.addOnClickListener(R.id.ll_rebate);
 
                 break;
             case MultipleMerchantsItem.COMMENTS_TYPE:

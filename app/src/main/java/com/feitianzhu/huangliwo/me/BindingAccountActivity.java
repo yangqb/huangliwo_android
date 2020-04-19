@@ -15,20 +15,15 @@ import com.feitianzhu.huangliwo.model.BindingAliAccountModel;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.StringUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
+import com.hjq.toast.ToastUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.request.PostRequest;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.builder.PostFormBuilder;
-import com.zhy.http.okhttp.callback.Callback;
 
 import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import okhttp3.Call;
-import okhttp3.Response;
 
 /**
  * package name: com.feitianzhu.huangliwo.me
@@ -110,17 +105,17 @@ public class BindingAccountActivity extends BaseActivity {
 
     public void submit() {
         if (TextUtils.isEmpty(editName.getText().toString().trim())) {
-            ToastUtils.showShortToast("请输入真实姓名");
+            ToastUtils.show("请输入真实姓名");
             return;
         }
         if (!StringUtils.isPhone(editAccount.getText().toString().trim())) {
             if (!StringUtils.isEmail(editAccount.getText().toString().trim())) {
-                ToastUtils.showShortToast("请输入正确的支付宝账号");
+                ToastUtils.show("请输入正确的支付宝账号");
                 return;
             }
         }
         if (!editAccount.getText().toString().trim().equals(editAgainAccount.getText().toString().trim())) {
-            ToastUtils.showShortToast("两次输入的账号不一致");
+            ToastUtils.show("两次输入的账号不一致");
             return;
         }
 
@@ -140,9 +135,9 @@ public class BindingAccountActivity extends BaseActivity {
                         super.onSuccess(BindingAccountActivity.this, response.body().msg, response.body().code);
                         if (response.body().code == 0) {
                             if (infoModel.getIsBind() == 1) {
-                                ToastUtils.showShortToast("修改成功");
+                                ToastUtils.show("修改成功");
                             } else {
-                                ToastUtils.showShortToast("绑定成功");
+                                ToastUtils.show("绑定成功");
                                 setResult(RESULT_OK);
                                 EventBus.getDefault().postSticky(LoginEvent.BINDING_ALI_ACCOUNT);
                             }

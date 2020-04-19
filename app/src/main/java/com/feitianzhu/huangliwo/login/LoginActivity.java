@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -14,51 +13,36 @@ import android.widget.Toast;
 import com.feitianzhu.huangliwo.MainActivity;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
-import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
-import com.feitianzhu.huangliwo.dao.NetworkDao;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.login.entity.LoginEntity;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
-import com.feitianzhu.huangliwo.model.PayInfo;
 import com.feitianzhu.huangliwo.model.WXLoginInfo;
 import com.feitianzhu.huangliwo.model.WXLoginModel;
 import com.feitianzhu.huangliwo.model.WXUserInfo;
-import com.feitianzhu.huangliwo.shop.ShopPayActivity;
-import com.feitianzhu.huangliwo.shop.ui.OrderDetailActivity;
 import com.feitianzhu.huangliwo.utils.EncryptUtils;
-import com.feitianzhu.huangliwo.utils.PayUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.StringUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 import com.google.gson.Gson;
 import com.gyf.immersionbar.ImmersionBar;
+import com.hjq.toast.ToastUtils;
 import com.lzy.okgo.OkGo;
-import com.lzy.okgo.model.Progress;
 import com.lzy.okgo.model.Response;
-import com.lzy.okgo.request.base.Request;
 import com.socks.library.KLog;
 import com.tencent.mm.opensdk.modelmsg.SendAuth;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.Callback;
-import com.zhy.http.okhttp.https.HttpsUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONObject;
 
 import butterknife.BindView;
-import butterknife.OnClick;
-import okhttp3.Call;
 
 import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
-import static com.feitianzhu.huangliwo.common.Constant.FailCode;
 import static com.feitianzhu.huangliwo.common.Constant.POST_MINE_INFO;
 
 
@@ -260,7 +244,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         if (response.body().errcode == null) {
                             getWXUserInfo(response.body());
                         } else {
-                            ToastUtils.showShortToast(response.body().errmsg);
+                            ToastUtils.show(response.body().errmsg);
                         }
                     }
 
@@ -284,7 +268,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         if (response.body().errcode == null) {
                             wxLogin(response.body());
                         } else {
-                            ToastUtils.showShortToast(response.body().errmsg);
+                            ToastUtils.show(response.body().errmsg);
                         }
                     }
 

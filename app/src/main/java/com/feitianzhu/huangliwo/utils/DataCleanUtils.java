@@ -36,8 +36,8 @@ public final class DataCleanUtils {
      * context
      */
     public static void cleanSharedPreference(Context context) {
-        SPUtils.putString(context, Constant.SP_PHONE, "");
-        SPUtils.putString(context, Constant.SP_PASSWORD, "");
+        //SPUtils.putString(context, Constant.SP_PHONE, "");
+        //SPUtils.putString(context, Constant.SP_PASSWORD, "");
         deleteFilesByDirectory(new File("/data/data/"
                 + context.getPackageName() + "/shared_prefs"));
     }
@@ -81,7 +81,7 @@ public final class DataCleanUtils {
         cleanInternalCache(context);
         cleanExternalCache(context);
         cleanDatabases(context);
-        cleanSharedPreference(context);
+        //cleanSharedPreference(context);
         cleanFiles(context);
         for (String filePath : filepath) {
             cleanCustomCache(filePath);

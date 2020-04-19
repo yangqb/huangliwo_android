@@ -1,6 +1,5 @@
 package com.feitianzhu.huangliwo.pushshop;
 
-import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -17,33 +16,25 @@ import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.PayInfo;
 import com.feitianzhu.huangliwo.model.PayModel;
-import com.feitianzhu.huangliwo.model.WXModel;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsModel;
 import com.feitianzhu.huangliwo.pushshop.bean.PaymentInfo;
 import com.feitianzhu.huangliwo.utils.EditTextUtils;
 import com.feitianzhu.huangliwo.utils.PayUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
-import com.google.gson.Gson;
+import com.hjq.toast.ToastUtils;
 import com.itheima.roundedimageview.RoundedImageView;
 import com.lzy.okgo.OkGo;
 import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.Callback;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import okhttp3.Call;
-import okhttp3.Response;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.huangliwo.common.Constant.USERID;
@@ -134,11 +125,11 @@ public class MyPaymentActivity extends BaseActivity {
                 break;
             case R.id.tv_pay:
                 if (TextUtils.isEmpty(editAmount.getText().toString())) {
-                    ToastUtils.showShortToast("请输入正确金额");
+                    ToastUtils.show("请输入正确金额");
                     return;
                 }
                 if (editAmount.getText().toString().endsWith(".")) {
-                    ToastUtils.showShortToast("请输入正确金额");
+                    ToastUtils.show("请输入正确金额");
                     return;
                 }
                 pay();
@@ -215,7 +206,7 @@ public class MyPaymentActivity extends BaseActivity {
         mPayReq.timeStamp = result.timestamp + "";
         mPayReq.sign = result.sign;
         api.sendReq(mPayReq);
-        ToastUtils.showShortToast("正在打开微信中");
+        ToastUtils.show("正在打开微信中");
     }
 
 
@@ -224,13 +215,13 @@ public class MyPaymentActivity extends BaseActivity {
         PayUtils.aliPay(MyPaymentActivity.this, payProof, new onConnectionFinishLinstener() {
             @Override
             public void onSuccess(int code, Object result) {
-                ToastUtils.showShortToast("支付成功");
+                ToastUtils.show("支付成功");
                 finish();
             }
 
             @Override
             public void onFail(int code, String result) {
-                ToastUtils.showShortToast("支付失败");
+                ToastUtils.show("支付失败");
             }
         });
     }
@@ -239,10 +230,10 @@ public class MyPaymentActivity extends BaseActivity {
     public void onPayMessageCall(PayInfo msg) {
         if (msg.getCurrentInfo() == PayInfo.RECEIVABLES_SETMEAL_PAY) {
             if (msg.getIsSuccess() == PayInfo.SUCCESS) {
-                ToastUtils.showShortToast("支付成功");
+                ToastUtils.show("支付成功");
                 finish();
             } else {
-                ToastUtils.showShortToast("支付失败");
+                ToastUtils.show("支付失败");
             }
         }
     }

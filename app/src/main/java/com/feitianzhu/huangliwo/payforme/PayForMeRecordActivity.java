@@ -14,8 +14,8 @@ import com.feitianzhu.huangliwo.payforme.fragment.AuditComFragment;
 import com.feitianzhu.huangliwo.payforme.fragment.AuditIngFragment;
 import com.feitianzhu.huangliwo.payforme.fragment.AuditRejFragment;
 import com.feitianzhu.huangliwo.shop.adapter.MyPagerAdapter;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.flyco.tablayout.SlidingTabLayout;
+import com.hjq.toast.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -107,7 +107,7 @@ public class PayForMeRecordActivity extends BaseActivity {
 
             @Override
             public void onFail(int code, String result) {
-                ToastUtils.showShortToast(result);
+                ToastUtils.show(result);
                 setDefaultTabs();
             }
         });

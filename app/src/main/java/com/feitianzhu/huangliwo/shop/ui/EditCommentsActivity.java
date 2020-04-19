@@ -4,9 +4,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -19,36 +17,28 @@ import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.EvaluateMode;
-import com.feitianzhu.huangliwo.model.GoodsOrderInfo;
 import com.feitianzhu.huangliwo.model.MultiItemComment;
 import com.feitianzhu.huangliwo.shop.adapter.EditCommentAdapter;
 import com.feitianzhu.huangliwo.utils.Glide4Engine;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.utils.doubleclick.SingleClick;
 import com.google.gson.Gson;
+import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.request.PostRequest;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.builder.PostFormBuilder;
-import com.zhy.http.okhttp.callback.Callback;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import cc.shinichi.library.ImagePreview;
-import okhttp3.Call;
-import okhttp3.Response;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.huangliwo.common.Constant.USERID;
@@ -219,11 +209,11 @@ public class EditCommentsActivity extends BaseActivity {
                 break;
             case R.id.right_button:
                 if (TextUtils.isEmpty(editContent.getText().toString().trim())) {
-                    ToastUtils.showShortToast("您还没有填写评价内容");
+                    ToastUtils.show("您还没有填写评价内容");
                     return;
                 }
                 if (editContent.getText().toString().trim().length() > 500) {
-                    ToastUtils.showShortToast("最多可以输入500个字哦");
+                    ToastUtils.show("最多可以输入500个字哦");
                     return;
                 }
 
@@ -259,7 +249,7 @@ public class EditCommentsActivity extends BaseActivity {
                             public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
                                 super.onSuccess(EditCommentsActivity.this, response.body().msg, response.body().code);
                                 if (response.body().code == 0) {
-                                    ToastUtils.showShortToast("发布成功");
+                                    ToastUtils.show("发布成功");
                                     setResult(RESULT_OK);
                                     finish();
                                 }

@@ -79,6 +79,7 @@
                         android:layout_height="match_parent"
                         android:layout_toRightOf="@id/phone_tag"
                         android:background="@null"
+                        android:maxLength="11"
                         android:inputType="phone"
                         android:gravity="center_vertical"
                         android:hint="请输入手机号码"

@@ -21,10 +21,8 @@ import com.feitianzhu.huangliwo.App;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.LazyWebActivity;
-import com.feitianzhu.huangliwo.common.base.WebActivity;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
-import com.feitianzhu.huangliwo.login.LoginEvent;
 import com.feitianzhu.huangliwo.me.WithdrawActivity;
 import com.feitianzhu.huangliwo.me.WithdrawRecordActivity;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
@@ -34,9 +32,8 @@ import com.feitianzhu.huangliwo.pushshop.bean.MerchantsModel;
 import com.feitianzhu.huangliwo.pushshop.bean.SelfMerchantsListInfo;
 import com.feitianzhu.huangliwo.shop.ShopDao;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
-import com.feitianzhu.huangliwo.view.CustomRefundView;
+import com.feitianzhu.huangliwo.view.CustomClassificationView;
 import com.gyf.immersionbar.ImmersionBar;
 import com.lxj.xpopup.XPopup;
 import com.lzy.okgo.OkGo;
@@ -48,8 +45,6 @@ import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
 import com.yanzhenjie.permission.Rationale;
 import com.yanzhenjie.permission.RationaleListener;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.Callback;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -61,8 +56,6 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import okhttp3.Call;
-import okhttp3.Request;
 import q.rorbin.badgeview.QBadgeView;
 
 /**
@@ -239,10 +232,10 @@ public class MySelfMerchantsActivity extends BaseActivity {
                 startActivity(intent);
                 break;
             /*case R.id.ll_investment:
-                ToastUtils.showShortToast("敬请期待");
+                ToastUtils.show("敬请期待");
                 break;
             case R.id.ll_propaganda:
-                ToastUtils.showShortToast("敬请期待");
+                ToastUtils.show("敬请期待");
                 break;*/
             case R.id.feedback:
                 startActivity(new Intent(MySelfMerchantsActivity.this, ProblemFeedbackActivity.class));
@@ -296,9 +289,9 @@ public class MySelfMerchantsActivity extends BaseActivity {
             stringList.add(merchantsList.get(i).getMerchantName());
         }
         new XPopup.Builder(this)
-                .asCustom(new CustomRefundView(MySelfMerchantsActivity.this)
+                .asCustom(new CustomClassificationView(MySelfMerchantsActivity.this)
                         .setData(stringList)
-                        .setOnItemClickListener(new CustomRefundView.OnItemClickListener() {
+                        .setOnItemClickListener(new CustomClassificationView.OnItemClickListener() {
                             @Override
                             public void onItemClick(int position) {
                                 selectPos = position;

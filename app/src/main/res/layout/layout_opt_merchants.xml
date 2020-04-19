@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:id="@+id/item"
     android:layout_marginLeft="2.5dp"
     android:layout_marginRight="2.5dp"
     android:background="@drawable/shape_f7f7f7_r5"
@@ -27,7 +28,7 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:text="盛阳海鲜自助"
-        android:textColor="@color/color_333333"
+        android:textColor="@color/white"
         android:textSize="14sp" />
 
     <RelativeLayout
@@ -44,11 +45,11 @@
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="25dp"
+                android:layout_height="18dp"
                 android:background="@drawable/shape_rebate_left_vip"
                 android:gravity="end|center_vertical"
-                android:paddingLeft="8dp"
-                android:paddingRight="2dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
                 android:text="成为会员"
                 android:textColor="@color/color_333333"
                 android:textSize="10sp" />
@@ -56,13 +57,13 @@
             <TextView
                 android:id="@+id/tv_rebate"
                 android:layout_width="wrap_content"
-                android:layout_height="25dp"
+                android:layout_height="18dp"
                 android:background="@drawable/shape_rebate_right_vip"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:maxLines="1"
-                android:paddingLeft="2dp"
-                android:paddingRight="8dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
                 android:text="返20.5%"
                 android:textColor="@color/color_333333"
                 android:textSize="10sp" />

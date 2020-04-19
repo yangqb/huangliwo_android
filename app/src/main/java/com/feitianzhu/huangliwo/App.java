@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 import android.support.multidex.MultiDex;
 
 import com.baidu.mapapi.SDKInitializer;
+import com.feitianzhu.huangliwo.utils.ToastWhiteStyle2;
+import com.hjq.toast.ToastUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheEntity;
 import com.lzy.okgo.cache.CacheMode;
@@ -89,6 +91,8 @@ public class App extends MobApplication {
         AutoSizeConfig.getInstance().setCustomFragment(true);
         CrashReport.initCrashReport(getApplicationContext(), "ad4dea9550", false); //正式发布改为false
         SDKInitializer.initialize(this);
+        ToastUtils.init(this);
+        ToastUtils.initStyle(new ToastWhiteStyle2(this));
 
     }
     public void initOkgo(){

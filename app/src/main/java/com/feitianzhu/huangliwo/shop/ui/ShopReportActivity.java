@@ -10,7 +10,7 @@ import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.LazyBaseActivity;
 import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.huangliwo.shop.ShopDao;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
+import com.hjq.toast.ToastUtils;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -43,17 +43,17 @@ public class ShopReportActivity extends LazyBaseActivity {
   @OnClick(R.id.btn_submit) public void onViewClicked() {
     String str = mContent.getText().toString().trim();
     if (TextUtils.isEmpty(str)){
-      ToastUtils.showShortToast("举报内容不能为空");
+      ToastUtils.show("举报内容不能为空");
       return;
     }
     ShopDao.postShopReport(mId, mtype, str, new onConnectionFinishLinstener() {
       @Override public void onSuccess(int code, Object result) {
-        ToastUtils.showShortToast("举报成功");
+        ToastUtils.show("举报成功");
         finish();
       }
 
       @Override public void onFail(int code, String result) {
-        ToastUtils.showShortToast(result);
+        ToastUtils.show(result);
       }
     });
   }

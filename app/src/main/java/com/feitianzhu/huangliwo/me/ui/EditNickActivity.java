@@ -2,7 +2,6 @@ package com.feitianzhu.huangliwo.me.ui;
 
 import android.content.Intent;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -15,17 +14,13 @@ import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.login.LoginEvent;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
+import com.hjq.toast.ToastUtils;
 import com.lzy.okgo.OkGo;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.Callback;
 
 import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import okhttp3.Call;
-import okhttp3.Response;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
@@ -72,7 +67,7 @@ public class EditNickActivity extends BaseActivity {
                 break;
             case R.id.right_button:
                 if (TextUtils.isEmpty(editText.getText().toString())) {
-                    ToastUtils.showShortToast("请输入新的昵称");
+                    ToastUtils.show("请输入新的昵称");
                     return;
                 }
                 //提交信息操作

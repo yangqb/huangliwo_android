@@ -1,6 +1,5 @@
 package com.feitianzhu.huangliwo.me.ui;
 
-import android.annotation.SuppressLint;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -12,29 +11,21 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
-import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseTakePhotoActivity;
 import com.feitianzhu.huangliwo.model.Province;
 import com.feitianzhu.huangliwo.model.UserAuth;
 import com.feitianzhu.huangliwo.model.UserVeriModel;
-import com.feitianzhu.huangliwo.shop.ShopDao;
-import com.feitianzhu.huangliwo.shop.ui.EditApplyRefundActivity;
 import com.feitianzhu.huangliwo.shop.ui.dialog.ProvinceCallBack;
 import com.feitianzhu.huangliwo.shop.ui.dialog.ProvinceDialog2;
-import com.feitianzhu.huangliwo.utils.IDCardValidate;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.StringUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.view.CustomRefundView;
 import com.feitianzhu.huangliwo.view.CustomSelectPhotoView;
-import com.google.gson.Gson;
+import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
 import com.lzy.okgo.OkGo;
-import com.socks.library.KLog;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.Callback;
 
 import org.devio.takephoto.model.TResult;
 import org.greenrobot.eventbus.EventBus;
@@ -45,24 +36,14 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import okhttp3.Call;
-import okhttp3.Request;
-import okhttp3.Response;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.huangliwo.common.Constant.CERTIFNO;
 import static com.feitianzhu.huangliwo.common.Constant.CERTIFTYPE;
-import static com.feitianzhu.huangliwo.common.Constant.CITYID;
-import static com.feitianzhu.huangliwo.common.Constant.CITYNAME;
 import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
-import static com.feitianzhu.huangliwo.common.Constant.FailCode;
 import static com.feitianzhu.huangliwo.common.Constant.LOADER_VERI_USER_INFO;
-import static com.feitianzhu.huangliwo.common.Constant.LOAD_USER_AUTH;
 import static com.feitianzhu.huangliwo.common.Constant.POST_REALAUTH;
-import static com.feitianzhu.huangliwo.common.Constant.PROVINCEID;
-import static com.feitianzhu.huangliwo.common.Constant.PROVINCENAME;
 import static com.feitianzhu.huangliwo.common.Constant.REALNAME;
-import static com.feitianzhu.huangliwo.common.Constant.SuccessCode;
 import static com.feitianzhu.huangliwo.common.Constant.USERID;
 
 /**
@@ -218,35 +199,35 @@ public class VerificationActivity2 extends BaseTakePhotoActivity implements Prov
     public void submit() {
         String id_num = mEdtIdNum.getText().toString().trim();
         if (TextUtils.isEmpty(photo_file_one)) {
-            ToastUtils.showShortToast("还没有选择证件正面照");
+            ToastUtils.show("还没有选择证件正面照");
             return;
         }
         if (TextUtils.isEmpty(photo_file_two)) {
-            ToastUtils.showShortToast("还没有选择证件背面照");
+            ToastUtils.show("还没有选择证件背面照");
             return;
         }
         String name = mEditName.getText().toString().trim();
         if (TextUtils.isEmpty(name)) {
-            ToastUtils.showShortToast("还没有填写真实姓名");
+            ToastUtils.show("还没有填写真实姓名");
             return;
         }
         if (index == -1) {
-            ToastUtils.showShortToast("还没有选择证件类型");
+            ToastUtils.show("还没有选择证件类型");
             return;
         }
         if (TextUtils.isEmpty(id_num)) {
-            ToastUtils.showShortToast("还没有填写证件号码");
+            ToastUtils.show("还没有填写证件号码");
             return;
         }
         if ((index != certificates.length - 1)) {
             if (!StringUtils.isIDCard(id_num) && !StringUtils.isPassport(id_num)) {
-                ToastUtils.showShortToast("请输入正确的证件号码");
+                ToastUtils.show("请输入正确的证件号码");
                 return;
             }
         }
 
         if (province == null || city == null || area == null) {
-            ToastUtils.showShortToast("请选择地址");
+            ToastUtils.show("请选择地址");
             return;
         }
 
@@ -284,7 +265,7 @@ public class VerificationActivity2 extends BaseTakePhotoActivity implements Prov
                         super.onSuccess(VerificationActivity2.this, response.body().msg, response.body().code);
                         goneloadDialog();
                         if (response.body().code == 0) {
-                            ToastUtils.showShortToast("提交成功，请等待验证");
+                            ToastUtils.show("提交成功，请等待验证");
                             EventBus.getDefault().postSticky(AuthEvent.SUCCESS);
                             finish();
                         }

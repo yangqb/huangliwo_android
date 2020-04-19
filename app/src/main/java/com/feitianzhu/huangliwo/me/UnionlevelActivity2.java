@@ -18,7 +18,7 @@ import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.me.helper.DialogHelper;
 import com.feitianzhu.huangliwo.model.FuFriendModel;
 import com.feitianzhu.huangliwo.shop.ShopDao;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
+import com.hjq.toast.ToastUtils;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
 import com.yanzhenjie.permission.Rationale;
@@ -152,7 +152,7 @@ public class UnionlevelActivity2 extends BaseActivity implements BaseQuickAdapte
             public void onFail(int code, String result) {
                 if (isLoadMore)
                     adapter2.loadMoreFail();
-                ToastUtils.showShortToast(result);
+                ToastUtils.show(result);
             }
         });
     }

@@ -9,9 +9,9 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.SelectPhotoActivity2;
 import com.feitianzhu.huangliwo.me.navigationbar.DefaultNavigationBar;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.view.CustomPopWindow;
 import com.gyf.immersionbar.ImmersionBar;
+import com.hjq.toast.ToastUtils;
 
 import butterknife.ButterKnife;
 
@@ -89,7 +89,7 @@ public abstract class BaseTakePhotoActivity extends SelectPhotoActivity2 {
 
         String busName = editText.getText().toString().trim();
         if (TextUtils.isEmpty(busName)) {
-            ToastUtils.showShortToast(tips);
+            ToastUtils.show(tips);
             return true;
         }
         return false;

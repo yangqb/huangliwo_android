@@ -71,6 +71,10 @@
     <color name="color_DDDDDD">#DDDDDD</color>
     <color name="color_FF0101">#FF0101</color>
     <color name="color_fde29a">#FDE29A</color>
+    <color name="color_ffd0c8">#FFD0C8</color>
+    <color name="color_ffece9">#ffece9</color>
+    <color name="color_ff3528">#FF3528</color>
+    <color name="color_fffae5">#fffae5</color>
 
     <color name="color_wheel_sel">#1c1c1d</color>
     <color name="color_wheel_unsel">#4d4f54</color>

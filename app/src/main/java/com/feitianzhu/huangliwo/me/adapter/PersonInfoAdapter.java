@@ -8,7 +8,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
+import com.hjq.toast.ToastUtils;
 
 import java.util.List;
 
@@ -27,13 +27,13 @@ public class PersonInfoAdapter extends BaseQuickAdapter<MineInfoModel, BaseViewH
       rlGuanzhu.setOnClickListener(new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-              ToastUtils.showShortToast("敬请期待……");
+              ToastUtils.show("敬请期待……");
           }
       });
       rlZhuanfa.setOnClickListener(new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-              ToastUtils.showShortToast("敬请期待……");
+              ToastUtils.show("敬请期待……");
           }
       });
 

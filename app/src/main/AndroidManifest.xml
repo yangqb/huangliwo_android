@@ -614,9 +614,14 @@
             android:name=".sidebar.AreaSelectActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
-        <activity android:name=".plane.SelectPhoneCodeActivity"
+        <activity
+            android:name=".plane.SelectPhoneCodeActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".settings.ChangeLoginPassword"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

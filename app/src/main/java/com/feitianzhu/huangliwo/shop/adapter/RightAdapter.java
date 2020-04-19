@@ -42,6 +42,13 @@ public class RightAdapter extends BaseMultiItemQuickAdapter<MultipleItem, BaseVi
         MineInfoModel userInfo = UserInfoUtils.getUserInfo(mContext);
         switch (helper.getItemViewType()) {
             case MultipleItem.MERCHANTS:
+                if (userInfo.getAccountType() != 0) {
+                    helper.setGone(R.id.ll_rebate, false);
+                    helper.setGone(R.id.vip_rebate, true);
+                } else {
+                    helper.setGone(R.id.ll_rebate, true);
+                    helper.setGone(R.id.vip_rebate, false);
+                }
                 helper.setText(R.id.merchantsName, item.getMerchantsModel().getMerchantName());
                 if (item.getMerchantsModel().getIntroduce() != null) {
                     helper.setText(R.id.merchants_introduce, item.getMerchantsModel().getIntroduce());
@@ -50,41 +57,25 @@ public class RightAdapter extends BaseMultiItemQuickAdapter<MultipleItem, BaseVi
                 Glide.with(mContext).load(item.getMerchantsModel().getLogo())
                         .apply(new RequestOptions().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai).dontAnimate()).into((RoundedImageView) helper.getView(R.id.image));
                 String discount = String.valueOf((100 - item.getMerchantsModel().getDiscount() * 100));
-                helper.setText(R.id.tv_rebate, "返" + MathUtils.subZero(discount) + "%");
-                helper.setText(R.id.vip_rebate, "返" + MathUtils.subZero(discount) + "%");
-                if (userInfo.getAccountType() != 0) {
-                    helper.setVisible(R.id.ll_rebate, false);
-                    helper.setVisible(R.id.vip_rebate, true);
-                } else {
-                    helper.setVisible(R.id.ll_rebate, true);
-                    helper.setVisible(R.id.vip_rebate, false);
-                }
-               /* if (item.getMerchantsModel().getDiscount() == 100) {
-                    helper.setVisible(R.id.ll_rebate, false);
-                } else {
-                    helper.setVisible(R.id.ll_rebate, true);
-                }*/
+                helper.setText(R.id.tv_rebate, "奖励" + MathUtils.subZero(discount) + "%");
+                helper.setText(R.id.vip_rebate, "奖励" + MathUtils.subZero(discount) + "%");
                 helper.addOnClickListener(R.id.ll_rebate);
                 break;
             case MultipleItem.GOODS:
+                if (userInfo.getAccountType() != 0) {
+                    helper.setGone(R.id.ll_rebate, false);
+                    helper.setGone(R.id.vip_rebate, true);
+                } else {
+                    helper.setGone(R.id.ll_rebate, true);
+                    helper.setGone(R.id.vip_rebate, false);
+                }
                 helper.setText(R.id.tv_category, item.getGoodsListBean().getGoodsName());
                 setSpannableString(MathUtils.subZero(String.valueOf(item.getGoodsListBean().getPrice())), helper.getView(R.id.price));
                 helper.setText(R.id.tvContent, item.getGoodsListBean().getSummary());
-                String rebatePv = String.format(Locale.getDefault(), "%.2f", item.getGoodsListBean().getRebatePv());
-                helper.setText(R.id.tv_rebate, "返¥" + MathUtils.subZero(rebatePv));
-                helper.setText(R.id.vip_rebate, "返¥" + MathUtils.subZero(rebatePv));
-                if (userInfo.getAccountType() != 0) {
-                    helper.setVisible(R.id.ll_rebate, false);
-                    helper.setVisible(R.id.vip_rebate, true);
-                } else {
-                    helper.setVisible(R.id.ll_rebate, true);
-                    helper.setVisible(R.id.vip_rebate, false);
-                }
-               /* if (item.getGoodsListBean().getRebatePv() == 0) {
-                    helper.setVisible(R.id.ll_rebate, false);
-                } else {
-                    helper.setVisible(R.id.ll_rebate, true);
-                }*/
+                String rebatePv = String.valueOf(item.getGoodsListBean().getRebatePv());
+                helper.setText(R.id.tv_rebate, "奖励¥" + MathUtils.subZero(rebatePv));
+                helper.setText(R.id.vip_rebate, "奖励¥" + MathUtils.subZero(rebatePv));
+
                 helper.addOnClickListener(R.id.ll_rebate);
                 Glide.with(mContext).load(item.getGoodsListBean().getGoodsImg())
                         .apply(new RequestOptions().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai).dontAnimate()).into((RoundedImageView) helper.getView(R.id.image));

@@ -21,12 +21,11 @@ import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.MineQRcodeModel;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsModel;
-import com.feitianzhu.huangliwo.shop.ShareShopActivity;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ShareImageUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 import com.feitianzhu.huangliwo.view.CircleImageView;
+import com.hjq.toast.ToastUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.socks.library.KLog;
@@ -103,9 +102,9 @@ public class ShareMerchantActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.bt_save:
-                ShareImageUtils.saveImg(ShareImageUtils.viewToBitmap(shareLayout), "zxing_merchant_image");
+                ShareImageUtils.saveImg(this,ShareImageUtils.viewToBitmap(shareLayout), "zxing_merchant_image");
                 // 通知图库更新
-                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse(Environment.getExternalStorageDirectory().getPath())));
+                //sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse(Environment.getExternalStorageDirectory().getPath())));
                 break;
             case R.id.bt_shared:
                 showShare();
@@ -168,7 +167,7 @@ public class ShareMerchantActivity extends BaseActivity {
     private void setShowData(MineQRcodeModel response) {
         String qrUrl = response.getLink();
         if (TextUtils.isEmpty(qrUrl)) {
-            ToastUtils.showShortToast("未获取到分享地址");
+            ToastUtils.show("未获取到分享地址");
             return;
         }
         Log.e("Test", "-------->" + qrUrl);

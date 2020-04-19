@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -20,19 +19,16 @@ import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.AddressInfo;
 import com.feitianzhu.huangliwo.model.AskForResultInfo;
 import com.feitianzhu.huangliwo.model.DocOrderDetailInfo;
-import com.feitianzhu.huangliwo.model.ItineraryInfo;
 import com.feitianzhu.huangliwo.model.PayModel;
-import com.feitianzhu.huangliwo.model.PlaneOrderStatus;
 import com.feitianzhu.huangliwo.model.RefundAskForParams;
 import com.feitianzhu.huangliwo.model.RefundServiceInfo;
-import com.feitianzhu.huangliwo.shop.ShopPayActivity;
 import com.feitianzhu.huangliwo.utils.PayUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.view.CustomPassengerNameView;
 import com.feitianzhu.huangliwo.view.CustomRefundView;
 import com.google.gson.Gson;
+import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
@@ -202,30 +198,30 @@ public class PlaneReimbursementActivity extends BaseActivity {
 
     public void onSubmit() {
        /* if (TextUtils.isEmpty(tvReimbursement.getText().toString())) {
-            ToastUtils.showShortToast("请选择凭证类型");
+            ToastUtils.show("请选择凭证类型");
             return;
         }*/
         if (TextUtils.isEmpty(tvReimbursement.getText().toString())) {
-            ToastUtils.showShortToast("请选择发票类型");
+            ToastUtils.show("请选择发票类型");
             return;
         }
 
         if ((reimbursementPosition == 0 || reimbursementPosition == 2) && TextUtils.isEmpty(editInvoiceTitle.getText().toString().trim())) {
-            ToastUtils.showShortToast("请填写发票抬头");
+            ToastUtils.show("请填写发票抬头");
             return;
         }
         if (invoicePosition == 3 && TextUtils.isEmpty(editNum.getText().toString().trim())) {
-            ToastUtils.showShortToast("请填写纳税人识别号");
+            ToastUtils.show("请填写纳税人识别号");
             return;
         }
         if (addressBean == null) {
-            ToastUtils.showShortToast("请选择收货地址");
+            ToastUtils.show("请选择收货地址");
             return;
         }
         if (canApply && invoiceStringType != null) {
             refundAskFor();
         } else {
-            ToastUtils.showShortToast("当前订单不可报销");
+            ToastUtils.show("当前订单不可报销");
         }
     }
 
@@ -301,7 +297,7 @@ public class PlaneReimbursementActivity extends BaseActivity {
                             postagePrice.setText("¥" + response.body().expressFee);
                             expressFee = response.body().expressFee;
                         } else {
-                            ToastUtils.showShortToast("当前订单不可报销");
+                            ToastUtils.show("当前订单不可报销");
                         }
                     }
 
@@ -391,13 +387,13 @@ public class PlaneReimbursementActivity extends BaseActivity {
         PayUtils.aliPay(PlaneReimbursementActivity.this, payProof, new onConnectionFinishLinstener() {
             @Override
             public void onSuccess(int code, Object result) {
-                ToastUtils.showShortToast("申请成功");
+                ToastUtils.show("申请成功");
                 finish();
             }
 
             @Override
             public void onFail(int code, String result) {
-                ToastUtils.showShortToast("支付失败");
+                ToastUtils.show("支付失败");
             }
         });
     }

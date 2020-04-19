@@ -16,9 +16,11 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.me.navigationbar.DefaultNavigationBar;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.view.CustomPopWindow;
 import com.gyf.immersionbar.ImmersionBar;
+import com.hjq.toast.ToastUtils;
+import com.lxj.xpopup.XPopup;
+import com.lxj.xpopup.impl.LoadingPopupView;
 
 import java.util.TreeMap;
 
@@ -34,7 +36,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * 代替Context
      */
     protected Context mContext;
-    protected MaterialDialog mDialog;
+    LoadingPopupView loadingPopup;
     protected CustomPopWindow mCustomPopWindow;
 
     @Override
@@ -123,18 +125,19 @@ public abstract class BaseActivity extends AppCompatActivity {
 
 
     protected void showloadDialog(String title) {
-        mDialog = new MaterialDialog.Builder(this)
-                .content("加载中,请稍候...")
-                .progress(true, 0)
-                .progressIndeterminateStyle(false)
+        loadingPopup = (LoadingPopupView) new XPopup.Builder(this)
+                .asLoading("正在加载中")
                 .show();
     }
 
     protected void goneloadDialog() {
-        if (null != mDialog && mDialog.isShowing()) {
-            mDialog.dismiss();
+        if (null != loadingPopup) {
+            loadingPopup.delayDismissWith(1000, new Runnable() {
+                @Override
+                public void run() {
+                }
+            });
         }
-
     }
 
 
@@ -190,7 +193,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         String busName = editText.getText().toString().trim();
         if (TextUtils.isEmpty(busName)) {
-            ToastUtils.showShortToast(tips);
+            ToastUtils.show(tips);
             return true;
         }
         return false;
@@ -202,7 +205,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         String busName = textView.getText().toString().trim();
         if (TextUtils.isEmpty(busName)) {
-            ToastUtils.showShortToast(tips);
+            ToastUtils.show(tips);
             return true;
         }
         return false;
@@ -211,7 +214,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mDialog = null;
+        loadingPopup = null;
     }
 
     @Override

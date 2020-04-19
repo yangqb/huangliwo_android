@@ -10,7 +10,7 @@ import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.GetMoneyModel;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
+import com.hjq.toast.ToastUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.builder.PostFormBuilder;
 import com.zhy.http.okhttp.callback.Callback;
@@ -77,7 +77,7 @@ public class GetMoneyActivity extends BaseActivity {
         switch (v.getId()) {
             case R.id.bt_sure:
                 if (TextUtils.isEmpty(mEditText.getText().toString())) {
-                    ToastUtils.showShortToast("请输入转出金额");
+                    ToastUtils.show("请输入转出金额");
                     return;
                 }
                 sendParams();
@@ -106,12 +106,12 @@ public class GetMoneyActivity extends BaseActivity {
 
                     @Override
                     public void onError(Call call, Exception e, int id) {
-                        ToastUtils.showShortToast(e.getMessage());
+                        ToastUtils.show(e.getMessage());
                     }
 
                     @Override
                     public void onResponse(Object response, int id) {
-                        ToastUtils.showShortToast("支付成功");
+                        ToastUtils.show("支付成功");
                         finish();
                     }
                 });

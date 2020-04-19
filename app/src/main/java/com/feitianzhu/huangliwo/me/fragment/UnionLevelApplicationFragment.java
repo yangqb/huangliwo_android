@@ -16,9 +16,9 @@ import com.feitianzhu.huangliwo.me.base.BaseFragment;
 import com.feitianzhu.huangliwo.me.ui.totalScore.SelectPayActivity;
 import com.feitianzhu.huangliwo.model.SelectPayNeedModel;
 import com.feitianzhu.huangliwo.model.UnionLevelModel;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.hjq.toast.ToastUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
 
@@ -76,7 +76,7 @@ public class UnionLevelApplicationFragment extends BaseFragment {
         mAdapter.setOnItemImageClickListener(new UnionLevelAdapter.OnItemImageClickListener() {
             @Override
             public void onItemImageClick(int position) {
-//                ToastUtils.showShortToast("点击----》"+position);
+//                ToastUtils.show("点击----》"+position);
                 //进入付款页面
                 model.gradeId = mList.get(position).getGradeId() + "";
                 model.setHandleFee(mList.get(position).getPoints());
@@ -133,7 +133,7 @@ public class UnionLevelApplicationFragment extends BaseFragment {
                     intent.putExtra(Constant.INTENT_SELECTET_PAY_MODEL, model);
                     startActivity(intent);
                 } else {
-                    ToastUtils.showShortToast("请选择会员级别");
+                    ToastUtils.show("请选择会员级别");
                 }
 
                 break;

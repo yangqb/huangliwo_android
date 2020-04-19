@@ -2,7 +2,6 @@ package com.feitianzhu.huangliwo.me;
 
 import android.content.Intent;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -13,42 +12,25 @@ import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
-import com.feitianzhu.huangliwo.login.LoginEvent;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.BindingAliAccountModel;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
-import com.feitianzhu.huangliwo.model.WithdrawModel;
-import com.feitianzhu.huangliwo.pushshop.MySelfMerchantsActivity;
-import com.feitianzhu.huangliwo.shop.ShopDao;
 import com.feitianzhu.huangliwo.shop.ShopHelp;
-import com.feitianzhu.huangliwo.shop.ui.EditApplyRefundActivity;
 import com.feitianzhu.huangliwo.utils.EditTextUtils;
 import com.feitianzhu.huangliwo.utils.MathUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.StringUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.view.CustomRefundView;
-import com.google.gson.Gson;
+import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.lzy.okgo.OkGo;
-import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.PostRequest;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.builder.PostFormBuilder;
-import com.zhy.http.okhttp.callback.Callback;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import okhttp3.Call;
-import okhttp3.Request;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
@@ -147,20 +129,20 @@ public class WithdrawActivity extends BaseActivity {
 
     private void VeriPassword(double balance) {
         if (TextUtils.isEmpty(editAmount.getText().toString())) {
-            ToastUtils.showShortToast("请输入正确金额");
+            ToastUtils.show("请输入正确金额");
             return;
         }
         if (editAmount.getText().toString().endsWith(".")) {
-            ToastUtils.showShortToast("请输入正确金额");
+            ToastUtils.show("请输入正确金额");
             return;
         }
         double amount = Double.valueOf(editAmount.getText().toString());
        /* if (amount < 10) {
-            ToastUtils.showShortToast("提现金额不能少于10元");
+            ToastUtils.show("提现金额不能少于10元");
             return;
         }*/
         if (amount > balance) {
-            ToastUtils.showShortToast("当前余额不足");
+            ToastUtils.show("当前余额不足");
             return;
         }
 
@@ -194,7 +176,7 @@ public class WithdrawActivity extends BaseActivity {
 
             @Override
             public void onFail(int code, String result) {
-                ToastUtils.showShortToast(result);
+                ToastUtils.show(result);
             }
         });
     }

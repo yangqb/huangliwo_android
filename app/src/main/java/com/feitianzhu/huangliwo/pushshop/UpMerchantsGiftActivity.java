@@ -23,8 +23,8 @@ import com.feitianzhu.huangliwo.model.MerchantGiftInfo;
 import com.feitianzhu.huangliwo.model.MerchantGitModel;
 import com.feitianzhu.huangliwo.pushshop.adapter.MerchantGitfAdapter;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
+import com.hjq.toast.ToastUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -205,7 +205,7 @@ public class UpMerchantsGiftActivity extends BaseActivity {
                     public void onSuccess(Response<LzyResponse> response) {
                         super.onSuccess(UpMerchantsGiftActivity.this, response.body().msg, response.body().code);
                         if (response.body().code == 0) {
-                            ToastUtils.showShortToast("删除成功");
+                            ToastUtils.show("删除成功");
                         }
                     }
 

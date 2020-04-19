@@ -13,9 +13,6 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.feitianzhu.huangliwo.common.Constant;
-import com.feitianzhu.huangliwo.model.PayInfo;
-import com.feitianzhu.huangliwo.model.WXLoginModel;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.tencent.mm.opensdk.modelbase.BaseReq;
 import com.tencent.mm.opensdk.modelbase.BaseResp;
 import com.tencent.mm.opensdk.modelmsg.SendAuth;

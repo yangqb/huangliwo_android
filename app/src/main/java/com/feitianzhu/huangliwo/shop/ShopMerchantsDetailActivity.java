@@ -31,20 +31,18 @@ import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.MultipleMerchantsItem;
 import com.feitianzhu.huangliwo.model.SetMealEvalDetailInfo;
 import com.feitianzhu.huangliwo.model.VipGifListInfo;
-import com.feitianzhu.huangliwo.pushshop.MyPaymentActivity;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsModel;
 import com.feitianzhu.huangliwo.pushshop.bean.SetMealInfo;
 import com.feitianzhu.huangliwo.pushshop.bean.SetMealListInfo;
 import com.feitianzhu.huangliwo.shop.adapter.ShopDetailAdapter;
 import com.feitianzhu.huangliwo.utils.MathUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
-import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 import com.feitianzhu.huangliwo.view.CustomRefundView;
 import com.feitianzhu.huangliwo.vip.VipActivity;
 import com.feitianzhu.huangliwo.vip.VipGiftDetailActivity;
 import com.google.gson.Gson;
+import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.lzy.okgo.OkGo;
@@ -211,7 +209,7 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
                 break;
             case R.id.address:
                 if (mapList.size() <= 0) {
-                    ToastUtils.showShortToast("请先安装百度地图或高德地图");
+                    ToastUtils.show("请先安装百度地图或高德地图");
                     return;
                 } else {
                     new XPopup.Builder(this)
@@ -341,7 +339,7 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
                     public void onSuccess(Response<LzyResponse> response) {
                         super.onSuccess(ShopMerchantsDetailActivity.this, response.body().msg, response.body().code);
                         if (response.body().code == 0) {
-                            ToastUtils.showShortToast("取消收藏");
+                            ToastUtils.show("取消收藏");
                             collectImg.setSelected(false);
                         }
                     }
@@ -367,7 +365,7 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
                     public void onSuccess(Response<LzyResponse> response) {
                         super.onSuccess(ShopMerchantsDetailActivity.this, response.body().msg, response.body().code);
                         if (response.body().code == 0) {
-                            ToastUtils.showShortToast("收藏成功");
+                            ToastUtils.show("收藏成功");
                             collectImg.setSelected(true);
                         }
                     }
@@ -408,8 +406,12 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
                             receiveGif(multipleItemList.get(position).getGifModel().giftId, multipleItemList.get(position).getGifModel().merchantId, position);
                         }
                     } else {
-                        ToastUtils.showShortToast("您还不是会员");
+                        ToastUtils.show("您还不是会员");
                     }
+                } else if (mAdapter.getItemViewType(position) == MultipleMerchantsItem.SETMEAL_TYPE) {
+                    Intent intent = new Intent(ShopMerchantsDetailActivity.this, VipActivity.class);
+                    intent.putExtra(VipActivity.MINE_INFO, mineInfoModel);
+                    startActivity(intent);
                 }
             }
         });
@@ -466,7 +468,7 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
                     public void onSuccess(Response<LzyResponse> response) {
                         super.onSuccess(ShopMerchantsDetailActivity.this, response.body().msg, response.body().code);
                         if (response.body().code == 0) {
-                            ToastUtils.showShortToast("领取成功");
+                            ToastUtils.show("领取成功");
                             multipleItemList.get(position).getGifModel().isGet = 1;
                             mAdapter.setNewData(multipleItemList);
                             mAdapter.notifyItemChanged(position);
@@ -598,8 +600,8 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
                             shopName.setText(merchantsBean.getMerchantName());
                             address.setText(merchantsBean.getCityName() + merchantsBean.getAreaName() + merchantsBean.getDtlAddr());
                             String discount = String.valueOf((100 - merchantsBean.getDiscount() * 100));
-                            tvRebate.setText("返" + MathUtils.subZero(discount) + "%");
-                            vipRebate.setText("返" + MathUtils.subZero(discount) + "%");
+                            tvRebate.setText("奖励" + MathUtils.subZero(discount) + "%");
+                            vipRebate.setText("奖励" + MathUtils.subZero(discount) + "%");
                             getSetMealList(merchantsId);
                             String urlLogo = merchantsBean.getShopFrontImg() == null ? "" : merchantsBean.getShopFrontImg();
                             imgs.add(urlLogo);

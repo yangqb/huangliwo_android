@@ -22,29 +22,23 @@ import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsPaymentCodeModel;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ShareImageUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.gyf.immersionbar.ImmersionBar;
+import com.hjq.toast.ToastUtils;
 import com.itheima.roundedimageview.RoundedImageView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.Callback;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import okhttp3.Call;
-import okhttp3.Request;
 
 /**
  * package name: com.feitianzhu.huangliwo.pushshop
@@ -127,7 +121,7 @@ public class MerchantsPaymentCodeActivity extends BaseActivity {
 
     private void createCode(String url) {
         if (TextUtils.isEmpty(url)) {
-            ToastUtils.showShortToast("未获取到收款码");
+            ToastUtils.show("未获取到收款码");
             return;
         }
         Log.e("Test", "-------->" + url);
@@ -148,9 +142,9 @@ public class MerchantsPaymentCodeActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.save:
-                ShareImageUtils.saveImg(ShareImageUtils.viewToBitmap(saveLayout), "paycode_image");
+                ShareImageUtils.saveImg(this, ShareImageUtils.viewToBitmap(saveLayout), "paycode_image");
                 // 通知图库更新
-                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse(Environment.getExternalStorageDirectory().getPath())));
+               // sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse(Environment.getExternalStorageDirectory().getPath())));
                 break;
         }
 

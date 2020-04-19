@@ -3,7 +3,6 @@ package com.feitianzhu.huangliwo.plane;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bigkoo.pickerview.builder.TimePickerBuilder;
@@ -13,17 +12,15 @@ import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
-import com.feitianzhu.huangliwo.http.PlaneResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.CustomPlaneDetailInfo;
 import com.feitianzhu.huangliwo.model.PassengerModel;
 import com.feitianzhu.huangliwo.utils.DateUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
-import com.feitianzhu.huangliwo.view.CustomLuggageBuyTicketNoticeView;
 import com.feitianzhu.huangliwo.view.CustomPassengerNameView;
 import com.feitianzhu.huangliwo.view.CustomRefundView;
+import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
@@ -144,27 +141,27 @@ public class EditPassengerActivity extends BaseActivity {
                 break;
             case R.id.right_button:
                 if (TextUtils.isEmpty(tvPassengerType.getText().toString().trim())) {
-                    ToastUtils.showShortToast("请选择乘机人类型");
+                    ToastUtils.show("请选择乘机人类型");
                     return;
                 }
                 if (TextUtils.isEmpty(editName.getText().toString().trim())) {
-                    ToastUtils.showShortToast("请填写乘机人姓名");
+                    ToastUtils.show("请填写乘机人姓名");
                     return;
                 }
                 if (TextUtils.isEmpty(tvSexType.getText().toString().trim())) {
-                    ToastUtils.showShortToast("请选择乘机人性别");
+                    ToastUtils.show("请选择乘机人性别");
                     return;
                 }
                 if (TextUtils.isEmpty(tvBirthday.getText().toString().trim())) {
-                    ToastUtils.showShortToast("请选择乘机人生日");
+                    ToastUtils.show("请选择乘机人生日");
                     return;
                 }
                 if (TextUtils.isEmpty(tvCertificatesType.getText().toString().trim())) {
-                    ToastUtils.showShortToast("请选择证件类型");
+                    ToastUtils.show("请选择证件类型");
                     return;
                 }
                 if (TextUtils.isEmpty(editCardId.getText().toString().trim())) {
-                    ToastUtils.showShortToast("请填写证件号码");
+                    ToastUtils.show("请填写证件号码");
                     return;
                 }
                 submit();
@@ -265,23 +262,23 @@ public class EditPassengerActivity extends BaseActivity {
             url = Urls.ADD_PASSENGER;
             if (type == 2) {
                 if (ageType == 1) {
-                    ToastUtils.showShortToast("不支持儿童购买");
+                    ToastUtils.show("不支持儿童购买");
                     return;
                 }
             } else if (type == 1 || type == 3) {
                 if (ageType == 1 && customPlaneDetailInfo.customInterPriceInfo.cPrice == 0) {
-                    ToastUtils.showShortToast("不支持儿童购买");
+                    ToastUtils.show("不支持儿童购买");
                     return;
                 }
             } else {
                 if (customPlaneDetailInfo.customDocGoPriceInfo.businessExtMap == null) {
                     if (ageType == 1) {
-                        ToastUtils.showShortToast("不支持儿童购买");
+                        ToastUtils.show("不支持儿童购买");
                         return;
                     }
                 } else {
                     if (!customPlaneDetailInfo.customDocGoPriceInfo.businessExtMap.supportChild && !customPlaneDetailInfo.customDocGoPriceInfo.businessExtMap.supportChildBuyAdult && ageType == 1) {
-                        ToastUtils.showShortToast("不支持儿童购买");
+                        ToastUtils.show("不支持儿童购买");
                         return;
                     }
                 }
@@ -305,7 +302,7 @@ public class EditPassengerActivity extends BaseActivity {
                     public void onSuccess(Response<LzyResponse> response) {
                         super.onSuccess(EditPassengerActivity.this, response.body().msg, response.body().code);
                         if (response.body().code == 0) {
-                            ToastUtils.showShortToast("添加成功");
+                            ToastUtils.show("添加成功");
                             setResult(RESULT_OK);
                             finish();
                         }

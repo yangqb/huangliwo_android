@@ -30,13 +30,12 @@ import com.feitianzhu.huangliwo.model.ShopsType;
 import com.feitianzhu.huangliwo.model.UpdateAppModel;
 import com.feitianzhu.huangliwo.model.UserAuth;
 import com.feitianzhu.huangliwo.model.UserInformation;
-import com.feitianzhu.huangliwo.model.UserVeriModel;
 import com.feitianzhu.huangliwo.model.WXModel;
 import com.feitianzhu.huangliwo.model.WalletModel;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.hjq.toast.ToastUtils;
 import com.lzy.okgo.OkGo;
 import com.socks.library.KLog;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -83,7 +82,6 @@ import static com.feitianzhu.huangliwo.common.Constant.LATITUDE;
 import static com.feitianzhu.huangliwo.common.Constant.LEGALPERSON;
 import static com.feitianzhu.huangliwo.common.Constant.LOADER_USERINFO;
 import static com.feitianzhu.huangliwo.common.Constant.LOADER_VERI_SHOPS_INFO;
-import static com.feitianzhu.huangliwo.common.Constant.LOADER_VERI_USER_INFO;
 import static com.feitianzhu.huangliwo.common.Constant.LOAD_FU_FRIEND;
 import static com.feitianzhu.huangliwo.common.Constant.LOAD_NEARBY_SHOPS;
 import static com.feitianzhu.huangliwo.common.Constant.LOAD_RECMOOND_SHOP_LIST;
@@ -167,7 +165,7 @@ public class ShopDao {
                     public void onError(Call call, Exception e, int id) {
                         if ("数据为空".equals(e.getMessage())) {
                             mLinstener.onSuccess(1, "成功");
-                            ToastUtils.showShortToast("商户验证成功");
+                            ToastUtils.show("商户验证成功");
                         } else {
                             mLinstener.onFail(FailCode, e.getMessage());
                         }
@@ -394,7 +392,7 @@ public class ShopDao {
                     public void onError(Call call, Exception e, int id) {
                         if ("数据为空".equals(e.getMessage())) {
                             mLinstener.onSuccess(SuccessCode, "成功");
-                            ToastUtils.showShortToast("商铺编辑成功");
+                            ToastUtils.show("商铺编辑成功");
                         } else {
                             mLinstener.onFail(FailCode, e.getMessage());
                         }

@@ -1,14 +1,20 @@
 package com.feitianzhu.huangliwo.utils;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.net.Uri;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.view.View;
 
+import com.hjq.toast.ToastUtils;
 import com.tencent.mm.opensdk.utils.Log;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -40,7 +46,7 @@ public class ShareImageUtils {
         return cacheBmp;
     }
 
-    public static void saveImg(Bitmap cacheBmp, String child) {
+    public static void saveImg(Context context, Bitmap cacheBmp, String child) {
         Log.i("xing", "savePicture: ------------------------");
         if (null == cacheBmp) {
             Log.i("xing", "savePicture: ------------------图片为空------");
@@ -63,7 +69,16 @@ public class ShareImageUtils {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        ToastUtils.showShortToast("保存成功");
+        // 其次把文件插入到系统图库
+        /*try {
+            MediaStore.Images.Media.insertImage(context.getContentResolver(),
+                    myCaptureFile.getAbsolutePath(), child + ".png", null);
+        } catch (FileNotFoundException e) {
+
+            e.printStackTrace();
+        }*/
+        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File(myCaptureFile.getPath()))));
+        ToastUtils.show("保存成功");
     }
 
     private static Bitmap loadBitmapFromView(View v) {

@@ -13,9 +13,9 @@ import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.MerchantGitModel;
 import com.feitianzhu.huangliwo.utils.EditTextUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.ToastUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.google.gson.Gson;
+import com.hjq.toast.ToastUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.PostRequest;
@@ -101,12 +101,12 @@ public class EditMerchantGiftActivity extends BaseActivity {
         String price = editPrice.getText().toString().trim();
         String remark = editRemark.getText().toString().trim();
         if (TextUtils.isEmpty(name)) {
-            ToastUtils.showShortToast("请输入赠品名称");
+            ToastUtils.show("请输入赠品名称");
             return;
         }
 
         if (TextUtils.isEmpty(price)) {
-            ToastUtils.showShortToast("请输入赠品价格");
+            ToastUtils.show("请输入赠品价格");
             return;
         }
 
@@ -130,9 +130,9 @@ public class EditMerchantGiftActivity extends BaseActivity {
                         super.onSuccess(EditMerchantGiftActivity.this, response.body().msg, response.body().code);
                         if (response.body().code == 0) {
                             if (isAdd) {
-                                ToastUtils.showShortToast("添加成功");
+                                ToastUtils.show("添加成功");
                             } else {
-                                ToastUtils.showShortToast("修改成功");
+                                ToastUtils.show("修改成功");
                             }
                             setResult(RESULT_OK);
                             finish();
