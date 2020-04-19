@@ -80,9 +80,9 @@ android {
         applicationId "com.feitianzhu.huangliwo"
         minSdkVersion androidMinSdkVersion
         targetSdkVersion androidTargetSdkVersion
-        versionCode 23
+        versionCode 24
         multiDexEnabled true
-        versionName "1.2.4"
+        versionName "1.2.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             //设置支持的SO库架构

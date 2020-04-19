@@ -32,7 +32,7 @@ import com.feitianzhu.huangliwo.utils.PayUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.utils.doubleclick.SingleClick;
-import com.feitianzhu.huangliwo.view.CustomInputView;
+import com.feitianzhu.huangliwo.view.CustomVipInputView;
 import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
 import com.lzy.okgo.OkGo;
@@ -216,11 +216,11 @@ public class VipUpgradeActivity extends BaseActivity {
             titleText = "请确认邀请人ID";
         }
         new XPopup.Builder(VipUpgradeActivity.this)
-                .asCustom(new CustomInputView(VipUpgradeActivity.this)
+                .asCustom(new CustomVipInputView(VipUpgradeActivity.this)
                         .setTitle(titleText)
                         .setEditHintText("请输入")
                         .setText(parentId)
-                        .setOnConfirmClickListener(new CustomInputView.OnConfirmClickListener() {
+                        .setOnConfirmClickListener(new CustomVipInputView.OnConfirmClickListener() {
                             @Override
                             public void onConfirm(String account) {
                                 if (TextUtils.isEmpty(account)) {
