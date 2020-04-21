@@ -166,7 +166,7 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
                     SPUtils.putBoolean(context, Constant.LOGIN_DIALOG, false);
                 }
             } else {
-                ToastUtils.show(string);
+                ToastUtils.show(string == null ? "" : string);
             }
         }
     }

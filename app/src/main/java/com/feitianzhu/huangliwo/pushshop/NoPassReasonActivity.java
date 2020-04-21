@@ -69,6 +69,7 @@ public class NoPassReasonActivity extends BaseActivity {
                 intent = new Intent(NoPassReasonActivity.this, EditMerchantsActivity.class);
                 intent.putExtra(EditMerchantsActivity.MERCHANTS_DETAIL_DATA, merchantsModel);
                 startActivity(intent);
+                finish();
                 break;
             case R.id.left_button:
                 finish();

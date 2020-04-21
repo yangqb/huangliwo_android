@@ -84,6 +84,7 @@ public class WebActivity extends AppCompatActivity {
         WebSettings webSettings = mAgentWeb.getAgentWebSettings().getWebSettings();
         webSettings.setSupportZoom(true);
         webSettings.setBuiltInZoomControls(true);
+        webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         //不显示webview缩放按钮
         webSettings.setDisplayZoomControls(false);
         //设置自适应屏幕

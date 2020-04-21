@@ -25,26 +25,42 @@ public class LogisticsModel implements Serializable {
 
     private String message;
     private String nu;
-    private int ischeck;
+    private String ischeck;
     private String condition;
     private String com;
-    private int status;
-    private int state;
-    private List<DataBean> data;
+    private String status;
+    private String state;
+    private List<LogisticsInfo> data;
 
-    public int getIscheck() {
+    public List<LogisticsInfo> getData() {
+        return data;
+    }
+
+    public void setData(List<LogisticsInfo> data) {
+        this.data = data;
+    }
+
+    public String getIscheck() {
         return ischeck;
     }
 
-    public void setIscheck(int ischeck) {
+    public void setIscheck(String ischeck) {
         this.ischeck = ischeck;
     }
 
-    public int getState() {
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getState() {
         return state;
     }
 
-    public void setState(int state) {
+    public void setState(String state) {
         this.state = state;
     }
 
@@ -80,56 +96,4 @@ public class LogisticsModel implements Serializable {
         this.com = com;
     }
 
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
-
-
-    public List<DataBean> getData() {
-        return data;
-    }
-
-    public void setData(List<DataBean> data) {
-        this.data = data;
-    }
-
-    public static class DataBean {
-        /**
-         * time : 2019-12-14 19:57:33
-         * ftime : 2019-12-14 19:57:33
-         * context : 【深圳市】 快件已在 【深圳固戍】 签收, 签收人: 前台, 如有疑问请电联:15919433069 / 0755-81466334, 您的快递已经妥投。风里来雨里去, 只为客官您满意。上有老下有小, 赏个好评好不好？【请在评价快递员处帮忙点亮五颗星星哦~】
-         */
-
-        private String time;
-        private String ftime;
-        private String context;
-
-        public String getTime() {
-            return time;
-        }
-
-        public void setTime(String time) {
-            this.time = time;
-        }
-
-        public String getFtime() {
-            return ftime;
-        }
-
-        public void setFtime(String ftime) {
-            this.ftime = ftime;
-        }
-
-        public String getContext() {
-            return context;
-        }
-
-        public void setContext(String context) {
-            this.context = context;
-        }
-    }
 }

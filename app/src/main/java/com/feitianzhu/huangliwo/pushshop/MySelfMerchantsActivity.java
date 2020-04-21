@@ -178,8 +178,8 @@ public class MySelfMerchantsActivity extends BaseActivity {
                         if (response.body().code == 0) {
                             new QBadgeView(MySelfMerchantsActivity.this)
                                     .bindTarget(llMerchantsOrder).setGravityOffset(15, 15, true)
-                                    //.setBadgeNumber(response.body().data);
-                                    .setBadgeNumber(18);
+                                    .setBadgeNumber(response.body().data);
+                                    //.setBadgeNumber(18);
 
                         }
                     }

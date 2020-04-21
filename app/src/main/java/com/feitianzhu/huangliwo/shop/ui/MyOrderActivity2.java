@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.EvaluateMode;
 import com.feitianzhu.huangliwo.model.GoodOrderCountMode;
 import com.feitianzhu.huangliwo.model.GoodsOrderInfo;
+import com.feitianzhu.huangliwo.model.LogisticsModel;
 import com.feitianzhu.huangliwo.model.MultipleItemOrderModel;
 import com.feitianzhu.huangliwo.model.PlaneOrderTableEntity;
 import com.feitianzhu.huangliwo.model.SetMealOrderInfo;
@@ -31,6 +33,7 @@ import com.feitianzhu.huangliwo.view.CustomRefundView;
 import com.flyco.tablayout.CommonTabLayout;
 import com.flyco.tablayout.listener.CustomTabEntity;
 import com.flyco.tablayout.listener.OnTabSelectListener;
+import com.google.gson.Gson;
 import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
@@ -107,16 +110,18 @@ public class MyOrderActivity2 extends BaseActivity {
         tabLayout.setTabData(tabs);
 
         mAdapter = new OrderAdapter(multipleItemOrderModels);
-        /*View mEmptyView = View.inflate(this, R.layout.view_common_nodata, null);
+        View mEmptyView = View.inflate(this, R.layout.view_common_nodata, null);
         ImageView img_empty = (ImageView) mEmptyView.findViewById(R.id.img_empty);
+        TextView tvNoData = mEmptyView.findViewById(R.id.no_data);
+        tvNoData.setText("没有相关订单，下拉刷新试试");
         img_empty.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
             }
-        });*/
+        });
         refreshLayout.setEnableLoadMore(false);
-        //mAdapter.setEmptyView(mEmptyView);
+        mAdapter.setEmptyView(mEmptyView);
         mAdapter.notifyDataSetChanged();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(mAdapter);
@@ -272,10 +277,11 @@ public class MyOrderActivity2 extends BaseActivity {
                                         .show();
                             } else if (goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_WAIT_RECEIVING || goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_COMPLETED) {
                                 //查看物流
-                                intent = new Intent(MyOrderActivity2.this, LogisticsInfoActivity.class);
+                                checkLogisticsInfo(goodsOrderList.get(position).getExpressNo(), goodsOrderList.get(position).getLogisticCpName());
+                                /*intent = new Intent(MyOrderActivity2.this, LogisticsInfoActivity.class);
                                 intent.putExtra(LogisticsInfoActivity.LOGISTICS_COMPANY, goodsOrderList.get(position).getLogisticCpName());
                                 intent.putExtra(LogisticsInfoActivity.LOGISTICS_NO, goodsOrderList.get(position).getExpressNo());
-                                startActivity(intent);
+                                startActivity(intent);*/
                             } else if (goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_WAIT_DELIVERY) {
                                 //退款
                                 intent = new Intent(MyOrderActivity2.this, EditApplyRefundActivity.class);
@@ -309,10 +315,11 @@ public class MyOrderActivity2 extends BaseActivity {
                                 startActivityForResult(intent, PAY_REQUEST_CODE);
                             } else if (goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_WAIT_DELIVERY) {
                                 //查看物流
-                                intent = new Intent(MyOrderActivity2.this, LogisticsInfoActivity.class);
+                                checkLogisticsInfo(goodsOrderList.get(position).getExpressNo(), goodsOrderList.get(position).getLogisticCpName());
+                               /* intent = new Intent(MyOrderActivity2.this, LogisticsInfoActivity.class);
                                 intent.putExtra(LogisticsInfoActivity.LOGISTICS_COMPANY, goodsOrderList.get(position).getLogisticCpName());
                                 intent.putExtra(LogisticsInfoActivity.LOGISTICS_NO, goodsOrderList.get(position).getExpressNo());
-                                startActivity(intent);
+                                startActivity(intent);*/
                             } else if (goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_WAIT_RECEIVING) {
                                 //确认收货
                                 new XPopup.Builder(MyOrderActivity2.this)
@@ -570,12 +577,14 @@ public class MyOrderActivity2 extends BaseActivity {
                     @Override
                     public void onStart(com.lzy.okgo.request.base.Request<LzyResponse<GoodsOrderInfo>, ? extends com.lzy.okgo.request.base.Request> request) {
                         super.onStart(request);
+                        showloadDialog("");
                     }
 
                     @Override
                     public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<GoodsOrderInfo>> response) {
                         super.onSuccess(MyOrderActivity2.this, response.body().msg, response.body().code);
                         refreshLayout.finishRefresh();
+                        goneloadDialog();
                         if (response.body().code == 0 && response.body().data != null) {
                             goodsOrderInfo = response.body().data;
                             multipleItemOrderModels.clear();
@@ -596,6 +605,7 @@ public class MyOrderActivity2 extends BaseActivity {
                     public void onError(com.lzy.okgo.model.Response<LzyResponse<GoodsOrderInfo>> response) {
                         super.onError(response);
                         refreshLayout.finishRefresh(false);
+                        goneloadDialog();
                     }
                 });
     }
@@ -688,6 +698,47 @@ public class MyOrderActivity2 extends BaseActivity {
                         }
                     }
                 });
+    }
+
+    public void checkLogisticsInfo(String logisticsNo, String logisticsName) {
+        if (logisticsNo != null) {
+            OkGo.<LzyResponse<String>>get(Urls.GET_LOGISTICS_INFO)
+                    .tag(this)
+                    .params(Constant.ACCESSTOKEN, token)
+                    .params(Constant.USERID, userId)
+                    .params("expressNo", logisticsNo)
+                    .execute(new JsonCallback<LzyResponse<String>>() {
+                        @Override
+                        public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<String>> response) {
+                            super.onSuccess(MyOrderActivity2.this, response.body().msg, response.body().code);
+                            if (response.body().code == 0 && response.body().data != null && !TextUtils.isEmpty(response.body().data)) {
+                                String jsonStr = response.body().data;
+                                LogisticsModel logisticsModel = new Gson().fromJson(jsonStr, LogisticsModel.class);
+                                if (logisticsModel.getData() != null && logisticsModel.getData().size() > 0) {
+                                    Intent intent = new Intent(MyOrderActivity2.this, LogisticsInfoActivity.class);
+                                    intent.putExtra(LogisticsInfoActivity.LOGISTICS_COMPANY, logisticsName);
+                                    intent.putExtra(LogisticsInfoActivity.LOGISTICS_DATA, logisticsModel);
+                                    startActivity(intent);
+                                    /*logisticsModes.clear();
+                                    logisticsModes = logisticsModel.getData();
+                                    adapter.setNewData(logisticsModes);
+                                    adapter.notifyDataSetChanged();*/
+                                } else {
+                                    ToastUtils.show("暂无物流信息");
+                                }
+                            } else {
+                                ToastUtils.show("暂无物流信息");
+                            }
+                        }
+
+                        @Override
+                        public void onError(com.lzy.okgo.model.Response<LzyResponse<String>> response) {
+                            super.onError(response);
+                        }
+                    });
+        } else {
+            ToastUtils.show("暂无物流信息");
+        }
     }
 
     @Override

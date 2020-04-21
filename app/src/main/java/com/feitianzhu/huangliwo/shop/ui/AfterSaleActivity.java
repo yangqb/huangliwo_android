@@ -23,6 +23,7 @@ import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.base.Request;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -71,16 +72,18 @@ public class AfterSaleActivity extends BaseActivity {
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         mAdapter = new OrderAdapter(multipleItemOrderModels);
-        /*View mEmptyView = View.inflate(this, R.layout.view_common_nodata, null);
+        View mEmptyView = View.inflate(this, R.layout.view_common_nodata, null);
         ImageView img_empty = (ImageView) mEmptyView.findViewById(R.id.img_empty);
+        TextView tvNoData = mEmptyView.findViewById(R.id.no_data);
+        tvNoData.setText("没有相关订单，下拉刷新试试");
         img_empty.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
             }
-        });*/
+        });
         refreshLayout.setEnableLoadMore(false);
-        //mAdapter.setEmptyView(mEmptyView);
+        mAdapter.setEmptyView(mEmptyView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
@@ -167,15 +170,22 @@ public class AfterSaleActivity extends BaseActivity {
                     .params("status", "-2")
                     .execute(new JsonCallback<LzyResponse<GoodsOrderInfo>>() {
                         @Override
+                        public void onStart(Request<LzyResponse<GoodsOrderInfo>, ? extends Request> request) {
+                            super.onStart(request);
+                            showloadDialog("");
+                        }
+
+                        @Override
                         public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<GoodsOrderInfo>> response) {
                             super.onSuccess(AfterSaleActivity.this, response.body().msg, response.body().code);
+                            goneloadDialog();
                             refreshLayout.finishRefresh();
                             if (response.body().code == 0 && response.body().data != null) {
                                 GoodsOrderInfo goodsOrderInfo = response.body().data;
                                 goodsOrderList = goodsOrderInfo.getGoodsOrderList();
                                 multipleItemOrderModels.clear();
                                 for (int i = 0; i < goodsOrderList.size(); i++) {
-                                    MultipleItemOrderModel multipleItemOrderModel = new MultipleItemOrderModel(MultipleItemOrderModel.SETMEAL_ORDER);
+                                    MultipleItemOrderModel multipleItemOrderModel = new MultipleItemOrderModel(MultipleItemOrderModel.GOODS_ORDER);
                                     multipleItemOrderModel.setGoodsOrderListBean(goodsOrderList.get(i));
                                     multipleItemOrderModels.add(multipleItemOrderModel);
                                 }
@@ -188,6 +198,7 @@ public class AfterSaleActivity extends BaseActivity {
                         public void onError(com.lzy.okgo.model.Response<LzyResponse<GoodsOrderInfo>> response) {
                             super.onError(response);
                             refreshLayout.finishRefresh(false);
+                            goneloadDialog();
                         }
                     });
         } else {
@@ -200,11 +211,13 @@ public class AfterSaleActivity extends BaseActivity {
                         @Override
                         public void onStart(com.lzy.okgo.request.base.Request<LzyResponse<SetMealOrderInfo>, ? extends com.lzy.okgo.request.base.Request> request) {
                             super.onStart(request);
+                            showloadDialog("");
                         }
 
                         @Override
                         public void onSuccess(Response<LzyResponse<SetMealOrderInfo>> response) {
                             super.onSuccess(AfterSaleActivity.this, response.body().msg, response.body().code);
+                            goneloadDialog();
                             refreshLayout.finishRefresh();
                             if (response.body().code == 0 && response.body().data != null) {
                                 if (response != null) {
@@ -225,6 +238,7 @@ public class AfterSaleActivity extends BaseActivity {
                         public void onError(Response<LzyResponse<SetMealOrderInfo>> response) {
                             super.onError(response);
                             refreshLayout.finishRefresh(false);
+                            goneloadDialog();
                         }
                     });
         }

@@ -27,7 +27,7 @@ public class BaseGoodsListBean implements Serializable {
     private String stockCount;
     private double postage;
     private String isExtend;
-    private String connectPhone;
+    private String connectPhone;//客服电话
     private String isPoints;
     private int isCollect;
     private List<GoodsImgsListBean> goodsImgsList;

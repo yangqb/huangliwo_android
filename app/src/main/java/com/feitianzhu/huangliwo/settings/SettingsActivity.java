@@ -158,7 +158,7 @@ public class SettingsActivity extends BaseActivity {
             case R.id.rl_help:
                 intent = new Intent(SettingsActivity.this, LazyWebActivity.class);
                 intent.putExtra(Constant.URL, Urls.BASE_URL + "fhwl/static/html/bangzhu.html");
-                intent.putExtra(Constant.H5_TITLE, "\"便利大本营\"百问百答");
+                intent.putExtra(Constant.H5_TITLE, "帮助中心");
                 startActivity(intent);
                 break;
             case R.id.rl_update:

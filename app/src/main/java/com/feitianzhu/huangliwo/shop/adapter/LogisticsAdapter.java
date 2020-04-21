@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.feitianzhu.huangliwo.R;
+import com.feitianzhu.huangliwo.model.LogisticsInfo;
 import com.feitianzhu.huangliwo.model.LogisticsModel;
 import com.feitianzhu.huangliwo.utils.DateUtils;
 
@@ -18,14 +19,14 @@ import java.util.List;
  * time: 20:09
  * email: 694125155@qq.com
  */
-public class LogisticsAdapter extends BaseQuickAdapter<LogisticsModel.DataBean, BaseViewHolder> {
+public class LogisticsAdapter extends BaseQuickAdapter<LogisticsInfo, BaseViewHolder> {
 
-    public LogisticsAdapter(@Nullable List<LogisticsModel.DataBean> data) {
+    public LogisticsAdapter(@Nullable List<LogisticsInfo> data) {
         super(R.layout.layout_logistics_item, data);
     }
 
     @Override
-    protected void convert(@NonNull BaseViewHolder helper, LogisticsModel.DataBean item) {
+    protected void convert(@NonNull BaseViewHolder helper, LogisticsInfo item) {
         if (helper.getAdapterPosition() == 0) {
             helper.setVisible(R.id.line1, false);
             helper.setBackgroundRes(R.id.current_status_view, R.drawable.shape_logistics_fed428);

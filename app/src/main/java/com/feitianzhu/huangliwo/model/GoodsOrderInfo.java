@@ -90,6 +90,15 @@ userName (string, optional): 用户名
         private String buyerPhone;//":"13100680321",
         private int isEval;//是否评价 1.已评价
         private String remark;//备注
+        private String connectPhone;//客服电话
+
+        public String getConnectPhone() {
+            return connectPhone;
+        }
+
+        public void setConnectPhone(String connectPhone) {
+            this.connectPhone = connectPhone;
+        }
 
         public String getRemark() {
             return remark;

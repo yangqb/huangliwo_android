@@ -242,80 +242,77 @@ public class ShopsDetailActivity extends BaseActivity {
     public void showView() {
         tvAmount.setText("");
         String str2 = "¥ ";
-        if (goodsListBean != null) {
-            if (goodsListBean.getIsCollect() == 0) {
-                imgCollect.setSelected(false);
-            } else {
-                imgCollect.setSelected(true);
-            }
-            str3 = String.format(Locale.getDefault(), "%.2f", goodsListBean.getPrice());
-            goodsName.setText(goodsListBean.getGoodsName());
-            goodsSummary.setText(goodsListBean.getSummary());
-            String rebatePv = String.format(Locale.getDefault(), "%.2f", goodsListBean.getRebatePv());
-            tvRebate.setText("奖励¥" + MathUtils.subZero(rebatePv));
-            vipRebate.setText("奖励¥" + MathUtils.subZero(rebatePv));
-            evalList = goodsListBean.getEvalList();
-            if (evalList != null && evalList.size() > 0) {
-                llEvaluate.setVisibility(View.VISIBLE);
-                tvCount.setText("评价(" + evalList.size() + ")");
-                Glide.with(this).load(evalList.get(0).getHeadImg()).apply(new RequestOptions().error(R.mipmap.b08_01touxiang).placeholder(R.mipmap.b08_01touxiang)).into(ivHead);
-                userName.setText(evalList.get(0).getNickName());
-                tvDate.setText(evalList.get(0).getEvalDate());
-                tvContent.setText(evalList.get(0).getContent());
-                evaSpecifications.setText(evalList.get(0).getNorms() + "/" + goodsListBean.getGoodsName());
-            } else {
-                llEvaluate.setVisibility(View.GONE);
-                tvCount.setText("评价(0)");
-            }
+        if (goodsListBean.getIsCollect() == 0) {
+            imgCollect.setSelected(false);
+        } else {
+            imgCollect.setSelected(true);
+        }
+        str3 = String.format(Locale.getDefault(), "%.2f", goodsListBean.getPrice());
+        goodsName.setText(goodsListBean.getGoodsName());
+        goodsSummary.setText(goodsListBean.getSummary());
+        String rebatePv = String.format(Locale.getDefault(), "%.2f", goodsListBean.getRebatePv());
+        tvRebate.setText("奖励¥" + MathUtils.subZero(rebatePv));
+        vipRebate.setText("奖励¥" + MathUtils.subZero(rebatePv));
+        evalList = goodsListBean.getEvalList();
+        if (evalList != null && evalList.size() > 0) {
+            llEvaluate.setVisibility(View.VISIBLE);
+            tvCount.setText("评价(" + evalList.size() + ")");
+            Glide.with(this).load(evalList.get(0).getHeadImg()).apply(new RequestOptions().error(R.mipmap.b08_01touxiang).placeholder(R.mipmap.b08_01touxiang)).into(ivHead);
+            userName.setText(evalList.get(0).getNickName());
+            tvDate.setText(evalList.get(0).getEvalDate());
+            tvContent.setText(evalList.get(0).getContent());
+            evaSpecifications.setText(evalList.get(0).getNorms() + "/" + goodsListBean.getGoodsName());
+        } else {
+            llEvaluate.setVisibility(View.GONE);
+            tvCount.setText("评价(0)");
+        }
 
-            SpannableString span2 = new SpannableString(str2);
-            SpannableString span3 = new SpannableString(str3);
+        SpannableString span2 = new SpannableString(str2);
+        SpannableString span3 = new SpannableString(str3);
 
-            ForegroundColorSpan colorSpan2 = new ForegroundColorSpan(Color.parseColor("#FEA811"));
-            span2.setSpan(new AbsoluteSizeSpan(12, true), 0, str2.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-            span2.setSpan(new StyleSpan(Typeface.BOLD), 0, str2.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-            span2.setSpan(colorSpan2, 0, str2.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        ForegroundColorSpan colorSpan2 = new ForegroundColorSpan(Color.parseColor("#FEA811"));
+        span2.setSpan(new AbsoluteSizeSpan(12, true), 0, str2.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        span2.setSpan(new StyleSpan(Typeface.BOLD), 0, str2.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        span2.setSpan(colorSpan2, 0, str2.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 
-            ForegroundColorSpan colorSpan3 = new ForegroundColorSpan(Color.parseColor("#FEA811"));
-            span3.setSpan(new AbsoluteSizeSpan(17, true), 0, str3.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-            span3.setSpan(new StyleSpan(Typeface.BOLD), 0, str3.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-            span3.setSpan(colorSpan3, 0, str3.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        ForegroundColorSpan colorSpan3 = new ForegroundColorSpan(Color.parseColor("#FEA811"));
+        span3.setSpan(new AbsoluteSizeSpan(17, true), 0, str3.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        span3.setSpan(new StyleSpan(Typeface.BOLD), 0, str3.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        span3.setSpan(colorSpan3, 0, str3.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 
-            tvAmount.append(span2);
-            tvAmount.append(span3);
+        tvAmount.append(span2);
+        tvAmount.append(span3);
 
-            if (goodsListBean.getGoodsIntroduceImg() == null || TextUtils.isEmpty(goodsListBean.getGoodsIntroduceImg())) {
-                llGoodsDetail.setVisibility(View.GONE);
-            } else {
-                Glide.with(this).load(goodsListBean.getGoodsIntroduceImg()).apply(new RequestOptions().dontAnimate()).downloadOnly(new SimpleTarget<File>() {
-                    @Override
-                    public void onResourceReady(File resource, Transition<? super File> transition) {
-                        Uri uri = Uri.fromFile(resource);
-                        imgDetail.setImage(ImageSource.uri(uri));
-                        imgDetail.setZoomEnabled(false);
-                        imgDetail.setPanEnabled(false);
-                    }
-                });
-            }
+        if (goodsListBean.getGoodsIntroduceImg() == null || TextUtils.isEmpty(goodsListBean.getGoodsIntroduceImg())) {
+            llGoodsDetail.setVisibility(View.GONE);
+        } else {
+            Glide.with(this).load(goodsListBean.getGoodsIntroduceImg()).apply(new RequestOptions().dontAnimate()).downloadOnly(new SimpleTarget<File>() {
+                @Override
+                public void onResourceReady(File resource, Transition<? super File> transition) {
+                    Uri uri = Uri.fromFile(resource);
+                    imgDetail.setImage(ImageSource.uri(uri));
+                    imgDetail.setZoomEnabled(false);
+                    imgDetail.setPanEnabled(false);
+                }
+            });
+        }
 
-            //String urlLogo = goodsListBean.getGoodsImg() == null ? "" : goodsListBean.getGoodsImg();
-            //Glide.with(this).load(urlLogo).apply(new RequestOptions().placeholder(R.mipmap.g10_03weijiazai).error(R.mipmap.g10_03weijiazai)).into(GlideUtils.getImageView(this, urlLogo, bannerImage));
-            if (goodsListBean.getGoodsImgsList() != null) {
-                mViewpager.setCanLoop(true)
-                        .setAutoPlay(true)
-                        .setIndicatorStyle(IndicatorStyle.CIRCLE)
-                        //.setIndicatorSlideMode(IndicatorSlideMode.SMOOTH)
-                        //.setRoundCorner(20)
-                        .setIndicatorRadius(8)
-                        .setIndicatorColor(Color.parseColor("#CCCCCC"), Color.parseColor("#6C6D72"))
-                        .setHolderCreator(ShopsDetailActivity.DataViewHolder::new).setOnPageClickListener(new BannerViewPager.OnPageClickListener() {
-                    @Override
-                    public void onPageClick(int position) {
-                    }
-                }).create(goodsListBean.getGoodsImgsList());
-                mViewpager.startLoop();
-            }
-
+        //String urlLogo = goodsListBean.getGoodsImg() == null ? "" : goodsListBean.getGoodsImg();
+        //Glide.with(this).load(urlLogo).apply(new RequestOptions().placeholder(R.mipmap.g10_03weijiazai).error(R.mipmap.g10_03weijiazai)).into(GlideUtils.getImageView(this, urlLogo, bannerImage));
+        if (goodsListBean.getGoodsImgsList() != null) {
+            mViewpager.setCanLoop(true)
+                    .setAutoPlay(true)
+                    .setIndicatorStyle(IndicatorStyle.CIRCLE)
+                    //.setIndicatorSlideMode(IndicatorSlideMode.SMOOTH)
+                    //.setRoundCorner(20)
+                    .setIndicatorRadius(8)
+                    .setIndicatorColor(Color.parseColor("#CCCCCC"), Color.parseColor("#6C6D72"))
+                    .setHolderCreator(ShopsDetailActivity.DataViewHolder::new).setOnPageClickListener(new BannerViewPager.OnPageClickListener() {
+                @Override
+                public void onPageClick(int position) {
+                }
+            }).create(goodsListBean.getGoodsImgsList());
+            mViewpager.startLoop();
         }
     }
 
@@ -382,15 +379,17 @@ public class ShopsDetailActivity extends BaseActivity {
                 startActivity(intent);
                 break;
             case R.id.call_phone:
-                new XPopup.Builder(this)
-                        .asConfirm("拨打商家电话", Constant.CUSTOMER_SERVICE_TELEPHONE, "关闭", "确定", new OnConfirmListener() {
-                            @Override
-                            public void onConfirm() {
-                                requestPermission();
-                            }
-                        }, null, false)
-                        .bindLayout(R.layout.layout_dialog) //绑定已有布局
-                        .show();
+                if (goodsListBean != null) {
+                    new XPopup.Builder(this)
+                            .asConfirm("拨打商家电话", goodsListBean.getConnectPhone(), "关闭", "确定", new OnConfirmListener() {
+                                @Override
+                                public void onConfirm() {
+                                    requestPermission();
+                                }
+                            }, null, false)
+                            .bindLayout(R.layout.layout_dialog) //绑定已有布局
+                            .show();
+                }
                 break;
             case R.id.collect:
                 if (imgCollect.isSelected()) {
@@ -584,7 +583,7 @@ public class ShopsDetailActivity extends BaseActivity {
             if (requestCode == 200) {
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_CALL);
-                intent.setData(Uri.parse("tel:" + Constant.CUSTOMER_SERVICE_TELEPHONE));
+                intent.setData(Uri.parse("tel:" + goodsListBean.getConnectPhone()));
                 startActivity(intent);
             }
         }

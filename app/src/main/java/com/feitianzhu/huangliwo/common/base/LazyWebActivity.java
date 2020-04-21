@@ -73,6 +73,7 @@ public class LazyWebActivity extends AppCompatActivity {
         mAgentWeb.getWebCreator().getWebView().setVerticalScrollBarEnabled(false); //垂直不显示
         //支持屏幕缩放
         WebSettings webSettings = mAgentWeb.getAgentWebSettings().getWebSettings();
+        webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         webSettings.setSupportZoom(true);
         webSettings.setBuiltInZoomControls(true);
         //不显示webview缩放按钮

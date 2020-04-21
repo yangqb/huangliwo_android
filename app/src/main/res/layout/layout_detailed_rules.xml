@@ -23,12 +23,11 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <com.itheima.roundedimageview.RoundedImageView
+            <com.feitianzhu.huangliwo.view.CircleImageView
                 android:id="@+id/iv_head"
                 android:layout_width="44dp"
                 android:layout_height="44dp"
-                android:src="@mipmap/b08_01touxiang"
-                app:riv_oval="true" />
+                android:src="@mipmap/b08_01touxiang" />
 
             <LinearLayout
                 android:layout_width="wrap_content"

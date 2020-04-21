@@ -446,7 +446,8 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
         if (merchantsModel != null) {
             merchantInfo.setStatus(0);
             merchantInfo.setMerchantId(String.valueOf(merchantsModel.getMerchantId()));
-            merchantInfo.setInviteCode(Integer.valueOf(userId));
+        } else {
+            merchantInfo.setInviteCode(userId);
         }
         merchantInfo.setMerchantName(merchantsName);
         merchantInfo.setClsId(clsId);
@@ -494,7 +495,7 @@ public class EditMerchantsActivity extends BaseTakePhotoActivity implements OnGe
                             goneloadDialog();
                             if (response.body().code == 0) {
                                 EventBus.getDefault().post(UpdataMechantsEvent.SUCCESS);
-                                ToastUtils.show("修改成功");
+                                ToastUtils.show("提交成功，等待审核");
                                 finish();
                             }
                         }

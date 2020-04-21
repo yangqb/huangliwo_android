@@ -403,6 +403,9 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
                 if (mAdapter.getItemViewType(position) == MultipleMerchantsItem.GIFT_TYPE) {
                     if (mineInfoModel.getAccountType() != 0) {
                         if (multipleItemList.get(position).getGifModel().isGet == 0) {
+                            ToastUtils.show("领取成功");
+                            multipleItemList.get(position).getGifModel().isGet = 1;
+                            mAdapter.notifyItemChanged(position);
                             receiveGif(multipleItemList.get(position).getGifModel().giftId, multipleItemList.get(position).getGifModel().merchantId, position);
                         }
                     } else {
@@ -468,10 +471,7 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
                     public void onSuccess(Response<LzyResponse> response) {
                         super.onSuccess(ShopMerchantsDetailActivity.this, response.body().msg, response.body().code);
                         if (response.body().code == 0) {
-                            ToastUtils.show("领取成功");
-                            multipleItemList.get(position).getGifModel().isGet = 1;
-                            mAdapter.setNewData(multipleItemList);
-                            mAdapter.notifyItemChanged(position);
+
                         }
                     }
 

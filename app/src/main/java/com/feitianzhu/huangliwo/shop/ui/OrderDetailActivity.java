@@ -147,15 +147,17 @@ public class OrderDetailActivity extends BaseActivity {
                 ToastUtils.show("已复制");
                 break;
             case R.id.call_phone:
-                new XPopup.Builder(this)
-                        .asConfirm("拨打商家电话", Constant.CUSTOMER_SERVICE_TELEPHONE, "关闭", "确定", new OnConfirmListener() {
-                            @Override
-                            public void onConfirm() {
-                                requestPermission();
-                            }
-                        }, null, false)
-                        .bindLayout(R.layout.layout_dialog) //绑定已有布局
-                        .show();
+                if (goodsOrderBean != null) {
+                    new XPopup.Builder(this)
+                            .asConfirm("拨打商家电话", goodsOrderBean.getConnectPhone(), "关闭", "确定", new OnConfirmListener() {
+                                @Override
+                                public void onConfirm() {
+                                    requestPermission();
+                                }
+                            }, null, false)
+                            .bindLayout(R.layout.layout_dialog) //绑定已有布局
+                            .show();
+                }
                 break;
             case R.id.cancel_order: //取消订单
                 if (time <= 0) {
@@ -243,47 +245,45 @@ public class OrderDetailActivity extends BaseActivity {
     }
 
     public void showView() {
-        if (goodsOrderBean != null) {
-            tvOrderNo.setText(goodsOrderBean.getOrderNo());
-            createTime.setText(goodsOrderBean.getCreateDate());
-            merchantsName.setText(goodsOrderBean.getShopName());
-            goodsName.setText(goodsOrderBean.getGoodName());
-            specifications.setText(goodsOrderBean.getAttributeVal());
-            count.setText("×" + goodsOrderBean.getCount());
-            tvCount.setText("共" + goodsOrderBean.getCount() + "件商品");
-            remark.setText(goodsOrderBean.getRemark());
-            if (goodsOrderBean.getDetailAddress() != null && !TextUtils.isEmpty(goodsOrderBean.getDetailAddress())) {
-                rlAddress.setVisibility(View.VISIBLE);
-                address.setText(goodsOrderBean.getDetailAddress());
-            } else {
-                rlAddress.setVisibility(View.GONE);
-            }
-            userName.setText(goodsOrderBean.getBuyerName());
-            tvPhone.setText(goodsOrderBean.getBuyerPhone());
-            tvPrice.setText(String.format(Locale.getDefault(), "%.2f", goodsOrderBean.getPrice()));
-            merchantsName.setText(goodsOrderBean.getShopName());
-            Glide.with(mContext).load(goodsOrderBean.getGoodsImg())
-                    .apply(new RequestOptions().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai)).into(imageView);
+        tvOrderNo.setText(goodsOrderBean.getOrderNo());
+        createTime.setText(goodsOrderBean.getCreateDate());
+        merchantsName.setText(goodsOrderBean.getShopName());
+        goodsName.setText(goodsOrderBean.getGoodName());
+        specifications.setText(goodsOrderBean.getAttributeVal());
+        count.setText("×" + goodsOrderBean.getCount());
+        tvCount.setText("共" + goodsOrderBean.getCount() + "件商品");
+        remark.setText(goodsOrderBean.getRemark());
+        if (goodsOrderBean.getDetailAddress() != null && !TextUtils.isEmpty(goodsOrderBean.getDetailAddress())) {
+            rlAddress.setVisibility(View.VISIBLE);
+            address.setText(goodsOrderBean.getDetailAddress());
+        } else {
+            rlAddress.setVisibility(View.GONE);
+        }
+        userName.setText(goodsOrderBean.getBuyerName());
+        tvPhone.setText(goodsOrderBean.getBuyerPhone());
+        tvPrice.setText(String.format(Locale.getDefault(), "%.2f", goodsOrderBean.getPrice()));
+        merchantsName.setText(goodsOrderBean.getShopName());
+        Glide.with(mContext).load(goodsOrderBean.getGoodsImg())
+                .apply(new RequestOptions().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai)).into(imageView);
 
-            if (goodsOrderBean.getStatus() == GoodsOrderInfo.TYPE_NO_PAY) {
-                llStatus.setVisibility(View.VISIBLE);
-                llBottom.setVisibility(View.VISIBLE);
-                tvStatus.setText("等待付款");
-                handler.post(runnable);
-            } else if (goodsOrderBean.getStatus() == GoodsOrderInfo.TYPE_REFUND) {
-                llStatus.setVisibility(View.VISIBLE);
-                llBottom.setVisibility(View.GONE);
-                tvStatus.setText("退款中");
-                tvStatusContent.setText("等待商家处理");
-            } else if (goodsOrderBean.getStatus() == GoodsOrderInfo.TYPE_REFUNDED) {
-                llStatus.setVisibility(View.VISIBLE);
-                llBottom.setVisibility(View.GONE);
-                tvStatus.setText("退款成功");
-                tvStatusContent.setText("");
-            } else {
-                llStatus.setVisibility(View.GONE);
-                llBottom.setVisibility(View.GONE);
-            }
+        if (goodsOrderBean.getStatus() == GoodsOrderInfo.TYPE_NO_PAY) {
+            llStatus.setVisibility(View.VISIBLE);
+            llBottom.setVisibility(View.VISIBLE);
+            tvStatus.setText("等待付款");
+            handler.post(runnable);
+        } else if (goodsOrderBean.getStatus() == GoodsOrderInfo.TYPE_REFUND) {
+            llStatus.setVisibility(View.VISIBLE);
+            llBottom.setVisibility(View.GONE);
+            tvStatus.setText("退款中");
+            tvStatusContent.setText("等待商家处理");
+        } else if (goodsOrderBean.getStatus() == GoodsOrderInfo.TYPE_REFUNDED) {
+            llStatus.setVisibility(View.VISIBLE);
+            llBottom.setVisibility(View.GONE);
+            tvStatus.setText("退款成功");
+            tvStatusContent.setText("");
+        } else {
+            llStatus.setVisibility(View.GONE);
+            llBottom.setVisibility(View.GONE);
         }
     }
 
@@ -318,7 +318,7 @@ public class OrderDetailActivity extends BaseActivity {
             if (requestCode == 200) {
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_CALL);
-                intent.setData(Uri.parse("tel:" + Constant.CUSTOMER_SERVICE_TELEPHONE));
+                intent.setData(Uri.parse("tel:" + goodsOrderBean.getConnectPhone()));
                 startActivity(intent);
             }
         }

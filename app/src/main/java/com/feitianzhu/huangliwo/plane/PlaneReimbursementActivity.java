@@ -293,11 +293,13 @@ public class PlaneReimbursementActivity extends BaseActivity {
                         goneloadDialog();
                         canApply = response.body().canApply;
                         invoiceStringType = response.body().invoiceType;
-                        if (response.body().code == 0 && response.body().canApply && response.body().invoiceType != null) {
-                            postagePrice.setText("¥" + response.body().expressFee);
-                            expressFee = response.body().expressFee;
-                        } else {
-                            ToastUtils.show("当前订单不可报销");
+                        if (response.body().code == 0) {
+                            if (response.body().canApply && response.body().invoiceType != null) {
+                                postagePrice.setText("¥" + response.body().expressFee);
+                                expressFee = response.body().expressFee;
+                            } else {
+                                ToastUtils.show("当前订单不可报销");
+                            }
                         }
                     }
 

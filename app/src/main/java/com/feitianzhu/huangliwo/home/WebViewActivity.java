@@ -43,6 +43,7 @@ public class WebViewActivity extends BaseActivity {
         //支持屏幕缩放
         settings.setSupportZoom(true);
         settings.setBuiltInZoomControls(true);
+        settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         //不显示webview缩放按钮
         settings.setDisplayZoomControls(false);
         settings.setJavaScriptEnabled(true);

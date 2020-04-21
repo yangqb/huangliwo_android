@@ -15,6 +15,7 @@ import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
+import com.feitianzhu.huangliwo.login.LoginActivity;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
@@ -123,7 +124,9 @@ public class ChangePhone2Activity extends BaseActivity {
                                     Constant.PHONE = newPhone;
                                     SPUtils.putString(ChangePhone2Activity.this, Constant.SP_PHONE, newPhone);
                                     KLog.i("new Constant.PHONE : " + Constant.PHONE);
-                                    startActivity(new Intent(mContext, MainActivity.class));
+                                    Intent intent = new Intent(ChangePhone2Activity.this, MainActivity.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    startActivity(intent);
                                     finish();
                                 }
                             }

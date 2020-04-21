@@ -325,7 +325,7 @@ public class PlaneChangeActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == DATE_REQUEST_CODE) {
-                changeDate = data.getStringExtra(PlaneCalendarActivity.SELECT_DATE);
+                changeDate = data.getStringExtra(PlaneCalendarActivity.SELECT_DATE).split("=")[0];
                 tvDate.setText(changeDate);
                 checkChange();
             }

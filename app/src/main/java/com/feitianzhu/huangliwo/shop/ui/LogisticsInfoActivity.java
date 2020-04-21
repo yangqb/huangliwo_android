@@ -14,10 +14,13 @@ import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
+import com.feitianzhu.huangliwo.model.LogisticsInfo;
 import com.feitianzhu.huangliwo.model.LogisticsModel;
 import com.feitianzhu.huangliwo.shop.adapter.LogisticsAdapter;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.hjq.toast.ToastUtils;
 import com.lzy.okgo.OkGo;
 
@@ -31,9 +34,8 @@ import butterknife.OnClick;
  * 物流详情
  * */
 public class LogisticsInfoActivity extends BaseActivity {
-    public static final String LOGISTICS_NO = "logistics_no";
+    public static final String LOGISTICS_DATA = "logistics_data";
     public static final String LOGISTICS_COMPANY = "logistics_company";
-    private List<LogisticsModel.DataBean> logisticsModes = new ArrayList<>();
     private LogisticsAdapter adapter;
     private String logisticsNo = "";
     private String logisticsCompany = "";
@@ -62,57 +64,26 @@ public class LogisticsInfoActivity extends BaseActivity {
     protected void initView() {
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
-        logisticsNo = getIntent().getStringExtra(LOGISTICS_NO);
+        LogisticsModel logisticsModel = (LogisticsModel) getIntent().getSerializableExtra(LOGISTICS_DATA);
+
         logisticsCompany = getIntent().getStringExtra(LOGISTICS_COMPANY);
         titleName.setText("物流信息");
-        if (logisticsNo != null) {
-            tvLogisticsNo.setText("物流编号" + logisticsNo);
-            tvCopy.setVisibility(View.VISIBLE);
-            line.setVisibility(View.VISIBLE);
-        } else {
-            tvLogisticsNo.setText("暂无物流信息");
-            tvCopy.setVisibility(View.GONE);
-            line.setVisibility(View.GONE);
-        }
+        tvLogisticsNo.setText("物流编号" + logisticsModel.getNu());
+        tvCopy.setVisibility(View.VISIBLE);
+        line.setVisibility(View.VISIBLE);
         if (logisticsCompany != null) {
             tvCompanyName.setText(logisticsCompany);
         }
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setNestedScrollingEnabled(false);
-        adapter = new LogisticsAdapter(logisticsModes);
+        adapter = new LogisticsAdapter(logisticsModel.getData());
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
 
     @Override
     protected void initData() {
-        if (logisticsNo != null) {
-            OkGo.<LzyResponse<LogisticsModel>>get(Urls.GET_LOGISTICS_INFO)
-                    .tag(this)
-                    .params(Constant.ACCESSTOKEN, token)
-                    .params(Constant.USERID, userId)
-                    .params("expressNo", logisticsNo)
-                    .execute(new JsonCallback<LzyResponse<LogisticsModel>>() {
-                        @Override
-                        public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<LogisticsModel>> response) {
-                            super.onSuccess(LogisticsInfoActivity.this, response.body().msg, response.code());
-                            if (response.body().code == 0 && response.body().data != null) {
-                                LogisticsModel logisticsModel = response.body().data;
-                                if (logisticsModel != null && logisticsModel.getData() != null) {
-                                    logisticsModes.clear();
-                                    logisticsModes = logisticsModel.getData();
-                                    adapter.setNewData(logisticsModes);
-                                    adapter.notifyDataSetChanged();
-                                }
-                            }
-                        }
 
-                        @Override
-                        public void onError(com.lzy.okgo.model.Response<LzyResponse<LogisticsModel>> response) {
-                            super.onError(response);
-                        }
-                    });
-        }
     }
 
     @OnClick({R.id.left_button, R.id.tv_copy})

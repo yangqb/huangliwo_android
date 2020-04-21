@@ -12,6 +12,9 @@ import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.AddressInfo;
+import com.feitianzhu.huangliwo.model.Province;
+import com.feitianzhu.huangliwo.shop.ui.dialog.ProvinceCallBack;
+import com.feitianzhu.huangliwo.shop.ui.dialog.ProvinceDialog2;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.StringUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
@@ -32,14 +35,14 @@ import com.lzy.okgo.request.PostRequest;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class EditAddressActivity extends BaseActivity {
+public class EditAddressActivity extends BaseActivity implements ProvinceCallBack {
     public static final String ADDRESS_DATA = "address_data";
     public static final String IS_ADD_ADDRESS = "is_add_address";
     private int isDefalt;
     private boolean isAdd;
-    private ProvinceBean mProvince = new ProvinceBean();
-    private CityBean mCity = new CityBean();
-    private DistrictBean mDistrict = new DistrictBean();
+    private Province mProvince = new Province();
+    private Province.CityListBean mCity = new Province.CityListBean();
+    private Province.AreaListBean mDistrict = new Province.AreaListBean();
     private AddressInfo.ShopAddressListBean shopAddressListBean;
     @BindView(R.id.title_name)
     TextView titleName;
@@ -78,12 +81,12 @@ public class EditAddressActivity extends BaseActivity {
             tvAddress.setText(shopAddressListBean.getProvinceName() + "\n"
                     + shopAddressListBean.getCityName() + "\n"
                     + shopAddressListBean.getAreaName());
-            mProvince.setId(shopAddressListBean.getProvinceId());
-            mProvince.setName(shopAddressListBean.getProvinceName());
-            mCity.setId(shopAddressListBean.getCityId());
-            mCity.setName(shopAddressListBean.getCityName());
-            mDistrict.setId(shopAddressListBean.getAreaId());
-            mDistrict.setName(shopAddressListBean.getAreaName());
+            mProvince.id = shopAddressListBean.getProvinceId();
+            mProvince.name = shopAddressListBean.getProvinceName();
+            mCity.id = shopAddressListBean.getCityId();
+            mCity.name = shopAddressListBean.getCityName();
+            mDistrict.id = shopAddressListBean.getAreaId();
+            mDistrict.name = shopAddressListBean.getAreaName();
             if (shopAddressListBean.getIsDefalt() == 1) {
                 switchButton.setChecked(true);
             }
@@ -187,11 +190,11 @@ public class EditAddressActivity extends BaseActivity {
             isDefalt = 0;
         }
         String url;
-        //新增地址
-        if ("710000".equals(mProvince.getId()) || "810000".equals(mProvince.getId()) || "820000".equals(mProvince.getId())) {
+        /*//新增地址
+        if ("710000".equals(mProvince.id) || "810000".equals(mProvince.id) || "820000".equals(mProvince.id)) {
             ToastUtils.show("暂不支持港澳台地区配送");
             return;
-        }
+        }*/
         if (isAdd) {
             url = Urls.ADD_ADDRESS;
         } else {
@@ -203,12 +206,12 @@ public class EditAddressActivity extends BaseActivity {
         }
         postRequest.params("accessToken", token)
                 .params("userId", userId)
-                .params("provinceId", mProvince.getId())
-                .params("provinceName", mProvince.getName())
-                .params("cityId", mCity.getId())
-                .params("cityName", mCity.getName())
-                .params("areaId", mDistrict.getId())
-                .params("areaName", mDistrict.getName())
+                .params("provinceId", mProvince.id)
+                .params("provinceName", mProvince.name)
+                .params("cityId", mCity.id)
+                .params("cityName", mCity.name)
+                .params("areaId", mDistrict.id)
+                .params("areaName", mDistrict.name)
                 .params("detailAddress", editAddressDetail.getText().toString())
                 .params("userName", editName.getText().toString().trim())
                 .params("phone", editPhone.getText().toString().trim())
@@ -241,29 +244,12 @@ public class EditAddressActivity extends BaseActivity {
      * 选择区域
      * */
     public void setSelectAddress() {
-        JDCityPicker cityPicker = new JDCityPicker();
-        JDCityConfig jdCityConfig = new JDCityConfig.Builder().build();
 
-        jdCityConfig.setShowType(JDCityConfig.ShowType.PRO_CITY_DIS);
-        cityPicker.init(this);
-        cityPicker.setConfig(jdCityConfig);
-        cityPicker.setOnCityItemClickListener(new OnCityItemClickListener() {
-            @Override
-            public void onSelected(ProvinceBean province, CityBean city, DistrictBean district) {
-                tvAddress.setText("");
-                mProvince = province;
-                mCity = city;
-                mDistrict = district;
-                tvAddress.setText(province.getName() + "\n"
-                        + city.getName() + "\n"
-                        + district.getName());
-            }
-
-            @Override
-            public void onCancel() {
-            }
-        });
-        cityPicker.showCityPicker();
+        ProvinceDialog2 branchDialog = ProvinceDialog2.newInstance();
+        branchDialog.setCityLevel(ProvinceDialog2.PROVINCE_CITY_AREA);
+        branchDialog.setAddress("北京市", "东城区", "东华门街道");
+        branchDialog.setSelectOnListener(this);
+        branchDialog.show(getSupportFragmentManager());
     }
 
 
@@ -278,5 +264,16 @@ public class EditAddressActivity extends BaseActivity {
     @Override
     protected void initData() {
 
+    }
+
+    @Override
+    public void onWhellFinish(Province province, Province.CityListBean city, Province.AreaListBean mAreaListBean) {
+        tvAddress.setText("");
+        mProvince = province;
+        mCity = city;
+        mDistrict = mAreaListBean;
+        tvAddress.setText(province.name + "\n"
+                + city.name + "\n"
+                + mAreaListBean.name);
     }
 }

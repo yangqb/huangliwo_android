@@ -12,7 +12,7 @@ import java.io.Serializable;
 public class EditMerchantInfo implements Serializable {
     private String merchantId;
     private String merchantName;
-    private Integer inviteCode; //推荐的会员id
+    private String inviteCode; //推荐的会员id
     private String registerNo;
     private String phone;
     private Integer clsId;
@@ -81,11 +81,11 @@ public class EditMerchantInfo implements Serializable {
         this.merchantName = merchantName;
     }
 
-    public Integer getInviteCode() {
+    public String getInviteCode() {
         return inviteCode;
     }
 
-    public void setInviteCode(Integer inviteCode) {
+    public void setInviteCode(String inviteCode) {
         this.inviteCode = inviteCode;
     }
 

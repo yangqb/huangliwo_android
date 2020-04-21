@@ -16,6 +16,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.model.UserGoodVo;
+import com.feitianzhu.huangliwo.view.CircleImageView;
 import com.itheima.roundedimageview.RoundedImageView;
 
 import java.util.List;
@@ -39,7 +40,7 @@ public class DetailedRulesAdapter extends BaseQuickAdapter<UserGoodVo.ReslutBean
     @Override
     protected void convert(@NonNull BaseViewHolder helper, UserGoodVo.ReslutBean item) {
 
-        Glide.with(mContext).load(item.getIcon()).apply(new RequestOptions().error(R.mipmap.b08_01touxiang).placeholder(R.mipmap.b08_01touxiang)).into((RoundedImageView) helper.getView(R.id.iv_head));
+        Glide.with(mContext).load(item.getIcon()).apply(new RequestOptions().error(R.mipmap.b08_01touxiang).placeholder(R.mipmap.b08_01touxiang)).into((CircleImageView) helper.getView(R.id.iv_head));
         if (item.getPhone() != null && item.getPhone().length() == 11) {
             String str1 = item.getPhone().substring(0, 3);
             String str3 = item.getPhone().substring(8, 11);

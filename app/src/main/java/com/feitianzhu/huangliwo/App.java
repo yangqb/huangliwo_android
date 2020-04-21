@@ -6,6 +6,8 @@ import android.support.multidex.MultiDex;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.feitianzhu.huangliwo.utils.ToastWhiteStyle2;
+import com.feitianzhu.huangliwo.view.MRefreshFooter;
+import com.feitianzhu.huangliwo.view.MRefreshHeader;
 import com.hjq.toast.ToastUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheEntity;
@@ -64,6 +66,7 @@ public class App extends MobApplication {
                 //开始设置全局的基本参数（这里设置的属性只跟下面的MaterialHeader绑定，其他Header不会生效，能覆盖DefaultRefreshInitializer的属性和Xml设置的属性）
                 layout.setEnableFooterTranslationContent(true);
                 return new BallPulseFooter(context).setAnimatingColor(context.getResources().getColor(R.color.bg_yellow)).setNormalColor(context.getResources().getColor(R.color.bg_yellow));
+                //return new MRefreshFooter(context);
             }
         });
 
@@ -95,7 +98,8 @@ public class App extends MobApplication {
         ToastUtils.initStyle(new ToastWhiteStyle2(this));
 
     }
-    public void initOkgo(){
+
+    public void initOkgo() {
         //---------这里给出的是示例代码,告诉你可以这么传,实际使用的时候,根据需要传,不需要就不传-------------//
         /*HttpHeaders headers = new HttpHeaders();
         headers.put("commonHeaderKey1", "commonHeaderValue1"); //header不支持中文

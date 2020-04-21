@@ -24,6 +24,7 @@ import com.flyco.tablayout.listener.CustomTabEntity;
 import com.flyco.tablayout.listener.OnTabSelectListener;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.base.Request;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -67,15 +68,17 @@ public class PlaneOrderListActivity extends BaseActivity {
         titleName.setText("机票订单");
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new PlaneOrderAdapter(currOrder);
-       /* View mEmptyView = View.inflate(this, R.layout.view_common_nodata, null);
+        View mEmptyView = View.inflate(this, R.layout.view_common_nodata, null);
         ImageView img_empty = (ImageView) mEmptyView.findViewById(R.id.img_empty);
+        TextView tvNoData = mEmptyView.findViewById(R.id.no_data);
+        tvNoData.setText("没有相关订单，下拉刷新试试");
         img_empty.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
             }
-        });*/
-        //mAdapter.setEmptyView(mEmptyView);
+        });
+        mAdapter.setEmptyView(mEmptyView);
         recyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
         tabs.add(new PlaneOrderTableEntity("全部"));
@@ -144,9 +147,16 @@ public class PlaneOrderListActivity extends BaseActivity {
                 .params(Constant.USERID, userId)
                 .execute(new JsonCallback<LzyResponse<PlaneOrderInfo>>() {
                     @Override
+                    public void onStart(Request<LzyResponse<PlaneOrderInfo>, ? extends Request> request) {
+                        super.onStart(request);
+                        showloadDialog("");
+                    }
+
+                    @Override
                     public void onSuccess(Response<LzyResponse<PlaneOrderInfo>> response) {
                         super.onSuccess(PlaneOrderListActivity.this, response.body().msg, response.body().code);
                         refreshLayout.finishRefresh();
+                        goneloadDialog();
                         if (currOrder != null) {
                             currOrder.clear();
                         }
@@ -199,6 +209,7 @@ public class PlaneOrderListActivity extends BaseActivity {
                     public void onError(Response<LzyResponse<PlaneOrderInfo>> response) {
                         super.onError(response);
                         refreshLayout.finishRefresh(false);
+                        goneloadDialog();
                     }
                 });
 
