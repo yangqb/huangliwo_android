@@ -76,8 +76,9 @@ public class App extends MobApplication {
             @Override
             public RefreshHeader createRefreshHeader(@NonNull Context context, @NonNull RefreshLayout layout) {
                 //开始设置全局的基本参数（这里设置的属性只跟下面的MaterialHeader绑定，其他Header不会生效，能覆盖DefaultRefreshInitializer的属性和Xml设置的属性）
-                layout.setEnableHeaderTranslationContent(false);//拖动Header的时候是否同时拖动内容（默认true）
-                return new MaterialHeader(context).setColorSchemeColors(context.getResources().getColor(R.color.bg_yellow));
+                layout.setEnableHeaderTranslationContent(true);//拖动Header的时候是否同时拖动内容（默认true）
+                //return new MaterialHeader(context).setColorSchemeColors(context.getResources().getColor(R.color.bg_yellow));
+                return new MRefreshHeader(context);
             }
         });
     }

@@ -1,6 +1,7 @@
 package com.feitianzhu.huangliwo.me;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,6 +21,9 @@ import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.google.gson.Gson;
 import com.lzy.okgo.OkGo;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
 
@@ -45,7 +49,7 @@ public class AddressManagementActivity extends BaseActivity {
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     @BindView(R.id.swipeLayout)
-    SwipeRefreshLayout mSwipeLayout;
+    SmartRefreshLayout mSwipeLayout;
     private String token;
     private String userId;
 
@@ -76,7 +80,7 @@ public class AddressManagementActivity extends BaseActivity {
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
         isSelect = getIntent().getBooleanExtra(IS_SELECT, false);
-        mSwipeLayout.setColorSchemeColors(getResources().getColor(R.color.sf_blue));
+        mSwipeLayout.setEnableLoadMore(false);
 
         initListener();
 
@@ -113,9 +117,9 @@ public class AddressManagementActivity extends BaseActivity {
             }
         });
 
-        mSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        mSwipeLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
-            public void onRefresh() {
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                 initData();
             }
         });
@@ -148,7 +152,7 @@ public class AddressManagementActivity extends BaseActivity {
                     @Override
                     public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<AddressInfo>> response) {
                         super.onSuccess(AddressManagementActivity.this, response.body().msg, response.body().code);
-                        mSwipeLayout.setRefreshing(false);
+                        mSwipeLayout.finishRefresh();
                         if (response.body().code == 0 && response.body().data != null) {
                             AddressInfo addressInfo = response.body().data;
                             addressInfos = addressInfo.getShopAddressList();
@@ -156,10 +160,12 @@ public class AddressManagementActivity extends BaseActivity {
                             adapter.notifyDataSetChanged();
                         }
                     }
+
                     @Override
                     public void onError(com.lzy.okgo.model.Response<LzyResponse<AddressInfo>> response) {
-                        super.onError(response);super.onError(response);
-                        mSwipeLayout.setRefreshing(false);
+                        super.onError(response);
+                        super.onError(response);
+                        mSwipeLayout.finishRefresh(false);
                     }
                 });
     }

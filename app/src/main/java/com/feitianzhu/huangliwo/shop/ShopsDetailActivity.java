@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +44,7 @@ import com.feitianzhu.huangliwo.utils.MathUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.utils.UserInfoUtils;
+import com.feitianzhu.huangliwo.utils.doubleclick.SingleClick;
 import com.feitianzhu.huangliwo.view.CircleImageView;
 import com.feitianzhu.huangliwo.view.CustomSpecificationDialog;
 import com.feitianzhu.huangliwo.vip.VipActivity;
@@ -335,6 +337,7 @@ public class ShopsDetailActivity extends BaseActivity {
     }
 
     @OnClick({R.id.left_button, R.id.tv_pay, R.id.rl_more_evaluation, R.id.add_shopping_cart, R.id.shopping_cart, R.id.call_phone, R.id.collect, R.id.select_specifications, R.id.right_img, R.id.ll_rebate})
+    @SingleClick()
     public void onClick(View view) {
         Intent intent;
         switch (view.getId()) {

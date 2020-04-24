@@ -1,8 +1,10 @@
 package com.feitianzhu.huangliwo.me;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
@@ -24,18 +26,26 @@ import com.feitianzhu.huangliwo.me.adapter.TeamAdapter;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.MyTeamInfo;
+import com.feitianzhu.huangliwo.model.TeamDetailInfo;
 import com.feitianzhu.huangliwo.model.TeamModel;
+import com.feitianzhu.huangliwo.plane.EditPassengerActivity;
 import com.feitianzhu.huangliwo.utils.MathUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 import com.feitianzhu.huangliwo.view.CircleImageView;
+import com.feitianzhu.huangliwo.view.CustomRefundView;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.base.Request;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -50,6 +60,8 @@ import butterknife.OnClick;
  */
 public class MyTeamActivity extends BaseActivity {
     private List<TeamModel> teamModelList = new ArrayList<>();
+    private TeamDetailInfo teamDetailInfo;
+    private int selectPos;
     private MyTeamInfo teamInfo;
     private String userId;
     private String token;
@@ -70,6 +82,12 @@ public class MyTeamActivity extends BaseActivity {
     TextView addCount;
     @BindView(R.id.addAmount)
     TextView addAmount;
+    @BindView(R.id.right_text)
+    TextView rightText;
+    @BindView(R.id.right_img)
+    ImageView rightImg;
+    @BindView(R.id.refreshLayout)
+    SmartRefreshLayout refreshLayout;
 
     @Override
     protected int getLayoutId() {
@@ -79,12 +97,20 @@ public class MyTeamActivity extends BaseActivity {
     @Override
     protected void initView() {
         titleName.setText("我的团队");
+        rightText.setText("全部");
+        rightText.setVisibility(View.VISIBLE);
+        rightImg.setVisibility(View.VISIBLE);
+        rightImg.setBackgroundResource(R.mipmap.i01_01xiala);
+
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
+        refreshLayout.setEnableLoadMore(false);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         teamAdapter = new TeamAdapter(teamModelList);
         View mEmptyView = View.inflate(this, R.layout.view_common_nodata, null);
         ImageView img_empty = (ImageView) mEmptyView.findViewById(R.id.img_empty);
+        TextView noData = mEmptyView.findViewById(R.id.no_data);
+        noData.setText("空空如也");
         img_empty.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,6 +137,17 @@ public class MyTeamActivity extends BaseActivity {
         } else if (userInfo.getAccountType() == 7) {
             tvLevel.setText("省代理");
         }
+
+        initListener();
+    }
+
+    public void initListener() {
+        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                initData();
+            }
+        });
     }
 
     @Override
@@ -121,8 +158,16 @@ public class MyTeamActivity extends BaseActivity {
                 .params(Constant.USERID, userId)
                 .execute(new JsonCallback<LzyResponse<MyTeamInfo>>() {
                     @Override
+                    public void onStart(Request<LzyResponse<MyTeamInfo>, ? extends Request> request) {
+                        super.onStart(request);
+                        showloadDialog("");
+                    }
+
+                    @Override
                     public void onSuccess(Response<LzyResponse<MyTeamInfo>> response) {
                         super.onSuccess(MyTeamActivity.this, response.body().msg, response.body().code);
+                        refreshLayout.finishRefresh();
+                        goneloadDialog();
                         if (response.body().code == 0 && response.body().data != null) {
                             teamInfo = response.body().data;
                             Glide.with(MyTeamActivity.this).load(teamInfo.teamImg).apply(new RequestOptions().error(R.mipmap.b08_01touxiang).placeholder(R.mipmap.b08_01touxiang)).into(headImg);
@@ -139,9 +184,17 @@ public class MyTeamActivity extends BaseActivity {
                             } else {
                                 setSpannableString(MathUtils.subZero(String.valueOf(teamInfo.yesdayIncome)), addAmount);
                             }
-
                             teamModelList = teamInfo.listUser;
-                            teamAdapter.setNewData(teamModelList);
+                            teamDetailInfo = teamInfo.map;
+                            if (selectPos == 0) {
+                                teamAdapter.setNewData(teamModelList);
+                            } else if (selectPos == 1) {
+                                teamAdapter.setNewData(teamDetailInfo.svipList);
+                            } else if (selectPos == 2) {
+                                teamAdapter.setNewData(teamDetailInfo.vipList);
+                            } else {
+                                teamAdapter.setNewData(teamDetailInfo.consumeList);
+                            }
                             teamAdapter.notifyDataSetChanged();
                         }
                     }
@@ -149,14 +202,49 @@ public class MyTeamActivity extends BaseActivity {
                     @Override
                     public void onError(Response<LzyResponse<MyTeamInfo>> response) {
                         super.onError(response);
+                        refreshLayout.finishRefresh(false);
+                        goneloadDialog();
                     }
                 });
 
     }
 
-    @OnClick({R.id.left_button})
+    @OnClick({R.id.left_button, R.id.ll_team_count, R.id.right_button})
     public void onClick(View view) {
-        finish();
+        switch (view.getId()) {
+            case R.id.left_button:
+                finish();
+                break;
+            case R.id.ll_team_count:
+               /* Intent intent = new Intent(MyTeamActivity.this, TeamDetailListActivity.class);
+                intent.putExtra(TeamDetailListActivity.TEAM_DETAIL_INFO, teamDetailInfo);
+                startActivity(intent);*/
+                break;
+            case R.id.right_button:
+                String[] strings3 = new String[]{"全部", "超级会员", "优选会员", "消费者"};
+                new XPopup.Builder(this)
+                        .asCustom(new CustomRefundView(MyTeamActivity.this)
+                                .setData(Arrays.asList(strings3))
+                                .setOnItemClickListener(new CustomRefundView.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(int position) {
+                                        rightText.setText(strings3[position]);
+                                        selectPos = position;
+                                        if (position == 0) {
+                                            teamAdapter.setNewData(teamModelList);
+                                        } else if (position == 1) {
+                                            teamAdapter.setNewData(teamDetailInfo.svipList);
+                                        } else if (position == 2) {
+                                            teamAdapter.setNewData(teamDetailInfo.vipList);
+                                        } else {
+                                            teamAdapter.setNewData(teamDetailInfo.consumeList);
+                                        }
+                                        teamAdapter.notifyDataSetChanged();
+                                    }
+                                }))
+                        .show();
+                break;
+        }
     }
 
     @SuppressLint("SetTextI18n")

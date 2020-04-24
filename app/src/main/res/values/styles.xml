@@ -90,10 +90,12 @@
         <item name="android:windowEnterAnimation">@anim/cp_push_bottom_in</item>
         <item name="android:windowExitAnimation">@anim/cp_push_bottom_out</item>
     </style>
+
     <style name="CityPickerStyle" parent="AlertDialog.AppCompat">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:backgroundDimEnabled">false</item>
     </style>
+
     <style name="DefaultCityPickerTheme" parent="AppTheme">
         <item name="cpCancelTextSize">@dimen/cp_cancel_text_size</item>
         <item name="cpCancelTextColor">@color/cp_color_gray</item>
@@ -150,5 +152,10 @@
         <item name="android:windowBackground">@android:color/transparent</item>
         <!--弹窗背景是否变暗-->
         <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
+    <style name="CustomToolbarTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!--透明背景-->
+        <item name="android:background">@color/color_fed228</item>
     </style>
 </resources>

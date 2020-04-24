@@ -62,7 +62,7 @@ public class ChangePhone1Activity extends BaseActivity {
     @Override
     protected void initTitle() {
         titleName.setText("更换手机号码");
-        phone = SPUtils.getString(this, Constant.SP_PHONE);
+        phone = SPUtils.getString(this, Constant.SP_PHONE, "");
     }
 
     @Override
@@ -78,14 +78,12 @@ public class ChangePhone1Activity extends BaseActivity {
     @Override
     protected void initData() {
         mTvCurrentPhone.setText(String.format(getString(R.string.current_phone), phone));
-
     }
 
     @OnClick({R.id.button, R.id.rl_code, R.id.left_button})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.button:
-
                 if (TextUtils.isEmpty(phone)) {
                     ToastUtils.show("手机号不能为空");
                     return;

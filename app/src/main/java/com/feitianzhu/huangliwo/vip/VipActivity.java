@@ -31,17 +31,18 @@ import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.me.ui.VerificationActivity2;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
+import com.feitianzhu.huangliwo.model.MyPoint;
 import com.feitianzhu.huangliwo.model.VipGifListInfo;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsClassifyModel;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.utils.UserInfoUtils;
+import com.feitianzhu.huangliwo.utils.doubleclick.SingleClick;
 import com.feitianzhu.huangliwo.view.CustomClassificationView;
 import com.feitianzhu.huangliwo.view.CustomImgViewDialog;
 import com.gyf.immersionbar.ImmersionBar;
 import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
-import com.lxj.xpopup.impl.LoadingPopupView;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
@@ -50,10 +51,8 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -77,6 +76,8 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
     private List<VipGifListInfo.VipPresentsModel> presentsList = new ArrayList<>();
     private VipPresentsAdapter adapter;
     private VipPresentsAdapter2 adapter2;
+    private double longitude = 116.289189;
+    private double latitude = 39.826552;
     private int clsId;
     @BindView(R.id.title_name)
     TextView titleName;
@@ -147,6 +148,7 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
 
 
     @OnClick({R.id.left_button, R.id.more_vip, R.id.btn_submit, R.id.tv_protocol, R.id.all_gif, R.id.btnRecord, R.id.tvInstruction})
+    @SingleClick()
     public void onClick(View view) {
         Intent intent;
         switch (view.getId()) {
@@ -240,6 +242,7 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
         });
 
         adapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @SingleClick()
             @Override
             public void onItemChildClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
                 if (UserInfoUtils.getUserInfo(VipActivity.this).getAccountType() != 0) {
@@ -361,13 +364,18 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
     }
 
     public void getVipGif(int clsId) {
+        if (Constant.mPoint != null) {
+            MyPoint myPoint = Constant.mPoint;
+            longitude = myPoint.longitude;
+            latitude = myPoint.latitude;
+        }
         OkGo.<LzyResponse<VipGifListInfo>>get(Urls.GET_VIP_PRESENT)
                 .tag(this)
                 .params("accessToken", token)
                 .params("userId", userId)
                 .params("clsId", clsId)
-                .params("longitude", Constant.mPoint.longitude)
-                .params("latitude", Constant.mPoint.latitude)
+                .params("longitude", longitude + "")
+                .params("latitude", latitude + "")
                 .execute(new JsonCallback<LzyResponse<VipGifListInfo>>() {
                     @Override
                     public void onStart(Request<LzyResponse<VipGifListInfo>, ? extends Request> request) {

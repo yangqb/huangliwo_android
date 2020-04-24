@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/layout_head" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="33dp"
+        android:paddingTop="@dimen/dp_10"
+        android:paddingRight="33dp"
+        android:paddingBottom="@dimen/dp_10">
+
+        <TextView
+            android:id="@+id/btn_bonus"
+            android:layout_width="88dp"
+            android:layout_height="28dp"
+            android:layout_alignParentStart="true"
+            android:background="@drawable/selecter_push_shop"
+            android:gravity="center"
+            android:text="推广红利"
+            android:textColor="@color/color_333333"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/btn_discount"
+            android:layout_width="88dp"
+            android:layout_height="28dp"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/selecter_push_shop"
+            android:gravity="center"
+            android:text="消费折扣"
+            android:textColor="@color/color_333333"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/btn_earnings"
+            android:layout_width="88dp"
+            android:layout_height="28dp"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/selecter_push_shop"
+            android:gravity="center"
+            android:text="投资收益"
+            android:textColor="@color/color_333333"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
+
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/swipeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+        </android.support.v7.widget.RecyclerView>
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+</LinearLayout>

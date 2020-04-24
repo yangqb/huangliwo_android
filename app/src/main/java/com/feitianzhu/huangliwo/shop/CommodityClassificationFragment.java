@@ -123,8 +123,8 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
     private int clsMearchantsId;
     private String token;
     private String userId;
-    private double longitude;
-    private double latitude;
+    private double longitude = 116.289189;
+    private double latitude = 39.826552;
     private MineInfoModel mineInfoModel = new MineInfoModel();
 
     public CommodityClassificationFragment() {

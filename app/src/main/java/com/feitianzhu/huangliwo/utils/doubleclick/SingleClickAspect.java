@@ -4,6 +4,7 @@ import android.view.View;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 
@@ -16,6 +17,8 @@ import java.lang.reflect.Method;
  * time: 20:49
  * email: 694125155@qq.com
  */
+
+@Aspect
 public class SingleClickAspect {
     private static final long DEFAULT_TIME_INTERVAL = 5000;
 
@@ -24,7 +27,7 @@ public class SingleClickAspect {
      * 注意：这里me.baron.test.annotation.SingleClick需要替换成
      * 你自己项目中SingleClick这个类的全路径哦
      */
-    @Pointcut("execution(@com.feitianzhu.fu700.utils.doubleclick.SingleClick * *(..))")
+    @Pointcut("execution(@com.feitianzhu.huangliwo.utils.doubleclick.SingleClick * *(..))")
     public void methodAnnotated() {
     }
 

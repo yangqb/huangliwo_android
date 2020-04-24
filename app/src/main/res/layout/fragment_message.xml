@@ -22,19 +22,21 @@
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@color/white">
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:background="@color/color_f7f7f7"
             android:visibility="visible">
 
 
         </android.support.v7.widget.RecyclerView>
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
-
 
 
     <ImageView

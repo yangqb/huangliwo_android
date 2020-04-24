@@ -38,6 +38,7 @@ import com.feitianzhu.huangliwo.shop.adapter.ShopDetailAdapter;
 import com.feitianzhu.huangliwo.utils.MathUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
+import com.feitianzhu.huangliwo.utils.doubleclick.SingleClick;
 import com.feitianzhu.huangliwo.view.CustomRefundView;
 import com.feitianzhu.huangliwo.vip.VipActivity;
 import com.feitianzhu.huangliwo.vip.VipGiftDetailActivity;
@@ -164,6 +165,7 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
     }
 
     @OnClick({R.id.button1, R.id.button2, R.id.button3, R.id.left_button, R.id.img_collect, R.id.call_phone, R.id.address, R.id.ll_rebate})
+    @SingleClick()
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.button1:
@@ -398,6 +400,7 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
         });
 
         mAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @SingleClick()
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                 if (mAdapter.getItemViewType(position) == MultipleMerchantsItem.GIFT_TYPE) {

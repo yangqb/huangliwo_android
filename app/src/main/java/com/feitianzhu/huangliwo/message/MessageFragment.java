@@ -29,6 +29,7 @@ import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.base.Request;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -151,8 +152,15 @@ public class MessageFragment extends SFFragment {
                 .params("userId", userId)
                 .execute(new JsonCallback<LzyResponse<NewYearGoodsModel>>() {
                     @Override
+                    public void onStart(Request<LzyResponse<NewYearGoodsModel>, ? extends Request> request) {
+                        super.onStart(request);
+                        showloadDialog("");
+                    }
+
+                    @Override
                     public void onSuccess(Response<LzyResponse<NewYearGoodsModel>> response) {
                         super.onSuccess(getActivity(), "", response.body().code);
+                        goneloadDialog();
                         refreshLayout.finishRefresh();
                         if (response.body().data != null && response.body().data.getActivityList() != null) {
                             goodsListBeans = response.body().data.getActivityList();
@@ -165,6 +173,7 @@ public class MessageFragment extends SFFragment {
                     public void onError(Response<LzyResponse<NewYearGoodsModel>> response) {
                         super.onError(response);
                         refreshLayout.finishRefresh(false);
+                        goneloadDialog();
                     }
                 });
     }

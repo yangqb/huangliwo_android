@@ -21,4 +21,5 @@ public class MyTeamInfo implements Serializable {
     public int yesdayAddCount;//@ApiModelProperty("昨日新增人数")
     public double monthIncome;//@ApiModelProperty("本月团队业绩")
     public double yesdayIncome;//@ApiModelProperty("昨日团队业绩")
+    public TeamDetailInfo map;
 }

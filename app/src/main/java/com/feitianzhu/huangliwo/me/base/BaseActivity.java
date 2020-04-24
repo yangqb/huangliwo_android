@@ -20,6 +20,7 @@ import com.feitianzhu.huangliwo.view.CustomPopWindow;
 import com.gyf.immersionbar.ImmersionBar;
 import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
+import com.lxj.xpopup.enums.PopupAnimation;
 import com.lxj.xpopup.impl.LoadingPopupView;
 
 import java.util.TreeMap;
@@ -126,13 +127,16 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected void showloadDialog(String title) {
         loadingPopup = (LoadingPopupView) new XPopup.Builder(this)
-                .asLoading("正在加载中")
+                .hasShadowBg(false)
+                .popupAnimation(PopupAnimation.NoAnimation)
+                .asLoading()
+                .bindLayout(R.layout.layout_loading_view)
                 .show();
     }
 
     protected void goneloadDialog() {
         if (null != loadingPopup) {
-            loadingPopup.delayDismissWith(1000, new Runnable() {
+            loadingPopup.delayDismissWith(600, new Runnable() {
                 @Override
                 public void run() {
                 }

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/layout_head" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="33dp"
+        android:paddingTop="@dimen/dp_10"
+        android:paddingRight="33dp"
+        android:paddingBottom="@dimen/dp_10">
+
+        <TextView
+            android:id="@+id/btn_super"
+            android:layout_width="88dp"
+            android:layout_height="28dp"
+            android:layout_alignParentStart="true"
+            android:background="@drawable/selecter_push_shop"
+            android:gravity="center"
+            android:text="超级会员"
+            android:textColor="@color/color_333333"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/btn_optimization"
+            android:layout_width="88dp"
+            android:layout_height="28dp"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/selecter_push_shop"
+            android:gravity="center"
+            android:text="优选会员"
+            android:textColor="@color/color_333333"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/btn_ordinary"
+            android:layout_width="88dp"
+            android:layout_height="28dp"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/selecter_push_shop"
+            android:gravity="center"
+            android:text="消费者"
+            android:textColor="@color/color_333333"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+
+
+    </android.support.v7.widget.RecyclerView>
+
+</LinearLayout>

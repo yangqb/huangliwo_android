@@ -100,6 +100,8 @@ public class MyCenterFragment extends SFFragment {
     TextView tvWithdrawal;
     @BindView(R.id.withdrawCount)
     TextView withdrawCount;
+    @BindView(R.id.tv_wages)
+    TextView tvWages;
     private String mParam1;
     private String mParam2;
     private CenterAdapter adapter;
@@ -111,11 +113,13 @@ public class MyCenterFragment extends SFFragment {
     private String amount = "0.00";
     private String amount2 = "0.00";
     private String amount3 = "0.00";
+    private String wagesAmount = "0.00";
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private boolean isLogin = true;
-    Integer[] integers = {R.mipmap.b08_08dingdan, R.mipmap.b08_14gouwuche, R.mipmap.b08_11dizhi, R.mipmap.b08_06zhanghu, R.mipmap.b08_12huiyuan,
-            R.mipmap.b08_07yinhangka, R.mipmap.b08_10shouchang, R.mipmap.b08_09shangpu, R.mipmap.b08_15fenxiang, R.mipmap.b08_2tuandui};
+    Integer[] integers = {R.mipmap.dingdan, R.mipmap.gouwuche, R.mipmap.dizhi, R.mipmap.zhanghu, R.mipmap.huiyuan,
+            R.mipmap.yinhangka, R.mipmap.shouchang, R.mipmap.shangpu, R.mipmap.fenxiang, R.mipmap.tuandui,
+            R.mipmap.help};
 
     public MyCenterFragment() {
     }
@@ -183,7 +187,7 @@ public class MyCenterFragment extends SFFragment {
                                 amount = String.format(Locale.getDefault(), "%.2f", balanceModel.getWaitRelease());
                                 amount2 = String.format(Locale.getDefault(), "%.2f", balanceModel.getTotalAmount());
                                 amount3 = String.format(Locale.getDefault(), "%.2f", balanceModel.getBalance());
-                                setSpannableString(toBeReleasedAmount, tvProfit, tvWithdrawal, amount, amount2, amount3);
+                                setSpannableString(toBeReleasedAmount, tvProfit, tvWithdrawal, tvWages, amount, amount2, amount3, wagesAmount);
                                 if (balanceModel.getWithdrawCount() != 0) {
                                     withdrawCount.setText(balanceModel.getWithdrawCount() + "笔正在提现中");
                                     withdrawCount.setVisibility(View.VISIBLE);
@@ -191,7 +195,7 @@ public class MyCenterFragment extends SFFragment {
                                     withdrawCount.setVisibility(View.INVISIBLE);
                                 }
                             } else {
-                                setSpannableString(toBeReleasedAmount, tvProfit, tvWithdrawal, "0.00", "0.00", "0.00");
+                                setSpannableString(toBeReleasedAmount, tvProfit, tvWithdrawal, tvWages, "0.00", "0.00", "0.00", "0.00");
                             }
                         }
                     }
@@ -374,6 +378,10 @@ public class MyCenterFragment extends SFFragment {
                         }
 
                         break;
+                    case 10:
+                        intent = new Intent(getActivity(), HelperActivity.class);
+                        startActivity(intent);
+                        break;
                 }
             }
         });
@@ -391,7 +399,7 @@ public class MyCenterFragment extends SFFragment {
 
     private boolean isShowBalance = true;
 
-    @OnClick({R.id.ll_userInfo, R.id.iv_setting, R.id.iv_qrcode, R.id.ll_show_balance, R.id.btn_withdrawal, R.id.detailed_rules, R.id.withdrawCount})
+    @OnClick({R.id.ll_userInfo, R.id.iv_setting, R.id.iv_qrcode, R.id.ll_show_balance, R.id.btn_withdrawal, R.id.detailed_rules, R.id.withdrawCount, R.id.wages_detailed_rules, R.id.btn_wages_withdrawal})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ll_userInfo:
@@ -427,10 +435,11 @@ public class MyCenterFragment extends SFFragment {
                 } else {
                     imgShow.setBackgroundResource(R.mipmap.h01_02guanbi);
                 }
-                setSpannableString(toBeReleasedAmount, tvProfit, tvWithdrawal, amount, amount2, amount3);
+                setSpannableString(toBeReleasedAmount, tvProfit, tvWithdrawal, tvWages, amount, amount2, amount3, wagesAmount);
                 SPUtils.putBoolean(getActivity(), Constant.SP_SHOW_BALANCE, isShowBalance);
                 break;
             case R.id.btn_withdrawal:
+            case R.id.btn_wages_withdrawal:
                 UserAuth mAuth = Constant.mUserAuth;
                 if (null == mAuth || 0 == mAuth.isRnAuth) {
                     //未实名 审核被拒
@@ -459,6 +468,10 @@ public class MyCenterFragment extends SFFragment {
                 intent.putExtra(WithdrawRecordActivity.MERCHANT_ID, -1);
                 startActivity(intent);
                 break;
+            case R.id.wages_detailed_rules:
+                intent = new Intent(getActivity(), WagesDetailActivity.class);
+                startActivity(intent);
+                break;
         }
     }
 
@@ -469,16 +482,18 @@ public class MyCenterFragment extends SFFragment {
                 .show();
     }
 
-    public void setSpannableString(TextView view1, TextView view2, TextView view3, String str1, String str2, String str3) {
+    public void setSpannableString(TextView view1, TextView view2, TextView view3, TextView view4, String str1, String str2, String str3, String str4) {
         view1.setText("");
         view2.setText("");
         view3.setText("");
+        view4.setText("");
         String str0 = "¥ ";
         SpannableString span1 = new SpannableString(str0);
         SpannableString span3 = new SpannableString(str0);
         SpannableString span2 = new SpannableString(str1);
         SpannableString span4 = new SpannableString(str2);
         SpannableString span5 = new SpannableString(str3);
+        SpannableString span6 = new SpannableString(str4);
         ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.parseColor("#333333"));
         span1.setSpan(new AbsoluteSizeSpan(15, true), 0, str0.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         span1.setSpan(new StyleSpan(Typeface.BOLD), 0, str0.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
@@ -499,6 +514,10 @@ public class MyCenterFragment extends SFFragment {
         span5.setSpan(new StyleSpan(Typeface.BOLD), 0, str3.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         span5.setSpan(colorSpan, 0, str3.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 
+        span6.setSpan(new AbsoluteSizeSpan(18, true), 0, str4.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        span6.setSpan(new StyleSpan(Typeface.BOLD), 0, str4.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        span6.setSpan(colorSpan, 0, str4.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+
         if (isShowBalance) {
             view1.append(span1);
             view1.append(span2);
@@ -506,10 +525,13 @@ public class MyCenterFragment extends SFFragment {
             view2.append(span4);
             view3.append(span3);
             view3.append(span5);
+            view4.append(span3);
+            view4.append(span6);
         } else {
             view1.setText("****");
             view2.setText("****");
             view3.setText("****");
+            view4.setText("****");
         }
 
     }

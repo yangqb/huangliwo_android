@@ -84,13 +84,14 @@ public class MRefreshHeader extends LinearLayout implements RefreshHeader {
         switch (newState) {
             //1,下拉刷新的开始状态：下拉可以刷新
             case PullDownToRefresh:
-                mImage.setImageResource(R.drawable.commonui_pull_image);
+                mImage.setImageResource(R.drawable.blt_0);
                 break;
             //2,下拉到最底部的状态：释放立即刷新
             case ReleaseToRefresh:
-                mImage.setImageResource(R.drawable.anim_pull_end);
+                mImage.setImageResource(R.drawable.blt_0);
+                /*mImage.setImageResource(R.drawable.anim_pull_end);
                 mAnimPull = (AnimationDrawable) mImage.getDrawable();
-                mAnimPull.start();
+                mAnimPull.start();*/
                 break;
             //3,下拉到最底部后松手的状态：正在刷新
             case Refreshing:
@@ -116,7 +117,7 @@ public class MRefreshHeader extends LinearLayout implements RefreshHeader {
         if (mAnimPull != null && mAnimPull.isRunning()) {
             mAnimPull.stop();
         }
-        return 0;
+        return 0; //延迟500毫秒回弹
     }
 
     @Override
@@ -148,4 +149,5 @@ public class MRefreshHeader extends LinearLayout implements RefreshHeader {
     public boolean isSupportHorizontalDrag() {
         return false;
     }
+
 }

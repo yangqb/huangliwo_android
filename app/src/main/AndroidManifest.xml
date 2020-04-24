@@ -622,6 +622,22 @@
             android:name=".settings.ChangeLoginPassword"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".me.HelperActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".me.CustomerQrcodeActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".me.TeamDetailListActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".me.WagesDetailActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

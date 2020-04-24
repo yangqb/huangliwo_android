@@ -98,8 +98,9 @@ public class SearchShopActivity extends BaseActivity {
     }
 
     public void searchData(String searchText) {
-        if (TextUtils.isEmpty(searchText)) {
+        if (searchText == null || TextUtils.isEmpty(searchText)) {
             ToastUtils.show("请输入关键字进行搜索");
+            mSwipeLayout.finishRefresh(false);
             return;
         }
 

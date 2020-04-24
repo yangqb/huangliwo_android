@@ -38,12 +38,14 @@ import com.feitianzhu.huangliwo.home.entity.NoticeModel;
 import com.feitianzhu.huangliwo.home.entity.ShopAndMerchants;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
+import com.feitianzhu.huangliwo.login.LoginActivity;
 import com.feitianzhu.huangliwo.login.LoginEvent;
 import com.feitianzhu.huangliwo.me.ui.PersonalCenterActivity2;
 import com.feitianzhu.huangliwo.me.ui.ScannerActivity;
 import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
 import com.feitianzhu.huangliwo.model.HomeShops;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
+import com.feitianzhu.huangliwo.model.MyPoint;
 import com.feitianzhu.huangliwo.model.Province;
 import com.feitianzhu.huangliwo.model.ShopClassify;
 import com.feitianzhu.huangliwo.plane.PlaneHomeActivity;
@@ -58,6 +60,7 @@ import com.feitianzhu.huangliwo.shop.ui.dialog.ProvinceDialog2;
 import com.feitianzhu.huangliwo.travel.TravelHomeActivity;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
+import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 import com.feitianzhu.huangliwo.view.CircleImageView;
 import com.feitianzhu.huangliwo.vip.VipActivity;
 import com.gcssloop.widget.PagerGridLayoutManager;
@@ -141,6 +144,8 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, Pager
     private String token;
     private String userId;
     private int pageNo = 1;
+    private double longitude = 116.289189;
+    private double latitude = 39.826552;
     private PagerGridLayoutManager layoutManager;
     private OptMerchantsAdapter optMerchantsAdapter;
     private HotGoodsAdapter hotGoodsAdapter;
@@ -434,10 +439,17 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, Pager
     }
 
     public void getData() {
+        if (Constant.mPoint != null) {
+            MyPoint myPoint = Constant.mPoint;
+            longitude = myPoint.longitude;
+            latitude = myPoint.latitude;
+        }
         OkGo.<LzyResponse<HomeEntity>>get(Urls.GET_INDEX)
                 .tag(this)
                 .params("accessToken", token)
                 .params("userId", userId)
+                .params("longitude", longitude + "")
+                .params("latitude", latitude + "")
                 .execute(new JsonCallback<LzyResponse<HomeEntity>>() {
                     @Override
                     public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<HomeEntity>> response) {
@@ -767,6 +779,8 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, Pager
                             String headImg = mineInfoModel.getHeadImg();
                             Glide.with(mContext).load(headImg).apply(RequestOptions.placeholderOf(R.mipmap.b08_01touxiang).error(R.mipmap.b08_01touxiang).dontAnimate())
                                     .into(ivHead);
+                            UserInfoUtils.saveUserInfo(getActivity(), mineInfoModel);
+                            SPUtils.putString(getActivity(), Constant.SP_PHONE, mineInfoModel.getPhone());
                         }
                     }
 

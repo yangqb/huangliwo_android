@@ -68,5 +68,4 @@ public class TeamModel implements Serializable {
     public int userType;//(integer, optional),
 
     public List<RebateListInfo> waitRebateList;//(Array[WaitRebate], optional)
-
 }

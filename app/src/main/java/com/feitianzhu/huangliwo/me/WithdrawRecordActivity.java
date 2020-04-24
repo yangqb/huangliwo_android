@@ -68,6 +68,8 @@ public class WithdrawRecordActivity extends BaseActivity {
         merchantId = getIntent().getIntExtra(MERCHANT_ID, -1);
         View mEmptyView = View.inflate(this, R.layout.view_common_nodata, null);
         ImageView img_empty = (ImageView) mEmptyView.findViewById(R.id.img_empty);
+        TextView noData = mEmptyView.findViewById(R.id.no_data);
+        noData.setText("空空如也，下拉刷新试试");
         img_empty.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -5,151 +5,223 @@
     android:background="@color/color_f7f7f7"
     android:orientation="vertical">
 
-    <include layout="@layout/layout_head" />
-
-    <android.support.v4.widget.NestedScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/color_f7f7f7">
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="45dp"
+            android:background="@color/white">
 
             <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:id="@+id/left_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:padding="@dimen/dp_10">
 
                 <ImageView
-                    android:layout_width="match_parent"
+                    android:layout_width="10dp"
+                    android:layout_height="17dp"
+                    android:layout_centerInParent="true"
+                    android:src="@mipmap/e01_01fanhui" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/title_name"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:text=""
+                android:textColor="@color/color_333333"
+                android:textSize="17sp" />
+
+            <LinearLayout
+                android:id="@+id/right_button"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="@dimen/dp_10"
+                android:paddingEnd="10dp">
+
+                <TextView
+                    android:id="@+id/right_text"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@mipmap/k02_01beijing" />
+                    android:layout_marginRight="5dp"
+                    android:text="确定"
+                    android:textColor="@color/color_333333"
+                    android:textSize="17sp"
+                    android:visibility="gone" />
 
-                <LinearLayout
+                <ImageView
+                    android:id="@+id/right_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@mipmap/e01_02fenxiang"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/refreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/color_f7f7f7">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:orientation="vertical">
+                    android:layout_height="match_parent">
 
-                    <com.feitianzhu.huangliwo.view.CircleImageView
-                        android:id="@+id/headImg"
-                        android:layout_width="90dp"
-                        android:layout_height="90dp"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="28dp"
-                        android:background="@mipmap/b08_01touxiang" />
-
-                    <TextView
-                        android:id="@+id/tv_level"
-                        android:layout_width="wrap_content"
-                        android:layout_height="22dp"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginBottom="20dp"
-                        android:background="@drawable/shape_ffffff_r5"
-                        android:gravity="center"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
-                        android:text=""
-                        android:textColor="@color/color_333333"
-                        android:textSize="13sp" />
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@mipmap/k02_01beijing" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/shape_ffffff_r5"
-                        android:orientation="horizontal"
-                        android:paddingTop="20dp"
-                        android:paddingBottom="20dp">
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:orientation="vertical">
+
+                        <com.feitianzhu.huangliwo.view.CircleImageView
+                            android:id="@+id/headImg"
+                            android:layout_width="90dp"
+                            android:layout_height="90dp"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="28dp"
+                            android:background="@mipmap/b08_01touxiang" />
+
+                        <TextView
+                            android:id="@+id/tv_level"
+                            android:layout_width="wrap_content"
+                            android:layout_height="22dp"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginBottom="20dp"
+                            android:background="@drawable/shape_ffffff_r5"
+                            android:gravity="center"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:text=""
+                            android:textColor="@color/color_333333"
+                            android:textSize="13sp" />
 
                         <LinearLayout
-                            android:layout_width="0dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:orientation="vertical">
+                            android:background="@drawable/shape_ffffff_r5"
+                            android:orientation="horizontal"
+                            android:paddingTop="20dp"
+                            android:paddingBottom="20dp">
 
-                            <TextView
-                                android:layout_width="wrap_content"
+                            <LinearLayout
+                                android:id="@+id/ll_team_count"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:text="团队总人数(人)"
-                                android:textColor="@color/color_333333"
-                                android:textSize="14sp" />
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:orientation="vertical">
 
-                            <TextView
-                                android:id="@+id/teamCount"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="5dp"
-                                android:layout_marginBottom="5dp"
-                                android:text="0"
-                                android:textColor="@color/color_333333"
-                                android:textSize="26sp" />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="团队总人数(人)"
+                                    android:textColor="@color/color_333333"
+                                    android:textSize="14sp" />
 
-                            <TextView
-                                android:id="@+id/addCount"
-                                android:layout_width="wrap_content"
+                                <TextView
+                                    android:id="@+id/teamCount"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="5dp"
+                                    android:layout_marginBottom="5dp"
+                                    android:text="0"
+                                    android:textColor="@color/color_333333"
+                                    android:textSize="26sp" />
+
+                                <TextView
+                                    android:id="@+id/addCount"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="昨日+"
+                                    android:textColor="@color/color_333333"
+                                    android:textSize="12sp" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/checkArea"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:text="昨日+"
-                                android:textColor="@color/color_333333"
-                                android:textSize="12sp" />
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="本月团队业绩(元)"
+                                    android:textColor="@color/color_333333"
+                                    android:textSize="14sp" />
+
+                                <TextView
+                                    android:id="@+id/areaCount"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="5dp"
+                                    android:layout_marginBottom="5dp"
+                                    android:text="0"
+                                    android:textColor="@color/color_333333"
+                                    android:textSize="26sp" />
+
+                                <TextView
+                                    android:id="@+id/addAmount"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="昨日+"
+                                    android:textColor="@color/color_333333"
+                                    android:textSize="12sp" />
+                            </LinearLayout>
 
                         </LinearLayout>
 
-                        <LinearLayout
-                            android:id="@+id/checkArea"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:orientation="vertical">
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/recyclerView"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="10dp"
+                            android:minHeight="350dp">
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="本月团队业绩(元)"
-                                android:textColor="@color/color_333333"
-                                android:textSize="14sp" />
-
-                            <TextView
-                                android:id="@+id/areaCount"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="5dp"
-                                android:layout_marginBottom="5dp"
-                                android:text="0"
-                                android:textColor="@color/color_333333"
-                                android:textSize="26sp" />
-
-                            <TextView
-                                android:id="@+id/addAmount"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="昨日+"
-                                android:textColor="@color/color_333333"
-                                android:textSize="12sp" />
-                        </LinearLayout>
+                        </android.support.v7.widget.RecyclerView>
 
                     </LinearLayout>
 
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/recyclerView"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:minHeight="350dp"
-                        android:layout_marginTop="10dp">
+                </RelativeLayout>
 
-                    </android.support.v7.widget.RecyclerView>
-
-                </LinearLayout>
-
-            </RelativeLayout>
-
-        </LinearLayout>
-
-
-    </android.support.v4.widget.NestedScrollView>
-
+            </LinearLayout>
+        </android.support.v4.widget.NestedScrollView>
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 </LinearLayout>
