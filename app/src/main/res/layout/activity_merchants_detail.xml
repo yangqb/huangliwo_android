@@ -653,8 +653,8 @@
 
                         <com.itheima.roundedimageview.RoundedImageView
                             android:id="@+id/imageView1"
-                            android:layout_width="115dp"
-                            android:layout_height="115dp"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
                             android:layout_alignParentEnd="true"
                             android:layout_marginRight="@dimen/dp_10"
                             android:scaleType="fitXY"
@@ -669,76 +669,77 @@
                         android:layout_height="1dp"
                         android:background="@color/color_eeeeee" />
 
-                    <RelativeLayout
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/dp_10"
                         android:layout_marginRight="@dimen/dp_10"
                         android:background="@color/white"
+                        android:orientation="vertical"
                         android:paddingTop="25dp"
-                        android:paddingBottom="25dp">
+                        android:paddingBottom="10dp">
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="155dp"
-                            android:background="@color/white"
-                            android:orientation="vertical">
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
 
                             <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:gravity="center_vertical"
-                                android:orientation="horizontal">
+                                android:background="@color/white"
+                                android:orientation="vertical">
 
-                                <TextView
-                                    android:layout_width="20dp"
-                                    android:layout_height="20dp"
-                                    android:layout_marginRight="5dp"
-                                    android:background="@drawable/shape_fed428_circle_20"
-                                    android:gravity="center"
-                                    android:text="2"
-                                    android:textColor="@color/color_333333"
-                                    android:textSize="16sp" />
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center_vertical"
+                                    android:orientation="horizontal">
+
+                                    <TextView
+                                        android:layout_width="20dp"
+                                        android:layout_height="20dp"
+                                        android:layout_marginRight="5dp"
+                                        android:background="@drawable/shape_fed428_circle_20"
+                                        android:gravity="center"
+                                        android:text="2"
+                                        android:textColor="@color/color_333333"
+                                        android:textSize="16sp" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="商铺门面照片(必填)"
+                                        android:textColor="@color/color_333333"
+                                        android:textSize="16sp" />
+                                </LinearLayout>
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="商铺门面照片(必填)"
-                                    android:textColor="@color/color_333333"
-                                    android:textSize="16sp" />
+                                    android:layout_marginTop="@dimen/dp_10"
+                                    android:text="上传带完整清晰的牌匾的门面照片"
+                                    android:textColor="@color/color_999999"
+                                    android:textSize="14sp" />
+
                             </LinearLayout>
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/dp_10"
-                                android:text="上传带完整清晰的牌匾的门面照片"
-                                android:textColor="@color/color_999999"
-                                android:textSize="14sp" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/dp_10"
+                                android:layout_alignParentEnd="true"
                                 android:text="建议手机横屏拍照"
                                 android:textColor="@color/color_289cef"
                                 android:textSize="14sp" />
+                        </RelativeLayout>
 
-                        </LinearLayout>
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/recyclerView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp">
 
-                        <com.itheima.roundedimageview.RoundedImageView
-                            android:id="@+id/imageView2"
-                            android:layout_width="115dp"
-                            android:layout_height="115dp"
-                            android:layout_alignParentEnd="true"
-                            android:layout_marginRight="@dimen/dp_10"
-                            android:scaleType="fitXY"
-                            android:src="@mipmap/g01_01shangchuan"
-                            app:riv_corner_radius="5dp"
-                            app:riv_oval="false" />
-
-                    </RelativeLayout>
+                        </android.support.v7.widget.RecyclerView>
+                    </LinearLayout>
 
                     <View
                         android:layout_width="match_parent"
@@ -797,8 +798,8 @@
 
                         <com.itheima.roundedimageview.RoundedImageView
                             android:id="@+id/imageView3"
-                            android:layout_width="115dp"
-                            android:layout_height="115dp"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
                             android:layout_alignParentEnd="true"
                             android:layout_marginRight="@dimen/dp_10"
                             android:scaleType="fitXY"
@@ -875,8 +876,8 @@
 
                         <com.itheima.roundedimageview.RoundedImageView
                             android:id="@+id/imageView4"
-                            android:layout_width="115dp"
-                            android:layout_height="115dp"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
                             android:layout_alignParentEnd="true"
                             android:layout_marginRight="@dimen/dp_10"
                             android:scaleType="fitXY"
@@ -952,8 +953,8 @@
 
                         <com.itheima.roundedimageview.RoundedImageView
                             android:id="@+id/imageView5"
-                            android:layout_width="115dp"
-                            android:layout_height="115dp"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
                             android:layout_alignParentEnd="true"
                             android:layout_marginRight="@dimen/dp_10"
                             android:scaleType="fitXY"
@@ -1037,8 +1038,8 @@
 
                         <com.itheima.roundedimageview.RoundedImageView
                             android:id="@+id/imageView6"
-                            android:layout_width="115dp"
-                            android:layout_height="115dp"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
                             android:layout_alignParentEnd="true"
                             android:layout_marginRight="@dimen/dp_10"
                             android:scaleType="fitXY"
@@ -1112,8 +1113,8 @@
 
                         <com.itheima.roundedimageview.RoundedImageView
                             android:id="@+id/imageView7"
-                            android:layout_width="115dp"
-                            android:layout_height="115dp"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
                             android:layout_alignParentEnd="true"
                             android:layout_marginRight="@dimen/dp_10"
                             android:scaleType="fitXY"

@@ -40,6 +40,7 @@ public class RefundPlaneTicketActivity extends BaseActivity {
     private RefundPlaneTicketPassengerAdapter mAdapter;
     public static final String ORDER_DATA = "order_data";
     private NationalPassengerInfo passengerInfo;
+    private List<NationalPassengerInfo> passengerInfos;
     private List<String> reasonList = new ArrayList<>();
     private DocOrderDetailInfo docOrderDetailInfo;
     private String startDateStr;
@@ -95,6 +96,7 @@ public class RefundPlaneTicketActivity extends BaseActivity {
                         super.onSuccess(RefundPlaneTicketActivity.this, response.body().message, response.body().code);
                         goneloadDialog();
                         if (response.body().code == 0 && response.body().result != null) {
+                            passengerInfos = response.body().result;
                             passengerInfo = response.body().result.get(0);
                             if (passengerInfo.refundSearchResult.canRefund) {
                                 reasonList.clear();
@@ -157,6 +159,9 @@ public class RefundPlaneTicketActivity extends BaseActivity {
         }
     }
 
+    private int totalServiceAmount;
+    private int totalRefundAmount;
+
     public void selectShoppingSpaceDialog() {
         new XPopup.Builder(this)
                 .asCustom(new CustomRefundView(RefundPlaneTicketActivity.this)
@@ -166,8 +171,12 @@ public class RefundPlaneTicketActivity extends BaseActivity {
                             public void onItemClick(int position) {
                                 tvReason.setText(reasonList.get(position));
                                 index = position;
-                                serviceAmount.setText("¥" + MathUtils.subZero(String.valueOf(passengerInfo.refundSearchResult.tgqReasons.get(index).refundPassengerPriceInfoList.get(0).refundFeeInfo.refundFee)));
-                                refundAmount.setText("¥" + MathUtils.subZero(String.valueOf(passengerInfo.refundSearchResult.tgqReasons.get(index).refundPassengerPriceInfoList.get(0).refundFeeInfo.returnRefundFee)));
+                                for (int i = 0; i < passengerInfos.size(); i++) {
+                                    totalRefundAmount += passengerInfos.get(i).refundSearchResult.tgqReasons.get(index).refundPassengerPriceInfoList.get(0).refundFeeInfo.returnRefundFee;
+                                    totalServiceAmount += passengerInfos.get(i).refundSearchResult.tgqReasons.get(index).refundPassengerPriceInfoList.get(0).refundFeeInfo.refundFee;
+                                }
+                                serviceAmount.setText("¥" + MathUtils.subZero(String.valueOf(totalServiceAmount)));
+                                refundAmount.setText("¥" + MathUtils.subZero(String.valueOf(totalRefundAmount)));
                                 totalAmount.setText("¥" + MathUtils.subZero(String.valueOf(docOrderDetailInfo.passengerTypes.get(0).allPrices)));
                             }
                         }))

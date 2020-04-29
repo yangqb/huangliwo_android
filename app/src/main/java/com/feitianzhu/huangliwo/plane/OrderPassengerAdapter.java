@@ -2,6 +2,7 @@ package com.feitianzhu.huangliwo.plane;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -27,6 +28,13 @@ public class OrderPassengerAdapter extends BaseQuickAdapter<DocOrderDetailPassen
         helper.setText(R.id.name, item.name);
         helper.setText(R.id.ageType, "(" + item.type + ")");
         helper.setText(R.id.cardNo, item.cardType + item.cardNum);
+        if (item.ticketNo == null || TextUtils.isEmpty(item.ticketNo)) {
+            helper.setGone(R.id.ticketNo, false);
+        } else {
+            helper.setGone(R.id.ticketNo, true);
+            helper.setText(R.id.ticketNo, item.ticketNo);
+        }
+        helper.addOnClickListener(R.id.rl_copy);
 
 
     }

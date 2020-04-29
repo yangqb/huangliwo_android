@@ -7,6 +7,8 @@ import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -26,15 +28,19 @@ import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.me.ui.VerificationActivity2;
+import com.feitianzhu.huangliwo.model.MultiItemComment;
+import com.feitianzhu.huangliwo.pushshop.adapter.ShopFrontAdapter;
 import com.feitianzhu.huangliwo.pushshop.bean.EditMerchantInfo;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsClassifyModel;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsModel;
+import com.feitianzhu.huangliwo.pushshop.bean.MultiShopFront;
 import com.feitianzhu.huangliwo.pushshop.bean.UpdataMechantsEvent;
 import com.feitianzhu.huangliwo.utils.Glide4Engine;
 import com.feitianzhu.huangliwo.utils.KeyboardUtils;
@@ -71,6 +77,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -91,23 +98,24 @@ import static com.feitianzhu.huangliwo.common.Constant.USERID;
 public class MerchantsDetailActivity extends BaseActivity implements BusinessHoursDialog.OnTimePickListener, BusinessWeekDayDialog.OnWeekPickListener, OnGetGeoCoderResultListener {
     public static final String IS_MY_MERCHANTS = "is_my_merchants";
     public static final String MERCHANTS_DETAIL_DATA = "merchants_detail_data";
-    private static final int REQUEST_CODE_PERMISSION = 100;
-    private static final int REQUEST_CODE_SETTING = 300;
     private static final int REQUEST_CODE_CHOOSE = 23;
     private static final int REQUEST_CODE_CAPTURE = 24;
     private boolean isConfirm = false;
+    private List<MultiShopFront> multiShopFrontList = new ArrayList<>();
     private String userId;
     private String token;
     private int clsId;
     private String clsName;
+    private int maxSize = 6;
+    private ShopFrontAdapter shopFrontAdapter;
     private MerchantsModel merchantsBean;
     private List<MerchantsClassifyModel.ListBean> listBean;
     private MediaStoreCompat mMediaStoreCompat;
+    private List<String> allSelect = new ArrayList<>();
     private int imgType;
     private boolean isTimes = false;
     private boolean isWeek = false;
     private String photo1 = "";
-    private String photo2 = "";
     private String photo3 = "";
     private String photo4 = "";
     private String photo5 = "";
@@ -144,8 +152,8 @@ public class MerchantsDetailActivity extends BaseActivity implements BusinessHou
     TextView tvCode;
     @BindView(R.id.imageView1)
     RoundedImageView logoImg;
-    @BindView(R.id.imageView2)
-    RoundedImageView shopFrontImg;
+    @BindView(R.id.recyclerView)
+    RecyclerView recyclerView;
     @BindView(R.id.imageView3)
     RoundedImageView shopInsideImg;
     @BindView(R.id.imageView4)
@@ -210,6 +218,10 @@ public class MerchantsDetailActivity extends BaseActivity implements BusinessHou
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         merchantsBean = (MerchantsModel) getIntent().getSerializableExtra(MERCHANTS_DETAIL_DATA);
+        //默认有一张上传的图片
+        MultiShopFront multiShopFront = new MultiShopFront(MultiShopFront.upImg);
+        multiShopFront.setId(R.mipmap.g01_01shangchuan);
+        multiShopFrontList.add(multiShopFront);
         if (merchantsBean != null) {
             latitude = Double.valueOf(merchantsBean.getLatitude());
             longitude = Double.valueOf(merchantsBean.getLongitude());
@@ -241,36 +253,42 @@ public class MerchantsDetailActivity extends BaseActivity implements BusinessHou
                 } else {
                     btnSubmit.setVisibility(View.VISIBLE);
                 }
-              /*  if (merchantsBean.getExamineModel().getBlStatus() == -1) {
-                    businessStatus.setText("审核被拒：" + (merchantsBean.getExamineModel().getBlReason() == null ? "" : merchantsBean.getExamineModel().getBlReason()));
-                } else if (merchantsBean.getExamineModel().getBlStatus() == 0) {
-                    businessStatus.setText("审核中");
-                }
-                if (merchantsBean.getExamineModel().getCardStatus() == -1) {
-                    idCardFrontStatus.setText("审核被拒：" + (merchantsBean.getExamineModel().getCardReason() == null ? "" : merchantsBean.getExamineModel().getCardReason()));
-                    idCardBackStatus.setText("审核被拒：" + (merchantsBean.getExamineModel().getCardReason() == null ? "" : merchantsBean.getExamineModel().getCardReason()));
-                } else if (merchantsBean.getExamineModel().getCardStatus() == 0) {
-                    idCardFrontStatus.setText("审核中");
-                    idCardBackStatus.setText("审核中");
-                }*/
-                /*idCardFrontStatus.setVisibility(View.VISIBLE);
-                idCardBackStatus.setVisibility(View.VISIBLE);
-                businessStatus.setVisibility(View.VISIBLE);*/
             } else {
                 btnSubmit.setVisibility(View.VISIBLE);
-                /*idCardFrontStatus.setVisibility(View.GONE);
-                idCardBackStatus.setVisibility(View.GONE);
-                businessStatus.setVisibility(View.GONE);*/
             }
 
             Glide.with(mContext).load(merchantsBean.getLogo()).apply(new RequestOptions().dontAnimate().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai)).into(logoImg);
-            Glide.with(mContext).load(merchantsBean.getShopFrontImg()).apply(new RequestOptions().dontAnimate().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai)).into(shopFrontImg);
+            //Glide.with(mContext).load(merchantsBean.getShopFrontImg()).apply(new RequestOptions().dontAnimate().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai)).into(shopFrontImg);
             Glide.with(mContext).load(merchantsBean.getShopInsideImg()).apply(new RequestOptions().dontAnimate().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai)).into(shopInsideImg);
             Glide.with(mContext).load(merchantsBean.getCardFrontImg()).apply(new RequestOptions().dontAnimate().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai)).into(cardFrontImg);
             Glide.with(mContext).load(merchantsBean.getCardBackImg()).apply(new RequestOptions().dontAnimate().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai)).into(cardBackImg);
             Glide.with(mContext).load(merchantsBean.getBusinessLicenseImg()).apply(new RequestOptions().dontAnimate().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai)).into(businessLicenseImg);
             Glide.with(mContext).load(merchantsBean.getPermitImg()).apply(new RequestOptions().dontAnimate().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai)).into(permitImg);
+
+            if (merchantsBean.getShopFrontImg() != null && !TextUtils.isEmpty(merchantsBean.getShopFrontImg())) {
+                if (merchantsBean.getShopFrontImg().contains(",")) {
+                    allSelect.addAll(Arrays.asList(merchantsBean.getShopFrontImg().split(",")));
+                } else {
+                    allSelect.add(merchantsBean.getShopFrontImg());
+                }
+                for (int i = 0; i < allSelect.size(); i++) {
+                    MultiShopFront shopFront = new MultiShopFront(MultiShopFront.LookImg);
+                    shopFront.setPath(allSelect.get(i));
+                    multiShopFrontList.add(multiShopFrontList.size() - 1, shopFront);
+                }
+                //超过或等于6张删除掉上传默认上传的那张
+                maxSize = 6 - allSelect.size();
+                if (maxSize <= 0) {
+                    multiShopFrontList.remove(multiShopFrontList.size() - 1);
+                }
+            }
         }
+
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+        shopFrontAdapter = new ShopFrontAdapter(multiShopFrontList);
+        recyclerView.setAdapter(shopFrontAdapter);
+        shopFrontAdapter.notifyDataSetChanged();
+        recyclerView.setNestedScrollingEnabled(false);
         initListener();
     }
 
@@ -391,9 +409,37 @@ public class MerchantsDetailActivity extends BaseActivity implements BusinessHou
             }
         });
 
+        shopFrontAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                if (adapter.getItemViewType(position) == MultiItemComment.upImg) {
+                    imgType = 2;
+                    selectPhoto(maxSize);
+                } else {
+                    //showBigImg(allSelect, position);
+                }
+            }
+        });
+
+        shopFrontAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                multiShopFrontList.remove(position);
+                shopFrontAdapter.setNewData(multiShopFrontList);
+                shopFrontAdapter.notifyDataSetChanged();
+                allSelect.remove(position);
+                maxSize = 6 - allSelect.size();
+                if (maxSize == 1) {
+                    MultiShopFront shopFront = new MultiShopFront(MultiShopFront.upImg);
+                    shopFront.setId(R.mipmap.g01_01shangchuan);
+                    multiShopFrontList.add(shopFront);
+                }
+            }
+        });
+
     }
 
-    @OnClick({R.id.left_button, R.id.right_button, R.id.tvCode, R.id.tv_business_hours, R.id.tv_business_day, R.id.imageView1, R.id.imageView2, R.id.imageView3, R.id.imageView4, R.id.imageView5, R.id.imageView6, R.id.imageView7
+    @OnClick({R.id.left_button, R.id.right_button, R.id.tvCode, R.id.tv_business_hours, R.id.tv_business_day, R.id.imageView1, R.id.imageView3, R.id.imageView4, R.id.imageView5, R.id.imageView6, R.id.imageView7
             , R.id.select_merchants_area, R.id.select_merchants_type, R.id.submit, R.id.ll_discount})
     public void onClick(View view) {
         switch (view.getId()) {
@@ -419,31 +465,27 @@ public class MerchantsDetailActivity extends BaseActivity implements BusinessHou
                 break;
             case R.id.imageView1:
                 imgType = 1;
-                showDialog();
-                break;
-            case R.id.imageView2:
-                imgType = 2;
-                showDialog();
+                selectPhoto(1);
                 break;
             case R.id.imageView3:
                 imgType = 3;
-                showDialog();
+                selectPhoto(1);
                 break;
             case R.id.imageView4:
                 imgType = 4;
-                showDialog();
+                selectPhoto(1);
                 break;
             case R.id.imageView5:
                 imgType = 5;
-                showDialog();
+                selectPhoto(1);
                 break;
             case R.id.imageView6:
                 imgType = 6;
-                showDialog();
+                selectPhoto(1);
                 break;
             case R.id.imageView7:
                 imgType = 7;
-                showDialog();
+                selectPhoto(1);
                 break;
             case R.id.select_merchants_area:
                 KeyboardUtils.hideKeyboard(parentView);
@@ -521,7 +563,7 @@ public class MerchantsDetailActivity extends BaseActivity implements BusinessHou
         cityPicker.showCityPicker();
     }
 
-    public void showDialog() {
+    public void selectPhoto(int maxNum) {
         new XPopup.Builder(this)
                 .asCustom(new CustomSelectPhotoView(MerchantsDetailActivity.this)
                         .setOnSelectTakePhotoListener(new CustomSelectPhotoView.OnSelectTakePhotoListener() {
@@ -539,7 +581,7 @@ public class MerchantsDetailActivity extends BaseActivity implements BusinessHou
                                         //有序选择图片 123456...
                                         .countable(true)
                                         //最大选择数量为6
-                                        .maxSelectable(1)
+                                        .maxSelectable(maxNum)
                                         //选择方向
                                         .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
                                         //图片过滤
@@ -603,6 +645,7 @@ public class MerchantsDetailActivity extends BaseActivity implements BusinessHou
                     }
                 });
     }
+
     public void showDayDialog() {
         BusinessWeekDayDialog weekDayDialog = BusinessWeekDayDialog.newInstance();
         weekDayDialog.setBusinessTime("星期三", "星期三");
@@ -643,6 +686,8 @@ public class MerchantsDetailActivity extends BaseActivity implements BusinessHou
                 });
 
     }
+
+    private StringBuffer imgUrls = new StringBuffer();
 
     public void submit() {
         String merchantsName = editMerchantsName.getText().toString().trim();
@@ -741,15 +786,32 @@ public class MerchantsDetailActivity extends BaseActivity implements BusinessHou
         merchantInfo.setLatitude(String.valueOf(latitude));
         //merchantInfo.setInviteCode(Integer.valueOf(userId));
         merchantInfo.setBusinessTime(businessTimes);
-        String json = new Gson().toJson(merchantInfo);
         PostRequest<LzyResponse> postRequest = OkGo.<LzyResponse>post(Urls.UPDATA_MERCHANTS).tag(this);
 
         if (!TextUtils.isEmpty(photo1)) {
             postRequest.params("logo", new File(photo1), "logo.png");
         }
-        if (!TextUtils.isEmpty(photo2)) {
-            postRequest.params("shopFrontImg", new File(photo2), "shopFrontImg.png");
+        List<File> fileList = new ArrayList<>();
+        if (allSelect.size() > 0) {
+            for (int i = 0; i < allSelect.size(); i++) {
+                if (allSelect.get(i).startsWith("http") || allSelect.get(i).startsWith("https")) {
+                    String url = allSelect.get(i) + ",";
+                    imgUrls.append(url);
+                } else {
+                    fileList.add(new File(allSelect.get(i)));
+                }
+            }
         }
+        if (fileList.size() > 0) {
+            postRequest.addFileParams("shopFrontImg", fileList);
+        }
+
+        if (imgUrls.toString().endsWith(",")) {
+            String substring = imgUrls.substring(0, imgUrls.lastIndexOf(","));
+            merchantInfo.setShopFrontImg(substring);
+        }
+
+
         if (!TextUtils.isEmpty(photo3)) {
             postRequest.params("cardFrontImg", new File(photo3), "cardFrontImg.png");
         }
@@ -765,9 +827,10 @@ public class MerchantsDetailActivity extends BaseActivity implements BusinessHou
         if (!TextUtils.isEmpty(photo7)) {
             postRequest.params("permitImg", new File(photo7), "permitImg.png");
         }
-        if (TextUtils.isEmpty(photo1) && TextUtils.isEmpty(photo2) && TextUtils.isEmpty(photo3) && TextUtils.isEmpty(photo4) && TextUtils.isEmpty(photo5) && TextUtils.isEmpty(photo6) && TextUtils.isEmpty(photo7)) {
+        if (TextUtils.isEmpty(photo1) && fileList.size() <= 0 && TextUtils.isEmpty(photo3) && TextUtils.isEmpty(photo4) && TextUtils.isEmpty(photo5) && TextUtils.isEmpty(photo6) && TextUtils.isEmpty(photo7)) {
             postRequest.isMultipart(true);
         }
+        String json = new Gson().toJson(merchantInfo);
         postRequest.params("accessToken", token)
                 .params("userId", userId)
                 .params("merchantInfo", json)
@@ -840,27 +903,38 @@ public class MerchantsDetailActivity extends BaseActivity implements BusinessHou
             switch (requestCode) {
                 case REQUEST_CODE_CHOOSE:
                     List<Uri> uris = Matisse.obtainResult(data);
-                    List<String> strings = Matisse.obtainPathResult(data);
+                    List<String> currSelect = Matisse.obtainPathResult(data);
                     if (imgType == 1) {
-                        photo1 = strings.get(0);
+                        photo1 = currSelect.get(0);
                         Glide.with(MerchantsDetailActivity.this).load(photo1).into(logoImg);
                     } else if (imgType == 2) {
-                        photo2 = strings.get(0);
-                        Glide.with(MerchantsDetailActivity.this).load(photo2).into(shopFrontImg);
+                        allSelect.addAll(currSelect);
+                        for (int i = 0; i < currSelect.size(); i++) {
+                            MultiShopFront shopFront = new MultiShopFront(MultiShopFront.LookImg);
+                            shopFront.setPath(currSelect.get(i));
+                            multiShopFrontList.add(multiShopFrontList.size() - 1, shopFront);
+                        }
+                        maxSize = 6 - allSelect.size();
+                        if (maxSize <= 0) {
+                            multiShopFrontList.remove(multiShopFrontList.size() - 1);
+                        }
+                        shopFrontAdapter.setNewData(multiShopFrontList);
+                        shopFrontAdapter.notifyDataSetChanged();
+                        //Glide.with(MerchantsDetailActivity.this).load(photo2).into(shopFrontImg);
                     } else if (imgType == 3) {
-                        photo3 = strings.get(0);
+                        photo3 = currSelect.get(0);
                         Glide.with(MerchantsDetailActivity.this).load(photo3).into(shopInsideImg);
                     } else if (imgType == 4) {
-                        photo4 = strings.get(0);
+                        photo4 = currSelect.get(0);
                         Glide.with(MerchantsDetailActivity.this).load(photo4).into(cardFrontImg);
                     } else if (imgType == 5) {
-                        photo5 = strings.get(0);
+                        photo5 = currSelect.get(0);
                         Glide.with(MerchantsDetailActivity.this).load(photo5).into(cardBackImg);
                     } else if (imgType == 6) {
-                        photo6 = strings.get(0);
+                        photo6 = currSelect.get(0);
                         Glide.with(MerchantsDetailActivity.this).load(photo6).into(businessLicenseImg);
                     } else if (imgType == 7) {
-                        photo7 = strings.get(0);
+                        photo7 = currSelect.get(0);
                         Glide.with(MerchantsDetailActivity.this).load(photo7).into(permitImg);
                     }
                     break;
@@ -871,8 +945,18 @@ public class MerchantsDetailActivity extends BaseActivity implements BusinessHou
                         photo1 = path;
                         Glide.with(MerchantsDetailActivity.this).load(photo1).into(logoImg);
                     } else if (imgType == 2) {
-                        photo2 = path;
-                        Glide.with(MerchantsDetailActivity.this).load(photo2).into(shopFrontImg);
+                        allSelect.add(path);
+                        MultiShopFront shopFront = new MultiShopFront(MultiShopFront.LookImg);
+                        shopFront.setPath(path);
+                        multiShopFrontList.add(multiShopFrontList.size() - 1, shopFront);
+
+                        maxSize = 6 - allSelect.size();
+                        if (maxSize <= 0) {
+                            multiShopFrontList.remove(multiShopFrontList.size() - 1);
+                        }
+                        shopFrontAdapter.setNewData(multiShopFrontList);
+                        shopFrontAdapter.notifyDataSetChanged();
+                        //Glide.with(MerchantsDetailActivity.this).load(photo2).into(shopFrontImg);
                     } else if (imgType == 3) {
                         photo3 = path;
                         Glide.with(MerchantsDetailActivity.this).load(photo3).into(shopInsideImg);

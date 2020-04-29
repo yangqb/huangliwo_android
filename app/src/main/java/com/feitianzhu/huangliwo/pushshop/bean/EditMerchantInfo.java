@@ -32,6 +32,15 @@ public class EditMerchantInfo implements Serializable {
     private String email;
     private String businessTime;
     private int status;
+    private String shopFrontImg;
+
+    public String getShopFrontImg() {
+        return shopFrontImg;
+    }
+
+    public void setShopFrontImg(String shopFrontImg) {
+        this.shopFrontImg = shopFrontImg;
+    }
 
     public int getStatus() {
         return status;

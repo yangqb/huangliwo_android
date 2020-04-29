@@ -223,7 +223,6 @@ public class EditCommentsActivity extends BaseActivity {
 
                 if (allSelect.size() > 0) {
                     for (int i = 0; i < allSelect.size(); i++) {
-                        String name = i + ".png";
                         fileList.add(new File(allSelect.get(i)));
                     }
                 }

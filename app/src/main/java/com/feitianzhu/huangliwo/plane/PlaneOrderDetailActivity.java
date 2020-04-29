@@ -1,5 +1,8 @@
 package com.feitianzhu.huangliwo.plane;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
@@ -197,6 +201,8 @@ public class PlaneOrderDetailActivity extends BaseActivity {
             backArrAirportName.setText(orderModel.backArrAirport + orderModel.backArrTerminal);
             backFlightNum.setText(orderModel.backFlightNum);
         }
+
+        initListener();
     }
 
     @Override
@@ -397,6 +403,23 @@ public class PlaneOrderDetailActivity extends BaseActivity {
 
         }
 
+    }
+
+    public void initListener() {
+        mAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                //获取剪贴版
+                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                //创建ClipData对象
+                //第一个参数只是一个标记，随便传入。
+                //第二个参数是要复制到剪贴版的内容
+                ClipData clip = ClipData.newPlainText("simple text", passengers.get(position).ticketNo);
+                //传入clipdata对象.
+                clipboard.setPrimaryClip(clip);
+                ToastUtils.show("已复制");
+            }
+        });
     }
 
     @OnClick({R.id.btn_reimbursement, R.id.btn_refund, R.id.btn_change, R.id.left_button, R.id.price, R.id.pay})

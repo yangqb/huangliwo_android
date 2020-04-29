@@ -105,6 +105,7 @@ public class EditMerchantsActivity extends BaseActivity implements OnGetGeoCoder
     public static final String MERCHANTS_DETAIL_DATA = "merchants_detail_data";
     private int maxSize = 6;
     private List<String> allSelect = new ArrayList<>();
+    private List<String> currSelect = new ArrayList<>();
     private MerchantsModel merchantsModel;
     private MediaStoreCompat mMediaStoreCompat;
     private ShopFrontAdapter shopFrontAdapter;
@@ -120,6 +121,7 @@ public class EditMerchantsActivity extends BaseActivity implements OnGetGeoCoder
     private String clsName;
     private int imgType;
     private String photo1 = "";
+    private String photo2 = "";
     private String userId;
     private String token;
     @BindView(R.id.title_name)
@@ -205,7 +207,7 @@ public class EditMerchantsActivity extends BaseActivity implements OnGetGeoCoder
             mAreaId = merchantsModel.getAreaId();
             Glide.with(mContext).load(merchantsModel.getLogo()).apply(new RequestOptions().dontAnimate().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai)).into(imageView1);
 
-            if (merchantsModel.getShopFrontImg() != null && TextUtils.isEmpty(merchantsModel.getShopFrontImg())) {
+            if (merchantsModel.getShopFrontImg() != null && !TextUtils.isEmpty(merchantsModel.getShopFrontImg())) {
                 if (merchantsModel.getShopFrontImg().contains(",")) {
                     allSelect.addAll(Arrays.asList(merchantsModel.getShopFrontImg().split(",")));
                 } else {
@@ -358,7 +360,7 @@ public class EditMerchantsActivity extends BaseActivity implements OnGetGeoCoder
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 if (adapter.getItemViewType(position) == MultiItemComment.upImg) {
                     imgType = 2;
-                    showDialog();
+                    selectPhoto(maxSize);
                 } else {
                     //showBigImg(allSelect, position);
                 }
@@ -432,7 +434,7 @@ public class EditMerchantsActivity extends BaseActivity implements OnGetGeoCoder
                 break;
             case R.id.imageView1:
                 imgType = 1;
-                showDialog();
+                selectPhoto(1);
                 break;
             case R.id.submit:
                 submit();
@@ -507,6 +509,8 @@ public class EditMerchantsActivity extends BaseActivity implements OnGetGeoCoder
 
     }
 
+    private StringBuffer imgUrls = new StringBuffer();
+
     public void submit() {
         String merchantsName = editMerchantsName.getText().toString().trim();
         String phone = editPhone.getText().toString().trim();
@@ -547,7 +551,7 @@ public class EditMerchantsActivity extends BaseActivity implements OnGetGeoCoder
             }
         } else {
             if (TextUtils.isEmpty(merchantsName) || clsName == null || TextUtils.isEmpty(phone) || TextUtils.isEmpty(smsCode)
-                    || mProvinceName == null || mCityName == null || mAreaName == null || TextUtils.isEmpty(address) || TextUtils.isEmpty(percentage) || TextUtils.isEmpty(photo1)) {
+                    || mProvinceName == null || mCityName == null || mAreaName == null || TextUtils.isEmpty(address) || TextUtils.isEmpty(percentage) || TextUtils.isEmpty(photo1) || allSelect.size() <= 0) {
                 ToastUtils.show("您的资料填写不完整");
                 return;
             }
@@ -581,19 +585,36 @@ public class EditMerchantsActivity extends BaseActivity implements OnGetGeoCoder
         merchantInfo.setDiscount(Double.valueOf(percentage) / 100);
         merchantInfo.setLongitude(String.valueOf(longitude));
         merchantInfo.setLatitude(String.valueOf(latitude));
-        String json = new Gson().toJson(merchantInfo);
 
         if (merchantsModel != null) {
             PostRequest<LzyResponse> postRequest = OkGo.<LzyResponse>post(Urls.UPDATA_MERCHANTS).tag(this);
             if (!TextUtils.isEmpty(photo1)) {
                 postRequest.params("logo", new File(photo1), "logo.png");
             }
-           /* if (!TextUtils.isEmpty(photo2)) {
-                postRequest.params("shopFrontImg", new File(photo2), "shopFrontImg.png");
+            List<File> fileList = new ArrayList<>();
+            if (allSelect.size() > 0) {
+                for (int i = 0; i < allSelect.size(); i++) {
+                    if (allSelect.get(i).startsWith("http") || allSelect.get(i).startsWith("https")) {
+                        String url = allSelect.get(i) + ",";
+                        imgUrls.append(url);
+                    } else {
+                        fileList.add(new File(allSelect.get(i)));
+                    }
+                }
             }
-            if (TextUtils.isEmpty(photo1) && TextUtils.isEmpty(photo2)) {
+            if (fileList.size() > 0) {
+                postRequest.addFileParams("shopFrontImg", fileList);
+            }
+
+            if (imgUrls.toString().endsWith(",")) {
+                String substring = imgUrls.substring(0, imgUrls.lastIndexOf(","));
+                merchantInfo.setShopFrontImg(substring);
+            }
+
+            if (TextUtils.isEmpty(photo1) && fileList.size() <= 0) {
                 postRequest.isMultipart(true);
-            }*/
+            }
+            String json = new Gson().toJson(merchantInfo);
             postRequest.params("accessToken", token)
                     .params("userId", userId)
                     .params("merchantInfo", json)
@@ -622,9 +643,15 @@ public class EditMerchantsActivity extends BaseActivity implements OnGetGeoCoder
                         }
                     });
         } else {
+            String json = new Gson().toJson(merchantInfo);
+            List<File> fileList = new ArrayList<>();
+            for (int i = 0; i < allSelect.size(); i++) {
+                fileList.add(new File(allSelect.get(i)));
+            }
             OkGo.<LzyResponse>post(Urls.CREATE_MERCHANTS)
-                    .tag(this).params("logo", new File(photo1), "logo.png")
-                    //.params("shopFrontImg", new File(photo2), "shopFrontImg.png")
+                    .tag(this)
+                    .params("logo", new File(photo1), "logo.png")
+                    .addFileParams("shopFrontImg", fileList)
                     .params("accessToken", token)
                     .params("userId", userId)
                     .params("merchantInfo", json)
@@ -691,7 +718,7 @@ public class EditMerchantsActivity extends BaseActivity implements OnGetGeoCoder
         cityPicker.showCityPicker();
     }
 
-    public void showDialog() {
+    public void selectPhoto(int maxNum) {
         new XPopup.Builder(this)
                 .asCustom(new CustomSelectPhotoView(EditMerchantsActivity.this)
                         .setOnSelectTakePhotoListener(new CustomSelectPhotoView.OnSelectTakePhotoListener() {
@@ -708,8 +735,8 @@ public class EditMerchantsActivity extends BaseActivity implements OnGetGeoCoder
                                         .captureStrategy(new CaptureStrategy(true, "com.feitianzhu.fu700.fileprovider"))*/
                                         //有序选择图片 123456...
                                         .countable(true)
-                                        //最大选择数量为6
-                                        .maxSelectable(maxSize)
+                                        //最大选择数量
+                                        .maxSelectable(maxNum)
                                         //选择方向
                                         .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
                                         //图片过滤
@@ -810,16 +837,15 @@ public class EditMerchantsActivity extends BaseActivity implements OnGetGeoCoder
             switch (requestCode) {
                 case REQUEST_CODE_CHOOSE:
                     List<Uri> uris = Matisse.obtainResult(data);
-                    List<String> strings = Matisse.obtainPathResult(data);
+                    List<String> currSelect = Matisse.obtainPathResult(data);
                     if (imgType == 1) {
-                        photo1 = strings.get(0);
+                        photo1 = currSelect.get(0);
                         Glide.with(EditMerchantsActivity.this).load(photo1).into(imageView1);
                     } else {
-                        allSelect.addAll(strings);
-                        multiShopFrontList.clear();
-                        for (int i = 0; i < allSelect.size(); i++) {
+                        allSelect.addAll(currSelect);
+                        for (int i = 0; i < currSelect.size(); i++) {
                             MultiShopFront shopFront = new MultiShopFront(MultiShopFront.LookImg);
-                            shopFront.setPath(allSelect.get(i));
+                            shopFront.setPath(currSelect.get(i));
                             multiShopFrontList.add(multiShopFrontList.size() - 1, shopFront);
                         }
                         maxSize = 6 - allSelect.size();
@@ -839,12 +865,10 @@ public class EditMerchantsActivity extends BaseActivity implements OnGetGeoCoder
                         Glide.with(EditMerchantsActivity.this).load(photo1).into(imageView1);
                     } else {
                         allSelect.add(path);
-                        multiShopFrontList.clear();
-                        for (int i = 0; i < allSelect.size(); i++) {
-                            MultiShopFront shopFront = new MultiShopFront(MultiShopFront.LookImg);
-                            shopFront.setPath(allSelect.get(i));
-                            multiShopFrontList.add(multiShopFrontList.size() - 1, shopFront);
-                        }
+                        MultiShopFront shopFront = new MultiShopFront(MultiShopFront.LookImg);
+                        shopFront.setPath(path);
+                        multiShopFrontList.add(multiShopFrontList.size() - 1, shopFront);
+
                         maxSize = 6 - allSelect.size();
                         if (maxSize <= 0) {
                             multiShopFrontList.remove(multiShopFrontList.size() - 1);
@@ -856,33 +880,5 @@ public class EditMerchantsActivity extends BaseActivity implements OnGetGeoCoder
                     break;
             }
         }
-    }
-
-    public File drawableToFile(Context mContext, int drawableId, String fileName) {
-//        InputStream is = view.getContext().getResources().openRawResource(R.drawable.logo);
-        Bitmap bitmap = BitmapFactory.decodeResource(mContext.getResources(), drawableId);
-//        Bitmap bitmap = BitmapFactory.decodeStream(is);
-
-        String defaultPath = mContext.getFilesDir()
-                .getAbsolutePath() + "/defaultGoodInfo";
-        File file = new File(defaultPath);
-        if (!file.exists()) {
-            file.mkdirs();
-        }
-        String defaultImgPath = defaultPath + "/" + fileName;
-        file = new File(defaultImgPath);
-        try {
-            file.createNewFile();
-
-            FileOutputStream fOut = new FileOutputStream(file);
-
-            bitmap.compress(Bitmap.CompressFormat.PNG, 20, fOut);
-//            is.close();
-            fOut.flush();
-            fOut.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return file;
     }
 }
