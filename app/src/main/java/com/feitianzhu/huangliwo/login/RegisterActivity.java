@@ -153,7 +153,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 .execute(new JsonCallback<LzyResponse>() {
                     @Override
                     public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
-                        super.onSuccess(RegisterActivity.this, response.body().msg, response.body().code);
+                        super.onSuccess(RegisterActivity.this, response.body().msg == null ? "" : response.body().msg, response.body().code);
                         if (response.body().code == 0) {
                             Toast.makeText(mContext, "注册成功", Toast.LENGTH_SHORT).show();
                             SPUtils.putString(RegisterActivity.this, Constant.SP_PHONE, mAccount);

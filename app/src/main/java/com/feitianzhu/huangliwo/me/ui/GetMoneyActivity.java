@@ -11,9 +11,6 @@ import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.GetMoneyModel;
 import com.hjq.toast.ToastUtils;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.builder.PostFormBuilder;
-import com.zhy.http.okhttp.callback.Callback;
 
 import java.text.DecimalFormat;
 
@@ -89,32 +86,6 @@ public class GetMoneyActivity extends BaseActivity {
      * 提交
      */
     private void sendParams() {
-        PostFormBuilder mPost = OkHttpUtils.post();
-        mPost.url(Common_HEADER + POST_SCORE_GET)
-                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
-                .addParams(USERID, Constant.LOGIN_USERID)
-                .addParams("type", mData.getType()) //申请兑换的积分类型（1:推广积分，2：消费积分，3：汇联积分，4：志愿者积分，5：合伙人积分，6：分红积分，7：共享红利，8：黄花梨积分）
-                .addParams("payPass", mData.getPayPass())  //二级密码 线下支付可以不传
-                .addParams("points", mEditText.getText().toString() + "") //转出积分
-                .build()
-                .execute(new Callback() {
-                    @Override
-                    public Object parseNetworkResponse(String mData, Response response, int id)
-                            throws Exception {
-                        return mData;
-                    }
-
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-                        ToastUtils.show(e.getMessage());
-                    }
-
-                    @Override
-                    public void onResponse(Object response, int id) {
-                        ToastUtils.show("支付成功");
-                        finish();
-                    }
-                });
     }
 
 }

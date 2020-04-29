@@ -19,7 +19,6 @@ import butterknife.Unbinder;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.feitianzhu.huangliwo.R;
-import com.feitianzhu.huangliwo.common.impl.DataCallBack;
 import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.huangliwo.model.ShopsInfo;
 import com.feitianzhu.huangliwo.shop.ShopDao;
@@ -46,7 +45,6 @@ public class ShopsSellerFragment extends Fragment {
 
     private String merchantid;
     private String mParam2;
-    private DataCallBack callBack;
     private ShopsInfo mShopsInfo;
     private LinearLayout gaode;
     private LinearLayout baidu;
@@ -71,9 +69,6 @@ public class ShopsSellerFragment extends Fragment {
     public ShopsSellerFragment() {
     }
 
-    public void setDataCallBack(DataCallBack mDataCallBack) {
-        callBack = mDataCallBack;
-    }
 
     public static ShopsSellerFragment newInstance(String param1, String param2) {
         ShopsSellerFragment fragment = new ShopsSellerFragment();
@@ -114,43 +109,6 @@ public class ShopsSellerFragment extends Fragment {
     }
 
     private void initData() {
-        ShopDao.loadShopsInfo(getActivity(), merchantid, new onConnectionFinishLinstener() {
-            @Override
-            public void onSuccess(int code, Object result) {
-                if (null == result) {
-                    onFail(FailCode, "商铺信息获取失败");
-                    callBack.CallBack(null);
-                    return;
-                }
-                mShopsInfo = (ShopsInfo) result;
-                try {
-                    String[] mSplit = mShopsInfo.adImgs.split(",");
-                    String str = mSplit[0];
-                    mShopsInfo.adImgs = str;
-                    mTxtShopsDes.setText(mShopsInfo.introduce);
-                    mTxtShopType.setText(mShopsInfo.clsName + "");
-                    mTxtAddress.setText(Html.fromHtml("<u>" + mShopsInfo.dtlAddr + "" + "</u>"));
-                    /*mTxtAddress.setText(Html.fromHtml("<u>" +
-                            "广东省深圳市宝安区航空路与顺昌路交汇处" + "</u>"));*/
-
-                } catch (Exception mE) {
-                    mShopsInfo.adImgs = "";
-                    mTxtAddress.setText("");
-                }
-
-                mCollectId = mShopsInfo.collectId;
-                KLog.e("mCollectId" + mCollectId);
-                callBack.CallBack(mShopsInfo);
-
-                mMerchantId = mShopsInfo.merchantId;
-
-            }
-
-            @Override
-            public void onFail(int code, String result) {
-                ToastUtils.show(result);
-            }
-        });
     }
 
     @Override

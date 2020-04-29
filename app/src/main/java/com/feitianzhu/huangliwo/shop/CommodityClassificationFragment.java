@@ -28,6 +28,7 @@ import com.feitianzhu.huangliwo.login.LoginEvent;
 import com.feitianzhu.huangliwo.me.ui.PersonalCenterActivity2;
 import com.feitianzhu.huangliwo.me.ui.ScannerActivity;
 import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
+import com.feitianzhu.huangliwo.model.LocationPost;
 import com.feitianzhu.huangliwo.model.MerchantsInfo;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.MultiItemShopAndMerchants;
@@ -47,6 +48,9 @@ import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.view.CircleImageView;
 import com.feitianzhu.huangliwo.vip.VipActivity;
+import com.hjq.permissions.OnPermission;
+import com.hjq.permissions.Permission;
+import com.hjq.permissions.XXPermissions;
 import com.hjq.toast.ToastUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
@@ -54,11 +58,6 @@ import com.lzy.okgo.request.base.Request;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.yanzhenjie.permission.AndPermission;
-import com.yanzhenjie.permission.PermissionListener;
-import com.yanzhenjie.permission.Rationale;
-import com.yanzhenjie.permission.RationaleListener;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -473,52 +472,38 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
     }
 
     private void requestPermission() {
-        AndPermission.with(this)
-                .requestCode(200)
-                .permission(
-                        // 多个权限，以数组的形式传入。
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_NETWORK_STATE,
-                        Manifest.permission.ACCESS_WIFI_STATE,
-                        Manifest.permission.CAMERA
-                )
-                .callback(
-                        new RationaleListener() {
-                            @Override
-                            public void showRequestPermissionRationale(int requestCode, Rationale rationale) {
-                                // 此对话框可以自定义，调用rationale.resume()就可以继续申请。
-                                AndPermission.rationaleDialog(App.getAppContext(), rationale).show();
-                            }
+        XXPermissions.with(getActivity())
+                // 可设置被拒绝后继续申请，直到用户授权或者永久拒绝
+                //.constantRequest()
+                // 支持请求6.0悬浮窗权限8.0请求安装权限
+                //.permission(Permission.REQUEST_INSTALL_PACKAGES)
+                // 不指定权限则自动获取清单中的危险权限
+                .permission(Permission.CAMERA)
+                .request(new OnPermission() {
+
+                    @Override
+                    public void hasPermission(List<String> granted, boolean all) {
+                        if (all) {
+                            Intent intent = new Intent(getActivity(), ScannerActivity.class);
+                            intent.putExtra(ScannerActivity.IS_MERCHANTS, mineInfoModel.getIsMerchant());
+                            startActivity(intent);
+                        } else {
+                            ToastUtils.show("获取权限成功，部分权限未正常授予");
                         }
-                )
-                .callback(listener)
-                .start();
+                    }
+
+                    @Override
+                    public void noPermission(List<String> denied, boolean quick) {
+                        if (quick) {
+                            ToastUtils.show("被永久拒绝授权，请手动授予权限");
+                            //如果是被永久拒绝就跳转到应用权限系统设置页面
+                            XXPermissions.gotoPermissionSettings(mContext);
+                        } else {
+                            ToastUtils.show("获取权限失败");
+                        }
+                    }
+                });
     }
-
-    private PermissionListener listener = new PermissionListener() {
-        @Override
-        public void onSucceed(int requestCode, List<String> grantedPermissions) {
-            // 权限申请成功回调。
-
-            // 这里的requestCode就是申请时设置的requestCode。
-            // 和onActivityResult()的requestCode一样，用来区分多个不同的请求。
-            if (requestCode == 200) {
-                Intent intent = new Intent(getActivity(), ScannerActivity.class);
-                intent.putExtra(ScannerActivity.IS_MERCHANTS, mineInfoModel.getIsMerchant());
-                startActivity(intent);
-            }
-        }
-
-        @Override
-        public void onFailed(int requestCode, List<String> deniedPermissions) {
-            // 权限申请失败回调。
-            if (requestCode == 200) {
-                Toast.makeText(getActivity(), "请求权限失败!", Toast.LENGTH_SHORT).show();
-            }
-        }
-    };
 
     /*
      * 获取头像
@@ -568,7 +553,9 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
     @Override
     public void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)

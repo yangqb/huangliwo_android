@@ -36,8 +36,6 @@ import com.lzy.okgo.OkGo;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.Callback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -151,55 +149,6 @@ public class SearchShopActivity extends BaseActivity {
                             mSwipeLayout.finishRefresh(false);
                         } else {
                             mSwipeLayout.finishLoadMore(false);
-                        }
-                    }
-                });
-
-        OkHttpUtils.post()
-                .url(Urls.GET_SEARCH_LIST)
-                .addParams("accessToken", token)
-                .addParams("userId", userId)
-                .addParams("limitNum", Constant.PAGE_SIZE)
-                .addParams("curPage", pageNo + "")
-                .addParams("searchName", searchText)
-                .build()
-                .execute(new Callback() {
-                    @Override
-                    public Object parseNetworkResponse(String mData, Response response, int id) throws Exception {
-                        return new Gson().fromJson(mData, SearchGoodsMode.class);
-                    }
-
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-                        ToastUtils.show(e.getMessage());
-                        if (!isLoadMore) {
-                            mSwipeLayout.finishRefresh(false);
-                        } else {
-                            mSwipeLayout.finishLoadMore(false);
-                        }
-                    }
-
-                    @Override
-                    public void onResponse(Object response, int id) {
-                        if (!isLoadMore) {
-                            mSwipeLayout.finishRefresh();
-                        } else {
-                            mSwipeLayout.finishLoadMore();
-                        }
-                        SearchGoodsMode goodsMode = (SearchGoodsMode) response;
-                        goodsListBeans = goodsMode.getList();
-                        if (!isLoadMore) {
-                            shopAndMerchants.clear();
-                        }
-                        //商品
-                        if (goodsListBeans != null && goodsListBeans.size() > 0) {
-                            for (int i = 0; i < goodsListBeans.size(); i++) {
-                                ShopAndMerchants entity = new ShopAndMerchants(ShopAndMerchants.TYPE_GOODS);
-                                entity.setShopsList(goodsListBeans.get(i));
-                                shopAndMerchants.add(entity);
-                            }
-                            mAdapter.setNewData(shopAndMerchants);
-                            mAdapter.notifyDataSetChanged();
                         }
                     }
                 });

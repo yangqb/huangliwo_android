@@ -29,6 +29,7 @@ import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.MineQRcodeModel;
 import com.feitianzhu.huangliwo.utils.GlideUtils;
+import com.feitianzhu.huangliwo.utils.MathUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ShareImageUtils;
 import com.feitianzhu.huangliwo.utils.UserInfoUtils;
@@ -97,7 +98,7 @@ public class ShareShopActivity extends BaseActivity {
         tvAmount.setText("");
         String str2 = "¥ ";
         if (goodsListBean != null) {
-            str3 = String.format(Locale.getDefault(), "%.2f", goodsListBean.getPrice());
+            str3 = MathUtils.subZero(String.valueOf(goodsListBean.getPrice()));
             /*Glide.with(this).load(goodsListBean.getGoodsImg())
                     .apply(new RequestOptions()
                             .dontAnimate()
@@ -107,7 +108,7 @@ public class ShareShopActivity extends BaseActivity {
             Glide.with(this).load(goodsListBean.getGoodsImg()).apply(new RequestOptions().error(R.mipmap.g10_03weijiazai).placeholder(R.mipmap.g10_03weijiazai)).into(GlideUtils.getImageView(this, goodsListBean.getGoodsImg(), shareImg));
             tvInstruction.setText(goodsListBean.getGoodsName());
 
-            String rebatePv = String.format(Locale.getDefault(), "%.2f", goodsListBean.getRebatePv());
+            String rebatePv = MathUtils.subZero(String.valueOf(goodsListBean.getRebatePv()));
             if (goodsListBean.getRebatePv() == 0) {
                 llRebate.setVisibility(View.GONE);
             }

@@ -15,8 +15,6 @@ import com.feitianzhu.huangliwo.me.adapter.ReleaseTotalDetailAdapter;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.ReleaseTotalDetailModel;
 import com.hjq.toast.ToastUtils;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.Callback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,64 +75,6 @@ public class ReleaseTotalScoreActivity extends BaseActivity implements BaseQuick
 
     private void requestData(final int state) {
         showloadDialog("正在加载");
-        OkHttpUtils.post()//
-                .url(Common_HEADER + POST_RELEASE_SCORE_DETAIL)
-                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
-                .addParams(USERID, Constant.LOGIN_USERID)
-                .addParams("type",flag)
-                .addParams("pageIndex",currPage+"")
-                .addParams("pageRows",PageRows)
-                .build().execute(new Callback<ReleaseTotalDetailModel>() {
-            @Override
-            public void onError(Call call, Exception e, int id) {
-                Log.e("Test", "--Error-->" + e.getMessage());
-                goneloadDialog();
-                mAdapter.loadMoreFail();
-                ToastUtils.show(e.getMessage());
-            }
-
-            @Override
-            public void onResponse(ReleaseTotalDetailModel response, int id) {
-                goneloadDialog();
-                if(response == null){
-                    return;
-                }
-                if(response!=null && response.getPager()!=null){
-                    isHasNextPage = response.getPager().isHasNextPage();
-                }
-
-
-                if (null == response.getList() || 0 == response.getList().size()) {
-                    mAdapter.setEmptyView(mEmptyView);
-                    mAdapter.getEmptyView().setVisibility(View.VISIBLE);
-                    return;
-                }
-                if (mAdapter.getEmptyView() != null) {
-                    mAdapter.getEmptyView().setVisibility(View.GONE);
-                }
-
-                switch (state) {
-                    case LOAD_NORMAL:
-                        mDatas.clear();
-                        mDatas.addAll(response.getList());
-                        mAdapter.notifyDataSetChanged();
-                        break;
-                    case LOAD_MORE:
-                        mDatas.addAll(response.getList());
-                        mAdapter.notifyDataSetChanged();
-                        break;
-                }
-                if (isHasNextPage) {
-                    currPage++;
-                    mAdapter.loadMoreComplete();
-                } else{
-                    mAdapter.loadMoreEnd();
-                }
-
-
-
-            }
-        });
     }
 
     @Override

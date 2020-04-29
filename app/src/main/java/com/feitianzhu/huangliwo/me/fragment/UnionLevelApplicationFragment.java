@@ -19,8 +19,6 @@ import com.feitianzhu.huangliwo.model.UnionLevelModel;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hjq.toast.ToastUtils;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.Callback;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -89,33 +87,6 @@ public class UnionLevelApplicationFragment extends BaseFragment {
     }
 
     private void requestData() {
-        OkHttpUtils.post()//
-                .url(Common_HEADER + POST_UNION_LEVEL)
-                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
-                .addParams(USERID, Constant.LOGIN_USERID)
-                .build().execute(new Callback<List<UnionLevelModel>>() {
-            @Override
-            public List<UnionLevelModel> parseNetworkResponse(String mData, Response response, int id)
-                    throws Exception {
-                Type type = new TypeToken<List<UnionLevelModel>>() {
-                }.getType();
-                List<UnionLevelModel> bean = new Gson().fromJson(mData, type);
-                return bean;
-            }
-
-            @Override
-            public void onError(Call call, Exception e, int id) {
-                Log.e("wangyan", "onError---->" + e.getMessage());
-            }
-
-            @Override
-            public void onResponse(List<UnionLevelModel> response, int id) {
-                //setShowData(response);
-                mList.addAll(response);
-                mAdapter.notifyDataSetChanged();
-
-            }
-        });
     }
 
     @Override

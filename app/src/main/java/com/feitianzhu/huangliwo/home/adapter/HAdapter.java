@@ -3,6 +3,7 @@ package com.feitianzhu.huangliwo.home.adapter;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.feitianzhu.huangliwo.R;
@@ -27,6 +28,6 @@ public class HAdapter extends BaseQuickAdapter<ShopClassify.GGoodsClsListBean, B
     @Override
     protected void convert(BaseViewHolder helper, ShopClassify.GGoodsClsListBean item) {
         helper.setText(R.id.name, item.getClsName());
-        Glide.with(mContext).load(item.getClsImg()).into((CircleImageView) helper.getView(R.id.image));
+        Glide.with(mContext).load(item.getClsImg()).apply(new RequestOptions().dontAnimate()).into((CircleImageView) helper.getView(R.id.image));
     }
 }

@@ -30,6 +30,7 @@ import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.me.ui.VerificationActivity2;
+import com.feitianzhu.huangliwo.model.LocationPost;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.MyPoint;
 import com.feitianzhu.huangliwo.model.VipGifListInfo;
@@ -50,6 +51,11 @@ import com.lzy.okgo.request.base.Request;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.socks.library.KLog;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -116,6 +122,7 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
                 .statusBarDarkFont(true, 0.2f)
                 .statusBarColor(R.color.transparent)
                 .init();
+        EventBus.getDefault().register(this);
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         mTempData = (MineInfoModel) getIntent().getSerializableExtra(MINE_INFO);
@@ -422,6 +429,9 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
     }
 
 
@@ -439,6 +449,17 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
                 mineInfoModel.setAccountType(5);
                 UserInfoUtils.saveUserInfo(VipActivity.this, mineInfoModel);
             }
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true) //在ui线程执行
+    public void onLocationDataSynEvent(LocationPost mMoel) {
+        if (!mMoel.isLocationed || null == Constant.mPoint || 0 == Constant.mPoint.longitude) {
+            ToastUtils.show("当前无法定位，选择城市为北京");
+            Constant.mPoint = new MyPoint(116.232934, 39.541997);
+            Constant.mCity = "北京";
+        } else {
+            KLog.e("用户经纬度" + Constant.mPoint);
         }
     }
 

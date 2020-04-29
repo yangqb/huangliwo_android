@@ -19,10 +19,6 @@ import com.feitianzhu.huangliwo.me.helper.DialogHelper;
 import com.feitianzhu.huangliwo.model.FuFriendModel;
 import com.feitianzhu.huangliwo.shop.ShopDao;
 import com.hjq.toast.ToastUtils;
-import com.yanzhenjie.permission.AndPermission;
-import com.yanzhenjie.permission.PermissionListener;
-import com.yanzhenjie.permission.Rationale;
-import com.yanzhenjie.permission.RationaleListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,49 +82,7 @@ public class UnionlevelActivity2 extends BaseActivity implements BaseQuickAdapte
     }
 
     private void requestPermission() {
-        AndPermission.with(this)
-                .requestCode(200)
-                .permission(
-                        // 多个权限，以数组的形式传入。
-                        Manifest.permission.CALL_PHONE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
-                )
-                .callback(
-                        new RationaleListener() {
-                            @Override
-                            public void showRequestPermissionRationale(int requestCode, Rationale rationale) {
-                                // 此对话框可以自定义，调用rationale.resume()就可以继续申请。
-                                AndPermission.rationaleDialog(App.getAppContext(), rationale).show();
-                            }
-                        }
-                )
-                .callback(listener)
-                .start();
     }
-
-    private PermissionListener listener = new PermissionListener() {
-        @Override
-        public void onSucceed(int requestCode, List<String> grantedPermissions) {
-            // 权限申请成功回调。
-
-            // 这里的requestCode就是申请时设置的requestCode。
-            // 和onActivityResult()的requestCode一样，用来区分多个不同的请求。
-            if (requestCode == 200) {
-                Intent intent = new Intent();
-                intent.setAction(Intent.ACTION_CALL);
-                intent.setData(Uri.parse("tel:" + telNum));
-                startActivity(intent);
-            }
-        }
-
-        @Override
-        public void onFailed(int requestCode, List<String> deniedPermissions) {
-            // 权限申请失败回调。
-            if (requestCode == 200) {
-                Toast.makeText(UnionlevelActivity2.this, "请求权限失败!", Toast.LENGTH_SHORT).show();
-            }
-        }
-    };
 
     @OnClick(R.id.left_button)
     public void onClick() {
@@ -136,25 +90,6 @@ public class UnionlevelActivity2 extends BaseActivity implements BaseQuickAdapte
     }
 
     private void requestData(final boolean isLoadMore) {
-        ShopDao.loadFUFriend(index + "", new onNetFinishLinstenerT<FuFriendModel>() {
-            @Override
-            public void onSuccess(int code, FuFriendModel result) {
-                if (result != null && result.pager != null) {
-                    hasNextPage = result.pager.hasNextPage;
-                }
-                if (result != null && result.list != null) {
-                    adapter2.addData(result.list);
-                }
-                if (isLoadMore) adapter2.loadMoreComplete();
-            }
-
-            @Override
-            public void onFail(int code, String result) {
-                if (isLoadMore)
-                    adapter2.loadMoreFail();
-                ToastUtils.show(result);
-            }
-        });
     }
 
     @Override

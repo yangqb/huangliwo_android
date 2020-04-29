@@ -6,6 +6,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
@@ -29,16 +30,13 @@ import com.feitianzhu.huangliwo.shop.ShopsDetailActivity;
 import com.feitianzhu.huangliwo.utils.DateUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
+import com.hjq.permissions.OnPermission;
+import com.hjq.permissions.XXPermissions;
 import com.hjq.toast.ToastUtils;
 import com.itheima.roundedimageview.RoundedImageView;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.lzy.okgo.OkGo;
-import com.yanzhenjie.permission.AndPermission;
-import com.yanzhenjie.permission.PermissionListener;
-import com.yanzhenjie.permission.Rationale;
-import com.yanzhenjie.permission.RationaleListener;
-
 import java.util.List;
 import java.util.Locale;
 
@@ -107,27 +105,6 @@ public class OrderDetailActivity extends BaseActivity {
         titleName.setText("订单详情");
         orderNo = getIntent().getStringExtra(ORDER_NO);
     }
-
-    Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            if (msg.what == 0) {
-                String formatLongToTimeStr = DateUtils.formatTime(time * 1000);
-                tvStatusContent.setText("剩" + formatLongToTimeStr + "自动取消订单");
-            }
-            super.handleMessage(msg);
-        }
-    };
-    Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-            if (time > 0) {
-                handler.sendEmptyMessage(0);
-                handler.postDelayed(this, 1000);
-            }
-            time--;
-        }
-    };
 
     @OnClick({R.id.left_button, R.id.tv_copy, R.id.call_phone, R.id.cancel_order, R.id.shopPay, R.id.ll_order_detail})
     public void onClick(View view) {
@@ -270,7 +247,7 @@ public class OrderDetailActivity extends BaseActivity {
             llStatus.setVisibility(View.VISIBLE);
             llBottom.setVisibility(View.VISIBLE);
             tvStatus.setText("等待付款");
-            handler.post(runnable);
+            countDownTimer();
         } else if (goodsOrderBean.getStatus() == GoodsOrderInfo.TYPE_REFUND) {
             llStatus.setVisibility(View.VISIBLE);
             llBottom.setVisibility(View.GONE);
@@ -288,49 +265,39 @@ public class OrderDetailActivity extends BaseActivity {
     }
 
     private void requestPermission() {
-        AndPermission.with(this)
-                .requestCode(200)
-                .permission(
-                        // 多个权限，以数组的形式传入。
-                        Manifest.permission.CALL_PHONE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
-                )
-                .callback(
-                        new RationaleListener() {
-                            @Override
-                            public void showRequestPermissionRationale(int requestCode, Rationale rationale) {
-                                // 此对话框可以自定义，调用rationale.resume()就可以继续申请。
-                                AndPermission.rationaleDialog(App.getAppContext(), rationale).show();
-                            }
+        XXPermissions.with(OrderDetailActivity.this)
+                // 可设置被拒绝后继续申请，直到用户授权或者永久拒绝
+                //.constantRequest()
+                // 支持请求6.0悬浮窗权限8.0请求安装权限
+                //.permission(Permission.REQUEST_INSTALL_PACKAGES)
+                // 不指定权限则自动获取清单中的危险权限
+                .permission(Manifest.permission.CALL_PHONE)
+                .request(new OnPermission() {
+
+                    @Override
+                    public void hasPermission(List<String> granted, boolean all) {
+                        if (all) {
+                            Intent intent = new Intent();
+                            intent.setAction(Intent.ACTION_CALL);
+                            intent.setData(Uri.parse("tel:" + goodsOrderBean.getConnectPhone()));
+                            startActivity(intent);
+                        } else {
+                            ToastUtils.show("获取权限成功，部分权限未正常授予");
                         }
-                )
-                .callback(listener)
-                .start();
+                    }
+
+                    @Override
+                    public void noPermission(List<String> denied, boolean quick) {
+                        if (quick) {
+                            ToastUtils.show("被永久拒绝授权，请手动授予权限");
+                            //如果是被永久拒绝就跳转到应用权限系统设置页面
+                            XXPermissions.gotoPermissionSettings(mContext);
+                        } else {
+                            ToastUtils.show("获取权限失败");
+                        }
+                    }
+                });
     }
-
-    private PermissionListener listener = new PermissionListener() {
-        @Override
-        public void onSucceed(int requestCode, List<String> grantedPermissions) {
-            // 权限申请成功回调。
-
-            // 这里的requestCode就是申请时设置的requestCode。
-            // 和onActivityResult()的requestCode一样，用来区分多个不同的请求。
-            if (requestCode == 200) {
-                Intent intent = new Intent();
-                intent.setAction(Intent.ACTION_CALL);
-                intent.setData(Uri.parse("tel:" + goodsOrderBean.getConnectPhone()));
-                startActivity(intent);
-            }
-        }
-
-        @Override
-        public void onFailed(int requestCode, List<String> deniedPermissions) {
-            // 权限申请失败回调。
-            if (requestCode == 200) {
-                Toast.makeText(OrderDetailActivity.this, "请求权限失败!", Toast.LENGTH_SHORT).show();
-            }
-        }
-    };
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -342,8 +309,36 @@ public class OrderDetailActivity extends BaseActivity {
         }
     }
 
+    private CountDownTimer countDownTimer;
+
+    public void countDownTimer() {
+        countDownTimer = new CountDownTimer(time * 1000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                if (!OrderDetailActivity.this.isFinishing()) {
+                    time = millisUntilFinished / 1000;
+                    String formatLongToTimeStr = DateUtils.formatTime(millisUntilFinished);
+                    tvStatusContent.setText("剩" + formatLongToTimeStr + "自动取消订单");
+                }
+            }
+
+            /**
+             *倒计时结束后调用的
+             */
+            @Override
+            public void onFinish() {
+                ToastUtils.show("订单已取消");
+            }
+
+        }.start();
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+            countDownTimer = null;
+        }
     }
 }

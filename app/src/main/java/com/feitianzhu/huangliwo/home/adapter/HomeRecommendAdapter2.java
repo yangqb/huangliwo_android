@@ -66,7 +66,7 @@ public class HomeRecommendAdapter2 extends BaseMultiItemQuickAdapter<ShopAndMerc
                 if (shopsList.getGoodsImg() != null) {
                     Glide.with(mContext).load(shopsList.getGoodsImg()).apply(RequestOptions.errorOf(R.mipmap.g10_04weijiazai).placeholder(R.mipmap.g10_04weijiazai).dontAnimate()).into((RoundedImageView) holder.getView(R.id.image));
                 } else {
-                    Glide.with(mContext).load(R.mipmap.g10_04weijiazai).into((RoundedImageView) holder.getView(R.id.image));
+                    Glide.with(mContext).load(R.mipmap.g10_04weijiazai).apply(new RequestOptions().dontAnimate()).into((RoundedImageView) holder.getView(R.id.image));
                 }
                 break;
             case ShopAndMerchants.TYPE_MERCHANTS:

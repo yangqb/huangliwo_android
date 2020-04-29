@@ -16,8 +16,6 @@ import com.feitianzhu.huangliwo.model.MineCollectionMoneyModel;
 import com.feitianzhu.huangliwo.view.CircleImageView;
 import com.hjq.toast.ToastUtils;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.Callback;
 
 import java.io.ByteArrayOutputStream;
 
@@ -60,25 +58,6 @@ public class CollectMoneyActivity extends BaseActivity {
     }
 
     private void requestData() {
-        OkHttpUtils.post()//
-                .url(Common_HEADER + Constant.POST_MINE_COLLECTION_MONEY)
-                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
-                .addParams(USERID, Constant.LOGIN_USERID)
-                .build()
-                .execute(new Callback<MineCollectionMoneyModel>() {
-
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-                        Log.e("wangyan", "onError---->" + e.getMessage());
-                        ToastUtils.show(e.getMessage());
-                    }
-
-                    @Override
-                    public void onResponse(MineCollectionMoneyModel response, int id) {
-                        setShowData(response);
-                    }
-
-                });
     }
 
     @OnClick(R.id.left_button)

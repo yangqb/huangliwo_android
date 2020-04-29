@@ -33,8 +33,8 @@ public class ShopShowNoCreateActivity extends Activity {
   }
 
   @OnClick(R.id.btn_create) public void onViewClicked() {
-    Intent mIntent=new Intent(this,ShopsCreateActivity.class);
+  /*  Intent mIntent=new Intent(this,ShopsCreateActivity.class);
     startActivity(mIntent);
-    finish();
+    finish();*/
   }
 }

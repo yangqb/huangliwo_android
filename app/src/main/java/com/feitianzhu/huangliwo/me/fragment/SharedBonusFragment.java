@@ -23,8 +23,6 @@ import com.feitianzhu.huangliwo.model.GetMoneyModel;
 import com.feitianzhu.huangliwo.model.TotalScoreModel;
 import com.feitianzhu.huangliwo.shop.ShopHelp;
 import com.hjq.toast.ToastUtils;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.Callback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -101,29 +99,6 @@ public class SharedBonusFragment extends LazyFragment {
     @Override
     protected void setDefaultFragmentTitle(String title) {
 
-    }
-
-    private void requestData() {
-        showloadDialog("正在加载...");
-        mList.clear();
-        OkHttpUtils.post()//
-                .url(Common_HEADER + POST_TOTALSCORE)
-                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
-                .addParams(USERID, Constant.LOGIN_USERID)
-                .build().execute(new Callback<TotalScoreModel>() {
-            @Override
-            public void onError(Call call, Exception e, int id) {
-                Log.e("Test", "--Error-->" + e.getMessage());
-                goneloadDialog();
-                ToastUtils.show(e.getMessage());
-            }
-
-            @Override
-            public void onResponse(TotalScoreModel response, int id) {
-                setShowData();
-                goneloadDialog();
-            }
-        });
     }
 
     private void setShowData() {

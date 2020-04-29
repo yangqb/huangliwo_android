@@ -26,6 +26,7 @@ import com.lxj.xpopup.impl.LoadingPopupView;
 import java.util.TreeMap;
 
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * Created by Administrator on 2016/3/22.
@@ -33,6 +34,7 @@ import butterknife.ButterKnife;
 public abstract class BaseActivity extends AppCompatActivity {
     public DefaultNavigationBar defaultNavigationBar;
     protected TreeMap<String, String> maps;
+    private Unbinder unbinder;
     /**
      * 代替Context
      */
@@ -50,7 +52,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         //Log.e("TAG", viewRoot + "");
 
         // 一些特定的算法，子类基本都会使用的
-        ButterKnife.bind(BaseActivity.this);
+        unbinder = ButterKnife.bind(BaseActivity.this);
 
         ImmersionBar.with(this)
                 .fitsSystemWindows(true)
@@ -219,6 +221,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         loadingPopup = null;
+        unbinder.unbind();
     }
 
     @Override

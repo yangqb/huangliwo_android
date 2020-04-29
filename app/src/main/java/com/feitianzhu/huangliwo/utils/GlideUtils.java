@@ -67,6 +67,7 @@ public class GlideUtils {
 
     public static RoundedImageView getImageView3(Activity mContext, String url, RoundedImageView imgDetail) {
         Glide.with(mContext).asBitmap().load(url).apply(new RequestOptions()
+                .dontAnimate()
                 .fitCenter()
                 .error(R.mipmap.g10_04weijiazai)
                 .placeholder(R.mipmap.g10_04weijiazai)

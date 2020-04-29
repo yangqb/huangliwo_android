@@ -44,7 +44,6 @@ public class LocationUtils implements Manager {
 
     @Override
     public void start() {
-        Constant.mPoint = new MyPoint(116.232934, 39.541997);
         initLocationClient();
         mLocationClient.setLocOption(initLocation());
         mLocationClient.start();

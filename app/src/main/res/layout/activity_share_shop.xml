@@ -78,16 +78,16 @@
                                 android:id="@+id/ll_rebate"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="5dp"
                                 android:layout_centerVertical="true"
+                                android:layout_marginLeft="5dp"
                                 android:layout_toRightOf="@id/tv_amount"
                                 android:gravity="center_vertical"
                                 android:orientation="horizontal">
 
                                 <TextView
                                     android:layout_width="wrap_content"
-                                    android:layout_height="18dp"
-                                    android:background="@drawable/shape_detail_left_vip"
+                                    android:layout_height="22dp"
+                                    android:background="@drawable/shape_detail_rebate_left_vip"
                                     android:gravity="end|center_vertical"
                                     android:paddingLeft="5dp"
                                     android:paddingRight="5dp"
@@ -98,8 +98,8 @@
                                 <TextView
                                     android:id="@+id/tv_rebate"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="18dp"
-                                    android:background="@drawable/shape_detail_right_vip"
+                                    android:layout_height="22dp"
+                                    android:background="@drawable/shape_detail_rebate_right_vip"
                                     android:ellipsize="end"
                                     android:gravity="center_vertical"
                                     android:maxLines="1"

@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.SFActivity;
+import com.feitianzhu.huangliwo.home.HomeFragment;
 import com.feitianzhu.huangliwo.home.HomeFragment2;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
@@ -44,11 +45,8 @@ import com.vector.update_app.UpdateAppManager;
 import com.vector.update_app.UpdateCallback;
 import com.vector.update_app.listener.IUpdateDialogFragmentListener;
 import com.vector.update_app.utils.AppUpdateUtils;
-import com.yanzhenjie.permission.AndPermission;
-import com.yanzhenjie.permission.PermissionListener;
-import com.yanzhenjie.permission.Rationale;
-import com.yanzhenjie.permission.RationaleListener;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -56,6 +54,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
 import static com.feitianzhu.huangliwo.common.Constant.UAPDATE;
@@ -104,12 +103,14 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
     private int isShow; //是否弹出活动的框
     boolean constraint = false; //是否强制更新
     private HomePopModel.PopupBean popupBean = new HomePopModel.PopupBean();
+    private Unbinder unbinder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_view);
-        ButterKnife.bind(this);
+        unbinder = ButterKnife.bind(this);
+        EventBus.getDefault().register(this);
         LocationUtils.getInstance().start();
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
@@ -283,46 +284,6 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
             animator.cancel();
     }
 
-    private void requestPermission() {
-        AndPermission.with(this)
-                .requestCode(200)
-                .permission(
-                        // 多个权限，以数组的形式传入。
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_NETWORK_STATE,
-                        Manifest.permission.ACCESS_WIFI_STATE,
-                        Manifest.permission.CAMERA
-                )
-                .callback(
-                        new RationaleListener() {
-                            @Override
-                            public void showRequestPermissionRationale(int requestCode, Rationale rationale) {
-                                // 此对话框可以自定义，调用rationale.resume()就可以继续申请。
-                                AndPermission.rationaleDialog(App.getAppContext(), rationale).show();
-                            }
-                        }
-                )
-                .callback(listener)
-                .start();
-    }
-
-    private PermissionListener listener = new PermissionListener() {
-        @Override
-        public void onSucceed(int requestCode, List<String> grantedPermissions) {
-
-        }
-
-        @Override
-        public void onFailed(int requestCode, List<String> deniedPermissions) {
-            // 权限申请失败回调。
-            if (requestCode == 200) {
-                Toast.makeText(MainActivity.this, "请求权限失败!", Toast.LENGTH_SHORT).show();
-            }
-        }
-    };
-
     /*
      * 活动弹窗
      * */
@@ -380,9 +341,9 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
                         UpdateAppBean updateAppBean = new UpdateAppBean();
                         UpdateAppModel updateAppModel = new Gson().fromJson(json, UpdateAppModel.class);
                         String update = "No";
-                        if (VersionManagementUtil.VersionComparison(updateAppModel.versionName + "", versionName) == 1) {
+                        if (VersionManagementUtil.VersionComparison(updateAppModel.data.versionName + "", versionName) == 1) {
                             update = "Yes";
-                            if ("1".equals(updateAppModel.isForceUpdate)) {
+                            if ("1".equals(updateAppModel.data.isForceUpdate)) {
                                 constraint = true;
                             } else {
                                 constraint = false;
@@ -395,14 +356,14 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
                                 //（必须）是否更新Yes,No
                                 .setUpdate(update)
                                 //（必须）新版本号，
-                                .setNewVersion(updateAppModel.versionName + "")
+                                .setNewVersion(updateAppModel.data.versionName + "")
 //                                .setNewVer、sion("1.1.0"+ "")
                                 //（必须）下载地址
-                                .setApkFileUrl(updateAppModel.downloadUrl)
+                                .setApkFileUrl(updateAppModel.data.downloadUrl)
 //                                    .setUpdateLog("测试")
-                                .setUpdateLog(updateAppModel.updateDesc)
+                                .setUpdateLog(updateAppModel.data.updateDesc)
 //                                    .setUpdateLog("")
-                                .setTargetSize(updateAppModel.packSize + "Mb")
+                                .setTargetSize(updateAppModel.data.packSize + "Mb")
                                 //是否强制更新，可以不设置
                                 .setConstraint(constraint);
                         return updateAppBean;
@@ -471,6 +432,10 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        unbinder.unbind();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
     }
 
     @Override

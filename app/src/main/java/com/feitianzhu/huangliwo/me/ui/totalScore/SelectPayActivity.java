@@ -284,10 +284,10 @@ public class SelectPayActivity extends BaseActivity {
                     str = "余额支付";
                     sendParamsData();
                 } else if (text.equals("offline")) {
-                    str = "线下转账";
+                   /* str = "线下转账";
                     Intent intent = new Intent(SelectPayActivity.this, TransferVoucherActivity.class);
                     intent.putExtra("transferNeedModel", mSelectModel);
-                    startActivity(intent);
+                    startActivity(intent);*/
                 }
 
                 break;
@@ -315,53 +315,6 @@ public class SelectPayActivity extends BaseActivity {
                         ToastUtils.show("您未上传图片信息，请上传后重试");
                         return;
                     }
-                    NetworkDao.PayShopRecord(SelectPayActivity.this, mSelectModel.getMemberId(), mSelectModel.getConsumeAmount() + "", mSelectModel.getHandleFee() + ""
-                            , mSelectModel.getFeeId(), result.toString(), mPayChanel, mSelectModel.getPlaceImgFile(), mSelectModel.getObjImgFile(),
-                            mSelectModel.getRcptImgFile(), new onConnectionFinishLinstener() {
-                                @Override
-                                public void onSuccess(int code, Object result) {
-                                    goneloadDialog();
-                                    if (mPayChanel.equals("balance")) {
-                                                                               ToastUtils.show("支付成功");
-                                        finish();
-                                    }
-
-                                    if (mPayChanel.equals("wx")) {
-                                        if (result == null) {
-                                            ToastUtils.show("微信支付失败");
-                                            return;
-                                        }
-                                        Constant.PayFlag = PayInfo.SHOPRECORDER;
-                                        CallWxPay(result.toString());
-
-                                    }
-
-                                    if (mPayChanel.equals("alipay")) {
-                                        final String orderInfo = result.toString();
-                                        PayUtils.aliPay(SelectPayActivity.this, orderInfo, new onConnectionFinishLinstener() {
-                                            @Override
-                                            public void onSuccess(int code, Object result) {
-                                                ToastUtils.show("支付成功");
-                                                finish();
-
-                                            }
-
-                                            @Override
-                                            public void onFail(int code, String result) {
-                                                ToastUtils.show("支付失败");
-                                                EventBus.getDefault().post(PayForMeEvent.PAY_FAILURE);
-                                                goneloadDialog();
-                                            }
-                                        });
-                                    }
-                                }
-
-                                @Override
-                                public void onFail(int code, String result) {
-                                    ToastUtils.show(result);
-                                    goneloadDialog();
-                                }
-                            });
 
                 } else if (mSelectModel.getType() == SelectPayNeedModel.TYPE_PAY_FOR_ME) {
 

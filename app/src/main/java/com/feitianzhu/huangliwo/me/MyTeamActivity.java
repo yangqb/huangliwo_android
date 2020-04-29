@@ -14,6 +14,7 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -74,36 +75,39 @@ public class MyTeamActivity extends BaseActivity {
     CircleImageView headImg;
     @BindView(R.id.teamCount)
     TextView teamCount;
-    @BindView(R.id.areaCount)
-    TextView areaCount;
     @BindView(R.id.tv_level)
     TextView tvLevel;
-    @BindView(R.id.addCount)
-    TextView addCount;
-    @BindView(R.id.addAmount)
-    TextView addAmount;
-    @BindView(R.id.right_text)
-    TextView rightText;
-    @BindView(R.id.right_img)
-    ImageView rightImg;
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
+    @BindView(R.id.ll_team)
+    LinearLayout llTeam;
+    @BindView(R.id.ll_super)
+    LinearLayout llSuper;
+    @BindView(R.id.ll_opt)
+    LinearLayout llOpt;
+    @BindView(R.id.ll_consumer)
+    LinearLayout llConsumer;
+    @BindView(R.id.name)
+    TextView tvName;
+    @BindView(R.id.superCount)
+    TextView superCount;
+    @BindView(R.id.optCount)
+    TextView optCount;
+    @BindView(R.id.consumerCount)
+    TextView consumerCount;
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_my_team;
+        return R.layout.activity_my_team2;
     }
 
     @Override
     protected void initView() {
         titleName.setText("我的团队");
-        rightText.setText("全部");
-        rightText.setVisibility(View.VISIBLE);
-        rightImg.setVisibility(View.VISIBLE);
-        rightImg.setBackgroundResource(R.mipmap.i01_01xiala);
 
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
+        llTeam.setSelected(true);
         refreshLayout.setEnableLoadMore(false);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         teamAdapter = new TeamAdapter(teamModelList);
@@ -122,6 +126,7 @@ public class MyTeamActivity extends BaseActivity {
         teamAdapter.notifyDataSetChanged();
         recyclerView.setNestedScrollingEnabled(false);
         MineInfoModel userInfo = UserInfoUtils.getUserInfo(this);
+        tvName.setText(userInfo.getNickName());
         if (userInfo.getAccountType() == 0) {
             tvLevel.setText("消费者");
         } else if (userInfo.getAccountType() == 1) {
@@ -172,20 +177,11 @@ public class MyTeamActivity extends BaseActivity {
                             teamInfo = response.body().data;
                             Glide.with(MyTeamActivity.this).load(teamInfo.teamImg).apply(new RequestOptions().error(R.mipmap.b08_01touxiang).placeholder(R.mipmap.b08_01touxiang)).into(headImg);
                             teamCount.setText(teamInfo.teamNum + "");
-                            if (teamInfo.monthIncome == 0) {
-                                areaCount.setText("0");
-                            } else {
-                                areaCount.setText(MathUtils.subZero(String.valueOf(teamInfo.monthIncome)));
-                            }
-
-                            setSpannableString(String.valueOf(teamInfo.yesdayAddCount), addCount);
-                            if (teamInfo.yesdayIncome == 0) {
-                                setSpannableString("0", addAmount);
-                            } else {
-                                setSpannableString(MathUtils.subZero(String.valueOf(teamInfo.yesdayIncome)), addAmount);
-                            }
                             teamModelList = teamInfo.listUser;
                             teamDetailInfo = teamInfo.map;
+                            superCount.setText(teamDetailInfo.svipList.size() + "");
+                            optCount.setText(teamDetailInfo.vipList.size() + "");
+                            consumerCount.setText(teamDetailInfo.consumeList.size() + "");
                             if (selectPos == 0) {
                                 teamAdapter.setNewData(teamModelList);
                             } else if (selectPos == 1) {
@@ -209,61 +205,48 @@ public class MyTeamActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.left_button, R.id.ll_team_count, R.id.right_button})
+    @OnClick({R.id.left_button, R.id.ll_team, R.id.ll_super, R.id.ll_opt, R.id.ll_consumer})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.left_button:
                 finish();
                 break;
-            case R.id.ll_team_count:
-               /* Intent intent = new Intent(MyTeamActivity.this, TeamDetailListActivity.class);
-                intent.putExtra(TeamDetailListActivity.TEAM_DETAIL_INFO, teamDetailInfo);
-                startActivity(intent);*/
+            case R.id.ll_team:
+                selectPos = 0;
+                llTeam.setSelected(true);
+                llSuper.setSelected(false);
+                llOpt.setSelected(false);
+                llConsumer.setSelected(false);
+                teamAdapter.setNewData(teamModelList);
+                teamAdapter.notifyDataSetChanged();
                 break;
-            case R.id.right_button:
-                String[] strings3 = new String[]{"全部", "超级会员", "优选会员", "消费者"};
-                new XPopup.Builder(this)
-                        .asCustom(new CustomRefundView(MyTeamActivity.this)
-                                .setData(Arrays.asList(strings3))
-                                .setOnItemClickListener(new CustomRefundView.OnItemClickListener() {
-                                    @Override
-                                    public void onItemClick(int position) {
-                                        rightText.setText(strings3[position]);
-                                        selectPos = position;
-                                        if (position == 0) {
-                                            teamAdapter.setNewData(teamModelList);
-                                        } else if (position == 1) {
-                                            teamAdapter.setNewData(teamDetailInfo.svipList);
-                                        } else if (position == 2) {
-                                            teamAdapter.setNewData(teamDetailInfo.vipList);
-                                        } else {
-                                            teamAdapter.setNewData(teamDetailInfo.consumeList);
-                                        }
-                                        teamAdapter.notifyDataSetChanged();
-                                    }
-                                }))
-                        .show();
+            case R.id.ll_super:
+                selectPos = 1;
+                llTeam.setSelected(false);
+                llSuper.setSelected(true);
+                llOpt.setSelected(false);
+                llConsumer.setSelected(false);
+                teamAdapter.setNewData(teamDetailInfo.svipList);
+                teamAdapter.notifyDataSetChanged();
+                break;
+            case R.id.ll_opt:
+                selectPos = 2;
+                llTeam.setSelected(false);
+                llSuper.setSelected(false);
+                llOpt.setSelected(true);
+                llConsumer.setSelected(false);
+                teamAdapter.setNewData(teamDetailInfo.vipList);
+                teamAdapter.notifyDataSetChanged();
+                break;
+            case R.id.ll_consumer:
+                selectPos = 3;
+                llTeam.setSelected(false);
+                llSuper.setSelected(false);
+                llOpt.setSelected(false);
+                llConsumer.setSelected(true);
+                teamAdapter.setNewData(teamDetailInfo.consumeList);
+                teamAdapter.notifyDataSetChanged();
                 break;
         }
     }
-
-    @SuppressLint("SetTextI18n")
-    private void setSpannableString(String str3, TextView view) {
-        String str1 = "昨日+";
-        view.setText("");
-        SpannableString span1 = new SpannableString(str1);
-        SpannableString span3 = new SpannableString(str3);
-        ForegroundColorSpan colorSpan1 = new ForegroundColorSpan(Color.parseColor("#333333"));
-        span1.setSpan(new AbsoluteSizeSpan(12, true), 0, str1.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-        span1.setSpan(colorSpan1, 0, str1.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-
-        ForegroundColorSpan colorSpan3 = new ForegroundColorSpan(Color.parseColor("#FF0000"));
-        span3.setSpan(new AbsoluteSizeSpan(12, true), 0, str3.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-        span3.setSpan(colorSpan3, 0, str3.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-
-        view.append(span1);
-        view.append(span3);
-
-    }
-
 }

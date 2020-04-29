@@ -1,5 +1,10 @@
 package com.feitianzhu.huangliwo.me.ui;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -13,21 +18,27 @@ import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
-import com.feitianzhu.huangliwo.me.base.BaseTakePhotoActivity;
+import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.Province;
 import com.feitianzhu.huangliwo.model.UserAuth;
 import com.feitianzhu.huangliwo.model.UserVeriModel;
 import com.feitianzhu.huangliwo.shop.ui.dialog.ProvinceCallBack;
 import com.feitianzhu.huangliwo.shop.ui.dialog.ProvinceDialog2;
+import com.feitianzhu.huangliwo.utils.Glide4Engine;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.StringUtils;
 import com.feitianzhu.huangliwo.view.CustomRefundView;
 import com.feitianzhu.huangliwo.view.CustomSelectPhotoView;
+import com.hjq.permissions.OnPermission;
+import com.hjq.permissions.XXPermissions;
 import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
 import com.lzy.okgo.OkGo;
+import com.zhihu.matisse.Matisse;
+import com.zhihu.matisse.MimeType;
+import com.zhihu.matisse.internal.entity.CaptureStrategy;
+import com.zhihu.matisse.internal.utils.MediaStoreCompat;
 
-import org.devio.takephoto.model.TResult;
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
@@ -55,10 +66,15 @@ import static com.feitianzhu.huangliwo.common.Constant.USERID;
  * <p>
  * 实名认证
  */
-public class VerificationActivity2 extends BaseTakePhotoActivity implements ProvinceCallBack {
+public class VerificationActivity2 extends BaseActivity implements ProvinceCallBack {
+    private static final int REQUEST_CODE_PERMISSION = 100;
+    private static final int REQUEST_CODE_SETTING = 300;
+    private static final int REQUEST_CODE_CHOOSE = 23;
+    private static final int REQUEST_CODE_CAPTURE = 24;
     private Province province;
     private Province.CityListBean city;
     private Province.AreaListBean area;
+    private MediaStoreCompat mMediaStoreCompat;
     public static final String AUTH_INFO = "auth_info";
     private String[] certificates = new String[]{"身份证", "护照", "其他"};
     private int photo_type;
@@ -104,6 +120,7 @@ public class VerificationActivity2 extends BaseTakePhotoActivity implements Prov
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         mAuth = (UserAuth) getIntent().getSerializableExtra(AUTH_INFO);
+        mMediaStoreCompat = new MediaStoreCompat(this);
         if (mAuth != null) {
             if (mAuth.isRnAuth == 0) {
                 //未实名
@@ -285,45 +302,112 @@ public class VerificationActivity2 extends BaseTakePhotoActivity implements Prov
                         .setOnSelectTakePhotoListener(new CustomSelectPhotoView.OnSelectTakePhotoListener() {
                             @Override
                             public void onTakePhotoClick() {
-                                TakePhoto(false, 1);
+                                //TakePhoto(false, 1);
+                                Matisse.from(VerificationActivity2.this)
+                                        .choose(MimeType.ofImage())
+                                        //自定义选择选择的类型
+                                        //.choose(MimeType.of(MimeType.JPEG,MimeType.AVI))
+                                        //是否只显示选择的类型的缩略图，就不会把所有图片视频都放在一起，而是需要什么展示什么
+                                        .showSingleMediaType(true)
+                                        /*.capture(true)  // 使用相机，和 captureStrategy 一起使用
+                                        .captureStrategy(new CaptureStrategy(true, "com.feitianzhu.fu700.fileprovider"))*/
+                                        //有序选择图片 123456...
+                                        .countable(true)
+                                        //最大选择数量为6
+                                        .maxSelectable(1)
+                                        //选择方向
+                                        .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
+                                        //图片过滤
+                                        //.addFilter()
+                                        //界面中缩略图的质量
+                                        .thumbnailScale(0.85f)
+                                        //蓝色主题
+                                        .theme(R.style.Matisse_Zhihu)
+                                        //黑色主题
+                                        //.theme(R.style.Matisse_Dracula)
+                                        //Picasso加载方式
+                                        //.imageEngine(new PicassoEngine())
+                                        //Glide加载方式
+                                        .originalEnable(true)
+                                        .maxOriginalSize(10)
+                                        .imageEngine(new Glide4Engine())
+                                        .forResult(REQUEST_CODE_CHOOSE);
                             }
                         })
                         .setSelectCameraListener(new CustomSelectPhotoView.OnSelectCameraListener() {
                             @Override
                             public void onCameraClick() {
-                                TakeCamera(false);
+                                //TakeCamera(false);
+                               requestPermission();
                             }
                         }))
                 .show();
+    }
 
+    private void requestPermission() {
+        XXPermissions.with(VerificationActivity2.this)
+                // 可设置被拒绝后继续申请，直到用户授权或者永久拒绝
+                //.constantRequest()
+                // 支持请求6.0悬浮窗权限8.0请求安装权限
+                //.permission(Permission.REQUEST_INSTALL_PACKAGES)
+                // 不指定权限则自动获取清单中的危险权限
+                .permission(Manifest.permission.CAMERA)
+                .request(new OnPermission() {
+
+                    @Override
+                    public void hasPermission(List<String> granted, boolean all) {
+                        if (all) {
+                            Matisse.from(VerificationActivity2.this)
+                                    .capture()
+                                    .captureStrategy(new CaptureStrategy(true, "com.feitianzhu.huangliwo.fileprovider", "bldby"))
+                                    .forResult(REQUEST_CODE_CAPTURE, mMediaStoreCompat);
+                        } else {
+                            ToastUtils.show("获取权限成功，部分权限未正常授予");
+                        }
+                    }
+
+                    @Override
+                    public void noPermission(List<String> denied, boolean quick) {
+                        if (quick) {
+                            ToastUtils.show("被永久拒绝授权，请手动授予权限");
+                            //如果是被永久拒绝就跳转到应用权限系统设置页面
+                            XXPermissions.gotoPermissionSettings(mContext);
+                        } else {
+                            ToastUtils.show("获取权限失败");
+                        }
+                    }
+                });
     }
 
     @Override
-    protected void onWheelSelect(int num, List<String> mList) {
-    }
-
-    @Override
-    public void takeSuccess(TResult result) {
-        switch (photo_type) {
-            case 0:
-                photo_file_one = result.getImage().getCompressPath();
-                Glide.with(VerificationActivity2.this).load(photo_file_one).apply(new RequestOptions().placeholder(R.mipmap.g10_03weijiazai).error(R.mipmap.g10_03weijiazai)).into(mImgVeriOne);
-                break;
-            case 1:
-                photo_file_two = result.getImage().getCompressPath();
-                Glide.with(VerificationActivity2.this).load(photo_file_two).apply(new RequestOptions().placeholder(R.mipmap.g10_03weijiazai).error(R.mipmap.g10_03weijiazai)).into(mImgVeriTwo);
-                break;
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case REQUEST_CODE_CHOOSE:
+                    List<Uri> uris = Matisse.obtainResult(data);
+                    List<String> strings = Matisse.obtainPathResult(data);
+                    if (photo_type == 0) {
+                        photo_file_one = strings.get(0);
+                        Glide.with(VerificationActivity2.this).load(photo_file_one).apply(new RequestOptions().placeholder(R.mipmap.g10_03weijiazai).error(R.mipmap.g10_03weijiazai)).into(mImgVeriOne);
+                    } else {
+                        photo_file_two = strings.get(0);
+                        Glide.with(VerificationActivity2.this).load(photo_file_two).apply(new RequestOptions().placeholder(R.mipmap.g10_03weijiazai).error(R.mipmap.g10_03weijiazai)).into(mImgVeriTwo);
+                    }
+                    break;
+                case REQUEST_CODE_CAPTURE:
+                    Uri contentUri = mMediaStoreCompat.getCurrentPhotoUri();
+                    String path = mMediaStoreCompat.getCurrentPhotoPath();
+                    if (photo_type == 0) {
+                        photo_file_one = path;
+                        Glide.with(VerificationActivity2.this).load(photo_file_one).apply(new RequestOptions().placeholder(R.mipmap.g10_03weijiazai).error(R.mipmap.g10_03weijiazai)).into(mImgVeriOne);
+                    } else {
+                        photo_file_two = path;
+                        Glide.with(VerificationActivity2.this).load(photo_file_two).apply(new RequestOptions().placeholder(R.mipmap.g10_03weijiazai).error(R.mipmap.g10_03weijiazai)).into(mImgVeriTwo);
+                    }
+                    break;
+            }
         }
-    }
-
-    @Override
-    public void takeFail(TResult result, String msg) {
-
-    }
-
-    @Override
-    public void takeCancel() {
-
     }
 
     @Override

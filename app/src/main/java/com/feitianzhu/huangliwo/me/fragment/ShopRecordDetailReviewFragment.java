@@ -14,8 +14,6 @@ import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.LazyFragment;
 import com.feitianzhu.huangliwo.me.adapter.ShopRecordDetailAdapter;
 import com.feitianzhu.huangliwo.model.ShopRecordDetailModel;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.Callback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,47 +74,7 @@ public class ShopRecordDetailReviewFragment extends LazyFragment implements Base
     }
 
     private void requestData(final int state) {
-        OkHttpUtils.post()//
-                .url(Common_HEADER + POST_SHOP_RECORDEDETAIL)
-                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
-                .addParams(USERID, Constant.LOGIN_USERID)
-                .addParams("status", "1")//
-                .addParams("pageIndex", currPage+"")//
-                .addParams("pageRows", pageRows+"")//
-                .build()
-                .execute(new Callback<ShopRecordDetailModel>() {
 
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-                        Log.e("wangyan","onError---->"+e.getMessage());
-                        mAdapter.loadMoreFail();
-                    }
-
-                    @Override
-                    public void onResponse(ShopRecordDetailModel response, int id) {
-                        if(response == null || response.getPager() == null||response.getList()==null){
-                            mAdapter.loadMoreFail();
-                            return;
-                        }
-                        hasNextPage = response.getPager().isHasNextPage();
-                        switch (state){
-                            case LOAD_NORMAL:
-                                mDatas.addAll(response.getList());
-                                mAdapter.notifyDataSetChanged();
-                                break;
-                            case LOAD_MORE:
-                                mAdapter.addData(response.getList());
-                                break;
-                        }
-                        if(hasNextPage){
-                            currPage++;
-                            mAdapter.loadMoreComplete();
-                        }else{
-                            mAdapter.loadMoreEnd(true);
-                        }
-
-                    }
-                });
     }
 
 

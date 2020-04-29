@@ -36,16 +36,21 @@ MobSDK {
                 BypassApproval = "false"
                 Enable = "true"
             }
-           /* QZone {
-                Id = "3"
-                SortId = "5"
-                AppId = "1110085823"
-                AppKey = "osnroqSxxckkJOdI"
-                BypassApproval = "false"
-                Enable = "true"
-            }*/
+            /* QZone {
+                 Id = "3"
+                 SortId = "5"
+                 AppId = "1110085823"
+                 AppKey = "osnroqSxxckkJOdI"
+                 BypassApproval = "false"
+                 Enable = "true"
+             }*/
         }
     }
+}
+
+aspectjx {
+    //排除所有package路径中包含`com.alipay`的class文件及库（jar文件）
+    exclude 'com.alipay', 'com.baidu', 'cn.sharesdk.onekeyshare', 'com.mob', 'cn.sharesdk'
 }
 
 android {
@@ -80,9 +85,9 @@ android {
         applicationId "com.feitianzhu.huangliwo"
         minSdkVersion androidMinSdkVersion
         targetSdkVersion androidTargetSdkVersion
-        versionCode 27
+        versionCode 28
         multiDexEnabled true
-        versionName "1.2.8"
+        versionName "1.2.9"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             //设置支持的SO库架构
@@ -144,9 +149,8 @@ dependencies {
         exclude group: "com.android.support", module: "support-annotations"
     }*/
     //  compile(name: 'takephoto-release', ext: 'aar')
-    implementation project(':takephoto')
-    implementation project(':okhttputils')
     implementation project(':cityselect')
+    implementation project(':matisse')
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.50'
     //必须使用
     implementation 'com.lzy.net:okgo:3.0.4'
@@ -167,7 +171,7 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     implementation 'com.flyco.tablayout:FlycoTabLayout_Lib:2.1.2@aar'
     implementation 'com.jaeger.statusbarutil:library:1.4.0'
-    implementation 'com.yanzhenjie:permission:1.1.0'
+    implementation 'com.hjq:xxpermissions:6.2'
     implementation 'cn.yipianfengye.android:zxing-library:2.2'
     implementation 'com.afollestad.material-dialogs:core:0.9.4.3'
     implementation 'com.github.pinguo-zhouwei:CustomPopwindow:2.1.1'
@@ -207,7 +211,7 @@ dependencies {
     implementation 'q.rorbin:badgeview:1.1.3'
     //地址选择器
     implementation 'liji.library.dev:citypickerview:5.1.0'
-    implementation 'com.zhihu.android:matisse:0.5.2-beta3'
+    //implementation 'com.zhihu.android:matisse:0.5.2-beta3'
     //implementation 'com.github.RDSunhy:android-word2html:1.2.0'
     implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0'
     implementation 'com.scwang.smartrefresh:SmartRefreshHeader:1.1.0'
@@ -217,7 +221,7 @@ dependencies {
     //implementation 'com.zaaach:citypicker:2.0.3'    //必选
     implementation 'com.necer.ncalendar:ncalendar:4.3.8'
     implementation 'com.haibin:calendarview:3.6.6'
-   // implementation 'com.github.MZCretin:CitySelect:1.0.4'
+    // implementation 'com.github.MZCretin:CitySelect:1.0.4'
     implementation 'com.contrarywind:Android-PickerView:4.1.9'
     implementation 'com.gcssloop.recyclerview:pagerlayoutmanager:2.3.8'
     implementation 'com.hjq:toast:8.0'

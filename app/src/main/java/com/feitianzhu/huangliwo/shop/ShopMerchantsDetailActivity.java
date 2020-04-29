@@ -25,6 +25,7 @@ import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
+import com.feitianzhu.huangliwo.me.HelperActivity;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.CollectionBody;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
@@ -43,16 +44,14 @@ import com.feitianzhu.huangliwo.view.CustomRefundView;
 import com.feitianzhu.huangliwo.vip.VipActivity;
 import com.feitianzhu.huangliwo.vip.VipGiftDetailActivity;
 import com.google.gson.Gson;
+import com.hjq.permissions.OnPermission;
+import com.hjq.permissions.XXPermissions;
 import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.base.Request;
-import com.yanzhenjie.permission.AndPermission;
-import com.yanzhenjie.permission.PermissionListener;
-import com.yanzhenjie.permission.Rationale;
-import com.yanzhenjie.permission.RationaleListener;
 import com.zhpan.bannerview.BannerViewPager;
 import com.zhpan.bannerview.enums.IndicatorStyle;
 import com.zhpan.bannerview.holder.ViewHolder;
@@ -282,51 +281,39 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
 
 
     private void requestPermission() {
-        AndPermission.with(this)
-                .requestCode(200)
-                .permission(
-                        // 多个权限，以数组的形式传入。
-                        Manifest.permission.CALL_PHONE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
-                )
-                .callback(
-                        new RationaleListener() {
-                            @Override
-                            public void showRequestPermissionRationale(int requestCode, Rationale rationale) {
-                                // 此对话框可以自定义，调用rationale.resume()就可以继续申请。
-                                AndPermission.rationaleDialog(App.getAppContext(), rationale).show();
-                            }
+        XXPermissions.with(ShopMerchantsDetailActivity.this)
+                // 可设置被拒绝后继续申请，直到用户授权或者永久拒绝
+                //.constantRequest()
+                // 支持请求6.0悬浮窗权限8.0请求安装权限
+                //.permission(Permission.REQUEST_INSTALL_PACKAGES)
+                // 不指定权限则自动获取清单中的危险权限
+                .permission(Manifest.permission.CALL_PHONE)
+                .request(new OnPermission() {
+
+                    @Override
+                    public void hasPermission(List<String> granted, boolean all) {
+                        if (all) {
+                            Intent intent = new Intent();
+                            intent.setAction(Intent.ACTION_CALL);
+                            intent.setData(Uri.parse("tel:" + merchantsBean.getPhone()));
+                            startActivity(intent);
+                        } else {
+                            ToastUtils.show("获取权限成功，部分权限未正常授予");
                         }
-                )
-                .callback(listener)
-                .start();
+                    }
+
+                    @Override
+                    public void noPermission(List<String> denied, boolean quick) {
+                        if (quick) {
+                            ToastUtils.show("被永久拒绝授权，请手动授予权限");
+                            //如果是被永久拒绝就跳转到应用权限系统设置页面
+                            XXPermissions.gotoPermissionSettings(mContext);
+                        } else {
+                            ToastUtils.show("获取权限失败");
+                        }
+                    }
+                });
     }
-
-
-    private PermissionListener listener = new PermissionListener() {
-        @Override
-        public void onSucceed(int requestCode, List<String> grantedPermissions) {
-            // 权限申请成功回调。
-
-            // 这里的requestCode就是申请时设置的requestCode。
-            // 和onActivityResult()的requestCode一样，用来区分多个不同的请求。
-            if (requestCode == 200) {
-                Intent intent = new Intent();
-                intent.setAction(Intent.ACTION_CALL);
-                intent.setData(Uri.parse("tel:" + merchantsBean.getPhone()));
-                startActivity(intent);
-            }
-        }
-
-        @Override
-        public void onFailed(int requestCode, List<String> deniedPermissions) {
-            // 权限申请失败回调。
-            if (requestCode == 200) {
-                Toast.makeText(ShopMerchantsDetailActivity.this, "请求权限失败!", Toast.LENGTH_SHORT).show();
-            }
-        }
-    };
-
     public void deleteCollect() {
         CollectionBody collectionBody = new CollectionBody();
         collectionBody.type = 1;
@@ -680,7 +667,7 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
 
         @Override
         public void onBind(final Context context, String data, final int position, final int size) {
-            Glide.with(context).load(data).apply(new RequestOptions().placeholder(R.mipmap.g10_02weijiazai).error(R.mipmap.g10_02weijiazai)).into(mImageView);
+            Glide.with(context).load(data).apply(new RequestOptions().placeholder(R.mipmap.g10_02weijiazai).error(R.mipmap.g10_02weijiazai).dontAnimate()).into(mImageView);
         }
 
     }

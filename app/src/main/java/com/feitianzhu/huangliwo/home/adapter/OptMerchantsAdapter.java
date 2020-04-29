@@ -31,7 +31,7 @@ public class OptMerchantsAdapter extends BaseQuickAdapter<MerchantsModel, BaseVi
     @Override
     protected void convert(@NonNull BaseViewHolder helper, MerchantsModel item) {
         MineInfoModel userInfo = UserInfoUtils.getUserInfo(mContext);
-        Glide.with(mContext).load(item.getLogo()).apply(new RequestOptions().placeholder(R.mipmap.g10_04weijiazai).placeholder(R.mipmap.g10_04weijiazai)).into((ImageView) helper.getView(R.id.merchants_img));
+        Glide.with(mContext).load(item.getLogo()).apply(new RequestOptions().placeholder(R.mipmap.g10_04weijiazai).placeholder(R.mipmap.g10_04weijiazai).dontAnimate()).into((ImageView) helper.getView(R.id.merchants_img));
         helper.setText(R.id.merchants_Name, item.getMerchantName());
         String discount = String.valueOf((100 - item.getDiscount() * 100));
         helper.setText(R.id.tv_rebate, "奖励" + MathUtils.subZero(discount) + "%");

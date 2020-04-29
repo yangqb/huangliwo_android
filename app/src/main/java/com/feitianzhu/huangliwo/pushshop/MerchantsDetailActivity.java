@@ -1,7 +1,12 @@
 package com.feitianzhu.huangliwo.pushshop;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.net.Uri;
 import android.os.CountDownTimer;
+import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -25,11 +30,13 @@ import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
-import com.feitianzhu.huangliwo.me.base.BaseTakePhotoActivity;
+import com.feitianzhu.huangliwo.me.base.BaseActivity;
+import com.feitianzhu.huangliwo.me.ui.VerificationActivity2;
 import com.feitianzhu.huangliwo.pushshop.bean.EditMerchantInfo;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsClassifyModel;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsModel;
 import com.feitianzhu.huangliwo.pushshop.bean.UpdataMechantsEvent;
+import com.feitianzhu.huangliwo.utils.Glide4Engine;
 import com.feitianzhu.huangliwo.utils.KeyboardUtils;
 import com.feitianzhu.huangliwo.utils.MathUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
@@ -41,6 +48,8 @@ import com.feitianzhu.huangliwo.view.BusinessWeekDayDialog;
 import com.feitianzhu.huangliwo.view.CustomClassificationView;
 import com.feitianzhu.huangliwo.view.CustomSelectPhotoView;
 import com.google.gson.Gson;
+import com.hjq.permissions.OnPermission;
+import com.hjq.permissions.XXPermissions;
 import com.hjq.toast.ToastUtils;
 import com.itheima.roundedimageview.RoundedImageView;
 import com.lljjcoder.Interface.OnCityItemClickListener;
@@ -51,11 +60,13 @@ import com.lljjcoder.style.cityjd.JDCityConfig;
 import com.lljjcoder.style.cityjd.JDCityPicker;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
-import com.lzy.okgo.OkGo;
+import com.lzy.okgo.OkGo;;
 import com.lzy.okgo.request.PostRequest;
-import com.socks.library.KLog;
+import com.zhihu.matisse.Matisse;
+import com.zhihu.matisse.MimeType;
+import com.zhihu.matisse.internal.entity.CaptureStrategy;
+import com.zhihu.matisse.internal.utils.MediaStoreCompat;
 
-import org.devio.takephoto.model.TResult;
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
@@ -77,9 +88,13 @@ import static com.feitianzhu.huangliwo.common.Constant.USERID;
  * <p>
  * 商铺详情
  */
-public class MerchantsDetailActivity extends BaseTakePhotoActivity implements BusinessHoursDialog.OnTimePickListener, BusinessWeekDayDialog.OnWeekPickListener, OnGetGeoCoderResultListener {
+public class MerchantsDetailActivity extends BaseActivity implements BusinessHoursDialog.OnTimePickListener, BusinessWeekDayDialog.OnWeekPickListener, OnGetGeoCoderResultListener {
     public static final String IS_MY_MERCHANTS = "is_my_merchants";
     public static final String MERCHANTS_DETAIL_DATA = "merchants_detail_data";
+    private static final int REQUEST_CODE_PERMISSION = 100;
+    private static final int REQUEST_CODE_SETTING = 300;
+    private static final int REQUEST_CODE_CHOOSE = 23;
+    private static final int REQUEST_CODE_CAPTURE = 24;
     private boolean isConfirm = false;
     private String userId;
     private String token;
@@ -87,6 +102,7 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
     private String clsName;
     private MerchantsModel merchantsBean;
     private List<MerchantsClassifyModel.ListBean> listBean;
+    private MediaStoreCompat mMediaStoreCompat;
     private int imgType;
     private boolean isTimes = false;
     private boolean isWeek = false;
@@ -190,6 +206,7 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
     protected void initView() {
         geoCoder = GeoCoder.newInstance();
         geoCoder.setOnGetGeoCodeResultListener(this);
+        mMediaStoreCompat = new MediaStoreCompat(this);
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         merchantsBean = (MerchantsModel) getIntent().getSerializableExtra(MERCHANTS_DETAIL_DATA);
@@ -510,18 +527,82 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
                         .setOnSelectTakePhotoListener(new CustomSelectPhotoView.OnSelectTakePhotoListener() {
                             @Override
                             public void onTakePhotoClick() {
-                                TakePhoto(false, 1);
+                                //TakePhoto(false, 1);
+                                Matisse.from(MerchantsDetailActivity.this)
+                                        .choose(MimeType.ofImage())
+                                        //自定义选择选择的类型
+                                        //.choose(MimeType.of(MimeType.JPEG,MimeType.AVI))
+                                        //是否只显示选择的类型的缩略图，就不会把所有图片视频都放在一起，而是需要什么展示什么
+                                        .showSingleMediaType(true)
+                                        /*.capture(true)  // 使用相机，和 captureStrategy 一起使用
+                                        .captureStrategy(new CaptureStrategy(true, "com.feitianzhu.fu700.fileprovider"))*/
+                                        //有序选择图片 123456...
+                                        .countable(true)
+                                        //最大选择数量为6
+                                        .maxSelectable(1)
+                                        //选择方向
+                                        .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
+                                        //图片过滤
+                                        //.addFilter()
+                                        //界面中缩略图的质量
+                                        .thumbnailScale(0.85f)
+                                        //蓝色主题
+                                        .theme(R.style.Matisse_Zhihu)
+                                        //黑色主题
+                                        //.theme(R.style.Matisse_Dracula)
+                                        //Picasso加载方式
+                                        //.imageEngine(new PicassoEngine())
+                                        //Glide加载方式
+                                        .originalEnable(true)
+                                        .maxOriginalSize(10)
+                                        .imageEngine(new Glide4Engine())
+                                        .forResult(REQUEST_CODE_CHOOSE);
                             }
                         })
                         .setSelectCameraListener(new CustomSelectPhotoView.OnSelectCameraListener() {
                             @Override
                             public void onCameraClick() {
-                                TakeCamera(false);
+                                //TakeCamera(false);
+                                requestPermission();
                             }
                         }))
                 .show();
     }
 
+    private void requestPermission() {
+        XXPermissions.with(MerchantsDetailActivity.this)
+                // 可设置被拒绝后继续申请，直到用户授权或者永久拒绝
+                //.constantRequest()
+                // 支持请求6.0悬浮窗权限8.0请求安装权限
+                //.permission(Permission.REQUEST_INSTALL_PACKAGES)
+                // 不指定权限则自动获取清单中的危险权限
+                .permission(Manifest.permission.CAMERA)
+                .request(new OnPermission() {
+
+                    @Override
+                    public void hasPermission(List<String> granted, boolean all) {
+                        if (all) {
+                            Matisse.from(MerchantsDetailActivity.this)
+                                    .capture()
+                                    .captureStrategy(new CaptureStrategy(true, "com.feitianzhu.huangliwo.fileprovider", "bldby"))
+                                    .forResult(REQUEST_CODE_CAPTURE, mMediaStoreCompat);
+                        } else {
+                            ToastUtils.show("获取权限成功，部分权限未正常授予");
+                        }
+                    }
+
+                    @Override
+                    public void noPermission(List<String> denied, boolean quick) {
+                        if (quick) {
+                            ToastUtils.show("被永久拒绝授权，请手动授予权限");
+                            //如果是被永久拒绝就跳转到应用权限系统设置页面
+                            XXPermissions.gotoPermissionSettings(mContext);
+                        } else {
+                            ToastUtils.show("获取权限失败");
+                        }
+                    }
+                });
+    }
     public void showDayDialog() {
         BusinessWeekDayDialog weekDayDialog = BusinessWeekDayDialog.newInstance();
         weekDayDialog.setBusinessTime("星期三", "星期三");
@@ -733,56 +814,6 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
     }
 
     @Override
-    protected void onWheelSelect(int num, List<String> mList) {
-
-    }
-
-    @Override
-    public void takeSuccess(TResult result) {
-        switch (imgType) {
-            case 1:
-                photo1 = result.getImage().getCompressPath();
-                Glide.with(MerchantsDetailActivity.this).load(photo1).into(logoImg);
-                break;
-            case 2:
-                photo2 = result.getImage().getCompressPath();
-                Glide.with(MerchantsDetailActivity.this).load(photo2).into(shopFrontImg);
-                break;
-            case 3:
-                photo3 = result.getImage().getCompressPath();
-                Glide.with(MerchantsDetailActivity.this).load(photo3).into(shopInsideImg);
-                break;
-            case 4:
-                photo4 = result.getImage().getCompressPath();
-                Glide.with(MerchantsDetailActivity.this).load(photo4).into(cardFrontImg);
-                break;
-            case 5:
-                photo5 = result.getImage().getCompressPath();
-                Glide.with(MerchantsDetailActivity.this).load(photo5).into(cardBackImg);
-                break;
-            case 6:
-                photo6 = result.getImage().getCompressPath();
-                Glide.with(MerchantsDetailActivity.this).load(photo6).into(businessLicenseImg);
-                break;
-            case 7:
-                photo7 = result.getImage().getCompressPath();
-                Glide.with(MerchantsDetailActivity.this).load(photo7).into(permitImg);
-                break;
-        }
-        KLog.i("takeSuccess：" + result.getImage().getCompressPath() + "photo_type" + imgType);
-    }
-
-    @Override
-    public void takeFail(TResult result, String msg) {
-
-    }
-
-    @Override
-    public void takeCancel() {
-
-    }
-
-    @Override
     public void onGetGeoCodeResult(GeoCodeResult geoCodeResult) {
         if (null != geoCodeResult && null != geoCodeResult.getLocation()) {
             if (geoCodeResult.error != SearchResult.ERRORNO.NO_ERROR) {
@@ -802,4 +833,64 @@ public class MerchantsDetailActivity extends BaseTakePhotoActivity implements Bu
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case REQUEST_CODE_CHOOSE:
+                    List<Uri> uris = Matisse.obtainResult(data);
+                    List<String> strings = Matisse.obtainPathResult(data);
+                    if (imgType == 1) {
+                        photo1 = strings.get(0);
+                        Glide.with(MerchantsDetailActivity.this).load(photo1).into(logoImg);
+                    } else if (imgType == 2) {
+                        photo2 = strings.get(0);
+                        Glide.with(MerchantsDetailActivity.this).load(photo2).into(shopFrontImg);
+                    } else if (imgType == 3) {
+                        photo3 = strings.get(0);
+                        Glide.with(MerchantsDetailActivity.this).load(photo3).into(shopInsideImg);
+                    } else if (imgType == 4) {
+                        photo4 = strings.get(0);
+                        Glide.with(MerchantsDetailActivity.this).load(photo4).into(cardFrontImg);
+                    } else if (imgType == 5) {
+                        photo5 = strings.get(0);
+                        Glide.with(MerchantsDetailActivity.this).load(photo5).into(cardBackImg);
+                    } else if (imgType == 6) {
+                        photo6 = strings.get(0);
+                        Glide.with(MerchantsDetailActivity.this).load(photo6).into(businessLicenseImg);
+                    } else if (imgType == 7) {
+                        photo7 = strings.get(0);
+                        Glide.with(MerchantsDetailActivity.this).load(photo7).into(permitImg);
+                    }
+                    break;
+                case REQUEST_CODE_CAPTURE:
+                    Uri contentUri = mMediaStoreCompat.getCurrentPhotoUri();
+                    String path = mMediaStoreCompat.getCurrentPhotoPath();
+                    if (imgType == 1) {
+                        photo1 = path;
+                        Glide.with(MerchantsDetailActivity.this).load(photo1).into(logoImg);
+                    } else if (imgType == 2) {
+                        photo2 = path;
+                        Glide.with(MerchantsDetailActivity.this).load(photo2).into(shopFrontImg);
+                    } else if (imgType == 3) {
+                        photo3 = path;
+                        Glide.with(MerchantsDetailActivity.this).load(photo3).into(shopInsideImg);
+                    } else if (imgType == 4) {
+                        photo4 = path;
+                        Glide.with(MerchantsDetailActivity.this).load(photo4).into(cardFrontImg);
+                    } else if (imgType == 5) {
+                        photo5 = path;
+                        Glide.with(MerchantsDetailActivity.this).load(photo5).into(cardBackImg);
+                    } else if (imgType == 6) {
+                        photo6 = path;
+                        Glide.with(MerchantsDetailActivity.this).load(photo6).into(businessLicenseImg);
+                    } else if (imgType == 7) {
+                        photo7 = path;
+                        Glide.with(MerchantsDetailActivity.this).load(photo7).into(permitImg);
+                    }
+                    break;
+            }
+        }
+    }
 }

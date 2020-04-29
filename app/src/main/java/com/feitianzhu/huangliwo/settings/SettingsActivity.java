@@ -221,9 +221,9 @@ public class SettingsActivity extends BaseActivity {
                         UpdateAppBean updateAppBean = new UpdateAppBean();
                         UpdateAppModel updateAppModel = new Gson().fromJson(json, UpdateAppModel.class);
                         String update = "No";
-                        if (VersionManagementUtil.VersionComparison(updateAppModel.versionName + "", versionName) == 1) {
+                        if (VersionManagementUtil.VersionComparison(updateAppModel.data.versionName + "", versionName) == 1) {
                             update = "Yes";
-                            if ("1".equals(updateAppModel.isForceUpdate)) {
+                            if ("1".equals(updateAppModel.data.isForceUpdate)) {
                                 constraint = true;
                             } else {
                                 constraint = false;
@@ -235,15 +235,15 @@ public class SettingsActivity extends BaseActivity {
                                 //（必须）是否更新Yes,No
                                 .setUpdate(update)
                                 //（必须）新版本号，
-                                .setNewVersion(updateAppModel.versionName + "")
+                                .setNewVersion(updateAppModel.data.versionName + "")
 //                                .setNewVer、sion("1.1.0"+ "")
                                 //（必须）下载地址
-                                .setApkFileUrl(updateAppModel.downloadUrl)
+                                .setApkFileUrl(updateAppModel.data.downloadUrl)
 //                                    .setUpdateLog("测试")
-                                .setUpdateLog(updateAppModel.updateDesc)
+                                .setUpdateLog(updateAppModel.data.updateDesc)
 //                                    .setUpdateLog("今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说相对于其他行业来说今天我们来聊一聊程序员枯燥的编程生活，相对于其他行业来说\r\n")
                                 //大小，不设置不显示大小，可以不设置
-                                .setTargetSize(updateAppModel.packSize + "Mb")
+                                .setTargetSize(updateAppModel.data.packSize + "Mb")
                                 //是否强制更新，可以不设置
                                 .setConstraint(constraint);
                         return updateAppBean;

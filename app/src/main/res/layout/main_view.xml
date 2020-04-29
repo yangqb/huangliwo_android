@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
+
     <LinearLayout
         android:id="@+id/tab_menu"
         android:layout_width="match_parent"
@@ -41,8 +42,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="首页"
-                    android:textSize="12sp"
-                    android:textColor="@drawable/tab_select_text" />
+                    android:textColor="@drawable/tab_select_text"
+                    android:textSize="12sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -64,8 +65,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="分类"
-                    android:textSize="12sp"
-                    android:textColor="@drawable/tab_select_text" />
+                    android:textColor="@drawable/tab_select_text"
+                    android:textSize="12sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -86,9 +87,9 @@
                     android:id="@+id/txt_jiaoliu"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="关注"
-                    android:textSize="12sp"
-                    android:textColor="@drawable/tab_select_text" />
+                    android:text="发现"
+                    android:textColor="@drawable/tab_select_text"
+                    android:textSize="12sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -110,8 +111,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="我的"
-                    android:textSize="12sp"
-                    android:textColor="@drawable/tab_select_text" />
+                    android:textColor="@drawable/tab_select_text"
+                    android:textSize="12sp" />
             </LinearLayout>
 
         </LinearLayout>

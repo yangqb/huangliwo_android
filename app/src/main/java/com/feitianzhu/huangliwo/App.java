@@ -1,5 +1,6 @@
 package com.feitianzhu.huangliwo;
 
+import android.app.Application;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.multidex.MultiDex;
@@ -29,9 +30,6 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.footer.BallPulseFooter;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.uuzuche.lib_zxing.activity.ZXingLibrary;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.log.LoggerInterceptor;
-
 import java.util.concurrent.TimeUnit;
 
 import me.jessyan.autosize.AutoSizeConfig;
@@ -41,7 +39,7 @@ import okhttp3.OkHttpClient;
  * Created by dicallc on 2017/9/4 0004.
  */
 
-public class App extends MobApplication {
+public class App extends Application {
     static App context;
 
     static {//使用static代码段可以防止内存泄漏
@@ -88,12 +86,12 @@ public class App extends MobApplication {
         super.onCreate();
         context = this;
         ZXingLibrary.initDisplayOpinion(this);
-        initOkUtils();
         initOkgo();
         initPush();
+        MobSDK.init(this, "2cfea20c40b5c", "d05a96dcf8c7c603f1429933d6dd957f");
         MobSDK.submitPolicyGrantResult(true, null); //调用位置开发者可以自己制定，只需要在使用SDK功能之前调用即可。该接口必须接入，否则可能造成无法使用MobTech各SDK提供的相关服务。
-        AutoSizeConfig.getInstance().setCustomFragment(true);
-        CrashReport.initCrashReport(getApplicationContext(), "ad4dea9550", false); //正式发布改为false
+        AutoSizeConfig.getInstance().setCustomFragment(true);//屏幕适配
+        CrashReport.initCrashReport(getApplicationContext(), "ad4dea9550", false); //Bugly正式发布改为false
         SDKInitializer.initialize(this);
         ToastUtils.init(this);
         ToastUtils.initStyle(new ToastWhiteStyle2(this));
@@ -149,19 +147,6 @@ public class App extends MobApplication {
 
     private void initPush() {
 
-    }
-
-
-    private void initOkUtils() {
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                //                .addInterceptor(new LoggerInterceptor("TAG"))
-                .connectTimeout(10000L, TimeUnit.MILLISECONDS)
-                .addInterceptor(new LoggerInterceptor("feitianzhu"))
-                .readTimeout(10000L, TimeUnit.MILLISECONDS)
-                //其他配置
-                .build();
-
-        OkHttpUtils.initClient(okHttpClient);
     }
 
     public static Context getAppContext() {

@@ -15,7 +15,6 @@ import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.LazyFragment;
 import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.huangliwo.dao.NetworkDao;
-import com.feitianzhu.huangliwo.payforme.PayForMeRejectActivity;
 import com.feitianzhu.huangliwo.payforme.adapter.PayForMeRecordAdapter;
 import com.feitianzhu.huangliwo.payforme.entity.PayForMeEntity;
 
@@ -75,11 +74,11 @@ public class AuditRejFragment extends LazyFragment implements SwipeRefreshLayout
             @Override
             public void onItemChildClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
                 if (view.getId() == R.id.button) {
-                    Intent intent = new Intent(getActivity(), PayForMeRejectActivity.class);
+                   /* Intent intent = new Intent(getActivity(), PayForMeRejectActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putParcelable(Constant.INTENT_REJECT_RECORD, mDatas.get(i));
                     intent.putExtras(bundle);
-                    startActivity(intent);
+                    startActivity(intent);*/
                 }
             }
         });

@@ -11,8 +11,6 @@ import com.feitianzhu.huangliwo.me.adapter.PersonInfoAdapter;
 import com.feitianzhu.huangliwo.me.base.BaseFragment;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.hjq.toast.ToastUtils;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.Callback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,32 +54,6 @@ public class PersonInfoFragment extends BaseFragment {
 
        // requestData();
 
-    }
-
-    private void requestData() {
-        OkHttpUtils.get()//
-                .url(Common_HEADER + POST_MINE_INFO)
-                .addParams(ACCESSTOKEN, Constant.ACCESS_TOKEN)//
-                .addParams(USERID, Constant.LOGIN_USERID)
-                .addParams("otherUserId", otherUserId)//
-                .build()
-                .execute(new Callback<MineInfoModel>() {
-
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-                        Log.e("wangyan","onError---->"+e.getMessage());
-                        ToastUtils.show(e.getMessage());
-                    }
-
-                    @Override
-                    public void onResponse(MineInfoModel response, int id) {
-                        if(response != null){
-                            mList.add(response);
-                            mAdapter.notifyDataSetChanged();
-                        }
-                        Log.e("wangyan","--->"+response.toString());
-                    }
-                });
     }
 
     @Override

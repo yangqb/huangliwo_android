@@ -282,7 +282,7 @@
                 android:layout_marginLeft="28dp"
                 android:layout_marginTop="30dp"
                 android:layout_marginRight="28dp"
-                android:background="@drawable/button_shape_red"
+                android:background="@drawable/shape_fed428_r5"
                 android:foreground="?attr/selectableItemBackground"
                 android:text="退出当前账号"
                 android:textColor="@android:color/white"
