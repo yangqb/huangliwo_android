@@ -477,10 +477,9 @@
 
                         <com.itheima.roundedimageview.RoundedImageView
                             android:id="@+id/imageView1"
-                            android:layout_width="115dp"
-                            android:layout_height="115dp"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
                             android:layout_alignParentEnd="true"
-                            android:layout_marginRight="@dimen/dp_10"
                             android:scaleType="fitXY"
                             android:src="@mipmap/g01_01shangchuan"
                             app:riv_corner_radius="5dp"
@@ -562,8 +561,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="25dp"
-                            android:layout_marginTop="20dp"
-                            android:layout_marginEnd="10dp">
+                            android:layout_marginTop="20dp">
 
                         </android.support.v7.widget.RecyclerView>
 

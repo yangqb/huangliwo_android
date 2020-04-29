@@ -80,6 +80,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -99,18 +100,15 @@ import static com.feitianzhu.huangliwo.common.Constant.USERID;
  */
 public class EditMerchantsActivity extends BaseActivity implements OnGetGeoCoderResultListener {
     private boolean isConfirm = false;
-    private static final int REQUEST_CODE_PERMISSION = 100;
-    private static final int REQUEST_CODE_SETTING = 300;
     private static final int REQUEST_CODE_CHOOSE = 23;
     private static final int REQUEST_CODE_CAPTURE = 24;
     public static final String MERCHANTS_DETAIL_DATA = "merchants_detail_data";
-    private int maxSize = 3;
-    private List<String> mSelected = new ArrayList<>();
+    private int maxSize = 6;
     private List<String> allSelect = new ArrayList<>();
     private MerchantsModel merchantsModel;
     private MediaStoreCompat mMediaStoreCompat;
     private ShopFrontAdapter shopFrontAdapter;
-    private List<MultiShopFront> multiItemCommentList = new ArrayList<>();
+    private List<MultiShopFront> multiShopFrontList = new ArrayList<>();
     private String mProvinceId;
     private String mProvinceName;
     private String mCityId;
@@ -182,6 +180,11 @@ public class EditMerchantsActivity extends BaseActivity implements OnGetGeoCoder
         geoCoder = GeoCoder.newInstance();
         geoCoder.setOnGetGeoCodeResultListener(this);
         mMediaStoreCompat = new MediaStoreCompat(this);
+        //默认有一张上传的图片
+        MultiShopFront multiShopFront = new MultiShopFront(MultiShopFront.upImg);
+        multiShopFront.setId(R.mipmap.g01_01shangchuan);
+        multiShopFrontList.add(multiShopFront);
+
         if (merchantsModel != null) {
             latitude = Double.valueOf(merchantsModel.getLatitude());
             longitude = Double.valueOf(merchantsModel.getLongitude());
@@ -201,16 +204,31 @@ public class EditMerchantsActivity extends BaseActivity implements OnGetGeoCoder
             mAreaName = merchantsModel.getAreaName();
             mAreaId = merchantsModel.getAreaId();
             Glide.with(mContext).load(merchantsModel.getLogo()).apply(new RequestOptions().dontAnimate().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai)).into(imageView1);
+
+            if (merchantsModel.getShopFrontImg() != null && TextUtils.isEmpty(merchantsModel.getShopFrontImg())) {
+                if (merchantsModel.getShopFrontImg().contains(",")) {
+                    allSelect.addAll(Arrays.asList(merchantsModel.getShopFrontImg().split(",")));
+                } else {
+                    allSelect.add(merchantsModel.getShopFrontImg());
+                }
+                for (int i = 0; i < allSelect.size(); i++) {
+                    MultiShopFront shopFront = new MultiShopFront(MultiShopFront.LookImg);
+                    shopFront.setPath(allSelect.get(i));
+                    multiShopFrontList.add(multiShopFrontList.size() - 1, shopFront);
+                }
+                //超过或等于6张删除掉上传默认上传的那张
+                maxSize = 6 - allSelect.size();
+                if (maxSize <= 0) {
+                    multiShopFrontList.remove(multiShopFrontList.size() - 1);
+                }
+            }
         }
 
-        MultiShopFront multiShopFront = new MultiShopFront(MultiShopFront.upImg);
-        multiShopFront.setId(R.mipmap.g01_01shangchuan);
-        multiItemCommentList.add(multiShopFront);
-
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
-        shopFrontAdapter = new ShopFrontAdapter(multiItemCommentList);
+        shopFrontAdapter = new ShopFrontAdapter(multiShopFrontList);
         recyclerView.setAdapter(shopFrontAdapter);
         shopFrontAdapter.notifyDataSetChanged();
+        recyclerView.setNestedScrollingEnabled(false);
 
         initListener();
     }
@@ -342,40 +360,60 @@ public class EditMerchantsActivity extends BaseActivity implements OnGetGeoCoder
                     imgType = 2;
                     showDialog();
                 } else {
-                    // 仅需一行代码,默认配置为：
-                    //      显示顶部进度指示器、
-                    //      显示右侧下载按钮、
-                    //      隐藏左侧关闭按钮、
-                    //      开启点击图片关闭、
-                    //      关闭下拉图片关闭、
-                    //      加载方式为手动模式
-                    //      加载原图的百分比在底部
-                    ImagePreview
-                            .getInstance()
-                            // 上下文，必须是activity，不需要担心内存泄漏，本框架已经处理好；
-                            .setContext(mContext)
-                            .setEnableDragClose(true) //下拉图片关闭
-                            .setShowDownButton(false)
-                            // 设置从第几张开始看（索引从0开始）
-                            .setIndex(position)
-                            .setShowErrorToast(true)//加载失败提示
-                            //=================================================================================================
-                            // 有三种设置数据集合的方式，根据自己的需求进行三选一：
-                            // 1：第一步生成的imageInfo List
-                            //.setImageInfoList(imageInfoList)
-
-                            // 2：直接传url List
-                            .setImageList(allSelect)
-
-                            // 3：只有一张图片的情况，可以直接传入这张图片的url
-                            //.setImage(String image)
-                            //=================================================================================================
-
-                            // 开启预览
-                            .start();
+                    //showBigImg(allSelect, position);
                 }
             }
         });
+
+        shopFrontAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                multiShopFrontList.remove(position);
+                shopFrontAdapter.setNewData(multiShopFrontList);
+                shopFrontAdapter.notifyDataSetChanged();
+                allSelect.remove(position);
+                maxSize = 6 - allSelect.size();
+                if (maxSize == 1) {
+                    MultiShopFront shopFront = new MultiShopFront(MultiShopFront.upImg);
+                    shopFront.setId(R.mipmap.g01_01shangchuan);
+                    multiShopFrontList.add(shopFront);
+                }
+            }
+        });
+    }
+
+    public void showBigImg(List<String> imgUrlList, int position) {
+// 仅需一行代码,默认配置为：
+        //      显示顶部进度指示器、
+        //      显示右侧下载按钮、
+        //      隐藏左侧关闭按钮、
+        //      开启点击图片关闭、
+        //      关闭下拉图片关闭、
+        //      加载方式为手动模式
+        //      加载原图的百分比在底部
+        ImagePreview
+                .getInstance()
+                // 上下文，必须是activity，不需要担心内存泄漏，本框架已经处理好；
+                .setContext(mContext)
+                .setEnableDragClose(true) //下拉图片关闭
+                .setShowDownButton(false)
+                // 设置从第几张开始看（索引从0开始）
+                .setIndex(position)
+                .setShowErrorToast(true)//加载失败提示
+                //=================================================================================================
+                // 有三种设置数据集合的方式，根据自己的需求进行三选一：
+                // 1：第一步生成的imageInfo List
+                //.setImageInfoList(imageInfoList)
+
+                // 2：直接传url List
+                .setImageList(imgUrlList)
+
+                // 3：只有一张图片的情况，可以直接传入这张图片的url
+                //.setImage(String image)
+                //=================================================================================================
+
+                // 开启预览
+                .start();
     }
 
     @OnClick({R.id.left_button, R.id.imageView1, R.id.ll_discount, R.id.submit, R.id.tvCode, R.id.rl_merchants_type, R.id.rl_merchants_area})
@@ -778,6 +816,18 @@ public class EditMerchantsActivity extends BaseActivity implements OnGetGeoCoder
                         Glide.with(EditMerchantsActivity.this).load(photo1).into(imageView1);
                     } else {
                         allSelect.addAll(strings);
+                        multiShopFrontList.clear();
+                        for (int i = 0; i < allSelect.size(); i++) {
+                            MultiShopFront shopFront = new MultiShopFront(MultiShopFront.LookImg);
+                            shopFront.setPath(allSelect.get(i));
+                            multiShopFrontList.add(multiShopFrontList.size() - 1, shopFront);
+                        }
+                        maxSize = 6 - allSelect.size();
+                        if (maxSize <= 0) {
+                            multiShopFrontList.remove(multiShopFrontList.size() - 1);
+                        }
+                        shopFrontAdapter.setNewData(multiShopFrontList);
+                        shopFrontAdapter.notifyDataSetChanged();
                         //Glide.with(EditMerchantsActivity.this).load(photo2).into(imageView2);
                     }
                     break;
@@ -789,6 +839,18 @@ public class EditMerchantsActivity extends BaseActivity implements OnGetGeoCoder
                         Glide.with(EditMerchantsActivity.this).load(photo1).into(imageView1);
                     } else {
                         allSelect.add(path);
+                        multiShopFrontList.clear();
+                        for (int i = 0; i < allSelect.size(); i++) {
+                            MultiShopFront shopFront = new MultiShopFront(MultiShopFront.LookImg);
+                            shopFront.setPath(allSelect.get(i));
+                            multiShopFrontList.add(multiShopFrontList.size() - 1, shopFront);
+                        }
+                        maxSize = 6 - allSelect.size();
+                        if (maxSize <= 0) {
+                            multiShopFrontList.remove(multiShopFrontList.size() - 1);
+                        }
+                        shopFrontAdapter.setNewData(multiShopFrontList);
+                        shopFrontAdapter.notifyDataSetChanged();
                         //Glide.with(EditMerchantsActivity.this).load(photo2).into(imageView2);
                     }
                     break;
