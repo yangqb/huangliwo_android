@@ -101,7 +101,7 @@ public class Urls {
     /*
      * 获取商城分类
      * */
-    public static final String GET_SHOP_CLASS = BASE_URL + "fhwl/shop/getGoodCls";
+    public static final String GET_SHOP_CLASS = BASE_URL + "fhwl/shop/getshop";
 
     /*
      * 商城分类的商品

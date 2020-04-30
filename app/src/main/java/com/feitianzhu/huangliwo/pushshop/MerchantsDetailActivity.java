@@ -740,7 +740,7 @@ public class MerchantsDetailActivity extends BaseActivity implements BusinessHou
 
 
         if (TextUtils.isEmpty(merchantsName) || TextUtils.isEmpty(phone)
-                || TextUtils.isEmpty(address) || TextUtils.isEmpty(percentage) || (!isTimes || !isWeek)) {
+                || TextUtils.isEmpty(address) || TextUtils.isEmpty(percentage) || (!isTimes || !isWeek) || allSelect.size() <= 0) {
             ToastUtils.show("您的资料填写不完整");
             return;
         }

@@ -545,7 +545,7 @@ public class EditMerchantsActivity extends BaseActivity implements OnGetGeoCoder
 
         if (merchantsModel != null) {
             if (TextUtils.isEmpty(merchantsName) || clsName == null || TextUtils.isEmpty(phone) || (llCode.getVisibility() == View.VISIBLE && TextUtils.isEmpty(smsCode))
-                    || mProvinceName == null || mCityName == null || mAreaName == null || TextUtils.isEmpty(address) || TextUtils.isEmpty(percentage)) {
+                    || mProvinceName == null || mCityName == null || mAreaName == null || TextUtils.isEmpty(address) || TextUtils.isEmpty(percentage) && allSelect.size() <= 0) {
                 ToastUtils.show("您的资料填写不完整");
                 return;
             }
