@@ -22,6 +22,7 @@ import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.MineQRcodeModel;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ShareImageUtils;
+import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.view.CircleImageView;
 import com.hjq.toast.ToastUtils;
 import com.lzy.okgo.OkGo;
@@ -39,7 +40,6 @@ import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.onekeyshare.OnekeyShare;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
-import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
 import static com.feitianzhu.huangliwo.common.Constant.USERID;
 
 /**
@@ -107,7 +107,7 @@ public class MineQrcodeActivity extends BaseActivity {
     @Override
     protected void initData() {
 
-        OkGo.<LzyResponse<MineQRcodeModel>>get(Common_HEADER + Constant.POST_MINE_QRCODE)
+        OkGo.<LzyResponse<MineQRcodeModel>>get(Urls.BASE_URL + Constant.POST_MINE_QRCODE)
                 .tag(this)
                 .params(ACCESSTOKEN, token)//
                 .params(USERID, userId)

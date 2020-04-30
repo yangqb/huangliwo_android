@@ -51,7 +51,6 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
-import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
 import static com.feitianzhu.huangliwo.common.Constant.USERID;
 
 /**
@@ -240,7 +239,7 @@ public class VipUpgradeActivity extends BaseActivity {
             appId = "";
         }
 
-        OkGo.<LzyResponse<PayModel>>post(Common_HEADER + Constant.POST_UNION_LEVEL_PAY)
+        OkGo.<LzyResponse<PayModel>>post(Urls.BASE_URL + Constant.POST_UNION_LEVEL_PAY)
                 .tag(this)
                 .params(ACCESSTOKEN, token)//
                 .params(USERID, userId)

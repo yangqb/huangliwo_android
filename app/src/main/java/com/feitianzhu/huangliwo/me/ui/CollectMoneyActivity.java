@@ -23,10 +23,6 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import okhttp3.Call;
 
-import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
-import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
-import static com.feitianzhu.huangliwo.common.Constant.USERID;
-
 /**
  * Created by Vya on 2017/8/31 0031.
  */

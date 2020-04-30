@@ -18,11 +18,6 @@ import java.util.List;
 import butterknife.BindView;
 import okhttp3.Call;
 
-import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
-import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
-import static com.feitianzhu.huangliwo.common.Constant.POST_MINE_INFO;
-import static com.feitianzhu.huangliwo.common.Constant.USERID;
-
 /**
  * Created by Vya on 2017/8/29 0029.
  */

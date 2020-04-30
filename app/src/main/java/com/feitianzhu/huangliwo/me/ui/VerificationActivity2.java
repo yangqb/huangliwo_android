@@ -27,6 +27,7 @@ import com.feitianzhu.huangliwo.shop.ui.dialog.ProvinceDialog2;
 import com.feitianzhu.huangliwo.utils.Glide4Engine;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.StringUtils;
+import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.view.CustomRefundView;
 import com.feitianzhu.huangliwo.view.CustomSelectPhotoView;
 import com.hjq.permissions.OnPermission;
@@ -51,7 +52,6 @@ import butterknife.OnClick;
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.huangliwo.common.Constant.CERTIFNO;
 import static com.feitianzhu.huangliwo.common.Constant.CERTIFTYPE;
-import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
 import static com.feitianzhu.huangliwo.common.Constant.LOADER_VERI_USER_INFO;
 import static com.feitianzhu.huangliwo.common.Constant.POST_REALAUTH;
 import static com.feitianzhu.huangliwo.common.Constant.REALNAME;
@@ -150,7 +150,7 @@ public class VerificationActivity2 extends BaseActivity implements ProvinceCallB
 
     public void getAuthInfo() {
 
-        OkGo.<LzyResponse<UserVeriModel>>get(Common_HEADER + LOADER_VERI_USER_INFO)
+        OkGo.<LzyResponse<UserVeriModel>>get(Urls.BASE_URL + LOADER_VERI_USER_INFO)
                 .tag(this)
                 .params(ACCESSTOKEN, token)
                 .params(USERID, userId)
@@ -255,7 +255,7 @@ public class VerificationActivity2 extends BaseActivity implements ProvinceCallB
             businatures = (index + 1) + "";
         }
 
-        OkGo.<LzyResponse>post(Common_HEADER + POST_REALAUTH)
+        OkGo.<LzyResponse>post(Urls.BASE_URL + POST_REALAUTH)
                 .tag(this)
                 .params("certifFile", new File(photo_file_one), "01.png")//
                 .params("certifFile", new File(photo_file_two), "02.png")//

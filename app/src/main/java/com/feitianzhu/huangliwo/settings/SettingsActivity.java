@@ -37,7 +37,6 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
-import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
 import static com.feitianzhu.huangliwo.common.Constant.LOAD_USER_AUTH;
 import static com.feitianzhu.huangliwo.common.Constant.UAPDATE;
 import static com.feitianzhu.huangliwo.common.Constant.USERID;
@@ -104,7 +103,7 @@ public class SettingsActivity extends BaseActivity {
         }
         String token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         String userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
-        OkGo.<LzyResponse<UserAuth>>post(Common_HEADER + LOAD_USER_AUTH)
+        OkGo.<LzyResponse<UserAuth>>post(Urls.BASE_URL + LOAD_USER_AUTH)
                 .params(ACCESSTOKEN, token)//
                 .params(USERID, userId)//
                 .execute(new JsonCallback<LzyResponse<UserAuth>>() {
@@ -205,7 +204,7 @@ public class SettingsActivity extends BaseActivity {
                 .Builder()
                 .setActivity(this)
                 .setHttpManager(new UpdateAppHttpUtil(this))
-                .setUpdateUrl(Common_HEADER + UAPDATE)
+                .setUpdateUrl(Urls.BASE_URL + UAPDATE)
                 .setPost(false)
                 .setThemeColor(0xfffed428)
                 .build()

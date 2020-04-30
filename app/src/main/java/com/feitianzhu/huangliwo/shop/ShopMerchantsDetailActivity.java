@@ -65,7 +65,6 @@ import butterknife.OnClick;
 import cc.shinichi.library.ImagePreview;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
-import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
 import static com.feitianzhu.huangliwo.common.Constant.POST_MINE_INFO;
 import static com.feitianzhu.huangliwo.common.Constant.USERID;
 import static com.feitianzhu.huangliwo.vip.VipGiftDetailActivity.GIFT_ID;
@@ -620,7 +619,7 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
     }
 
     public void getUserInfo() {
-        OkGo.<LzyResponse<MineInfoModel>>get(Common_HEADER + POST_MINE_INFO)
+        OkGo.<LzyResponse<MineInfoModel>>get(Urls.BASE_URL + POST_MINE_INFO)
                 .tag(this)
                 .params(ACCESSTOKEN, token)//
                 .params(USERID, userId)

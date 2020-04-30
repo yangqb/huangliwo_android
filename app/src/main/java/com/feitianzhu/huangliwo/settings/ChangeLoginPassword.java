@@ -15,10 +15,13 @@ import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.login.ForgetPasswordActivity;
 import com.feitianzhu.huangliwo.login.LoginActivity;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
+import com.feitianzhu.huangliwo.pushshop.EditMerchantsActivity;
 import com.feitianzhu.huangliwo.utils.EncryptUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.hjq.toast.ToastUtils;
+import com.lxj.xpopup.XPopup;
+import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.lzy.okgo.OkGo;
 
 import butterknife.BindView;
@@ -118,12 +121,23 @@ public class ChangeLoginPassword extends BaseActivity {
                             public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
                                 super.onSuccess(ChangeLoginPassword.this, response.body().msg, response.body().code);
                                 if (response.body().code == 0) {
-                                    ToastUtils.show(R.string.change_ok);
                                     SPUtils.putString(mContext, Constant.SP_PASSWORD, finalNewPassword);
-                                    Intent intent = new Intent(ChangeLoginPassword.this, LoginActivity.class);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                    startActivity(intent);
-                                    finish();
+                                    new XPopup.Builder(ChangeLoginPassword.this)
+                                            .dismissOnTouchOutside(false)
+                                            .dismissOnBackPressed(false)
+                                            .autoDismiss(false)
+                                            .enableDrag(false)
+                                            .asConfirm("", "修改密码成功，请从新登录", "", "确定", new OnConfirmListener() {
+                                                @Override
+                                                public void onConfirm() {
+                                                    Intent intent = new Intent(ChangeLoginPassword.this, LoginActivity.class);
+                                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                    startActivity(intent);
+                                                    finish();
+                                                }
+                                            }, null, true)
+                                            .bindLayout(R.layout.layout_dialog_login) //绑定已有布局
+                                            .show();
                                 }
                             }
 

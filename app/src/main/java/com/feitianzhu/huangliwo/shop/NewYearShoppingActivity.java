@@ -33,7 +33,6 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
-import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
 import static com.feitianzhu.huangliwo.common.Constant.POST_MINE_INFO;
 import static com.feitianzhu.huangliwo.common.Constant.USERID;
 
@@ -134,7 +133,7 @@ public class NewYearShoppingActivity extends BaseActivity {
     }
 
     private void requestData() {
-        OkGo.<LzyResponse<MineInfoModel>>get(Common_HEADER + POST_MINE_INFO)
+        OkGo.<LzyResponse<MineInfoModel>>get(Urls.BASE_URL + POST_MINE_INFO)
                 .tag(this)
                 .params(ACCESSTOKEN, token)//
                 .params(USERID, userId)

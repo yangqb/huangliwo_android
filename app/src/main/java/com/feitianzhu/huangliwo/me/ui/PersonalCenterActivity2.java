@@ -25,6 +25,7 @@ import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.SharedInfoModel;
 import com.feitianzhu.huangliwo.utils.Glide4Engine;
 import com.feitianzhu.huangliwo.utils.SPUtils;
+import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.view.CircleImageView;
 import com.feitianzhu.huangliwo.view.CustomSelectPhotoView;
 import com.hjq.permissions.OnPermission;
@@ -51,7 +52,6 @@ import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.onekeyshare.OnekeyShare;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
-import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
 import static com.feitianzhu.huangliwo.common.Constant.POST_MINE_INFO;
 import static com.feitianzhu.huangliwo.common.Constant.POST_UPLOAD_PIC;
 import static com.feitianzhu.huangliwo.common.Constant.USERID;
@@ -145,7 +145,7 @@ public class PersonalCenterActivity2 extends BaseActivity {
     }
 
     private void requestData() {
-        OkGo.<LzyResponse<MineInfoModel>>get(Common_HEADER + POST_MINE_INFO)
+        OkGo.<LzyResponse<MineInfoModel>>get(Urls.BASE_URL + POST_MINE_INFO)
                 .tag(this)
                 .params(ACCESSTOKEN, token)//
                 .params(USERID, userId)
@@ -285,7 +285,7 @@ public class PersonalCenterActivity2 extends BaseActivity {
      */
     private void getSharedInfo() {
 
-        OkGo.<LzyResponse<SharedInfoModel>>post(Common_HEADER + Constant.GET_SHARED_INFO)
+        OkGo.<LzyResponse<SharedInfoModel>>post(Urls.BASE_URL + Constant.GET_SHARED_INFO)
                 .tag(this)
                 .params(ACCESSTOKEN, token)//
                 .params(USERID, userId)
@@ -359,7 +359,7 @@ public class PersonalCenterActivity2 extends BaseActivity {
     }
 
     private void uploadPic(String compressPath) {
-        OkGo.<LzyResponse>post(Common_HEADER + POST_UPLOAD_PIC)
+        OkGo.<LzyResponse>post(Urls.BASE_URL + POST_UPLOAD_PIC)
                 .tag(this)
                 .params(ACCESSTOKEN, token)//
                 .params(USERID, userId)

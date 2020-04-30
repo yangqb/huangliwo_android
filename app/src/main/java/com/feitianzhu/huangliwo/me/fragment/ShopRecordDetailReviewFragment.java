@@ -22,10 +22,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import okhttp3.Call;
 
-import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
-import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
-import static com.feitianzhu.huangliwo.common.Constant.POST_SHOP_RECORDEDETAIL;
-import static com.feitianzhu.huangliwo.common.Constant.USERID;
 
 /**
  * Created by Vya on 2017/9/13 0013.

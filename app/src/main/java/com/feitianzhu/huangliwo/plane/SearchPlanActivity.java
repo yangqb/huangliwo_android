@@ -265,7 +265,7 @@ public class SearchPlanActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == DATE_REQUEST_CODE) {
-                customFightCityInfo.goDate = data.getStringExtra(PlaneCalendarActivity.SELECT_DATE);
+                customFightCityInfo.goDate = data.getStringExtra(PlaneCalendarActivity.SELECT_DATE).split("=")[0];
                 initData();
             }
         }

@@ -19,11 +19,6 @@ import butterknife.OnClick;
 import okhttp3.Call;
 import okhttp3.Response;
 
-import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
-import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
-import static com.feitianzhu.huangliwo.common.Constant.POST_SCORE_GET;
-import static com.feitianzhu.huangliwo.common.Constant.USERID;
-
 /**
  * Created by Vya on 2017/9/24.
  * 转入余额界面

@@ -29,12 +29,6 @@ import java.util.ArrayList;
 import okhttp3.Call;
 import okhttp3.Response;
 
-import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
-import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
-import static com.feitianzhu.huangliwo.common.Constant.FailCode;
-import static com.feitianzhu.huangliwo.common.Constant.POST_BUY_SERVICE;
-import static com.feitianzhu.huangliwo.common.Constant.POST_SHOP_RECORD_SEND;
-import static com.feitianzhu.huangliwo.common.Constant.USERID;
 
 /**
  * Created by lijia on 2017/9/4 0004.

@@ -19,12 +19,14 @@ import com.feitianzhu.huangliwo.home.HomeFragment;
 import com.feitianzhu.huangliwo.home.HomeFragment2;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
+import com.feitianzhu.huangliwo.login.LoginActivity;
 import com.feitianzhu.huangliwo.me.MyCenterFragment;
 import com.feitianzhu.huangliwo.message.MessageFragment;
 import com.feitianzhu.huangliwo.model.HomePopModel;
 import com.feitianzhu.huangliwo.model.LocationPost;
 import com.feitianzhu.huangliwo.model.MyPoint;
 import com.feitianzhu.huangliwo.model.UpdateAppModel;
+import com.feitianzhu.huangliwo.settings.ChangeLoginPassword;
 import com.feitianzhu.huangliwo.shop.CommodityClassificationFragment;
 import com.feitianzhu.huangliwo.shop.NewYearShoppingActivity;
 import com.feitianzhu.huangliwo.utils.LocationUtils;
@@ -37,6 +39,9 @@ import com.google.gson.Gson;
 import com.gyf.immersionbar.ImmersionBar;
 import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
+import com.lxj.xpopup.core.BasePopupView;
+import com.lxj.xpopup.impl.ConfirmPopupView;
+import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.socks.library.KLog;
@@ -56,7 +61,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
 import static com.feitianzhu.huangliwo.common.Constant.UAPDATE;
 
 public class MainActivity extends SFActivity implements View.OnClickListener, HomeFragment2.CallbackBFragment {
@@ -125,6 +129,21 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
                 .statusBarDarkFont(true, 0.2f)
                 .statusBarColor(R.color.bg_yellow)
                 .init();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopAnimation();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbinder.unbind();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true) //在ui线程执行
@@ -273,12 +292,6 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
         mImgMe.setSelected(false);
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        stopAnimation();
-    }
-
     private void stopAnimation() {
         if (null != animator)
             animator.cancel();
@@ -318,7 +331,7 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
                 .Builder()
                 .setActivity(this)
                 .setHttpManager(new UpdateAppHttpUtil(this))
-                .setUpdateUrl(Common_HEADER + UAPDATE)
+                .setUpdateUrl(Urls.BASE_URL + UAPDATE)
                 .setPost(false)
                 .setThemeColor(0xfffed428)
                 .setUpdateDialogFragmentListener(new IUpdateDialogFragmentListener() {
@@ -418,24 +431,30 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
                         })).show();
     }
 
-    //对返回键进行监听
+    /**
+     * 上次点击返回键的时间
+     */
+    private long lastBackPressed;
+    /**
+     * 两次点击的间隔时间
+     */
+    private static final int QUIT_INTERVAL = 3000;
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-            finish();
-            System.exit(0);
+            long backPressed = System.currentTimeMillis();
+            if (backPressed - lastBackPressed > QUIT_INTERVAL) {
+                lastBackPressed = backPressed;
+                ToastUtils.show("再按一次退出程序");
+            } else {
+                finish();
+                System.exit(0);
+            }
             return true;
         }
         return super.onKeyDown(keyCode, event);
-    }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        unbinder.unbind();
-        if (EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().unregister(this);
-        }
     }
 
     @Override
@@ -443,4 +462,5 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
         this.type = type;
         showFragment(view);
     }
+
 }

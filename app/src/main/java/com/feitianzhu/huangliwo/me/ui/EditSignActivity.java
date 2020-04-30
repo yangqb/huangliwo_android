@@ -14,6 +14,7 @@ import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.login.LoginEvent;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.utils.SPUtils;
+import com.feitianzhu.huangliwo.utils.Urls;
 import com.hjq.toast.ToastUtils;
 import com.lzy.okgo.OkGo;
 
@@ -23,7 +24,6 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
-import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
 import static com.feitianzhu.huangliwo.common.Constant.EDIT_MINE_INFO;
 import static com.feitianzhu.huangliwo.common.Constant.USERID;
 
@@ -77,7 +77,7 @@ public class EditSignActivity extends BaseActivity {
     }
 
     private void sendSaveRequest() {
-        OkGo.<LzyResponse>post(Common_HEADER + EDIT_MINE_INFO)
+        OkGo.<LzyResponse>post(Urls.BASE_URL + EDIT_MINE_INFO)
                 .tag(this)
                 .params(ACCESSTOKEN, token)//
                 .params(USERID, userId)

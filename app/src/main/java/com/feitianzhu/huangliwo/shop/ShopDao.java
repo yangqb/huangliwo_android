@@ -11,9 +11,9 @@ import com.feitianzhu.huangliwo.model.ShopsNearby;
 import com.feitianzhu.huangliwo.model.UserAuth;
 import com.feitianzhu.huangliwo.model.WXModel;
 import com.feitianzhu.huangliwo.utils.SPUtils;
+import com.feitianzhu.huangliwo.utils.Urls;
 import com.lzy.okgo.OkGo;
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
-import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
 import static com.feitianzhu.huangliwo.common.Constant.LOAD_USER_AUTH;
 import static com.feitianzhu.huangliwo.common.Constant.USERID;
 
@@ -45,7 +45,7 @@ public class ShopDao {
         Constant.mUserAuth = null;
         String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN);
         String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID);
-        OkGo.<LzyResponse<UserAuth>>post(Common_HEADER + LOAD_USER_AUTH)
+        OkGo.<LzyResponse<UserAuth>>post(Urls.BASE_URL + LOAD_USER_AUTH)
                 .params(ACCESSTOKEN, token)//
                 .params(USERID, userId)//
                 .execute(new JsonCallback<LzyResponse<UserAuth>>() {

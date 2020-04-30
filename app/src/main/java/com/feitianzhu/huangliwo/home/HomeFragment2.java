@@ -92,7 +92,6 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
-import static com.feitianzhu.huangliwo.common.Constant.Common_HEADER;
 import static com.feitianzhu.huangliwo.common.Constant.POST_MINE_INFO;
 import static com.feitianzhu.huangliwo.common.Constant.USERID;
 import static com.feitianzhu.huangliwo.login.LoginEvent.EDITOR_INFO;
@@ -752,7 +751,7 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, Pager
      * 获取头像
      * */
     private void requestData() {
-        OkGo.<LzyResponse<MineInfoModel>>get(Common_HEADER + POST_MINE_INFO)
+        OkGo.<LzyResponse<MineInfoModel>>get(Urls.BASE_URL + POST_MINE_INFO)
                 .tag(this)
                 .params(ACCESSTOKEN, token)
                 .params(USERID, userId)
