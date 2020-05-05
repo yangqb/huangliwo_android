@@ -103,7 +103,7 @@
                                     android:id="@+id/teamCount"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="23"
+                                    android:text="0"
                                     android:textColor="@color/color_333333"
                                     android:textSize="17sp" />
 
@@ -131,7 +131,7 @@
                                     android:id="@+id/superCount"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="23"
+                                    android:text="0"
                                     android:textColor="@color/color_333333"
                                     android:textSize="17sp" />
 
@@ -159,7 +159,7 @@
                                     android:id="@+id/optCount"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="23"
+                                    android:text="0"
                                     android:textColor="@color/color_333333"
                                     android:textSize="17sp" />
 
@@ -186,7 +186,7 @@
                                     android:id="@+id/consumerCount"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="23"
+                                    android:text="0"
                                     android:textColor="@color/color_333333"
                                     android:textSize="17sp" />
 

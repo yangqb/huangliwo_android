@@ -270,8 +270,8 @@ public class PlaneOrderDetailActivity extends BaseActivity {
                                 goArrTime.setText(docOrderDetailInfo.flightInfo.get(0).deptTime.split("-")[4]);
                                 contactName.setText(docOrderDetailInfo.contacterInfo.name);
                                 contactPhone.setText(docOrderDetailInfo.contacterInfo.mobile.substring(0, 3) + "****" + docOrderDetailInfo.contacterInfo.mobile.substring(8, 11));
-
-                                mAdapter.setNewData(docOrderDetailInfo.passengers);
+                                passengers = docOrderDetailInfo.passengers;
+                                mAdapter.setNewData(passengers);
                                 mAdapter.notifyDataSetChanged();
 
                                 if (docOrderDetailInfo.passengerTypes.size() > 0) {
@@ -350,8 +350,8 @@ public class PlaneOrderDetailActivity extends BaseActivity {
                                 backArrTime.setText(docOrderDetailInfo.flightInfo.get(1).deptTime.split("-")[4]);
                                 contactName.setText(docOrderDetailInfo.contacterInfo.name);
                                 contactPhone.setText(docOrderDetailInfo.contacterInfo.mobile.substring(0, 3) + "****" + docOrderDetailInfo.contacterInfo.mobile.substring(8, 11));
-
-                                mAdapter.setNewData(docOrderDetailInfo.passengers);
+                                passengers = docOrderDetailInfo.passengers;
+                                mAdapter.setNewData(passengers);
                                 mAdapter.notifyDataSetChanged();
 
                                 if (docOrderDetailInfo.passengerTypes.size() > 0) {

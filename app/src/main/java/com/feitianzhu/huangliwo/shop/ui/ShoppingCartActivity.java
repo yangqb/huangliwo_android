@@ -31,6 +31,7 @@ import com.feitianzhu.huangliwo.shop.ShopsDetailActivity;
 import com.feitianzhu.huangliwo.shop.adapter.ShoppingCartAdapter;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
+import com.feitianzhu.huangliwo.utils.doubleclick.SingleClick;
 import com.feitianzhu.huangliwo.view.CustomInputView;
 import com.feitianzhu.huangliwo.view.CustomSpecificationDialog;
 import com.google.gson.Gson;
@@ -419,6 +420,7 @@ public class ShoppingCartActivity extends BaseActivity {
     }
 
     @OnClick({R.id.left_button, R.id.tv_pay})
+    @SingleClick()
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.left_button:

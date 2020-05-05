@@ -163,8 +163,9 @@ public class VipUpgradeActivity extends BaseActivity {
 
     }
 
-    @SingleClick
+
     @OnClick({R.id.left_button, R.id.weixinPay_icon, R.id.alipay_icon, R.id.balancePay_icon, R.id.tv_pay, R.id.no_address, R.id.rl_address})
+    @SingleClick()
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.left_button:

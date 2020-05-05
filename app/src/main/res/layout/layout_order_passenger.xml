@@ -1,69 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="15dp"
-    android:background="@color/white"
-    android:orientation="horizontal">
+    android:background="@color/white">
 
     <TextView
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="5dp"
         android:text="小黄鹂"
         android:textColor="@color/color_333333"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/ageType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="10dp"
         android:text="（成人票）"
+        android:textColor="@color/color_666666"
+        android:textSize="12sp"
+        app:layout_constraintBaseline_toBaselineOf="@id/name"
+        app:layout_constraintLeft_toRightOf="@id/name" />
+
+    <TextView
+        android:id="@+id/cardType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="身份证"
+        android:textColor="@color/color_666666"
+        android:textSize="12sp"
+        app:layout_constraintBaseline_toBaselineOf="@id/name"
+        app:layout_constraintLeft_toRightOf="@id/ageType" />
+
+    <TextView
+        android:id="@+id/cardNo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:text="dddddddddddd"
+        android:textColor="@color/color_666666"
+        android:textSize="12sp"
+        app:layout_constraintBaseline_toBaselineOf="@id/name"
+        app:layout_constraintLeft_toRightOf="@id/cardType" />
+
+
+    <TextView
+        android:id="@+id/tvTicketName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintLeft_toRightOf="@id/ageType"
+        app:layout_constraintTop_toBottomOf="@id/cardNo"
+        android:text="票号"
         android:textColor="@color/color_666666"
         android:textSize="12sp" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/ticketNo"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_marginTop="4dp"
+        android:layout_marginStart="5dp"
+        app:layout_constraintBaseline_toBaselineOf="@id/tvTicketName"
+        app:layout_constraintLeft_toRightOf="@id/tvTicketName"
+        app:layout_constraintTop_toBottomOf="@id/cardNo"
+        android:text="cccccc"
+        android:textColor="@color/color_666666"
+        android:textSize="12sp" />
 
-        <TextView
-            android:id="@+id/cardNo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="身份证 1234567891234123456"
-            android:textColor="@color/color_666666"
-            android:textSize="12sp" />
+    <RelativeLayout
+        android:id="@+id/rl_copy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="7dp"
+        app:layout_constraintLeft_toRightOf="@id/ticketNo"
+        app:layout_constraintTop_toBottomOf="@id/ageType">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical">
-
-            <TextView
-                android:id="@+id/ticketNo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="票号 123-0123456789"
-                android:textColor="@color/color_666666"
-                android:textSize="12sp" />
-
-            <RelativeLayout
-                android:id="@+id/rl_copy"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="10dp">
-
-                <ImageView
-                    android:layout_width="10dp"
-                    android:layout_height="10dp"
-                    android:background="@mipmap/fuzhia" />
-            </RelativeLayout>
-        </LinearLayout>
-
-    </LinearLayout>
+        <ImageView
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:background="@mipmap/fuzhia" />
+    </RelativeLayout>
 
 
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>

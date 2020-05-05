@@ -625,7 +625,7 @@ public class DateUtils {
      * */
     public static String strToStr2(String str) {
         String[] result = str.split("-");
-        return result[1] + "-" + result[2] + "-" + result[2];
+        return result[0] + "-" + result[1] + "-" + result[2];
     }
 
     /*

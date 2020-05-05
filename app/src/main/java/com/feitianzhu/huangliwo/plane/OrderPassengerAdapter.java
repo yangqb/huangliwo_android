@@ -26,16 +26,19 @@ public class OrderPassengerAdapter extends BaseQuickAdapter<DocOrderDetailPassen
     @Override
     protected void convert(@NonNull BaseViewHolder helper, DocOrderDetailPassengersInfo item) {
         helper.setText(R.id.name, item.name);
-        helper.setText(R.id.ageType, "(" + item.type + ")");
-        helper.setText(R.id.cardNo, item.cardType + item.cardNum);
+        helper.setText(R.id.ageType, "（" + item.type + "）");
+        helper.setText(R.id.cardNo, item.cardNum);
+        helper.setText(R.id.cardType, item.cardType);
         if (item.ticketNo == null || TextUtils.isEmpty(item.ticketNo)) {
+            helper.setGone(R.id.rl_copy, false);
             helper.setGone(R.id.ticketNo, false);
+            helper.setGone(R.id.tvTicketName,false);
         } else {
+            helper.setGone(R.id.rl_copy, true);
             helper.setGone(R.id.ticketNo, true);
+            helper.setGone(R.id.tvTicketName,true);
             helper.setText(R.id.ticketNo, item.ticketNo);
         }
         helper.addOnClickListener(R.id.rl_copy);
-
-
     }
 }

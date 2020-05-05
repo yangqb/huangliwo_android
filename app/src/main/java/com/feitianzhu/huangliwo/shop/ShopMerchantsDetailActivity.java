@@ -89,7 +89,6 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
     public static final String QQMAP_PACKAGENAME = "com.tencent.map";
     private ShopDetailAdapter mAdapter;
     private MerchantsModel merchantsBean;
-    ;
     private MineInfoModel mineInfoModel = new MineInfoModel();
     private List<MultipleMerchantsItem> multipleItemList = new ArrayList<>();
     private List<SetMealInfo> setMealInfoList = new ArrayList<>();
@@ -313,6 +312,7 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
                     }
                 });
     }
+
     public void deleteCollect() {
         CollectionBody collectionBody = new CollectionBody();
         collectionBody.type = 1;
@@ -592,8 +592,9 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
                             tvRebate.setText("奖励" + MathUtils.subZero(discount) + "%");
                             vipRebate.setText("奖励" + MathUtils.subZero(discount) + "%");
                             getSetMealList(merchantsId);
-                            String urlLogo = merchantsBean.getShopFrontImg() == null ? "" : merchantsBean.getShopFrontImg();
-                            imgs.add(urlLogo);
+                            if (merchantsBean.getShopFrontImg() != null && merchantsBean.getShopFrontImg().contains(",")) {
+                                imgs.addAll(Arrays.asList(merchantsBean.getShopFrontImg().split(",")));
+                            }
                             mViewpager.setCanLoop(true)
                                     .setAutoPlay(true)
                                     .setIndicatorStyle(IndicatorStyle.CIRCLE)

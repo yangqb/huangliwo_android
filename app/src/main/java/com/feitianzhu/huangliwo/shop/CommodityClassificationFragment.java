@@ -58,6 +58,7 @@ import com.lzy.okgo.request.base.Request;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -247,16 +248,18 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                             ShopClassify shopClassify = response.body().data;
                             shopClassifyLsit = shopClassify.getGGoodsClsList();
                             multiItemShopAndMerchantsClass.clear();
-                            for (int i = 0; i < shopClassifyLsit.size(); i++) {
-                                MultiItemShopAndMerchants multiItemShopAndMerchants = new MultiItemShopAndMerchants(MultiItemShopAndMerchants.SHOP_TYPE);
-                                multiItemShopAndMerchants.setShopClassifyModel(shopClassifyLsit.get(i));
-                                multiItemShopAndMerchantsClass.add(multiItemShopAndMerchants);
+                            if (shopClassifyLsit != null && shopClassifyLsit.size() > 0) {
+                                for (int i = 0; i < shopClassifyLsit.size(); i++) {
+                                    MultiItemShopAndMerchants multiItemShopAndMerchants = new MultiItemShopAndMerchants(MultiItemShopAndMerchants.SHOP_TYPE);
+                                    multiItemShopAndMerchants.setShopClassifyModel(shopClassifyLsit.get(i));
+                                    multiItemShopAndMerchantsClass.add(multiItemShopAndMerchants);
+                                }
+                                leftAdapter.setSelect(0);
+                                leftAdapter.setNewData(multiItemShopAndMerchantsClass);
+                                leftAdapter.notifyDataSetChanged();
+                                clsShopId = shopClassifyLsit.get(0).getClsId();
+                                getShops(clsShopId);
                             }
-                            leftAdapter.setSelect(0);
-                            leftAdapter.setNewData(multiItemShopAndMerchantsClass);
-                            leftAdapter.notifyDataSetChanged();
-                            clsShopId = shopClassifyLsit.get(0).getClsId();
-                            getShops(clsShopId);
                         }
                     }
 
