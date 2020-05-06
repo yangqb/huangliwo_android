@@ -296,7 +296,7 @@
                 android:paddingRight="22dp"
                 android:paddingBottom="11dp"
                 android:text="立即支付"
-                android:textColor="@color/color_666666"
+                android:textColor="@color/color_333333"
                 android:textSize="15dp"
                 android:textStyle="bold" />
 

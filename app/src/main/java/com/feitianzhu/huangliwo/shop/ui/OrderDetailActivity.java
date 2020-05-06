@@ -25,18 +25,22 @@ import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.GoodsOrderInfo;
+import com.feitianzhu.huangliwo.settings.ChangeLoginPassword;
 import com.feitianzhu.huangliwo.shop.SelectPayActivity;
 import com.feitianzhu.huangliwo.shop.ShopsDetailActivity;
 import com.feitianzhu.huangliwo.utils.DateUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
+import com.feitianzhu.huangliwo.utils.doubleclick.SingleClick;
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.XXPermissions;
 import com.hjq.toast.ToastUtils;
 import com.itheima.roundedimageview.RoundedImageView;
 import com.lxj.xpopup.XPopup;
+import com.lxj.xpopup.interfaces.OnCancelListener;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.lzy.okgo.OkGo;
+
 import java.util.List;
 import java.util.Locale;
 
@@ -106,7 +110,8 @@ public class OrderDetailActivity extends BaseActivity {
         orderNo = getIntent().getStringExtra(ORDER_NO);
     }
 
-    @OnClick({R.id.left_button, R.id.tv_copy, R.id.call_phone, R.id.cancel_order, R.id.shopPay, R.id.ll_order_detail})
+    @OnClick({R.id.left_button, R.id.tv_copy, R.id.call_phone, R.id.cancel_order, R.id.shopPay, R.id.ll_order_detail, R.id.tvStatusContent})
+    @SingleClick()
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.left_button:
@@ -166,6 +171,23 @@ public class OrderDetailActivity extends BaseActivity {
                 Intent intent = new Intent(OrderDetailActivity.this, ShopsDetailActivity.class);
                 intent.putExtra(ShopsDetailActivity.GOODS_DETAIL_DATA, goodsOrderBean.getGoodId());
                 startActivity(intent);
+                break;
+            case R.id.tvStatusContent:
+                if (goodsOrderBean != null && goodsOrderBean.getRefuseReason() != null && !TextUtils.isEmpty(goodsOrderBean.getRefuseReason())) {
+                    new XPopup.Builder(this)
+                            .asConfirm("", goodsOrderBean.getRefuseReason(), "关闭", "确定", new OnConfirmListener() {
+                                @Override
+                                public void onConfirm() {
+                                }
+                            }, new OnCancelListener() {
+                                @Override
+                                public void onCancel() {
+
+                                }
+                            }, true)
+                            .bindLayout(R.layout.layout_dialog_login)
+                            .show();//绑定已有布局
+                }
                 break;
         }
     }
@@ -261,6 +283,9 @@ public class OrderDetailActivity extends BaseActivity {
         } else {
             llStatus.setVisibility(View.GONE);
             llBottom.setVisibility(View.GONE);
+        }
+        if (goodsOrderBean.getRefuseReason() != null && !TextUtils.isEmpty(goodsOrderBean.getRefuseReason())) {
+            tvStatusContent.setText(goodsOrderBean.getRefuseReason());
         }
     }
 

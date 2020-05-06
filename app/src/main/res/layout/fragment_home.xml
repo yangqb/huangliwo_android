@@ -16,366 +16,397 @@
         android:background="@color/white"
         android:orientation="vertical">
 
-        <android.support.v4.widget.NestedScrollView
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:focusableInTouchMode="true">
+            android:background="@color/white">
 
-            <LinearLayout
+            <android.support.v4.widget.NestedScrollView
+                android:id="@+id/scrollView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:descendantFocusability="blocksDescendants"
-                android:orientation="vertical">
+                android:layout_height="match_parent"
+                android:focusableInTouchMode="true">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/bg_yellow"
+                    android:descendantFocusability="blocksDescendants"
                     android:orientation="vertical">
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="120dp"
-                        android:layout_marginLeft="@dimen/dp_10"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginRight="@dimen/dp_10"
-                        android:background="@drawable/bg_ffffff_r10"
-                        android:gravity="center_vertical"
-                        android:orientation="vertical"
-                        android:paddingLeft="6dp"
-                        android:paddingTop="@dimen/dp_10"
-                        android:paddingRight="6dp"
-                        android:paddingBottom="@dimen/dp_10">
+                        android:layout_height="wrap_content"
+                        android:background="@color/bg_yellow"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="120dp"
+                            android:layout_marginLeft="@dimen/dp_10"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginRight="@dimen/dp_10"
+                            android:background="@drawable/bg_ffffff_r10"
+                            android:gravity="center_vertical"
+                            android:orientation="vertical"
+                            android:paddingLeft="6dp"
+                            android:paddingTop="@dimen/dp_10"
+                            android:paddingRight="6dp"
+                            android:paddingBottom="@dimen/dp_10">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <RelativeLayout
+                                    android:id="@+id/rl_merchants"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1">
+
+                                    <ImageView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_centerInParent="true"
+                                        android:src="@mipmap/a02_01shangjia" />
+                                </RelativeLayout>
+
+                                <RelativeLayout
+                                    android:id="@+id/rl_mall"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1">
+
+                                    <ImageView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_centerInParent="true"
+                                        android:src="@mipmap/a02_02shangcheng" />
+                                </RelativeLayout>
+
+                                <RelativeLayout
+                                    android:id="@+id/rl_ticket"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1">
+
+                                    <ImageView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_centerInParent="true"
+                                        android:src="@mipmap/a02_03jipiao" />
+                                </RelativeLayout>
+
+                                <RelativeLayout
+                                    android:id="@+id/rl_financial"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:visibility="gone">
+
+                                    <ImageView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_centerInParent="true"
+                                        android:src="@mipmap/a02_04jinrong" />
+                                </RelativeLayout>
+
+                                <RelativeLayout
+                                    android:id="@+id/rl_travel"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1">
+
+                                    <ImageView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_centerInParent="true"
+                                        android:src="@mipmap/a02_05lvyou" />
+                                </RelativeLayout>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="5dp"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:text="商家"
+                                    android:textColor="@color/color_333333"
+                                    android:textSize="13sp" />
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:text="商城"
+                                    android:textColor="@color/color_333333"
+                                    android:textSize="13sp" />
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:text="出行"
+                                    android:textColor="@color/color_333333"
+                                    android:textSize="12sp" />
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:text="金融"
+                                    android:textColor="@color/color_333333"
+                                    android:textSize="13sp"
+                                    android:visibility="gone" />
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:text="旅游"
+                                    android:textColor="@color/color_333333"
+                                    android:textSize="13sp" />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/shape_fffae5_r10_top"
+                            android:orientation="vertical">
 
-                            <RelativeLayout
-                                android:id="@+id/rl_merchants"
-                                android:layout_width="0dp"
+                            <LinearLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1">
+                                android:layout_marginLeft="@dimen/dp_10"
+                                android:layout_marginTop="10dp"
+                                android:layout_marginRight="@dimen/dp_10"
+                                android:orientation="vertical">
 
-                                <ImageView
+                                <RelativeLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="5dp">
+
+                                    <android.support.v7.widget.RecyclerView
+                                        android:id="@+id/hList"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="70dp">
+
+                                    </android.support.v7.widget.RecyclerView>
+
+                                </RelativeLayout>
+
+                                <RelativeLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_centerInParent="true"
-                                    android:src="@mipmap/a02_01shangjia" />
-                            </RelativeLayout>
+                                    android:layout_gravity="center_horizontal"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginTop="5dp"
+                                    android:layout_marginRight="10dp"
+                                    android:layout_marginBottom="5dp"
+                                    android:background="@color/color_f7f7f7">
 
-                            <RelativeLayout
-                                android:id="@+id/rl_mall"
-                                android:layout_width="0dp"
+                                    <android.support.v7.widget.RecyclerView
+                                        android:id="@+id/indicatorRecyclerView"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content">
+
+                                    </android.support.v7.widget.RecyclerView>
+                                </RelativeLayout>
+                            </LinearLayout>
+
+                            <com.zhpan.bannerview.BannerViewPager
+                                android:id="@+id/viewpager"
+                                android:layout_width="match_parent"
+                                android:layout_height="95dp"
+                                android:layout_marginLeft="@dimen/dp_10"
+                                android:layout_marginTop="@dimen/dp_10"
+                                android:layout_marginRight="@dimen/dp_10" />
+
+                            <LinearLayout
+                                android:id="@+id/ll_notice"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1">
-
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_centerInParent="true"
-                                    android:src="@mipmap/a02_02shangcheng" />
-                            </RelativeLayout>
-
-                            <RelativeLayout
-                                android:id="@+id/rl_ticket"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1">
-
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_centerInParent="true"
-                                    android:src="@mipmap/a02_03jipiao" />
-                            </RelativeLayout>
-
-                            <RelativeLayout
-                                android:id="@+id/rl_financial"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
+                                android:layout_marginLeft="@dimen/dp_10"
+                                android:layout_marginTop="@dimen/dp_10"
+                                android:layout_marginRight="@dimen/dp_10"
+                                android:background="@drawable/shape_ffffff_r5"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:padding="@dimen/dp_10"
                                 android:visibility="gone">
 
                                 <ImageView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_centerInParent="true"
-                                    android:src="@mipmap/a02_04jinrong" />
-                            </RelativeLayout>
+                                    android:layout_marginRight="15dp"
+                                    android:src="@mipmap/i01_02gonggao" />
 
-                            <RelativeLayout
-                                android:id="@+id/rl_travel"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1">
-
-                                <ImageView
+                                <TextView
+                                    android:id="@+id/tvNotice"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_centerInParent="true"
-                                    android:src="@mipmap/a02_05lvyou" />
-                            </RelativeLayout>
-                        </LinearLayout>
+                                    android:text=""
+                                    android:textColor="@color/color_333333"
+                                    android:textSize="12sp" />
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
-                            android:orientation="horizontal">
+                            </LinearLayout>
 
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                android:text="商家"
-                                android:textColor="@color/color_333333"
-                                android:textSize="13sp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                android:text="商城"
-                                android:textColor="@color/color_333333"
-                                android:textSize="13sp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                android:text="出行"
-                                android:textColor="@color/color_333333"
-                                android:textSize="12sp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                android:text="金融"
-                                android:textColor="@color/color_333333"
-                                android:textSize="13sp"
-                                android:visibility="gone" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                android:text="旅游"
-                                android:textColor="@color/color_333333"
-                                android:textSize="13sp" />
-
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:background="@drawable/shape_fffae5_r10_top"
-                        android:orientation="vertical">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/dp_10"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginRight="@dimen/dp_10"
-                            android:orientation="vertical">
-
-                            <RelativeLayout
+                            <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="5dp">
+                                android:layout_marginLeft="@dimen/dp_10"
+                                android:layout_marginTop="@dimen/dp_10"
+                                android:layout_marginRight="@dimen/dp_10"
+                                android:background="@drawable/shape_ffffff_r5"
+                                android:orientation="vertical"
+                                android:paddingLeft="7.5dp"
+                                android:paddingTop="20dp"
+                                android:paddingRight="7.5dp"
+                                android:paddingBottom="15dp">
 
-                                <android.support.v7.widget.RecyclerView
-                                    android:id="@+id/hList"
+                                <LinearLayout
                                     android:layout_width="match_parent"
-                                    android:layout_height="70dp">
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal">
 
-                                </android.support.v7.widget.RecyclerView>
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginRight="10dp"
+                                        android:text="优选商家"
+                                        android:textColor="@color/color_333333"
+                                        android:textSize="17sp" />
 
-                            </RelativeLayout>
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="为您推荐附近优质商家"
+                                        android:textColor="@color/color_999999"
+                                        android:textSize="12sp" />
+                                </LinearLayout>
 
-                            <RelativeLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_horizontal"
-                                android:layout_marginLeft="10dp"
-                                android:layout_marginTop="5dp"
-                                android:layout_marginRight="10dp"
-                                android:layout_marginBottom="5dp"
-                                android:background="@color/color_f7f7f7">
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0.5dp"
+                                    android:layout_marginTop="10dp"
+                                    android:layout_marginBottom="10dp"
+                                    android:background="@color/color_eeeeee" />
 
                                 <android.support.v7.widget.RecyclerView
-                                    android:id="@+id/indicatorRecyclerView"
-                                    android:layout_width="wrap_content"
+                                    android:id="@+id/optRecyclerView"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content">
 
                                 </android.support.v7.widget.RecyclerView>
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/dp_10"
+                                android:layout_marginTop="@dimen/dp_10"
+                                android:layout_marginRight="@dimen/dp_10"
+                                android:background="@drawable/shape_ffffff_r5"
+                                android:orientation="vertical"
+                                android:paddingLeft="7.5dp"
+                                android:paddingTop="20dp"
+                                android:paddingRight="7.5dp"
+                                android:paddingBottom="10dp">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginRight="10dp"
+                                        android:text="便利爆品"
+                                        android:textColor="@color/color_333333"
+                                        android:textSize="17sp" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="为您推选实惠商品"
+                                        android:textColor="@color/color_999999"
+                                        android:textSize="12sp" />
+                                </LinearLayout>
+
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0.5dp"
+                                    android:layout_marginTop="10dp"
+                                    android:layout_marginBottom="10dp"
+                                    android:background="@color/color_eeeeee" />
+
+                                <android.support.v7.widget.RecyclerView
+                                    android:id="@+id/hotRecyclerView"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content">
+
+                                </android.support.v7.widget.RecyclerView>
+                            </LinearLayout>
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <android.support.v7.widget.RecyclerView
+                                    android:id="@+id/recyclerview"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:paddingBottom="15dp" />
                             </RelativeLayout>
                         </LinearLayout>
-
-                        <com.zhpan.bannerview.BannerViewPager
-                            android:id="@+id/viewpager"
-                            android:layout_width="match_parent"
-                            android:layout_height="95dp"
-                            android:layout_marginLeft="@dimen/dp_10"
-                            android:layout_marginTop="@dimen/dp_10"
-                            android:layout_marginRight="@dimen/dp_10" />
-
-                        <LinearLayout
-                            android:id="@+id/ll_notice"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/dp_10"
-                            android:layout_marginTop="@dimen/dp_10"
-                            android:layout_marginRight="@dimen/dp_10"
-                            android:background="@drawable/shape_ffffff_r5"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:padding="@dimen/dp_10"
-                            android:visibility="gone">
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginRight="15dp"
-                                android:src="@mipmap/i01_02gonggao" />
-
-                            <TextView
-                                android:id="@+id/tvNotice"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text=""
-                                android:textColor="@color/color_333333"
-                                android:textSize="12sp" />
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/dp_10"
-                            android:layout_marginTop="@dimen/dp_10"
-                            android:layout_marginRight="@dimen/dp_10"
-                            android:background="@drawable/shape_ffffff_r5"
-                            android:orientation="vertical"
-                            android:paddingLeft="7.5dp"
-                            android:paddingTop="20dp"
-                            android:paddingRight="7.5dp"
-                            android:paddingBottom="15dp">
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginRight="10dp"
-                                    android:text="优选商家"
-                                    android:textColor="@color/color_333333"
-                                    android:textSize="17sp" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="为您推荐附近优质商家"
-                                    android:textColor="@color/color_999999"
-                                    android:textSize="12sp" />
-                            </LinearLayout>
-
-                            <View
-                                android:layout_width="match_parent"
-                                android:layout_height="0.5dp"
-                                android:layout_marginTop="10dp"
-                                android:layout_marginBottom="10dp"
-                                android:background="@color/color_eeeeee" />
-
-                            <android.support.v7.widget.RecyclerView
-                                android:id="@+id/optRecyclerView"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
-
-                            </android.support.v7.widget.RecyclerView>
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/dp_10"
-                            android:layout_marginTop="@dimen/dp_10"
-                            android:layout_marginRight="@dimen/dp_10"
-                            android:background="@drawable/shape_ffffff_r5"
-                            android:orientation="vertical"
-                            android:paddingLeft="7.5dp"
-                            android:paddingTop="20dp"
-                            android:paddingRight="7.5dp"
-                            android:paddingBottom="10dp">
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginRight="10dp"
-                                    android:text="便利爆品"
-                                    android:textColor="@color/color_333333"
-                                    android:textSize="17sp" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="为您推选实惠商品"
-                                    android:textColor="@color/color_999999"
-                                    android:textSize="12sp" />
-                            </LinearLayout>
-
-                            <View
-                                android:layout_width="match_parent"
-                                android:layout_height="0.5dp"
-                                android:layout_marginTop="10dp"
-                                android:layout_marginBottom="10dp"
-                                android:background="@color/color_eeeeee" />
-
-                            <android.support.v7.widget.RecyclerView
-                                android:id="@+id/hotRecyclerView"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
-
-                            </android.support.v7.widget.RecyclerView>
-                        </LinearLayout>
-
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-
-                            <android.support.v7.widget.RecyclerView
-                                android:id="@+id/recyclerview"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:paddingBottom="15dp" />
-                        </RelativeLayout>
                     </LinearLayout>
                 </LinearLayout>
+            </android.support.v4.widget.NestedScrollView>
+
+            <LinearLayout
+                android:id="@+id/back_top"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_marginRight="25dp"
+                android:layout_marginBottom="25dp"
+                android:background="@drawable/shape_back_top"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@mipmap/fanhuidingbu" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center"
+                    android:text="顶部"
+                    android:textColor="@color/color_333333"
+                    android:textSize="11sp" />
+
             </LinearLayout>
-
-
-        </android.support.v4.widget.NestedScrollView>
-
+        </FrameLayout>
 
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 

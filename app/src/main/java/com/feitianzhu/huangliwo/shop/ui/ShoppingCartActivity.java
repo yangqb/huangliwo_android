@@ -15,6 +15,7 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -23,10 +24,13 @@ import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
+import com.feitianzhu.huangliwo.me.ui.AuthEvent;
 import com.feitianzhu.huangliwo.model.ProductParameters;
+import com.feitianzhu.huangliwo.model.ShoppingCartEvent;
 import com.feitianzhu.huangliwo.model.ShoppingCartModel;
 import com.feitianzhu.huangliwo.model.UpdateShoppingCartBody;
 import com.feitianzhu.huangliwo.shop.SettlementShoppingCartActivity;
+import com.feitianzhu.huangliwo.shop.ShopDao;
 import com.feitianzhu.huangliwo.shop.ShopsDetailActivity;
 import com.feitianzhu.huangliwo.shop.adapter.ShoppingCartAdapter;
 import com.feitianzhu.huangliwo.utils.SPUtils;
@@ -43,6 +47,10 @@ import com.lzy.okgo.model.Response;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -61,9 +69,11 @@ import butterknife.OnClick;
  * 购物车列表
  */
 public class ShoppingCartActivity extends BaseActivity {
-    private static final int REQUEST_CODE = 111;
     private String totalAmount = "0.00";
     private double p = 0.00;
+    private StringBuffer carIds = new StringBuffer();
+    private List<ShoppingCartModel.CartGoodsModel> allSelectList = new ArrayList<>();
+    private boolean isSelectAll = false;
     private ShoppingCartAdapter mAdapter;
     private StringBuffer valueId;
     private StringBuffer speciName;
@@ -83,6 +93,10 @@ public class ShoppingCartActivity extends BaseActivity {
     TextView bottomAmount;
     @BindView(R.id.swipeLayout)
     SmartRefreshLayout refreshLayout;
+    @BindView(R.id.select_img)
+    ImageView selectImg;
+    @BindView(R.id.ll_select)
+    LinearLayout llSelect;
 
     @Override
     protected int getLayoutId() {
@@ -91,6 +105,7 @@ public class ShoppingCartActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+        EventBus.getDefault().register(this);
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         titleName.setText("购物车");
@@ -166,7 +181,7 @@ public class ShoppingCartActivity extends BaseActivity {
                                 .asConfirm("确定要删除该商品吗？", "", "取消", "确定", new OnConfirmListener() {
                                     @Override
                                     public void onConfirm() {
-                                        deleteShoppingCart(shoppingCartModels.get(position).carId);
+                                        deleteShoppingCart(shoppingCartModels.get(position).carId + "");
                                         shoppingCartModels.remove(position);
                                         calculationAmount();
                                         mAdapter.notifyDataSetChanged();
@@ -183,6 +198,11 @@ public class ShoppingCartActivity extends BaseActivity {
                         shoppingCartBody.goodsCount = shoppingCartModels.get(position).goodsCount;
                         shoppingCartBody.speci = shoppingCartModels.get(position).speci;
                         shoppingCartBody.speciName = shoppingCartModels.get(position).speciName;
+                        if (isSelectAll()) {
+                            selectImg.setBackgroundResource(R.mipmap.g07_02quan);
+                        } else {
+                            selectImg.setBackgroundResource(R.mipmap.g07_01quan);
+                        }
                         mAdapter.notifyItemChanged(position);
                         calculationAmount();
                         upDateShoppingCart();
@@ -226,6 +246,15 @@ public class ShoppingCartActivity extends BaseActivity {
         });
     }
 
+    public boolean isSelectAll() {
+        for (int i = 0; i < shoppingCartModels.size(); i++) {
+            if (shoppingCartModels.get(i).checks == 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public void shopEditDialog(int pos) {
         new XPopup.Builder(ShoppingCartActivity.this)
                 .asCustom(new CustomInputView(ShoppingCartActivity.this)
@@ -250,7 +279,7 @@ public class ShoppingCartActivity extends BaseActivity {
                 .show();
     }
 
-    public void deleteShoppingCart(int cartId) {
+    public void deleteShoppingCart(String cartId) {
         OkGo.<LzyResponse>get(Urls.DELETE_SHOPPING_CART)
                 .tag(this)
                 .params("accessToken", token)
@@ -309,7 +338,8 @@ public class ShoppingCartActivity extends BaseActivity {
                         super.onSuccess(ShoppingCartActivity.this, response.body().msg, response.body().code);
                         refreshLayout.finishRefresh();
                         if (response.body().code == 0 && response.body().data != null) {
-                            if (response.body().data.allSCcar != null) {
+                            if (response.body().data.allSCcar != null && response.body().data.allSCcar.size() > 0) {
+                                llSelect.setVisibility(View.VISIBLE);
                                 shoppingCartModels = response.body().data.allSCcar;
                                 for (int i = 0; i < shoppingCartModels.size(); i++) {
                                     shoppingCartModels.get(i).checks = 0;
@@ -317,7 +347,11 @@ public class ShoppingCartActivity extends BaseActivity {
                                 mAdapter.setNewData(shoppingCartModels);
                                 mAdapter.notifyDataSetChanged();
                                 calculationAmount();
+                            } else {
+                                llSelect.setVisibility(View.GONE);
                             }
+                        } else {
+                            llSelect.setVisibility(View.GONE);
                         }
                     }
 
@@ -419,12 +453,33 @@ public class ShoppingCartActivity extends BaseActivity {
                 }).show();
     }
 
-    @OnClick({R.id.left_button, R.id.tv_pay})
+    @OnClick({R.id.left_button, R.id.tv_pay, R.id.select_all, R.id.delete_all})
     @SingleClick()
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.left_button:
                 finish();
+                break;
+            case R.id.select_all:
+                selectAll();
+                break;
+            case R.id.delete_all:
+                allSelectList.clear();
+                for (int i = 0; i < shoppingCartModels.size(); i++) {
+                    if (shoppingCartModels.get(i).checks == 1) {
+                        allSelectList.add(shoppingCartModels.get(i));
+                        carIds.append(shoppingCartModels.get(i).carId);
+                        carIds.append(",");
+                    }
+                }
+                if (allSelectList.size() <= 0) {
+                    ToastUtils.show("请选择要删除的商品");
+                    return;
+                }
+                shoppingCartModels.removeAll(allSelectList);
+                mAdapter.notifyDataSetChanged();
+                calculationAmount();
+                deleteShoppingCart(carIds.substring(0, carIds.length() - 1));
                 break;
             case R.id.tv_pay:
                 ArrayList<ShoppingCartModel.CartGoodsModel> selectCartModels = new ArrayList<>();
@@ -437,12 +492,32 @@ public class ShoppingCartActivity extends BaseActivity {
                 if (selectCartModels.size() > 0) {
                     Intent intent = new Intent(ShoppingCartActivity.this, SettlementShoppingCartActivity.class);
                     intent.putParcelableArrayListExtra(SettlementShoppingCartActivity.CART_DATA, selectCartModels);
-                    startActivityForResult(intent, REQUEST_CODE);
+                    startActivity(intent);
                 } else {
                     ToastUtils.show("没有要结算的商品");
                 }
                 break;
         }
+    }
+
+    public void selectAll() {
+        isSelectAll = !isSelectAll;
+        if (isSelectAll) {
+            selectImg.setBackgroundResource(R.mipmap.g07_02quan);
+        } else {
+            selectImg.setBackgroundResource(R.mipmap.g07_01quan);
+        }
+        for (int i = 0; i < shoppingCartModels.size(); i++) {
+            shoppingCartModels.get(i).checks = isSelectAll ? 1 : 0;
+            shoppingCartBody.carId = shoppingCartModels.get(i).carId;
+            shoppingCartBody.checks = shoppingCartModels.get(i).checks;
+            shoppingCartBody.goodsCount = shoppingCartModels.get(i).goodsCount;
+            shoppingCartBody.speci = shoppingCartModels.get(i).speci;
+            shoppingCartBody.speciName = shoppingCartModels.get(i).speciName;
+        }
+        mAdapter.notifyDataSetChanged();
+        calculationAmount();
+        upDateShoppingCart();
     }
 
     public void calculationAmount() {
@@ -455,16 +530,6 @@ public class ShoppingCartActivity extends BaseActivity {
         }
         totalAmount = String.format(Locale.getDefault(), "%.2f", p);
         setSpannableString(totalAmount);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            if (requestCode == REQUEST_CODE) {
-                initData();
-            }
-        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -490,5 +555,18 @@ public class ShoppingCartActivity extends BaseActivity {
         bottomAmount.append(span1);
         bottomAmount.append(span2);
         bottomAmount.append(span3);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onShoppingCartEvent(ShoppingCartEvent cartEvent) {
+        if (cartEvent == ShoppingCartEvent.CREATE_ORDER_SUCCESS) {
+            initData();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

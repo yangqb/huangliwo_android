@@ -47,6 +47,8 @@ public class LazyWebActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         ImmersionBar.with(this)
                 .fitsSystemWindows(true)
+                .navigationBarColor(R.color.white)
+                .navigationBarDarkIcon(true)
                 .statusBarDarkFont(true, 0.2f)
                 .statusBarColor(R.color.white)
                 .init();

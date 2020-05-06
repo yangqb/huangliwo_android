@@ -23,6 +23,7 @@ public class BaseGoodsListBean implements Serializable {
     private double rebatePv;
     private String summary;
     private String goodsIntroduceImg; //长图
+    private List<String> goodsIntroduceImgList;
     private String sales;
     private String stockCount;
     private double postage;
@@ -30,8 +31,25 @@ public class BaseGoodsListBean implements Serializable {
     private String connectPhone;//客服电话
     private String isPoints;
     private int isCollect;
+    private float scale;
     private List<GoodsImgsListBean> goodsImgsList;
     private List<GoodsEvaluateMode> evalList;
+
+    public List<String> getGoodsIntroduceImgList() {
+        return goodsIntroduceImgList;
+    }
+
+    public void setGoodsIntroduceImgList(List<String> goodsIntroduceImgList) {
+        this.goodsIntroduceImgList = goodsIntroduceImgList;
+    }
+
+    public float getScale() {
+        return scale;
+    }
+
+    public void setScale(float scale) {
+        this.scale = scale;
+    }
 
     public int getIsCollect() {
         return isCollect;

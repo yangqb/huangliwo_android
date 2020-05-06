@@ -19,6 +19,48 @@
             android:layout_gravity="bottom"
             android:background="@color/white">
 
+            <LinearLayout
+                android:id="@+id/ll_select"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <RelativeLayout
+                    android:id="@+id/select_all"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:padding="10dp">
+
+                    <ImageView
+                        android:id="@+id/select_img"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:background="@mipmap/g07_01quan" />
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:text="全选"
+                    android:textColor="@color/color_666666"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/delete_all"
+                    android:layout_width="40dp"
+                    android:layout_height="26dp"
+                    android:background="@drawable/shape_fed428_r5"
+                    android:gravity="center"
+                    android:text="删除"
+                    android:textColor="@color/color_333333"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/tv_pay"
                 android:layout_width="106dp"
@@ -32,7 +74,7 @@
                 android:paddingTop="11dp"
                 android:paddingBottom="11dp"
                 android:text="结算"
-                android:textColor="@color/color_666666"
+                android:textColor="@color/color_333333"
                 android:textSize="15dp"
                 android:textStyle="bold" />
 
@@ -53,8 +95,8 @@
             android:id="@+id/swipeLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white"
-            android:layout_above="@id/bottom">
+            android:layout_above="@id/bottom"
+            android:background="@color/white">
 
             <RelativeLayout
                 android:layout_width="match_parent"

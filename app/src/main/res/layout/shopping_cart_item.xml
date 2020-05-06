@@ -11,15 +11,14 @@
         android:layout_margin="@dimen/dp_10"
         android:background="@drawable/bg_ffffff_r5"
         android:orientation="horizontal"
-        android:paddingLeft="@dimen/dp_10"
         android:paddingTop="@dimen/dp_20"
-        android:paddingRight="@dimen/dp_10"
         android:paddingBottom="25dp">
 
         <RelativeLayout
             android:id="@+id/select_goods"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
             android:paddingEnd="8dp"
             android:paddingBottom="8dp">
 
@@ -60,6 +59,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_marginLeft="@dimen/dp_20"
                         android:paddingLeft="@dimen/dp_10"
+                        android:paddingRight="10dp"
                         android:paddingBottom="@dimen/dp_10">
 
                         <ImageView
@@ -102,6 +102,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
+                    android:layout_marginRight="10dp"
                     android:orientation="horizontal">
 
                     <TextView

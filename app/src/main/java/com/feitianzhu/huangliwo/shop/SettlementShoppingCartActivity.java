@@ -27,6 +27,7 @@ import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.AddressInfo;
 import com.feitianzhu.huangliwo.model.PayInfo;
 import com.feitianzhu.huangliwo.model.PayModel;
+import com.feitianzhu.huangliwo.model.ShoppingCartEvent;
 import com.feitianzhu.huangliwo.model.ShoppingCartModel;
 import com.feitianzhu.huangliwo.model.ShoppingCartPayInfo;
 import com.feitianzhu.huangliwo.shop.adapter.SettlementShoppingAdapter;
@@ -276,6 +277,7 @@ public class SettlementShoppingCartActivity extends BaseActivity {
                     public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<PayModel>> response) {
                         super.onSuccess(SettlementShoppingCartActivity.this, response.body().msg, response.body().code);
                         if (response.body().code == 0 && response.body().data != null) {
+                            EventBus.getDefault().post(ShoppingCartEvent.CREATE_ORDER_SUCCESS);
                             if ("wx".equals(payChannel)) {
                                 orderNo = response.body().data.orderNo;
                                 wexinPay(response.body().data);
@@ -317,7 +319,6 @@ public class SettlementShoppingCartActivity extends BaseActivity {
             @Override
             public void onSuccess(int code, Object result) {
                 ToastUtils.show("支付成功");
-                setResult(RESULT_OK);
                 finish();
             }
 
@@ -341,7 +342,6 @@ public class SettlementShoppingCartActivity extends BaseActivity {
         if (msg.getCurrentInfo() == PayInfo.SHOPPING_CART_PAY) {
             if (msg.getIsSuccess() == PayInfo.SUCCESS) {
                 ToastUtils.show("支付成功");
-                setResult(RESULT_OK);
                 finish();
             } else {
                 ToastUtils.show("支付失败");

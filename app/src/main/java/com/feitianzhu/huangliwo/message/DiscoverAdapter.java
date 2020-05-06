@@ -1,12 +1,24 @@
 package com.feitianzhu.huangliwo.message;
 
 import android.app.Activity;
+import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.feitianzhu.huangliwo.R;
@@ -31,8 +43,8 @@ public class DiscoverAdapter extends BaseQuickAdapter<BaseGoodsListBean, BaseVie
     @Override
     protected void convert(@NonNull BaseViewHolder helper, BaseGoodsListBean item) {
         RoundedImageView imageView = helper.getView(R.id.imageView);
-        GlideUtils.getImageView3((Activity) mContext, item.getGoodsImg(), imageView);
-        //Glide.with(mContext).load(item.getGoodsImg()).apply(new RequestOptions().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai)).into();
+        //GlideUtils.getImageView3((Activity) mContext, item.getGoodsImg(), imageView);
+        Glide.with(mContext).load(item.getGoodsImg()).apply(new RequestOptions().error(R.mipmap.g10_04weijiazai)).into(imageView);
         helper.setText(R.id.goodsName, item.getGoodsName());
     }
 }

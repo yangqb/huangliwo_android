@@ -10,6 +10,8 @@ import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.entity.DefaultRate;
 import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.huangliwo.home.entity.NoticeEntity;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.login.entity.LoginEntity;
 import com.feitianzhu.huangliwo.login.entity.UserInfoEntity;
 import com.feitianzhu.huangliwo.me.helper.CityModel;
@@ -19,7 +21,9 @@ import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.lzy.okgo.OkGo;
 import com.socks.library.KLog;
+
 import org.json.JSONObject;
 
 import java.io.File;
@@ -40,7 +44,7 @@ public class NetworkDao {
     private NetworkDao() {
     }
 
-   /* *//**
+    /* *//**
      * 获取验证码
      *//*
     public static void getSmsCode(Context context, String phone, String type, final onConnectionFinishLinstener linstener) {
@@ -82,6 +86,26 @@ public class NetworkDao {
     public static void checkPayPwd(Context context, String paypass, final onConnectionFinishLinstener linstener) {
         String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN);
         String userId = SPUtils.getString(context, Constant.SP_LOGIN_USERID);
+
+        OkGo.<LzyResponse>post(Urls.CHECK_PAYPASS)
+                .params(Constant.ACCESSTOKEN, token)
+                .params(Constant.USERID, userId)
+                .params("paypass", paypass)
+                .execute(new JsonCallback<LzyResponse>() {
+                    @Override
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onSuccess(context, response.body().msg, response.body().code);
+                        if (response.body().code == 0) {
+                            linstener.onSuccess(response.body().code, response);
+                        }
+                    }
+
+                    @Override
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onError(response);
+                        linstener.onFail(response.body().code, response.message());
+                    }
+                });
     }
 
     /**
@@ -132,7 +156,7 @@ public class NetworkDao {
      * @param payProofFile  转账凭证（线下支付时必传）
      * @param linstener
      */
-    public static void payForMe(Context context,String payPass, String merchantName, String merchantAddr, String goodsName, String consumeAmount, String handleFee, final String payChannel,
+    public static void payForMe(Context context, String payPass, String merchantName, String merchantAddr, String goodsName, String consumeAmount, String handleFee, final String payChannel,
                                 String placeImgFile, String objImgFile, String rcptImgFile, String payProofFile, final onConnectionFinishLinstener linstener) {
     }
 

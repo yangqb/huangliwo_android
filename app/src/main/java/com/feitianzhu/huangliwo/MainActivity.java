@@ -126,6 +126,8 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
         mTransaction.commit();
         ImmersionBar.with(this)
                 .fitsSystemWindows(true)
+                .navigationBarColor(R.color.white)
+                .navigationBarDarkIcon(true)
                 .statusBarDarkFont(true, 0.2f)
                 .statusBarColor(R.color.bg_yellow)
                 .init();
@@ -210,7 +212,7 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
                 mTxtJiaoliu.setSelected(true);
                 mImgJiaoliu.setSelected(true);
                 if (mMessageFragment == null) {
-                    mMessageFragment = MessageFragment.newInstance("", "");
+                    mMessageFragment = MessageFragment.newInstance("","");
                     mTransaction.add(R.id.fragment_container, mMessageFragment);
                 } else {
                     mTransaction.show(mMessageFragment);

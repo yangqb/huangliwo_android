@@ -3,6 +3,7 @@ package com.feitianzhu.huangliwo.splash;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -48,6 +49,8 @@ public class SplashActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         ImmersionBar.with(this)
                 .fitsSystemWindows(true)
+                .navigationBarColor(R.color.white)
+                .navigationBarDarkIcon(true)
                 .statusBarDarkFont(true, 0.2f)
                 .statusBarColor(R.color.bg_yellow)
                 .init();

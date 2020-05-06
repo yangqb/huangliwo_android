@@ -4,9 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -100,13 +102,13 @@ public class MessageFragment extends SFFragment {
         //商家
         token = SPUtils.getString(getActivity(), Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(getActivity(), Constant.SP_LOGIN_USERID);
-        staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(staggeredGridLayoutManager);
+        //staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        //staggeredGridLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
+        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         mAdapter = new DiscoverAdapter(goodsListBeans);
         recyclerView.setAdapter(mAdapter);
-        staggeredGridLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
-        recyclerView.setItemAnimator(null);
-        recyclerView.addItemDecoration(new StaggeredDividerItemDecoration(getActivity(), 10));
+        //recyclerView.setItemAnimator(null);
+        // recyclerView.addItemDecoration(new StaggeredDividerItemDecoration(getActivity(), 10));
         mAdapter.notifyDataSetChanged();
         refreshLayout.setEnableLoadMore(false);
         getData();
@@ -116,7 +118,7 @@ public class MessageFragment extends SFFragment {
 
     public void initListener() {
         int spanCount = 2;
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+       /* recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 int[] first = new int[spanCount];
@@ -125,7 +127,8 @@ public class MessageFragment extends SFFragment {
                     staggeredGridLayoutManager.invalidateSpanAssignments();
                 }
             }
-        });
+        });*/
+
 
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override

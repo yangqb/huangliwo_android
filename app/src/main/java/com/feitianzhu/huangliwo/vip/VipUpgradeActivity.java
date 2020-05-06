@@ -277,7 +277,6 @@ public class VipUpgradeActivity extends BaseActivity {
         PayUtils.aliPay(VipUpgradeActivity.this, orderInfo, new onConnectionFinishLinstener() {
             @Override
             public void onSuccess(int code, Object result) {
-                setResult(RESULT_OK);
                 ToastUtils.show("支付成功");
                 EventBus.getDefault().postSticky(LoginEvent.BUY_VIP);
                 //弹框
@@ -297,7 +296,6 @@ public class VipUpgradeActivity extends BaseActivity {
         switch (msg.getCurrentInfo()) {
             case PayInfo.UNIONLEVEL:
                 if (msg.getIsSuccess() == PayInfo.SUCCESS) {
-                    setResult(RESULT_OK);
                     EventBus.getDefault().postSticky(LoginEvent.BUY_VIP);
                     showDialog();
                 }
@@ -308,9 +306,12 @@ public class VipUpgradeActivity extends BaseActivity {
     public void showDialog() {
         new XPopup.Builder(this)
                 .enableDrag(false)
+                .dismissOnBackPressed(false)
+                .dismissOnTouchOutside(false)
                 .asCustom(new CustomPopup(this).onClose(new Runnable() {
                     @Override
                     public void run() {
+                        setResult(RESULT_OK);
                         finish();
                     }
                 }))

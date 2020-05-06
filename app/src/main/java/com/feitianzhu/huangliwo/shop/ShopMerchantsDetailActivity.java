@@ -594,6 +594,8 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
                             getSetMealList(merchantsId);
                             if (merchantsBean.getShopFrontImg() != null && merchantsBean.getShopFrontImg().contains(",")) {
                                 imgs.addAll(Arrays.asList(merchantsBean.getShopFrontImg().split(",")));
+                            } else {
+                                imgs.add(merchantsBean.getShopFrontImg());
                             }
                             mViewpager.setCanLoop(true)
                                     .setAutoPlay(true)

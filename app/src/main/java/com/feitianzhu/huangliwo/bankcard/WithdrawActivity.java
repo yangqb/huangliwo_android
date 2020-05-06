@@ -150,7 +150,6 @@ public class WithdrawActivity extends BaseActivity {
                             @Override
                             public void onSuccess(int code, Object result) {
                                 ToastUtils.show("提现成功");
-                                EventBus.getDefault().post(BankCardEvent.WITHDRAW_SUCCESS);
                                 startActivity(new Intent(mContext, WithdrawResultActivity.class));
                                 finish();
                             }

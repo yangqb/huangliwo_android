@@ -91,6 +91,15 @@ userName (string, optional): 用户名
         private int isEval;//是否评价 1.已评价
         private String remark;//备注
         private String connectPhone;//客服电话
+        private String refuseReason;//拒绝退款原因
+
+        public String getRefuseReason() {
+            return refuseReason;
+        }
+
+        public void setRefuseReason(String refuseReason) {
+            this.refuseReason = refuseReason;
+        }
 
         public String getConnectPhone() {
             return connectPhone;

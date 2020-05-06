@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.feitianzhu.huangliwo.R;
+import com.feitianzhu.huangliwo.utils.doubleclick.SingleClick;
 import com.lxj.xpopup.core.CenterPopupView;
 
 /**
@@ -99,6 +100,7 @@ public class CustomVipInputView extends CenterPopupView {
         });
 
         tvConfirm.setOnClickListener(new OnClickListener() {
+            @SingleClick()
             @Override
             public void onClick(View v) {
                 if (onConfirmClickListener != null) {

@@ -11,7 +11,6 @@ import com.feitianzhu.huangliwo.home.entity.ShopAndMerchants;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
-import com.feitianzhu.huangliwo.message.DiscoverAdapter;
 import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
 import com.feitianzhu.huangliwo.model.HomeShops;
 import com.feitianzhu.huangliwo.utils.SPUtils;

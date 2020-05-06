@@ -3,6 +3,7 @@ package com.feitianzhu.huangliwo.me.base;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -56,6 +57,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         ImmersionBar.with(this)
                 .fitsSystemWindows(true)
+                .navigationBarColor(R.color.white)
+                .navigationBarDarkIcon(true)
                 .statusBarDarkFont(true, 0.2f)
                 .statusBarColor(R.color.white)
                 .init();
