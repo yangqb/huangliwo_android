@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
@@ -133,6 +134,8 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, Pager
     RecyclerView hotRecyclerView;
     @BindView(R.id.scrollView)
     NestedScrollView scrollView;
+    @BindView(R.id.back_top)
+    LinearLayout backTop;
     private List<ShopAndMerchants> shopAndMerchants = new ArrayList<>();
     private List<ShopClassify.GGoodsClsListBean> shopClassifyLsit = new ArrayList<>();
     private List<BaseGoodsListBean> shopsLists = new ArrayList<>();
@@ -270,6 +273,7 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, Pager
         hotGoodsAdapter.notifyDataSetChanged();
         hotRecyclerView.setNestedScrollingEnabled(false);
 
+
         getData();
         requestData();
         getGoodsData();
@@ -368,6 +372,18 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, Pager
                 getGoodsData();
             }
         });
+
+        scrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                int height = getResources().getDisplayMetrics().heightPixels;
+                if (height != 0 && scrollY > height / 2) {
+                    backTop.setVisibility(View.VISIBLE);
+                } else {
+                    backTop.setVisibility(View.GONE);
+                }
+            }
+        });
     }
 
     @OnClick({R.id.ll_location, R.id.iv_head, R.id.rl_ticket, R.id.rl_financial, R.id.rl_travel, R.id.rl_mall, R.id.rl_merchants, R.id.search, R.id.iv_home_nv_right, R.id.back_top})
@@ -411,6 +427,7 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, Pager
                 break;
             case R.id.back_top:
                 mRecyclerview.smoothScrollToPosition(0);
+                scrollView.fling(0);
                 scrollView.smoothScrollTo(0, 0);
                 break;
         }

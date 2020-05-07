@@ -15,8 +15,6 @@ import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -33,13 +31,15 @@ import com.feitianzhu.huangliwo.me.adapter.CenterAdapter;
 import com.feitianzhu.huangliwo.me.ui.AuthEvent;
 import com.feitianzhu.huangliwo.me.ui.PersonalCenterActivity2;
 import com.feitianzhu.huangliwo.me.ui.VerificationActivity2;
-import com.feitianzhu.huangliwo.me.ui.totalScore.MineQrcodeActivity;
 import com.feitianzhu.huangliwo.model.BalanceModel;
+import com.feitianzhu.huangliwo.model.GoodsOrderInfo;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
+import com.feitianzhu.huangliwo.model.SetMealOrderInfo;
 import com.feitianzhu.huangliwo.model.UserAuth;
 import com.feitianzhu.huangliwo.pushshop.PushShopHomeActivity;
 import com.feitianzhu.huangliwo.settings.SettingsActivity;
 import com.feitianzhu.huangliwo.shop.ShopDao;
+import com.feitianzhu.huangliwo.shop.ui.AfterSaleActivity;
 import com.feitianzhu.huangliwo.shop.ui.MyOrderActivity2;
 import com.feitianzhu.huangliwo.shop.ui.ShoppingCartActivity;
 import com.feitianzhu.huangliwo.utils.SPUtils;
@@ -77,7 +77,7 @@ import static com.feitianzhu.huangliwo.common.Constant.POST_MINE_INFO;
  */
 public class MyCenterFragment extends SFFragment {
     public static final int REQUEST_CODE = 100;
-    @BindView(R.id.recyclerview)
+    @BindView(R.id.recyclerView2)
     RecyclerView mRecyclerView;
     @BindView(R.id.civ_head)
     CircleImageView civHead;
@@ -87,10 +87,6 @@ public class MyCenterFragment extends SFFragment {
     TextView gradeName;
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
-    @BindView(R.id.ll_show_balance)
-    LinearLayout llShowBalance;
-    @BindView(R.id.img_show)
-    ImageView imgShow;
     @BindView(R.id.toBeReleased_Amount)
     TextView toBeReleasedAmount;
     @BindView(R.id.tv_profit)
@@ -116,9 +112,9 @@ public class MyCenterFragment extends SFFragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private boolean isLogin = true;
-    Integer[] integers = {R.mipmap.dingdan, R.mipmap.gouwuche, R.mipmap.dizhi, R.mipmap.zhanghu, R.mipmap.huiyuan,
-            R.mipmap.yinhangka, R.mipmap.shouchang, R.mipmap.shangpu, R.mipmap.fenxiang, R.mipmap.tuandui,
-            R.mipmap.help};
+    Integer[] integers = {R.mipmap.o05_01gouwuche, R.mipmap.o05_02dizhi, R.mipmap.o05_03renzheng, R.mipmap.o05_04bangding,
+            R.mipmap.shoucang, R.mipmap.o05_06tuidian, R.mipmap.o05_tuiguang, R.mipmap.o05_09bagnzhu,
+            R.mipmap.o05_kefu};
 
     public MyCenterFragment() {
     }
@@ -146,24 +142,18 @@ public class MyCenterFragment extends SFFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_center, container, false);
+        View view = inflater.inflate(R.layout.fragment_center2, container, false);
         unbinder = ButterKnife.bind(this, view);
         token = SPUtils.getString(getActivity(), Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(getActivity(), Constant.SP_LOGIN_USERID);
         refreshLayout.setEnableLoadMore(false);
-        mRecyclerView.setNestedScrollingEnabled(false);
         adapter = new CenterAdapter(Arrays.asList(integers));
-        GridLayoutManager manager = new GridLayoutManager(getActivity(), 3);
+        GridLayoutManager manager = new GridLayoutManager(getActivity(), 5);
         mRecyclerView.setLayoutManager(manager);
         mRecyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
         mRecyclerView.setNestedScrollingEnabled(false);
-        isShowBalance = SPUtils.getBoolean(getActivity(), Constant.SP_SHOW_BALANCE, true);
-        if (isShowBalance) {
-            imgShow.setBackgroundResource(R.mipmap.h01_01dakai);
-        } else {
-            imgShow.setBackgroundResource(R.mipmap.h01_02guanbi);
-        }
+
         ShopDao.loadUserAuthImpl(getActivity());
         initListener();
         requestData();
@@ -282,7 +272,7 @@ public class MyCenterFragment extends SFFragment {
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Intent intent;
                 switch (position) {
-                    case 3: //实名认证
+                    case 2: //实名认证
                         UserAuth mAuth = Constant.mUserAuth;
                         if (mAuth != null && mAuth.isRnAuth == -1) {
                             new XPopup.Builder(getActivity())
@@ -304,7 +294,7 @@ public class MyCenterFragment extends SFFragment {
                             startActivity(intent);
                         }
                         break;
-                    case 5:
+                    case 3:
                         //银行卡 //暂不提供银行卡功能
                         intent = new Intent(getActivity(), BindingAccountActivity.class);
                         intent.putExtra(BindingAccountActivity.MINE_INFO, mTempData);
@@ -327,43 +317,33 @@ public class MyCenterFragment extends SFFragment {
                             });
                         }*/
                         break;
-                    case 0://我的订单
-                        // JumpActivity(getContext(), MyOrderActivity.class);
-                        intent = new Intent(getActivity(), MyOrderActivity2.class);
-                        startActivity(intent);
-                        break;
-                    case 7: //推店
+                    case 5: //推店
                         //ShopHelp.veriJumpActivity(getActivity());
                         intent = new Intent(getActivity(), PushShopHomeActivity.class);
                         intent.putExtra(PushShopHomeActivity.MINE_INFO, mTempData);
                         startActivity(intent);
                         break;
-                    case 6://我的收藏
+                    case 4://我的收藏
                         /*intent = new Intent(getActivity(), TestActivity.class);
                         startActivity(intent);*/
                         //JumpActivity(getContext(), MineCollectionActivity.class);
                         intent = new Intent(getActivity(), MyCollectionActivity.class);
                         startActivity(intent);
                         break;
-                    case 2://地址管理
+                    case 1://地址管理
                         intent = new Intent(getActivity(), AddressManagementActivity.class);
                         startActivity(intent);
                         break;
-                    case 4://成为会员
-                        intent = new Intent(getContext(), VipActivity.class);
-                        intent.putExtra(VipActivity.MINE_INFO, mTempData);
-                        startActivity(intent);
-                        break;
-                    case 8: //分享
+                    case 6: //分享
                         intent = new Intent(getActivity(), RecruitActivity.class);
                         intent.putExtra(RecruitActivity.MINE_DATA, mTempData);
                         startActivity(intent);
                         break;
-                    case 1: //购物车
+                    case 0: //购物车
                         intent = new Intent(getContext(), ShoppingCartActivity.class);
                         startActivity(intent);
                         break;
-                    case 9:
+                    case 7:
                         //ToastUtils.show("敬请期待");
                         if (mTempData.getAccountType() == 0) {
                             String content = "您还不是会员无法查看我的团队，请尽快开通！";
@@ -377,7 +357,7 @@ public class MyCenterFragment extends SFFragment {
                         }
 
                         break;
-                    case 10:
+                    case 8:
                         intent = new Intent(getActivity(), HelperActivity.class);
                         startActivity(intent);
                         break;
@@ -396,10 +376,11 @@ public class MyCenterFragment extends SFFragment {
     }
 
 
-    private boolean isShowBalance = true;
-
-    @OnClick({R.id.ll_userInfo, R.id.iv_setting, R.id.iv_qrcode, R.id.ll_show_balance, R.id.btn_withdrawal, R.id.detailed_rules, R.id.withdrawCount, R.id.wages_detailed_rules, R.id.btn_wages_withdrawal})
+    @OnClick({R.id.ll_userInfo, R.id.iv_setting, R.id.btn_withdrawal, R.id.detailed_rules, R.id.withdrawCount, R.id.wages_detailed_rules, R.id.btn_wages_withdrawal,
+            R.id.goodsAllOrder, R.id.merchantAllOrder, R.id.upgrade_Vip, R.id.goods_wait_pay, R.id.goods_wait_deliver, R.id.goods_wait_receiving, R.id.goods_wait_comments, R.id.goods_after_sales,
+            R.id.merchant_wait_pay, R.id.merchant_wait_use, R.id.merchant_wait_comments, R.id.merchant_after_sales})
     public void onClick(View view) {
+        Intent intent;
         switch (view.getId()) {
             case R.id.ll_userInfo:
                 if (isLogin) {
@@ -411,7 +392,7 @@ public class MyCenterFragment extends SFFragment {
                     Constant.ACCESS_TOKEN = "";
                     Constant.LOGIN_USERID = "";
                     Constant.PHONE = "";
-                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+                    intent = new Intent(getActivity(), LoginActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                     getActivity().finish();
@@ -420,22 +401,6 @@ public class MyCenterFragment extends SFFragment {
                 break;
             case R.id.iv_setting:
                 startActivity(new Intent(getActivity(), SettingsActivity.class));
-                break;
-            case R.id.iv_qrcode:
-                Intent intent = new Intent(getActivity(), MineQrcodeActivity.class);
-                intent.putExtra(MineQrcodeActivity.SHARE_TYPE, 1);
-                intent.putExtra(MineQrcodeActivity.MINE_DATA, mTempData);
-                startActivity(intent);
-                break;
-            case R.id.ll_show_balance:
-                isShowBalance = !isShowBalance;
-                if (isShowBalance) {
-                    imgShow.setBackgroundResource(R.mipmap.h01_01dakai);
-                } else {
-                    imgShow.setBackgroundResource(R.mipmap.h01_02guanbi);
-                }
-                setSpannableString(toBeReleasedAmount, tvProfit, tvWithdrawal, tvWages, amount, amount2, amount3, wagesAmount);
-                SPUtils.putBoolean(getActivity(), Constant.SP_SHOW_BALANCE, isShowBalance);
                 break;
             case R.id.btn_withdrawal:
             case R.id.btn_wages_withdrawal:
@@ -471,6 +436,75 @@ public class MyCenterFragment extends SFFragment {
                 intent = new Intent(getActivity(), WagesDetailActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.goodsAllOrder:
+                intent = new Intent(getActivity(), MyOrderActivity2.class);
+                intent.putExtra(MyOrderActivity2.ORDER_TYPE, 0);
+                intent.putExtra(MyOrderActivity2.ORDER_STATUS, GoodsOrderInfo.TYPE_All);
+                startActivity(intent);
+                break;
+            case R.id.merchantAllOrder:
+                intent = new Intent(getActivity(), MyOrderActivity2.class);
+                intent.putExtra(MyOrderActivity2.ORDER_TYPE, 1);
+                intent.putExtra(MyOrderActivity2.ORDER_STATUS, 0);
+                startActivity(intent);
+                break;
+            case R.id.upgrade_Vip:
+                intent = new Intent(getContext(), VipActivity.class);
+                intent.putExtra(VipActivity.MINE_INFO, mTempData);
+                startActivity(intent);
+                break;
+            case R.id.goods_wait_pay:
+                intent = new Intent(getActivity(), MyOrderActivity2.class);
+                intent.putExtra(MyOrderActivity2.ORDER_TYPE, 0);
+                intent.putExtra(MyOrderActivity2.ORDER_STATUS, GoodsOrderInfo.TYPE_NO_PAY);
+                startActivity(intent);
+                break;
+            case R.id.goods_wait_deliver:
+                intent = new Intent(getActivity(), MyOrderActivity2.class);
+                intent.putExtra(MyOrderActivity2.ORDER_TYPE, 0);
+                intent.putExtra(MyOrderActivity2.ORDER_STATUS, GoodsOrderInfo.TYPE_WAIT_DELIVERY);
+                startActivity(intent);
+                break;
+            case R.id.goods_wait_receiving:
+                intent = new Intent(getActivity(), MyOrderActivity2.class);
+                intent.putExtra(MyOrderActivity2.ORDER_TYPE, 0);
+                intent.putExtra(MyOrderActivity2.ORDER_STATUS, GoodsOrderInfo.TYPE_WAIT_RECEIVING);
+                startActivity(intent);
+                break;
+            case R.id.goods_wait_comments:
+                intent = new Intent(getActivity(), MyOrderActivity2.class);
+                intent.putExtra(MyOrderActivity2.ORDER_TYPE, 0);
+                intent.putExtra(MyOrderActivity2.ORDER_STATUS, GoodsOrderInfo.TYPE_WAIT_COMMENTS);
+                startActivity(intent);
+                break;
+            case R.id.goods_after_sales:
+                intent = new Intent(getActivity(), AfterSaleActivity.class);
+                intent.putExtra(AfterSaleActivity.ORDER_TYPE, 0);
+                startActivity(intent);
+                break;
+            case R.id.merchant_wait_pay:
+                intent = new Intent(getActivity(), MyOrderActivity2.class);
+                intent.putExtra(MyOrderActivity2.ORDER_TYPE, 1);
+                intent.putExtra(MyOrderActivity2.ORDER_STATUS, 1);
+                startActivity(intent);
+                break;
+            case R.id.merchant_wait_use:
+                intent = new Intent(getActivity(), MyOrderActivity2.class);
+                intent.putExtra(MyOrderActivity2.ORDER_TYPE, 1);
+                intent.putExtra(MyOrderActivity2.ORDER_STATUS, 2);
+                startActivity(intent);
+                break;
+            case R.id.merchant_wait_comments:
+                intent = new Intent(getActivity(), MyOrderActivity2.class);
+                intent.putExtra(MyOrderActivity2.ORDER_TYPE, 1);
+                intent.putExtra(MyOrderActivity2.ORDER_STATUS, 4);
+                startActivity(intent);
+                break;
+            case R.id.merchant_after_sales:
+                intent = new Intent(getActivity(), AfterSaleActivity.class);
+                intent.putExtra(AfterSaleActivity.ORDER_TYPE, 1);
+                startActivity(intent);
+                break;
         }
     }
 
@@ -488,50 +522,39 @@ public class MyCenterFragment extends SFFragment {
         view4.setText("");
         String str0 = "¥ ";
         SpannableString span1 = new SpannableString(str0);
-        SpannableString span3 = new SpannableString(str0);
         SpannableString span2 = new SpannableString(str1);
         SpannableString span4 = new SpannableString(str2);
         SpannableString span5 = new SpannableString(str3);
         SpannableString span6 = new SpannableString(str4);
         ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.parseColor("#333333"));
-        span1.setSpan(new AbsoluteSizeSpan(15, true), 0, str0.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        span1.setSpan(new AbsoluteSizeSpan(14, true), 0, str0.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         span1.setSpan(new StyleSpan(Typeface.BOLD), 0, str0.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         span1.setSpan(colorSpan, 0, str0.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-        span3.setSpan(new AbsoluteSizeSpan(12, true), 0, str0.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-        span3.setSpan(new StyleSpan(Typeface.BOLD), 0, str0.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-        span3.setSpan(colorSpan, 0, str0.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 
-        span2.setSpan(new AbsoluteSizeSpan(24, true), 0, str1.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        span2.setSpan(new AbsoluteSizeSpan(17, true), 0, str1.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         span2.setSpan(new StyleSpan(Typeface.BOLD), 0, str1.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         span2.setSpan(colorSpan, 0, str1.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 
-        span4.setSpan(new AbsoluteSizeSpan(18, true), 0, str2.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        span4.setSpan(new AbsoluteSizeSpan(17, true), 0, str2.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         span4.setSpan(new StyleSpan(Typeface.BOLD), 0, str2.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         span4.setSpan(colorSpan, 0, str2.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 
-        span5.setSpan(new AbsoluteSizeSpan(18, true), 0, str3.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        span5.setSpan(new AbsoluteSizeSpan(17, true), 0, str3.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         span5.setSpan(new StyleSpan(Typeface.BOLD), 0, str3.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         span5.setSpan(colorSpan, 0, str3.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 
-        span6.setSpan(new AbsoluteSizeSpan(18, true), 0, str4.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        span6.setSpan(new AbsoluteSizeSpan(17, true), 0, str4.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         span6.setSpan(new StyleSpan(Typeface.BOLD), 0, str4.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         span6.setSpan(colorSpan, 0, str4.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 
-        if (isShowBalance) {
-            view1.append(span1);
-            view1.append(span2);
-            view2.append(span3);
-            view2.append(span4);
-            view3.append(span3);
-            view3.append(span5);
-            view4.append(span3);
-            view4.append(span6);
-        } else {
-            view1.setText("****");
-            view2.setText("****");
-            view3.setText("****");
-            view4.setText("****");
-        }
+        view1.append(span1);
+        view1.append(span2);
+        view2.append(span1);
+        view2.append(span4);
+        view3.append(span1);
+        view3.append(span5);
+        view4.append(span1);
+        view4.append(span6);
 
     }
 

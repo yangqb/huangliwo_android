@@ -35,36 +35,30 @@ public class CenterAdapter extends BaseQuickAdapter<Integer, BaseViewHolder> {
         }*/
         switch (helper.getAdapterPosition()) {
             case 0:
-                textView.setText("我的订单");
-                break;
-            case 1:
                 textView.setText("购物车");
                 break;
-            case 2:
+            case 1:
                 textView.setText("地址管理");
                 break;
-            case 3:
+            case 2:
                 textView.setText("实名认证");
                 break;
-            case 4:
-                textView.setText("成为会员");
-                break;
-            case 5:
+            case 3:
                 textView.setText("绑定账号");
                 break;
-            case 6:
+            case 4:
                 textView.setText("我的收藏");
                 break;
-            case 7:
+            case 5:
                 textView.setText("推店赚钱");
                 break;
-            case 8:
+            case 6:
                 textView.setText("分享");
                 break;
-            case 9:
+            case 7:
                 textView.setText("我的团队");
                 break;
-            case 10:
+            case 8:
                 textView.setText("帮助中心");
                 break;
         }

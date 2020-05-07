@@ -9,23 +9,25 @@
 
     <include layout="@layout/layer_classification_head_nav" />
 
-    <com.scwang.smartrefresh.layout.SmartRefreshLayout
-        android:id="@+id/swipeLayout"
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
-        android:orientation="vertical">
+        android:background="@color/white">
 
-        <FrameLayout
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:id="@+id/swipeLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white">
+            android:background="@color/white"
+            android:orientation="vertical">
 
             <android.support.v4.widget.NestedScrollView
                 android:id="@+id/scrollView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:focusableInTouchMode="true">
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -307,13 +309,17 @@
                                     android:layout_marginBottom="10dp"
                                     android:background="@color/color_eeeeee" />
 
-                                <android.support.v7.widget.RecyclerView
-                                    android:id="@+id/optRecyclerView"
+                                <RelativeLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content">
 
-                                </android.support.v7.widget.RecyclerView>
+                                    <android.support.v7.widget.RecyclerView
+                                        android:id="@+id/optRecyclerView"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content">
 
+                                    </android.support.v7.widget.RecyclerView>
+                                </RelativeLayout>
                             </LinearLayout>
 
                             <LinearLayout
@@ -357,12 +363,18 @@
                                     android:layout_marginBottom="10dp"
                                     android:background="@color/color_eeeeee" />
 
-                                <android.support.v7.widget.RecyclerView
-                                    android:id="@+id/hotRecyclerView"
+                                <RelativeLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content">
 
-                                </android.support.v7.widget.RecyclerView>
+                                    <android.support.v7.widget.RecyclerView
+                                        android:id="@+id/hotRecyclerView"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content">
+
+                                    </android.support.v7.widget.RecyclerView>
+                                </RelativeLayout>
+
                             </LinearLayout>
 
                             <RelativeLayout
@@ -376,38 +388,43 @@
                                     android:paddingBottom="15dp" />
                             </RelativeLayout>
                         </LinearLayout>
-                    </LinearLayout>
-                </LinearLayout>
-            </android.support.v4.widget.NestedScrollView>
 
-            <LinearLayout
-                android:id="@+id/back_top"
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </android.support.v4.widget.NestedScrollView>
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+        <LinearLayout
+            android:id="@+id/back_top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="25dp"
+            android:layout_marginBottom="25dp"
+            android:visibility="gone"
+            android:background="@drawable/shape_back_top"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom|end"
-                android:layout_marginRight="25dp"
-                android:layout_marginBottom="25dp"
-                android:background="@drawable/shape_back_top"
+                android:background="@mipmap/fanhuidingbu" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:text="顶部"
+                android:textColor="@color/color_333333"
+                android:textSize="11sp" />
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@mipmap/fanhuidingbu" />
+        </LinearLayout>
+    </RelativeLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:gravity="center"
-                    android:text="顶部"
-                    android:textColor="@color/color_333333"
-                    android:textSize="11sp" />
-
-            </LinearLayout>
-        </FrameLayout>
-
-    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
 </LinearLayout>

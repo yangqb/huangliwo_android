@@ -56,6 +56,8 @@ import static com.feitianzhu.huangliwo.common.Constant.USERID;
 public class MyOrderActivity2 extends BaseActivity {
     private static final int PAY_REQUEST_CODE = 1001;
     private static final int COMMENTS_REQUEST_CODE = 1002;
+    public static final String ORDER_TYPE = "order_type";
+    public static final String ORDER_STATUS = "order_status";
     private int type = 0; //0，商品订单1，商铺订单
     private int butType = 0;//0全部1代付款2待发货（待使用）3待收货4待评价5售后
     private OrderAdapter mAdapter;
@@ -75,10 +77,6 @@ public class MyOrderActivity2 extends BaseActivity {
     TextView titleName;
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
-    @BindView(R.id.img_collect)
-    ImageView search;
-    @BindView(R.id.right_img)
-    ImageView afterSale;
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
     @BindView(R.id.tabLayout)
@@ -98,16 +96,50 @@ public class MyOrderActivity2 extends BaseActivity {
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         titleName.setText("商品订单");
-        afterSale.setBackgroundResource(R.mipmap.a01_03shouhou);
-        search.setBackgroundResource(R.mipmap.a01_03sousuo);
-        afterSale.setVisibility(View.VISIBLE);
-        search.setVisibility(View.VISIBLE);
-        tabs.add(new PlaneOrderTableEntity("全部"));
-        tabs.add(new PlaneOrderTableEntity("待付款(0)"));
-        tabs.add(new PlaneOrderTableEntity("待发货(0)"));
-        tabs.add(new PlaneOrderTableEntity("待收货(0)"));
-        tabs.add(new PlaneOrderTableEntity("待评价(0)"));
-        tabLayout.setTabData(tabs);
+        type = getIntent().getIntExtra(ORDER_TYPE, 0);
+        status = getIntent().getIntExtra(ORDER_STATUS, -1);
+        butType = getIntent().getIntExtra(ORDER_STATUS, 0);
+        if (type == 0) {
+            tabLayout.setVisibility(View.VISIBLE);
+            tabLayout2.setVisibility(View.GONE);
+            titleName.setText(strings[0]);
+            tabs.add(new PlaneOrderTableEntity("全部"));
+            tabs.add(new PlaneOrderTableEntity("待付款(0)"));
+            tabs.add(new PlaneOrderTableEntity("待发货(0)"));
+            tabs.add(new PlaneOrderTableEntity("待收货(0)"));
+            tabs.add(new PlaneOrderTableEntity("待评价(0)"));
+            tabLayout.setTabData(tabs);
+            if (status == GoodsOrderInfo.TYPE_All) {
+                tabLayout.setCurrentTab(0);
+            } else if (status == GoodsOrderInfo.TYPE_WAIT_COMMENTS) {
+                tabLayout.setCurrentTab(4);
+            } else if (status == GoodsOrderInfo.TYPE_NO_PAY) {
+                tabLayout.setCurrentTab(1);
+            } else if (status == GoodsOrderInfo.TYPE_WAIT_DELIVERY) {
+                tabLayout.setCurrentTab(2);
+            } else if (status == GoodsOrderInfo.TYPE_WAIT_RECEIVING) {
+                tabLayout.setCurrentTab(3);
+            }
+        } else {
+            tabLayout.setVisibility(View.GONE);
+            tabLayout2.setVisibility(View.VISIBLE);
+            titleName.setText(strings[1]);
+            tabs.add(new PlaneOrderTableEntity("全部"));
+            tabs.add(new PlaneOrderTableEntity("待付款(0)"));
+            tabs.add(new PlaneOrderTableEntity("待使用(0)"));
+            tabs.add(new PlaneOrderTableEntity("待评价(0)"));
+            tabLayout2.setTabData(tabs);
+            if (butType == 0) {
+                tabLayout2.setCurrentTab(0);
+            } else if (butType == 1) {
+                tabLayout2.setCurrentTab(1);
+            } else if (butType == 2) {
+                tabLayout2.setCurrentTab(2);
+            } else if (butType == 4) {
+                tabLayout2.setCurrentTab(3);
+            }
+        }
+
 
         mAdapter = new OrderAdapter(multipleItemOrderModels);
         View mEmptyView = View.inflate(this, R.layout.view_common_nodata, null);
@@ -134,7 +166,7 @@ public class MyOrderActivity2 extends BaseActivity {
             public void onTabSelect(int position) {
                 if (position == 0) {
                     butType = 0;
-                    status = -1;
+                    status = GoodsOrderInfo.TYPE_All;
                     getOrderList(status);
                 } else if (position == 1) {
                     butType = 1;
@@ -149,7 +181,7 @@ public class MyOrderActivity2 extends BaseActivity {
                     getOrderList(status);
                 } else if (position == 4) {
                     butType = 4;
-                    status = 0;
+                    status = GoodsOrderInfo.TYPE_WAIT_COMMENTS;
                     getOrderList(status);
                 }
             }
@@ -165,7 +197,6 @@ public class MyOrderActivity2 extends BaseActivity {
             public void onTabSelect(int position) {
                 if (position == 0) {
                     butType = 0;
-                    status = -1;
                     multipleItemOrderModels.clear();
                     currSetMealOder = allSetMealOder;
                     for (int i = 0; i < currSetMealOder.size(); i++) {
@@ -411,7 +442,7 @@ public class MyOrderActivity2 extends BaseActivity {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                 if (type == 0) {
-                    initData();
+                    getGoodsOrderList();
                 } else {
                     getSetMealOrderList();
                 }
@@ -420,12 +451,9 @@ public class MyOrderActivity2 extends BaseActivity {
     }
 
 
-    @OnClick({R.id.left_button, R.id.right_button, R.id.title_name, R.id.img_collect})
+    @OnClick({R.id.left_button, R.id.title_name})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.img_collect:
-                ToastUtils.show("待开发");
-                break;
             case R.id.title_name:
                 new XPopup.Builder(this)
                         .asCustom(new CustomRefundView(MyOrderActivity2.this)
@@ -445,8 +473,7 @@ public class MyOrderActivity2 extends BaseActivity {
                                             tabs.add(new PlaneOrderTableEntity("待收货(0)"));
                                             tabs.add(new PlaneOrderTableEntity("待评价(0)"));
                                             tabLayout.setTabData(tabs);
-                                            status = -1;
-                                            initData();
+                                            getGoodsOrderList();
                                         } else {
                                             tabLayout.setVisibility(View.GONE);
                                             tabLayout2.setVisibility(View.VISIBLE);
@@ -465,18 +492,21 @@ public class MyOrderActivity2 extends BaseActivity {
             case R.id.left_button:
                 finish();
                 break;
-            case R.id.right_button:
-                //售后(退款)
-                Intent intent = new Intent(MyOrderActivity2.this, AfterSaleActivity.class);
-                intent.putExtra(AfterSaleActivity.ORDER_TYPE, type);
-                startActivity(intent);
-                break;
         }
 
     }
 
     @Override
     protected void initData() {
+        if (type == 0) {
+            getGoodsOrderList();
+        } else {
+            getSetMealOrderList();
+        }
+    }
+
+
+    public void getGoodsOrderList() {
         OkGo.<LzyResponse<GoodOrderCountMode>>get(Urls.GTE_ORDER_COUNT)
                 .tag(this)
                 .params(ACCESSTOKEN, token)
@@ -622,7 +652,7 @@ public class MyOrderActivity2 extends BaseActivity {
                         super.onSuccess(MyOrderActivity2.this, response.body().msg, response.body().code);
                         if (response.body().code == 0) {
                             ToastUtils.show("删除成功");
-                            initData();
+                            getGoodsOrderList();
                         }
                     }
 
@@ -646,7 +676,7 @@ public class MyOrderActivity2 extends BaseActivity {
                         super.onSuccess(MyOrderActivity2.this, response.body().msg, response.body().code);
                         if (response.body().code == 0) {
                             ToastUtils.show("取消成功");
-                            initData();
+                            getGoodsOrderList();
                         }
                     }
 
@@ -694,7 +724,7 @@ public class MyOrderActivity2 extends BaseActivity {
                         super.onSuccess(MyOrderActivity2.this, response.body().msg, response.body().code);
                         if (response.body().code == 0) {
                             ToastUtils.show("确认收货");
-                            initData();
+                            getGoodsOrderList();
                         }
                     }
                 });
@@ -747,12 +777,12 @@ public class MyOrderActivity2 extends BaseActivity {
         if (resultCode == RESULT_OK) {
             if (requestCode == REFUND_REQUEST_CODE || requestCode == COMMENTS_REQUEST_CODE) {
                 if (type == 0) {
-                    initData();
+                    getGoodsOrderList();
                 } else {
                     getSetMealOrderList();
                 }
             } else if (requestCode == PAY_REQUEST_CODE) {
-                initData();
+                getGoodsOrderList();
             }
         }
     }

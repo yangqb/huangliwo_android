@@ -21,6 +21,8 @@ public class GoodsOrderInfo implements Serializable {
     public static final int TYPE_REFUND = 5;
     public static final int TYPE_REFUNDED = 6;
     public static final int TYPE_CANCEL = 7;
+    public static final int TYPE_All = -1;
+    public static final int TYPE_WAIT_COMMENTS = 0;
 
     private List<GoodsOrderListBean> goodsOrderList;
 

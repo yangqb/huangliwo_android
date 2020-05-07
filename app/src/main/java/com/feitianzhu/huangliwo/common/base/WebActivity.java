@@ -17,7 +17,6 @@ import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.pushshop.EditMerchantsActivity;
 import com.feitianzhu.huangliwo.pushshop.PushShopListActivity;
-import com.feitianzhu.huangliwo.pushshop.PushShopProtocolActivity;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.gyf.immersionbar.ImmersionBar;
 import com.just.agentweb.AgentWeb;
