@@ -97,7 +97,7 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
     LinearLayout mLyMe;
     private HomeFragment2 mHomeFragment;
     private CommodityClassificationFragment mShopFragment;
-    private MessageFragment mMessageFragment;
+    private HomeFragment mMessageFragment;
     private MyCenterFragment mMeFragment;
     private FragmentTransaction mTransaction;
     private ObjectAnimator animator;
@@ -212,7 +212,7 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
                 mTxtJiaoliu.setSelected(true);
                 mImgJiaoliu.setSelected(true);
                 if (mMessageFragment == null) {
-                    mMessageFragment = MessageFragment.newInstance("","");
+                    mMessageFragment = HomeFragment.newInstance();
                     mTransaction.add(R.id.fragment_container, mMessageFragment);
                 } else {
                     mTransaction.show(mMessageFragment);

@@ -78,7 +78,7 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 import com.zhpan.bannerview.BannerViewPager;
-import com.zhpan.bannerview.enums.IndicatorStyle;
+import com.zhpan.bannerview.constants.IndicatorStyle;
 import com.zhpan.bannerview.holder.ViewHolder;
 
 import org.greenrobot.eventbus.EventBus;
@@ -758,16 +758,14 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, Pager
         private RoundedImageView mImageView;
 
         @Override
-        public View createView(ViewGroup viewGroup, Context context, int position) {
-            // 返回页面布局文件
-            View view = LayoutInflater.from(context).inflate(R.layout.banner_item, viewGroup, false);
-            mImageView = view.findViewById(R.id.banner_image);
-            return view;
+        public int getLayoutId() {
+            return R.layout.banner_item;
         }
 
         @Override
-        public void onBind(final Context context, HomeEntity.BannerListBean data, final int position, final int size) {
-            Glide.with(context).load(data.imagUrl).apply(new RequestOptions().error(R.mipmap.g10_01weijiazai).placeholder(R.mipmap.g10_01weijiazai).dontAnimate()).into(mImageView);
+        public void onBind(View itemView, HomeEntity.BannerListBean data, int position, int size) {
+            mImageView = itemView.findViewById(R.id.banner_image);
+            Glide.with(mContext).load(data.imagUrl).apply(new RequestOptions().error(R.mipmap.g10_01weijiazai).placeholder(R.mipmap.g10_01weijiazai).dontAnimate()).into(mImageView);
         }
     }
 

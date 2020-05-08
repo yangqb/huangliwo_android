@@ -57,7 +57,7 @@ import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.zhpan.bannerview.BannerViewPager;
-import com.zhpan.bannerview.enums.IndicatorStyle;
+import com.zhpan.bannerview.constants.IndicatorStyle;
 import com.zhpan.bannerview.holder.ViewHolder;
 
 import java.io.File;
@@ -320,17 +320,14 @@ public class ShopsDetailActivity extends BaseActivity {
         private ImageView mImageView;
 
         @Override
-        public View createView(ViewGroup viewGroup, Context context, int position) {
-            // 返回页面布局文件
-            View view = LayoutInflater.from(context).inflate(R.layout.detail_banner_item, viewGroup, false);
-            mImageView = view.findViewById(R.id.banner_image);
-            return view;
+        public int getLayoutId() {
+            return R.layout.detail_banner_item;
         }
 
         @Override
-        public void onBind(final Context context, BaseGoodsListBean.GoodsImgsListBean data, final int position, final int size) {
-            Glide.with(context).load(data.getGoodsImg()).apply(new RequestOptions().error(R.mipmap.g10_03weijiazai).placeholder(R.mipmap.g10_03weijiazai).dontAnimate()).into(mImageView);
-            //Glide.with(context).load(data.getGoodsImg()).apply(new RequestOptions().error(R.mipmap.g10_03weijiazai).placeholder(R.mipmap.g10_03weijiazai)).into(GlideUtils.getImageView((Activity) context, data.getGoodsImg(), mImageView));
+        public void onBind(View itemView, BaseGoodsListBean.GoodsImgsListBean data, int position, int size) {
+            mImageView = itemView.findViewById(R.id.banner_image);
+            Glide.with(mContext).load(data.getGoodsImg()).apply(new RequestOptions().error(R.mipmap.g10_03weijiazai).placeholder(R.mipmap.g10_03weijiazai).dontAnimate()).into(mImageView);
         }
     }
 
@@ -587,6 +584,7 @@ public class ShopsDetailActivity extends BaseActivity {
                     }
                 });
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
