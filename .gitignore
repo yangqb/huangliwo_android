@@ -9,5 +9,11 @@
 .externalNativeBuild
 /app/build/
 /.idea/
-/wheel/
-/okhttputils/build/
+/matisse/build/
+matisse/build/generated/res/
+matisse/build/generated/source/rs/
+matisse/build/intermediates/check-manifest/
+matisse/build/intermediates/incremental/packageDebugResources/stripped.dir/
+matisse/build/intermediates/lint_jar/
+matisse/build/intermediates/public_res/
+matisse/build/intermediates/rs/
