@@ -200,7 +200,7 @@ dependencies {
     implementation 'com.gyf.immersionbar:immersionbar:3.0.0'
     // fragment快速实现（可选）
     implementation 'com.gyf.immersionbar:immersionbar-components:3.0.0'
-    implementation 'com.zhpan.library:bannerview:2.3.5'
+    implementation 'com.zhpan.library:bannerview:2.7.4'
     //屏幕适配
     implementation 'me.jessyan:autosize:1.1.2'
     //dialog
