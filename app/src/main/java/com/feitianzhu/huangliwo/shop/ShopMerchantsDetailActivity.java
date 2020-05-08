@@ -53,7 +53,7 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.base.Request;
 import com.zhpan.bannerview.BannerViewPager;
-import com.zhpan.bannerview.enums.IndicatorStyle;
+import com.zhpan.bannerview.constants.IndicatorStyle;
 import com.zhpan.bannerview.holder.ViewHolder;
 
 import java.util.ArrayList;
@@ -658,20 +658,16 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
 
     public class DataViewHolder implements ViewHolder<String> {
         private ImageView mImageView;
-
         @Override
-        public View createView(ViewGroup viewGroup, Context context, int position) {
-            // 返回页面布局文件
-            View view = LayoutInflater.from(context).inflate(R.layout.layout_banner_merchants, viewGroup, false);
-            mImageView = view.findViewById(R.id.image);
-            return view;
+        public int getLayoutId() {
+            return R.layout.layout_banner_merchants;
         }
 
         @Override
-        public void onBind(final Context context, String data, final int position, final int size) {
-            Glide.with(context).load(data).apply(new RequestOptions().placeholder(R.mipmap.g10_02weijiazai).error(R.mipmap.g10_02weijiazai).dontAnimate()).into(mImageView);
+        public void onBind(View itemView, String data, int position, int size) {
+            mImageView = itemView.findViewById(R.id.image);
+            Glide.with(mContext).load(data).apply(new RequestOptions().placeholder(R.mipmap.g10_02weijiazai).error(R.mipmap.g10_02weijiazai).dontAnimate()).into(mImageView);
         }
-
     }
 
     @Override

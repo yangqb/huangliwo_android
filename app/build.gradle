@@ -225,5 +225,5 @@ dependencies {
     implementation 'com.contrarywind:Android-PickerView:4.1.9'
     implementation 'com.gcssloop.recyclerview:pagerlayoutmanager:2.3.8'
     implementation 'com.hjq:toast:8.0'
-    //implementation 'com.facebook.fresco:fresco:1.13.0'  //更高版本要使用Androidx
+    ////implementation 'com.facebook.fresco:fresco:1.13.0'  //更高版本要使用Androidx
 }
