@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -16,18 +17,23 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.SFFragment;
+import com.feitianzhu.huangliwo.home.adapter.HotGoodsAdapter2;
 import com.feitianzhu.huangliwo.home.adapter.OptAdapter;
+import com.feitianzhu.huangliwo.home.adapter.RecommendedAdapter;
 import com.feitianzhu.huangliwo.home.entity.HomeEntity;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
+import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
 import com.feitianzhu.huangliwo.model.HomeModel;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsModel;
 import com.feitianzhu.huangliwo.shop.CommodityClassificationFragment;
 import com.feitianzhu.huangliwo.shop.NewYearShoppingActivity;
+import com.feitianzhu.huangliwo.shop.ShopMerchantsDetailActivity;
 import com.feitianzhu.huangliwo.shop.ShopsDetailActivity;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
@@ -49,6 +55,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
@@ -64,6 +71,8 @@ public class FirstFragment extends SFFragment {
     private static final String ARG_PARAM2 = "param2";
     private List<HomeEntity.BannerListBean> mBanners = new ArrayList<>();
     private List<MerchantsModel> optMerchantList = new ArrayList<>();
+    private List<BaseGoodsListBean> hotGoodsList = new ArrayList<>();
+    private List<BaseGoodsListBean> recGoodsList = new ArrayList<>();
     private double longitude = 116.289189;
     private double latitude = 39.826552;
     private HomeModel mHomeMode;
@@ -71,6 +80,8 @@ public class FirstFragment extends SFFragment {
     private String token;
     private String userId;
     private OptAdapter optAdapter;
+    private HotGoodsAdapter2 hotGoodsAdapter;
+    private RecommendedAdapter recommendedAdapter;
     Unbinder unbinder;
     @BindView(R.id.content)
     TextView content;
@@ -84,6 +95,20 @@ public class FirstFragment extends SFFragment {
     RoundedImageView hotImg;
     @BindView(R.id.optRecyclerView)
     RecyclerView optRecyclerView;
+    @BindView(R.id.discounts_img1)
+    ImageView discountsImg1;
+    @BindView(R.id.discounts_img2)
+    ImageView discountsImg2;
+    @BindView(R.id.discounts_img3)
+    ImageView discountsImg3;
+    @BindView(R.id.discounts_img4)
+    ImageView discountsImg4;
+    @BindView(R.id.discounts_img5)
+    ImageView discountsImg5;
+    @BindView(R.id.hotRecyclerView)
+    RecyclerView hotRecyclerView;
+    @BindView(R.id.recommendedRecyclerView)
+    RecyclerView recommendedRecyclerView;
 
     public FirstFragment() {
 
@@ -115,6 +140,18 @@ public class FirstFragment extends SFFragment {
         optRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         optAdapter = new OptAdapter(optMerchantList);
         optRecyclerView.setAdapter(optAdapter);
+        optRecyclerView.setNestedScrollingEnabled(false);
+
+        hotGoodsAdapter = new HotGoodsAdapter2(hotGoodsList);
+        hotRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+        hotRecyclerView.setAdapter(hotGoodsAdapter);
+        hotRecyclerView.setNestedScrollingEnabled(false);
+
+        recommendedAdapter = new RecommendedAdapter(recGoodsList);
+        recommendedRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        recommendedRecyclerView.setAdapter(recommendedAdapter);
+        recommendedRecyclerView.setNestedScrollingEnabled(false);
+        refreshLayout.setEnableLoadMore(false);
         initView();
         initData();
         initListener();
@@ -133,6 +170,96 @@ public class FirstFragment extends SFFragment {
                 initData();
             }
         });
+
+        optAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                //商铺详情页
+                Intent intent = new Intent(getActivity(), ShopMerchantsDetailActivity.class);
+                intent.putExtra(ShopMerchantsDetailActivity.MERCHANTS_ID, optMerchantList.get(position).getMerchantId());
+                startActivity(intent);
+            }
+        });
+
+        optAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                Intent intent = new Intent(getContext(), VipActivity.class);
+                intent.putExtra(VipActivity.MINE_INFO, userInfo);
+                startActivity(intent);
+            }
+        });
+
+        hotGoodsAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                //商品详情
+                Intent intent = new Intent(getActivity(), ShopsDetailActivity.class);
+                intent.putExtra(ShopsDetailActivity.GOODS_DETAIL_DATA, hotGoodsList.get(position).getGoodsId());
+                startActivity(intent);
+            }
+        });
+
+        hotGoodsAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                Intent intent = new Intent(getContext(), VipActivity.class);
+                intent.putExtra(VipActivity.MINE_INFO, userInfo);
+                startActivity(intent);
+            }
+        });
+
+        recommendedAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                //商品详情
+                Intent intent = new Intent(getActivity(), ShopsDetailActivity.class);
+                intent.putExtra(ShopsDetailActivity.GOODS_DETAIL_DATA, recGoodsList.get(position).getGoodsId());
+                startActivity(intent);
+            }
+        });
+
+        recommendedAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                Intent intent = new Intent(getContext(), VipActivity.class);
+                intent.putExtra(VipActivity.MINE_INFO, userInfo);
+                startActivity(intent);
+            }
+        });
+    }
+
+
+    @OnClick({R.id.discounts_img1, R.id.discounts_img2, R.id.discounts_img3, R.id.discounts_img4, R.id.discounts_img5, R.id.activityImg, R.id.hotImg})
+    public void onClick(View view) {
+        Intent intent;
+        switch (view.getId()) {
+            case R.id.discounts_img1:
+
+                break;
+            case R.id.discounts_img2:
+
+                break;
+            case R.id.discounts_img3:
+
+                break;
+            case R.id.discounts_img4:
+
+                break;
+            case R.id.discounts_img5:
+
+                break;
+            case R.id.activityImg:
+                intent = new Intent(getContext(), VipActivity.class);
+                intent.putExtra(VipActivity.MINE_INFO, userInfo);
+                startActivity(intent);
+                break;
+            case R.id.hotImg:
+                intent = new Intent(getActivity(), ShopsDetailActivity.class);
+                intent.putExtra(ShopsDetailActivity.GOODS_DETAIL_DATA, mHomeMode.hotGood.goodId);
+                startActivity(intent);
+                break;
+        }
     }
 
 
@@ -147,9 +274,10 @@ public class FirstFragment extends SFFragment {
                     @Override
                     public void onSuccess(Response<LzyResponse<HomeModel>> response) {
                         super.onSuccess(getActivity(), response.body().msg, response.body().code);
+                        refreshLayout.finishRefresh();
                         if (response.body().code == 0 && response.body().data != null) {
                             mHomeMode = response.body().data;
-                            if (mHomeMode.bannerList != null && !mHomeMode.bannerList.isEmpty()) {
+                            if (mHomeMode.bannerList != null && mHomeMode.bannerList.size() > 0) {
                                 showBanner();
                             }
                             Glide.with(getActivity()).load(mHomeMode.activityImg).apply(new RequestOptions().placeholder(R.mipmap.g10_01weijiazai).error(R.mipmap.g10_01weijiazai).dontAnimate()).into(activityImageView);
@@ -161,14 +289,37 @@ public class FirstFragment extends SFFragment {
                                 optAdapter.setNewData(optMerchantList);
                                 optAdapter.notifyDataSetChanged();
                             }
+                            if (mHomeMode.goodClsImgs != null && mHomeMode.goodClsImgs.size() > 0) {
+                                showDiscountsImg();
+                            }
+
+                            if (mHomeMode.goodsListfove != null) {
+                                hotGoodsList = mHomeMode.goodsListfove;
+                                hotGoodsAdapter.setNewData(hotGoodsList);
+                                hotGoodsAdapter.notifyDataSetChanged();
+                            }
+                            if (mHomeMode.goodsList != null) {
+                                recGoodsList = mHomeMode.goodsList;
+                                recommendedAdapter.setNewData(recGoodsList);
+                                recommendedAdapter.notifyDataSetChanged();
+                            }
                         }
                     }
 
                     @Override
                     public void onError(Response<LzyResponse<HomeModel>> response) {
                         super.onError(response);
+                        refreshLayout.finishRefresh(false);
                     }
                 });
+    }
+
+    public void showDiscountsImg() {
+        Glide.with(getActivity()).load(mHomeMode.goodClsImgs.get(0).goodClsImg).apply(new RequestOptions().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai).dontAnimate()).into(discountsImg1);
+        Glide.with(getActivity()).load(mHomeMode.goodClsImgs.get(1).goodClsImg).apply(new RequestOptions().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai).dontAnimate()).into(discountsImg2);
+        Glide.with(getActivity()).load(mHomeMode.goodClsImgs.get(2).goodClsImg).apply(new RequestOptions().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai).dontAnimate()).into(discountsImg3);
+        Glide.with(getActivity()).load(mHomeMode.goodClsImgs.get(3).goodClsImg).apply(new RequestOptions().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai).dontAnimate()).into(discountsImg4);
+        Glide.with(getActivity()).load(mHomeMode.goodClsImgs.get(4).goodClsImg).apply(new RequestOptions().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai).dontAnimate()).into(discountsImg5);
     }
 
     public void showBanner() {

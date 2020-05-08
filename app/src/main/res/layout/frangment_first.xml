@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginBottom="10dp"
     android:background="@color/color_f7f7f7"
     android:gravity="center"
     android:orientation="vertical">
@@ -182,8 +183,7 @@
                     android:orientation="vertical"
                     android:paddingLeft="5dp"
                     android:paddingTop="10dp"
-                    android:paddingRight="5dp"
-                    android:paddingBottom="10dp">
+                    android:paddingRight="5dp">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -209,7 +209,8 @@
 
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp">
 
                         <android.support.v7.widget.RecyclerView
                             android:id="@+id/optRecyclerView"
@@ -218,6 +219,199 @@
 
                         </android.support.v7.widget.RecyclerView>
                     </RelativeLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/shape_ffffff_r5"
+                    android:orientation="vertical"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="更多优惠"
+                            android:textColor="@color/color_222222"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:text="更多优惠等你来"
+                            android:textColor="@color/color_222222"
+                            android:textSize="13sp" />
+
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="10dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:id="@+id/discounts_img1"
+                                android:layout_width="match_parent"
+                                android:layout_height="133dp"
+                                android:layout_marginBottom="7dp"
+                                android:background="@color/white"
+                                android:scaleType="fitXY" />
+
+                            <ImageView
+                                android:id="@+id/discounts_img2"
+                                android:layout_width="match_parent"
+                                android:layout_height="133dp"
+                                android:background="@color/white"
+                                android:scaleType="fitXY" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:id="@+id/discounts_img3"
+                                android:layout_width="match_parent"
+                                android:layout_height="86dp"
+                                android:layout_marginBottom="7dp"
+                                android:background="@color/white"
+                                android:scaleType="fitXY" />
+
+                            <ImageView
+                                android:id="@+id/discounts_img4"
+                                android:layout_width="match_parent"
+                                android:layout_height="86dp"
+                                android:layout_marginBottom="7dp"
+                                android:background="@color/white"
+                                android:scaleType="fitXY" />
+
+                            <ImageView
+                                android:id="@+id/discounts_img5"
+                                android:layout_width="match_parent"
+                                android:layout_height="86dp"
+                                android:background="@color/white"
+                                android:scaleType="fitXY" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/shape_ffffff_r5"
+                    android:orientation="vertical"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="5dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="爆品上新"
+                            android:textColor="@color/color_222222"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:text="超多新品 超多折扣"
+                            android:textColor="@color/color_222222"
+                            android:textSize="13sp" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp">
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/hotRecyclerView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                        </android.support.v7.widget.RecyclerView>
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/shape_ffffff_r5"
+                    android:orientation="vertical"
+                    android:paddingTop="10dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="为您推荐"
+                            android:textColor="@color/color_222222"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:text="为您推选实惠商品"
+                            android:textColor="@color/color_222222"
+                            android:textSize="13sp" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp">
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/recommendedRecyclerView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                        </android.support.v7.widget.RecyclerView>
+                    </RelativeLayout>
+
+
                 </LinearLayout>
 
 
