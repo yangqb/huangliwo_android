@@ -2,11 +2,11 @@ package com.feitianzhu.huangliwo.shop;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -14,13 +14,10 @@ import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -28,17 +25,16 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
-import com.feitianzhu.huangliwo.App;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
+import com.feitianzhu.huangliwo.model.AddShoppingCartBody;
 import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
 import com.feitianzhu.huangliwo.model.CollectionBody;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.ProductParameters;
-import com.feitianzhu.huangliwo.model.AddShoppingCartBody;
 import com.feitianzhu.huangliwo.shop.ui.ShoppingCartActivity;
 import com.feitianzhu.huangliwo.utils.MathUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
@@ -66,6 +62,7 @@ import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.feitianzhu.huangliwo.shop.ShareShopActivity.GOODS_DATA;
@@ -79,6 +76,10 @@ import static com.feitianzhu.huangliwo.shop.ShareShopActivity.GOODS_DATA;
  * 商品详情页面
  */
 public class ShopsDetailActivity extends BaseActivity {
+    @BindView(R.id.goodsStock)
+    TextView goodsStock;
+    @BindView(R.id.goodsSalesvolume)
+    TextView goodsSalesvolume;
     private boolean isAddShoppingCart = false;
     private boolean isBuyGoods = false;
     public static final String GOODS_DETAIL_DATA = "goods_detail_data";
@@ -100,7 +101,7 @@ public class ShopsDetailActivity extends BaseActivity {
     @BindView(R.id.title_name)
     TextView titleName;
     @BindView(R.id.viewpager)
-    BannerViewPager<BaseGoodsListBean.GoodsImgsListBean, ShopsDetailActivity.DataViewHolder> mViewpager;
+    BannerViewPager<BaseGoodsListBean.GoodsImgsListBean, DataViewHolder> mViewpager;
     @BindView(R.id.goodsName)
     TextView goodsName;
     @BindView(R.id.goodsSummary)
@@ -185,7 +186,7 @@ public class ShopsDetailActivity extends BaseActivity {
                 .params("goodsId", goodsId + "")
                 .execute(new JsonCallback<LzyResponse<ProductParameters>>() {
                     @Override
-                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<ProductParameters>> response) {
+                    public void onSuccess(Response<LzyResponse<ProductParameters>> response) {
                         //super.onSuccess(ShopsDetailActivity.this, response.body().msg, response.body().code);
                         if (response.body().data != null) {
                             productParameters = response.body().data;
@@ -210,7 +211,7 @@ public class ShopsDetailActivity extends BaseActivity {
                     }
 
                     @Override
-                    public void onError(com.lzy.okgo.model.Response<LzyResponse<ProductParameters>> response) {
+                    public void onError(Response<LzyResponse<ProductParameters>> response) {
                         super.onError(response);
                     }
                 });
@@ -224,7 +225,7 @@ public class ShopsDetailActivity extends BaseActivity {
                 .params("goodsId", goodsId)
                 .execute(new JsonCallback<LzyResponse<BaseGoodsListBean>>() {
                     @Override
-                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<BaseGoodsListBean>> response) {
+                    public void onSuccess(Response<LzyResponse<BaseGoodsListBean>> response) {
                         //super.onSuccess(ShopsDetailActivity.this, response.body().msg, response.body().code);
                         if (response.body().data != null) {
                             goodsListBean = response.body().data;
@@ -233,7 +234,7 @@ public class ShopsDetailActivity extends BaseActivity {
                     }
 
                     @Override
-                    public void onError(com.lzy.okgo.model.Response<LzyResponse<BaseGoodsListBean>> response) {
+                    public void onError(Response<LzyResponse<BaseGoodsListBean>> response) {
                         super.onError(response);
                     }
                 });
@@ -250,6 +251,8 @@ public class ShopsDetailActivity extends BaseActivity {
         str3 = String.format(Locale.getDefault(), "%.2f", goodsListBean.getPrice());
         goodsName.setText(goodsListBean.getGoodsName());
         goodsSummary.setText(goodsListBean.getSummary());
+        goodsStock.setText("库存 "+goodsListBean.getStockCount());
+        goodsSalesvolume.setText("销量 "+goodsListBean.getSales());
         String rebatePv = String.format(Locale.getDefault(), "%.2f", goodsListBean.getRebatePv());
         tvRebate.setText("奖励¥" + MathUtils.subZero(rebatePv));
         vipRebate.setText("奖励¥" + MathUtils.subZero(rebatePv));
@@ -307,13 +310,20 @@ public class ShopsDetailActivity extends BaseActivity {
                     //.setRoundCorner(20)
                     .setIndicatorRadius(8)
                     .setIndicatorColor(Color.parseColor("#CCCCCC"), Color.parseColor("#6C6D72"))
-                    .setHolderCreator(ShopsDetailActivity.DataViewHolder::new).setOnPageClickListener(new BannerViewPager.OnPageClickListener() {
+                    .setHolderCreator(DataViewHolder::new).setOnPageClickListener(new BannerViewPager.OnPageClickListener() {
                 @Override
                 public void onPageClick(int position) {
                 }
             }).create(goodsListBean.getGoodsImgsList());
             mViewpager.startLoop();
         }
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
     }
 
     public class DataViewHolder implements ViewHolder<BaseGoodsListBean.GoodsImgsListBean> {
