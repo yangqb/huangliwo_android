@@ -87,6 +87,7 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
     private List<VipGifListInfo.VipPresentsModel> presentsList = new ArrayList<>();
     private VipPresentsAdapter adapter;
     private VipPresentsAdapter2 adapter2;
+    private VipGifListInfo presentsModel;
     private double longitude = 116.289189;
     private double latitude = 39.826552;
     private int clsId;
@@ -241,7 +242,7 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
                 }
                 break;
             case R.id.btn_logistics:
-                checkLogisticsInfo("", "");
+                checkLogisticsInfo(presentsModel.expressNum, "");
                 break;
         }
 
@@ -442,7 +443,7 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
                         shopGiftList.clear();
                         presentsList.clear();
                         if (response.body().code == 0 && response.body().data != null) {
-                            VipGifListInfo presentsModel = response.body().data;
+                            presentsModel = response.body().data;
                             presentsTitle.setText(presentsModel.title);
                             totalAmount.setText("¥" + response.body().data.totalPrice);
                             if (presentsModel.list != null && presentsModel.list.size() > 0) {

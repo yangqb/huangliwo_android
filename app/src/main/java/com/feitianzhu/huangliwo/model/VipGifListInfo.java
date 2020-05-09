@@ -8,7 +8,7 @@ public class VipGifListInfo implements Serializable {
     public List<VipPresentsModel> shopGiftList;
     public double totalPrice;
     public String title;
-
+    public String expressNum;
 
     public static class VipGifModel implements Serializable {
         public String createTime;//":"2020-02-14T08:51:33.039Z",
