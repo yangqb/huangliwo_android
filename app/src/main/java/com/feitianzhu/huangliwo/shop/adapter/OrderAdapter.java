@@ -80,7 +80,7 @@ public class OrderAdapter extends BaseMultiItemQuickAdapter<MultipleItemOrderMod
                 helper.setVisible(R.id.btn_refund, false);
             } else if (item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_WAIT_DELIVERY) {
                 helper.setText(R.id.tvStatus, "待发货");
-                helper.setText(R.id.btn_confirm_goods, "查看物流");
+                helper.setText(R.id.btn_confirm_goods, "查看详情");
                 helper.setText(R.id.btn_logistics, "退款 ");
                 helper.setVisible(R.id.btn_confirm_goods, true);
                 helper.setVisible(R.id.btn_logistics, true);

@@ -15,4 +15,5 @@ public class ApplyRefundParams implements Serializable {
     public String passengerIds;//": "string",
     public String refundCause;//": "string",
     public String refundCauseId;//": "string"
+    public String amount;
 }

@@ -199,6 +199,7 @@ public class RefundPlaneTicketActivity extends BaseActivity {
         params.passengerIds = passengerInfo.id + "";
         params.refundCause = passengerInfo.refundSearchResult.tgqReasons.get(index).msg;
         params.refundCauseId = passengerInfo.refundSearchResult.tgqReasons.get(index).code + "";
+        params.amount = String.valueOf(totalRefundAmount);
         String json = new Gson().toJson(params);
         MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
         RequestBody body = RequestBody.create(mediaType, json);

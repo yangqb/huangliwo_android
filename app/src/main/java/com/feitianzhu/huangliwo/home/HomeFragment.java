@@ -1,21 +1,16 @@
 package com.feitianzhu.huangliwo.home;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -23,8 +18,6 @@ import com.bumptech.glide.request.RequestOptions;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.SFFragment;
-import com.feitianzhu.huangliwo.financial.FinancialHomeActivity;
-import com.feitianzhu.huangliwo.home.entity.IndicatorEntity;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.login.LoginEvent;
@@ -33,12 +26,9 @@ import com.feitianzhu.huangliwo.me.ui.ScannerActivity;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.Province;
 import com.feitianzhu.huangliwo.model.ShopClassify;
-import com.feitianzhu.huangliwo.plane.PlaneHomeActivity;
-import com.feitianzhu.huangliwo.shop.CommodityClassificationFragment;
 import com.feitianzhu.huangliwo.shop.ui.SearchShopActivity;
 import com.feitianzhu.huangliwo.shop.ui.dialog.ProvinceCallBack;
 import com.feitianzhu.huangliwo.shop.ui.dialog.ProvinceDialog2;
-import com.feitianzhu.huangliwo.travel.TravelHomeActivity;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.utils.UserInfoUtils;
@@ -166,7 +156,7 @@ public class HomeFragment extends SFFragment implements ProvinceCallBack {
     public void initTab() {
         mFragments = new ArrayList<>();
         mList.add("推荐");
-        mFragments.add(FirstFragment.newInstance(shopClassifyLsit.get(0).getClsId()));
+        mFragments.add(RecommendedFragment.newInstance(shopClassifyLsit.get(0).getClsId()));
         for (int i = 0; i < shopClassifyLsit.size(); i++) {
             mFragments.add(GoodsClsFragment.newInstance(shopClassifyLsit.get(i).getClsId()));
             mList.add(shopClassifyLsit.get(i).getClsName());

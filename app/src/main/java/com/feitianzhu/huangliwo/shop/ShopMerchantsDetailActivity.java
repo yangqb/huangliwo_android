@@ -53,8 +53,10 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.base.Request;
 import com.zhpan.bannerview.BannerViewPager;
+import com.zhpan.bannerview.constants.IndicatorSlideMode;
 import com.zhpan.bannerview.constants.IndicatorStyle;
 import com.zhpan.bannerview.holder.ViewHolder;
+import com.zhpan.bannerview.utils.BannerUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -600,10 +602,9 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
                             mViewpager.setCanLoop(true)
                                     .setAutoPlay(true)
                                     .setIndicatorStyle(IndicatorStyle.CIRCLE)
-                                    //.setIndicatorSlideMode(IndicatorSlideMode.SMOOTH)
-                                    // .setRoundCorner(10)
-                                    .setIndicatorRadius(8)
-                                    .setIndicatorColor(Color.parseColor("#CCCCCC"), Color.parseColor("#6C6D72"))
+                                    .setIndicatorSlideMode(IndicatorSlideMode.SMOOTH)
+                                    .setIndicatorSliderRadius(BannerUtils.dp2px(2.5f))
+                                    .setIndicatorSliderColor(Color.parseColor("#CCCCCC"), Color.parseColor("#6C6D72"))
                                     .setHolderCreator(ShopMerchantsDetailActivity.DataViewHolder::new).setOnPageClickListener(new BannerViewPager.OnPageClickListener() {
                                 @Override
                                 public void onPageClick(int position) {
