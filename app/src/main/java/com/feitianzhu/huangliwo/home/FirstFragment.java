@@ -30,10 +30,12 @@ import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
 import com.feitianzhu.huangliwo.model.HomeModel;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
+import com.feitianzhu.huangliwo.model.ShopClassify;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsModel;
 import com.feitianzhu.huangliwo.shop.CommodityClassificationFragment;
 import com.feitianzhu.huangliwo.shop.NewYearShoppingActivity;
 import com.feitianzhu.huangliwo.shop.ShopMerchantsDetailActivity;
+import com.feitianzhu.huangliwo.shop.ShopsActivity;
 import com.feitianzhu.huangliwo.shop.ShopsDetailActivity;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
@@ -114,11 +116,10 @@ public class FirstFragment extends SFFragment {
 
     }
 
-    public static FirstFragment newInstance(int param1, String param2) {
+    public static FirstFragment newInstance(int param2) {
         FirstFragment fragment = new FirstFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putInt(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -235,19 +236,19 @@ public class FirstFragment extends SFFragment {
         Intent intent;
         switch (view.getId()) {
             case R.id.discounts_img1:
-
+                jumpActivity(mHomeMode.goodClsImgs.get(0).clsId);
                 break;
             case R.id.discounts_img2:
-
+                jumpActivity(mHomeMode.goodClsImgs.get(1).clsId);
                 break;
             case R.id.discounts_img3:
-
+                jumpActivity(mHomeMode.goodClsImgs.get(2).clsId);
                 break;
             case R.id.discounts_img4:
-
+                jumpActivity(mHomeMode.goodClsImgs.get(3).clsId);
                 break;
             case R.id.discounts_img5:
-
+                jumpActivity(mHomeMode.goodClsImgs.get(4).clsId);
                 break;
             case R.id.activityImg:
                 intent = new Intent(getContext(), VipActivity.class);
@@ -262,6 +263,12 @@ public class FirstFragment extends SFFragment {
         }
     }
 
+
+    public void jumpActivity(int clsId) {
+        Intent intent = new Intent(getActivity(), ShopsActivity.class);
+        intent.putExtra(ShopsActivity.CLASSES_ID, clsId);
+        startActivity(intent);
+    }
 
     public void initData() {
         OkGo.<LzyResponse<HomeModel>>get(Urls.GET_INDEX)

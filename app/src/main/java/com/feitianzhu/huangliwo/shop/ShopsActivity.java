@@ -46,7 +46,7 @@ import static com.feitianzhu.huangliwo.common.Constant.USERID;
 public class ShopsActivity extends BaseActivity {
     private List<BaseGoodsListBean> goodsListBeans = new ArrayList<>();
     private List<MultipleItem> multipleItemList = new ArrayList<>();
-    public static final String CLASSES_DATA = "classes_data";
+    public static final String CLASSES_ID = "classes_id";
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     @BindView(R.id.swipeLayout)
@@ -65,14 +65,10 @@ public class ShopsActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        ShopClassify.GGoodsClsListBean goodsClsListBean = (ShopClassify.GGoodsClsListBean) getIntent().getSerializableExtra(CLASSES_DATA);
+        clsId = getIntent().getIntExtra(CLASSES_ID, -1);
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
-        if (goodsClsListBean != null) {
-            titleName.setText(goodsClsListBean.getClsName());
-            clsId = goodsClsListBean.getClsId();
-            getShops(clsId);
-        }
+        getShops(clsId);
         rightAdapter = new RightAdapter(multipleItemList);
         View mEmptyView = View.inflate(this, R.layout.view_common_nodata, null);
         ImageView img_empty = (ImageView) mEmptyView.findViewById(R.id.img_empty);
@@ -113,9 +109,7 @@ public class ShopsActivity extends BaseActivity {
                     intent.putExtra(ShopsDetailActivity.GOODS_DETAIL_DATA, goodsListBeans.get(position).getGoodsId());
                     startActivity(intent);
                 } else {
-                    //套餐详情页
-                    Intent intent = new Intent(ShopsActivity.this, ShopMerchantsDetailActivity.class);
-                    startActivity(intent);
+                 
                 }
             }
         });

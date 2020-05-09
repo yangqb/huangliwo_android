@@ -32,6 +32,7 @@
         android:textSize="16sp" />
 
     <TextView
+        android:id="@+id/goodsSummary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
@@ -71,7 +72,7 @@
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
                 android:text="成为会员"
-                android:textColor="@color/white"
+                android:textColor="@color/color_333333"
                 android:textSize="10sp" />
 
             <TextView
@@ -101,7 +102,7 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:text="省¥0.00"
-            android:textColor="@color/color_333333"
+            android:textColor="@color/white"
             android:textSize="10sp"
             android:visibility="gone" />
     </RelativeLayout>

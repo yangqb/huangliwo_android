@@ -4,36 +4,52 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="5dp"
-    android:layout_marginTop="8dp"
+    android:layout_marginTop="10dp"
     android:layout_marginEnd="5dp"
-    android:layout_marginBottom="8dp"
-    android:background="@color/white"
-    android:gravity="center"
-    android:orientation="vertical">
+    android:background="@drawable/shape_ffffff_r5"
+    android:orientation="vertical"
+    android:paddingBottom="10dp">
 
     <com.itheima.roundedimageview.RoundedImageView
-        android:id="@+id/goodsImg"
-        android:layout_width="110dp"
-        android:layout_height="110dp"
+        android:id="@+id/image"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:layout_gravity="center"
+        android:layout_margin="5dp"
         app:riv_corner_radius="5dp" />
-
 
     <TextView
         android:id="@+id/goodsName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         android:ellipsize="end"
         android:maxLines="1"
-        android:text="三星 Galaxy ...三星 Galaxy ...三星 Galaxy ...三星 Galaxy ...三星 Galaxy ...三星 Galaxy ...三星 Galaxy ...三星 Galaxy ...三星 Galaxy"
+        android:text="三星 Galaxy G9730三星 Galaxy G9730三星 Galaxy G9730"
         android:textColor="@color/color_000000"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/goodsSummary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="10dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="三星 Galaxy G9730三星 Galaxy G9730三星 Galaxy G9730"
+        android:textColor="@color/color_666666"
         android:textSize="13sp" />
 
     <TextView
         android:id="@+id/price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="10dp"
         android:text="4299"
         android:textColor="@color/color_E63411"
         android:textSize="16sp" />
@@ -41,7 +57,9 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp">
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="10dp">
 
         <LinearLayout
             android:id="@+id/ll_rebate"

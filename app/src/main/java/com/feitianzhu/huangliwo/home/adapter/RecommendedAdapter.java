@@ -43,6 +43,7 @@ public class RecommendedAdapter extends BaseQuickAdapter<BaseGoodsListBean, Base
         Glide.with(mContext).load(item.getGoodsImg())
                 .apply(new RequestOptions().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai).dontAnimate()).into((ImageView) helper.getView(R.id.goodsImg));
         helper.setText(R.id.goodsName, item.getGoodsName());
+        helper.setText(R.id.goodsSummary,item.getSummary());
         String rebatePv = String.valueOf(item.getRebatePv());
         helper.setText(R.id.tv_rebate, "奖励¥" + MathUtils.subZero(rebatePv));
         helper.setText(R.id.vip_rebate, "奖励¥" + MathUtils.subZero(rebatePv));

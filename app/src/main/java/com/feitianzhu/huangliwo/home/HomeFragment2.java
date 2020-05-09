@@ -317,7 +317,7 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, Pager
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 ShopClassify.GGoodsClsListBean goodsClsListBean = shopClassifyLsit.get(position);
                 Intent intent = new Intent(getActivity(), ShopsActivity.class);
-                intent.putExtra(ShopsActivity.CLASSES_DATA, goodsClsListBean);
+                intent.putExtra(ShopsActivity.CLASSES_ID, goodsClsListBean.getClsId());
                 startActivity(intent);
             }
         });

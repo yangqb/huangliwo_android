@@ -28,19 +28,18 @@
 
     </com.flyco.tablayout.SlidingTabLayout>
 
-  <!--  <android.support.design.widget.TabLayout
-        android:id="@+id/mytab"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="@color/bg_yellow"
-        app:tabGravity="fill"
-        app:tabIndicatorColor="@color/color_333333"
-        app:tabMode="scrollable"
-        app:tabSelectedTextColor="#333333"
-        app:tabTextAppearance="@style/TabLayoutTextSize"
-        app:tabTextColor="#2A2A2A">
-
-    </android.support.design.widget.TabLayout>-->
+    <!--  <android.support.design.widget.TabLayout
+          android:id="@+id/mytab"
+          android:layout_width="match_parent"
+          android:layout_height="40dp"
+          android:background="@color/bg_yellow"
+          app:tabGravity="fill"
+          app:tabIndicatorColor="@color/color_333333"
+          app:tabMode="scrollable"
+          app:tabSelectedTextColor="#333333"
+          app:tabTextAppearance="@style/TabLayoutTextSize"
+          app:tabTextColor="#2A2A2A">
+      </android.support.design.widget.TabLayout>-->
 
     <View
         android:layout_width="match_parent"
