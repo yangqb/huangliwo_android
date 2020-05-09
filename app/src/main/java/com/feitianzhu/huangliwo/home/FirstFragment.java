@@ -1,10 +1,12 @@
 package com.feitianzhu.huangliwo.home;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -21,6 +24,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.SFFragment;
+import com.feitianzhu.huangliwo.financial.FinancialHomeActivity;
 import com.feitianzhu.huangliwo.home.adapter.HotGoodsAdapter2;
 import com.feitianzhu.huangliwo.home.adapter.OptAdapter;
 import com.feitianzhu.huangliwo.home.adapter.RecommendedAdapter;
@@ -31,12 +35,14 @@ import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
 import com.feitianzhu.huangliwo.model.HomeModel;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.ShopClassify;
+import com.feitianzhu.huangliwo.plane.PlaneHomeActivity;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsModel;
 import com.feitianzhu.huangliwo.shop.CommodityClassificationFragment;
 import com.feitianzhu.huangliwo.shop.NewYearShoppingActivity;
 import com.feitianzhu.huangliwo.shop.ShopMerchantsDetailActivity;
 import com.feitianzhu.huangliwo.shop.ShopsActivity;
 import com.feitianzhu.huangliwo.shop.ShopsDetailActivity;
+import com.feitianzhu.huangliwo.travel.TravelHomeActivity;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.utils.UserInfoUtils;
@@ -84,9 +90,8 @@ public class FirstFragment extends SFFragment {
     private OptAdapter optAdapter;
     private HotGoodsAdapter2 hotGoodsAdapter;
     private RecommendedAdapter recommendedAdapter;
+    private CallbackBFragment mCallbackBFragment;
     Unbinder unbinder;
-    @BindView(R.id.content)
-    TextView content;
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
     @BindView(R.id.bannerViewPager)
@@ -111,9 +116,23 @@ public class FirstFragment extends SFFragment {
     RecyclerView hotRecyclerView;
     @BindView(R.id.recommendedRecyclerView)
     RecyclerView recommendedRecyclerView;
+    @BindView(R.id.scrollView)
+    NestedScrollView scrollView;
+    @BindView(R.id.back_top)
+    LinearLayout backTop;
 
     public FirstFragment() {
 
+    }
+
+    public interface CallbackBFragment {
+        void skipToCommodityFragment(int type, View view);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mCallbackBFragment = (CallbackBFragment) context;
     }
 
     public static FirstFragment newInstance(int param2) {
@@ -138,6 +157,14 @@ public class FirstFragment extends SFFragment {
         userId = SPUtils.getString(getActivity(), Constant.SP_LOGIN_USERID);
         userInfo = UserInfoUtils.getUserInfo(getActivity());
 
+        initView();
+        initData();
+        initListener();
+
+        return view;
+    }
+
+    public void initView() {
         optRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         optAdapter = new OptAdapter(optMerchantList);
         optRecyclerView.setAdapter(optAdapter);
@@ -153,15 +180,6 @@ public class FirstFragment extends SFFragment {
         recommendedRecyclerView.setAdapter(recommendedAdapter);
         recommendedRecyclerView.setNestedScrollingEnabled(false);
         refreshLayout.setEnableLoadMore(false);
-        initView();
-        initData();
-        initListener();
-
-        return view;
-    }
-
-    public void initView() {
-        content.setText(getArguments().getString(ARG_PARAM2));
     }
 
     public void initListener() {
@@ -228,10 +246,22 @@ public class FirstFragment extends SFFragment {
                 startActivity(intent);
             }
         });
+
+        scrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                int height = getResources().getDisplayMetrics().heightPixels;
+                if (height != 0 && scrollY > height / 2) {
+                    backTop.setVisibility(View.VISIBLE);
+                } else {
+                    backTop.setVisibility(View.GONE);
+                }
+            }
+        });
     }
 
 
-    @OnClick({R.id.discounts_img1, R.id.discounts_img2, R.id.discounts_img3, R.id.discounts_img4, R.id.discounts_img5, R.id.activityImg, R.id.hotImg})
+    @OnClick({R.id.discounts_img1, R.id.discounts_img2, R.id.discounts_img3, R.id.discounts_img4, R.id.discounts_img5, R.id.activityImg, R.id.hotImg, R.id.rl_ticket, R.id.rl_travel, R.id.rl_mall, R.id.rl_merchants, R.id.back_top})
     public void onClick(View view) {
         Intent intent;
         switch (view.getId()) {
@@ -259,6 +289,28 @@ public class FirstFragment extends SFFragment {
                 intent = new Intent(getActivity(), ShopsDetailActivity.class);
                 intent.putExtra(ShopsDetailActivity.GOODS_DETAIL_DATA, mHomeMode.hotGood.goodId);
                 startActivity(intent);
+                break;
+            case R.id.rl_mall:
+                mCallbackBFragment.skipToCommodityFragment(2, view);
+                break;
+            case R.id.rl_merchants:
+                mCallbackBFragment.skipToCommodityFragment(1, view);
+                break;
+            case R.id.rl_ticket:
+                intent = new Intent(getActivity(), PlaneHomeActivity.class);
+                startActivity(intent);
+                break;
+            /*case R.id.rl_financial:
+                intent = new Intent(getActivity(), FinancialHomeActivity.class);
+                startActivity(intent);
+                break;*/
+            case R.id.rl_travel:
+                intent = new Intent(getActivity(), TravelHomeActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.back_top:
+                scrollView.fling(0);
+                scrollView.smoothScrollTo(0, 0);
                 break;
         }
     }
@@ -401,6 +453,12 @@ public class FirstFragment extends SFFragment {
         super.onResume();
         if (mViewpager != null)
             mViewpager.startLoop();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallbackBFragment = null;
     }
 
     @Override

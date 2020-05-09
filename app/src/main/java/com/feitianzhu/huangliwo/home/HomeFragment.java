@@ -1,5 +1,7 @@
 package com.feitianzhu.huangliwo.home;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,32 +23,50 @@ import com.bumptech.glide.request.RequestOptions;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.SFFragment;
+import com.feitianzhu.huangliwo.financial.FinancialHomeActivity;
 import com.feitianzhu.huangliwo.home.entity.IndicatorEntity;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
+import com.feitianzhu.huangliwo.login.LoginEvent;
+import com.feitianzhu.huangliwo.me.ui.PersonalCenterActivity2;
+import com.feitianzhu.huangliwo.me.ui.ScannerActivity;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
+import com.feitianzhu.huangliwo.model.Province;
 import com.feitianzhu.huangliwo.model.ShopClassify;
+import com.feitianzhu.huangliwo.plane.PlaneHomeActivity;
 import com.feitianzhu.huangliwo.shop.CommodityClassificationFragment;
+import com.feitianzhu.huangliwo.shop.ui.SearchShopActivity;
+import com.feitianzhu.huangliwo.shop.ui.dialog.ProvinceCallBack;
+import com.feitianzhu.huangliwo.shop.ui.dialog.ProvinceDialog2;
+import com.feitianzhu.huangliwo.travel.TravelHomeActivity;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 import com.feitianzhu.huangliwo.view.CircleImageView;
 import com.flyco.tablayout.SlidingTabLayout;
 import com.flyco.tablayout.listener.OnTabSelectListener;
+import com.hjq.permissions.OnPermission;
+import com.hjq.permissions.Permission;
+import com.hjq.permissions.XXPermissions;
+import com.hjq.toast.ToastUtils;
 import com.lzy.okgo.OkGo;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.huangliwo.common.Constant.POST_MINE_INFO;
 import static com.feitianzhu.huangliwo.common.Constant.USERID;
+import static com.feitianzhu.huangliwo.login.LoginEvent.EDITOR_INFO;
 
 /**
  * package name: com.feitianzhu.huangliwo.home
@@ -54,7 +75,7 @@ import static com.feitianzhu.huangliwo.common.Constant.USERID;
  * time: 18:09
  * email: 694125155@qq.com
  */
-public class HomeFragment extends SFFragment {
+public class HomeFragment extends SFFragment implements ProvinceCallBack {
     Unbinder unbinder;
     private ArrayList<Fragment> mFragments;
     private MineInfoModel userInfo;
@@ -68,10 +89,13 @@ public class HomeFragment extends SFFragment {
     ViewPager mViewPager;
     @BindView(R.id.iv_head)
     CircleImageView ivHead;
+    @BindView(R.id.txt_location)
+    TextView mTxtLocation;
 
     public HomeFragment() {
 
     }
+
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -80,6 +104,7 @@ public class HomeFragment extends SFFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
     }
 
     @Nullable
@@ -87,6 +112,9 @@ public class HomeFragment extends SFFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home2, container, false);
         unbinder = ButterKnife.bind(this, view);
+        if (!TextUtils.isEmpty(Constant.mCity)) {
+            mTxtLocation.setText(Constant.mCity);
+        }
         token = SPUtils.getString(getActivity(), Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(getActivity(), Constant.SP_LOGIN_USERID);
         getUserInfo();
@@ -204,9 +232,92 @@ public class HomeFragment extends SFFragment {
                 });
     }
 
+    @OnClick({R.id.ll_location, R.id.iv_head, R.id.search, R.id.iv_home_nv_right})
+    public void onClick(View view) {
+        Intent intent;
+        switch (view.getId()) {
+            case R.id.ll_location:
+                ProvinceDialog2 branchDialog = ProvinceDialog2.newInstance();
+                branchDialog.setCityLevel(ProvinceDialog2.PROVINCE_CITY);
+                branchDialog.setAddress("北京市", "东城区", "东华门街道");
+                branchDialog.setSelectOnListener(this);
+                branchDialog.show(getChildFragmentManager());
+                break;
+            case R.id.iv_head: //
+                intent = new Intent(getActivity(), PersonalCenterActivity2.class);
+                startActivity(intent);
+                break;
+            case R.id.search:
+                intent = new Intent(getActivity(), SearchShopActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.iv_home_nv_right:
+                requestPermission(view);
+                break;
+        }
+    }
+
+    public void requestPermission(View view) {
+        XXPermissions.with(getActivity())
+                // 可设置被拒绝后继续申请，直到用户授权或者永久拒绝
+                //.constantRequest()
+                // 支持请求6.0悬浮窗权限8.0请求安装权限
+                //.permission(Permission.REQUEST_INSTALL_PACKAGES)
+                // 不指定权限则自动获取清单中的危险权限
+                .permission(Permission.CAMERA)
+                .request(new OnPermission() {
+
+                    @Override
+                    public void hasPermission(List<String> granted, boolean all) {
+                        if (all) {
+                            Intent intent = new Intent(getActivity(), ScannerActivity.class);
+                            intent.putExtra(ScannerActivity.IS_MERCHANTS, userInfo.getIsMerchant());
+                            startActivity(intent);
+                        } else {
+                            ToastUtils.show("获取权限成功，部分权限未正常授予");
+                        }
+                    }
+
+                    @Override
+                    public void noPermission(List<String> denied, boolean quick) {
+                        if (quick) {
+                            ToastUtils.show("被永久拒绝授权，请手动授予权限");
+                            //如果是被永久拒绝就跳转到应用权限系统设置页面
+                            XXPermissions.gotoPermissionSettings(mContext);
+                        } else {
+                            ToastUtils.show("获取权限失败");
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!TextUtils.isEmpty(Constant.mCity)) {
+            mTxtLocation.setText(Constant.mCity);
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void onMessageEvent(LoginEvent event) {
+        if (event == EDITOR_INFO) {
+            getUserInfo();
+        }
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
+        EventBus.getDefault().unregister(this);
         unbinder.unbind();
+    }
+
+    @Override
+    public void onWhellFinish(Province province, Province.CityListBean city, Province.AreaListBean mAreaListBean) {
+        Constant.provinceId = province.id;
+        Constant.cityId = city.id;
+        Constant.mCity = city.name;
+        mTxtLocation.setText(city.name);
     }
 }

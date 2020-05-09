@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.SFActivity;
+import com.feitianzhu.huangliwo.home.FirstFragment;
 import com.feitianzhu.huangliwo.home.HomeFragment;
 import com.feitianzhu.huangliwo.home.HomeFragment2;
 import com.feitianzhu.huangliwo.http.JsonCallback;
@@ -63,7 +64,7 @@ import butterknife.Unbinder;
 
 import static com.feitianzhu.huangliwo.common.Constant.UAPDATE;
 
-public class MainActivity extends SFActivity implements View.OnClickListener, HomeFragment2.CallbackBFragment {
+public class MainActivity extends SFActivity implements View.OnClickListener, FirstFragment.CallbackBFragment {
 
     @BindView(R.id.txt_index)
     TextView mTxtIndex;
@@ -95,9 +96,9 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
     LinearLayout mLyJiaoliu;
     @BindView(R.id.ly_me)
     LinearLayout mLyMe;
-    private HomeFragment2 mHomeFragment;
+    private HomeFragment mHomeFragment;
     private CommodityClassificationFragment mShopFragment;
-    private HomeFragment mMessageFragment;
+    private MessageFragment mMessageFragment;
     private MyCenterFragment mMeFragment;
     private FragmentTransaction mTransaction;
     private ObjectAnimator animator;
@@ -121,7 +122,7 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
         initView();
         updateDiy();
         mTransaction = getSupportFragmentManager().beginTransaction();
-        mHomeFragment = HomeFragment2.newInstance();
+        mHomeFragment = HomeFragment.newInstance();
         mTransaction.add(R.id.fragment_container, mHomeFragment);
         mTransaction.commit();
         ImmersionBar.with(this)
@@ -169,7 +170,7 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
                 mTxtIndex.setSelected(true);
                 mImgIndex.setSelected(true);
                 if (mHomeFragment == null) {
-                    mHomeFragment = HomeFragment2.newInstance();
+                    mHomeFragment = HomeFragment.newInstance();
                     mTransaction.add(R.id.fragment_container, mHomeFragment);
                 } else {
                     mTransaction.show(mHomeFragment);
@@ -212,7 +213,7 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Ho
                 mTxtJiaoliu.setSelected(true);
                 mImgJiaoliu.setSelected(true);
                 if (mMessageFragment == null) {
-                    mMessageFragment = HomeFragment.newInstance();
+                    mMessageFragment = MessageFragment.newInstance("", "");
                     mTransaction.add(R.id.fragment_container, mMessageFragment);
                 } else {
                     mTransaction.show(mMessageFragment);
