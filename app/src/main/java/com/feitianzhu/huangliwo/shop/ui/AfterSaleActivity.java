@@ -52,7 +52,7 @@ public class AfterSaleActivity extends BaseActivity {
     private List<MultipleItemOrderModel> multipleItemOrderModels = new ArrayList<>();
     private List<SetMealOrderInfo.SetMealOrderModel> refundingSetMealOder = new ArrayList<>();
     @BindView(R.id.refreshLayout)
-    SmartRefreshLayout refreshLayout;
+    RefreshLayout refreshLayout;
     @BindView(R.id.title_name)
     TextView titleName;
     @BindView(R.id.recyclerView)

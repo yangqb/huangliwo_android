@@ -98,7 +98,7 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
     @BindView(R.id.total_amount)
     TextView totalAmount;
     @BindView(R.id.refreshLayout)
-    SmartRefreshLayout refreshLayout;
+    RefreshLayout refreshLayout;
     @BindView(R.id.recyclerView2)
     RecyclerView recyclerView2;
     @BindView(R.id.presentsTitle)

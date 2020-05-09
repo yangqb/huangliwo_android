@@ -92,7 +92,7 @@ public class ShoppingCartActivity extends BaseActivity {
     @BindView(R.id.amount)
     TextView bottomAmount;
     @BindView(R.id.swipeLayout)
-    SmartRefreshLayout refreshLayout;
+    RefreshLayout refreshLayout;
     @BindView(R.id.select_img)
     ImageView selectImg;
     @BindView(R.id.ll_select)

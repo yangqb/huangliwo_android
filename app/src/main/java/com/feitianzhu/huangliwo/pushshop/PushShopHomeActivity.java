@@ -43,7 +43,7 @@ public class PushShopHomeActivity extends BaseActivity {
     @BindView(R.id.title_name)
     TextView titleName;
     @BindView(R.id.refreshLayout)
-    SmartRefreshLayout refreshLayout;
+    RefreshLayout refreshLayout;
 
     @Override
     protected int getLayoutId() {

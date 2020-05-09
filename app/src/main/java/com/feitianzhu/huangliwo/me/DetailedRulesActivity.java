@@ -49,7 +49,7 @@ public class DetailedRulesActivity extends BaseActivity {
     @BindView(R.id.btn_earnings)
     TextView btnEarnings;
     @BindView(R.id.swipeLayout)
-    SmartRefreshLayout refreshLayout;
+    RefreshLayout refreshLayout;
     private String token;
     private String userId;
     private int type = 1;

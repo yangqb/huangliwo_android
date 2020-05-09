@@ -34,6 +34,7 @@ import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
 import com.feitianzhu.huangliwo.model.HomeModel;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
+import com.feitianzhu.huangliwo.model.MyPoint;
 import com.feitianzhu.huangliwo.model.ShopClassify;
 import com.feitianzhu.huangliwo.plane.PlaneHomeActivity;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsModel;
@@ -93,7 +94,7 @@ public class FirstFragment extends SFFragment {
     private CallbackBFragment mCallbackBFragment;
     Unbinder unbinder;
     @BindView(R.id.refreshLayout)
-    SmartRefreshLayout refreshLayout;
+    RefreshLayout refreshLayout;
     @BindView(R.id.bannerViewPager)
     BannerViewPager<HomeEntity.BannerListBean, FirstFragment.DataViewHolder> mViewpager;
     @BindView(R.id.activityImg)
@@ -323,6 +324,11 @@ public class FirstFragment extends SFFragment {
     }
 
     public void initData() {
+        if (Constant.mPoint != null) {
+            MyPoint myPoint = Constant.mPoint;
+            longitude = myPoint.longitude;
+            latitude = myPoint.latitude;
+        }
         OkGo.<LzyResponse<HomeModel>>get(Urls.GET_INDEX)
                 .tag(this)
                 .params("accessToken", token)

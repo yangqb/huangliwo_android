@@ -78,7 +78,7 @@ public class MyOrderActivity2 extends BaseActivity {
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     @BindView(R.id.refreshLayout)
-    SmartRefreshLayout refreshLayout;
+    RefreshLayout refreshLayout;
     @BindView(R.id.tabLayout)
     CommonTabLayout tabLayout;
     @BindView(R.id.tabLayout2)

@@ -41,7 +41,7 @@ public class GiftRecordActivity extends BaseActivity {
     @BindView(R.id.title_name)
     TextView titleName;
     @BindView(R.id.refreshLayout)
-    SmartRefreshLayout refreshLayout;
+    RefreshLayout refreshLayout;
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
 
