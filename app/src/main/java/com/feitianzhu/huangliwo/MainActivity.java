@@ -25,6 +25,7 @@ import com.feitianzhu.huangliwo.model.MyPoint;
 import com.feitianzhu.huangliwo.model.UpdateAppModel;
 import com.feitianzhu.huangliwo.shop.CommodityClassificationFragment;
 import com.feitianzhu.huangliwo.shop.NewYearShoppingActivity;
+import com.feitianzhu.huangliwo.update.UpdateMyDialogFragment;
 import com.feitianzhu.huangliwo.utils.LocationUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.UpdateAppHttpUtil;
@@ -320,6 +321,7 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Re
 
     public void updateDiy() {
         final String versionName = AppUpdateUtils.getVersionName(this);
+//        final String versionName = "1.2.5";
         new UpdateAppManager
                 .Builder()
                 .setActivity(this)
@@ -380,7 +382,22 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Re
                         /*
                         自定义对话框
                         * */
-                        updateAppManager.showDialogFragment();
+//                        updateAppManager.showDialogFragment();
+
+                        UpdateAppBean updateAppBean = updateAppManager.fillUpdateAppData();
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("update_dialog_values", updateAppBean);
+                        bundle.putInt("theme_color", 0xfffed428);
+                        UpdateMyDialogFragment updateMyDialogFragment = UpdateMyDialogFragment.newInstance(bundle);
+                        updateMyDialogFragment.setUpdateDialogFragmentListener(new IUpdateDialogFragmentListener() {
+                            @Override
+                            public void onUpdateNotifyDialogCancel(UpdateAppBean updateApp) {
+                                //用户点击关闭按钮，取消了更新，如果是下载完，用户取消了安装，则可以在 onActivityResult 监听到。
+
+                                getPopData();
+                            }
+                        });
+                        updateMyDialogFragment.show(getSupportFragmentManager(), "dialog");
                     }
 
                     /**

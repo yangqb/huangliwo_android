@@ -47,7 +47,7 @@
                 android:id="@+id/iv_head"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-                android:layout_centerVertical="true"
+                android:layout_marginRight="7dp"
                 android:layout_toLeftOf="@id/img_go1"
                 android:src="@mipmap/b08_01touxiang" />
 
