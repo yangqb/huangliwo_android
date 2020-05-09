@@ -137,8 +137,6 @@ public class SettingsActivity extends BaseActivity {
                     }
                 });
     }
-
-
     @OnClick({R.id.rl_change_phone, R.id.rl_change_password, R.id.rl_change_second_password, R.id.rl_about,
             R.id.rl_feedback, R.id.rl_help, R.id.rl_clear_cache, R.id.button, R.id.rl_update, R.id.left_button})
     public void onClick(View v) {
