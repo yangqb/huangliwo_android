@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
@@ -20,6 +22,7 @@ import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.UpdateAppModel;
 import com.feitianzhu.huangliwo.model.UserAuth;
 import com.feitianzhu.huangliwo.pushshop.ProblemFeedbackActivity;
+import com.feitianzhu.huangliwo.update.UpdateMyDialogFragment;
 import com.feitianzhu.huangliwo.utils.DataCleanUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.UpdateAppHttpUtil;
@@ -31,6 +34,7 @@ import com.lzy.okgo.OkGo;
 import com.vector.update_app.UpdateAppBean;
 import com.vector.update_app.UpdateAppManager;
 import com.vector.update_app.UpdateCallback;
+import com.vector.update_app.UpdateDialogFragment;
 import com.vector.update_app.utils.AppUpdateUtils;
 
 import butterknife.BindView;
@@ -71,6 +75,7 @@ public class SettingsActivity extends BaseActivity {
     TextView titleName;
 
     private boolean isPayPassword;
+    private UpdateAppModel updateAppModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -199,6 +204,7 @@ public class SettingsActivity extends BaseActivity {
     }
 
     public void updateDiy() {
+//        final String versionName = "1.2.5";
         final String versionName = AppUpdateUtils.getVersionName(this);
         new UpdateAppManager
                 .Builder()
@@ -218,7 +224,7 @@ public class SettingsActivity extends BaseActivity {
                     @Override
                     protected UpdateAppBean parseJson(String json) {
                         UpdateAppBean updateAppBean = new UpdateAppBean();
-                        UpdateAppModel updateAppModel = new Gson().fromJson(json, UpdateAppModel.class);
+                        updateAppModel = new Gson().fromJson(json, UpdateAppModel.class);
                         String update = "No";
                         if (VersionManagementUtil.VersionComparison(updateAppModel.data.versionName + "", versionName) == 1) {
                             update = "Yes";
@@ -253,7 +259,13 @@ public class SettingsActivity extends BaseActivity {
                       /*
                         自定义对话框
                         * */
-                        updateAppManager.showDialogFragment();
+//                        updateAppManager.showDialogFragment();
+                        UpdateAppBean updateAppBean = updateAppManager.fillUpdateAppData();
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("update_dialog_values", updateAppBean);
+                        bundle.putInt("theme_color", 0xfffed428);
+                        UpdateMyDialogFragment updateMyDialogFragment = UpdateMyDialogFragment.newInstance(bundle);
+                        updateMyDialogFragment.show(getSupportFragmentManager(), "dialog");
                     }
 
                     /**
