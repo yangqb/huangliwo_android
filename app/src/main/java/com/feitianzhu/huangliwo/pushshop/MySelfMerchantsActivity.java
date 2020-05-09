@@ -76,7 +76,7 @@ public class MySelfMerchantsActivity extends BaseActivity {
     @BindView(R.id.tv_withdrawal)
     TextView tvWithdrawal;
     @BindView(R.id.refreshLayout)
-    SmartRefreshLayout refreshLayout;
+    RefreshLayout refreshLayout;
     @BindView(R.id.imgView)
     ImageView imgView;
     @BindView(R.id.merchants_order)

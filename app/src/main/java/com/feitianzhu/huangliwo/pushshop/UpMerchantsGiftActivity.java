@@ -63,7 +63,7 @@ public class UpMerchantsGiftActivity extends BaseActivity {
     @BindView(R.id.right_img)
     ImageView rightImg;
     @BindView(R.id.refreshLayout)
-    SmartRefreshLayout refreshLayout;
+    RefreshLayout refreshLayout;
 
     @Override
     protected int getLayoutId() {

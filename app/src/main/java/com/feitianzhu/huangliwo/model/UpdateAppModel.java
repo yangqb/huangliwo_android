@@ -23,11 +23,16 @@ public class UpdateAppModel implements Serializable {
          */
 
         public int versionCode;
+//        服务器版本号
         public String versionName;
         public String packName;
+        //包大小
         public String packSize;
+        //更新内容
         public String updateDesc;
+        //下载地址
         public String downloadUrl;
+        //是否强制更新 1 是 2 不是
         public String isForceUpdate;
     }
 

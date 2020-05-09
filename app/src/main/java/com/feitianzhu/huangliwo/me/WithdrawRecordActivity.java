@@ -49,7 +49,7 @@ public class WithdrawRecordActivity extends BaseActivity {
     private String userId;
     private int merchantId = -1;
     @BindView(R.id.refreshLayout)
-    SmartRefreshLayout refreshLayout;
+    RefreshLayout refreshLayout;
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     @BindView(R.id.title_name)

@@ -92,7 +92,7 @@ public class ShoppingCartActivity extends BaseActivity {
     @BindView(R.id.amount)
     TextView bottomAmount;
     @BindView(R.id.swipeLayout)
-    SmartRefreshLayout refreshLayout;
+    RefreshLayout refreshLayout;
     @BindView(R.id.select_img)
     ImageView selectImg;
     @BindView(R.id.ll_select)
@@ -139,28 +139,6 @@ public class ShoppingCartActivity extends BaseActivity {
                 initData();
             }
         });
-
-        /*mAdapter.setOnGoodsAmountListener(new ShoppingCartAdapter.OnGoodsAmountListener() {
-            @Override
-            public void getGoodsAmount(int pos, int count) {
-                shoppingCartModels.get(pos).goodsCount = count;
-                shoppingCartBody.carId = shoppingCartModels.get(pos).carId;
-                shoppingCartBody.checks = shoppingCartModels.get(pos).checks;
-                shoppingCartBody.goodsCount = shoppingCartModels.get(pos).goodsCount;
-                shoppingCartBody.speci = shoppingCartModels.get(pos).speci;
-                shoppingCartBody.speciName = shoppingCartModels.get(pos).speciName;
-                upDateShoppingCart();
-                p = 0.00;
-                for (ShoppingCartModel.CartGoodsModel shoppingCartModel : shoppingCartModels
-                ) {
-                    if (shoppingCartModel.checks == 1) {
-                        p += shoppingCartModel.goodsCount * shoppingCartModel.price;
-                    }
-                    totalAmount = String.format(Locale.getDefault(), "%.2f", p);
-                    setSpannableString(totalAmount);
-                }
-            }
-        });*/
 
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override

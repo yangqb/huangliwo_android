@@ -160,6 +160,7 @@
     </style>
 
     !--设置Tablayout字体大小-->
+
     <style name="TabLayoutTextSize">
         <item name="android:textSize">16sp</item>
     </style>
@@ -167,4 +168,12 @@
     <style name="TabLayoutTextStyle">
         <item name="android:textStyle">bold</item>
     </style>
+
+    <declare-styleable name="CornerLinearView">
+        <attr name="cornerRadius" format="dimension|reference" />
+        <attr name="isCornerTopLeftRadius" format="boolean" />
+        <attr name="isCornerTopRightRadius" format="boolean" />
+        <attr name="isCornerBottomLeftRadius" format="boolean" />
+        <attr name="isCornerBottomRightRadius" format="boolean" />
+    </declare-styleable>
 </resources>

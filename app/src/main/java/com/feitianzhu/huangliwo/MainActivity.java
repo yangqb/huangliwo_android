@@ -1,6 +1,5 @@
 package com.feitianzhu.huangliwo;
 
-import android.Manifest;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,25 +10,22 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.SFActivity;
-import com.feitianzhu.huangliwo.home.FirstFragment;
+import com.feitianzhu.huangliwo.home.RecommendedFragment;
 import com.feitianzhu.huangliwo.home.HomeFragment;
-import com.feitianzhu.huangliwo.home.HomeFragment2;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
-import com.feitianzhu.huangliwo.login.LoginActivity;
 import com.feitianzhu.huangliwo.me.MyCenterFragment;
 import com.feitianzhu.huangliwo.message.MessageFragment;
 import com.feitianzhu.huangliwo.model.HomePopModel;
 import com.feitianzhu.huangliwo.model.LocationPost;
 import com.feitianzhu.huangliwo.model.MyPoint;
 import com.feitianzhu.huangliwo.model.UpdateAppModel;
-import com.feitianzhu.huangliwo.settings.ChangeLoginPassword;
 import com.feitianzhu.huangliwo.shop.CommodityClassificationFragment;
 import com.feitianzhu.huangliwo.shop.NewYearShoppingActivity;
+import com.feitianzhu.huangliwo.update.UpdateMyDialogFragment;
 import com.feitianzhu.huangliwo.utils.LocationUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.UpdateAppHttpUtil;
@@ -40,9 +36,6 @@ import com.google.gson.Gson;
 import com.gyf.immersionbar.ImmersionBar;
 import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
-import com.lxj.xpopup.core.BasePopupView;
-import com.lxj.xpopup.impl.ConfirmPopupView;
-import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.socks.library.KLog;
@@ -56,15 +49,13 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 import static com.feitianzhu.huangliwo.common.Constant.UAPDATE;
 
-public class MainActivity extends SFActivity implements View.OnClickListener, FirstFragment.CallbackBFragment {
+public class MainActivity extends SFActivity implements View.OnClickListener, RecommendedFragment.CallbackBFragment {
 
     @BindView(R.id.txt_index)
     TextView mTxtIndex;
@@ -330,6 +321,7 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Fi
 
     public void updateDiy() {
         final String versionName = AppUpdateUtils.getVersionName(this);
+//        final String versionName = "1.2.5";
         new UpdateAppManager
                 .Builder()
                 .setActivity(this)
@@ -390,7 +382,22 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Fi
                         /*
                         自定义对话框
                         * */
-                        updateAppManager.showDialogFragment();
+//                        updateAppManager.showDialogFragment();
+
+                        UpdateAppBean updateAppBean = updateAppManager.fillUpdateAppData();
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("update_dialog_values", updateAppBean);
+                        bundle.putInt("theme_color", 0xfffed428);
+                        UpdateMyDialogFragment updateMyDialogFragment = UpdateMyDialogFragment.newInstance(bundle);
+                        updateMyDialogFragment.setUpdateDialogFragmentListener(new IUpdateDialogFragmentListener() {
+                            @Override
+                            public void onUpdateNotifyDialogCancel(UpdateAppBean updateApp) {
+                                //用户点击关闭按钮，取消了更新，如果是下载完，用户取消了安装，则可以在 onActivityResult 监听到。
+
+                                getPopData();
+                            }
+                        });
+                        updateMyDialogFragment.show(getSupportFragmentManager(), "dialog");
                     }
 
                     /**

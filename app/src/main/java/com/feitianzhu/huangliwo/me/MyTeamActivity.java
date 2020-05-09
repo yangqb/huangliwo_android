@@ -78,7 +78,7 @@ public class MyTeamActivity extends BaseActivity {
     @BindView(R.id.tv_level)
     TextView tvLevel;
     @BindView(R.id.refreshLayout)
-    SmartRefreshLayout refreshLayout;
+    RefreshLayout refreshLayout;
     @BindView(R.id.ll_team)
     LinearLayout llTeam;
     @BindView(R.id.ll_super)

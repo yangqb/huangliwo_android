@@ -159,7 +159,7 @@ public class PlaneDetailActivity extends BaseActivity {
     @BindView(R.id.plane_title)
     LinearLayout planeTitle;
     @BindView(R.id.refreshLayout)
-    SmartRefreshLayout refreshLayout;
+    RefreshLayout refreshLayout;
 
     @Override
     protected int getLayoutId() {

@@ -64,7 +64,7 @@ public class GoodsClsFragment extends SFFragment {
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     @BindView(R.id.refreshLayout)
-    SmartRefreshLayout refreshLayout;
+    RefreshLayout refreshLayout;
 
     public GoodsClsFragment() {
 

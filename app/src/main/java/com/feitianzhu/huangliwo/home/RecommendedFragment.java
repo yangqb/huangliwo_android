@@ -10,13 +10,11 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -24,7 +22,6 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.SFFragment;
-import com.feitianzhu.huangliwo.financial.FinancialHomeActivity;
 import com.feitianzhu.huangliwo.home.adapter.HotGoodsAdapter2;
 import com.feitianzhu.huangliwo.home.adapter.OptAdapter;
 import com.feitianzhu.huangliwo.home.adapter.RecommendedAdapter;
@@ -34,10 +31,9 @@ import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
 import com.feitianzhu.huangliwo.model.HomeModel;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
-import com.feitianzhu.huangliwo.model.ShopClassify;
+import com.feitianzhu.huangliwo.model.MyPoint;
 import com.feitianzhu.huangliwo.plane.PlaneHomeActivity;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsModel;
-import com.feitianzhu.huangliwo.shop.CommodityClassificationFragment;
 import com.feitianzhu.huangliwo.shop.NewYearShoppingActivity;
 import com.feitianzhu.huangliwo.shop.ShopMerchantsDetailActivity;
 import com.feitianzhu.huangliwo.shop.ShopsActivity;
@@ -47,16 +43,16 @@ import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 import com.feitianzhu.huangliwo.vip.VipActivity;
-import com.hjq.toast.ToastUtils;
 import com.itheima.roundedimageview.RoundedImageView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
-import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zhpan.bannerview.BannerViewPager;
+import com.zhpan.bannerview.constants.IndicatorSlideMode;
 import com.zhpan.bannerview.constants.IndicatorStyle;
 import com.zhpan.bannerview.holder.ViewHolder;
+import com.zhpan.bannerview.utils.BannerUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +70,7 @@ import butterknife.Unbinder;
  * email: 694125155@qq.com
  */
 @SuppressWarnings("ALL")
-public class FirstFragment extends SFFragment {
+public class RecommendedFragment extends SFFragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private List<HomeEntity.BannerListBean> mBanners = new ArrayList<>();
@@ -93,9 +89,9 @@ public class FirstFragment extends SFFragment {
     private CallbackBFragment mCallbackBFragment;
     Unbinder unbinder;
     @BindView(R.id.refreshLayout)
-    SmartRefreshLayout refreshLayout;
+    RefreshLayout refreshLayout;
     @BindView(R.id.bannerViewPager)
-    BannerViewPager<HomeEntity.BannerListBean, FirstFragment.DataViewHolder> mViewpager;
+    BannerViewPager<HomeEntity.BannerListBean, RecommendedFragment.DataViewHolder> mViewpager;
     @BindView(R.id.activityImg)
     ImageView activityImageView;
     @BindView(R.id.hotImg)
@@ -121,7 +117,7 @@ public class FirstFragment extends SFFragment {
     @BindView(R.id.back_top)
     LinearLayout backTop;
 
-    public FirstFragment() {
+    public RecommendedFragment() {
 
     }
 
@@ -135,8 +131,8 @@ public class FirstFragment extends SFFragment {
         mCallbackBFragment = (CallbackBFragment) context;
     }
 
-    public static FirstFragment newInstance(int param2) {
-        FirstFragment fragment = new FirstFragment();
+    public static RecommendedFragment newInstance(int param2) {
+        RecommendedFragment fragment = new RecommendedFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_PARAM2, param2);
         fragment.setArguments(args);
@@ -323,6 +319,11 @@ public class FirstFragment extends SFFragment {
     }
 
     public void initData() {
+        if (Constant.mPoint != null) {
+            MyPoint myPoint = Constant.mPoint;
+            longitude = myPoint.longitude;
+            latitude = myPoint.latitude;
+        }
         OkGo.<LzyResponse<HomeModel>>get(Urls.GET_INDEX)
                 .tag(this)
                 .params("accessToken", token)
@@ -387,10 +388,10 @@ public class FirstFragment extends SFFragment {
         mViewpager.setCanLoop(true)
                 .setAutoPlay(true)
                 .setIndicatorStyle(IndicatorStyle.CIRCLE)
-                //.setIndicatorSlideMode(IndicatorSlideMode.SMOOTH)
-                .setIndicatorRadius(8)
-                .setIndicatorColor(Color.parseColor("#CCCCCC"), Color.parseColor("#6C6D72"))
-                .setHolderCreator(FirstFragment.DataViewHolder::new).setOnPageClickListener(new BannerViewPager.OnPageClickListener() {
+                .setIndicatorSlideMode(IndicatorSlideMode.SMOOTH)
+                .setIndicatorSliderRadius(BannerUtils.dp2px(2.5f))
+                .setIndicatorSliderColor(Color.parseColor("#CCCCCC"), Color.parseColor("#6C6D72"))
+                .setHolderCreator(RecommendedFragment.DataViewHolder::new).setOnPageClickListener(new BannerViewPager.OnPageClickListener() {
             @Override
             public void onPageClick(int position) {
                 onClickBanner(position);

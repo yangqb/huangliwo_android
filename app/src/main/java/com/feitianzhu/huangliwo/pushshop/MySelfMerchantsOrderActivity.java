@@ -70,7 +70,7 @@ public class MySelfMerchantsOrderActivity extends BaseActivity implements View.O
     @BindView(R.id.right_text)
     TextView rightText;
     @BindView(R.id.refreshLayout)
-    SmartRefreshLayout refreshLayout;
+    RefreshLayout refreshLayout;
 
     @Override
     protected int getLayoutId() {

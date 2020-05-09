@@ -91,7 +91,7 @@ public class SearchPlanActivity2 extends BaseActivity {
     @BindView(R.id.go_city_title)
     TextView goCityTitle;
     @BindView(R.id.refreshLayout)
-    SmartRefreshLayout refreshLayout;
+    RefreshLayout refreshLayout;
 
     @Override
     protected int getLayoutId() {

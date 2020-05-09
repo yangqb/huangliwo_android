@@ -52,7 +52,7 @@ public class PlaneOrderListActivity extends BaseActivity {
     @BindView(R.id.title_name)
     TextView titleName;
     @BindView(R.id.refreshLayout)
-    SmartRefreshLayout refreshLayout;
+    RefreshLayout refreshLayout;
     @BindView(R.id.tabLayout)
     CommonTabLayout tabLayout;
 

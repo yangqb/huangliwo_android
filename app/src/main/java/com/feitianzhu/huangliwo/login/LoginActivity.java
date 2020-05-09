@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -150,7 +151,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         }
 
         String base64Ps = EncryptUtils.encodePassword(mPassword);
-
         OkGo.<LzyResponse<LoginEntity>>post(Urls.LOGIN)
                 .tag(this)
                 .params("phone", mAccount)
@@ -162,7 +162,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         if (response.body().code == 0) {
 
                             KLog.i("response:%s", response.toString());
-
                             LoginEntity loginEntity = response.body().data;
                             Constant.ACCESS_TOKEN = loginEntity.accessToken;
                             Constant.LOGIN_USERID = loginEntity.userId;
