@@ -61,7 +61,7 @@ public class SearchPlanActivity extends BaseActivity {
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     @BindView(R.id.refreshLayout)
-    SmartRefreshLayout refreshLayout;
+    RefreshLayout refreshLayout;
     @BindView(R.id.plane_title)
     LinearLayout planeTitle;
     @BindView(R.id.startCity)

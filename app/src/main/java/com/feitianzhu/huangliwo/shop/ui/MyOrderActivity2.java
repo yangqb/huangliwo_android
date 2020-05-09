@@ -78,7 +78,7 @@ public class MyOrderActivity2 extends BaseActivity {
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     @BindView(R.id.refreshLayout)
-    SmartRefreshLayout refreshLayout;
+    RefreshLayout refreshLayout;
     @BindView(R.id.tabLayout)
     CommonTabLayout tabLayout;
     @BindView(R.id.tabLayout2)
@@ -345,12 +345,10 @@ public class MyOrderActivity2 extends BaseActivity {
                                 intent.putExtra(SelectPayActivity.ORDER_DATA, goodsOrderList.get(position));
                                 startActivityForResult(intent, PAY_REQUEST_CODE);
                             } else if (goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_WAIT_DELIVERY) {
-                                //查看物流
-                                checkLogisticsInfo(goodsOrderList.get(position).getExpressNo(), goodsOrderList.get(position).getLogisticCpName());
-                               /* intent = new Intent(MyOrderActivity2.this, LogisticsInfoActivity.class);
-                                intent.putExtra(LogisticsInfoActivity.LOGISTICS_COMPANY, goodsOrderList.get(position).getLogisticCpName());
-                                intent.putExtra(LogisticsInfoActivity.LOGISTICS_NO, goodsOrderList.get(position).getExpressNo());
-                                startActivity(intent);*/
+                                //查看详情
+                                intent = new Intent(MyOrderActivity2.this, OrderDetailActivity.class);
+                                intent.putExtra(OrderDetailActivity.ORDER_NO, goodsOrderList.get(position).getOrderNo());
+                                startActivity(intent);
                             } else if (goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_WAIT_RECEIVING) {
                                 //确认收货
                                 new XPopup.Builder(MyOrderActivity2.this)
@@ -731,7 +729,7 @@ public class MyOrderActivity2 extends BaseActivity {
     }
 
     public void checkLogisticsInfo(String logisticsNo, String logisticsName) {
-        if (logisticsNo != null) {
+        if (logisticsNo != null && !TextUtils.isEmpty(logisticsNo)) {
             OkGo.<LzyResponse<String>>get(Urls.GET_LOGISTICS_INFO)
                     .tag(this)
                     .params(Constant.ACCESSTOKEN, token)
@@ -749,10 +747,6 @@ public class MyOrderActivity2 extends BaseActivity {
                                     intent.putExtra(LogisticsInfoActivity.LOGISTICS_COMPANY, logisticsName);
                                     intent.putExtra(LogisticsInfoActivity.LOGISTICS_DATA, logisticsModel);
                                     startActivity(intent);
-                                    /*logisticsModes.clear();
-                                    logisticsModes = logisticsModel.getData();
-                                    adapter.setNewData(logisticsModes);
-                                    adapter.notifyDataSetChanged();*/
                                 } else {
                                     ToastUtils.show("暂无物流信息");
                                 }

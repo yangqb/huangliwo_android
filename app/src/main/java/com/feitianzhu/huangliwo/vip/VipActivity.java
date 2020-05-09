@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -31,16 +32,20 @@ import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.me.ui.VerificationActivity2;
 import com.feitianzhu.huangliwo.model.LocationPost;
+import com.feitianzhu.huangliwo.model.LogisticsModel;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.MyPoint;
 import com.feitianzhu.huangliwo.model.VipGifListInfo;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsClassifyModel;
+import com.feitianzhu.huangliwo.shop.ui.LogisticsInfoActivity;
+import com.feitianzhu.huangliwo.shop.ui.MyOrderActivity2;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 import com.feitianzhu.huangliwo.utils.doubleclick.SingleClick;
 import com.feitianzhu.huangliwo.view.CustomClassificationView;
 import com.feitianzhu.huangliwo.view.CustomImgViewDialog;
+import com.google.gson.Gson;
 import com.gyf.immersionbar.ImmersionBar;
 import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
@@ -82,6 +87,7 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
     private List<VipGifListInfo.VipPresentsModel> presentsList = new ArrayList<>();
     private VipPresentsAdapter adapter;
     private VipPresentsAdapter2 adapter2;
+    private VipGifListInfo presentsModel;
     private double longitude = 116.289189;
     private double latitude = 39.826552;
     private int clsId;
@@ -98,7 +104,7 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
     @BindView(R.id.total_amount)
     TextView totalAmount;
     @BindView(R.id.refreshLayout)
-    SmartRefreshLayout refreshLayout;
+    RefreshLayout refreshLayout;
     @BindView(R.id.recyclerView2)
     RecyclerView recyclerView2;
     @BindView(R.id.presentsTitle)
@@ -154,7 +160,7 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
     }
 
 
-    @OnClick({R.id.left_button, R.id.more_vip, R.id.btn_submit, R.id.tv_protocol, R.id.all_gif, R.id.btnRecord, R.id.tvInstruction})
+    @OnClick({R.id.left_button, R.id.more_vip, R.id.btn_submit, R.id.tv_protocol, R.id.all_gif, R.id.btnRecord, R.id.tvInstruction, R.id.btn_logistics})
     @SingleClick()
     public void onClick(View view) {
         Intent intent;
@@ -235,6 +241,9 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
                             .show();
                 }
                 break;
+            case R.id.btn_logistics:
+                checkLogisticsInfo(presentsModel.expressNum, "");
+                break;
         }
 
     }
@@ -308,6 +317,43 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
                         .show();
             }
         });
+    }
+
+    public void checkLogisticsInfo(String logisticsNo, String logisticsName) {
+        if (logisticsNo != null && !TextUtils.isEmpty(logisticsNo)) {
+            OkGo.<LzyResponse<String>>get(Urls.GET_LOGISTICS_INFO)
+                    .tag(this)
+                    .params(Constant.ACCESSTOKEN, token)
+                    .params(Constant.USERID, userId)
+                    .params("expressNo", logisticsNo)
+                    .execute(new JsonCallback<LzyResponse<String>>() {
+                        @Override
+                        public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<String>> response) {
+                            super.onSuccess(VipActivity.this, response.body().msg, response.body().code);
+                            if (response.body().code == 0 && response.body().data != null && !TextUtils.isEmpty(response.body().data)) {
+                                String jsonStr = response.body().data;
+                                LogisticsModel logisticsModel = new Gson().fromJson(jsonStr, LogisticsModel.class);
+                                if (logisticsModel.getData() != null && logisticsModel.getData().size() > 0) {
+                                    Intent intent = new Intent(VipActivity.this, LogisticsInfoActivity.class);
+                                    intent.putExtra(LogisticsInfoActivity.LOGISTICS_COMPANY, logisticsName);
+                                    intent.putExtra(LogisticsInfoActivity.LOGISTICS_DATA, logisticsModel);
+                                    startActivity(intent);
+                                } else {
+                                    ToastUtils.show("暂无物流信息");
+                                }
+                            } else {
+                                ToastUtils.show("暂无物流信息");
+                            }
+                        }
+
+                        @Override
+                        public void onError(com.lzy.okgo.model.Response<LzyResponse<String>> response) {
+                            super.onError(response);
+                        }
+                    });
+        } else {
+            ToastUtils.show("暂无物流信息");
+        }
     }
 
     public void receiveGif(int giftId, int merchantId, int position) {
@@ -397,7 +443,7 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
                         shopGiftList.clear();
                         presentsList.clear();
                         if (response.body().code == 0 && response.body().data != null) {
-                            VipGifListInfo presentsModel = response.body().data;
+                            presentsModel = response.body().data;
                             presentsTitle.setText(presentsModel.title);
                             totalAmount.setText("¥" + response.body().data.totalPrice);
                             if (presentsModel.list != null && presentsModel.list.size() > 0) {

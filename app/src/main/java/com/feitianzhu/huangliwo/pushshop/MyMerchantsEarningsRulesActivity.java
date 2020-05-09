@@ -56,7 +56,7 @@ public class MyMerchantsEarningsRulesActivity extends BaseActivity implements Da
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     @BindView(R.id.refreshLayout)
-    SmartRefreshLayout refreshLayout;
+    RefreshLayout refreshLayout;
 
     @Override
     protected int getLayoutId() {

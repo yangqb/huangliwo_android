@@ -54,7 +54,7 @@ public class MyCollectionActivity extends BaseActivity {
     private CollectionAdapter mAdapter;
     private MineInfoModel mineInfoModel;
     @BindView(R.id.refreshLayout)
-    SmartRefreshLayout refreshLayout;
+    RefreshLayout refreshLayout;
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     @BindView(R.id.title_name)

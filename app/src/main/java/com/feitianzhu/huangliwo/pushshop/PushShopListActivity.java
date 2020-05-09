@@ -65,7 +65,7 @@ public class PushShopListActivity extends BaseActivity {
     @BindView(R.id.btn_noPass)
     TextView btnNoPass;
     @BindView(R.id.swipeLayout)
-    SmartRefreshLayout refreshLayout;
+    RefreshLayout refreshLayout;
     @BindView(R.id.title_name)
     TextView titleName;
     @BindView(R.id.right_text)

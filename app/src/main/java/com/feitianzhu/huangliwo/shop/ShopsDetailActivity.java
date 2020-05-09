@@ -53,8 +53,10 @@ import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.zhpan.bannerview.BannerViewPager;
+import com.zhpan.bannerview.constants.IndicatorSlideMode;
 import com.zhpan.bannerview.constants.IndicatorStyle;
 import com.zhpan.bannerview.holder.ViewHolder;
+import com.zhpan.bannerview.utils.BannerUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -251,8 +253,8 @@ public class ShopsDetailActivity extends BaseActivity {
         str3 = String.format(Locale.getDefault(), "%.2f", goodsListBean.getPrice());
         goodsName.setText(goodsListBean.getGoodsName());
         goodsSummary.setText(goodsListBean.getSummary());
-        goodsStock.setText("库存 "+goodsListBean.getStockCount());
-        goodsSalesvolume.setText("销量 "+goodsListBean.getSales());
+        goodsStock.setText("库存 " + goodsListBean.getStockCount());
+        goodsSalesvolume.setText("销量 " + goodsListBean.getSales());
         String rebatePv = String.format(Locale.getDefault(), "%.2f", goodsListBean.getRebatePv());
         tvRebate.setText("奖励¥" + MathUtils.subZero(rebatePv));
         vipRebate.setText("奖励¥" + MathUtils.subZero(rebatePv));
@@ -306,10 +308,9 @@ public class ShopsDetailActivity extends BaseActivity {
             mViewpager.setCanLoop(true)
                     .setAutoPlay(true)
                     .setIndicatorStyle(IndicatorStyle.CIRCLE)
-                    //.setIndicatorSlideMode(IndicatorSlideMode.SMOOTH)
-                    //.setRoundCorner(20)
-                    .setIndicatorRadius(8)
-                    .setIndicatorColor(Color.parseColor("#CCCCCC"), Color.parseColor("#6C6D72"))
+                    .setIndicatorSlideMode(IndicatorSlideMode.SMOOTH)
+                    .setIndicatorSliderRadius(BannerUtils.dp2px(2.5f))
+                    .setIndicatorSliderColor(Color.parseColor("#CCCCCC"), Color.parseColor("#6C6D72"))
                     .setHolderCreator(DataViewHolder::new).setOnPageClickListener(new BannerViewPager.OnPageClickListener() {
                 @Override
                 public void onPageClick(int position) {
@@ -351,6 +352,10 @@ public class ShopsDetailActivity extends BaseActivity {
                 break;
             case R.id.tv_pay:
                 isBuyGoods = true;
+                if (goodsListBean.getStockCount() <= 0) {
+                    ToastUtils.show("当前商铺已售完");
+                    return;
+                }
                 if (specifications.size() > 0) {
                     showSpeDialog();
                     return;

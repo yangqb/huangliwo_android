@@ -52,7 +52,7 @@ public class NewYearShoppingActivity extends BaseActivity {
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     @BindView(R.id.refreshLayout)
-    SmartRefreshLayout refreshLayout;
+    RefreshLayout refreshLayout;
 
     @Override
     protected int getLayoutId() {

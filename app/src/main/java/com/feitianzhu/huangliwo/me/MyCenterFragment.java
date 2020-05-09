@@ -86,7 +86,7 @@ public class MyCenterFragment extends SFFragment {
     @BindView(R.id.gradeName)
     TextView gradeName;
     @BindView(R.id.refreshLayout)
-    SmartRefreshLayout refreshLayout;
+    RefreshLayout refreshLayout;
     @BindView(R.id.toBeReleased_Amount)
     TextView toBeReleasedAmount;
     @BindView(R.id.tv_profit)
