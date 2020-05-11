@@ -1,13 +1,19 @@
 package com.feitianzhu.huangliwo.login;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
+import android.support.v4.widget.NestedScrollView;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,14 +28,19 @@ import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.WXLoginInfo;
 import com.feitianzhu.huangliwo.model.WXLoginModel;
 import com.feitianzhu.huangliwo.model.WXUserInfo;
+import com.feitianzhu.huangliwo.pushshop.MerchantsDetailActivity;
+import com.feitianzhu.huangliwo.splash.SplashActivity;
 import com.feitianzhu.huangliwo.utils.EncryptUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
+import com.feitianzhu.huangliwo.utils.SoftKeyBoardListener;
 import com.feitianzhu.huangliwo.utils.StringUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 import com.google.gson.Gson;
 import com.gyf.immersionbar.ImmersionBar;
 import com.hjq.toast.ToastUtils;
+import com.lxj.xpopup.XPopup;
+import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.socks.library.KLog;
@@ -61,8 +72,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     TextView mRegister;
     @BindView(R.id.wx_login)
     ImageView wxLogin;
+    @BindView(R.id.loginLayout)
+    LinearLayout loginLayout;
     private String mAccount;
     private String mPassword;
+    private int loginViewtoBottom;
+    private ObjectAnimator animatorUp, animatorDown;
 
     @Override
     protected int getLayoutId() {
@@ -72,7 +87,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     @Override
     protected void initView() {
         ImmersionBar.with(this)
-                .fitsSystemWindows(true)
                 .statusBarDarkFont(true, 0.2f)
                 .statusBarColor(R.color.white)
                 .init();
@@ -85,12 +99,58 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         mRegister.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
         mForgetLayout.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
 
+        initListener();
+
     }
 
     @Override
     protected void initData() {
         mAccount = SPUtils.getString(this, Constant.SP_PHONE, "");
         showLoginLayout();
+
+        loginLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                //不可以直接获取控件位置，放在这个里面获取；
+                int[] viewLocation = new int[2];
+                loginLayout.getLocationOnScreen(viewLocation); //获取该控价在屏幕中的位置（左上角的点）
+//              loginViewtoBottom = UiUtils.getScreenHeight(mContext) - layoutLogin.getBottom(); //getBottom是该控件最底部距离父控件顶部的距离
+                WindowManager manager = getWindowManager();
+                DisplayMetrics outMetrics = new DisplayMetrics();
+                manager.getDefaultDisplay().getMetrics(outMetrics);
+                int heightPixels = outMetrics.heightPixels;
+                loginViewtoBottom = heightPixels - viewLocation[1] - loginLayout.getHeight(); //屏幕高度-控件距离顶部高度-控件高度
+            }
+        });
+    }
+
+    public void initListener() {
+        SoftKeyBoardListener.setListener(LoginActivity.this, new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
+            @Override
+            public void keyBoardShow(int height) {
+                //Toast.makeText(AppActivity.this, "键盘显示 高度" + height, Toast.LENGTH_SHORT).show();
+
+                //if (animatorUp == null) { //如果每次弹出的键盘高度不一致，就不要这个判断，每次都新创建动画（密码键盘可能和普通键盘高度不一致）
+                int translationY = height - loginViewtoBottom - 100;
+                animatorUp = ObjectAnimator.ofFloat(loginLayout, "translationY", 0, -translationY);
+                animatorUp.setDuration(360);
+                animatorUp.setInterpolator(new AccelerateDecelerateInterpolator());
+                //}
+                animatorUp.start();
+
+            }
+
+            @Override
+            public void keyBoardHide(int height) {
+                //if (animatorDown == null) {//如果每次弹出的键盘高度不一致，就不要这个判断，每次都新创建动画（密码键盘可能和普通键盘高度不一致）
+                int translationY = height - loginViewtoBottom - 100;
+                animatorDown = ObjectAnimator.ofFloat(loginLayout, "translationY", -translationY, 0);
+                animatorDown.setDuration(360);
+                animatorDown.setInterpolator(new AccelerateDecelerateInterpolator());
+                //}
+                animatorDown.start();
+            }
+        });
     }
 
     private void showLoginLayout() {
