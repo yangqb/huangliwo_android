@@ -72,7 +72,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text=""
-                android:textColor="@color/color_289cef"
+                android:textColor="@color/color_333333"
                 android:textSize="14sp" />
 
         </LinearLayout>

@@ -1,7 +1,6 @@
 package com.feitianzhu.huangliwo.vip;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -424,7 +423,6 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
             latitude = myPoint.latitude;
         }
         OkGo.<LzyResponse<VipGifListInfo>>get(Urls.GET_VIP_PRESENT)
-
                 .tag(this)
                 .params("accessToken", token)
                 .params("userId", userId)
@@ -451,19 +449,17 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
                             if (presentsModel.list != null && presentsModel.list.size() > 0) {
                                 shopGiftList = presentsModel.list;
                                 adapter.setNewData(shopGiftList);
-
+                                adapter.notifyDataSetChanged();
                             }
                             if (presentsModel.shopGiftList != null && presentsModel.shopGiftList.size() > 0) {
                                 presentsList = presentsModel.shopGiftList;
                                 adapter2.setNewData(presentsList);
-
+                                adapter2.notifyDataSetChanged();
                             }
                             llGiftsPresents.setVisibility(View.VISIBLE);
                         } else {
                             llGiftsPresents.setVisibility(View.GONE);
                         }
-                        adapter.notifyDataSetChanged();
-                        adapter2.notifyDataSetChanged();
                         goneloadDialog();
                     }
 

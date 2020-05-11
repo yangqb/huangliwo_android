@@ -16,23 +16,15 @@ import android.widget.TextView;
 import com.feitianzhu.huangliwo.MainActivity;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
-import com.feitianzhu.huangliwo.common.base.LazyWebActivity;
 import com.feitianzhu.huangliwo.login.LoginActivity;
-import com.feitianzhu.huangliwo.settings.ChangeLoginPassword;
 import com.feitianzhu.huangliwo.utils.LocationUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.Urls;
-import com.feitianzhu.huangliwo.view.CustomUserPrivateView;
 import com.feitianzhu.huangliwo.view.CustomVideoView;
 import com.gyf.immersionbar.ImmersionBar;
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
 import com.hjq.toast.ToastUtils;
-import com.lxj.xpopup.XPopup;
-import com.lxj.xpopup.interfaces.OnCancelListener;
-import com.lxj.xpopup.interfaces.OnConfirmListener;
-
 import java.util.List;
 
 import butterknife.BindView;
@@ -63,7 +55,7 @@ public class SplashActivity extends AppCompatActivity {
                 .statusBarColor(R.color.bg_yellow)
                 .init();
         //initPermision();
-        showPrivateDialog();
+        requestPermission();
         SPUtils.putBoolean(this, Constant.LOGIN_DIALOG, true);//重新进入APP才弹出异地登录的弹框
     }
 
@@ -98,50 +90,11 @@ public class SplashActivity extends AppCompatActivity {
         runnable = new Runnable() {
             @Override
             public void run() {
-               realLogin();
+                realLogin();
             }
         };
         handler.postDelayed(runnable, 3000);
     }
-
-
-    public void showPrivateDialog() {
-
-        new XPopup.Builder(this)
-                .asCustom(new CustomUserPrivateView(this).setOnClickCancelListener(new CustomUserPrivateView.OnClickCancelListener() {
-                    @Override
-                    public void onCancel() {
-                        finish();
-                        System.exit(0);
-                    }
-                }).setOnClickConfirmListener(new CustomUserPrivateView.OnClickConfirmListener() {
-                    @Override
-                    public void onConfirm() {
-                        requestPermission();
-                    }
-                })).show();
-       /* new XPopup.Builder(this)
-                .asConfirm("", "巴拉巴啦啦啦啦啦啦啦巴拉巴啦啦啦啦啦啦啦巴拉巴啦啦啦啦啦啦啦", "暂不使用", "同意", new OnConfirmListener() {
-                    @Override
-                    public void onConfirm() {
-
-                        //context.startActivity(new Intent(context, ForgetPasswordActivity.class));
-                        Intent intent = new Intent(SplashActivity.this, LazyWebActivity.class);
-                        intent.putExtra(Constant.URL, Urls.BASE_URL + "fhwl/static/html/yonghuxieyi.html");
-                        intent.putExtra(Constant.H5_TITLE, "便利大本营用户隐私协议");
-                        startActivity(intent);
-                    }
-                }, new OnCancelListener() {
-                    @Override
-                    public void onCancel() {
-
-                    }
-                }, false)
-                .bindLayout(R.layout.layout_dialog_login)
-        .show();//绑定已有布局*/
-
-    }
-
 
     private void realLogin() {
         String token = SPUtils.getString(SplashActivity.this, Constant.SP_ACCESS_TOKEN, "");

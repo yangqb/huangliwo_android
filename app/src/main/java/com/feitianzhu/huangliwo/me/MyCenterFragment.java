@@ -51,7 +51,6 @@ import com.feitianzhu.huangliwo.vip.VipActivity;
 import com.lxj.xpopup.XPopup;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
-import com.lzy.okgo.request.base.Request;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -163,20 +162,14 @@ public class MyCenterFragment extends SFFragment {
     }
 
     public void getData() {
+
         OkGo.<LzyResponse<BalanceModel>>get(Urls.GET_USER_MONEY_INFO)
                 .tag(this)
                 .params(Constant.ACCESSTOKEN, token)
                 .params(Constant.USERID, userId)
                 .execute(new JsonCallback<LzyResponse<BalanceModel>>() {
                     @Override
-                    public void onStart(Request<LzyResponse<BalanceModel>, ? extends Request> request) {
-                        super.onStart(request);
-                        showloadDialog("");
-                    }
-
-                    @Override
                     public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<BalanceModel>> response) {
-                        goneloadDialog();
                         if (response.body().code == 0) {
                             balanceModel = response.body().data;
                             if (balanceModel != null) {
@@ -199,7 +192,6 @@ public class MyCenterFragment extends SFFragment {
                     @Override
                     public void onError(com.lzy.okgo.model.Response<LzyResponse<BalanceModel>> response) {
                         super.onError(response);
-                        goneloadDialog();
                     }
                 });
     }
@@ -215,6 +207,7 @@ public class MyCenterFragment extends SFFragment {
                     @Override
                     public void onStart(com.lzy.okgo.request.base.Request<LzyResponse<MineInfoModel>, ? extends com.lzy.okgo.request.base.Request> request) {
                         super.onStart(request);
+                        showloadDialog("");
                     }
 
                     @Override
@@ -227,6 +220,7 @@ public class MyCenterFragment extends SFFragment {
                             isLogin = true;
                         }
 
+                        goneloadDialog();
                         if (refreshLayout != null) {
                             refreshLayout.finishRefresh();
                         }
@@ -241,6 +235,7 @@ public class MyCenterFragment extends SFFragment {
                     @Override
                     public void onError(Response<LzyResponse<MineInfoModel>> response) {
                         super.onError(response);
+                        goneloadDialog();
                         if (refreshLayout != null) {
                             refreshLayout.finishRefresh();
                         }
@@ -588,14 +583,6 @@ public class MyCenterFragment extends SFFragment {
             if (requestCode == REQUEST_CODE) {
                 getData();
             }
-        }
-    }
-
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        if(!hidden){
-            requestData();
         }
     }
 
