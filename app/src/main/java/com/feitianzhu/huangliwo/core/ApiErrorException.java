@@ -1,7 +1,9 @@
-package com.feitianzhu.huangliwo.core.network;
+package com.feitianzhu.huangliwo.core;
+
+import com.feitianzhu.huangliwo.core.network.BaseApiResponse;
 
 /**
- * Created by gundam on 16/11/7.
+ * Created by bch on 2020/5/11
  */
 public class ApiErrorException extends RuntimeException {
     private int errorCode;

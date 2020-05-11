@@ -1,11 +1,11 @@
 package com.feitianzhu.huangliwo.core.network;
 
-
 import com.alibaba.fastjson.JSON;
 
-//TODO
+/**
+ * Created by bch on 2020/5/11
+ */
 public class JsonAwareObject {
-
     @Override
     public String toString() {
         return JSON.toJSONString(this);

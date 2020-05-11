@@ -9,7 +9,7 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 
 /**
- * Created by liusiyang on 2018/5/4.
+ * Created by bch on 2020/5/11
  */
 
 public class NetworkConnectChangedReceiver extends BroadcastReceiver {
@@ -18,24 +18,8 @@ public class NetworkConnectChangedReceiver extends BroadcastReceiver {
     //网络状态
     private NetWorkState networkStatus = NetWorkState.Null;
 
-    /**
-     * 没有网络连接
-     */
-    public static final NetWorkState NETWORK_STATUS_NO_CONNECTION = NetWorkState.NONE;
-    /**
-     * 其他连接(VPN,以太网等)
-     */
-    public static final NetWorkState NETWORK_STATUS_OTHERS = NetWorkState.VPN;
-    /**
-     * wifi连接
-     */
-    public static final NetWorkState NETWORK_STATUS_WIFI = NetWorkState.WIFI;
-    /**
-     * 手机流量连接
-     */
-    public static final NetWorkState NETWORK_STATUS_MOBILE = NetWorkState.GPRS;
-
     public NetworkChangedListener listener;
+
     public static NetworkConnectChangedReceiver receiver;
     //================== NetworkChangedListener ====================
 
@@ -45,6 +29,12 @@ public class NetworkConnectChangedReceiver extends BroadcastReceiver {
 
     //================== static method ====================
 
+    /**
+     * 添加网络监听
+     *
+     * @param context
+     * @param listener
+     */
     public static void addNetworkConnectChangedListener(Context context, NetworkChangedListener listener) {
         if (receiver == null) {
             receiver = new NetworkConnectChangedReceiver();
@@ -59,12 +49,17 @@ public class NetworkConnectChangedReceiver extends BroadcastReceiver {
         receiver.callBack(getNetworkStatus(context));
     }
 
+    /**
+     * 移除网络监听
+     *
+     * @param context
+     */
     public static void removeNetworkConnectChangedListener(Context context) {
         context.unregisterReceiver(receiver);
     }
 
     /**
-     * 网络连接状态
+     * 获取网络连接状态
      */
     public static NetWorkState getNetworkStatus(Context context) {
         ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -72,16 +67,16 @@ public class NetworkConnectChangedReceiver extends BroadcastReceiver {
         if (activeNetwork != null) {
             if (activeNetwork.isConnected()) {
                 if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
-                    return NETWORK_STATUS_WIFI;
+                    return NetWorkState.WIFI;
                 } else if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
-                    return NETWORK_STATUS_MOBILE;
+                    return NetWorkState.GPRS;
                 }
-                return NETWORK_STATUS_OTHERS;
+                return NetWorkState.VPN;
             } else {
-                return NETWORK_STATUS_NO_CONNECTION;
+                return NetWorkState.NONE;
             }
         } else {   // not connected to the internet
-            return NETWORK_STATUS_NO_CONNECTION;
+            return NetWorkState.NONE;
         }
     }
 
@@ -100,46 +95,6 @@ public class NetworkConnectChangedReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-
-//        //监听wifi的打开与关闭，与wifi的连接无关
-//        if (WifiManager.WIFI_STATE_CHANGED_ACTION.equals(intent.getAction())) {
-//            int wifiState = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, 0);
-//            switch (wifiState) {
-//                case WifiManager.WIFI_STATE_DISABLED:
-//                    break;
-//                case WifiManager.WIFI_STATE_DISABLING:
-//
-//                    break;
-//                case WifiManager.WIFI_STATE_ENABLING:
-//                    break;
-//                case WifiManager.WIFI_STATE_ENABLED:
-//                    break;
-//                case WifiManager.WIFI_STATE_UNKNOWN:
-//                    break;
-//                default:
-//                    break;
-//
-//
-//            }
-////            callBack(getNetworkStatus(context));
-//        }
-
-//        /*
-//         *  这个监听wifi的连接状态即是否连上了一个有效无线路由
-//         *  当上边广播的状态是WifiManager.WIFI_STATE_DISABLING，和WIFI_STATE_DISABLED的时候，根本不会接到这个广播。
-//         *  在上边广播接到广播是WifiManager.WIFI_STATE_ENABLED状态的同时也会接到这个广播
-//         *  当然刚打开wifi肯定还没有连接到有效的无线
-//         */
-//        if (WifiManager.NETWORK_STATE_CHANGED_ACTION.equals(intent.getAction())) {
-//            Parcelable parcelableExtra = intent
-//                    .getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
-//            if (null != parcelableExtra) {
-//                NetworkInfo networkInfo = (NetworkInfo) parcelableExtra;
-//                NetworkInfo.State state = networkInfo.getState();
-//                boolean isConnected = state == NetworkInfo.State.CONNECTED;
-//                callBack(getNetworkStatus(context));
-//            }
-//        }
 
         /*
         这个监听网络连接的设置,包括wifi和移动数据的打开和关闭,最好用的还是这个监听。

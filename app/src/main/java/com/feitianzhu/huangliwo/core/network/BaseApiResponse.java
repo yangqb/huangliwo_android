@@ -1,7 +1,7 @@
 package com.feitianzhu.huangliwo.core.network;
 
 /**
- * Created by gundam on 16/11/3.
+ * Created by bch on 2020/5/11
  */
 public class BaseApiResponse extends JsonAwareObject {
     /**

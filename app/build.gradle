@@ -154,7 +154,6 @@ dependencies {
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.50'
     //必须使用
     implementation 'com.lzy.net:okgo:3.0.4'
-
     implementation 'com.lzy.net:okrx:1.0.2'
 
     //implementation 'com.lzy.net:okrx2:2.0.2'
@@ -162,7 +161,8 @@ dependencies {
     implementation 'io.reactivex:rxandroid:+'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.6.0'
     //文件存储
-    implementation 'com.alibaba:fastjson:1.1.67.android'
+    implementation 'com.alibaba:fastjson:1.2.68'
+
     //以下三个选择添加，okrx和okrx2不能同时使用
     //implementation 'com.lzy.net:okrx:1.0.2'
     //implementation 'com.lzy.net:okrx2:2.0.2'

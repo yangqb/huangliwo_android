@@ -15,6 +15,8 @@ import android.widget.Toast;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.LazyWebActivity;
+import com.feitianzhu.huangliwo.core.network.ApiCallBack;
+import com.feitianzhu.huangliwo.core.network.test.UpdataRequest;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.login.LoginActivity;
@@ -142,6 +144,7 @@ public class SettingsActivity extends BaseActivity {
                     }
                 });
     }
+
     @OnClick({R.id.rl_change_phone, R.id.rl_change_password, R.id.rl_change_second_password, R.id.rl_about,
             R.id.rl_feedback, R.id.rl_help, R.id.rl_clear_cache, R.id.button, R.id.rl_update, R.id.left_button})
     public void onClick(View v) {
@@ -164,7 +167,19 @@ public class SettingsActivity extends BaseActivity {
                 startActivity(intent);
                 break;
             case R.id.rl_update:
-                updateDiy();
+                UpdataRequest updataRequest = new UpdataRequest();
+                updataRequest.call(new ApiCallBack<UpdateAppModel>() {
+                    @Override
+                    public void onAPIResponse(UpdateAppModel response) {
+                        ToastUtils.show("sds");
+                    }
+
+                    @Override
+                    public void onAPIError(int errorCode, String errorMsg) {
+
+                    }
+                });
+//                updateDiy();
                 break;
             case R.id.rl_change_phone:
                 startActivity(new Intent(this, ChangePhone1Activity.class));

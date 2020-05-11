@@ -6,6 +6,9 @@ import android.support.annotation.NonNull;
 import android.support.multidex.MultiDex;
 
 import com.baidu.mapapi.SDKInitializer;
+import com.feitianzhu.huangliwo.core.network.networkcheck.NetWorkState;
+import com.feitianzhu.huangliwo.core.network.networkcheck.NetworkConnectChangedReceiver;
+import com.feitianzhu.huangliwo.core.rxbus.RxBus;
 import com.feitianzhu.huangliwo.utils.ToastWhiteStyle2;
 import com.feitianzhu.huangliwo.view.MRefreshFooter;
 import com.feitianzhu.huangliwo.view.MRefreshHeader;
@@ -30,6 +33,7 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.footer.BallPulseFooter;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.uuzuche.lib_zxing.activity.ZXingLibrary;
+
 import java.util.concurrent.TimeUnit;
 
 import me.jessyan.autosize.AutoSizeConfig;
@@ -79,6 +83,8 @@ public class App extends Application {
                 return new MRefreshHeader(context);
             }
         });
+
+
     }
 
     @Override
@@ -95,7 +101,14 @@ public class App extends Application {
         SDKInitializer.initialize(this);
         ToastUtils.init(this);
         ToastUtils.initStyle(new ToastWhiteStyle2(this));
-
+        //网络监听日志
+        NetworkConnectChangedReceiver.addNetworkConnectChangedListener(context, new NetworkConnectChangedReceiver.NetworkChangedListener() {
+            @Override
+            public void onNetworkChanged(NetWorkState networkStatus) {
+                RxBus.getDefault().post(RxCodeConstants.NETWORKSTATUS, networkStatus);
+            }
+        });
+        GlobalUtil.setApplication(context);
     }
 
     public void initOkgo() {
