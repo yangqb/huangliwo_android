@@ -66,10 +66,10 @@ android {
             keyPassword 'kaisa008'
             storeFile file('../key/feitianzhu.jks')
             storePassword 'kaisa008'
-            /*keyAlias 'androiddebugkey'
+            keyAlias 'androiddebugkey'
             keyPassword 'android'
             storeFile file('../key/debug.keystore')
-            storePassword 'android'*/
+            storePassword 'android'
         }
     }
 
