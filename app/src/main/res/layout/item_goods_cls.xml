@@ -26,6 +26,7 @@
         android:layout_marginEnd="10dp"
         android:ellipsize="end"
         android:maxLines="1"
+        android:singleLine="true"
         android:text="三星 Galaxy G9730三星 Galaxy G9730三星 Galaxy G9730"
         android:textColor="@color/color_000000"
         android:textSize="16sp" />

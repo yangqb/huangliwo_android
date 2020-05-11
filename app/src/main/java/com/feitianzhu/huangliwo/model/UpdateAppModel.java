@@ -32,7 +32,7 @@ public class UpdateAppModel implements Serializable {
         public String updateDesc;
         //下载地址
         public String downloadUrl;
-        //是否强制更新 1 是 2 不是
+        //是否强制更新 1 是 0 不是
         public String isForceUpdate;
     }
 
