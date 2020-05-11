@@ -1,6 +1,7 @@
 package com.feitianzhu.huangliwo.settings;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -36,6 +37,8 @@ import com.vector.update_app.UpdateAppManager;
 import com.vector.update_app.UpdateCallback;
 import com.vector.update_app.UpdateDialogFragment;
 import com.vector.update_app.utils.AppUpdateUtils;
+
+import java.io.File;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -76,6 +79,8 @@ public class SettingsActivity extends BaseActivity {
 
     private boolean isPayPassword;
     private UpdateAppModel updateAppModel;
+    private SharedPreferences preferences;
+    private SharedPreferences.Editor edit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -190,15 +195,45 @@ public class SettingsActivity extends BaseActivity {
                 Toast.makeText(this, R.string.clean_cache_successfully, Toast.LENGTH_SHORT).show();
                 break;
             case R.id.button:
+                //退出登录，清空存储数据
+                preferences = getSharedPreferences(SPUtils.PREFERENCE_NAME, MODE_PRIVATE);
+                edit = preferences.edit();
+                //删除存储文件
+                File[] files = new File("/data/data/"+this.getPackageName()+"/shared_prefs").listFiles();
+                deleteCache(files);
                 Constant.ACCESS_TOKEN = "";
                 Constant.LOGIN_USERID = "";
                 Constant.PHONE = "";
+                //跳转到登录页面
                 intent = new Intent(this, LoginActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 finish();
                 break;
         }
+    }
+    /**
+     * 删除SharedPreferences数据文件
+     * @param files
+     */
+    public void deleteCache(File[] files){
+
+        boolean flag;
+        for(File itemFile : files){
+            flag = itemFile.delete();
+            if (flag == false) {
+                deleteCache(itemFile.listFiles());
+            }
+        }
+        Toast.makeText(this, "清除成功", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //清空数据
+        edit.clear();
+        edit.commit();
     }
 
     public void updateDiy() {
