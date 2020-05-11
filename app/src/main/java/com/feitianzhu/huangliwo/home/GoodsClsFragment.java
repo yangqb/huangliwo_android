@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
@@ -32,6 +33,7 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.request.base.Request;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.api.ScrollBoundaryDecider;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
@@ -65,6 +67,8 @@ public class GoodsClsFragment extends SFFragment {
     RecyclerView recyclerView;
     @BindView(R.id.refreshLayout)
     RefreshLayout refreshLayout;
+    @BindView(R.id.back_top)
+    LinearLayout backTop;
 
     public GoodsClsFragment() {
 
@@ -102,6 +106,44 @@ public class GoodsClsFragment extends SFFragment {
     }
 
     public void initListener() {
+        backTop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                backTop.setVisibility(View.GONE);
+                recyclerView.scrollToPosition(0);
+            }
+        });
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                GridLayoutManager manager = (GridLayoutManager) recyclerView.getLayoutManager();
+                int firstVisibleItemPosition = manager.findFirstVisibleItemPosition();
+                if (firstVisibleItemPosition != 0) {
+                    backTop.setVisibility(View.VISIBLE);
+                } else {
+                    backTop.setVisibility(View.GONE);
+                }
+            }
+        });
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {

@@ -103,7 +103,6 @@
         android:layout_height="96dp"
         android:scaleType="centerCrop"
         android:layout_alignParentEnd="true"
-        android:background="@color/white"
         app:riv_corner_radius="5dp" />
 
 </RelativeLayout>

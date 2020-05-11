@@ -160,7 +160,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     public void onSuccess(Response<LzyResponse<LoginEntity>> response) {
                         super.onSuccess(LoginActivity.this, response.body().msg, response.body().code);
                         if (response.body().code == 0) {
-
                             KLog.i("response:%s", response.toString());
                             LoginEntity loginEntity = response.body().data;
                             Constant.ACCESS_TOKEN = loginEntity.accessToken;
