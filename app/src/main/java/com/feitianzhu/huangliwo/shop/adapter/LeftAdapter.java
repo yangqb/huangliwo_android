@@ -20,12 +20,13 @@ public class LeftAdapter extends BaseMultiItemQuickAdapter<MultiItemShopAndMerch
 
     public LeftAdapter(List<MultiItemShopAndMerchants> list) {
         super(list);
-        addItemType(MultiItemShopAndMerchants.MERCHANTS_TYPE, R.layout.shop_left_item);
-        addItemType(MultiItemShopAndMerchants.SHOP_TYPE, R.layout.shop_left_item);
+        addItemType(MultiItemShopAndMerchants.MERCHANTS_TYPE, R.layout.shop_left_item1);
+        addItemType(MultiItemShopAndMerchants.SHOP_TYPE, R.layout.shop_left_item1);
     }
 
     @Override
     protected void convert(BaseViewHolder helper, MultiItemShopAndMerchants item) {
+
         switch (helper.getItemViewType()) {
             case MultiItemShopAndMerchants.MERCHANTS_TYPE:
                 helper.setText(R.id.text, item.getMerchantsClassifyModel().getClsName());

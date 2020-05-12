@@ -44,28 +44,7 @@
                         android:paddingTop="15dp"
                         android:paddingBottom="15dp">
 
-                        <LinearLayout
-                            android:id="@+id/rl_merchants"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:orientation="vertical">
 
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:src="@mipmap/a02_01shangjia" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="10dp"
-                                android:text="线下商家"
-                                android:textColor="@color/color_000000"
-                                android:textSize="14sp" />
-
-                        </LinearLayout>
 
                         <LinearLayout
                             android:id="@+id/rl_mall"
@@ -85,6 +64,28 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="10dp"
                                 android:text="线上商城"
+                                android:textColor="@color/color_000000"
+                                android:textSize="14sp" />
+
+                        </LinearLayout>
+                        <LinearLayout
+                            android:id="@+id/rl_merchants"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@mipmap/a02_01shangjia" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:text="线下商家"
                                 android:textColor="@color/color_000000"
                                 android:textSize="14sp" />
 

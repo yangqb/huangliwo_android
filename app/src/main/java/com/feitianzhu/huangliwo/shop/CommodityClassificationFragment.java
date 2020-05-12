@@ -1,9 +1,9 @@
 package com.feitianzhu.huangliwo.shop;
 
-import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -13,12 +13,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.feitianzhu.huangliwo.App;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.SFFragment;
@@ -28,7 +26,6 @@ import com.feitianzhu.huangliwo.login.LoginEvent;
 import com.feitianzhu.huangliwo.me.ui.PersonalCenterActivity2;
 import com.feitianzhu.huangliwo.me.ui.ScannerActivity;
 import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
-import com.feitianzhu.huangliwo.model.LocationPost;
 import com.feitianzhu.huangliwo.model.MerchantsInfo;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.MultiItemShopAndMerchants;
@@ -40,7 +37,7 @@ import com.feitianzhu.huangliwo.model.Shops;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsClassifyModel;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsModel;
 import com.feitianzhu.huangliwo.shop.adapter.LeftAdapter;
-import com.feitianzhu.huangliwo.shop.adapter.RightAdapter;
+import com.feitianzhu.huangliwo.shop.adapter.RightAdapter1;
 import com.feitianzhu.huangliwo.shop.ui.SearchShopActivity;
 import com.feitianzhu.huangliwo.shop.ui.dialog.ProvinceCallBack;
 import com.feitianzhu.huangliwo.shop.ui.dialog.ProvinceDialog2;
@@ -105,13 +102,23 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
     RecyclerView rightRecyclerView;
     @BindView(R.id.iv_head)
     CircleImageView ivHead;
+    @BindView(R.id.recyclerView1)
+    RecyclerView recyclerView1;
+    @BindView(R.id.recyclerView2)
+    RecyclerView recyclerView2;
+
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    @BindView(R.id.line1)
+    View line1;
+    @BindView(R.id.line)
+    View line;
+
     private int mParam1 = 2;
     private String mParam2;
     Unbinder unbinder;
     private LeftAdapter leftAdapter;
-    private RightAdapter rightAdapter;
+    private RightAdapter1 rightAdapter;
     private List<ShopClassify.GGoodsClsListBean> shopClassifyLsit = new ArrayList<>();
     private List<MerchantsClassifyModel.ListBean> merchantsClassifyList = new ArrayList<>();
     private List<MultiItemShopAndMerchants> multiItemShopAndMerchantsClass = new ArrayList<>();
@@ -165,7 +172,7 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
         leftRecyclerView.setAdapter(leftAdapter);
         leftAdapter.notifyDataSetChanged();
 
-        rightAdapter = new RightAdapter(multipleItemList);
+        rightAdapter = new RightAdapter1(multipleItemList);
         View mEmptyView = View.inflate(getActivity(), R.layout.view_common_nodata, null);
         ImageView img_empty = (ImageView) mEmptyView.findViewById(R.id.img_empty);
         img_empty.setOnClickListener(new View.OnClickListener() {
@@ -175,18 +182,23 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
             }
         });
         rightAdapter.setEmptyView(mEmptyView);
-        rightRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
+        rightRecyclerView.setLayoutManager(gridLayoutManager);
         rightRecyclerView.setAdapter(rightAdapter);
         rightAdapter.notifyDataSetChanged();
         mSwipeLayout.setEnableLoadMore(false);
 
         if (mParam1 == 1) { //商家
-            button1.setSelected(true);
-            button2.setSelected(false);
+            line1.setVisibility(View.GONE);
+            line.setVisibility(View.VISIBLE);
+//            button1.setSelected(true);
+//            button2.setSelected(false);
             getMerchantsClass();
         } else {//商城
-            button1.setSelected(false);
-            button2.setSelected(true);
+            line1.setVisibility(View.VISIBLE);
+            line.setVisibility(View.GONE);
+//            button1.setSelected(false);
+//            button2.setSelected(true);
             getShopClass();
         }
         requestData();
@@ -206,7 +218,7 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                     }
 
                     @Override
-                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<MerchantsClassifyModel>> response) {
+                    public void onSuccess(Response<LzyResponse<MerchantsClassifyModel>> response) {
                         super.onSuccess(getActivity(), response.body().msg, response.body().code);
                         if (response.body().data != null) {
                             merchantsClassifyList = response.body().data.getList();
@@ -225,7 +237,7 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                     }
 
                     @Override
-                    public void onError(com.lzy.okgo.model.Response<LzyResponse<MerchantsClassifyModel>> response) {
+                    public void onError(Response<LzyResponse<MerchantsClassifyModel>> response) {
                         super.onError(response);
                     }
                 });
@@ -237,12 +249,12 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                 .params(USERID, userId)
                 .execute(new JsonCallback<LzyResponse<ShopClassify>>() {
                     @Override
-                    public void onStart(com.lzy.okgo.request.base.Request<LzyResponse<ShopClassify>, ? extends com.lzy.okgo.request.base.Request> request) {
+                    public void onStart(Request<LzyResponse<ShopClassify>, ? extends Request> request) {
                         super.onStart(request);
                     }
 
                     @Override
-                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<ShopClassify>> response) {
+                    public void onSuccess(Response<LzyResponse<ShopClassify>> response) {
                         super.onSuccess(getActivity(), "", response.body().code);
                         if (response.body().data != null) {
                             ShopClassify shopClassify = response.body().data;
@@ -264,7 +276,7 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                     }
 
                     @Override
-                    public void onError(com.lzy.okgo.model.Response<LzyResponse<ShopClassify>> response) {
+                    public void onError(Response<LzyResponse<ShopClassify>> response) {
                         super.onError(response);
                     }
                 });
@@ -396,7 +408,7 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                     }
 
                     @Override
-                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<MerchantsInfo>> response) {
+                    public void onSuccess(Response<LzyResponse<MerchantsInfo>> response) {
                         super.onSuccess(getActivity(), "", response.body().code);
                         goneloadDialog();
                         mSwipeLayout.finishRefresh();
@@ -416,7 +428,7 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                     }
 
                     @Override
-                    public void onError(com.lzy.okgo.model.Response<LzyResponse<MerchantsInfo>> response) {
+                    public void onError(Response<LzyResponse<MerchantsInfo>> response) {
                         super.onError(response);
                         mSwipeLayout.finishRefresh(false);
                         ToastUtils.show(response.body().msg);
@@ -450,14 +462,18 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                 break;
             case R.id.button1:
                 mParam1 = 1;
-                button1.setSelected(true);
-                button2.setSelected(false);
+//                button1.setSelected(true);
+//                button2.setSelected(false);
+                line1.setVisibility(View.GONE);
+                line.setVisibility(View.VISIBLE);
                 getMerchantsClass();
                 break;
             case R.id.button2:
                 mParam1 = 2;
-                button1.setSelected(false);
-                button2.setSelected(true);
+                line1.setVisibility(View.VISIBLE);
+                line.setVisibility(View.GONE);
+//                button1.setSelected(false);
+//                button2.setSelected(true);
                 getShopClass();
                 break;
             case R.id.iv_home_nv_right:
