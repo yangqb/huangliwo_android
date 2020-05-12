@@ -85,7 +85,6 @@ public class MineInfoModel implements Serializable {
     private String homeCityName;// (string, optional),
     private int homeProvinceId;// (integer, optional),
     private String homeProvinceName;// (string, optional),
-
     public int getIsBind() {
         return isBind;
     }

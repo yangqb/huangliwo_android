@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
@@ -15,11 +16,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.feitianzhu.huangliwo.R;
+import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.login.LoginActivity;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.pushshop.bean.SetMealInfo;
 import com.feitianzhu.huangliwo.pushshop.bean.SingleGoodsModel;
 import com.feitianzhu.huangliwo.shop.adapter.ShopInfoDetailAdapter;
 import com.feitianzhu.huangliwo.shop.adapter.ShopInfoDetailImgAdapter;
+import com.feitianzhu.huangliwo.utils.SPUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -54,6 +58,8 @@ public class ShopSetMealDetailActivity extends BaseActivity {
     TextView setMealName;
     @BindView(R.id.setMealDescription)
     TextView setMealDescription;
+    private String token;
+    private String userId;
 
     @Override
     protected int getLayoutId() {
@@ -63,6 +69,8 @@ public class ShopSetMealDetailActivity extends BaseActivity {
     @Override
     protected void initView() {
         titleName.setText("套餐详情");
+        token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
+        userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         //rightImg.setVisibility(View.VISIBLE);
         //collectImg.setVisibility(View.VISIBLE);
         setMealInfo = (SetMealInfo) getIntent().getSerializableExtra(SETMEAL_INFO);
@@ -124,6 +132,11 @@ public class ShopSetMealDetailActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.tv_pay:
+                if (token == null || TextUtils.isEmpty(token)) {
+                    Intent intent = new Intent(this, LoginActivity.class);
+                    startActivity(intent);
+                    return;
+                }
                 Intent intent = new Intent(ShopSetMealDetailActivity.this, SetMealPayActivity.class);
                 intent.putExtra(SetMealPayActivity.ORDER_NO,"");
                 intent.putExtra(SetMealPayActivity.SETMEAL_ORDERI_NFO, setMealInfo);

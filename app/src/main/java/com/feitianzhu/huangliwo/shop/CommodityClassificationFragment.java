@@ -22,6 +22,7 @@ import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.SFFragment;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
+import com.feitianzhu.huangliwo.login.LoginActivity;
 import com.feitianzhu.huangliwo.login.LoginEvent;
 import com.feitianzhu.huangliwo.me.ui.PersonalCenterActivity2;
 import com.feitianzhu.huangliwo.me.ui.ScannerActivity;
@@ -43,6 +44,7 @@ import com.feitianzhu.huangliwo.shop.ui.dialog.ProvinceCallBack;
 import com.feitianzhu.huangliwo.shop.ui.dialog.ProvinceDialog2;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
+import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 import com.feitianzhu.huangliwo.view.CircleImageView;
 import com.feitianzhu.huangliwo.vip.VipActivity;
 import com.hjq.permissions.OnPermission;
@@ -201,7 +203,7 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
 //            button2.setSelected(true);
             getShopClass();
         }
-        requestData();
+        showHeadImg();
         initListener();
         return view;
     }
@@ -453,6 +455,11 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                 branchDialog.show(getChildFragmentManager());
                 break;
             case R.id.iv_head: //
+                if (token == null || TextUtils.isEmpty(token)) {
+                    intent = new Intent(getActivity(), LoginActivity.class);
+                    startActivity(intent);
+                    return;
+                }
                 intent = new Intent(getActivity(), PersonalCenterActivity2.class);
                 startActivity(intent);
                 break;
@@ -526,30 +533,11 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
     /*
      * 获取头像
      * */
-    private void requestData() {
-        token = SPUtils.getString(getActivity(), Constant.SP_ACCESS_TOKEN);
-        userId = SPUtils.getString(getActivity(), Constant.SP_LOGIN_USERID);
-        OkGo.<LzyResponse<MineInfoModel>>get(Urls.BASE_URL + POST_MINE_INFO)
-                .tag(this)
-                .params(ACCESSTOKEN, token)//
-                .params(USERID, userId)
-                .execute(new JsonCallback<LzyResponse<MineInfoModel>>() {
-                    @Override
-                    public void onSuccess(Response<LzyResponse<MineInfoModel>> response) {
-                        super.onSuccess(getActivity(), response.body().msg, response.body().code);
-                        if (response.body().data != null) {
-                            mineInfoModel = response.body().data;
-                            String headImg = response.body().data.getHeadImg();
-                            Glide.with(mContext).load(headImg).apply(RequestOptions.placeholderOf(R.mipmap.b08_01touxiang).error(R.mipmap.b08_01touxiang).dontAnimate())
-                                    .into(ivHead);
-                        }
-                    }
-
-                    @Override
-                    public void onError(Response<LzyResponse<MineInfoModel>> response) {
-                        super.onError(response);
-                    }
-                });
+    private void showHeadImg() {
+        mineInfoModel = UserInfoUtils.getUserInfo(getActivity());
+        String headImg = mineInfoModel.getHeadImg();
+        Glide.with(mContext).load(headImg).apply(RequestOptions.placeholderOf(R.mipmap.b08_01touxiang).error(R.mipmap.b08_01touxiang).dontAnimate())
+                .into(ivHead);
     }
 
     @Override
@@ -579,10 +567,7 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void onMessageEvent(LoginEvent event) {
         if (event == EDITOR_INFO) {
-            /*
-              启动App就去个人中心编辑个人信息，这里会收到信息，需要先获取userID，token不然会报错
-            * */
-            requestData();
+            showHeadImg();
         }
     }
 }

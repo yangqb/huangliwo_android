@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
+import com.feitianzhu.huangliwo.login.LoginActivity;
 import com.feitianzhu.huangliwo.me.HelperActivity;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.CollectionBody;
@@ -39,6 +41,7 @@ import com.feitianzhu.huangliwo.shop.adapter.ShopDetailAdapter;
 import com.feitianzhu.huangliwo.utils.MathUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
+import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 import com.feitianzhu.huangliwo.utils.doubleclick.SingleClick;
 import com.feitianzhu.huangliwo.view.CustomRefundView;
 import com.feitianzhu.huangliwo.vip.VipActivity;
@@ -191,6 +194,11 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.img_collect:
+                if (token == null || TextUtils.isEmpty(token)) {
+                    Intent intent = new Intent(this, LoginActivity.class);
+                    startActivity(intent);
+                    return;
+                }
                 if (collectImg.isSelected()) { //如果已经是收藏就删除收藏
                     deleteCollect();
                 } else {  //收藏
@@ -391,6 +399,11 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
             @SingleClick()
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                if (token == null || TextUtils.isEmpty(token)) {
+                    Intent intent = new Intent(ShopMerchantsDetailActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                    return;
+                }
                 if (mAdapter.getItemViewType(position) == MultipleMerchantsItem.GIFT_TYPE) {
                     if (mineInfoModel.getAccountType() != 0) {
                         if (multipleItemList.get(position).getGifModel().isGet == 0) {
@@ -516,9 +529,7 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
 
         OkGo.<LzyResponse<SetMealListInfo>>get(Urls.GET_SETMEAL_LIST)
                 .tag(this)
-                .params(ACCESSTOKEN, token)
                 .params("type", "2")
-                .params(USERID, userId)
                 .params("merchantId", merchantsId + "")
                 .execute(new JsonCallback<LzyResponse<SetMealListInfo>>() {
                     @Override
@@ -575,8 +586,6 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
     public void getMerchantInfo() {
         OkGo.<LzyResponse<MerchantsModel>>get(Urls.GET_MERCHANTS_DETAIL)
                 .tag(this)
-                .params(ACCESSTOKEN, token)
-                .params(USERID, userId)
                 .params("merchantId", merchantsId + "")
                 .execute(new JsonCallback<LzyResponse<MerchantsModel>>() {
                     @Override
@@ -623,31 +632,15 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
     }
 
     public void getUserInfo() {
-        OkGo.<LzyResponse<MineInfoModel>>get(Urls.BASE_URL + POST_MINE_INFO)
-                .tag(this)
-                .params(ACCESSTOKEN, token)//
-                .params(USERID, userId)
-                .execute(new JsonCallback<LzyResponse<MineInfoModel>>() {
-                    @Override
-                    public void onSuccess(Response<LzyResponse<MineInfoModel>> response) {
-                        super.onSuccess(ShopMerchantsDetailActivity.this, response.body().msg, response.body().code);
-                        if (response.body().code == 0 && response.body().data != null) {
-                            mineInfoModel = response.body().data;
-                            if (mineInfoModel.getAccountType() != 0) {
-                                llRebate.setVisibility(View.GONE);
-                                vipRebate.setVisibility(View.VISIBLE);
-                            } else {
-                                llRebate.setVisibility(View.VISIBLE);
-                                vipRebate.setVisibility(View.GONE);
-                            }
-                        }
-                    }
+        mineInfoModel = UserInfoUtils.getUserInfo(this);
+        if (mineInfoModel.getAccountType() != 0) {
+            llRebate.setVisibility(View.GONE);
+            vipRebate.setVisibility(View.VISIBLE);
+        } else {
+            llRebate.setVisibility(View.VISIBLE);
+            vipRebate.setVisibility(View.GONE);
+        }
 
-                    @Override
-                    public void onError(Response<LzyResponse<MineInfoModel>> response) {
-                        super.onError(response);
-                    }
-                });
     }
 
     /*
@@ -659,6 +652,7 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
 
     public class DataViewHolder implements ViewHolder<String> {
         private ImageView mImageView;
+
         @Override
         public int getLayoutId() {
             return R.layout.layout_banner_merchants;

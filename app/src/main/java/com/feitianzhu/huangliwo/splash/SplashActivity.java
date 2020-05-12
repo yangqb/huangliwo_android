@@ -78,7 +78,7 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public boolean onError(MediaPlayer mp, int what, int extra) {
                 KLog.e("视频播放失败");
-                realLogin();
+                startMainActivity();
                 return true;
             }
         });
@@ -86,7 +86,7 @@ public class SplashActivity extends AppCompatActivity {
         mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mediaPlayer) {
-                realLogin();
+                 startMainActivity();
             }
         });*/
 
@@ -97,7 +97,7 @@ public class SplashActivity extends AppCompatActivity {
         runnable = new Runnable() {
             @Override
             public void run() {
-                showPrivateDialog();
+                startMainActivity();
             }
         };
         handler.postDelayed(runnable, 3000);
@@ -119,40 +119,8 @@ public class SplashActivity extends AppCompatActivity {
                         requestPermission();
                     }
                 })).show();
-       /* new XPopup.Builder(this)
-                .asConfirm("", "巴拉巴啦啦啦啦啦啦啦巴拉巴啦啦啦啦啦啦啦巴拉巴啦啦啦啦啦啦啦", "暂不使用", "同意", new OnConfirmListener() {
-                    @Override
-                    public void onConfirm() {
-
-                        //context.startActivity(new Intent(context, ForgetPasswordActivity.class));
-                        Intent intent = new Intent(SplashActivity.this, LazyWebActivity.class);
-                        intent.putExtra(Constant.URL, Urls.BASE_URL + "fhwl/static/html/yonghuxieyi.html");
-                        intent.putExtra(Constant.H5_TITLE, "便利大本营用户隐私协议");
-                        startActivity(intent);
-                    }
-                }, new OnCancelListener() {
-                    @Override
-                    public void onCancel() {
-
-                    }
-                }, false)
-                .bindLayout(R.layout.layout_dialog_login)
-        .show();//绑定已有布局*/
-
     }
 
-
-    private void realLogin() {
-        String token = SPUtils.getString(SplashActivity.this, Constant.SP_ACCESS_TOKEN, "");
-        String userId = SPUtils.getString(SplashActivity.this, Constant.SP_LOGIN_USERID, "");
-
-        if (!TextUtils.isEmpty(token) && !TextUtils.isEmpty(userId)) {
-            startMainActivity();
-        } else {
-            startActivity(new Intent(SplashActivity.this, LoginActivity.class));
-            finish();
-        }
-    }
 
     private void startMainActivity() {
         startActivity(new Intent(SplashActivity.this, MainActivity.class));
@@ -209,7 +177,7 @@ public class SplashActivity extends AppCompatActivity {
       /*  if (mVideoView != null && mVideoView.isPlaying()) {
             mVideoView.stopPlayback();
         }*/
-        realLogin();
+        startMainActivity();
     }
 
     @Override

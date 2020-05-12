@@ -29,6 +29,7 @@ import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
+import com.feitianzhu.huangliwo.login.LoginActivity;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.AddShoppingCartBody;
 import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
@@ -94,7 +95,7 @@ public class ShopsDetailActivity extends BaseActivity {
     private ProductParameters productParameters;
     private List<BaseGoodsListBean.GoodsEvaluateMode> evalList;
     private List<ProductParameters.GoodsSpecifications> specifications = new ArrayList<>();
-    private MineInfoModel mineInfoModel = new MineInfoModel();
+    private MineInfoModel mineInfoModel;
     private List<String> imgs = new ArrayList<>();
     private String token;
     private String userId;
@@ -183,8 +184,6 @@ public class ShopsDetailActivity extends BaseActivity {
     public void getSpecifications() {
         OkGo.<LzyResponse<ProductParameters>>post(Urls.GET_PRODUCT_PARAMETERS)
                 .tag(this)
-                .params("accessToken", token)
-                .params("userId", userId)
                 .params("goodsId", goodsId + "")
                 .execute(new JsonCallback<LzyResponse<ProductParameters>>() {
                     @Override
@@ -222,8 +221,6 @@ public class ShopsDetailActivity extends BaseActivity {
     public void getDetail(String goodsId) {
         OkGo.<LzyResponse<BaseGoodsListBean>>get(Urls.GET_SHOP_DETAIL)
                 .tag(this)
-                .params("accessToken", token)
-                .params("userId", userId)
                 .params("goodsId", goodsId)
                 .execute(new JsonCallback<LzyResponse<BaseGoodsListBean>>() {
                     @Override
@@ -351,6 +348,11 @@ public class ShopsDetailActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.tv_pay:
+                if (token == null || TextUtils.isEmpty(token)) {
+                    intent = new Intent(this, LoginActivity.class);
+                    startActivity(intent);
+                    return;
+                }
                 isBuyGoods = true;
                 if (goodsListBean.getStockCount() <= 0) {
                     ToastUtils.show("当前商铺已售完");
@@ -379,6 +381,11 @@ public class ShopsDetailActivity extends BaseActivity {
                 startActivity(intent);
                 break;
             case R.id.add_shopping_cart:
+                if (token == null || TextUtils.isEmpty(token)) {
+                    intent = new Intent(this, LoginActivity.class);
+                    startActivity(intent);
+                    return;
+                }
                 isAddShoppingCart = true;
                 if (specifications.size() > 0) {
                     showSpeDialog();
@@ -388,6 +395,11 @@ public class ShopsDetailActivity extends BaseActivity {
                 }
                 break;
             case R.id.shopping_cart:
+                if (token == null || TextUtils.isEmpty(token)) {
+                    intent = new Intent(this, LoginActivity.class);
+                    startActivity(intent);
+                    return;
+                }
                 intent = new Intent(ShopsDetailActivity.this, ShoppingCartActivity.class);
                 startActivity(intent);
                 break;
@@ -405,6 +417,11 @@ public class ShopsDetailActivity extends BaseActivity {
                 }
                 break;
             case R.id.collect:
+                if (token == null || TextUtils.isEmpty(token)) {
+                    intent = new Intent(this, LoginActivity.class);
+                    startActivity(intent);
+                    return;
+                }
                 if (imgCollect.isSelected()) {
                     deleteCollect();
                 } else {
@@ -412,6 +429,11 @@ public class ShopsDetailActivity extends BaseActivity {
                 }
                 break;
             case R.id.right_img:
+                if (token == null || TextUtils.isEmpty(token)) {
+                    intent = new Intent(this, LoginActivity.class);
+                    startActivity(intent);
+                    return;
+                }
                 intent = new Intent(ShopsDetailActivity.this, ShareShopActivity.class);
                 intent.putExtra(GOODS_DATA, goodsListBean);
                 startActivity(intent);
