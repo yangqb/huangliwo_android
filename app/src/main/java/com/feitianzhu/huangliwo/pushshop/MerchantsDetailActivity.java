@@ -49,6 +49,7 @@ import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.SoftKeyBoardListener;
 import com.feitianzhu.huangliwo.utils.StringUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
+import com.feitianzhu.huangliwo.utils.doubleclick.SingleClick;
 import com.feitianzhu.huangliwo.view.BusinessHoursDialog;
 import com.feitianzhu.huangliwo.view.BusinessWeekDayDialog;
 import com.feitianzhu.huangliwo.view.CustomClassificationView;
@@ -441,6 +442,7 @@ public class MerchantsDetailActivity extends BaseActivity implements BusinessHou
 
     @OnClick({R.id.left_button, R.id.right_button, R.id.tvCode, R.id.tv_business_hours, R.id.tv_business_day, R.id.imageView1, R.id.imageView3, R.id.imageView4, R.id.imageView5, R.id.imageView6, R.id.imageView7
             , R.id.select_merchants_area, R.id.select_merchants_type, R.id.submit, R.id.ll_discount})
+    @SingleClick()
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.left_button:
