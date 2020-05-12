@@ -14,6 +14,8 @@ import android.widget.Toast;
 import com.feitianzhu.huangliwo.MainActivity;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.core.networkcheck.NetWorkState;
+import com.feitianzhu.huangliwo.core.networkcheck.NetworkConnectChangedReceiver;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.login.entity.LoginEntity;
@@ -135,8 +137,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
         mAccount = stringTrim(mAccountLayout);
         mPassword = stringTrim(mPasswordEditText1);
-
-
+        NetWorkState networkStatus = NetworkConnectChangedReceiver.getNetworkStatus(getApplicationContext());
+        if (networkStatus == NetWorkState.NONE) {
+            Toast.makeText(this, R.string.no_network, Toast.LENGTH_SHORT).show();
+            return;
+        }
         if (TextUtils.isEmpty(mAccount)) {
             Toast.makeText(this, R.string.please_input_phone, Toast.LENGTH_SHORT).show();
             return;
