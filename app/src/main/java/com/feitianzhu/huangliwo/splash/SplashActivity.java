@@ -49,7 +49,6 @@ public class SplashActivity extends AppCompatActivity {
     TextView mBtn;
     private Handler handler;
     private Runnable runnable;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
