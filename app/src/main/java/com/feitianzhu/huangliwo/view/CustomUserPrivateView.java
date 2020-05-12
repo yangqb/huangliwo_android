@@ -79,6 +79,7 @@ public class CustomUserPrivateView extends CenterPopupView {
         TextView tvConfirm = findViewById(R.id.tv_confirm);
         tvCancel.setText("暂不使用");
         tvConfirm.setText("确定");
+        tvConfirm.setTextColor(context.getResources().getColor(R.color.color_289cef));
 
         tvTitle.setText("隐私协议和隐私政策");
         String str1 = "巴拉巴拉报价单啦交多久啊点击可哦啊好歹爱受打击爱拍等级啊偶怕大数据盘";
@@ -126,11 +127,16 @@ public class CustomUserPrivateView extends CenterPopupView {
         span2.setSpan(new ClickableSpan() {
             @Override
             public void onClick(@NonNull View widget) {
+                if (widget instanceof TextView) {
+                    ((TextView) widget).setHighlightColor(Color.TRANSPARENT);
+                }
+
                 Intent intent = new Intent(context, LazyWebActivity.class);
                 intent.putExtra(Constant.URL, Urls.BASE_URL + "fhwl/static/html/yonghuxieyi.html");
                 intent.putExtra(Constant.H5_TITLE, "便利大本营用户隐私协议");
                 context.startActivity(intent);
             }
+
             //去除连接下划线
             @Override
             public void updateDrawState(TextPaint ds) {
@@ -138,6 +144,7 @@ public class CustomUserPrivateView extends CenterPopupView {
                 ds.setColor(ds.linkColor);
                 /**Remove the underline**/
                 ds.setUnderlineText(false);
+                ds.clearShadowLayer();
             }
         }, 0, span2.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
@@ -151,10 +158,23 @@ public class CustomUserPrivateView extends CenterPopupView {
         span4.setSpan(new ClickableSpan() {
             @Override
             public void onClick(@NonNull View widget) {
+                if (widget instanceof TextView) {
+                    ((TextView) widget).setHighlightColor(Color.TRANSPARENT);
+                }
                 Intent intent = new Intent(context, LazyWebActivity.class);
                 intent.putExtra(Constant.URL, Urls.BASE_URL + "fhwl/static/html/yonghuxieyi.html");
                 intent.putExtra(Constant.H5_TITLE, "便利大本营用户隐私协议");
                 context.startActivity(intent);
+            }
+
+            //去除连接下划线
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                /**set textColor**/
+                ds.setColor(ds.linkColor);
+                /**Remove the underline**/
+                ds.setUnderlineText(false);
+                ds.clearShadowLayer();
             }
         }, 0, span4.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
