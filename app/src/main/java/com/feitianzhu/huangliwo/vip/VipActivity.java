@@ -449,17 +449,17 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
                             if (presentsModel.list != null && presentsModel.list.size() > 0) {
                                 shopGiftList = presentsModel.list;
                                 adapter.setNewData(shopGiftList);
-                                adapter.notifyDataSetChanged();
+
                             }
                             if (presentsModel.shopGiftList != null && presentsModel.shopGiftList.size() > 0) {
                                 presentsList = presentsModel.shopGiftList;
                                 adapter2.setNewData(presentsList);
-                                adapter2.notifyDataSetChanged();
                             }
                             llGiftsPresents.setVisibility(View.VISIBLE);
                         } else {
                             llGiftsPresents.setVisibility(View.GONE);
                         }
+                        adapter.notifyDataSetChanged();
                         goneloadDialog();
                     }
 
