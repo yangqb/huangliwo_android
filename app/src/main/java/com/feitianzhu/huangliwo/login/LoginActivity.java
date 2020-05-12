@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -268,7 +269,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     @Override
                     public void onSuccess(Response<LzyResponse<MineInfoModel>> response) {
                         if (response.body().code == 0 && response.body().data != null) {
-                            UserInfoUtils.saveUserInfo(LoginActivity.this, response.body().data);
+                            MineInfoModel userInfo = response.body().data;
+                            UserInfoUtils.saveUserInfo(LoginActivity.this, userInfo);
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             startActivity(intent);
                             finish();
@@ -375,6 +377,19 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+
     }
 }
 
