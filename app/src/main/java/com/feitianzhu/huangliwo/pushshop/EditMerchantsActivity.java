@@ -53,7 +53,6 @@ import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.SoftKeyBoardListener;
 import com.feitianzhu.huangliwo.utils.StringUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
-import com.feitianzhu.huangliwo.utils.doubleclick.SingleClick;
 import com.feitianzhu.huangliwo.view.CustomClassificationView;
 import com.feitianzhu.huangliwo.view.CustomSelectPhotoView;
 import com.google.gson.Gson;
@@ -420,7 +419,6 @@ public class EditMerchantsActivity extends BaseActivity implements OnGetGeoCoder
     }
 
     @OnClick({R.id.left_button, R.id.imageView1, R.id.ll_discount, R.id.submit, R.id.tvCode, R.id.rl_merchants_type, R.id.rl_merchants_area})
-    @SingleClick()
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ll_discount:

@@ -85,10 +85,15 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
+            android:name="com.feitianzhu.huangliwo.me.ui.ShopsCreateActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
             android:name="com.feitianzhu.huangliwo.login.LoginActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|adjustPan" />
         <activity
             android:name="com.feitianzhu.huangliwo.login.RegisterActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
@@ -118,6 +123,14 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
         <activity
+            android:name="com.feitianzhu.huangliwo.payforme.PayForMeActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.feitianzhu.huangliwo.payforme.PayForMeRejectActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
             android:name="com.feitianzhu.huangliwo.me.ui.ScannerActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
@@ -135,6 +148,10 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="com.feitianzhu.huangliwo.me.ui.totalScore.SelectPayActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.feitianzhu.huangliwo.me.ui.totalScore.TransferVoucherActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
@@ -166,6 +183,10 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="com.feitianzhu.huangliwo.settings.GetPasswordActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.feitianzhu.huangliwo.me.ui.ShopsEditActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
         <activity
