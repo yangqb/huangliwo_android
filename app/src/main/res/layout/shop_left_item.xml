@@ -11,15 +11,13 @@
         android:layout_width="2dp"
         android:layout_height="match_parent"
         android:layout_marginRight="3dp"
-        android:background="@drawable/select_commodity_color"
-        android:visibility="gone" />
+        android:background="@drawable/select_commodity_color" />
 
     <TextView
         android:id="@+id/text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/select_commodity_color"
-        android:gravity="center"
+        android:gravity="center_vertical|start"
         android:text="111"
         android:textColor="@drawable/select_commodity_left"
         android:textSize="14sp" />

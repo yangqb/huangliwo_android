@@ -38,6 +38,7 @@ import com.feitianzhu.huangliwo.pushshop.bean.MerchantsClassifyModel;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsModel;
 import com.feitianzhu.huangliwo.shop.adapter.LeftAdapter;
 import com.feitianzhu.huangliwo.shop.adapter.RightAdapter;
+import com.feitianzhu.huangliwo.shop.adapter.RightAdapter1;
 import com.feitianzhu.huangliwo.shop.ui.SearchShopActivity;
 import com.feitianzhu.huangliwo.shop.ui.dialog.ProvinceCallBack;
 import com.feitianzhu.huangliwo.shop.ui.dialog.ProvinceDialog2;
@@ -118,7 +119,7 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
     private String mParam2;
     Unbinder unbinder;
     private LeftAdapter leftAdapter;
-    private RightAdapter rightAdapter;
+    private RightAdapter1 rightAdapter;
     private List<ShopClassify.GGoodsClsListBean> shopClassifyLsit = new ArrayList<>();
     private List<MerchantsClassifyModel.ListBean> merchantsClassifyList = new ArrayList<>();
     private List<MultiItemShopAndMerchants> multiItemShopAndMerchantsClass = new ArrayList<>();
@@ -172,7 +173,7 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
         leftRecyclerView.setAdapter(leftAdapter);
         leftAdapter.notifyDataSetChanged();
 
-        rightAdapter = new RightAdapter(multipleItemList);
+        rightAdapter = new RightAdapter1(multipleItemList);
         View mEmptyView = View.inflate(getActivity(), R.layout.view_common_nodata, null);
         ImageView img_empty = (ImageView) mEmptyView.findViewById(R.id.img_empty);
         img_empty.setOnClickListener(new View.OnClickListener() {
