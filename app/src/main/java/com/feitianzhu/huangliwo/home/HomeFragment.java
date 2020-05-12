@@ -82,7 +82,6 @@ public class HomeFragment extends SFFragment implements ProvinceCallBack {
     CircleImageView ivHead;
     @BindView(R.id.txt_location)
     TextView mTxtLocation;
-
     public HomeFragment() {
 
     }
@@ -131,6 +130,7 @@ public class HomeFragment extends SFFragment implements ProvinceCallBack {
             @Override
             public void onTabReselect(int position) {
             }
+
         });
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -145,7 +145,7 @@ public class HomeFragment extends SFFragment implements ProvinceCallBack {
                 int length = mList.size();
                 for (int i = 0; i < length; i++) {
                     TextView titleView = slidingTabLayout.getTitleView(i);
-                    titleView.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+                        titleView.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
                 }
 
                 //将当前选中的tab设置为粗体
@@ -157,6 +157,7 @@ public class HomeFragment extends SFFragment implements ProvinceCallBack {
             public void onPageScrollStateChanged(int state) {
 
             }
+
         });
 
     }

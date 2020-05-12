@@ -33,6 +33,7 @@
             android:drawableRight="@mipmap/i01_01xiala"
             android:drawablePadding="5dp"
             android:gravity="center"
+            android:visibility="gone"
             android:text=""
             android:textColor="@color/color_333333"
             android:textSize="17sp" />

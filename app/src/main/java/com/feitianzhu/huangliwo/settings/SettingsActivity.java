@@ -228,7 +228,6 @@ public class SettingsActivity extends BaseActivity {
                 deleteCache(itemFile.listFiles());
             }
         }
-        Toast.makeText(this, "清除成功", Toast.LENGTH_SHORT).show();
     }
 
     @Override

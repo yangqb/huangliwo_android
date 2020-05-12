@@ -2,6 +2,7 @@ package com.feitianzhu.huangliwo.shop;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -79,7 +80,7 @@ public class ShopsActivity extends BaseActivity {
             }
         });
         rightAdapter.setEmptyView(mEmptyView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         recyclerView.setAdapter(rightAdapter);
         recyclerView.setNestedScrollingEnabled(false);
         mSwipeLayout.setEnableLoadMore(false);
@@ -109,7 +110,7 @@ public class ShopsActivity extends BaseActivity {
                     intent.putExtra(ShopsDetailActivity.GOODS_DETAIL_DATA, goodsListBeans.get(position).getGoodsId());
                     startActivity(intent);
                 } else {
-                 
+
                 }
             }
         });
