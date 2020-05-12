@@ -1,8 +1,10 @@
 package com.feitianzhu.huangliwo.login;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
+import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.TextUtils;
 import android.view.View;
@@ -27,8 +29,10 @@ import com.feitianzhu.huangliwo.utils.Urls;
 import com.gyf.immersionbar.ImmersionBar;
 import com.hjq.toast.ToastUtils;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.Response;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 public class RegisterActivity extends BaseActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
@@ -56,6 +60,9 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     @BindView(R.id.tv_regist)
     TextView mRegister;
 
+
+    private int loginViewtoBottom;
+    private ObjectAnimator animatorUp, animatorDown;
     @BindView(R.id.ll_protocol)
     LinearLayout mProtocolLayout;
     @BindView(R.id.tv_protocol)
@@ -116,7 +123,9 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         mCheckBox.setBackgroundResource(R.mipmap.f01_06xuanzhong5);
         mRegister.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
         mForgetLayout.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
+
     }
+
 
     @Override
     protected void initData() {
@@ -152,7 +161,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 .params("smsCode", code)
                 .execute(new JsonCallback<LzyResponse>() {
                     @Override
-                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
+                    public void onSuccess(Response<LzyResponse> response) {
                         super.onSuccess(RegisterActivity.this, response.body().msg == null ? "" : response.body().msg, response.body().code);
                         if (response.body().code == 0) {
                             Toast.makeText(mContext, "注册成功", Toast.LENGTH_SHORT).show();
@@ -163,7 +172,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                     }
 
                     @Override
-                    public void onError(com.lzy.okgo.model.Response<LzyResponse> response) {
+                    public void onError(Response<LzyResponse> response) {
                         super.onError(response);
                     }
                 });
@@ -260,7 +269,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 .params("accessToken", token)
                 .execute(new JsonCallback<LzyResponse>() {
                     @Override
-                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
+                    public void onSuccess(Response<LzyResponse> response) {
                         super.onSuccess(RegisterActivity.this, response.body().msg, response.body().code);
                         if (response.body().code == 0) {
                             ToastUtils.show("验证码已发送至您的手机");
@@ -268,7 +277,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                     }
 
                     @Override
-                    public void onError(com.lzy.okgo.model.Response<LzyResponse> response) {
+                    public void onError(Response<LzyResponse> response) {
                         super.onError(response);
                     }
                 });
@@ -294,6 +303,13 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 mSignInButton.setBackgroundResource(R.drawable.button_shape_blue);
             }
         }
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
     }
 }
 

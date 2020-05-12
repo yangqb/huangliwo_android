@@ -26,6 +26,7 @@ public class LeftAdapter extends BaseMultiItemQuickAdapter<MultiItemShopAndMerch
 
     @Override
     protected void convert(BaseViewHolder helper, MultiItemShopAndMerchants item) {
+
         switch (helper.getItemViewType()) {
             case MultiItemShopAndMerchants.MERCHANTS_TYPE:
                 helper.setText(R.id.text, item.getMerchantsClassifyModel().getClsName());

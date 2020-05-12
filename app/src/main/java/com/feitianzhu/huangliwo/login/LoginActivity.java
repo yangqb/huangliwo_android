@@ -4,9 +4,9 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -29,7 +29,6 @@ import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.WXLoginInfo;
 import com.feitianzhu.huangliwo.model.WXLoginModel;
 import com.feitianzhu.huangliwo.model.WXUserInfo;
-import com.feitianzhu.huangliwo.pushshop.MerchantsDetailActivity;
 import com.feitianzhu.huangliwo.utils.EncryptUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.SoftKeyBoardListener;
@@ -39,10 +38,9 @@ import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 import com.google.gson.Gson;
 import com.gyf.immersionbar.ImmersionBar;
 import com.hjq.toast.ToastUtils;
-import com.lxj.xpopup.XPopup;
-import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.base.Request;
 import com.socks.library.KLog;
 import com.tencent.mm.opensdk.modelmsg.SendAuth;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
@@ -53,6 +51,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 import static com.feitianzhu.huangliwo.common.Constant.POST_MINE_INFO;
 
@@ -266,7 +265,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 .params(Constant.USERID, userId)
                 .execute(new JsonCallback<LzyResponse<MineInfoModel>>() {
                     @Override
-                    public void onStart(com.lzy.okgo.request.base.Request<LzyResponse<MineInfoModel>, ? extends com.lzy.okgo.request.base.Request> request) {
+                    public void onStart(Request<LzyResponse<MineInfoModel>, ? extends Request> request) {
                         super.onStart(request);
                     }
 
@@ -380,6 +379,13 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
     }
 }
 
