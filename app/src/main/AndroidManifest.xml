@@ -93,7 +93,7 @@
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|adjustPan" />
+            android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name="com.feitianzhu.huangliwo.login.RegisterActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
