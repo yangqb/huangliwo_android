@@ -4,9 +4,10 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -19,6 +20,8 @@ import android.widget.Toast;
 import com.feitianzhu.huangliwo.MainActivity;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.core.networkcheck.NetWorkState;
+import com.feitianzhu.huangliwo.core.networkcheck.NetworkConnectChangedReceiver;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.login.entity.LoginEntity;
@@ -27,7 +30,6 @@ import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.WXLoginInfo;
 import com.feitianzhu.huangliwo.model.WXLoginModel;
 import com.feitianzhu.huangliwo.model.WXUserInfo;
-import com.feitianzhu.huangliwo.pushshop.MerchantsDetailActivity;
 import com.feitianzhu.huangliwo.utils.EncryptUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.SoftKeyBoardListener;
@@ -37,10 +39,9 @@ import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 import com.google.gson.Gson;
 import com.gyf.immersionbar.ImmersionBar;
 import com.hjq.toast.ToastUtils;
-import com.lxj.xpopup.XPopup;
-import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.base.Request;
 import com.socks.library.KLog;
 import com.tencent.mm.opensdk.modelmsg.SendAuth;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
@@ -51,6 +52,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 import static com.feitianzhu.huangliwo.common.Constant.POST_MINE_INFO;
 
@@ -190,8 +192,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
         mAccount = stringTrim(mAccountLayout);
         mPassword = stringTrim(mPasswordEditText1);
-
-
+        NetWorkState networkStatus = NetworkConnectChangedReceiver.getNetworkStatus(getApplicationContext());
+        if (networkStatus == NetWorkState.NONE) {
+            Toast.makeText(this, R.string.no_network, Toast.LENGTH_SHORT).show();
+            return;
+        }
         if (TextUtils.isEmpty(mAccount)) {
             Toast.makeText(this, R.string.please_input_phone, Toast.LENGTH_SHORT).show();
             return;
@@ -261,14 +266,15 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 .params(Constant.USERID, userId)
                 .execute(new JsonCallback<LzyResponse<MineInfoModel>>() {
                     @Override
-                    public void onStart(com.lzy.okgo.request.base.Request<LzyResponse<MineInfoModel>, ? extends com.lzy.okgo.request.base.Request> request) {
+                    public void onStart(Request<LzyResponse<MineInfoModel>, ? extends Request> request) {
                         super.onStart(request);
                     }
 
                     @Override
                     public void onSuccess(Response<LzyResponse<MineInfoModel>> response) {
                         if (response.body().code == 0 && response.body().data != null) {
-                            UserInfoUtils.saveUserInfo(LoginActivity.this, response.body().data);
+                            MineInfoModel userInfo = response.body().data;
+                            UserInfoUtils.saveUserInfo(LoginActivity.this, userInfo);
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             startActivity(intent);
                             finish();
@@ -376,5 +382,24 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         super.onDestroy();
         EventBus.getDefault().unregister(this);
     }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
+    }
+
 }
 

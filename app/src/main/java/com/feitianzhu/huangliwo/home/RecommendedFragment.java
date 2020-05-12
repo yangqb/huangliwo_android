@@ -326,8 +326,6 @@ public class RecommendedFragment extends SFFragment {
         }
         OkGo.<LzyResponse<HomeModel>>get(Urls.GET_INDEX)
                 .tag(this)
-                .params("accessToken", token)
-                .params("userId", userId)
                 .params("longitude", longitude + "")
                 .params("latitude", latitude + "")
                 .execute(new JsonCallback<LzyResponse<HomeModel>>() {

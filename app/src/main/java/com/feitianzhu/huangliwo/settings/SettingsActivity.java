@@ -120,7 +120,7 @@ public class SettingsActivity extends BaseActivity {
                     @Override
                     public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<UserAuth>> response) {
                         super.onSuccess(SettingsActivity.this, response.body().msg, response.body().code);
-                        if (response.body().code == 100021105) {
+                        if (response.body().code == 100021105 || response.body().code == 100010100) {
                             mButton.setText("登陆");
                         } else {
                             mButton.setText("退出当前账号");
@@ -147,6 +147,7 @@ public class SettingsActivity extends BaseActivity {
                     }
                 });
     }
+
     @OnClick({R.id.rl_change_phone, R.id.rl_change_password, R.id.rl_change_second_password, R.id.rl_about,
             R.id.rl_feedback, R.id.rl_help, R.id.rl_clear_cache, R.id.button, R.id.rl_update, R.id.left_button})
     public void onClick(View v) {
@@ -199,7 +200,7 @@ public class SettingsActivity extends BaseActivity {
                 preferences = getSharedPreferences(SPUtils.PREFERENCE_NAME, MODE_PRIVATE);
                 edit = preferences.edit();
                 //删除存储文件
-                File[] files = new File("/data/data/"+this.getPackageName()+"/shared_prefs").listFiles();
+                File[] files = new File("/data/data/" + this.getPackageName() + "/shared_prefs").listFiles();
                 deleteCache(files);
                 Constant.ACCESS_TOKEN = "";
                 Constant.LOGIN_USERID = "";
@@ -212,20 +213,21 @@ public class SettingsActivity extends BaseActivity {
                 break;
         }
     }
+
     /**
      * 删除SharedPreferences数据文件
+     *
      * @param files
      */
-    public void deleteCache(File[] files){
+    public void deleteCache(File[] files) {
 
         boolean flag;
-        for(File itemFile : files){
+        for (File itemFile : files) {
             flag = itemFile.delete();
             if (flag == false) {
                 deleteCache(itemFile.listFiles());
             }
         }
-        Toast.makeText(this, "清除成功", Toast.LENGTH_SHORT).show();
     }
 
     @Override
