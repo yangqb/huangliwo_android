@@ -37,7 +37,6 @@ import com.feitianzhu.huangliwo.model.Shops;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsClassifyModel;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsModel;
 import com.feitianzhu.huangliwo.shop.adapter.LeftAdapter;
-import com.feitianzhu.huangliwo.shop.adapter.RightAdapter;
 import com.feitianzhu.huangliwo.shop.adapter.RightAdapter1;
 import com.feitianzhu.huangliwo.shop.ui.SearchShopActivity;
 import com.feitianzhu.huangliwo.shop.ui.dialog.ProvinceCallBack;
