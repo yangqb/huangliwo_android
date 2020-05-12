@@ -192,8 +192,9 @@ public class EditCommentsActivity extends BaseActivity {
         return cachePath;
     }*/
 
-    @SingleClick
+
     @OnClick({R.id.left_button, R.id.right_button})
+    @SingleClick()
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.left_button:
