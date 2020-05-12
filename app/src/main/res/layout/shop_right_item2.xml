@@ -3,39 +3,138 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
+    android:background="@color/color_f7f7f7"
     android:orientation="vertical">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/dp_10"
         android:layout_marginTop="@dimen/dp_10"
         android:background="@drawable/bg_ffffff_r5"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="10dp">
 
-
-        <com.itheima.roundedimageview.RoundedImageView
-            android:id="@+id/image"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:scaleType="fitXY"
-            android:src="@mipmap/g10_04weijiazai"
-            app:riv_corner_radius="10dp"
-            app:riv_oval="false" />
-
-        <TextView
-            android:id="@+id/text"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:maxLines="1"
-            android:text="dfsf"
-            android:textColor="@color/bank_bg01"
-            android:textSize="13sp" />
+            android:orientation="vertical">
+
+            <com.itheima.roundedimageview.RoundedImageView
+                android:id="@+id/image"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/g10_04weijiazai"
+                app:riv_corner_radius="5dp"
+                app:riv_oval="false" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/image"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_category"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="商品名称"
+                    android:textColor="@color/color_333333"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tvContent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:text=""
+                    android:textColor="@color/color_666666"
+                    android:textSize="12sp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textColor="@color/color_F7AF25"
+                        android:textSize="16sp" />
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="18dp"
+                        android:layout_marginLeft="5dp">
+
+                        <LinearLayout
+                            android:id="@+id/ll_rebate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:visibility="gone">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/shape_rebate_left_vip"
+                                android:gravity="end|center_vertical"
+                                android:paddingLeft="5dp"
+                                android:paddingRight="5dp"
+                                android:text="成为会员"
+                                android:textColor="@color/color_333333"
+                                android:textSize="10sp" />
+
+                            <TextView
+                                android:id="@+id/tv_rebate"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/shape_rebate_right_vip"
+                                android:ellipsize="end"
+                                android:gravity="center_vertical"
+                                android:maxLines="1"
+                                android:paddingLeft="5dp"
+                                android:paddingRight="5dp"
+                                android:text="省¥0.00"
+                                android:textColor="@color/color_333333"
+                                android:textSize="10sp" />
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/vip_rebate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_centerVertical="true"
+                            android:background="@drawable/shape_rebate"
+                            android:gravity="center"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:text="省¥0.00"
+                            android:textColor="@color/color_333333"
+                            android:textSize="10sp"
+                            android:visibility="gone" />
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </RelativeLayout>
     </LinearLayout>
 
 
