@@ -1,5 +1,6 @@
 package com.feitianzhu.huangliwo.splash;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -10,7 +11,9 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.view.KeyEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.feitianzhu.huangliwo.MainActivity;
@@ -20,6 +23,7 @@ import com.feitianzhu.huangliwo.common.base.LazyWebActivity;
 import com.feitianzhu.huangliwo.login.LoginActivity;
 import com.feitianzhu.huangliwo.settings.ChangeLoginPassword;
 import com.feitianzhu.huangliwo.shop.ui.SearchShopActivity;
+import com.feitianzhu.huangliwo.utils.GlideUtils;
 import com.feitianzhu.huangliwo.utils.LocationUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
@@ -45,6 +49,8 @@ public class SplashActivity extends AppCompatActivity {
 
     @BindView(R.id.videoview)
     CustomVideoView mVideoView;
+    @BindView(R.id.image)
+    ImageView image;
     private static final int REQUEST_CODE_PERMISSION = 100;
     @BindView(R.id.btn)
     TextView mBtn;
@@ -57,13 +63,14 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
         ImmersionBar.with(this)
-                .fitsSystemWindows(true)
-                .navigationBarColor(R.color.white)
-                .navigationBarDarkIcon(true)
+                .fitsSystemWindows(false)
+                .fullScreen(true)
                 .statusBarDarkFont(true, 0.2f)
-                .statusBarColor(R.color.bg_yellow)
+                .statusBarColor(R.color.transparent)
                 .init();
+
         //initPermision();
+        GlideUtils.getImageView2(this, R.mipmap.dingbu, image);
         showPrivateDialog();
         SPUtils.putBoolean(this, Constant.LOGIN_DIALOG, true);//重新进入APP才弹出异地登录的弹框
     }
@@ -207,4 +214,16 @@ public class SplashActivity extends AppCompatActivity {
         res.updateConfiguration(newConfig, displayMetrics);
         return res;
     }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+            finish();
+            System.exit(0);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+
+    }
+
 }
