@@ -281,7 +281,8 @@ public class MyOrderActivity2 extends BaseActivity {
                                 intent.putExtra(EditApplyRefundActivity.ORDER_AMOUNT, goodsOrderList.get(position).getAmount());
                                 intent.putExtra(EditApplyRefundActivity.ORDER_TYPE, type);
                                 startActivityForResult(intent, REFUND_REQUEST_CODE);
-                            } else if (goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_COMPLETED) {
+                            } else if (goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_COMPLETED ||
+                                    goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_REFUNDED || goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_CANCEL) {
                                 //删除订单，
                                 new XPopup.Builder(MyOrderActivity2.this)
                                         .asConfirm("确定要删除该订单？", "", "关闭", "确定", new OnConfirmListener() {
@@ -361,8 +362,7 @@ public class MyOrderActivity2 extends BaseActivity {
                                         .bindLayout(R.layout.layout_dialog_login) //绑定已有布局
                                         .show();
                             } else if (goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_REFUND
-                                    || goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_REFUNDED
-                                    || goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_CANCEL) {
+                                    || goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_REFUNDED) {
                                 //查看详情
                                 intent = new Intent(MyOrderActivity2.this, OrderDetailActivity.class);
                                 intent.putExtra(OrderDetailActivity.ORDER_NO, goodsOrderList.get(position).getOrderNo());
