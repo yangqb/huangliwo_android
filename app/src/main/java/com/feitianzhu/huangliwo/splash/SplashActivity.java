@@ -19,6 +19,7 @@ import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.LazyWebActivity;
 import com.feitianzhu.huangliwo.login.LoginActivity;
 import com.feitianzhu.huangliwo.settings.ChangeLoginPassword;
+import com.feitianzhu.huangliwo.shop.ui.SearchShopActivity;
 import com.feitianzhu.huangliwo.utils.LocationUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
@@ -49,6 +50,7 @@ public class SplashActivity extends AppCompatActivity {
     TextView mBtn;
     private Handler handler;
     private Runnable runnable;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,6 +109,9 @@ public class SplashActivity extends AppCompatActivity {
     public void showPrivateDialog() {
 
         new XPopup.Builder(this)
+                .autoDismiss(false)
+                .dismissOnTouchOutside(false)
+                .enableDrag(false)
                 .asCustom(new CustomUserPrivateView(this).setOnClickCancelListener(new CustomUserPrivateView.OnClickCancelListener() {
                     @Override
                     public void onCancel() {

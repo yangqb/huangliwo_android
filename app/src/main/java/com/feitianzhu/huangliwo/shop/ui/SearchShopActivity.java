@@ -58,7 +58,7 @@ public class SearchShopActivity extends BaseActivity {
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     @BindView(R.id.refreshLayout)
-    SmartRefreshLayout mSwipeLayout;
+    RefreshLayout mSwipeLayout;
     @BindView(R.id.emptyView)
     LinearLayout emptyView;
     private String token;
@@ -135,10 +135,16 @@ public class SearchShopActivity extends BaseActivity {
                                 mAdapter.setNewData(shopAndMerchants);
                                 mAdapter.notifyDataSetChanged();
                             } else {
-                                emptyView.setVisibility(View.VISIBLE);
+                                if (!isLoadMore) {
+                                    emptyView.setVisibility(View.VISIBLE);
+                                } else {
+                                    ToastUtils.show("没有更多数据了");
+                                }
                             }
                         } else {
-                            emptyView.setVisibility(View.VISIBLE);
+                            if (!isLoadMore) {
+                                emptyView.setVisibility(View.VISIBLE);
+                            }
                         }
                     }
 

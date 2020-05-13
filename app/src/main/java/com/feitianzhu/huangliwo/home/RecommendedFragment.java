@@ -10,6 +10,7 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,7 @@ import com.feitianzhu.huangliwo.home.adapter.RecommendedAdapter;
 import com.feitianzhu.huangliwo.home.entity.HomeEntity;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
+import com.feitianzhu.huangliwo.login.LoginActivity;
 import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
 import com.feitianzhu.huangliwo.model.HomeModel;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
@@ -277,6 +279,11 @@ public class RecommendedFragment extends SFFragment {
                 jumpActivity(mHomeMode.goodClsImgs.get(4).clsId);
                 break;
             case R.id.activityImg:
+                if (token == null || TextUtils.isEmpty(token)) {
+                    intent = new Intent(getContext(), LoginActivity.class);
+                    startActivity(intent);
+                    return;
+                }
                 intent = new Intent(getContext(), VipActivity.class);
                 intent.putExtra(VipActivity.MINE_INFO, userInfo);
                 startActivity(intent);

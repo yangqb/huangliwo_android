@@ -156,6 +156,7 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
                         confirmPopupView = new XPopup.Builder(context)
                                 .autoDismiss(false)
                                 .dismissOnTouchOutside(false)
+                                .enableDrag(false)
                                 .asConfirm("", "您的账号已在其他设备登陆，如果这不是您的操作，请及时修改密码并重新登陆。", "重新登录", "找回密码", new OnConfirmListener() {
                                     @Override
                                     public void onConfirm() {
