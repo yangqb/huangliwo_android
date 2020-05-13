@@ -3,6 +3,7 @@ package com.feitianzhu.huangliwo.shop;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -71,7 +72,6 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
-import static com.feitianzhu.huangliwo.common.Constant.POST_MINE_INFO;
 import static com.feitianzhu.huangliwo.common.Constant.USERID;
 import static com.feitianzhu.huangliwo.login.LoginEvent.EDITOR_INFO;
 
@@ -115,6 +115,14 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
     View line1;
     @BindView(R.id.line)
     View line;
+    @BindView(R.id.nescro)
+    NestedScrollView nescro;
+    @BindView(R.id.title1)
+    TextView title1;
+    @BindView(R.id.title2)
+    TextView title2;
+    @BindView(R.id.title3)
+    TextView title3;
 
     private int mParam1 = 2;
     private String mParam2;
@@ -209,6 +217,10 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
     }
 
     public void getMerchantsClass() {
+        title1.setText("热门商铺");
+        title2.setText("优质商家");
+        title3.setText("为您推荐");
+        nescro.scrollTo(0, 0);
         OkGo.<LzyResponse<MerchantsClassifyModel>>get(Urls.GET_MERCHANTS_TYPE)
                 .tag(this)
                 .params(ACCESSTOKEN, token)
@@ -246,6 +258,10 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
     }
 
     public void getShopClass() {
+        nescro.scrollTo(0, 0);
+        title1.setText("热门商品");
+        title2.setText("精品推荐");
+        title3.setText("为您推荐");
         OkGo.<LzyResponse<ShopClassify>>post(Urls.GET_SHOP_CLASS)
                 .params(ACCESSTOKEN, token)
                 .params(USERID, userId)
@@ -288,6 +304,7 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
         leftAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                nescro.scrollTo(0, 0);
                 leftAdapter.setSelect(position);
                 leftAdapter.notifyDataSetChanged();
                 if (leftAdapter.getItemViewType(position) == MultiItemShopAndMerchants.SHOP_TYPE) {
@@ -319,14 +336,14 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
             }
         });
 
-        rightAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
-            @Override
-            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                Intent intent = new Intent(getContext(), VipActivity.class);
-                intent.putExtra(VipActivity.MINE_INFO, mineInfoModel);
-                startActivity(intent);
-            }
-        });
+//        rightAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+//            @Override
+//            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+//                Intent intent = new Intent(getContext(), VipActivity.class);
+//                intent.putExtra(VipActivity.MINE_INFO, mineInfoModel);
+//                startActivity(intent);
+//            }
+//        });
 
         mSwipeLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override

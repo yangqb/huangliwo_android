@@ -182,7 +182,7 @@ public class UpdateMyDialogFragment extends DialogFragment implements View.OnCli
         mRoot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!mUpdateApp.isConstraint()){
+                if (!mUpdateApp.isConstraint()) {
                     dismiss();
 
                 }
@@ -221,7 +221,7 @@ public class UpdateMyDialogFragment extends DialogFragment implements View.OnCli
             //更新内容
             mContentTextView.setText(updateLog);
             //标题
-            mTvTitleTextView.setText(String.format("黄鹂窝全新版本%s上线", newVersion));
+            mTvTitleTextView.setText(String.format("全新版本%s上线", newVersion));
             //强制更新
             if (mUpdateApp.isConstraint()) {
                 mIgnore.setVisibility(View.GONE);
