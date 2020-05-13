@@ -276,6 +276,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                             MineInfoModel userInfo = response.body().data;
                             UserInfoUtils.saveUserInfo(LoginActivity.this, userInfo);
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
                             finish();
                         }

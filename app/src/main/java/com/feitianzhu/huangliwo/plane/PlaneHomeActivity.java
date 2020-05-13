@@ -8,9 +8,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cretin.tools.cityselect.model.CityModel;
+import com.feitianzhu.huangliwo.MainActivity;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.LazyWebActivity;
+import com.feitianzhu.huangliwo.login.LoginActivity;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.CustomFightCityInfo;
 import com.feitianzhu.huangliwo.utils.DateUtils;
@@ -254,6 +256,11 @@ public class PlaneHomeActivity extends BaseActivity {
                 startActivity(intent);
                 break;
             case R.id.ll_order:
+                if (token == null || TextUtils.isEmpty(token)) {
+                    intent = new Intent(PlaneHomeActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                    return;
+                }
                 intent = new Intent(PlaneHomeActivity.this, PlaneOrderListActivity.class);
                 startActivity(intent);
                 break;

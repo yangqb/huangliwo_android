@@ -245,6 +245,11 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
                 }
                 break;
             case R.id.ll_rebate:
+                if (token == null || TextUtils.isEmpty(token)) {
+                    Intent intent = new Intent(this, LoginActivity.class);
+                    startActivity(intent);
+                    return;
+                }
                 Intent intent = new Intent(ShopMerchantsDetailActivity.this, VipActivity.class);
                 intent.putExtra(VipActivity.MINE_INFO, mineInfoModel);
                 startActivity(intent);

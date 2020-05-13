@@ -546,6 +546,14 @@ public class MyCenterFragment extends SFFragment {
         }
     }
 
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            getUserInfo();
+        }
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void onAuthEvent(AuthEvent mAuth) {
         if (mAuth == AuthEvent.SUCCESS) {

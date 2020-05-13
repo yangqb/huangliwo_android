@@ -234,8 +234,10 @@ public class SettingsActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         //清空数据
-        edit.clear();
-        edit.commit();
+        if (edit != null) {
+            edit.clear();
+            edit.commit();
+        }
     }
 
     public void updateDiy() {
