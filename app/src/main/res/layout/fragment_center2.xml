@@ -102,7 +102,7 @@
                                         android:layout_height="wrap_content"
                                         android:ellipsize="end"
                                         android:lines="1"
-                                        android:text="morning"
+                                        android:text=""
                                         android:textColor="@color/color_333333"
                                         android:textSize="19sp"
                                         android:textStyle="bold" />
@@ -111,7 +111,7 @@
                                         android:id="@+id/gradeName"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="普通会员"
+                                        android:text=""
                                         android:textColor="@color/color_333333"
                                         android:textSize="13sp" />
 

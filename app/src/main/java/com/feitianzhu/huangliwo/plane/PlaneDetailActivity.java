@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ClickableSpan;
@@ -24,6 +25,7 @@ import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.PlaneResponse;
+import com.feitianzhu.huangliwo.login.LoginActivity;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.model.CustomFightCityInfo;
 import com.feitianzhu.huangliwo.model.CustomPlaneDetailInfo;
@@ -348,6 +350,11 @@ public class PlaneDetailActivity extends BaseActivity {
                 Intent intent;
                 switch (view.getId()) {
                     case R.id.ll_rebate:
+                        if (token == null || TextUtils.isEmpty(token)) {
+                            intent = new Intent(PlaneDetailActivity.this, LoginActivity.class);
+                            startActivity(intent);
+                            return;
+                        }
                         MineInfoModel userInfo = UserInfoUtils.getUserInfo(mContext);
                         intent = new Intent(PlaneDetailActivity.this, VipActivity.class);
                         intent.putExtra(VipActivity.MINE_INFO, userInfo);
@@ -371,6 +378,11 @@ public class PlaneDetailActivity extends BaseActivity {
                         getRefundChange();
                         break;
                     case R.id.btn_reserve:
+                        if (token == null || TextUtils.isEmpty(token)) {
+                            intent = new Intent(PlaneDetailActivity.this, LoginActivity.class);
+                            startActivity(intent);
+                            return;
+                        }
                         intent = new Intent(PlaneDetailActivity.this, EditPlaneReserveActivity.class);
                         intent.putExtra(EditPlaneReserveActivity.PLANE_TYPE, type);
                         if (type == 0) {

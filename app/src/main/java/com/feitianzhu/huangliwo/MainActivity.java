@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -17,12 +18,14 @@ import com.feitianzhu.huangliwo.home.RecommendedFragment;
 import com.feitianzhu.huangliwo.home.HomeFragment;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
+import com.feitianzhu.huangliwo.login.LoginActivity;
 import com.feitianzhu.huangliwo.me.MyCenterFragment;
 import com.feitianzhu.huangliwo.message.MessageFragment;
 import com.feitianzhu.huangliwo.model.HomePopModel;
 import com.feitianzhu.huangliwo.model.LocationPost;
 import com.feitianzhu.huangliwo.model.MyPoint;
 import com.feitianzhu.huangliwo.model.UpdateAppModel;
+import com.feitianzhu.huangliwo.plane.PlaneDetailActivity;
 import com.feitianzhu.huangliwo.shop.CommodityClassificationFragment;
 import com.feitianzhu.huangliwo.shop.NewYearShoppingActivity;
 import com.feitianzhu.huangliwo.update.UpdateMyDialogFragment;
@@ -213,6 +216,11 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Re
                 break;
 
             case R.id.ly_me:
+                if (token == null || TextUtils.isEmpty(token)) {
+                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                    return;
+                }
                 selected();
                 mTxtMe.setSelected(true);
                 mImgMe.setSelected(true);
