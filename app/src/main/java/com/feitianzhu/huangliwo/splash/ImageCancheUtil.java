@@ -36,8 +36,10 @@ public class ImageCancheUtil {
      * @return
      */
     public static String getFilePath(String url) {
-        String fileName = Base64.encodeToString(url.getBytes(), Base64.DEFAULT);
-        return getImageCachePath() + "/" + fileName;
+        String fileName = Base64.encodeToString(url.getBytes(), Base64.URL_SAFE | Base64.NO_WRAP);
+        //TODO 猜测可能是base64之后文件名太长,有手机不支持, 2020-5-14
+        String substring = fileName.substring(fileName.length() - 20, fileName.length());
+        return getImageCachePath() + "/" + substring;
     }
 
     /**
@@ -87,15 +89,16 @@ public class ImageCancheUtil {
                         String filePath = getFilePath(filename);
                         File file = new File(filePath);
                         try {
+
                             FileOutputStream out = new FileOutputStream(file);
                             //压缩
                             bitmap.compress(Bitmap.CompressFormat.PNG, 80, out);
                             out.flush();
                             out.close();
-                            Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                            Uri uri = Uri.fromFile(file);
-                            intent.setData(uri);
-                            activity.sendBroadcast(intent);//这个广播的目的就是更新图库，发了这个广播进入相册就可以找到你保存的图片了！，记得要传你更新的file
+//                            Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+//                            Uri uri = Uri.fromFile(file);
+//                            intent.setData(uri);
+//                            activity.sendBroadcast(intent);//这个广播的目的就是更新图库，发了这个广播进入相册就可以找到你保存的图片了！，记得要传你更新的file
                             return filePath;
                         } catch (Exception e) {
                             e.printStackTrace();
