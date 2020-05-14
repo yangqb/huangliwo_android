@@ -301,6 +301,7 @@ public class MySelfMerchantsActivity extends BaseActivity {
                                 String strIncome = String.format(Locale.getDefault(), "%.2f", merchantsList.get(position).getIncome());
                                 String strBalance = String.format(Locale.getDefault(), "%.2f", balance);
                                 setSpannableString(tvProfit, tvWithdrawal, strIncome, strBalance);
+                                getUnConsumeCount();
                             }
                         }))
                 .show();
