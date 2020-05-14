@@ -1,5 +1,4 @@
 package com.feitianzhu.huangliwo.pushshop;
-
 import android.Manifest;
 import android.content.Intent;
 import android.graphics.Color;

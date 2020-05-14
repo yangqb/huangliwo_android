@@ -1,5 +1,4 @@
 package com.feitianzhu.huangliwo.shop.adapter;
-
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -255,3 +254,4 @@ public class OrderAdapter extends BaseMultiItemQuickAdapter<MultipleItemOrderMod
         view.append(span5);
     }
 }
+

@@ -260,6 +260,7 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
         title2.setText("优质商家");
         title3.setText("为您推荐");
         nescro.scrollTo(0, 0);
+        leftRecyclerView.scrollToPosition(0);
         OkGo.<LzyResponse<MerchantsClassifyModel>>get(Urls.GET_MERCHANTS_TYPE)
                 .tag(this)
                 .params(ACCESSTOKEN, token)
@@ -298,6 +299,8 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
 
     public void getShopClass() {
         nescro.scrollTo(0, 0);
+        leftRecyclerView.scrollToPosition(0);
+
         title1.setText("热门商品");
         title2.setText("精品推荐");
         title3.setText("为您推荐");
