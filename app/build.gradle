@@ -155,6 +155,11 @@ dependencies {
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.50'
     //必须使用
     implementation 'com.lzy.net:okgo:3.0.4'
+    implementation 'com.lzy.net:okrx:1.0.2'
+
+    //implementation 'com.lzy.net:okrx2:2.0.2'
+    implementation 'com.lzy.net:okserver:2.0.5'
+    implementation 'io.reactivex:rxandroid:+'
 
     //以下三个选择添加，okrx和okrx2不能同时使用
     //implementation 'com.lzy.net:okrx:1.0.2'
