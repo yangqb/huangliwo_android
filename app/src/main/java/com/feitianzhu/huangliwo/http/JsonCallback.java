@@ -15,14 +15,18 @@
  */
 package com.feitianzhu.huangliwo.http;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.login.LoginActivity;
 import com.feitianzhu.huangliwo.settings.ChangeLoginPassword;
 import com.feitianzhu.huangliwo.settings.ChangePasswordActivity;
 import com.feitianzhu.huangliwo.settings.SettingsActivity;
+import com.feitianzhu.huangliwo.splash.SplashActivity;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
@@ -31,6 +35,7 @@ import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.impl.ConfirmPopupView;
 import com.lxj.xpopup.interfaces.OnCancelListener;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
+import com.lxj.xpopup.interfaces.XPopupCallback;
 import com.lzy.okgo.callback.AbsCallback;
 import com.lzy.okgo.request.base.Request;
 
@@ -144,10 +149,13 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
         if (errorCode != 0) {
             if (errorCode == 100021105) {
                 boolean loginDialog = SPUtils.getBoolean(context, Constant.LOGIN_DIALOG);
-                if (loginDialog) {
+                String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN, "");
                     if (confirmPopupView == null) {
                         confirmPopupView = new XPopup.Builder(context)
-                                .asConfirm("", "您的账号已在其他设备登陆，如果这不是您的操作，请及时修改密码并重新登陆。", "忽略", "修改密码", new OnConfirmListener() {
+                                .autoDismiss(false)
+                                .dismissOnTouchOutside(false)
+                                .enableDrag(false)
+                                .asConfirm("", "您的账号已在其他设备登陆，如果这不是您的操作，请及时修改密码并重新登陆。", "重新登录", "找回密码", new OnConfirmListener() {
                                     @Override
                                     public void onConfirm() {
                                         //context.startActivity(new Intent(context, ForgetPasswordActivity.class));
@@ -157,14 +165,33 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
                                 }, new OnCancelListener() {
                                     @Override
                                     public void onCancel() {
-
+                                        SPUtils.putString(context, Constant.SP_PASSWORD, "");
+                                        SPUtils.putString(context, Constant.SP_LOGIN_USERID, "");
+                                        SPUtils.putString(context, Constant.SP_ACCESS_TOKEN, "");
+                                        Constant.ACCESS_TOKEN = "";
+                                        Constant.LOGIN_USERID = "";
+                                        Constant.PHONE = "";
+                                        Intent intent = new Intent(context, LoginActivity.class);
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        context.startActivity(intent);
                                     }
                                 }, false)
                                 .bindLayout(R.layout.layout_dialog_login);
                         confirmPopupView.show();//绑定已有布局
                     }
                     SPUtils.putBoolean(context, Constant.LOGIN_DIALOG, false);
-                }
+
+
+            } else if (errorCode == 100010100) {
+                SPUtils.putString(context, Constant.SP_PASSWORD, "");
+                SPUtils.putString(context, Constant.SP_LOGIN_USERID, "");
+                SPUtils.putString(context, Constant.SP_ACCESS_TOKEN, "");
+                Constant.ACCESS_TOKEN = "";
+                Constant.LOGIN_USERID = "";
+                Constant.PHONE = "";
+                Intent intent = new Intent(context, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
             } else {
                 ToastUtils.show(string == null ? "" : string);
             }

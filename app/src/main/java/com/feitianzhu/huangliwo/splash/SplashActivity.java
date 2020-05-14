@@ -1,5 +1,6 @@
 package com.feitianzhu.huangliwo.splash;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -10,7 +11,9 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.view.KeyEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.feitianzhu.huangliwo.MainActivity;
@@ -19,6 +22,8 @@ import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.LazyWebActivity;
 import com.feitianzhu.huangliwo.login.LoginActivity;
 import com.feitianzhu.huangliwo.settings.ChangeLoginPassword;
+import com.feitianzhu.huangliwo.shop.ui.SearchShopActivity;
+import com.feitianzhu.huangliwo.utils.GlideUtils;
 import com.feitianzhu.huangliwo.utils.LocationUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
@@ -44,24 +49,28 @@ public class SplashActivity extends AppCompatActivity {
 
     @BindView(R.id.videoview)
     CustomVideoView mVideoView;
+    @BindView(R.id.image)
+    ImageView image;
     private static final int REQUEST_CODE_PERMISSION = 100;
     @BindView(R.id.btn)
     TextView mBtn;
     private Handler handler;
     private Runnable runnable;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
         ImmersionBar.with(this)
-                .fitsSystemWindows(true)
-                .navigationBarColor(R.color.white)
-                .navigationBarDarkIcon(true)
+                .fitsSystemWindows(false)
+                .fullScreen(true)
                 .statusBarDarkFont(true, 0.2f)
-                .statusBarColor(R.color.bg_yellow)
+                .statusBarColor(R.color.transparent)
                 .init();
+
         //initPermision();
+        GlideUtils.getImageView2(this, R.mipmap.dingbu, image);
         showPrivateDialog();
         SPUtils.putBoolean(this, Constant.LOGIN_DIALOG, true);//重新进入APP才弹出异地登录的弹框
     }
@@ -78,7 +87,7 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public boolean onError(MediaPlayer mp, int what, int extra) {
                 KLog.e("视频播放失败");
-                realLogin();
+                startMainActivity();
                 return true;
             }
         });
@@ -86,7 +95,7 @@ public class SplashActivity extends AppCompatActivity {
         mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mediaPlayer) {
-                realLogin();
+                 startMainActivity();
             }
         });*/
 
@@ -97,7 +106,7 @@ public class SplashActivity extends AppCompatActivity {
         runnable = new Runnable() {
             @Override
             public void run() {
-                showPrivateDialog();
+                startMainActivity();
             }
         };
         handler.postDelayed(runnable, 3000);
@@ -107,6 +116,9 @@ public class SplashActivity extends AppCompatActivity {
     public void showPrivateDialog() {
 
         new XPopup.Builder(this)
+                .autoDismiss(false)
+                .dismissOnTouchOutside(false)
+                .enableDrag(false)
                 .asCustom(new CustomUserPrivateView(this).setOnClickCancelListener(new CustomUserPrivateView.OnClickCancelListener() {
                     @Override
                     public void onCancel() {
@@ -119,40 +131,8 @@ public class SplashActivity extends AppCompatActivity {
                         requestPermission();
                     }
                 })).show();
-       /* new XPopup.Builder(this)
-                .asConfirm("", "巴拉巴啦啦啦啦啦啦啦巴拉巴啦啦啦啦啦啦啦巴拉巴啦啦啦啦啦啦啦", "暂不使用", "同意", new OnConfirmListener() {
-                    @Override
-                    public void onConfirm() {
-
-                        //context.startActivity(new Intent(context, ForgetPasswordActivity.class));
-                        Intent intent = new Intent(SplashActivity.this, LazyWebActivity.class);
-                        intent.putExtra(Constant.URL, Urls.BASE_URL + "fhwl/static/html/yonghuxieyi.html");
-                        intent.putExtra(Constant.H5_TITLE, "便利大本营用户隐私协议");
-                        startActivity(intent);
-                    }
-                }, new OnCancelListener() {
-                    @Override
-                    public void onCancel() {
-
-                    }
-                }, false)
-                .bindLayout(R.layout.layout_dialog_login)
-        .show();//绑定已有布局*/
-
     }
 
-
-    private void realLogin() {
-        String token = SPUtils.getString(SplashActivity.this, Constant.SP_ACCESS_TOKEN, "");
-        String userId = SPUtils.getString(SplashActivity.this, Constant.SP_LOGIN_USERID, "");
-
-        if (!TextUtils.isEmpty(token) && !TextUtils.isEmpty(userId)) {
-            startMainActivity();
-        } else {
-            startActivity(new Intent(SplashActivity.this, LoginActivity.class));
-            finish();
-        }
-    }
 
     private void startMainActivity() {
         startActivity(new Intent(SplashActivity.this, MainActivity.class));
@@ -209,7 +189,7 @@ public class SplashActivity extends AppCompatActivity {
       /*  if (mVideoView != null && mVideoView.isPlaying()) {
             mVideoView.stopPlayback();
         }*/
-        realLogin();
+        startMainActivity();
     }
 
     @Override
@@ -234,4 +214,16 @@ public class SplashActivity extends AppCompatActivity {
         res.updateConfiguration(newConfig, displayMetrics);
         return res;
     }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+            finish();
+            System.exit(0);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+
+    }
+
 }

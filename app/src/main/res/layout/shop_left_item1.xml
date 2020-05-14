@@ -20,6 +20,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/select_commodity_color1"
         android:gravity="center"
+        android:padding="5dp"
         android:text="111"
         android:textColor="@drawable/select_commodity_left1"
         android:textSize="14sp" />

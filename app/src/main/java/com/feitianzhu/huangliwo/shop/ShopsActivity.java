@@ -22,6 +22,8 @@ import com.feitianzhu.huangliwo.model.Shops;
 import com.feitianzhu.huangliwo.shop.adapter.RightAdapter;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
+import com.feitianzhu.huangliwo.utils.UserInfoUtils;
+import com.feitianzhu.huangliwo.vip.VipActivity;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.request.base.Request;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -103,17 +105,21 @@ public class ShopsActivity extends BaseActivity {
         rightAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                int type = rightAdapter.getItemViewType(position);
-                if (type == MultipleItem.GOODS) {
-                    //商品详情
-                    Intent intent = new Intent(ShopsActivity.this, ShopsDetailActivity.class);
-                    intent.putExtra(ShopsDetailActivity.GOODS_DETAIL_DATA, goodsListBeans.get(position).getGoodsId());
-                    startActivity(intent);
-                } else {
-
-                }
+                //商品详情
+                Intent intent = new Intent(ShopsActivity.this, ShopsDetailActivity.class);
+                intent.putExtra(ShopsDetailActivity.GOODS_DETAIL_DATA, goodsListBeans.get(position).getGoodsId());
+                startActivity(intent);
             }
         });
+        rightAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                Intent intent = new Intent(ShopsActivity.this, VipActivity.class);
+                intent.putExtra(VipActivity.MINE_INFO, UserInfoUtils.getUserInfo(ShopsActivity.this));
+                startActivity(intent);
+            }
+        });
+
     }
 
     @Override

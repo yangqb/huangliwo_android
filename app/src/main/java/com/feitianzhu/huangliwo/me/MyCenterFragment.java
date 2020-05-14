@@ -101,7 +101,7 @@ public class MyCenterFragment extends SFFragment {
     private String mParam2;
     private CenterAdapter adapter;
     Unbinder unbinder;
-    private MineInfoModel mTempData = new MineInfoModel();
+    private MineInfoModel userInfo;
     private BalanceModel balanceModel;
     private String token;
     private String userId;
@@ -111,7 +111,6 @@ public class MyCenterFragment extends SFFragment {
     private String wagesAmount = "0.00";
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private boolean isLogin = true;
     Integer[] integers = {R.mipmap.o05_01gouwuche, R.mipmap.o05_02dizhi, R.mipmap.o05_03renzheng, R.mipmap.o05_04bangding,
             R.mipmap.shoucang, R.mipmap.o05_06tuidian, R.mipmap.o05_tuiguang, R.mipmap.o05_09bagnzhu,
             R.mipmap.o05_kefu};
@@ -154,15 +153,14 @@ public class MyCenterFragment extends SFFragment {
         adapter.notifyDataSetChanged();
         mRecyclerView.setNestedScrollingEnabled(false);
 
+        getUserInfo();
         ShopDao.loadUserAuthImpl(getActivity());
         initListener();
-        requestData();
         getData();
         return view;
     }
 
     public void getData() {
-
         OkGo.<LzyResponse<BalanceModel>>get(Urls.GET_USER_MONEY_INFO)
                 .tag(this)
                 .params(Constant.ACCESSTOKEN, token)
@@ -196,7 +194,7 @@ public class MyCenterFragment extends SFFragment {
                 });
     }
 
-    public void requestData() {
+    public void getUserInfo() {
         token = SPUtils.getString(getActivity(), Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(getActivity(), Constant.SP_LOGIN_USERID);
         OkGo.<LzyResponse<MineInfoModel>>get(Urls.BASE_URL + POST_MINE_INFO)
@@ -213,20 +211,13 @@ public class MyCenterFragment extends SFFragment {
                     @Override
                     public void onSuccess(Response<LzyResponse<MineInfoModel>> response) {
                         super.onSuccess(getActivity(), response.body().msg, response.body().code);
-                        if (response.body().code == 100021105) {
-                            nickName.setText("登陆");
-                            isLogin = false;
-                        } else {
-                            isLogin = true;
-                        }
-
                         goneloadDialog();
                         if (refreshLayout != null) {
                             refreshLayout.finishRefresh();
                         }
                         if (response.body().code == 0 && response.body().data != null) {
-                            mTempData = response.body().data;
-                            UserInfoUtils.saveUserInfo(getActivity(), mTempData);
+                            userInfo = response.body().data;
+                            UserInfoUtils.saveUserInfo(getActivity(), userInfo);
                             setShowData(response.body().data);
                         }
 
@@ -297,7 +288,7 @@ public class MyCenterFragment extends SFFragment {
                     case 3:
                         //银行卡 //暂不提供银行卡功能
                         intent = new Intent(getActivity(), BindingAccountActivity.class);
-                        intent.putExtra(BindingAccountActivity.MINE_INFO, mTempData);
+                        intent.putExtra(BindingAccountActivity.MINE_INFO, userInfo);
                         startActivity(intent);
                         /*if (!Constant.loadUserAuth) {
                             ToastUtils.show("正在获取授权信息，稍候进入");
@@ -320,7 +311,7 @@ public class MyCenterFragment extends SFFragment {
                     case 5: //推店
                         //ShopHelp.veriJumpActivity(getActivity());
                         intent = new Intent(getActivity(), PushShopHomeActivity.class);
-                        intent.putExtra(PushShopHomeActivity.MINE_INFO, mTempData);
+                        intent.putExtra(PushShopHomeActivity.MINE_INFO, userInfo);
                         startActivity(intent);
                         break;
                     case 4://我的收藏
@@ -336,7 +327,7 @@ public class MyCenterFragment extends SFFragment {
                         break;
                     case 6: //分享
                         intent = new Intent(getActivity(), RecruitActivity.class);
-                        intent.putExtra(RecruitActivity.MINE_DATA, mTempData);
+                        intent.putExtra(RecruitActivity.MINE_DATA, userInfo);
                         startActivity(intent);
                         break;
                     case 0: //购物车
@@ -345,7 +336,7 @@ public class MyCenterFragment extends SFFragment {
                         break;
                     case 7:
                         //ToastUtils.show("敬请期待");
-                        if (mTempData.getAccountType() == 0) {
+                        if (userInfo.getAccountType() == 0) {
                             String content = "您还不是会员无法查看我的团队，请尽快开通！";
                             new XPopup.Builder(getActivity())
                                     .asConfirm("", content, "关闭", "确定", null, null, true)
@@ -368,7 +359,7 @@ public class MyCenterFragment extends SFFragment {
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-                requestData();
+                getUserInfo();
                 getData();
             }
         });
@@ -383,21 +374,7 @@ public class MyCenterFragment extends SFFragment {
         Intent intent;
         switch (view.getId()) {
             case R.id.ll_userInfo:
-                if (isLogin) {
-                    startActivity(new Intent(getActivity(), PersonalCenterActivity2.class));
-                } else {
-                    SPUtils.putString(getActivity(), Constant.SP_PASSWORD, "");
-                    SPUtils.putString(getActivity(), Constant.SP_LOGIN_USERID, "");
-                    SPUtils.putString(getActivity(), Constant.SP_ACCESS_TOKEN, "");
-                    Constant.ACCESS_TOKEN = "";
-                    Constant.LOGIN_USERID = "";
-                    Constant.PHONE = "";
-                    intent = new Intent(getActivity(), LoginActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-                    getActivity().finish();
-                }
-
+                startActivity(new Intent(getActivity(), PersonalCenterActivity2.class));
                 break;
             case R.id.iv_setting:
                 startActivity(new Intent(getActivity(), SettingsActivity.class));
@@ -450,7 +427,7 @@ public class MyCenterFragment extends SFFragment {
                 break;
             case R.id.upgrade_Vip:
                 intent = new Intent(getContext(), VipActivity.class);
-                intent.putExtra(VipActivity.MINE_INFO, mTempData);
+                intent.putExtra(VipActivity.MINE_INFO, userInfo);
                 startActivity(intent);
                 break;
             case R.id.goods_wait_pay:
@@ -564,8 +541,16 @@ public class MyCenterFragment extends SFFragment {
             case EDITOR_INFO:
             case BUY_VIP:
             case BINDING_ALI_ACCOUNT:
-                requestData();  //一定要获取token，userId,防止直接从商品列表进入VIP购买
+                getUserInfo();  //一定要获取token，userId,防止直接从商品列表进入VIP购买
                 break;
+        }
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            getUserInfo();
         }
     }
 

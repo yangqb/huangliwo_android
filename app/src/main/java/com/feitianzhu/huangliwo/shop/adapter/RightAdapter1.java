@@ -1,5 +1,8 @@
 package com.feitianzhu.huangliwo.shop.adapter;
 
+import android.view.View;
+import android.widget.TextView;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
@@ -27,22 +30,23 @@ public class RightAdapter1 extends BaseMultiItemQuickAdapter<MultipleItem, BaseV
 
     @Override
     protected void convert(BaseViewHolder helper, MultipleItem item) {
-        MineInfoModel userInfo = UserInfoUtils.getUserInfo(mContext);
         switch (helper.getItemViewType()) {
             case MultipleItem.MERCHANTS:
-                helper.setText(R.id.text, item.getMerchantsModel().getAreaName());
-
-                helper.addOnClickListener(R.id.ll_rebate);
+//                helper.setText(R.id.text1, item.getMerchantsModel().getAreaName());
+                TextView view = helper.getView(R.id.text1);
+                view.setText(item.getMerchantsModel().getMerchantName());
+                view.setTextColor(view.getResources().getColor(R.color.bank_bg01));
                 Glide.with(mContext).load(item.getMerchantsModel().getLogo())
-                        .apply(new RequestOptions().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai).dontAnimate()).into((RoundedImageView) helper.getView(R.id.image));
-
+                        .apply(new RequestOptions().placeholder(R.mipmap.g10_04weijiazai)
+                                .error(R.mipmap.g10_04weijiazai)
+                                .dontAnimate()).into((RoundedImageView) helper.getView(R.id.image));
                 break;
             case MultipleItem.GOODS:
-                helper.setText(R.id.text, item.getGoodsListBean().getGoodsName());
-
-                helper.addOnClickListener(R.id.ll_rebate);
+                helper.setText(R.id.text1, item.getGoodsListBean().getGoodsName());
                 Glide.with(mContext).load(item.getGoodsListBean().getGoodsImg())
-                        .apply(new RequestOptions().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai).dontAnimate()).into((RoundedImageView) helper.getView(R.id.image));
+                        .apply(new RequestOptions().placeholder(R.mipmap.g10_04weijiazai)
+                                .error(R.mipmap.g10_04weijiazai)
+                                .dontAnimate()).into((RoundedImageView) helper.getView(R.id.image));
                 break;
         }
     }

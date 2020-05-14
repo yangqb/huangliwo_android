@@ -60,10 +60,6 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     TextView mForgetLayout;
     @BindView(R.id.tv_regist)
     TextView mRegister;
-
-
-    private int loginViewtoBottom;
-    private ObjectAnimator animatorUp, animatorDown;
     @BindView(R.id.ll_protocol)
     LinearLayout mProtocolLayout;
     @BindView(R.id.tv_protocol)

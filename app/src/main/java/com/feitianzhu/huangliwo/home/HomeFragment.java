@@ -20,6 +20,7 @@ import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.SFFragment;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
+import com.feitianzhu.huangliwo.login.LoginActivity;
 import com.feitianzhu.huangliwo.login.LoginEvent;
 import com.feitianzhu.huangliwo.me.ui.PersonalCenterActivity2;
 import com.feitianzhu.huangliwo.me.ui.ScannerActivity;
@@ -106,10 +107,17 @@ public class HomeFragment extends SFFragment implements ProvinceCallBack {
         }
         token = SPUtils.getString(getActivity(), Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(getActivity(), Constant.SP_LOGIN_USERID);
-        getUserInfo();
+        showHeadImg();
         getClasses();
         initListener();
         return view;
+    }
+
+    public void showHeadImg() {
+        userInfo = UserInfoUtils.getUserInfo(getActivity());
+        String headImg = userInfo.getHeadImg();
+        Glide.with(mContext).load(headImg).apply(RequestOptions.placeholderOf(R.mipmap.b08_01touxiang).error(R.mipmap.b08_01touxiang).dontAnimate())
+                .into(ivHead);
     }
 
     public void initListener() {
@@ -175,8 +183,6 @@ public class HomeFragment extends SFFragment implements ProvinceCallBack {
 
         OkGo.<LzyResponse<ShopClassify>>post(Urls.GET_SHOP_CLASS)
                 .tag(this)
-                .params(ACCESSTOKEN, token)
-                .params(USERID, userId)
                 .execute(new JsonCallback<LzyResponse<ShopClassify>>() {
                     @Override
                     public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<ShopClassify>> response) {
@@ -196,33 +202,6 @@ public class HomeFragment extends SFFragment implements ProvinceCallBack {
 
     }
 
-
-    public void getUserInfo() {
-        OkGo.<LzyResponse<MineInfoModel>>get(Urls.BASE_URL + POST_MINE_INFO)
-                .tag(this)
-                .params(ACCESSTOKEN, token)
-                .params(USERID, userId)
-                .execute(new JsonCallback<LzyResponse<MineInfoModel>>() {
-                    @Override
-                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<MineInfoModel>> response) {
-                        super.onSuccess(getActivity(), "", response.body().code);
-                        if (response.body().data != null) {
-                            userInfo = response.body().data;
-                            String headImg = userInfo.getHeadImg();
-                            Glide.with(mContext).load(headImg).apply(RequestOptions.placeholderOf(R.mipmap.b08_01touxiang).error(R.mipmap.b08_01touxiang).dontAnimate())
-                                    .into(ivHead);
-                            UserInfoUtils.saveUserInfo(getActivity(), userInfo);
-                            SPUtils.putString(getActivity(), Constant.SP_PHONE, userInfo.getPhone());
-                        }
-                    }
-
-                    @Override
-                    public void onError(com.lzy.okgo.model.Response<LzyResponse<MineInfoModel>> response) {
-                        super.onError(response);
-                    }
-                });
-    }
-
     @OnClick({R.id.ll_location, R.id.iv_head, R.id.search, R.id.iv_home_nv_right})
     public void onClick(View view) {
         Intent intent;
@@ -235,6 +214,11 @@ public class HomeFragment extends SFFragment implements ProvinceCallBack {
                 branchDialog.show(getChildFragmentManager());
                 break;
             case R.id.iv_head: //
+                if (token == null || TextUtils.isEmpty(token)) {
+                    intent = new Intent(getActivity(), LoginActivity.class);
+                    startActivity(intent);
+                    return;
+                }
                 intent = new Intent(getActivity(), PersonalCenterActivity2.class);
                 startActivity(intent);
                 break;
@@ -293,7 +277,7 @@ public class HomeFragment extends SFFragment implements ProvinceCallBack {
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void onMessageEvent(LoginEvent event) {
         if (event == EDITOR_INFO) {
-            getUserInfo();
+            showHeadImg();
         }
     }
 

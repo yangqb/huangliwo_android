@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -78,6 +79,10 @@ public class SettingsActivity extends BaseActivity {
     Button mButton;
     @BindView(R.id.title_name)
     TextView titleName;
+    @BindView(R.id.btn_fuwu)
+    TextView btnFuwu;
+    @BindView(R.id.btn_yinsi)
+    TextView btnYinsi;
 
     private boolean isPayPassword;
     private UpdateAppModel updateAppModel;
@@ -101,7 +106,10 @@ public class SettingsActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-
+        btnFuwu.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG); //下划线
+        btnFuwu.getPaint().setAntiAlias(true);//抗锯齿
+        btnYinsi.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG); //下划线
+        btnYinsi.getPaint().setAntiAlias(true);//抗锯齿
     }
 
     @Override
@@ -122,7 +130,7 @@ public class SettingsActivity extends BaseActivity {
                     @Override
                     public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<UserAuth>> response) {
                         super.onSuccess(SettingsActivity.this, response.body().msg, response.body().code);
-                        if (response.body().code == 100021105) {
+                        if (response.body().code == 100021105 || response.body().code == 100010100) {
                             mButton.setText("登陆");
                         } else {
                             mButton.setText("退出当前账号");
@@ -151,12 +159,24 @@ public class SettingsActivity extends BaseActivity {
     }
 
     @OnClick({R.id.rl_change_phone, R.id.rl_change_password, R.id.rl_change_second_password, R.id.rl_about,
-            R.id.rl_feedback, R.id.rl_help, R.id.rl_clear_cache, R.id.button, R.id.rl_update, R.id.left_button})
+            R.id.rl_feedback, R.id.rl_help, R.id.rl_clear_cache, R.id.button, R.id.rl_update, R.id.left_button, R.id.btn_fuwu, R.id.btn_yinsi})
     public void onClick(View v) {
         Intent intent;
         switch (v.getId()) {
             case R.id.left_button:
                 finish();
+                break;
+            case R.id.btn_fuwu:
+                intent = new Intent(this, LazyWebActivity.class);
+                intent.putExtra(Constant.URL, Urls.BASE_URL + "fhwl/static/html/fuwuxieyi.html");
+                intent.putExtra(Constant.H5_TITLE, "便利大本营用户服务协议");
+                startActivity(intent);
+                break;
+            case R.id.btn_yinsi:
+                intent = new Intent(this, LazyWebActivity.class);
+                intent.putExtra(Constant.URL, Urls.BASE_URL + "fhwl/static/html/yinsishuoming.html");
+                intent.putExtra(Constant.H5_TITLE, "便利大本营用户隐私说明");
+                startActivity(intent);
                 break;
             case R.id.rl_about:
                /* intent = new Intent(this, LazyWebActivity.class);
@@ -214,7 +234,7 @@ public class SettingsActivity extends BaseActivity {
                 preferences = getSharedPreferences(SPUtils.PREFERENCE_NAME, MODE_PRIVATE);
                 edit = preferences.edit();
                 //删除存储文件
-                File[] files = new File("/data/data/"+this.getPackageName()+"/shared_prefs").listFiles();
+                File[] files = new File("/data/data/" + this.getPackageName() + "/shared_prefs").listFiles();
                 deleteCache(files);
                 Constant.ACCESS_TOKEN = "";
                 Constant.LOGIN_USERID = "";
@@ -227,14 +247,16 @@ public class SettingsActivity extends BaseActivity {
                 break;
         }
     }
+
     /**
      * 删除SharedPreferences数据文件
+     *
      * @param files
      */
-    public void deleteCache(File[] files){
+    public void deleteCache(File[] files) {
 
         boolean flag;
-        for(File itemFile : files){
+        for (File itemFile : files) {
             flag = itemFile.delete();
             if (flag == false) {
                 deleteCache(itemFile.listFiles());
@@ -246,8 +268,10 @@ public class SettingsActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         //清空数据
-        edit.clear();
-        edit.commit();
+        if (edit != null) {
+            edit.clear();
+            edit.commit();
+        }
     }
 
     public void updateDiy() {
