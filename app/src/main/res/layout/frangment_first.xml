@@ -55,9 +55,9 @@
                             android:orientation="vertical">
 
                             <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:src="@mipmap/a02_02shangcheng" />
+                                android:layout_width="60dp"
+                                android:layout_height="60dp"
+                                android:background="@mipmap/a02_02shangcheng" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -77,9 +77,9 @@
                             android:orientation="vertical">
 
                             <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:src="@mipmap/a02_01shangjia" />
+                                android:layout_width="60dp"
+                                android:layout_height="60dp"
+                                android:background="@mipmap/a02_01shangjia" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -100,9 +100,9 @@
                             android:orientation="vertical">
 
                             <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:src="@mipmap/a02_03jipiao" />
+                                android:layout_width="60dp"
+                                android:layout_height="60dp"
+                                android:background="@mipmap/a02_03jipiao" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -123,9 +123,9 @@
                             android:orientation="vertical">
 
                             <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:src="@mipmap/a02_05lvyou" />
+                                android:layout_width="60dp"
+                                android:layout_height="60dp"
+                                android:background="@mipmap/a02_05lvyou" />
 
                             <TextView
                                 android:layout_width="wrap_content"

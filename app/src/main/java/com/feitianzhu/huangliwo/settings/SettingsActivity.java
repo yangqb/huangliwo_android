@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -76,6 +77,10 @@ public class SettingsActivity extends BaseActivity {
     Button mButton;
     @BindView(R.id.title_name)
     TextView titleName;
+    @BindView(R.id.btn_fuwu)
+    TextView btnFuwu;
+    @BindView(R.id.btn_yinsi)
+    TextView btnYinsi;
 
     private boolean isPayPassword;
     private UpdateAppModel updateAppModel;
@@ -99,7 +104,10 @@ public class SettingsActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-
+        btnFuwu.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG); //下划线
+        btnFuwu.getPaint().setAntiAlias(true);//抗锯齿
+        btnYinsi.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG); //下划线
+        btnYinsi.getPaint().setAntiAlias(true);//抗锯齿
     }
 
     @Override
@@ -149,12 +157,24 @@ public class SettingsActivity extends BaseActivity {
     }
 
     @OnClick({R.id.rl_change_phone, R.id.rl_change_password, R.id.rl_change_second_password, R.id.rl_about,
-            R.id.rl_feedback, R.id.rl_help, R.id.rl_clear_cache, R.id.button, R.id.rl_update, R.id.left_button})
+            R.id.rl_feedback, R.id.rl_help, R.id.rl_clear_cache, R.id.button, R.id.rl_update, R.id.left_button, R.id.btn_fuwu, R.id.btn_yinsi})
     public void onClick(View v) {
         Intent intent;
         switch (v.getId()) {
             case R.id.left_button:
                 finish();
+                break;
+            case R.id.btn_fuwu:
+                intent = new Intent(this, LazyWebActivity.class);
+                intent.putExtra(Constant.URL, Urls.BASE_URL + "fhwl/static/html/fuwuxieyi.html");
+                intent.putExtra(Constant.H5_TITLE, "便利大本营用户服务协议");
+                startActivity(intent);
+                break;
+            case R.id.btn_yinsi:
+                intent = new Intent(this, LazyWebActivity.class);
+                intent.putExtra(Constant.URL, Urls.BASE_URL + "fhwl/static/html/yinsishuoming.html");
+                intent.putExtra(Constant.H5_TITLE, "便利大本营用户隐私说明");
+                startActivity(intent);
                 break;
             case R.id.rl_about:
                /* intent = new Intent(this, LazyWebActivity.class);

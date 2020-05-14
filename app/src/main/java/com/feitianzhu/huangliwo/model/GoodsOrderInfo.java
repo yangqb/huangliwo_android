@@ -94,6 +94,15 @@ userName (string, optional): 用户名
         private String remark;//备注
         private String connectPhone;//客服电话
         private String refuseReason;//拒绝退款原因
+        private int isVipOrder;//1是399,0是商品
+
+        public int getIsVipOrder() {
+            return isVipOrder;
+        }
+
+        public void setIsVipOrder(int isVipOrder) {
+            this.isVipOrder = isVipOrder;
+        }
 
         public String getRefuseReason() {
             return refuseReason;
