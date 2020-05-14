@@ -369,10 +369,10 @@ public class ShopsDetailActivity extends BaseActivity {
                     return;
                 }
                 isBuyGoods = true;
-                if (goodsListBean.getStockCount() <= 0) {
-                    ToastUtils.show("当前商铺已售完");
+              /*  if (goodsListBean.getStockCount() <= 0) {
+                    ToastUtils.show("当前商品已售完");
                     return;
-                }
+                }*/
                 if (specifications.size() > 0) {
                     showSpeDialog();
                     return;
