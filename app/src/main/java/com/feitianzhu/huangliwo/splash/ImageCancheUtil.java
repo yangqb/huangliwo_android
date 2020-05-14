@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Base64;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -35,7 +36,8 @@ public class ImageCancheUtil {
      * @return
      */
     public static String getFilePath(String url) {
-        return getImageCachePath() + "/" + url;
+        String fileName = Base64.encodeToString(url.getBytes(), Base64.DEFAULT);
+        return getImageCachePath() + "/" + fileName;
     }
 
     /**
@@ -52,7 +54,7 @@ public class ImageCancheUtil {
     /**
      * 图片是否已缓存
      */
-    private static boolean hasImageCached(String imageUrl) {
+    public static boolean hasImageCached(String imageUrl) {
         File file = new File(getFilePath(imageUrl));
         return file.exists();
     }
@@ -64,10 +66,10 @@ public class ImageCancheUtil {
      * @param imageUrl    图片网址
      * @param apiCallBack 回调
      */
-    private static void cacheImage(Activity activity, String imageUrl, ApiCallBack<String> apiCallBack) {
+    public static void cacheImage(Activity activity, String imageUrl, ApiCallBack<String> apiCallBack) {
         Glide.with(activity)
                 .asBitmap()
-                .load("")
+                .load(imageUrl)
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {

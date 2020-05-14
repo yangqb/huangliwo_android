@@ -254,11 +254,14 @@ public class MyOrderActivity2 extends BaseActivity {
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Intent intent;
                 if (mAdapter.getItemViewType(position) == MultipleItemOrderModel.GOODS_ORDER) {
-                    intent = new Intent(MyOrderActivity2.this, OrderDetailActivity.class);
-                    intent.putExtra(OrderDetailActivity.ORDER_NO, goodsOrderList.get(position).getOrderNo());
-                    startActivity(intent);
+                    //商品订单详情，不包含399订单
+                    if (goodsOrderList.get(position).getIsVipOrder() == 0) {
+                        intent = new Intent(MyOrderActivity2.this, OrderDetailActivity.class);
+                        intent.putExtra(OrderDetailActivity.ORDER_NO, goodsOrderList.get(position).getOrderNo());
+                        startActivity(intent);
+                    }
                 } else {
-                    //详情
+                    //商铺订单详情
                     intent = new Intent(MyOrderActivity2.this, SetMealOrderDetailActivity.class);
                     intent.putExtra(SetMealOrderDetailActivity.ORDER_NO, currSetMealOder.get(position).getOrderNo());
                     startActivity(intent);
