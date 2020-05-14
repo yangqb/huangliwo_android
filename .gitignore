@@ -10,3 +10,5 @@
 /app/build/
 /.idea/
 /matisse/build/
+/app/debug
+/app/release
