@@ -150,8 +150,6 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
             if (errorCode == 100021105) {
                 boolean loginDialog = SPUtils.getBoolean(context, Constant.LOGIN_DIALOG);
                 String token = SPUtils.getString(context, Constant.SP_ACCESS_TOKEN, "");
-
-                if (loginDialog) {
                     if (confirmPopupView == null) {
                         confirmPopupView = new XPopup.Builder(context)
                                 .autoDismiss(false)
@@ -182,7 +180,7 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
                         confirmPopupView.show();//绑定已有布局
                     }
                     SPUtils.putBoolean(context, Constant.LOGIN_DIALOG, false);
-                }
+
 
             } else if (errorCode == 100010100) {
                 SPUtils.putString(context, Constant.SP_PASSWORD, "");

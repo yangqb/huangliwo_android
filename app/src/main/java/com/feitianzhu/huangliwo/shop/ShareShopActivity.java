@@ -146,7 +146,7 @@ public class ShareShopActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.bt_save:
-                ShareImageUtils.saveImg(this, ShareImageUtils.viewToBitmap(shareLayout), "zxing_goods_image");
+                ShareImageUtils.saveImg(this, ShareImageUtils.viewToBitmap(shareLayout), "zxing_goods_image"+System.currentTimeMillis());
                 // 通知图库更新
                 // sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse(Environment.getExternalStorageDirectory().getPath())));
                 break;

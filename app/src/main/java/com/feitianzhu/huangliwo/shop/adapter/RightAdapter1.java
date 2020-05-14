@@ -34,7 +34,7 @@ public class RightAdapter1 extends BaseMultiItemQuickAdapter<MultipleItem, BaseV
             case MultipleItem.MERCHANTS:
 //                helper.setText(R.id.text1, item.getMerchantsModel().getAreaName());
                 TextView view = helper.getView(R.id.text1);
-                view.setText(item.getMerchantsModel().getAreaName());
+                view.setText(item.getMerchantsModel().getMerchantName());
                 view.setTextColor(view.getResources().getColor(R.color.bank_bg01));
                 Glide.with(mContext).load(item.getMerchantsModel().getLogo())
                         .apply(new RequestOptions().placeholder(R.mipmap.g10_04weijiazai)

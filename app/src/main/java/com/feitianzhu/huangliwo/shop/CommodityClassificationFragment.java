@@ -28,14 +28,14 @@ import com.feitianzhu.huangliwo.login.LoginEvent;
 import com.feitianzhu.huangliwo.me.ui.PersonalCenterActivity2;
 import com.feitianzhu.huangliwo.me.ui.ScannerActivity;
 import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
-import com.feitianzhu.huangliwo.model.MerchantsInfo;
+import com.feitianzhu.huangliwo.model.MerchantsInfoNew;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.MultiItemShopAndMerchants;
 import com.feitianzhu.huangliwo.model.MultipleItem;
 import com.feitianzhu.huangliwo.model.MyPoint;
 import com.feitianzhu.huangliwo.model.Province;
 import com.feitianzhu.huangliwo.model.ShopClassify;
-import com.feitianzhu.huangliwo.model.Shops;
+import com.feitianzhu.huangliwo.model.ShopsNew;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsClassifyModel;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsModel;
 import com.feitianzhu.huangliwo.shop.adapter.LeftAdapter;
@@ -47,7 +47,7 @@ import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 import com.feitianzhu.huangliwo.view.CircleImageView;
-import com.feitianzhu.huangliwo.vip.VipActivity;
+import com.feitianzhu.huangliwo.view.CornerLinearView;
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
@@ -123,6 +123,14 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
     TextView title2;
     @BindView(R.id.title3)
     TextView title3;
+    @BindView(R.id.hot)
+    CornerLinearView hot;
+    @BindView(R.id.boutique)
+    CornerLinearView boutique;
+    @BindView(R.id.recommend)
+    CornerLinearView recommend;
+    @BindView(R.id.backgroundImg)
+    LinearLayout backgroundImg;
 
     private int mParam1 = 2;
     private String mParam2;
@@ -132,9 +140,23 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
     private List<ShopClassify.GGoodsClsListBean> shopClassifyLsit = new ArrayList<>();
     private List<MerchantsClassifyModel.ListBean> merchantsClassifyList = new ArrayList<>();
     private List<MultiItemShopAndMerchants> multiItemShopAndMerchantsClass = new ArrayList<>();
-    private List<BaseGoodsListBean> goodsListBeans = new ArrayList<>();
-    private List<MerchantsModel> merchantsList = new ArrayList<>();
+
+
     private List<MultipleItem> multipleItemList = new ArrayList<>();
+    private List<BaseGoodsListBean> goodsListBeans = new ArrayList<>();
+
+    private List<MerchantsModel> merchantsList = new ArrayList<>();
+
+    private List<MultipleItem> multipleRecommItemList = new ArrayList<>();
+    private List<BaseGoodsListBean> goodsRecommListBeans = new ArrayList<>();
+
+    private List<MerchantsModel> merchantsRecommList = new ArrayList<>();
+
+    private List<MultipleItem> multipleBouItemList = new ArrayList<>();
+    private List<BaseGoodsListBean> goodsBouListBeans = new ArrayList<>();
+
+    private List<MerchantsModel> merchantsBouList = new ArrayList<>();
+
     private int clsShopId;
     private int clsMearchantsId;
     private String token;
@@ -142,6 +164,8 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
     private double longitude = 116.289189;
     private double latitude = 39.826552;
     private MineInfoModel mineInfoModel = new MineInfoModel();
+    private RightAdapter1 rightAdapterRecomm;
+    private RightAdapter1 rightAdapterBou;
 
     public CommodityClassificationFragment() {
 
@@ -196,6 +220,21 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
         rightRecyclerView.setLayoutManager(gridLayoutManager);
         rightRecyclerView.setAdapter(rightAdapter);
         rightAdapter.notifyDataSetChanged();
+
+
+        rightAdapterRecomm = new RightAdapter1(multipleRecommItemList);
+        GridLayoutManager gridLayoutManager1 = new GridLayoutManager(getContext(), 3);
+        recyclerView2.setLayoutManager(gridLayoutManager1);
+        recyclerView2.setAdapter(rightAdapterRecomm);
+        rightAdapterRecomm.notifyDataSetChanged();
+
+        rightAdapterBou = new RightAdapter1(multipleBouItemList);
+        GridLayoutManager gridLayoutManager2 = new GridLayoutManager(getContext(), 3);
+        recyclerView1.setLayoutManager(gridLayoutManager2);
+        recyclerView1.setAdapter(rightAdapterBou);
+        rightAdapterBou.notifyDataSetChanged();
+
+
         mSwipeLayout.setEnableLoadMore(false);
 
         if (mParam1 == 1) { //商家
@@ -335,7 +374,39 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                 }
             }
         });
+        rightAdapterRecomm.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                if (rightAdapterRecomm.getItemViewType(position) == MultipleItem.MERCHANTS) {
+                    //商铺详情页
+                    Intent intent = new Intent(getActivity(), ShopMerchantsDetailActivity.class);
+                    intent.putExtra(ShopMerchantsDetailActivity.MERCHANTS_ID, merchantsRecommList.get(position).getMerchantId());
+                    startActivity(intent);
+                } else {
+                    //商品详情
+                    Intent intent = new Intent(getActivity(), ShopsDetailActivity.class);
+                    intent.putExtra(ShopsDetailActivity.GOODS_DETAIL_DATA, goodsRecommListBeans.get(position).getGoodsId());
+                    startActivity(intent);
+                }
+            }
+        });
 
+        rightAdapterBou.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                if (rightAdapterBou.getItemViewType(position) == MultipleItem.MERCHANTS) {
+                    //商铺详情页
+                    Intent intent = new Intent(getActivity(), ShopMerchantsDetailActivity.class);
+                    intent.putExtra(ShopMerchantsDetailActivity.MERCHANTS_ID, merchantsBouList.get(position).getMerchantId());
+                    startActivity(intent);
+                } else {
+                    //商品详情
+                    Intent intent = new Intent(getActivity(), ShopsDetailActivity.class);
+                    intent.putExtra(ShopsDetailActivity.GOODS_DETAIL_DATA, goodsBouListBeans.get(position).getGoodsId());
+                    startActivity(intent);
+                }
+            }
+        });
 //        rightAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
 //            @Override
 //            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
@@ -359,47 +430,123 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
 
 
     public void getShops(int clsId) {
-        OkGo.<LzyResponse<Shops>>post(Urls.GET_SHOP)
+
+        OkGo.<LzyResponse<ShopsNew>>post(Urls.GET_SHOP1)
                 .tag(this)
                 .params(ACCESSTOKEN, token)
                 .params(USERID, userId)
-                .params("cls_id", clsId + "")
-                .execute(new JsonCallback<LzyResponse<Shops>>() {
+                .params("clsId", clsId + "")
+                .execute(new JsonCallback<LzyResponse<ShopsNew>>() {
                     @Override
-                    public void onStart(Request<LzyResponse<Shops>, ? extends Request> request) {
+                    public void onStart(Request<LzyResponse<ShopsNew>, ? extends Request> request) {
                         super.onStart(request);
                         showloadDialog("");
                     }
 
                     @Override
-                    public void onSuccess(Response<LzyResponse<Shops>> response) {
+                    public void onSuccess(Response<LzyResponse<ShopsNew>> response) {
                         super.onSuccess(getActivity(), "", response.body().code);
+                        backgroundImg.setVisibility(View.GONE);
+
                         mSwipeLayout.finishRefresh();
                         goneloadDialog();
                         multipleItemList.clear();
                         goodsListBeans.clear();
+
+                        multipleRecommItemList.clear();
+                        goodsRecommListBeans.clear();
+
+                        goodsBouListBeans.clear();
+                        multipleBouItemList.clear();
+
                         if (response.body().data != null) {
-                            goodsListBeans = response.body().data.getGoodslist();
-                            for (int i = 0; i < goodsListBeans.size(); i++) {
-                                MultipleItem multipleItem = new MultipleItem(MultipleItem.GOODS);
-                                multipleItem.setGoodsListBean(goodsListBeans.get(i));
-                                multipleItemList.add(multipleItem);
+//                            goodsListBeans = response.body().data.getGoodslist();
+//                            for (int i = 0; i < goodsListBeans.size(); i++) {
+//                                MultipleItem multipleItem = new MultipleItem(MultipleItem.GOODS);
+//                                multipleItem.setGoodsListBean(goodsListBeans.get(i));
+//                                multipleItemList.add(multipleItem);
+//                            }
+                            ShopsNew data = response.body().data;
+//
+                            if (data.getBoutique() == null || data.getBoutique().size() == 0) {
+                                boutique.setVisibility(View.GONE);
+                            } else {
+                                boutique.setVisibility(View.VISIBLE);
+
+                                goodsBouListBeans = data.getBoutique();
+                                for (int i = 0; i < goodsBouListBeans.size(); i++) {
+                                    MultipleItem multipleItem = new MultipleItem(MultipleItem.GOODS);
+                                    multipleItem.setGoodsListBean(goodsBouListBeans.get(i));
+                                    multipleBouItemList.add(multipleItem);
+                                }
                             }
+
+                            if (data.getHot() == null || data.getHot().size() == 0) {
+                                hot.setVisibility(View.GONE);
+                            } else {
+                                hot.setVisibility(View.VISIBLE);
+
+                                goodsListBeans = data.getHot();
+                                for (int i = 0; i < goodsListBeans.size(); i++) {
+                                    MultipleItem multipleItem = new MultipleItem(MultipleItem.GOODS);
+                                    multipleItem.setGoodsListBean(goodsListBeans.get(i));
+                                    multipleItemList.add(multipleItem);
+                                }
+                            }
+
+                            if (data.getRecommendFor() == null || data.getRecommendFor().size() == 0) {
+                                recommend.setVisibility(View.GONE);
+                            } else {
+                                recommend.setVisibility(View.VISIBLE);
+
+                                goodsRecommListBeans = data.getRecommendFor();
+                                for (int i = 0; i < goodsRecommListBeans.size(); i++) {
+                                    MultipleItem multipleItem = new MultipleItem(MultipleItem.GOODS);
+                                    multipleItem.setGoodsListBean(goodsRecommListBeans.get(i));
+                                    multipleRecommItemList.add(multipleItem);
+                                }
+                            }
+
+
                         }
-                        rightRecyclerView.smoothScrollToPosition(0);
+
                         rightAdapter.setNewData(multipleItemList);
                         rightAdapter.notifyDataSetChanged();
+
+                        rightAdapterRecomm.setNewData(multipleRecommItemList);
+                        rightAdapterRecomm.notifyDataSetChanged();
+
+                        rightAdapterBou.setNewData(multipleBouItemList);
+                        rightAdapterBou.notifyDataSetChanged();
+                        if (recommend.getVisibility() == View.GONE &&
+                                hot.getVisibility() == View.GONE &&
+                                boutique.getVisibility() == View.GONE) {
+                            backgroundImg.setVisibility(View.VISIBLE);
+//                            rightAdapter.setNewData(null);
+                        }
                     }
 
                     @Override
-                    public void onError(Response<LzyResponse<Shops>> response) {
+                    public void onError(Response<LzyResponse<ShopsNew>> response) {
                         super.onError(response);
                         mSwipeLayout.finishRefresh(false);
                         ToastUtils.show(response.body().msg);
+
                         multipleItemList.clear();
                         goodsListBeans.clear();
                         rightAdapter.setNewData(multipleItemList);
                         rightAdapter.notifyDataSetChanged();
+
+
+                        multipleRecommItemList.clear();
+                        goodsRecommListBeans.clear();
+                        rightAdapterRecomm.setNewData(multipleRecommItemList);
+                        rightAdapterRecomm.notifyDataSetChanged();
+
+                        goodsBouListBeans.clear();
+                        multipleBouItemList.clear();
+                        rightAdapterBou.setNewData(multipleBouItemList);
+                        rightAdapterBou.notifyDataSetChanged();
                         goneloadDialog();
                     }
                 });
@@ -412,49 +559,114 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
             latitude = myPoint.latitude;
         }
 
-        OkGo.<LzyResponse<MerchantsInfo>>get(Urls.GET_MERCHANTS)
+        OkGo.<LzyResponse<MerchantsInfoNew>>get(Urls.GET_MERCHANTS1)
                 .tag(this)
                 .params(ACCESSTOKEN, token)
                 .params(USERID, userId)
                 .params("clsId", clsId + "")
                 .params("longitude", longitude + "")
                 .params("latitude", latitude + "")
-                .execute(new JsonCallback<LzyResponse<MerchantsInfo>>() {
+                .execute(new JsonCallback<LzyResponse<MerchantsInfoNew>>() {
                     @Override
-                    public void onStart(Request<LzyResponse<MerchantsInfo>, ? extends Request> request) {
+                    public void onStart(Request<LzyResponse<MerchantsInfoNew>, ? extends Request> request) {
                         super.onStart(request);
                         showloadDialog("");
                     }
 
                     @Override
-                    public void onSuccess(Response<LzyResponse<MerchantsInfo>> response) {
+                    public void onSuccess(Response<LzyResponse<MerchantsInfoNew>> response) {
                         super.onSuccess(getActivity(), "", response.body().code);
                         goneloadDialog();
+                        backgroundImg.setVisibility(View.GONE);
+
                         mSwipeLayout.finishRefresh();
                         multipleItemList.clear();
                         merchantsList.clear();
+
+                        merchantsRecommList.clear();
+                        multipleRecommItemList.clear();
+
+                        merchantsBouList.clear();
+                        multipleBouItemList.clear();
                         if (response.body().data != null) {
-                            merchantsList = response.body().data.getList();
-                            for (int i = 0; i < merchantsList.size(); i++) {
-                                MultipleItem multipleItem = new MultipleItem(MultipleItem.MERCHANTS);
-                                multipleItem.setMerchantsModel(merchantsList.get(i));
-                                multipleItemList.add(multipleItem);
+//
+
+                            MerchantsInfoNew data = response.body().data;
+                            if (data.getVeryGood() == null || data.getVeryGood().size() == 0) {
+                                boutique.setVisibility(View.GONE);
+                            } else {
+                                boutique.setVisibility(View.VISIBLE);
+
+                                merchantsBouList = data.getVeryGood();
+                                for (int i = 0; i < merchantsBouList.size(); i++) {
+                                    MultipleItem multipleItem = new MultipleItem(MultipleItem.MERCHANTS);
+                                    multipleItem.setMerchantsModel(merchantsBouList.get(i));
+                                    multipleBouItemList.add(multipleItem);
+                                }
                             }
+
+                            if (data.getHot() == null || data.getHot().size() == 0) {
+                                hot.setVisibility(View.GONE);
+                            } else {
+                                hot.setVisibility(View.VISIBLE);
+                                merchantsList = data.getHot();
+                                for (int i = 0; i < merchantsList.size(); i++) {
+                                    MultipleItem multipleItem = new MultipleItem(MultipleItem.MERCHANTS);
+                                    multipleItem.setMerchantsModel(merchantsList.get(i));
+                                    multipleItemList.add(multipleItem);
+                                }
+                            }
+
+                            if (data.getRecommendFor() == null || data.getRecommendFor().size() == 0) {
+                                recommend.setVisibility(View.GONE);
+                            } else {
+                                recommend.setVisibility(View.VISIBLE);
+
+                                merchantsRecommList = data.getRecommendFor();
+                                for (int i = 0; i < merchantsRecommList.size(); i++) {
+                                    MultipleItem multipleItem = new MultipleItem(MultipleItem.MERCHANTS);
+                                    multipleItem.setMerchantsModel(merchantsRecommList.get(i));
+                                    multipleRecommItemList.add(multipleItem);
+                                }
+                            }
+
                         }
-                        rightRecyclerView.smoothScrollToPosition(0);
                         rightAdapter.setNewData(multipleItemList);
                         rightAdapter.notifyDataSetChanged();
+
+                        rightAdapterRecomm.setNewData(multipleRecommItemList);
+                        rightAdapterRecomm.notifyDataSetChanged();
+
+                        rightAdapterBou.setNewData(multipleBouItemList);
+                        rightAdapterBou.notifyDataSetChanged();
+                        if (recommend.getVisibility() == View.GONE &&
+                                hot.getVisibility() == View.GONE &&
+                                boutique.getVisibility() == View.GONE) {
+                            backgroundImg.setVisibility(View.VISIBLE);
+//                            rightAdapter.setNewData(null);
+                        }
                     }
 
                     @Override
-                    public void onError(Response<LzyResponse<MerchantsInfo>> response) {
+                    public void onError(Response<LzyResponse<MerchantsInfoNew>> response) {
                         super.onError(response);
                         mSwipeLayout.finishRefresh(false);
                         ToastUtils.show(response.body().msg);
+
                         multipleItemList.clear();
                         merchantsList.clear();
                         rightAdapter.setNewData(multipleItemList);
                         rightAdapter.notifyDataSetChanged();
+
+                        multipleRecommItemList.clear();
+                        merchantsRecommList.clear();
+                        rightAdapterRecomm.setNewData(multipleRecommItemList);
+                        rightAdapterRecomm.notifyDataSetChanged();
+
+                        merchantsBouList.clear();
+                        multipleBouItemList.clear();
+                        rightAdapterBou.setNewData(multipleBouItemList);
+                        rightAdapterBou.notifyDataSetChanged();
                         goneloadDialog();
                     }
                 });
