@@ -13,6 +13,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.itheima.roundedimageview.RoundedImageView;
@@ -23,7 +24,9 @@ public class GlideUtils {
      * 根据图片尺寸等比缩放到屏幕尺寸
      * */
     public static ImageView getImageView(Activity mContext, String imgUrl, ImageView imgDetail) {
-        Glide.with(mContext).asBitmap().load(imgUrl).into(new SimpleTarget<Bitmap>() {
+        Glide.with(mContext).asBitmap()
+                .apply(new RequestOptions()
+                        .dontAnimate()).load(imgUrl).into(new SimpleTarget<Bitmap>() {
             @Override
             public void onResourceReady(Bitmap bitmap, Transition<? super Bitmap> transition) {
                 int bWidth = bitmap.getWidth();

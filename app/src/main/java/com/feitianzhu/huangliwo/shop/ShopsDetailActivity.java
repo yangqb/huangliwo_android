@@ -7,6 +7,8 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -36,6 +38,7 @@ import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
 import com.feitianzhu.huangliwo.model.CollectionBody;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.ProductParameters;
+import com.feitianzhu.huangliwo.shop.adapter.ShopsDetailImgAdapter;
 import com.feitianzhu.huangliwo.shop.ui.ShoppingCartActivity;
 import com.feitianzhu.huangliwo.utils.MathUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
@@ -109,8 +112,6 @@ public class ShopsDetailActivity extends BaseActivity {
     TextView goodsName;
     @BindView(R.id.goodsSummary)
     TextView goodsSummary;
-    @BindView(R.id.detail_img)
-    SubsamplingScaleImageView imgDetail;
     @BindView(R.id.select_specifications)
     TextView specificationsName;
     @BindView(R.id.tv_count)
@@ -141,7 +142,10 @@ public class ShopsDetailActivity extends BaseActivity {
     LinearLayout llGoodsDetail;
     @BindView(R.id.imgCollect)
     ImageView imgCollect;
-
+    @BindView(R.id.detailRecyclerView)
+    RecyclerView detailRecyclerView;
+    @BindView(R.id.detail_img)
+    SubsamplingScaleImageView detailImg;
 
     @Override
     protected int getLayoutId() {
@@ -285,20 +289,31 @@ public class ShopsDetailActivity extends BaseActivity {
         tvAmount.append(span2);
         tvAmount.append(span3);
 
-        if (goodsListBean.getGoodsIntroduceImg() == null || TextUtils.isEmpty(goodsListBean.getGoodsIntroduceImg())) {
+        if (goodsListBean.getGoodsIntroduceImgList() == null || goodsListBean.getGoodsIntroduceImgList().size() <= 0) {
             llGoodsDetail.setVisibility(View.GONE);
         } else {
-            Glide.with(this).load(goodsListBean.getGoodsIntroduceImg()).apply(new RequestOptions().dontAnimate()).downloadOnly(new SimpleTarget<File>() {
-                @Override
-                public void onResourceReady(File resource, Transition<? super File> transition) {
-                    Uri uri = Uri.fromFile(resource);
-                    imgDetail.setImage(ImageSource.uri(uri));
-                    imgDetail.setZoomEnabled(false);
-                    imgDetail.setPanEnabled(false);
-                }
-            });
+            if (goodsListBean.getGoodsIntroduceImgList().size() > 1) {
+                ShopsDetailImgAdapter adapter = new ShopsDetailImgAdapter(goodsListBean.getGoodsIntroduceImgList());
+                detailRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+                detailRecyclerView.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
+                detailRecyclerView.setNestedScrollingEnabled(false);
+                detailRecyclerView.setVisibility(View.VISIBLE);
+                detailImg.setVisibility(View.GONE);
+            } else {
+                detailRecyclerView.setVisibility(View.GONE);
+                detailImg.setVisibility(View.VISIBLE);
+                Glide.with(this).load(goodsListBean.getGoodsIntroduceImg()).apply(new RequestOptions().dontAnimate()).downloadOnly(new SimpleTarget<File>() {
+                    @Override
+                    public void onResourceReady(File resource, Transition<? super File> transition) {
+                        Uri uri = Uri.fromFile(resource);
+                        detailImg.setImage(ImageSource.uri(uri));
+                        detailImg.setZoomEnabled(false);
+                        detailImg.setPanEnabled(false);
+                    }
+                });
+            }
         }
-
         //String urlLogo = goodsListBean.getGoodsImg() == null ? "" : goodsListBean.getGoodsImg();
         //Glide.with(this).load(urlLogo).apply(new RequestOptions().placeholder(R.mipmap.g10_03weijiazai).error(R.mipmap.g10_03weijiazai)).into(GlideUtils.getImageView(this, urlLogo, bannerImage));
         if (goodsListBean.getGoodsImgsList() != null) {
