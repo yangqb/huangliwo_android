@@ -7,8 +7,10 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -25,6 +27,7 @@ import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.utils.EncryptUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
+import com.feitianzhu.huangliwo.utils.SoftKeyBoardListener;
 import com.feitianzhu.huangliwo.utils.StringUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.gyf.immersionbar.ImmersionBar;
@@ -38,6 +41,8 @@ import butterknife.ButterKnife;
 
 public class RegisterActivity extends BaseActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
     public static final String ext_register = "REGISTER";
+    private int loginViewtoBottom;
+    private ObjectAnimator animatorUp, animatorDown;
     @BindView(R.id.account)
     EditText mAccountLayout;
     @BindView(R.id.password1)
@@ -66,6 +71,8 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     TextView mTvProtocol;
     @BindView(R.id.cb_protocol)
     CheckBox mCheckBox;
+    @BindView(R.id.registerLayout)
+    LinearLayout registerLayout;
 
     private CountDownTimer mTimer = new CountDownTimer(6000 * 10, 1000) {
 
@@ -104,6 +111,22 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 .statusBarColor(R.color.white)
                 .init();
 
+        registerLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                //不可以直接获取控件位置，放在这个里面获取；
+                int[] viewLocation = new int[2];
+                registerLayout.getLocationOnScreen(viewLocation); //获取该控价在屏幕中的位置（左上角的点）
+//              loginViewtoBottom = UiUtils.getScreenHeight(mContext) - layoutLogin.getBottom(); //getBottom是该控件最底部距离父控件顶部的距离
+                WindowManager manager = getWindowManager();
+                DisplayMetrics outMetrics = new DisplayMetrics();
+                manager.getDefaultDisplay().getMetrics(outMetrics);
+                int screenHeight = outMetrics.heightPixels;
+                loginViewtoBottom = screenHeight - viewLocation[1] - registerLayout.getHeight(); //屏幕高度-控件距离顶部高度-控件高度
+            }
+        });
+
+
         boolean isShow = getIntent().getBooleanExtra(ext_register, false);
         if (isShow) {
             back.setVisibility(View.VISIBLE);
@@ -122,6 +145,35 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         mRegister.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
         mForgetLayout.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
 
+        initListener();
+
+    }
+
+    public void initListener() {
+        SoftKeyBoardListener.setListener(RegisterActivity.this, new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
+            @Override
+            public void keyBoardShow(int height) {
+                //Toast.makeText(AppActivity.this, "键盘显示 高度" + height, Toast.LENGTH_SHORT).show();
+                //if (animatorUp == null) { //如果每次弹出的键盘高度不一致，就不要这个判断，每次都新创建动画（密码键盘可能和普通键盘高度不一致）
+                int translationY = height - loginViewtoBottom - 140;
+                animatorUp = ObjectAnimator.ofFloat(registerLayout, "translationY", 0, -translationY);
+                animatorUp.setDuration(360);
+                animatorUp.setInterpolator(new AccelerateDecelerateInterpolator());
+                //}
+                animatorUp.start();
+            }
+
+            @Override
+            public void keyBoardHide(int height) {
+                //if (animatorDown == null) {//如果每次弹出的键盘高度不一致，就不要这个判断，每次都新创建动画（密码键盘可能和普通键盘高度不一致）
+                int translationY = height - loginViewtoBottom - 140;
+                animatorDown = ObjectAnimator.ofFloat(registerLayout, "translationY", -translationY, 0);
+                animatorDown.setDuration(360);
+                animatorDown.setInterpolator(new AccelerateDecelerateInterpolator());
+                //}
+                animatorDown.start();
+            }
+        });
     }
 
 
