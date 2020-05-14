@@ -23,7 +23,9 @@ public class GlideUtils {
      * 根据图片尺寸等比缩放到屏幕尺寸
      * */
     public static ImageView getImageView(Activity mContext, String imgUrl, ImageView imgDetail) {
-        Glide.with(mContext).asBitmap().load(imgUrl).into(new SimpleTarget<Bitmap>() {
+        Glide.with(mContext).asBitmap()
+                .apply(new RequestOptions()
+                        .dontAnimate()).load(imgUrl).into(new SimpleTarget<Bitmap>() {
             @Override
             public void onResourceReady(Bitmap bitmap, Transition<? super Bitmap> transition) {
                 int bWidth = bitmap.getWidth();
