@@ -13,6 +13,7 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 
@@ -80,13 +81,14 @@ public class CustomUserPrivateView extends CenterPopupView {
         tvCancel.setText("暂不使用");
         tvConfirm.setText("确定");
         tvConfirm.setTextColor(context.getResources().getColor(R.color.color_289cef));
-
-        tvTitle.setText("隐私协议和隐私政策");
-        String str1 = "巴拉巴拉报价单啦交多久啊点击可哦啊好歹爱受打击爱拍等级啊偶怕大数据盘";
+        tvContent.setGravity(Gravity.START);
+        tvTitle.setText("服务协议和隐私政策");
+        String str1 = "请您务必审慎阅读，充分理解“服务协议”和“隐私政策”各条款，包括但不限于：为了向您提供购物，分享等服务，我们需收集您的设备信息、操作日志等个人信息。您可以在“设置”中查看、变更、删除个人信息并管理您的授权。\n" +
+                "您可阅读";
         String str2 = "《服务协议》";
         String str3 = "和";
         String str4 = "《隐私政策》";
-        String str5 = "吧啦啦啦啦啦叭叭叭叭叭";
+        String str5 = "了解详细信息。如您同意，请点击“同意”开始接受我们的服务。";
         setSpannableString(str1, str2, str3, str4, str5, tvContent);
         tvCancel.setOnClickListener(new OnClickListener() {
             @Override
@@ -132,8 +134,8 @@ public class CustomUserPrivateView extends CenterPopupView {
                 }
 
                 Intent intent = new Intent(context, LazyWebActivity.class);
-                intent.putExtra(Constant.URL, Urls.BASE_URL + "fhwl/static/html/yonghuxieyi.html");
-                intent.putExtra(Constant.H5_TITLE, "便利大本营用户隐私协议");
+                intent.putExtra(Constant.URL, Urls.BASE_URL + "fhwl/static/html/fuwuxieyi.html");
+                intent.putExtra(Constant.H5_TITLE, "便利大本营用户服务协议");
                 context.startActivity(intent);
             }
 
@@ -162,8 +164,8 @@ public class CustomUserPrivateView extends CenterPopupView {
                     ((TextView) widget).setHighlightColor(Color.TRANSPARENT);
                 }
                 Intent intent = new Intent(context, LazyWebActivity.class);
-                intent.putExtra(Constant.URL, Urls.BASE_URL + "fhwl/static/html/yonghuxieyi.html");
-                intent.putExtra(Constant.H5_TITLE, "便利大本营用户隐私协议");
+                intent.putExtra(Constant.URL, Urls.BASE_URL + "fhwl/static/html/yinsishuoming.html");
+                intent.putExtra(Constant.H5_TITLE, "便利大本营用户隐私说明");
                 context.startActivity(intent);
             }
 
