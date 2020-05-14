@@ -9,10 +9,12 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Base64;
+import android.util.Log;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.feitianzhu.huangliwo.http.MD5Utils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -36,10 +38,10 @@ public class ImageCancheUtil {
      * @return
      */
     public static String getFilePath(String url) {
-        String fileName = Base64.encodeToString(url.getBytes(), Base64.URL_SAFE | Base64.NO_WRAP);
-        //TODO 猜测可能是base64之后文件名太长,有手机不支持, 2020-5-14
-        String substring = fileName.substring(fileName.length() - 20, fileName.length());
-        return getImageCachePath() + "/" + substring;
+        String encode = MD5Utils.encode(url);
+//图片地址长度不确定,可能超过最长的文件名长度,通过MD5加密确定图片
+        Log.e("TAG", "getFilePath: " + encode);
+        return getImageCachePath() + "/" + encode;
     }
 
     /**
