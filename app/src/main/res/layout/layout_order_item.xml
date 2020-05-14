@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <LinearLayout
@@ -51,11 +51,11 @@
                 android:id="@+id/image"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:scaleType="fitXY"
-                app:riv_oval="false"
-                app:riv_corner_radius="5dp"
                 android:layout_marginRight="13dp"
-                android:src="@mipmap/g10_04weijiazai" />
+                android:scaleType="fitXY"
+                android:src="@mipmap/g10_04weijiazai"
+                app:riv_corner_radius="5dp"
+                app:riv_oval="false" />
 
             <LinearLayout
                 android:layout_width="170dp"
@@ -86,6 +86,7 @@
                     android:textSize="12sp" />
 
                 <TextView
+                    android:id="@+id/refund_tag"
                     android:layout_width="52dp"
                     android:layout_height="14dp"
                     android:background="@drawable/shape_fed428_r7"
