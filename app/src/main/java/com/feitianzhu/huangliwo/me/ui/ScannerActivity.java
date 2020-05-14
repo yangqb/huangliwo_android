@@ -137,7 +137,7 @@ public class ScannerActivity extends BaseActivity {
               /*
                录单页面
               * */
-                if (isMerchants != 2) {
+                if (isMerchants != 1) {
                     ToastUtils.show("您不是商户不可录单");
                     finish();
                 } else {
@@ -158,7 +158,7 @@ public class ScannerActivity extends BaseActivity {
 
             } else if (result.contains("record")) {
                 //赠品录单
-                if (isMerchants != 2) {
+                if (isMerchants != 1) {
                     ToastUtils.show("您不是商户不可录单");
                     finish();
                 } else {

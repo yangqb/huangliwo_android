@@ -89,7 +89,6 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
     public T convertResponse(okhttp3.Response response) {
 
         ResponseBody body = response.body();
-
         if (body == null) return null;
         T data = null;
         Gson gson = new Gson();

@@ -24,7 +24,7 @@ public class BaseGoodsListBean implements Serializable {
     private String summary;
     private String goodsIntroduceImg; //长图
     private List<String> goodsIntroduceImgList;
-    private int sales;
+    private String salesStr;
     private int stockCount;
     private double postage;
     private String isExtend;
@@ -76,12 +76,12 @@ public class BaseGoodsListBean implements Serializable {
         this.goodsIntroduceImg = goodsIntroduceImg;
     }
 
-    public int getSales() {
-        return sales;
+    public String getSalesStr() {
+        return salesStr;
     }
 
-    public void setSales(int sales) {
-        this.sales = sales;
+    public void setSalesStr(String salesStr) {
+        this.salesStr = salesStr;
     }
 
     public int getStockCount() {

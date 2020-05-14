@@ -255,7 +255,7 @@ public class ShopsDetailActivity extends BaseActivity {
         goodsName.setText(goodsListBean.getGoodsName());
         goodsSummary.setText(goodsListBean.getSummary());
         goodsStock.setText("库存 " + goodsListBean.getStockCount());
-        goodsSalesvolume.setText("销量 " + goodsListBean.getSales());
+        goodsSalesvolume.setText("销量 " + goodsListBean.getSalesStr());
         String rebatePv = String.format(Locale.getDefault(), "%.2f", goodsListBean.getRebatePv());
         tvRebate.setText("奖励¥" + MathUtils.subZero(rebatePv));
         vipRebate.setText("奖励¥" + MathUtils.subZero(rebatePv));

@@ -77,12 +77,15 @@ public class ImageCancheUtil {
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+
                         saveBitmap(activity, resource, imageUrl, apiCallBack);
                     }
                 });
     }
 
     private static void saveBitmap(Activity activity, Bitmap bitmap, String filename, ApiCallBack<String> apiCallBack) {
+
+
         Observable.just(1)
                 .subscribeOn(Schedulers.io())
                 .map(new Func1<Integer, String>() {

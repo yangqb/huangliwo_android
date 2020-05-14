@@ -12,6 +12,6 @@
         android:color="@color/color_333333" />
 
     <!-- android:radius 圆角的半径 -->
-    <corners android:radius="7dp" />
+    <corners android:radius="5dp" />
 
 </shape>
