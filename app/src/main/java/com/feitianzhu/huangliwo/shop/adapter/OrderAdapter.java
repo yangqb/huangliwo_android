@@ -63,53 +63,59 @@ public class OrderAdapter extends BaseMultiItemQuickAdapter<MultipleItemOrderMod
                 if (item.getGoodsOrderListBean().getIsEval() == 1) { //是否评价
                     helper.setText(R.id.btn_confirm_goods, "查看详情");
                 } else {
-                    helper.setText(R.id.btn_confirm_goods, "评价");
+                    helper.setText(R.id.btn_confirm_goods, "晒评价");
                 }
                 helper.setText(R.id.btn_refund, "删除订单");
-                helper.setText(R.id.tvStatus, "交易成功");
+                helper.setText(R.id.tvStatus, "交易完成");
                 helper.setText(R.id.btn_logistics, "查看物流");
-                helper.setVisible(R.id.btn_logistics, true);
-                helper.setVisible(R.id.btn_refund, true);
-                helper.setVisible(R.id.btn_confirm_goods, true);
+                helper.setGone(R.id.btn_logistics, true);
+                helper.setGone(R.id.btn_refund, true);
+                helper.setGone(R.id.btn_confirm_goods, true);
             } else if (item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_NO_PAY) {
-                helper.setText(R.id.tvStatus, "待付款");
-                helper.setText(R.id.btn_confirm_goods, "付款");
+                helper.setText(R.id.tvStatus, "等待付款");
+                helper.setText(R.id.btn_confirm_goods, "去付款");
                 helper.setText(R.id.btn_logistics, " 取消订单");
-                helper.setVisible(R.id.btn_confirm_goods, true);
-                helper.setVisible(R.id.btn_logistics, true);
-                helper.setVisible(R.id.btn_refund, false);
+                helper.setGone(R.id.btn_confirm_goods, true);
+                helper.setGone(R.id.btn_logistics, true);
+                helper.setGone(R.id.btn_refund, false);
             } else if (item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_WAIT_DELIVERY) {
-                helper.setText(R.id.tvStatus, "待发货");
-                helper.setText(R.id.btn_confirm_goods, "查看详情");
-                helper.setText(R.id.btn_logistics, "退款 ");
-                helper.setVisible(R.id.btn_confirm_goods, true);
-                helper.setVisible(R.id.btn_logistics, true);
-                helper.setVisible(R.id.btn_refund, false);
+                helper.setText(R.id.tvStatus, "等待发货");
+                helper.setText(R.id.btn_logistics, "申请退款 ");
+                helper.setGone(R.id.btn_confirm_goods, false);
+                helper.setGone(R.id.btn_logistics, true);
+                helper.setGone(R.id.btn_refund, false);
             } else if (item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_WAIT_RECEIVING) {
-                helper.setText(R.id.tvStatus, "待收货");
+                helper.setText(R.id.tvStatus, "等待收货");
                 helper.setText(R.id.btn_confirm_goods, "确认收货");
                 helper.setText(R.id.btn_logistics, " 查看物流");
-                helper.setText(R.id.btn_refund, "退款");
-                helper.setVisible(R.id.btn_confirm_goods, true);
-                helper.setVisible(R.id.btn_logistics, true);
-                helper.setVisible(R.id.btn_refund, true);
+                helper.setText(R.id.btn_refund, "申请退款");
+                helper.setGone(R.id.btn_confirm_goods, true);
+                helper.setGone(R.id.btn_logistics, true);
+                helper.setGone(R.id.btn_refund, true);
             } else if (item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_REFUND || item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_REFUNDED || item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_CANCEL) {
                 if (item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_REFUND) {
                     helper.setText(R.id.tvStatus, "退款中");
+                    helper.setText(R.id.btn_confirm_goods, "退款进度");
+                    helper.setGone(R.id.btn_refund, false);
+                    helper.setGone(R.id.btn_confirm_goods, true);
                 } else if (item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_REFUNDED) {
-                    helper.setText(R.id.tvStatus, "已退款");
+                    helper.setText(R.id.tvStatus, "退款完成");
+                    helper.setText(R.id.btn_refund, "删除订单");
+                    helper.setText(R.id.btn_confirm_goods, "查看订单");
+                    helper.setGone(R.id.btn_refund, true);
+                    helper.setGone(R.id.btn_confirm_goods, true);
                 } else {
-                    helper.setText(R.id.tvStatus, "订单关闭");
+                    helper.setText(R.id.tvStatus, "交易关闭");
+                    helper.setText(R.id.btn_refund, "删除订单");
+                    helper.setGone(R.id.btn_refund, true);
+                    helper.setGone(R.id.btn_confirm_goods, false);
                 }
-                helper.setText(R.id.btn_confirm_goods, "查看详情");
-                helper.setVisible(R.id.btn_confirm_goods, true);
-                helper.setVisible(R.id.btn_logistics, false);
-                helper.setVisible(R.id.btn_refund, false);
+                helper.setGone(R.id.btn_logistics, false);
             } else {
                 helper.setText(R.id.tvStatus, "");
-                helper.setVisible(R.id.btn_confirm_goods, false);
-                helper.setVisible(R.id.btn_logistics, false);
-                helper.setVisible(R.id.btn_refund, false);
+                helper.setGone(R.id.btn_confirm_goods, false);
+                helper.setGone(R.id.btn_logistics, false);
+                helper.setGone(R.id.btn_refund, false);
             }
         } else {
             helper.setText(R.id.count, "×1");
@@ -134,49 +140,48 @@ public class OrderAdapter extends BaseMultiItemQuickAdapter<MultipleItemOrderMod
 
             helper.setVisible(R.id.btn_refund, false);
             if (item.getSetMealOrderModel().getStatus() == SetMealOrderInfo.WAIT_PAY) {
-                helper.setVisible(R.id.btn_logistics, true);
-                helper.setVisible(R.id.btn_confirm_goods, true);
-                helper.setText(R.id.tvStatus, "待付款");
+                helper.setGone(R.id.btn_logistics, true);
+                helper.setGone(R.id.btn_confirm_goods, true);
+                helper.setText(R.id.tvStatus, "等待付款");
                 helper.setText(R.id.btn_logistics, "取消订单");
-                helper.setText(R.id.btn_confirm_goods, "付款");
+                helper.setText(R.id.btn_confirm_goods, "去付款");
             } else if (item.getSetMealOrderModel().getStatus() == SetMealOrderInfo.WAIT_USE) {
                 //未使用
                 helper.setText(R.id.btn_logistics, "申请退款");
-                helper.setText(R.id.tvStatus, "待使用");
-                helper.setVisible(R.id.btn_logistics, true);
-                helper.setVisible(R.id.btn_confirm_goods, true);
-                helper.setText(R.id.btn_confirm_goods, "查看详情");
+                helper.setText(R.id.tvStatus, "等待使用");
+                helper.setGone(R.id.btn_logistics, true);
+                helper.setGone(R.id.btn_confirm_goods, true);
+                helper.setText(R.id.btn_confirm_goods, "查看订单");
             } else if (item.getSetMealOrderModel().getStatus() == SetMealOrderInfo.REFUNDING) {
                 helper.setText(R.id.tvStatus, "退款中");
-                helper.setVisible(R.id.btn_logistics, false);
-                helper.setVisible(R.id.btn_confirm_goods, true);
-                helper.setText(R.id.btn_confirm_goods, "查看详情");
+                helper.setGone(R.id.btn_logistics, false);
+                helper.setGone(R.id.btn_confirm_goods, true);
+                helper.setText(R.id.btn_confirm_goods, "查看订单");
             } else if (item.getSetMealOrderModel().getStatus() == SetMealOrderInfo.REFUNDED) {
-                helper.setText(R.id.tvStatus, "已退款");
-                helper.setVisible(R.id.btn_logistics, false);
-                helper.setVisible(R.id.btn_confirm_goods, true);
+                helper.setText(R.id.tvStatus, "退款完成");
+                helper.setGone(R.id.btn_logistics, false);
+                helper.setGone(R.id.btn_confirm_goods, true);
                 helper.setText(R.id.btn_confirm_goods, "查看详情");
             } else if (item.getSetMealOrderModel().getStatus() == SetMealOrderInfo.CANCEL) {
-                helper.setText(R.id.tvStatus, "订单关闭");
-                helper.setText(R.id.btn_confirm_goods, "查看详情");
-                helper.setVisible(R.id.btn_confirm_goods, true);
-                helper.setVisible(R.id.btn_logistics, false);
+                helper.setText(R.id.tvStatus, "交易关闭");
+                helper.setText(R.id.btn_confirm_goods, "查看订单");
+                helper.setGone(R.id.btn_confirm_goods, true);
+                helper.setGone(R.id.btn_logistics, false);
             } else if (item.getSetMealOrderModel().getStatus() == SetMealOrderInfo.HAVE_USED) {
                 if (item.getSetMealOrderModel().getIsConsume() == 1) {
                     //已使用
                     if (item.getSetMealOrderModel().getIsEval() == 1) {
-                        helper.setVisible(R.id.btn_logistics, false);
-                        helper.setText(R.id.tvStatus, "已完成");
+                        helper.setGone(R.id.btn_logistics, false);
                     } else {
-                        helper.setVisible(R.id.btn_logistics, true);
-                        helper.setText(R.id.tvStatus, "待评价");
-                        helper.setText(R.id.btn_logistics, "评价");
+                        helper.setGone(R.id.btn_logistics, true);
+                        helper.setText(R.id.btn_logistics, "晒评价");
                     }
+                    helper.setText(R.id.tvStatus, "交易完成");
                 }
             } else {
                 helper.setText(R.id.tvStatus, "");
-                helper.setVisible(R.id.btn_confirm_goods, false);
-                helper.setVisible(R.id.btn_logistics, false);
+                helper.setGone(R.id.btn_confirm_goods, false);
+                helper.setGone(R.id.btn_logistics, false);
             }
         }
 
