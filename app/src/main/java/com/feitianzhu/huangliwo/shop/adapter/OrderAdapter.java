@@ -1,4 +1,5 @@
 package com.feitianzhu.huangliwo.shop.adapter;
+
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -59,6 +60,7 @@ public class OrderAdapter extends BaseMultiItemQuickAdapter<MultipleItemOrderMod
                     .placeholder(R.mipmap.g10_04weijiazai)
                     .error(R.mipmap.g10_04weijiazai)).into((RoundedImageView) helper.getView(R.id.image));
             if (item.getGoodsOrderListBean().getIsVipOrder() == 1) {
+                helper.setGone(R.id.refund_tag, false);
                 if (item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_WAIT_DELIVERY) {
                     helper.setText(R.id.tvStatus, "等待发货");
                     helper.setGone(R.id.btn_logistics, false);
@@ -83,6 +85,7 @@ public class OrderAdapter extends BaseMultiItemQuickAdapter<MultipleItemOrderMod
                 }
 
             } else {
+                helper.setGone(R.id.refund_tag, true);
                 if (item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_COMPLETED) {
                     if (item.getGoodsOrderListBean().getIsEval() == 1) { //是否评价
                         helper.setText(R.id.btn_confirm_goods, "查看详情");
