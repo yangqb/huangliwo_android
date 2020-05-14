@@ -73,17 +73,7 @@ public class ImageCancheUtil {
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                        saveBitmap(activity, resource, imageUrl, new ApiCallBack<String>() {
-                            @Override
-                            public void onAPIResponse(String response) {
-
-                            }
-
-                            @Override
-                            public void onAPIError(int errorCode, String errorMsg) {
-
-                            }
-                        });
+                        saveBitmap(activity, resource, imageUrl, apiCallBack);
                     }
                 });
     }
@@ -98,6 +88,7 @@ public class ImageCancheUtil {
                         File file = new File(filePath);
                         try {
                             FileOutputStream out = new FileOutputStream(file);
+                            //压缩
                             bitmap.compress(Bitmap.CompressFormat.PNG, 80, out);
                             out.flush();
                             out.close();
