@@ -161,7 +161,7 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
     }
 
 
-    @OnClick({R.id.left_button, R.id.more_vip, R.id.btn_submit, R.id.tv_protocol, R.id.all_gif, R.id.btnRecord, R.id.tvInstruction, R.id.btn_logistics})
+    @OnClick({R.id.left_button, R.id.more_vip, R.id.btn_submit, R.id.tv_protocol, R.id.all_gif, R.id.btnRecord, R.id.tvInstruction})
     @SingleClick()
     public void onClick(View view) {
         Intent intent;
@@ -242,9 +242,6 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
                             .show();
                 }
                 break;
-            case R.id.btn_logistics:
-                checkLogisticsInfo(presentsModel.expressNum, "");
-                break;
         }
 
     }
@@ -318,43 +315,6 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
                         .show();
             }
         });
-    }
-
-    public void checkLogisticsInfo(String logisticsNo, String logisticsName) {
-        if (logisticsNo != null && !TextUtils.isEmpty(logisticsNo)) {
-            OkGo.<LzyResponse<String>>get(Urls.GET_LOGISTICS_INFO)
-                    .tag(this)
-                    .params(Constant.ACCESSTOKEN, token)
-                    .params(Constant.USERID, userId)
-                    .params("expressNo", logisticsNo)
-                    .execute(new JsonCallback<LzyResponse<String>>() {
-                        @Override
-                        public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<String>> response) {
-                            super.onSuccess(VipActivity.this, response.body().msg, response.body().code);
-                            if (response.body().code == 0 && response.body().data != null && !TextUtils.isEmpty(response.body().data)) {
-                                String jsonStr = response.body().data;
-                                LogisticsModel logisticsModel = new Gson().fromJson(jsonStr, LogisticsModel.class);
-                                if (logisticsModel.getData() != null && logisticsModel.getData().size() > 0) {
-                                    Intent intent = new Intent(VipActivity.this, LogisticsInfoActivity.class);
-                                    intent.putExtra(LogisticsInfoActivity.LOGISTICS_COMPANY, logisticsName);
-                                    intent.putExtra(LogisticsInfoActivity.LOGISTICS_DATA, logisticsModel);
-                                    startActivity(intent);
-                                } else {
-                                    ToastUtils.show("暂无物流信息");
-                                }
-                            } else {
-                                ToastUtils.show("暂无物流信息");
-                            }
-                        }
-
-                        @Override
-                        public void onError(com.lzy.okgo.model.Response<LzyResponse<String>> response) {
-                            super.onError(response);
-                        }
-                    });
-        } else {
-            ToastUtils.show("暂无物流信息");
-        }
     }
 
     public void receiveGif(int giftId, int merchantId, int position) {

@@ -59,63 +59,89 @@ public class OrderAdapter extends BaseMultiItemQuickAdapter<MultipleItemOrderMod
             Glide.with(mContext).load(item.getGoodsOrderListBean().getGoodsImg()).apply(new RequestOptions()
                     .placeholder(R.mipmap.g10_04weijiazai)
                     .error(R.mipmap.g10_04weijiazai)).into((RoundedImageView) helper.getView(R.id.image));
-            if (item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_COMPLETED) {
-                if (item.getGoodsOrderListBean().getIsEval() == 1) { //是否评价
-                    helper.setText(R.id.btn_confirm_goods, "查看详情");
-                } else {
-                    helper.setText(R.id.btn_confirm_goods, "晒评价");
-                }
-                helper.setText(R.id.btn_refund, "删除订单");
-                helper.setText(R.id.tvStatus, "交易完成");
-                helper.setText(R.id.btn_logistics, "查看物流");
-                helper.setGone(R.id.btn_logistics, true);
-                helper.setGone(R.id.btn_refund, true);
-                helper.setGone(R.id.btn_confirm_goods, true);
-            } else if (item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_NO_PAY) {
-                helper.setText(R.id.tvStatus, "等待付款");
-                helper.setText(R.id.btn_confirm_goods, "去付款");
-                helper.setText(R.id.btn_logistics, " 取消订单");
-                helper.setGone(R.id.btn_confirm_goods, true);
-                helper.setGone(R.id.btn_logistics, true);
-                helper.setGone(R.id.btn_refund, false);
-            } else if (item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_WAIT_DELIVERY) {
-                helper.setText(R.id.tvStatus, "等待发货");
-                helper.setText(R.id.btn_logistics, "申请退款 ");
-                helper.setGone(R.id.btn_confirm_goods, false);
-                helper.setGone(R.id.btn_logistics, true);
-                helper.setGone(R.id.btn_refund, false);
-            } else if (item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_WAIT_RECEIVING) {
-                helper.setText(R.id.tvStatus, "等待收货");
-                helper.setText(R.id.btn_confirm_goods, "确认收货");
-                helper.setText(R.id.btn_logistics, " 查看物流");
-                helper.setText(R.id.btn_refund, "申请退款");
-                helper.setGone(R.id.btn_confirm_goods, true);
-                helper.setGone(R.id.btn_logistics, true);
-                helper.setGone(R.id.btn_refund, true);
-            } else if (item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_REFUND || item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_REFUNDED || item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_CANCEL) {
-                if (item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_REFUND) {
-                    helper.setText(R.id.tvStatus, "退款中");
-                    helper.setText(R.id.btn_confirm_goods, "退款进度");
+            if (item.getGoodsOrderListBean().getIsVipOrder() == 1) {
+                if (item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_WAIT_DELIVERY) {
+                    helper.setText(R.id.tvStatus, "等待发货");
+                    helper.setGone(R.id.btn_logistics, false);
+                    helper.setGone(R.id.btn_refund, false);
+                    helper.setGone(R.id.btn_confirm_goods, false);
+                } else if (item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_WAIT_RECEIVING) {
+                    helper.setText(R.id.tvStatus, "等待收货");
+                    helper.setText(R.id.btn_logistics, "查看物流");
+                    helper.setGone(R.id.btn_logistics, false);
                     helper.setGone(R.id.btn_refund, false);
                     helper.setGone(R.id.btn_confirm_goods, true);
-                } else if (item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_REFUNDED) {
-                    helper.setText(R.id.tvStatus, "退款完成");
+                } else if (item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_COMPLETED) {
+                    helper.setText(R.id.tvStatus, "交易完成");
+                    helper.setGone(R.id.btn_logistics, false);
+                    helper.setGone(R.id.btn_refund, false);
+                    helper.setGone(R.id.btn_confirm_goods, false);
+                } else {
+                    helper.setText(R.id.tvStatus, "");
+                    helper.setGone(R.id.btn_confirm_goods, false);
+                    helper.setGone(R.id.btn_logistics, false);
+                    helper.setGone(R.id.btn_refund, false);
+                }
+
+            } else {
+                if (item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_COMPLETED) {
+                    if (item.getGoodsOrderListBean().getIsEval() == 1) { //是否评价
+                        helper.setText(R.id.btn_confirm_goods, "查看详情");
+                    } else {
+                        helper.setText(R.id.btn_confirm_goods, "晒评价");
+                    }
                     helper.setText(R.id.btn_refund, "删除订单");
-                    helper.setText(R.id.btn_confirm_goods, "查看订单");
+                    helper.setText(R.id.tvStatus, "交易完成");
+                    helper.setText(R.id.btn_logistics, "查看物流");
+                    helper.setGone(R.id.btn_logistics, true);
                     helper.setGone(R.id.btn_refund, true);
                     helper.setGone(R.id.btn_confirm_goods, true);
-                } else {
-                    helper.setText(R.id.tvStatus, "交易关闭");
-                    helper.setText(R.id.btn_refund, "删除订单");
-                    helper.setGone(R.id.btn_refund, true);
+                } else if (item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_NO_PAY) {
+                    helper.setText(R.id.tvStatus, "等待付款");
+                    helper.setText(R.id.btn_confirm_goods, "去付款");
+                    helper.setText(R.id.btn_logistics, " 取消订单");
+                    helper.setGone(R.id.btn_confirm_goods, true);
+                    helper.setGone(R.id.btn_logistics, true);
+                    helper.setGone(R.id.btn_refund, false);
+                } else if (item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_WAIT_DELIVERY) {
+                    helper.setText(R.id.tvStatus, "等待发货");
+                    helper.setText(R.id.btn_logistics, "申请退款 ");
                     helper.setGone(R.id.btn_confirm_goods, false);
+                    helper.setGone(R.id.btn_logistics, true);
+                    helper.setGone(R.id.btn_refund, false);
+                } else if (item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_WAIT_RECEIVING) {
+                    helper.setText(R.id.tvStatus, "等待收货");
+                    helper.setText(R.id.btn_confirm_goods, "确认收货");
+                    helper.setText(R.id.btn_logistics, " 查看物流");
+                    helper.setText(R.id.btn_refund, "申请退款");
+                    helper.setGone(R.id.btn_confirm_goods, true);
+                    helper.setGone(R.id.btn_logistics, true);
+                    helper.setGone(R.id.btn_refund, true);
+                } else if (item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_REFUND || item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_REFUNDED || item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_CANCEL) {
+                    if (item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_REFUND) {
+                        helper.setText(R.id.tvStatus, "退款中");
+                        helper.setText(R.id.btn_confirm_goods, "退款进度");
+                        helper.setGone(R.id.btn_refund, false);
+                        helper.setGone(R.id.btn_confirm_goods, true);
+                    } else if (item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_REFUNDED) {
+                        helper.setText(R.id.tvStatus, "退款完成");
+                        helper.setText(R.id.btn_refund, "删除订单");
+                        helper.setText(R.id.btn_confirm_goods, "查看订单");
+                        helper.setGone(R.id.btn_refund, true);
+                        helper.setGone(R.id.btn_confirm_goods, true);
+                    } else {
+                        helper.setText(R.id.tvStatus, "交易关闭");
+                        helper.setText(R.id.btn_refund, "删除订单");
+                        helper.setGone(R.id.btn_refund, true);
+                        helper.setGone(R.id.btn_confirm_goods, false);
+                    }
+                    helper.setGone(R.id.btn_logistics, false);
+                } else {
+                    helper.setText(R.id.tvStatus, "");
+                    helper.setGone(R.id.btn_confirm_goods, false);
+                    helper.setGone(R.id.btn_logistics, false);
+                    helper.setGone(R.id.btn_refund, false);
                 }
-                helper.setGone(R.id.btn_logistics, false);
-            } else {
-                helper.setText(R.id.tvStatus, "");
-                helper.setGone(R.id.btn_confirm_goods, false);
-                helper.setGone(R.id.btn_logistics, false);
-                helper.setGone(R.id.btn_refund, false);
             }
         } else {
             helper.setText(R.id.count, "×1");
