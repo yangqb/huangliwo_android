@@ -1,5 +1,6 @@
 package com.feitianzhu.huangliwo.pushshop;
 
+import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -10,6 +11,7 @@ import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
+import com.feitianzhu.huangliwo.me.ui.ScannerActivity;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.hjq.toast.ToastUtils;
@@ -59,16 +61,17 @@ public class RecordOrderActivity extends BaseActivity {
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         type = getIntent().getStringExtra(TYPE);
         result = getIntent().getStringExtra(URL_CODE);
-        if ("1".equals(type)) {
-            String[] strings = result.split("-");
-            mealCode = strings[0];
-            merchantsId = strings[1];
-        } else {
+        if (result != null) {
             String[] aa = result.split("\\?");
             String[] bb = aa[1].split("\\&");
             merchantsId = bb[0].split("=")[1];
+            type = bb[1].split("=")[1];
             mealCode = bb[2].split("=")[1];
+
+        } else {
+            merchantsId = getIntent().getStringExtra(MERCHANTS_ID);
         }
+
 
         if (mealCode != null) {
             editCode.setText(mealCode);
@@ -93,6 +96,8 @@ public class RecordOrderActivity extends BaseActivity {
             return;
         }
 
+        mealCode = editCode.getText().toString();
+
         OkGo.<LzyResponse>post(Urls.RECORD_ORDER)
                 .tag(this)
                 .params("num", mealCode)
@@ -109,7 +114,9 @@ public class RecordOrderActivity extends BaseActivity {
                                     .asConfirm("录单成功！是否继续录单？", "", "取消", "确定", new OnConfirmListener() {
                                         @Override
                                         public void onConfirm() {
+                                            finish();
                                             editCode.setHint("请输入套餐码");
+                                            startActivity(new Intent(RecordOrderActivity.this, ScannerActivity.class));
                                         }
                                     }, new OnCancelListener() {
                                         @Override

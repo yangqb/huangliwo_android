@@ -120,6 +120,10 @@ public class RecommendedFragment extends SFFragment {
     NestedScrollView scrollView;
     @BindView(R.id.back_top)
     LinearLayout backTop;
+    @BindView(R.id.tvNotice)
+    TextView tvNotice;
+    @BindView(R.id.ll_notice)
+    LinearLayout llNotice;
 
     public RecommendedFragment() {
 
@@ -160,8 +164,35 @@ public class RecommendedFragment extends SFFragment {
         initView();
         initData();
         initListener();
+        getNotice();
 
         return view;
+    }
+    public void getNotice() {
+        OkGo.<LzyResponse<NoticeModel>>get(Urls.GET_HOME_NOTICE)
+                .tag(this)
+                .params("accessToken", token)
+                .params("userId", userId)
+                .execute(new JsonCallback<LzyResponse<NoticeModel>>() {
+                    @Override
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<NoticeModel>> response) {
+                        super.onSuccess(getActivity(), "", response.body().code);
+                        if (response.body().data != null) {
+                            NoticeModel noticeModel = response.body().data;
+                            if (noticeModel.getPushMsg() != null && !TextUtils.isEmpty(noticeModel.getPushMsg().getPushContent()) && noticeModel.getPushMsg().getPushContent() != null) {
+                                llNotice.setVisibility(View.VISIBLE);
+                                tvNotice.setText(noticeModel.getPushMsg().getPushContent());
+                            } else {
+                                llNotice.setVisibility(View.GONE);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse<NoticeModel>> response) {
+                        super.onError(response);
+                    }
+                });
     }
 
     public void initView() {

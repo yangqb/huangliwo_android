@@ -85,7 +85,7 @@
                 <LinearLayout
                     android:id="@+id/myMerchantList"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="19dp"
                     android:layout_marginLeft="45dp"
                     android:orientation="horizontal">
 

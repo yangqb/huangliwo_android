@@ -118,7 +118,7 @@ public class SetMealOrderDetailActivity extends BaseActivity {
 
     public void showView(SetMealOrderDetailInfo orderDetailInfo) {
         if (orderDetailInfo.getStatus() != 1 && orderDetailInfo.getStatus() != 5) {
-            createQrcode(orderDetailInfo.getNumMid());
+            createQrcode(orderDetailInfo.getUrl());
             llQRCode.setVisibility(View.VISIBLE);
         }
         if (orderDetailInfo.getStatus() == 3) {
