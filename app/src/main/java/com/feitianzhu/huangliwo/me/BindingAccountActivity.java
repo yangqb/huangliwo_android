@@ -16,6 +16,7 @@ import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.StringUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
+import com.feitianzhu.huangliwo.utils.doubleclick.SingleClick;
 import com.hjq.toast.ToastUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.request.PostRequest;
@@ -98,12 +99,15 @@ public class BindingAccountActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.right_button:
+
                 submit();
                 break;
         }
     }
 
+   @SingleClick
     public void submit() {
+
         if (TextUtils.isEmpty(editName.getText().toString().trim())) {
             ToastUtils.show("请输入真实姓名");
             return;
