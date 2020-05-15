@@ -12,6 +12,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,6 +22,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.feitianzhu.huangliwo.MainActivity;
 import com.feitianzhu.huangliwo.R;
+import com.gyf.immersionbar.ImmersionBar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,19 +35,21 @@ public class AdvertisementActivity extends AppCompatActivity {
     @BindView(R.id.imageadvertise)
     ImageView imageadvertise;
     private String strVal;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_advertisement);
         ButterKnife.bind(this);
-        handler.post(waitSendsRunnable);
+        ImmersionBar.with(this)
+                .fitsSystemWindows(false)
+                .fullScreen(true)
+                .statusBarDarkFont(true, 0.2f)
+                .statusBarColor(R.color.transparent)
+                .init();
         strVal = getIntent().getStringExtra("strVal");
         //加载图片
-        // Glide.with(AdvertisementActivity.this).load(url).asGif().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(imageadvertise);
-        Log.e("TAG", "onCreate: ");
-
         BitmapFactory.Options options = new BitmapFactory.Options();
-
         options.inPreferredConfig = Bitmap.Config.ARGB_4444;
         Bitmap img = BitmapFactory.decodeFile(ImageCancheUtil.getFilePath(strVal)
                 , options);
@@ -52,20 +57,34 @@ public class AdvertisementActivity extends AppCompatActivity {
 //        Glide.with(this)
 //                .load(img)
 //                .into(imageadvertise);
+        btnAdv.setText("跳过 " + index);
+        handler.sendEmptyMessageDelayed(index, 1000);
+
+
     }
 
+    // 倒计时五秒
+    int index = 3;
     //启用一个Handler
     Handler handler = new Handler() {
         @SuppressLint("HandlerLeak")
         public void handleMessage(Message msg) {
 
             super.handleMessage(msg);
+            index--;
+            btnAdv.setText("跳过 " + index);
+
             switch (msg.what) {
-                case 0:
+                case 1:
                     startMainActivity();
                     break;
-                case 1:
-                    btnAdv.setText("跳过 " + index);
+                case 2:
+                    handler.sendEmptyMessageDelayed(index, 1000);
+
+                    break;
+                case 3:
+                    handler.sendEmptyMessageDelayed(index, 1000);
+
                     break;
                 default:
                     break;
@@ -75,7 +94,7 @@ public class AdvertisementActivity extends AppCompatActivity {
 
     //点击跳转到主页面
     @OnClick(R.id.btnAdv)
-    public void onViewClicked() {
+    public void onViewClicked(View view) {
         startMainActivity();
     }
 
@@ -85,32 +104,6 @@ public class AdvertisementActivity extends AppCompatActivity {
         finish();
     }
 
-    // 倒计时五秒
-    int index = 3;
-    Runnable waitSendsRunnable = new Runnable() {
-        public void run() {
-            if (index > 0) {
-                index--;
-                try {
-                    Thread.sleep(1000);
-                    handler.sendEmptyMessage(1);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                handler.post(waitSendsRunnable);
-            } else {
-                try {
-                    Thread.sleep(1000);
-                    handler.sendEmptyMessage(0);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-        }
-
-    };
 
 
 }

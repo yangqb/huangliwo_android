@@ -73,12 +73,13 @@
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
-        <activity android:name=".splash.AdvertisementActivity"
+        <activity
+            android:name=".splash.AdvertisementActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
-            android:screenOrientation="portrait"
             android:launchMode="singleTask"
-            android:theme="@style/SplashAdvertiseTheme"
-            />
+            android:screenOrientation="portrait"
+            android:theme="@style/SplashAdvertiseTheme">
+        </activity>
         <activity
             android:name=".me.ui.ShopsCreateActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
@@ -103,8 +104,7 @@
             android:name=".splash.SplashActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait"
-            android:theme="@style/SplashTheme"
-            >
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
