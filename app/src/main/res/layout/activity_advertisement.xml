@@ -9,7 +9,9 @@
         android:id="@+id/imageadvertise"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:scaleType="centerCrop"
         android:visibility="visible" />
+
     <TextView
         android:id="@+id/btnAdv"
         android:layout_width="61dp"

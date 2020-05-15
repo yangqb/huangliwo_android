@@ -82,7 +82,6 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void ImageCancheok() {
-        Log.i("imageseccess", "onSuccess: " + "2");
         OkGo.<LzyResponse<AdvertisementBean>>get(Urls.ADVERTISEMENT)
                 .tag(this)
                 .execute(new JsonCallback<LzyResponse<AdvertisementBean>>() {

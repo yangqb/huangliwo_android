@@ -22,15 +22,16 @@
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/text1"
-        android:layout_width="54dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:ellipsize="end"
         android:gravity="center_horizontal"
         android:lines="1"
+        android:ems="6"
         android:maxLines="1"
         android:text=""
-        android:textColor="@color/bank_bg01"
-        android:textSize="8sp" />
+        android:textColor="#666666"
+        android:textSize="11sp" />
 
 </LinearLayout>

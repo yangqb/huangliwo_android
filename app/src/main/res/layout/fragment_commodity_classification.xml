@@ -151,7 +151,7 @@
                                 android:id="@+id/title1"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="14.5dp"
+                                android:layout_marginTop="5dp"
                                 android:text="热门商铺"
                                 android:textColor="@color/bank_bg01"
                                 android:textSize="13sp"></TextView>
@@ -182,7 +182,7 @@
                                 android:id="@+id/title2"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="14.5dp"
+                                android:layout_marginTop="5dp"
                                 android:text="优质商家"
                                 android:textColor="@color/bank_bg01"
                                 android:textSize="13sp"></TextView>
@@ -215,7 +215,7 @@
                                 android:id="@+id/title3"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="14.5dp"
+                                android:layout_marginTop="5dp"
                                 android:text="为您推荐"
                                 android:textColor="@color/bank_bg01"
                                 android:textSize="13sp"></TextView>
