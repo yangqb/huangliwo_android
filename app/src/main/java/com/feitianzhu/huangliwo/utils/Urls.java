@@ -6,11 +6,10 @@ package com.feitianzhu.huangliwo.utils;
 
 public class Urls {
     //public static final String BASE_URL = "http://182.92.177.234/"; //正式环境
-    //public static final String BASE_URL = "http://39.106.65.35:8088/"; //测试地址
-    public static final String BASE_URL = "http://8.129.218.83:8088/"; //新测试地址
+    public static final String BASE_URL = "http://8.129.218.83:8088/"; //测试地址
     //public static final String BASE_URL = "http://192.168.0.9:8089/";//钟工本地地址
     //public static final String BASE_URL = "http://172.16.48.5:8089/"; //周工本地地址
-    public static final String TICKET_BASE_URL = "http://39.106.65.35:8087/"; //机票测试
+    public static final String TICKET_BASE_URL = "http://8.129.218.83:8087/"; //机票测试
     //public static final String TICKET_BASE_URL = "http://192.168.0.7:8087/"; //周工机票本地
 //    public static final String TICKET_BASE_URL = "http://182.92.177.234:8087/"; //机票正式
 
@@ -244,6 +243,11 @@ public class Urls {
      * 商铺收益细则和订单列表
      * */
     public static final String GET_EARNINGS_RULES = BASE_URL + "fhwl/merchant/getMerchantOrder";
+
+    /*
+     * 商铺赠品订单列表
+     * */
+    public static final String GET_GIFT_ORDER_LIST = BASE_URL + "fhwl/merchantPay/giftOrderList";
 
     /*
      * 提现记录
@@ -663,4 +667,8 @@ public class Urls {
      *退票差额信息提交
      * */
     public static final String REFUND_ASKFOR = TICKET_BASE_URL + "askFor";
+    /**
+     * 广告页
+     */
+    public static final String ADVERTISEMENT = BASE_URL + "fhwl/index/getPoster";
 }

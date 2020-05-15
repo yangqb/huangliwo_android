@@ -79,6 +79,7 @@ public class WithdrawRecordActivity extends BaseActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new WithdrawRecordAdapter(withdrawRecordModelList);
         mAdapter.setEmptyView(mEmptyView);
+        mAdapter.getEmptyView().setVisibility(View.INVISIBLE);
         recyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
         initListener();
@@ -161,6 +162,7 @@ public class WithdrawRecordActivity extends BaseActivity {
                             mAdapter.setNewData(withdrawRecordModelList);
                             mAdapter.notifyDataSetChanged();
                         }
+                        mAdapter.getEmptyView().setVisibility(View.VISIBLE);
                     }
 
                     @Override

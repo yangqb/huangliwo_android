@@ -84,7 +84,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/dp_10"
-            android:text="设置支付密码"
+            android:text="设置提现密码"
             android:textColor="@color/txt_big"
             android:textSize="@dimen/text_size_body" />
 

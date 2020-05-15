@@ -124,11 +124,11 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
     @BindView(R.id.title3)
     TextView title3;
     @BindView(R.id.hot)
-    CornerLinearView hot;
+    LinearLayout hot;
     @BindView(R.id.boutique)
-    CornerLinearView boutique;
+    LinearLayout boutique;
     @BindView(R.id.recommend)
-    CornerLinearView recommend;
+    LinearLayout recommend;
     @BindView(R.id.backgroundImg)
     LinearLayout backgroundImg;
 
@@ -215,7 +215,6 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
 
             }
         });
-        rightAdapter.setEmptyView(mEmptyView);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
         rightRecyclerView.setLayoutManager(gridLayoutManager);
         rightRecyclerView.setAdapter(rightAdapter);

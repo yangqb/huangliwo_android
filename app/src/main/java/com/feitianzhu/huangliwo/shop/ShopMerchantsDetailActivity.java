@@ -70,6 +70,7 @@ import butterknife.OnClick;
 import cc.shinichi.library.ImagePreview;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
+import static com.feitianzhu.huangliwo.common.Constant.ACCESS_TOKEN;
 import static com.feitianzhu.huangliwo.common.Constant.POST_MINE_INFO;
 import static com.feitianzhu.huangliwo.common.Constant.USERID;
 import static com.feitianzhu.huangliwo.vip.VipGiftDetailActivity.GIFT_ID;
@@ -158,6 +159,7 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
         mRecyclerView.setNestedScrollingEnabled(false);
         mAdapter = new ShopDetailAdapter(multipleItemList);
         mAdapter.setEmptyView(mEmptyView);
+        mAdapter.getEmptyView().setVisibility(View.INVISIBLE);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
@@ -520,6 +522,7 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
                             mAdapter.setNewData(multipleItemList);
                             mAdapter.notifyDataSetChanged();
                         }
+                        mAdapter.getEmptyView().setVisibility(View.VISIBLE);
                     }
 
                     @Override
@@ -536,6 +539,8 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
                 .tag(this)
                 .params("type", "2")
                 .params("merchantId", merchantsId + "")
+                .params(ACCESSTOKEN ,token)
+                .params(USERID, userId)
                 .execute(new JsonCallback<LzyResponse<SetMealListInfo>>() {
                     @Override
                     public void onStart(Request<LzyResponse<SetMealListInfo>, ? extends Request> request) {
@@ -571,6 +576,7 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
                             mAdapter.setNewData(multipleItemList);
                             mAdapter.notifyDataSetChanged();
                         }
+                        mAdapter.getEmptyView().setVisibility(View.VISIBLE);
 
                     }
 

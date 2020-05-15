@@ -43,9 +43,11 @@ public class RightAdapter1 extends BaseMultiItemQuickAdapter<MultipleItem, BaseV
 
                 helper.setText(R.id.text1, item.getGoodsListBean().getGoodsName());
                 Glide.with(mContext).load(item.getGoodsListBean().getGoodsImg())
-                        .apply(new RequestOptions().placeholder(R.mipmap.g10_04weijiazai)
+                        .apply(new RequestOptions()
+                                .placeholder(R.mipmap.g10_04weijiazai)
                                 .error(R.mipmap.g10_04weijiazai)
-                                .dontAnimate()).into((RoundedImageView) helper.getView(R.id.image));
+                                .dontAnimate())
+                        .into((RoundedImageView) helper.getView(R.id.image));
                 break;
         }
     }

@@ -82,6 +82,7 @@ public class ShopsActivity extends BaseActivity {
             }
         });
         rightAdapter.setEmptyView(mEmptyView);
+        rightAdapter.getEmptyView().setVisibility(View.INVISIBLE);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         recyclerView.setAdapter(rightAdapter);
         recyclerView.setNestedScrollingEnabled(false);
@@ -159,6 +160,7 @@ public class ShopsActivity extends BaseActivity {
                             rightAdapter.setNewData(multipleItemList);
                             rightAdapter.notifyDataSetChanged();
                         }
+                        rightAdapter.getEmptyView().setVisibility(View.VISIBLE);
                     }
 
                     @Override

@@ -154,6 +154,7 @@ public class MyOrderActivity2 extends BaseActivity {
         });
         refreshLayout.setEnableLoadMore(false);
         mAdapter.setEmptyView(mEmptyView);
+        mAdapter.getEmptyView().setVisibility(View.INVISIBLE);
         mAdapter.notifyDataSetChanged();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(mAdapter);
@@ -583,6 +584,7 @@ public class MyOrderActivity2 extends BaseActivity {
                             mAdapter.setNewData(multipleItemOrderModels);
                             mAdapter.notifyDataSetChanged();
                         }
+                        mAdapter.getEmptyView().setVisibility(View.VISIBLE);
                     }
 
                     @Override
@@ -630,6 +632,7 @@ public class MyOrderActivity2 extends BaseActivity {
                             mAdapter.setNewData(multipleItemOrderModels);
                             mAdapter.notifyDataSetChanged();
                         }
+                        mAdapter.getEmptyView().setVisibility(View.VISIBLE);
                     }
 
                     @Override

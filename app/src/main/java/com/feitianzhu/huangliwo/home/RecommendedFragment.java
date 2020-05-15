@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -27,6 +28,7 @@ import com.feitianzhu.huangliwo.home.adapter.HotGoodsAdapter2;
 import com.feitianzhu.huangliwo.home.adapter.OptAdapter;
 import com.feitianzhu.huangliwo.home.adapter.RecommendedAdapter;
 import com.feitianzhu.huangliwo.home.entity.HomeEntity;
+import com.feitianzhu.huangliwo.home.entity.NoticeModel;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.login.LoginActivity;

@@ -33,6 +33,7 @@ public class SelfMerchantsOrderAdapter extends BaseMultiItemQuickAdapter<SelfMer
         super(data);
         addItemType(SelfMerchantsModel.RULES_TYPE, R.layout.layout_merchants_rules_order);
         addItemType(SelfMerchantsModel.ORDER_TYPE, R.layout.layout_merchants_setmeal_order);
+        addItemType(SelfMerchantsModel.GIFT_ORDER_TYPE, R.layout.layout_merchants_setmeal_order);
     }
 
     @Override
@@ -48,7 +49,7 @@ public class SelfMerchantsOrderAdapter extends BaseMultiItemQuickAdapter<SelfMer
             } else {
                 helper.setText(R.id.tvStatus, "线上消费");
             }
-        } else {
+        } else if (helper.getItemViewType() == SelfMerchantsModel.ORDER_TYPE) {
             helper.setText(R.id.setMealName, item.getMerchantsEarnRulesModel().getSmName());
             helper.setText(R.id.phone, item.getMerchantsEarnRulesModel().getPhone());
             helper.setText(R.id.name, item.getMerchantsEarnRulesModel().getNickName());
@@ -66,6 +67,17 @@ public class SelfMerchantsOrderAdapter extends BaseMultiItemQuickAdapter<SelfMer
                 helper.setText(R.id.tvStatus, "已取消");
             } else if (item.getMerchantsEarnRulesModel().getStatus() == 6) {
                 helper.setText(R.id.tvStatus, "已到账");
+            }
+        } else {
+            helper.setText(R.id.setMealName, item.getMerchantGiftOrderModel().giftName);
+            helper.setText(R.id.phone, item.getMerchantGiftOrderModel().phone);
+            helper.setText(R.id.name, item.getMerchantGiftOrderModel().nickName);
+            helper.setText(R.id.date, item.getMerchantGiftOrderModel().createTime);
+            setSpannableString(String.format(Locale.getDefault(), "%.2f", item.getMerchantGiftOrderModel().price), helper.getView(R.id.amount));
+            if (item.getMerchantGiftOrderModel().isUse == 1) {
+                helper.setText(R.id.tvStatus, "已录单");
+            } else {
+                helper.setText(R.id.tvStatus, "待录单");
             }
         }
 

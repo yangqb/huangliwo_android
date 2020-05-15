@@ -84,6 +84,7 @@ public class MyCollectionActivity extends BaseActivity {
             }
         });
         mAdapter.setEmptyView(mEmptyView);
+        mAdapter.getEmptyView().setVisibility(View.INVISIBLE);
         ItemDragAndSwipeCallback itemDragAndSwipeCallback = new ItemDragAndSwipeCallback(mAdapter);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemDragAndSwipeCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
@@ -221,6 +222,8 @@ public class MyCollectionActivity extends BaseActivity {
                             mAdapter.setNewData(collectionModelList);
                             mAdapter.notifyDataSetChanged();
                         }
+
+                        mAdapter.getEmptyView().setVisibility(View.VISIBLE);
                     }
 
                     @Override
