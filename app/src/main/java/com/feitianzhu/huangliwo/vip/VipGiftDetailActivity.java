@@ -118,7 +118,7 @@ public class VipGiftDetailActivity extends BaseActivity {
                             } else {
                                 tvUser.setText("已使用");
                             }
-                            createCode(detailModel.url);
+                            createCode(detailModel.numMid);
                             tvCode.setText(detailModel.num);
 
                         }

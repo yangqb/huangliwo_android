@@ -133,22 +133,7 @@ public class ScannerActivity extends BaseActivity {
             startActivity(intent);
             finish();
         } else {
-            if (result.contains("-")) {
-              /*
-               录单页面
-              * */
-                if (isMerchants != 1) {
-                    ToastUtils.show("您不是商户不可录单");
-                    finish();
-                } else {
-                    finish();
-                    intent = new Intent(ScannerActivity.this, RecordOrderActivity.class);
-                    intent.putExtra(RecordOrderActivity.TYPE, "1");
-                    intent.putExtra(RecordOrderActivity.URL_CODE, result);
-                    startActivity(intent);
-
-                }
-            } else if (result.contains("merchantId") && result.contains("receivables")) {
+            if (result.contains("merchantId") && result.contains("receivables")) {
                  /*
                收款页面
               * */
@@ -158,18 +143,18 @@ public class ScannerActivity extends BaseActivity {
                 finish();
 
             } else if (result.contains("record")) {
-                //赠品录单
+               /*
+               赠品录单
+              * */
                 if (isMerchants != 1) {
                     ToastUtils.show("您不是商户不可录单");
                     finish();
                 } else {
                     intent = new Intent(ScannerActivity.this, RecordOrderActivity.class);
-                    intent.putExtra(RecordOrderActivity.TYPE, "2");
                     intent.putExtra(RecordOrderActivity.URL_CODE, result);
                     startActivity(intent);
                     finish();
                 }
-
             } else {
                 ToastUtils.show("无法识别此二维码!!");
             }

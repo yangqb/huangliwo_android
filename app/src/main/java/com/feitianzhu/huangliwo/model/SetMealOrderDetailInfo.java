@@ -43,14 +43,14 @@ public class SetMealOrderDetailInfo implements Serializable {
     private int smId;
     private int merchantId;
     private String userId;
-    private String numMid;
+    public String url;
 
-    public String getNumMid() {
-        return numMid;
+    public String getUrl() {
+        return url;
     }
 
-    public void setNumMid(String numMid) {
-        this.numMid = numMid;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public int getMerchantId() {

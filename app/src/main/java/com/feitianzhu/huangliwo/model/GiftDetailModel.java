@@ -14,4 +14,5 @@ public class GiftDetailModel implements Serializable {
     public double price;//": 0,
     public int type;//": 0,
     public String url;//": "string"
+    public String numMid;
 }
