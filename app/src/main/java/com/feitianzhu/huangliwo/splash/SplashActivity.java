@@ -1,15 +1,12 @@
 package com.feitianzhu.huangliwo.splash;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -17,21 +14,16 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.feitianzhu.huangliwo.MainActivity;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
-import com.feitianzhu.huangliwo.common.base.LazyWebActivity;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
-import com.feitianzhu.huangliwo.login.LoginActivity;
-import com.feitianzhu.huangliwo.login.entity.LoginEntity;
-import com.feitianzhu.huangliwo.settings.ChangeLoginPassword;
-import com.feitianzhu.huangliwo.shop.ui.SearchShopActivity;
 import com.feitianzhu.huangliwo.splash.Bean.AdvertisementBean;
 import com.feitianzhu.huangliwo.utils.GlideUtils;
 import com.feitianzhu.huangliwo.utils.LocationUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
+import com.feitianzhu.huangliwo.utils.StringUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.view.CustomUserPrivateView;
 import com.feitianzhu.huangliwo.view.CustomVideoView;
@@ -41,8 +33,6 @@ import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
 import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
-import com.lxj.xpopup.interfaces.OnCancelListener;
-import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 
@@ -64,16 +54,15 @@ public class SplashActivity extends AppCompatActivity {
     TextView mBtn;
     private Handler handler;
     private Runnable runnable;
-    private boolean b;
+    private boolean b = false;
     private String strVal;
-    private int code;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
-       // ImageCancheok();
+        // ImageCancheok();
         ImmersionBar.with(this)
                 .fitsSystemWindows(false)
                 .fullScreen(true)
@@ -82,49 +71,49 @@ public class SplashActivity extends AppCompatActivity {
                 .init();
 
         //initPermision();
-        b = ImageCancheUtil.hasImageCached(strVal);
-        if (b==false){
-            Log.i("imageseccess", "onSuccess: "+"1");
-            ImageCancheUtil.cacheImage(SplashActivity.this, strVal, new ApiCallBack<String>() {
-                @Override
-                public void onAPIResponse(String response) {
-                }
-                @Override
-                public void onAPIError(int errorCode, String errorMsg) {
-                }
-            });
-        }
-
+        //请求广告数据
+        ImageCancheok();
         GlideUtils.getImageView2(this, R.mipmap.dingbu, image);
         showPrivateDialog();
         SPUtils.putBoolean(this, Constant.LOGIN_DIALOG, true);//重新进入APP才弹出异地登录的弹框
         //获取本地图片
-       //判断本地时候存在动画
+        //判断本地时候存在动画
 
     }
 
     private void ImageCancheok() {
-        Log.i("imageseccess", "onSuccess: "+"2");
+        Log.i("imageseccess", "onSuccess: " + "2");
         OkGo.<LzyResponse<AdvertisementBean>>get(Urls.ADVERTISEMENT)
                 .tag(this)
                 .execute(new JsonCallback<LzyResponse<AdvertisementBean>>() {
                     @Override
                     public void onSuccess(Response<LzyResponse<AdvertisementBean>> response) {
-                        super.onSuccess(SplashActivity.this,response.body().msg==null?"":response.body().msg, response.body().code);
-                        if (response.body()!=null){
+                        super.onSuccess(SplashActivity.this, response.body().msg == null ? "" : response.body().msg, response.body().code);
+                        if (response.body() != null) {
                             AdvertisementBean data = response.body().data;
-                            AdvertisementBean.DataBean data1 = data.getData();
-                            code = response.code();
-                            strVal = data1.getStrVal();
-                           // b = ImageCancheUtil.hasImageCached(strVal);
-                            Log.i("imageseccess", "onSuccess: "+strVal);
+                            strVal = data.getStrVal();
+                            // b = ImageCancheUtil.hasImageCached(strVal);
+                            if (StringUtils.isEmpty(strVal)) {
+                                return;
+                            }
+                            b = ImageCancheUtil.hasImageCached(strVal);
+                            if (b == false) {
+                                ImageCancheUtil.cacheImage(SplashActivity.this, strVal, new ApiCallBack<String>() {
+                                    @Override
+                                    public void onAPIResponse(String response) {
+                                    }
+
+                                    @Override
+                                    public void onAPIError(int errorCode, String errorMsg) {
+                                    }
+                                });
+                            }
                         }
                     }
 
                     @Override
                     public void onError(Response<LzyResponse<AdvertisementBean>> response) {
                         super.onError(response);
-                        Log.i("imageseccess", "onSuccess: "+response.message());
                     }
                 });
        /* .execute(new JsonCallback<LzyResponse<AdvertisementBean>>() {
@@ -169,17 +158,10 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void run() {
 
-                if (b){
+                if (b) {
                     //跳转广告页面
-                    if (code==0){
-                        starAdvertiseActivity();
-                        Log.i("imageseccess", "onSuccess: "+"3");
-
-                    }else{
-                        Log.i("imageseccess", "onSuccess: "+"4");
-                        startMainActivity();
-                    }
-                }else {
+                    starAdvertiseActivity();
+                } else {
                     //跳转进入MainActivity
                     startMainActivity();
                 }
@@ -213,9 +195,10 @@ public class SplashActivity extends AppCompatActivity {
         startActivity(new Intent(SplashActivity.this, MainActivity.class));
         finish();
     }
+
     private void starAdvertiseActivity() {
-        Intent intent=new Intent(SplashActivity.this,AdvertisementActivity.class);
-        intent.getStringExtra(strVal);
+        Intent intent = new Intent(SplashActivity.this, AdvertisementActivity.class);
+        intent.putExtra("strVal", strVal);
         startActivity(intent);
         //startActivity(new Intent(SplashActivity.this, AdvertisementActivity.class));
         finish();
@@ -234,7 +217,7 @@ public class SplashActivity extends AppCompatActivity {
                     @Override
                     public void hasPermission(List<String> granted, boolean all) {
                         if (all) {
-                           // mBtn.setVisibility(View.VISIBLE);
+                            // mBtn.setVisibility(View.VISIBLE);
                             doSomeThing();
                         } else {
                             ToastUtils.show("获取权限成功，部分权限未正常授予");

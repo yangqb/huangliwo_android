@@ -40,11 +40,7 @@ public class AdvertisementActivity extends AppCompatActivity {
         handler.post(waitSendsRunnable);
         strVal = getIntent().getStringExtra("strVal");
         //加载图片
-        // Glide.with(AdvertisementActivity.this).load(url).asGif().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(imageadvertise);
-        Log.e("TAG", "onCreate: ");
-
         BitmapFactory.Options options = new BitmapFactory.Options();
-
         options.inPreferredConfig = Bitmap.Config.ARGB_4444;
         Bitmap img = BitmapFactory.decodeFile(ImageCancheUtil.getFilePath(strVal)
                 , options);
