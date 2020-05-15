@@ -77,6 +77,7 @@ public class DetailedRulesActivity extends BaseActivity {
         });
         adapter = new DetailedRulesAdapter(resultBeans);
         adapter.setEmptyView(mEmptyView);
+        adapter.getEmptyView().setVisibility(View.INVISIBLE);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
@@ -161,6 +162,7 @@ public class DetailedRulesActivity extends BaseActivity {
                                     adapter.notifyDataSetChanged();
                                 }
                             }
+                            adapter.getEmptyView().setVisibility(View.VISIBLE);
                         }
 
                         @Override

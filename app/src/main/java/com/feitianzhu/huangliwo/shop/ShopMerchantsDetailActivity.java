@@ -159,6 +159,7 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
         mRecyclerView.setNestedScrollingEnabled(false);
         mAdapter = new ShopDetailAdapter(multipleItemList);
         mAdapter.setEmptyView(mEmptyView);
+        mAdapter.getEmptyView().setVisibility(View.INVISIBLE);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
@@ -521,6 +522,7 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
                             mAdapter.setNewData(multipleItemList);
                             mAdapter.notifyDataSetChanged();
                         }
+                        mAdapter.getEmptyView().setVisibility(View.VISIBLE);
                     }
 
                     @Override
@@ -574,6 +576,7 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
                             mAdapter.setNewData(multipleItemList);
                             mAdapter.notifyDataSetChanged();
                         }
+                        mAdapter.getEmptyView().setVisibility(View.VISIBLE);
 
                     }
 

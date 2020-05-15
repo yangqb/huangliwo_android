@@ -215,7 +215,6 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
 
             }
         });
-        rightAdapter.setEmptyView(mEmptyView);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
         rightRecyclerView.setLayoutManager(gridLayoutManager);
         rightRecyclerView.setAdapter(rightAdapter);

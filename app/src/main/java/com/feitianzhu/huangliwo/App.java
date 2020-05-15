@@ -49,9 +49,11 @@ public class App extends Application {
             public void initialize(@NonNull Context context, @NonNull RefreshLayout layout) {
                 //开始设置全局的基本参数（可以被下面的DefaultRefreshHeaderCreator覆盖）
                 //layout.setReboundDuration(1000);//回弹动画时长（毫秒）
+                layout.setEnableAutoLoadMore(true);//是否启用列表惯性滑动到底部时自动加载更多
                 layout.setDisableContentWhenLoading(false);//是否在加载更多的时候禁止列表的操作
                 layout.setDisableContentWhenRefresh(false);//是否在刷新的时候禁止列表的操作
                 layout.setEnableLoadMoreWhenContentNotFull(false);//在内容不满一页的时候，是否可以上拉加载更多
+                layout.autoLoadMore();//自动加载
                 // layout.setPrimaryColorsId(R.color.colorPrimary, android.R.color.white);
             }
         });

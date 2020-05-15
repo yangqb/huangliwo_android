@@ -91,6 +91,7 @@ public class UpMerchantsGiftActivity extends BaseActivity {
             }
         });
         adapter.setEmptyView(mEmptyView);
+        adapter.getEmptyView().setVisibility(View.INVISIBLE);
         ItemDragAndSwipeCallback itemDragAndSwipeCallback = new ItemDragAndSwipeCallback(adapter);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemDragAndSwipeCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
@@ -139,6 +140,7 @@ public class UpMerchantsGiftActivity extends BaseActivity {
                                 adapter.notifyDataSetChanged();
                             }
                         }
+                        adapter.getEmptyView().setVisibility(View.VISIBLE);
                     }
 
                     @Override

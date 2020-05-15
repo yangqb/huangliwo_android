@@ -124,6 +124,7 @@ public class ShoppingCartActivity extends BaseActivity {
             }
         });
         mAdapter.setEmptyView(mEmptyView);
+        mAdapter.getEmptyView().setVisibility(View.INVISIBLE);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
@@ -331,6 +332,7 @@ public class ShoppingCartActivity extends BaseActivity {
                         } else {
                             llSelect.setVisibility(View.GONE);
                         }
+                        mAdapter.getEmptyView().setVisibility(View.VISIBLE);
                     }
 
                     @Override
