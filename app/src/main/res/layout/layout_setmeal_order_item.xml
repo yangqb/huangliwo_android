@@ -178,7 +178,7 @@
                 android:layout_height="26dp"
                 android:background="@drawable/shape_fed428_r13"
                 android:gravity="center"
-                android:text="确认收货"
+                android:text="查看详情"
                 android:textColor="@color/color_333333"
                 android:textSize="14sp" />
 

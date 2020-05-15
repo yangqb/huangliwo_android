@@ -141,11 +141,12 @@ public class ScannerActivity extends BaseActivity {
                     ToastUtils.show("您不是商户不可录单");
                     finish();
                 } else {
+                    finish();
                     intent = new Intent(ScannerActivity.this, RecordOrderActivity.class);
                     intent.putExtra(RecordOrderActivity.TYPE, "1");
                     intent.putExtra(RecordOrderActivity.URL_CODE, result);
                     startActivity(intent);
-                    finish();
+
                 }
             } else if (result.contains("merchantId") && result.contains("receivables")) {
                  /*

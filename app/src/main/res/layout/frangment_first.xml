@@ -146,6 +146,34 @@
                         android:layout_marginEnd="10dp"
                         android:layout_marginBottom="5dp"
                         android:scaleType="fitXY" />
+                    <LinearLayout
+                        android:id="@+id/ll_notice"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_10"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:layout_marginRight="@dimen/dp_10"
+                        android:background="@drawable/shape_ffffff_r5"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/dp_10"
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="15dp"
+                            android:src="@mipmap/i01_02gonggao" />
+
+                        <TextView
+                            android:id="@+id/tvNotice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:textColor="@color/color_333333"
+                            android:textSize="12sp" />
+
+                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
