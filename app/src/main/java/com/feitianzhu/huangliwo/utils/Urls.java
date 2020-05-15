@@ -245,6 +245,11 @@ public class Urls {
     public static final String GET_EARNINGS_RULES = BASE_URL + "fhwl/merchant/getMerchantOrder";
 
     /*
+     * 商铺赠品订单列表
+     * */
+    public static final String GET_GIFT_ORDER_LIST = BASE_URL + "fhwl/merchantPay/giftOrderList";
+
+    /*
      * 提现记录
      * */
     public static final String GET_WITHDRAW_RECORD = BASE_URL + "fhwl/withdrawal/selectWithdrawal";
