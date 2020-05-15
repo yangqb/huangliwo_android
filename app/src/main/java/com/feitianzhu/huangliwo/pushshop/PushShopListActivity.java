@@ -96,6 +96,7 @@ public class PushShopListActivity extends BaseActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new PushShopAdapter(muitlMerchantsModels);
         mAdapter.setEmptyView(mEmptyView);
+        mAdapter.getEmptyView().setVisibility(View.INVISIBLE);
         recyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
         refreshLayout.setEnableLoadMore(false);
@@ -191,6 +192,7 @@ public class PushShopListActivity extends BaseActivity {
                             mAdapter.setNewData(muitlMerchantsModels);
                             mAdapter.notifyDataSetChanged();
                         }
+                        mAdapter.getEmptyView().setVisibility(View.VISIBLE);
                     }
 
                     @Override

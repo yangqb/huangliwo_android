@@ -125,6 +125,7 @@ public class SearchPlanActivity2 extends BaseActivity {
             }
         });
         mAdapter.setEmptyView(mEmptyView);
+        mAdapter.getEmptyView().setVisibility(View.INVISIBLE);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
@@ -203,6 +204,7 @@ public class SearchPlanActivity2 extends BaseActivity {
                                     mAdapter.notifyDataSetChanged();
                                 }
                             }
+                            mAdapter.getEmptyView().setVisibility(View.VISIBLE);
                         }
 
                         @Override
@@ -253,6 +255,7 @@ public class SearchPlanActivity2 extends BaseActivity {
                                     mAdapter.notifyDataSetChanged();
                                 }
                             }
+                            mAdapter.getEmptyView().setVisibility(View.VISIBLE);
                         }
 
                         @Override

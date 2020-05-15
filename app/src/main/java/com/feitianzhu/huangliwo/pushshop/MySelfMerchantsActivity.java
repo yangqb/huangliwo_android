@@ -1,4 +1,5 @@
 package com.feitianzhu.huangliwo.pushshop;
+
 import android.Manifest;
 import android.content.Intent;
 import android.graphics.Color;
@@ -40,6 +41,7 @@ import com.lzy.okgo.model.Response;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -66,6 +68,7 @@ public class MySelfMerchantsActivity extends BaseActivity {
     private int selectPos = 0;
     private double balance = 0.00;
     private List<MerchantsModel> merchantsList;
+    private QBadgeView qBadgeView;
     @BindView(R.id.myMerchantDetail)
     LinearLayout myMerchantDetail;
     @BindView(R.id.merchants_name)
@@ -101,6 +104,7 @@ public class MySelfMerchantsActivity extends BaseActivity {
                 .statusBarColor(R.color.transparent)
                 .init();
         refreshLayout.setEnableLoadMore(false);
+        qBadgeView = new QBadgeView(MySelfMerchantsActivity.this);
         initListener();
     }
 
@@ -170,10 +174,9 @@ public class MySelfMerchantsActivity extends BaseActivity {
                     @Override
                     public void onSuccess(Response<LzyResponse<Integer>> response) {
                         if (response.body().code == 0) {
-                            new QBadgeView(MySelfMerchantsActivity.this)
-                                    .bindTarget(llMerchantsOrder).setGravityOffset(15, 15, true)
+                            qBadgeView.bindTarget(llMerchantsOrder).setGravityOffset(15, 15, true)
                                     .setBadgeNumber(response.body().data);
-                                    //.setBadgeNumber(18);
+                            //.setBadgeNumber(18);
 
                         }
                     }
