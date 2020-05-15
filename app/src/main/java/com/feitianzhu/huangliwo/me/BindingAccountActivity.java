@@ -91,7 +91,7 @@ public class BindingAccountActivity extends BaseActivity {
                     });
         }
     }
-
+    @SingleClick()
     @OnClick({R.id.left_button, R.id.right_button})
     public void onClick(View view) {
         switch (view.getId()) {
@@ -105,7 +105,6 @@ public class BindingAccountActivity extends BaseActivity {
         }
     }
 
-   @SingleClick
     public void submit() {
 
         if (TextUtils.isEmpty(editName.getText().toString().trim())) {
