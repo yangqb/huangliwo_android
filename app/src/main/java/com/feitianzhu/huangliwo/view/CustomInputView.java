@@ -112,8 +112,8 @@ public class CustomInputView extends CenterPopupView {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (!TextUtils.isEmpty(s.toString()) && Integer.valueOf(s.toString()) > 10) {
-                    editContent.setText("10");
+                if (!TextUtils.isEmpty(s.toString()) && Integer.valueOf(s.toString()) > 1000000) {
+                    editContent.setText("1000000");
                 }
             }
         });

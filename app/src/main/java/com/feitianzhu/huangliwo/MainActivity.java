@@ -316,7 +316,7 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Re
                             isShow = response.body().data.getPopup().getStatus();
                             if (isShow == 1) {
                                 showActivityPop();
-                            }
+                        }
                         }
                     }
 
@@ -341,7 +341,7 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Re
                     @Override
                     public void onUpdateNotifyDialogCancel(UpdateAppBean updateApp) {
                         //用户点击关闭按钮，取消了更新，如果是下载完，用户取消了安装，则可以在 onActivityResult 监听到。
-                        getPopData();
+                       // getPopData();
                     }
                 })
                 .build()
@@ -402,7 +402,7 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Re
                             public void onUpdateNotifyDialogCancel(UpdateAppBean updateApp) {
                                 //用户点击关闭按钮，取消了更新，如果是下载完，用户取消了安装，则可以在 onActivityResult 监听到。
 
-                                getPopData();
+                               // getPopData();
                             }
                         });
                         updateMyDialogFragment.show(getSupportFragmentManager(), "dialog");
@@ -430,7 +430,7 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Re
                      */
                     @Override
                     protected void noNewApp(String error) {
-                        getPopData();
+                       // getPopData();
                     }
                 });
     }
@@ -472,7 +472,6 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Re
             return true;
         }
         return super.onKeyDown(keyCode, event);
-
     }
 
     @Override

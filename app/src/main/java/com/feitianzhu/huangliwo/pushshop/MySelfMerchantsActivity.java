@@ -1,5 +1,4 @@
 package com.feitianzhu.huangliwo.pushshop;
-
 import android.Manifest;
 import android.content.Intent;
 import android.graphics.Color;
@@ -301,6 +300,7 @@ public class MySelfMerchantsActivity extends BaseActivity {
                                 String strIncome = String.format(Locale.getDefault(), "%.2f", merchantsList.get(position).getIncome());
                                 String strBalance = String.format(Locale.getDefault(), "%.2f", balance);
                                 setSpannableString(tvProfit, tvWithdrawal, strIncome, strBalance);
+                                getUnConsumeCount();
                             }
                         }))
                 .show();

@@ -191,7 +191,7 @@ public class ShopPayActivity extends BaseActivity {
         }
 
         mAmountView = (AmountView) findViewById(R.id.amount_view);
-        mAmountView.setGoods_storage(10);
+        mAmountView.setGoods_storage(1000000);
         mAmountView.setOnAmountChangeListener(new AmountView.OnAmountChangeListener() {
             @SuppressLint("SetTextI18n")
             @Override

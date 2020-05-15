@@ -1,5 +1,6 @@
 package com.feitianzhu.huangliwo.shop.adapter;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -32,21 +33,21 @@ public class RightAdapter1 extends BaseMultiItemQuickAdapter<MultipleItem, BaseV
     protected void convert(BaseViewHolder helper, MultipleItem item) {
         switch (helper.getItemViewType()) {
             case MultipleItem.MERCHANTS:
-//                helper.setText(R.id.text1, item.getMerchantsModel().getAreaName());
-                TextView view = helper.getView(R.id.text1);
-                view.setText(item.getMerchantsModel().getMerchantName());
-                view.setTextColor(view.getResources().getColor(R.color.bank_bg01));
+                helper.setText(R.id.text1, item.getMerchantsModel().getMerchantName());
                 Glide.with(mContext).load(item.getMerchantsModel().getLogo())
                         .apply(new RequestOptions().placeholder(R.mipmap.g10_04weijiazai)
                                 .error(R.mipmap.g10_04weijiazai)
                                 .dontAnimate()).into((RoundedImageView) helper.getView(R.id.image));
                 break;
             case MultipleItem.GOODS:
+
                 helper.setText(R.id.text1, item.getGoodsListBean().getGoodsName());
                 Glide.with(mContext).load(item.getGoodsListBean().getGoodsImg())
-                        .apply(new RequestOptions().placeholder(R.mipmap.g10_04weijiazai)
+                        .apply(new RequestOptions()
+                                .placeholder(R.mipmap.g10_04weijiazai)
                                 .error(R.mipmap.g10_04weijiazai)
-                                .dontAnimate()).into((RoundedImageView) helper.getView(R.id.image));
+                                .dontAnimate())
+                        .into((RoundedImageView) helper.getView(R.id.image));
                 break;
         }
     }

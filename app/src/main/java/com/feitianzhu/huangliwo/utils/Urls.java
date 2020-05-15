@@ -663,4 +663,8 @@ public class Urls {
      *退票差额信息提交
      * */
     public static final String REFUND_ASKFOR = TICKET_BASE_URL + "askFor";
+    /**
+     * 广告页
+     */
+    public static final String ADVERTISEMENT = BASE_URL + "fhwl/index/getPoster";
 }

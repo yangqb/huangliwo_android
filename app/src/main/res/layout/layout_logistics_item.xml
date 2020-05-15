@@ -44,9 +44,9 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingBottom="50dp"
         android:layout_marginTop="3dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingBottom="50dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -54,13 +54,14 @@
             android:text="已签收"
             android:textColor="@color/color_333333"
             android:textSize="14sp"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
+            android:autoLink="phone"
             android:text="快递已到达[深圳市宝安区分派所],派送员 正在派送；快递已到达[深圳市宝安区分派所],派送员 正在派送；"
             android:textColor="@color/color_333333"
             android:textSize="14sp" />
