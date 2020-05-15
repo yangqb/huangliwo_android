@@ -109,6 +109,7 @@ public class MySelfMerchantsOrderActivity extends BaseActivity implements View.O
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         selfMerchantsOrderAdapter = new SelfMerchantsOrderAdapter(selfMerchantsModels);
         selfMerchantsOrderAdapter.setEmptyView(mEmptyView);
+        selfMerchantsOrderAdapter.getEmptyView().setVisibility(View.INVISIBLE);
         recyclerView.setAdapter(selfMerchantsOrderAdapter);
         selfMerchantsOrderAdapter.notifyDataSetChanged();
         refreshLayout.setEnableLoadMore(false);
@@ -159,6 +160,7 @@ public class MySelfMerchantsOrderActivity extends BaseActivity implements View.O
                             selfMerchantsOrderAdapter.setNewData(selfMerchantsModels);
                             selfMerchantsOrderAdapter.notifyDataSetChanged();
                         }
+                        selfMerchantsOrderAdapter.getEmptyView().setVisibility(View.VISIBLE);
                     }
 
                     @Override
@@ -213,7 +215,7 @@ public class MySelfMerchantsOrderActivity extends BaseActivity implements View.O
                     public void hasPermission(List<String> granted, boolean all) {
                         if (all) {
                             Intent intent = new Intent(MySelfMerchantsOrderActivity.this, ScannerActivity.class);
-                            intent.putExtra(ScannerActivity.IS_MERCHANTS, 2);
+                            intent.putExtra(ScannerActivity.IS_MERCHANTS, 1);
                             startActivity(intent);
                         } else {
                             ToastUtils.show("获取权限成功，部分权限未正常授予");

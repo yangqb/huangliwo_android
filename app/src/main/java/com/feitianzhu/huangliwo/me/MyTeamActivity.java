@@ -122,6 +122,7 @@ public class MyTeamActivity extends BaseActivity {
             }
         });
         teamAdapter.setEmptyView(mEmptyView);
+        teamAdapter.getEmptyView().setVisibility(View.INVISIBLE);
         recyclerView.setAdapter(teamAdapter);
         teamAdapter.notifyDataSetChanged();
         recyclerView.setNestedScrollingEnabled(false);
@@ -193,6 +194,7 @@ public class MyTeamActivity extends BaseActivity {
                             }
                             teamAdapter.notifyDataSetChanged();
                         }
+                        teamAdapter.getEmptyView().setVisibility(View.VISIBLE);
                     }
 
                     @Override

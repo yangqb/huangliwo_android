@@ -67,6 +67,7 @@ public class GiftRecordActivity extends BaseActivity {
             }
         });
         adapter.setEmptyView(mEmptyView);
+        adapter.getEmptyView().setVisibility(View.INVISIBLE);
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
         initListener();
@@ -87,6 +88,7 @@ public class GiftRecordActivity extends BaseActivity {
                             adapter.setNewData(giftRecordModelList);
                             adapter.notifyDataSetChanged();
                         }
+                        adapter.getEmptyView().setVisibility(View.VISIBLE);
                     }
 
                     @Override

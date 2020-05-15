@@ -88,6 +88,7 @@ public class SetMealListActivity extends BaseActivity {
             }
         });
         mAdapter.setEmptyView(mEmptyView);
+        mAdapter.getEmptyView().setVisibility(View.INVISIBLE);
         recyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
         refreshLayout.setEnableLoadMore(false);
@@ -175,6 +176,7 @@ public class SetMealListActivity extends BaseActivity {
                             mAdapter.setNewData(setMealInfoList);
                             mAdapter.notifyDataSetChanged();
                         }
+                        mAdapter.getEmptyView().setVisibility(View.VISIBLE);
                     }
 
                     @Override

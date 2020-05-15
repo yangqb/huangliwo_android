@@ -82,6 +82,7 @@ public class MyMerchantsEarningsRulesActivity extends BaseActivity implements Da
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         selfMerchantsOrderAdapter = new SelfMerchantsOrderAdapter(selfMerchantsModels);
         selfMerchantsOrderAdapter.setEmptyView(mEmptyView);
+        selfMerchantsOrderAdapter.getEmptyView().setVisibility(View.INVISIBLE);
         recyclerView.setAdapter(selfMerchantsOrderAdapter);
         selfMerchantsOrderAdapter.notifyDataSetChanged();
         refreshLayout.setEnableLoadMore(false);
@@ -122,6 +123,7 @@ public class MyMerchantsEarningsRulesActivity extends BaseActivity implements Da
                             selfMerchantsOrderAdapter.setNewData(selfMerchantsModels);
                             selfMerchantsOrderAdapter.notifyDataSetChanged();
                         }
+                        selfMerchantsOrderAdapter.getEmptyView().setVisibility(View.VISIBLE);
                     }
 
                     @Override

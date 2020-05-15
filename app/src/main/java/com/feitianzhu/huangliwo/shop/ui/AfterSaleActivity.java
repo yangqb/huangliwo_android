@@ -84,6 +84,7 @@ public class AfterSaleActivity extends BaseActivity {
         });
         refreshLayout.setEnableLoadMore(false);
         mAdapter.setEmptyView(mEmptyView);
+        mAdapter.getEmptyView().setVisibility(View.INVISIBLE);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
@@ -192,6 +193,7 @@ public class AfterSaleActivity extends BaseActivity {
                                 mAdapter.setNewData(multipleItemOrderModels);
                                 mAdapter.notifyDataSetChanged();
                             }
+                            mAdapter.getEmptyView().setVisibility(View.VISIBLE);
                         }
 
                         @Override
@@ -232,6 +234,7 @@ public class AfterSaleActivity extends BaseActivity {
                                     mAdapter.notifyDataSetChanged();
                                 }
                             }
+                            mAdapter.getEmptyView().setVisibility(View.VISIBLE);
                         }
 
                         @Override
