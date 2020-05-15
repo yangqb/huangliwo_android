@@ -246,10 +246,12 @@ public class MySelfMerchantsOrderActivity extends BaseActivity implements View.O
                 if (selectPos == 0) {
                     Intent intent = new Intent(MySelfMerchantsOrderActivity.this, RecordOrderActivity.class);
                     intent.putExtra(RecordOrderActivity.TYPE, "1");
+                    intent.putExtra(RecordOrderActivity.MERCHANTS_ID, merchantsId + "");
                     startActivity(intent);
                 } else {
                     Intent intent = new Intent(MySelfMerchantsOrderActivity.this, RecordOrderActivity.class);
                     intent.putExtra(RecordOrderActivity.TYPE, "2");
+                    intent.putExtra(RecordOrderActivity.MERCHANTS_ID, merchantsId + "");
                     startActivity(intent);
                 }
 

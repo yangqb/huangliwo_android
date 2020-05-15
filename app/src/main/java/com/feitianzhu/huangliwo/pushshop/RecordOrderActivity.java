@@ -59,16 +59,17 @@ public class RecordOrderActivity extends BaseActivity {
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         type = getIntent().getStringExtra(TYPE);
         result = getIntent().getStringExtra(URL_CODE);
-        if ("1".equals(type)) {
-            String[] strings = result.split("-");
-            mealCode = strings[0];
-            merchantsId = strings[1];
-        } else {
+        if (result != null) {
             String[] aa = result.split("\\?");
             String[] bb = aa[1].split("\\&");
             merchantsId = bb[0].split("=")[1];
+            type = bb[1].split("=")[1];
             mealCode = bb[2].split("=")[1];
+
+        } else {
+            merchantsId = getIntent().getStringExtra(MERCHANTS_ID);
         }
+
 
         if (mealCode != null) {
             editCode.setText(mealCode);
@@ -92,6 +93,8 @@ public class RecordOrderActivity extends BaseActivity {
             ToastUtils.show("请输入套餐码");
             return;
         }
+
+        mealCode = editCode.getText().toString();
 
         OkGo.<LzyResponse>post(Urls.RECORD_ORDER)
                 .tag(this)
