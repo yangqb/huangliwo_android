@@ -20,15 +20,20 @@ import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.me.base.BaseActivity;
 import com.feitianzhu.huangliwo.me.ui.ScannerActivity;
+import com.feitianzhu.huangliwo.model.MerchantGiftOrderInfo;
+import com.feitianzhu.huangliwo.model.MerchantGiftOrderModel;
 import com.feitianzhu.huangliwo.model.MerchantsEarnRulesInfo;
+import com.feitianzhu.huangliwo.plane.EditPassengerActivity;
 import com.feitianzhu.huangliwo.pushshop.adapter.SelfMerchantsOrderAdapter;
 import com.feitianzhu.huangliwo.pushshop.bean.SelfMerchantsModel;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
+import com.feitianzhu.huangliwo.view.CustomRefundView;
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.XXPermissions;
 import com.hjq.toast.ToastUtils;
 import com.just.agentweb.ActionActivity;
+import com.lxj.xpopup.XPopup;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -38,6 +43,7 @@ import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.internal.entity.CaptureStrategy;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -56,21 +62,22 @@ public class MySelfMerchantsOrderActivity extends BaseActivity implements View.O
     private SelfMerchantsOrderAdapter selfMerchantsOrderAdapter;
     private List<SelfMerchantsModel> selfMerchantsModels = new ArrayList<>();
     private List<MerchantsEarnRulesInfo.MerchantsEarnRulesModel> earnRulesModelList = new ArrayList<>();
+    private List<MerchantGiftOrderModel> merchantGiftOrderModelList = new ArrayList<>();
+    String[] strings = new String[]{"套餐订单", "赠品订单"};
     private PopupWindow popupWindow;
     private View vPopupWindow;
     private String userId;
     private String token;
     private int merchantsId = -1;
+    private int selectPos = 0;
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     @BindView(R.id.title_name)
     TextView titleName;
-    @BindView(R.id.right_img)
-    ImageView rightImg;
-    @BindView(R.id.right_text)
-    TextView rightText;
     @BindView(R.id.refreshLayout)
     RefreshLayout refreshLayout;
+    @BindView(R.id.right_text)
+    TextView rightText;
 
     @Override
     protected int getLayoutId() {
@@ -81,11 +88,7 @@ public class MySelfMerchantsOrderActivity extends BaseActivity implements View.O
     protected void initView() {
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
-        titleName.setText("订单列表");
-        rightText.setText("快速录单");
-        rightImg.setBackgroundResource(R.mipmap.a01_04jia);
-        rightImg.setVisibility(View.VISIBLE);
-        rightText.setVisibility(View.VISIBLE);
+        titleName.setText(strings[0]);
         merchantsId = getIntent().getIntExtra(MERCHANTS_ID, -1);
 
         vPopupWindow = getLayoutInflater().inflate(R.layout.layout_popupwindow, null);
@@ -114,6 +117,7 @@ public class MySelfMerchantsOrderActivity extends BaseActivity implements View.O
         selfMerchantsOrderAdapter.notifyDataSetChanged();
         refreshLayout.setEnableLoadMore(false);
         initListener();
+
     }
 
     public void initListener() {
@@ -136,42 +140,79 @@ public class MySelfMerchantsOrderActivity extends BaseActivity implements View.O
 
     @Override
     protected void initData() {
-
-        OkGo.<LzyResponse<MerchantsEarnRulesInfo>>post(Urls.GET_EARNINGS_RULES)
-                .tag(this)
-                .params("accessToken", token)
-                .params("userId", userId)
-                .params("merchantId", merchantsId + "")
-                .params("type", "setMeal")
-                .params("date", "")
-                .execute(new JsonCallback<LzyResponse<MerchantsEarnRulesInfo>>() {
-                    @Override
-                    public void onSuccess(Response<LzyResponse<MerchantsEarnRulesInfo>> response) {
-                        super.onSuccess(MySelfMerchantsOrderActivity.this, response.body().msg, response.body().code);
-                        refreshLayout.finishRefresh();
-                        if (response.body().code == 0 && response.body().data != null) {
-                            earnRulesModelList = response.body().data.getList();
+        if (selectPos == 0) {
+            OkGo.<LzyResponse<MerchantsEarnRulesInfo>>post(Urls.GET_EARNINGS_RULES)
+                    .tag(this)
+                    .params("accessToken", token)
+                    .params("userId", userId)
+                    .params("merchantId", merchantsId + "")
+                    .params("type", "setMeal")
+                    .params("date", "")
+                    .execute(new JsonCallback<LzyResponse<MerchantsEarnRulesInfo>>() {
+                        @Override
+                        public void onSuccess(Response<LzyResponse<MerchantsEarnRulesInfo>> response) {
+                            super.onSuccess(MySelfMerchantsOrderActivity.this, response.body().msg, response.body().code);
+                            refreshLayout.finishRefresh();
                             selfMerchantsModels.clear();
-                            for (int i = 0; i < earnRulesModelList.size(); i++) {
-                                SelfMerchantsModel merchantsModel = new SelfMerchantsModel(SelfMerchantsModel.ORDER_TYPE);
-                                merchantsModel.setMerchantsEarnRulesModel(earnRulesModelList.get(i));
-                                selfMerchantsModels.add(merchantsModel);
+                            if (response.body().code == 0 && response.body().data != null) {
+                                earnRulesModelList = response.body().data.getList();
+                                for (int i = 0; i < earnRulesModelList.size(); i++) {
+                                    SelfMerchantsModel merchantsModel = new SelfMerchantsModel(SelfMerchantsModel.ORDER_TYPE);
+                                    merchantsModel.setMerchantsEarnRulesModel(earnRulesModelList.get(i));
+                                    selfMerchantsModels.add(merchantsModel);
+                                }
+                                selfMerchantsOrderAdapter.setNewData(selfMerchantsModels);
                             }
-                            selfMerchantsOrderAdapter.setNewData(selfMerchantsModels);
+                            selfMerchantsOrderAdapter.notifyDataSetChanged();
+                            selfMerchantsOrderAdapter.getEmptyView().setVisibility(View.VISIBLE);
+                        }
+
+                        @Override
+                        public void onError(Response<LzyResponse<MerchantsEarnRulesInfo>> response) {
+                            super.onError(response);
+                            refreshLayout.finishRefresh(false);
+                            selfMerchantsModels.clear();
+                            selfMerchantsOrderAdapter.notifyDataSetChanged();
+
+                        }
+                    });
+        } else {
+            OkGo.<LzyResponse<MerchantGiftOrderInfo>>get(Urls.GET_GIFT_ORDER_LIST)
+                    .tag(this)
+                    .params("accessToken", token)
+                    .params("userId", userId)
+                    .params("merchantId", merchantsId + "")
+                    .execute(new JsonCallback<LzyResponse<MerchantGiftOrderInfo>>() {
+                        @Override
+                        public void onSuccess(Response<LzyResponse<MerchantGiftOrderInfo>> response) {
+                            super.onSuccess(MySelfMerchantsOrderActivity.this, response.body().msg, response.body().code);
+                            refreshLayout.finishRefresh();
+                            selfMerchantsModels.clear();
+                            if (response.body().code == 0 && response.body().data != null) {
+                                merchantGiftOrderModelList = response.body().data.all;
+                                for (int i = 0; i < merchantGiftOrderModelList.size(); i++) {
+                                    SelfMerchantsModel merchantsModel = new SelfMerchantsModel(SelfMerchantsModel.GIFT_ORDER_TYPE);
+                                    merchantsModel.setMerchantGiftOrderModel(merchantGiftOrderModelList.get(i));
+                                    selfMerchantsModels.add(merchantsModel);
+                                }
+                                selfMerchantsOrderAdapter.setNewData(selfMerchantsModels);
+                            }
+                            selfMerchantsOrderAdapter.notifyDataSetChanged();
+                            selfMerchantsOrderAdapter.getEmptyView().setVisibility(View.VISIBLE);
+                        }
+
+                        @Override
+                        public void onError(Response<LzyResponse<MerchantGiftOrderInfo>> response) {
+                            super.onError(response);
+                            refreshLayout.finishRefresh(false);
+                            selfMerchantsModels.clear();
                             selfMerchantsOrderAdapter.notifyDataSetChanged();
                         }
-                        selfMerchantsOrderAdapter.getEmptyView().setVisibility(View.VISIBLE);
-                    }
-
-                    @Override
-                    public void onError(Response<LzyResponse<MerchantsEarnRulesInfo>> response) {
-                        super.onError(response);
-                        refreshLayout.finishRefresh(false);
-                    }
-                });
+                    });
+        }
     }
 
-    @OnClick({R.id.left_button, R.id.right_button})
+    @OnClick({R.id.left_button, R.id.right_button, R.id.title_name})
     public void onBtnClick(View view) {
         switch (view.getId()) {
             case R.id.left_button:
@@ -181,6 +222,20 @@ public class MySelfMerchantsOrderActivity extends BaseActivity implements View.O
                 vPopupWindow.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
                 popupWindow.showAsDropDown(rightText, -vPopupWindow.getMeasuredWidth() + rightText.getWidth(), 0);
                 break;
+            case R.id.title_name:
+                new XPopup.Builder(this)
+                        .asCustom(new CustomRefundView(MySelfMerchantsOrderActivity.this)
+                                .setData(Arrays.asList(strings))
+                                .setOnItemClickListener(new CustomRefundView.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(int position) {
+                                        titleName.setText(strings[position]);
+                                        selectPos = position;
+                                        initData();
+                                    }
+                                }))
+                        .show();
+                break;
         }
     }
 
@@ -188,9 +243,18 @@ public class MySelfMerchantsOrderActivity extends BaseActivity implements View.O
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ivRecordOrder:
-                Intent intent = new Intent(MySelfMerchantsOrderActivity.this, RecordOrderActivity.class);
-                intent.putExtra(RecordOrderActivity.TYPE, "1");
-                startActivity(intent);
+                if (selectPos == 0) {
+                    Intent intent = new Intent(MySelfMerchantsOrderActivity.this, RecordOrderActivity.class);
+                    intent.putExtra(RecordOrderActivity.TYPE, "1");
+                    intent.putExtra(RecordOrderActivity.MERCHANTS_ID, merchantsId + "");
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(MySelfMerchantsOrderActivity.this, RecordOrderActivity.class);
+                    intent.putExtra(RecordOrderActivity.TYPE, "2");
+                    intent.putExtra(RecordOrderActivity.MERCHANTS_ID, merchantsId + "");
+                    startActivity(intent);
+                }
+
                 popupWindow.dismiss();
                 break;
             case R.id.ivScanQRCode:

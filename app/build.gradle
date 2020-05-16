@@ -61,7 +61,7 @@ android {
             storeFile file('../key/feitianzhu.jks')
             storePassword 'kaisa008'
         }
-        debug {
+        /*debug {
             keyAlias 'feitianzhu'
             keyPassword 'kaisa008'
             storeFile file('../key/feitianzhu.jks')
@@ -70,7 +70,7 @@ android {
             keyPassword 'android'
             storeFile file('../key/debug.keystore')
             storePassword 'android'
-        }
+        }*/
     }
 
     compileOptions {
@@ -85,9 +85,9 @@ android {
         applicationId "com.feitianzhu.huangliwo"
         minSdkVersion androidMinSdkVersion
         targetSdkVersion androidTargetSdkVersion
-        versionCode 30
+        versionCode 31
         multiDexEnabled true
-        versionName "1.3.1"
+        versionName "1.3.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             //设置支持的SO库架构

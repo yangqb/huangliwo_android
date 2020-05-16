@@ -79,6 +79,7 @@ public class PlaneOrderListActivity extends BaseActivity {
             }
         });
         mAdapter.setEmptyView(mEmptyView);
+        mAdapter.getEmptyView().setVisibility(View.INVISIBLE);
         recyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
         tabs.add(new PlaneOrderTableEntity("全部"));
@@ -203,6 +204,7 @@ public class PlaneOrderListActivity extends BaseActivity {
                                 mAdapter.notifyDataSetChanged();
                             }
                         }
+                        mAdapter.getEmptyView().setVisibility(View.VISIBLE);
                     }
 
                     @Override
