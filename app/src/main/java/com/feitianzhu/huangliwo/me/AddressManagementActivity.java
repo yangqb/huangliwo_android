@@ -75,6 +75,7 @@ public class AddressManagementActivity extends BaseActivity {
             }
         });
         adapter.setEmptyView(mEmptyView);
+        adapter.getEmptyView().setVisibility(View.INVISIBLE);
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
         isSelect = getIntent().getBooleanExtra(IS_SELECT, false);
@@ -157,6 +158,7 @@ public class AddressManagementActivity extends BaseActivity {
                             adapter.setNewData(addressInfos);
                             adapter.notifyDataSetChanged();
                         }
+                        adapter.getEmptyView().setVisibility(View.VISIBLE);
                     }
 
                     @Override
