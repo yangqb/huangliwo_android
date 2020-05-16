@@ -3,7 +3,7 @@ package com.feitianzhu.huangliwo.vip;
 import android.widget.TextView;
 
 import com.feitianzhu.huangliwo.R;
-import com.feitianzhu.huangliwo.me.base.BaseActivity;
+import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.gyf.immersionbar.ImmersionBar;
 
 import butterknife.BindView;

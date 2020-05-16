@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.feitianzhu.huangliwo.R;
+import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.login.LoginActivity;
 import com.feitianzhu.huangliwo.login.RegisterActivity;
 
@@ -18,7 +19,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class SplashActivity2 extends AppCompatActivity {
+public class SplashActivity2 extends BaseActivity {
 
     @BindView(R.id.imageview)
     ImageView mImageview;
@@ -26,8 +27,22 @@ public class SplashActivity2 extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash2);
         ButterKnife.bind(this);
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_splash2;
+    }
+
+    @Override
+    protected void initView() {
+
+    }
+
+    @Override
+    protected void initData() {
+
     }
 
     @OnClick({R.id.btn_register, R.id.btn_login})

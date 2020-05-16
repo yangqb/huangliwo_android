@@ -1,10 +1,9 @@
-package com.feitianzhu.huangliwo.common.base;
+package com.feitianzhu.huangliwo.common.base.activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -36,7 +35,7 @@ import butterknife.OnClick;
  * time: 14:35
  * email: 694125155@qq.com
  */
-public class WebActivity extends AppCompatActivity {
+public class WebActivity extends SFActivity {
     public static final String PUSH_PROTOCOL = "push_protocol";
     private boolean isPushProtocol;
     @BindView(R.id.container)
@@ -50,7 +49,6 @@ public class WebActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_web_bottom);
         ButterKnife.bind(this);
         ImmersionBar.with(this)
                 .fitsSystemWindows(true)
@@ -89,6 +87,11 @@ public class WebActivity extends AppCompatActivity {
         //设置自适应屏幕
         webSettings.setUseWideViewPort(true);
         webSettings.setLoadWithOverviewMode(true);
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_web_bottom;
     }
 
     private WebChromeClient chromeClient = new WebChromeClient() {

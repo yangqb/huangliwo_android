@@ -3,7 +3,7 @@ package com.feitianzhu.huangliwo.me;
 import android.widget.TextView;
 
 import com.feitianzhu.huangliwo.R;
-import com.feitianzhu.huangliwo.me.base.BaseActivity;
+import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 
 import butterknife.BindView;
 import butterknife.OnClick;

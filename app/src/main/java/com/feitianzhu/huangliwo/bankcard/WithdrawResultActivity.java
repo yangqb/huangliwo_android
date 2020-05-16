@@ -3,7 +3,7 @@ package com.feitianzhu.huangliwo.bankcard;
 import android.os.Bundle;
 
 import com.feitianzhu.huangliwo.R;
-import com.feitianzhu.huangliwo.me.base.BaseActivity;
+import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 
 public class WithdrawResultActivity extends BaseActivity {
 

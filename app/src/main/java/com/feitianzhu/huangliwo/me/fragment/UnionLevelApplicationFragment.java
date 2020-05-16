@@ -12,22 +12,17 @@ import android.widget.TextView;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.me.adapter.UnionLevelAdapter;
-import com.feitianzhu.huangliwo.me.base.BaseFragment;
+import com.feitianzhu.huangliwo.common.base.BaseFragment;
 import com.feitianzhu.huangliwo.me.ui.totalScore.SelectPayActivity;
 import com.feitianzhu.huangliwo.model.SelectPayNeedModel;
 import com.feitianzhu.huangliwo.model.UnionLevelModel;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.hjq.toast.ToastUtils;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import okhttp3.Call;
-import okhttp3.Response;
 
 /**
  * Created by Vya on 2017/8/29 0029.

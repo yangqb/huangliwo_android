@@ -1,6 +1,6 @@
 package com.feitianzhu.huangliwo.plane;
 
-import com.feitianzhu.huangliwo.me.base.BaseActivity;
+import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 
 public class PlaneProtocolActivity extends BaseActivity {
     @Override

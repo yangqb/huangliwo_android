@@ -8,8 +8,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.feitianzhu.huangliwo.R;
-import com.feitianzhu.huangliwo.me.base.BaseActivity;
-import com.feitianzhu.huangliwo.me.ui.totalScore.MineQrcodeActivity;
+import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.utils.ShareImageUtils;
 import com.socks.library.KLog;
 

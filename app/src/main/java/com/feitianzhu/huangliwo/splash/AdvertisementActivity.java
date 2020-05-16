@@ -4,49 +4,35 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.feitianzhu.huangliwo.MainActivity;
 import com.feitianzhu.huangliwo.R;
+import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
+import com.feitianzhu.huangliwo.common.base.activity.SFActivity;
 import com.gyf.immersionbar.ImmersionBar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AdvertisementActivity extends AppCompatActivity {
+public class AdvertisementActivity extends BaseActivity {
 
-    @BindView(R.id.btnAdv)
-    TextView btnAdv;
+
     @BindView(R.id.imageadvertise)
     ImageView imageadvertise;
+    @BindView(R.id.btnAdv)
+    TextView btnAdv;
     private String strVal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_advertisement);
-        ButterKnife.bind(this);
-        ImmersionBar.with(this)
-                .fitsSystemWindows(false)
-                .fullScreen(true)
-                .statusBarDarkFont(true, 0.2f)
-                .statusBarColor(R.color.transparent)
-                .init();
         strVal = getIntent().getStringExtra("strVal");
         //加载图片
         BitmapFactory.Options options = new BitmapFactory.Options();
@@ -60,6 +46,38 @@ public class AdvertisementActivity extends AppCompatActivity {
         btnAdv.setText("跳过 " + index);
         handler.sendEmptyMessageDelayed(index, 1000);
 
+        ImmersionBar.with(this)
+                .fitsSystemWindows(false)
+                .navigationBarColor(R.color.white)
+                .navigationBarDarkIcon(true)
+                .statusBarDarkFont(true, 0.2f)
+                .statusBarColor(R.color.transparent)
+                .init();
+
+//        ImmersionBar.with(this)
+//                .fitsSystemWindows(true)
+//                .statusBarDarkFont(true, 0.2f)
+//                .statusBarColor(R.color.transparent)
+//                .init();
+    }
+
+    @Override
+    public boolean getOpenImmersionBar() {
+        return false;
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_advertisement;
+    }
+
+    @Override
+    protected void initView() {
+
+    }
+
+    @Override
+    protected void initData() {
 
     }
 
@@ -103,7 +121,6 @@ public class AdvertisementActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
-
 
 
 }

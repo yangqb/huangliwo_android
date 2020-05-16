@@ -7,8 +7,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.feitianzhu.huangliwo.R;
-import com.feitianzhu.huangliwo.common.Constant;
-import com.feitianzhu.huangliwo.me.base.BaseActivity;
+import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.model.GetMoneyModel;
 import com.hjq.toast.ToastUtils;
 
@@ -16,8 +15,6 @@ import java.text.DecimalFormat;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import okhttp3.Call;
-import okhttp3.Response;
 
 /**
  * Created by Vya on 2017/9/24.

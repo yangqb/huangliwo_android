@@ -1,7 +1,7 @@
 package com.feitianzhu.huangliwo.plane;
 
 import com.feitianzhu.huangliwo.R;
-import com.feitianzhu.huangliwo.me.base.BaseActivity;
+import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 
 /**
  * package name: com.feitianzhu.huangliwo.plane

@@ -32,7 +32,7 @@ public class LoadingUtil {
     synchronized public static void setLoadingViewShowWithContent(BaseApiRequest baseApiRequest, Boolean show, String content) {
         if (show) {
             usefulCount++;
-            loadingPopup = (LoadingPopupView) new XPopup.Builder(GlobalUtil.getMainActivity())
+            loadingPopup = (LoadingPopupView) new XPopup.Builder(GlobalUtil.getCurrentActivity())
                     .hasShadowBg(false)
                     .popupAnimation(PopupAnimation.NoAnimation)
                     .asLoading()
