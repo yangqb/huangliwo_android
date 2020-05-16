@@ -329,6 +329,7 @@ public class PlaneDetailActivity extends BaseActivity {
             }
         });
         mAdapter.setEmptyView(mEmptyView);
+        mAdapter.getEmptyView().setVisibility(View.INVISIBLE);
         recyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
         recyclerView.setNestedScrollingEnabled(false);
@@ -533,6 +534,7 @@ public class PlaneDetailActivity extends BaseActivity {
                                     mAdapter.notifyDataSetChanged();
                                 }
                             }
+                            mAdapter.getEmptyView().setVisibility(View.VISIBLE);
 
                         }
 
@@ -579,6 +581,7 @@ public class PlaneDetailActivity extends BaseActivity {
                                     mAdapter.notifyDataSetChanged();
                                 }
                             }
+                            mAdapter.getEmptyView().setVisibility(View.VISIBLE);
                         }
 
                         @Override
@@ -636,6 +639,7 @@ public class PlaneDetailActivity extends BaseActivity {
                                     mAdapter.notifyDataSetChanged();
                                 }
                             }
+                            mAdapter.getEmptyView().setVisibility(View.VISIBLE);
                         }
 
                         @Override
