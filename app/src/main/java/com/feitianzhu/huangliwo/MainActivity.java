@@ -126,6 +126,7 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Re
                 .statusBarDarkFont(true, 0.2f)
                 .statusBarColor(R.color.bg_yellow)
                 .init();
+        GlobalUtil.setMainActivity(this);
     }
 
     @Override

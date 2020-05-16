@@ -26,17 +26,10 @@ public class BaseApiResponse extends JsonAwareObject {
     }
 
     /**
-     * 请求是否成功
+     * 请求成功,通过判断后台返回的code判断是不是异常流
      */
     public boolean isRequestSuccess() {
         return true;
     }
 
-    public void setJsonData(Object o) {
-
-    }
-
-    public boolean getSupportJson() {
-        return false;
-    }
 }

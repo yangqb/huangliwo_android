@@ -10,6 +10,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import com.feitianzhu.huangliwo.GlobalUtil;
 import com.feitianzhu.huangliwo.R;
 import com.gyf.immersionbar.ImmersionBar;
 

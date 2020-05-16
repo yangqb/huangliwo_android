@@ -20,8 +20,9 @@ import android.widget.Toast;
 import com.feitianzhu.huangliwo.MainActivity;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
-import com.feitianzhu.huangliwo.core.networkcheck.NetWorkState;
-import com.feitianzhu.huangliwo.core.networkcheck.NetworkConnectChangedReceiver;
+
+import com.feitianzhu.huangliwo.core.network.networkcheck.NetWorkState;
+import com.feitianzhu.huangliwo.core.network.networkcheck.NetworkConnectChangedReceiver;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.login.entity.LoginEntity;

@@ -36,12 +36,6 @@ public abstract class AbsApiRequest {
         return getAPIBaseURL() + getAPIName();
     }
 
-    /**
-     * 拼接公共参数
-     */
-    protected ParamsBuilder appendBaseParams(ParamsBuilder builder) {
-        return builder;
-    }
 
     /**
      * 添加参数
@@ -67,11 +61,24 @@ public abstract class AbsApiRequest {
     public abstract boolean usePost();
 
     /**
+     * 开始请求
+     */
+    public abstract void onStart();
+
+    /**
      * 服务器返回的json统一处理类
      *
      * @return
      */
     public abstract TypeReference getResponseType();
+
+    /**
+     * 在将返回值转换成对应的model之前,对返回值进行一些处理
+     * 第一次处理之后
+     * 第二次处理之前
+     */
+    public abstract Object handleRsponseBeforeTransform(Object rsp);
+
 
     /**
      * json统一处理完之后第二次处理为详细model
@@ -81,13 +88,10 @@ public abstract class AbsApiRequest {
     public abstract TypeReference getDatatype();
 
     /**
-     * 错误处理
-     *
-     * @param listener
-     * @param errorCode
-     * @param errorMsg
+     * 在将返回值转换成对应的model后,对返回值进行一些处理
+     * 完成了第二次处理
      */
-    public abstract void handleError(ApiCallBack listener, int errorCode, String errorMsg);
+    public abstract Object handleRsponseAfterTransform(Object rsp);
 
     /**
      * 发起请求
@@ -95,7 +99,17 @@ public abstract class AbsApiRequest {
      * @param listener
      * @return
      */
-    public abstract Subscription call(final ApiCallBack listener);
+    public abstract Subscription call(ApiCallBack listener);
+
+    /**
+     * 错误处理
+     *
+     * @param errorCode
+     * @param errorMsg
+     */
+    public abstract void handleError( int errorCode, String errorMsg);
+
+    public abstract void onFinsh();
 
     /**
      * 取消请求

@@ -8,18 +8,6 @@ public interface AbsApiRequestLife {
     public boolean showFailToast = false;
 
 
-    /**
-     * 在将返回值转换成对应的model之前,对返回值进行一些处理
-     * 第一次处理之后
-     * 第二次处理之前
-     */
-    Object handleRsponseBeforeTransform(Object rsp);
-
-    /**
-     * 在将返回值转换成对应的model后,对返回值进行一些处理
-     * 完成了第二次处理
-     */
-    Object handleRsponseAfterTransform(Object rsp);
 
     /**
      * 是否展示成功提示

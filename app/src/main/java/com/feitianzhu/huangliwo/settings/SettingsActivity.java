@@ -14,10 +14,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.feitianzhu.huangliwo.GlobalUtil;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.LazyWebActivity;
 import com.feitianzhu.huangliwo.core.network.ApiCallBack;
+import com.feitianzhu.huangliwo.core.network.ApiLifeCallBack;
+import com.feitianzhu.huangliwo.core.network.LoadingUtil;
 import com.feitianzhu.huangliwo.core.network.test.UpdataRequest;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
@@ -192,15 +195,31 @@ public class SettingsActivity extends BaseActivity {
                 startActivity(intent);
                 break;
             case R.id.rl_update:
+                GlobalUtil.setMainActivity(this);
+//                LoadingUtil.setLoadingViewShow(true);
                 UpdataRequest updataRequest = new UpdataRequest();
-                updataRequest.call(new ApiCallBack<UpdateAppModel>() {
+                updataRequest.isShowLoading = true;
+                updataRequest.accessToken = SPUtils.getString(getApplicationContext(), Constant.SP_ACCESS_TOKEN);
+                updataRequest.userId = SPUtils.getString(getApplicationContext(), Constant.SP_LOGIN_USERID);
+                updataRequest.call(new ApiLifeCallBack<UpdateAppBean>() {
                     @Override
-                    public void onAPIResponse(UpdateAppModel response) {
-                        ToastUtils.show("sds");
+                    public void onStart() {
+
+                    }
+
+                    @Override
+                    public void onFinsh() {
+
+                    }
+
+                    @Override
+                    public void onAPIResponse(UpdateAppBean response) {
+//                        ToastUtils.show("sdfsdf");
                     }
 
                     @Override
                     public void onAPIError(int errorCode, String errorMsg) {
+                        ToastUtils.show(errorMsg + " " + errorCode);
 
                     }
                 });
