@@ -236,4 +236,13 @@ dependencies {
     implementation 'com.gcssloop.recyclerview:pagerlayoutmanager:2.3.8'
     implementation 'com.hjq:toast:8.0'
     ////implementation 'com.facebook.fresco:fresco:1.13.0'  //更高版本要使用Androidx
+
+    // 友盟基础组件库（所有友盟业务SDK都依赖基础组件库）
+    implementation  'com.umeng.umsdk:analytics:8.0.0'
+    implementation  'com.umeng.umsdk:common:2.1.0'
+//PushSDK必须依赖utdid库，所以需要加入对应依赖
+//    implementation 'com.umeng.umsdk:utdid:1.1.5.3'
+////PushSDK
+//    implementation 'com.umeng.umsdk:push:6.0.1'
+
 }

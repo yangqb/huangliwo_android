@@ -108,8 +108,8 @@ public class App extends Application {
         ToastUtils.init(this);
         ToastUtils.initStyle(new ToastWhiteStyle2(this));
 
-//        UMengAnalyze.getInstance().init(context);
-//        UMengAnalyze.getInstance().openLog(true);
+        UMengAnalyze.getInstance().init(context);
+        UMengAnalyze.getInstance().openLog(true);
 
 
         //网络监听日志
