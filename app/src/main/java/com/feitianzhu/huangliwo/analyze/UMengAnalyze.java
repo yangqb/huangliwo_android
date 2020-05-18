@@ -27,9 +27,7 @@ public class UMengAnalyze {
     }
 
     public void init(Context context) {
-        // 选用AUTO页面采集模式
 
-        MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO);
 
         /**
          * 初始化common库
@@ -39,7 +37,11 @@ public class UMengAnalyze {
          * 参数4:设备类型，UMConfigure.DEVICE_TYPE_PHONE为手机、UMConfigure.DEVICE_TYPE_BOX为盒子，默认为手机
          * 参数5:Push推送业务的secret
          */
-        UMConfigure.init(context, APPKEY, Channel, UMConfigure.DEVICE_TYPE_PHONE, "");
+        UMConfigure.init(context, APPKEY, Channel, UMConfigure.DEVICE_TYPE_PHONE, MessageSecret);
+
+        // 选用AUTO页面采集模式
+
+        MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO);
 //        UMConfigure.init(context, APPKEY, Channel, UMConfigure.DEVICE_TYPE_PHONE, MessageSecret);
         getTestDeviceInfo(context);
         //获取消息推送代理示例
@@ -91,6 +93,6 @@ public class UMengAnalyze {
      * 参数: boolean 默认为false，如需查看LOG设置为true
      */
     public void openLog(boolean isOPen) {
-        UMConfigure.setLogEnabled(true);
+        UMConfigure.setLogEnabled(isOPen);
     }
 }

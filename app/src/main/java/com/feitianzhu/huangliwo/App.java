@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.feitianzhu.huangliwo.analyze.UMengAnalyze;
+import com.feitianzhu.huangliwo.core.log.HttpLogUtil;
 import com.feitianzhu.huangliwo.core.network.networkcheck.NetWorkState;
 import com.feitianzhu.huangliwo.core.network.networkcheck.NetworkConnectChangedReceiver;
 import com.feitianzhu.huangliwo.core.rxbus.RxBus;
@@ -42,6 +43,7 @@ import java.util.concurrent.TimeUnit;
 
 import me.jessyan.autosize.AutoSizeConfig;
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 
 /**
  * Created by dicallc on 2017/9/4 0004.
@@ -108,8 +110,9 @@ public class App extends Application {
         ToastUtils.init(this);
         ToastUtils.initStyle(new ToastWhiteStyle2(this));
 
-//        UMengAnalyze.getInstance().init(context);
-//        UMengAnalyze.getInstance().openLog(true);
+        UMengAnalyze.getInstance().openLog(true);
+
+        UMengAnalyze.getInstance().init(context);
 
 
         //网络监听日志
@@ -143,7 +146,16 @@ public class App extends Application {
         //builder.cookieJar(new CookieJarImpl(new SPCookieStore(this)));            //使用sp保持cookie，如果cookie不过期，则一直有效
         builder.cookieJar(new CookieJarImpl(new DBCookieStore(this)));      //使用数据库保持cookie，如果cookie不过期，则一直有效
         //builder.cookieJar(new CookieJarImpl(new MemoryCookieStore()));            //使用内存保持cookie，app退出后，cookie消失
-
+        HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
+            @Override
+            public void log(String message) {
+                HttpLogUtil.i("HttpLoggingInterceptor", message);
+            }
+        });
+        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        if (false) {
+            builder.addInterceptor(httpLoggingInterceptor);
+        }
         /*//https相关设置，以下几种方案根据需要自己设置
 
         //方法二：自定义信任规则，校验服务端证书
