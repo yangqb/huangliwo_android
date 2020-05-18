@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
-import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ClickableSpan;
@@ -19,10 +18,8 @@ import android.widget.TextView;
 
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
-import com.feitianzhu.huangliwo.common.base.LazyWebActivity;
-import com.feitianzhu.huangliwo.plane.PlaneDetailActivity;
+import com.feitianzhu.huangliwo.common.base.activity.LazyWebActivity;
 import com.feitianzhu.huangliwo.utils.Urls;
-import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.core.CenterPopupView;
 
 public class CustomUserPrivateView extends CenterPopupView {

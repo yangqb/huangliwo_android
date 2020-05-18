@@ -3,25 +3,21 @@ package com.feitianzhu.huangliwo.me.ui;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.feitianzhu.huangliwo.R;
-import com.feitianzhu.huangliwo.common.Constant;
-import com.feitianzhu.huangliwo.me.base.BaseActivity;
+import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.model.MineCollectionMoneyModel;
 import com.feitianzhu.huangliwo.view.CircleImageView;
-import com.hjq.toast.ToastUtils;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 
 import java.io.ByteArrayOutputStream;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import okhttp3.Call;
 
 /**
  * Created by Vya on 2017/8/31 0031.

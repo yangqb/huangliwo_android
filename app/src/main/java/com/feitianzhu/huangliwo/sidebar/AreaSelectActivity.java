@@ -1,7 +1,6 @@
 package com.feitianzhu.huangliwo.sidebar;
 
 import android.content.Context;
-import android.content.Intent;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -12,7 +11,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.feitianzhu.huangliwo.R;
-import com.feitianzhu.huangliwo.me.base.BaseActivity;
+import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.model.AreaPhoneBean;
 import com.feitianzhu.huangliwo.utils.PinyinUtils;
 import com.feitianzhu.huangliwo.utils.ReadAssetsJsonUtil;

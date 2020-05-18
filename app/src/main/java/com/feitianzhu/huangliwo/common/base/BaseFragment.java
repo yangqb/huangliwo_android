@@ -1,4 +1,4 @@
-package com.feitianzhu.huangliwo.me.base;
+package com.feitianzhu.huangliwo.common.base;
 
 import android.content.Context;
 import android.os.Bundle;

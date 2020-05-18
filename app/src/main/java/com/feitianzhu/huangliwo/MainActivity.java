@@ -13,7 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.feitianzhu.huangliwo.common.Constant;
-import com.feitianzhu.huangliwo.common.base.SFActivity;
+import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
+import com.feitianzhu.huangliwo.common.base.activity.SFActivity;
 import com.feitianzhu.huangliwo.home.RecommendedFragment;
 import com.feitianzhu.huangliwo.home.HomeFragment;
 import com.feitianzhu.huangliwo.http.JsonCallback;
@@ -25,7 +26,6 @@ import com.feitianzhu.huangliwo.model.HomePopModel;
 import com.feitianzhu.huangliwo.model.LocationPost;
 import com.feitianzhu.huangliwo.model.MyPoint;
 import com.feitianzhu.huangliwo.model.UpdateAppModel;
-import com.feitianzhu.huangliwo.plane.PlaneDetailActivity;
 import com.feitianzhu.huangliwo.shop.CommodityClassificationFragment;
 import com.feitianzhu.huangliwo.shop.NewYearShoppingActivity;
 import com.feitianzhu.huangliwo.update.UpdateMyDialogFragment;
@@ -58,7 +58,7 @@ import butterknife.Unbinder;
 
 import static com.feitianzhu.huangliwo.common.Constant.UAPDATE;
 
-public class MainActivity extends SFActivity implements View.OnClickListener, RecommendedFragment.CallbackBFragment {
+public class MainActivity extends BaseActivity implements View.OnClickListener, RecommendedFragment.CallbackBFragment {
 
     @BindView(R.id.txt_index)
     TextView mTxtIndex;
@@ -102,13 +102,10 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Re
     private int isShow; //是否弹出活动的框
     boolean constraint = false; //是否强制更新
     private HomePopModel.PopupBean popupBean = new HomePopModel.PopupBean();
-    private Unbinder unbinder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_view);
-        unbinder = ButterKnife.bind(this);
         EventBus.getDefault().register(this);
         LocationUtils.getInstance().start();
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
@@ -130,6 +127,11 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Re
     }
 
     @Override
+    protected int getLayoutId() {
+        return R.layout.main_view;
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
         stopAnimation();
@@ -138,7 +140,7 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Re
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unbinder.unbind();
+
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
@@ -242,7 +244,7 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Re
 
     }
 
-    private void initView() {
+    public void initView() {
         mLyIndex.setOnClickListener(this);
         mTxtIndex.setSelected(true);
         mImgIndex.setSelected(true);
@@ -251,6 +253,11 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Re
         mLyMe.setOnClickListener(this);
         //mImgFu.setOnClickListener(this);
         //initShakeAnimation();
+    }
+
+    @Override
+    protected void initData() {
+
     }
 
     /*private void initShakeAnimation() {
@@ -317,7 +324,7 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Re
                             isShow = response.body().data.getPopup().getStatus();
                             if (isShow == 1) {
                                 showActivityPop();
-                        }
+                            }
                         }
                     }
 
@@ -342,7 +349,7 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Re
                     @Override
                     public void onUpdateNotifyDialogCancel(UpdateAppBean updateApp) {
                         //用户点击关闭按钮，取消了更新，如果是下载完，用户取消了安装，则可以在 onActivityResult 监听到。
-                       // getPopData();
+                        // getPopData();
                     }
                 })
                 .build()
@@ -403,7 +410,7 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Re
                             public void onUpdateNotifyDialogCancel(UpdateAppBean updateApp) {
                                 //用户点击关闭按钮，取消了更新，如果是下载完，用户取消了安装，则可以在 onActivityResult 监听到。
 
-                               // getPopData();
+                                // getPopData();
                             }
                         });
                         updateMyDialogFragment.show(getSupportFragmentManager(), "dialog");
@@ -431,7 +438,7 @@ public class MainActivity extends SFActivity implements View.OnClickListener, Re
                      */
                     @Override
                     protected void noNewApp(String error) {
-                       // getPopData();
+                        // getPopData();
                     }
                 });
     }

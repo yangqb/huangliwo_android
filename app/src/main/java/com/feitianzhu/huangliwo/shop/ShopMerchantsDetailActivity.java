@@ -10,25 +10,20 @@ import android.net.Uri;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.feitianzhu.huangliwo.App;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.login.LoginActivity;
-import com.feitianzhu.huangliwo.me.HelperActivity;
-import com.feitianzhu.huangliwo.me.base.BaseActivity;
+import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.model.CollectionBody;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.MultipleMerchantsItem;
@@ -70,8 +65,6 @@ import butterknife.OnClick;
 import cc.shinichi.library.ImagePreview;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
-import static com.feitianzhu.huangliwo.common.Constant.ACCESS_TOKEN;
-import static com.feitianzhu.huangliwo.common.Constant.POST_MINE_INFO;
 import static com.feitianzhu.huangliwo.common.Constant.USERID;
 import static com.feitianzhu.huangliwo.vip.VipGiftDetailActivity.GIFT_ID;
 

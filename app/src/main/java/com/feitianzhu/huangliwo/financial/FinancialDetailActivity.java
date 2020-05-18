@@ -1,25 +1,11 @@
 package com.feitianzhu.huangliwo.financial;
 
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
 
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
-import com.feitianzhu.huangliwo.home.adapter.HomeRecommendAdapter2;
-import com.feitianzhu.huangliwo.home.entity.ShopAndMerchants;
-import com.feitianzhu.huangliwo.http.JsonCallback;
-import com.feitianzhu.huangliwo.http.LzyResponse;
-import com.feitianzhu.huangliwo.me.base.BaseActivity;
-import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
-import com.feitianzhu.huangliwo.model.HomeShops;
+import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.Urls;
-import com.gyf.immersionbar.ImmersionBar;
-import com.lzy.okgo.OkGo;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;

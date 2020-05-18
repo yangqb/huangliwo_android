@@ -4,6 +4,10 @@ buildscript {
     repositories {
         google()
         jcenter()
+        //友盟
+
+        maven { url 'https://dl.bintray.com/umsdk/release' }
+
         // 添加下面的内容
         flatDir {
             dirs 'libs'
@@ -29,6 +33,8 @@ allprojects {
         maven {
             url "https://maven.google.com"
         }
+        maven { url 'https://dl.bintray.com/umsdk/release' }
+//友盟
         maven { url "http://lib.gcssloop.com/repository/gcssloop-central/" }
 
     }

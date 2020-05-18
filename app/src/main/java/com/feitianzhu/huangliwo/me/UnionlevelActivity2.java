@@ -1,24 +1,16 @@
 package com.feitianzhu.huangliwo.me;
 
-import android.Manifest;
-import android.content.Intent;
-import android.net.Uri;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.feitianzhu.huangliwo.App;
 import com.feitianzhu.huangliwo.R;
-import com.feitianzhu.huangliwo.common.impl.onNetFinishLinstenerT;
 import com.feitianzhu.huangliwo.me.adapter.UnionlevelAdapter2;
-import com.feitianzhu.huangliwo.me.base.BaseActivity;
+import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.me.helper.DialogHelper;
 import com.feitianzhu.huangliwo.model.FuFriendModel;
-import com.feitianzhu.huangliwo.shop.ShopDao;
-import com.hjq.toast.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;

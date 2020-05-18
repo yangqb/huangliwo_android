@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.feitianzhu.huangliwo.MainActivity;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.splash.Bean.AdvertisementBean;
@@ -43,7 +44,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends BaseActivity {
 
     @BindView(R.id.videoview)
     CustomVideoView mVideoView;
@@ -56,35 +57,52 @@ public class SplashActivity extends AppCompatActivity {
     private Runnable runnable;
     private boolean b = false;
     private String strVal;
-    boolean service=false;
+    boolean service = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash);
-        ButterKnife.bind(this);
-        // ImageCancheok();
-        ImmersionBar.with(this)
-                .fitsSystemWindows(false)
-                .fullScreen(true)
-                .statusBarDarkFont(true, 0.2f)
-                .statusBarColor(R.color.transparent)
-                .init();
-
         //initPermision();
         //请求广告数据
         ImageCancheok();
         GlideUtils.getImageView2(this, R.mipmap.dingbu, image);
         service = SPUtils.getBoolean(this, "service");
-        if (service!=true){
+        if (service != true) {
             showPrivateDialog();
-        }else {
+        } else {
             requestPermission();
         }
+        ImmersionBar.with(this)
+                .fitsSystemWindows(false)
+                .navigationBarColor(R.color.white)
+                .navigationBarDarkIcon(true)
+                .statusBarDarkFont(true, 0.2f)
+                .statusBarColor(R.color.transparent)
+                .init();
 
         SPUtils.putBoolean(this, Constant.LOGIN_DIALOG, true);//重新进入APP才弹出异地登录的弹框
         //获取本地图片
         //判断本地时候存在动画
+    }
+
+    @Override
+    public boolean getOpenImmersionBar() {
+        return false;
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_splash;
+    }
+
+    @Override
+    protected void initView() {
+
+    }
+
+    @Override
+    protected void initData() {
+
     }
 
     private void ImageCancheok() {
@@ -190,7 +208,7 @@ public class SplashActivity extends AppCompatActivity {
                 }).setOnClickConfirmListener(new CustomUserPrivateView.OnClickConfirmListener() {
                     @Override
                     public void onConfirm() {
-                        SPUtils.putBoolean(SplashActivity.this,"service",true);
+                        SPUtils.putBoolean(SplashActivity.this, "service", true);
                         requestPermission();
                     }
                 })).show();

@@ -17,13 +17,11 @@ import com.feitianzhu.huangliwo.bankcard.entity.WithdrawFeeRateEntity;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.huangliwo.dao.NetworkDao;
-import com.feitianzhu.huangliwo.me.base.BaseActivity;
+import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.shop.ShopDao;
 import com.feitianzhu.huangliwo.shop.ShopHelp;
 import com.feitianzhu.huangliwo.utils.MathUtils;
 import com.hjq.toast.ToastUtils;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;

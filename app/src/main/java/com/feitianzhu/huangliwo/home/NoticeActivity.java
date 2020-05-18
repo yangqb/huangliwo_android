@@ -12,7 +12,7 @@ import com.feitianzhu.huangliwo.dao.NetworkDao;
 import com.feitianzhu.huangliwo.events.NotifyEvent;
 import com.feitianzhu.huangliwo.home.adapter.NoticeAdapter;
 import com.feitianzhu.huangliwo.home.entity.NoticeEntity;
-import com.feitianzhu.huangliwo.me.base.BaseActivity;
+import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 
 import org.greenrobot.eventbus.EventBus;
 

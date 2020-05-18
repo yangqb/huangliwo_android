@@ -6,26 +6,19 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.feitianzhu.huangliwo.GlobalUtil;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
-import com.feitianzhu.huangliwo.common.base.LazyWebActivity;
-import com.feitianzhu.huangliwo.core.network.ApiCallBack;
-import com.feitianzhu.huangliwo.core.network.ApiLifeCallBack;
-import com.feitianzhu.huangliwo.core.network.LoadingUtil;
-import com.feitianzhu.huangliwo.core.network.test.UpdataRequest;
+import com.feitianzhu.huangliwo.common.base.activity.LazyWebActivity;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.login.LoginActivity;
-import com.feitianzhu.huangliwo.me.base.BaseActivity;
+import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.model.UpdateAppModel;
 import com.feitianzhu.huangliwo.model.UserAuth;
 import com.feitianzhu.huangliwo.pushshop.ProblemFeedbackActivity;
@@ -41,7 +34,6 @@ import com.lzy.okgo.OkGo;
 import com.vector.update_app.UpdateAppBean;
 import com.vector.update_app.UpdateAppManager;
 import com.vector.update_app.UpdateCallback;
-import com.vector.update_app.UpdateDialogFragment;
 import com.vector.update_app.utils.AppUpdateUtils;
 
 import java.io.File;
@@ -195,35 +187,7 @@ public class SettingsActivity extends BaseActivity {
                 startActivity(intent);
                 break;
             case R.id.rl_update:
-                GlobalUtil.setMainActivity(this);
-//                LoadingUtil.setLoadingViewShow(true);
-                UpdataRequest updataRequest = new UpdataRequest();
-                updataRequest.isShowLoading = true;
-                updataRequest.accessToken = SPUtils.getString(getApplicationContext(), Constant.SP_ACCESS_TOKEN);
-                updataRequest.userId = SPUtils.getString(getApplicationContext(), Constant.SP_LOGIN_USERID);
-                updataRequest.call(new ApiLifeCallBack<UpdateAppBean>() {
-                    @Override
-                    public void onStart() {
-
-                    }
-
-                    @Override
-                    public void onFinsh() {
-
-                    }
-
-                    @Override
-                    public void onAPIResponse(UpdateAppBean response) {
-//                        ToastUtils.show("sdfsdf");
-                    }
-
-                    @Override
-                    public void onAPIError(int errorCode, String errorMsg) {
-                        ToastUtils.show(errorMsg + " " + errorCode);
-
-                    }
-                });
-//                updateDiy();
+                updateDiy();
                 break;
             case R.id.rl_change_phone:
                 startActivity(new Intent(this, ChangePhone1Activity.class));

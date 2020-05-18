@@ -10,20 +10,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.feitianzhu.huangliwo.App;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
-import com.feitianzhu.huangliwo.me.base.BaseActivity;
+import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.me.ui.ScannerActivity;
 import com.feitianzhu.huangliwo.model.MerchantGiftOrderInfo;
 import com.feitianzhu.huangliwo.model.MerchantGiftOrderModel;
 import com.feitianzhu.huangliwo.model.MerchantsEarnRulesInfo;
-import com.feitianzhu.huangliwo.plane.EditPassengerActivity;
 import com.feitianzhu.huangliwo.pushshop.adapter.SelfMerchantsOrderAdapter;
 import com.feitianzhu.huangliwo.pushshop.bean.SelfMerchantsModel;
 import com.feitianzhu.huangliwo.utils.SPUtils;
@@ -32,15 +28,11 @@ import com.feitianzhu.huangliwo.view.CustomRefundView;
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.XXPermissions;
 import com.hjq.toast.ToastUtils;
-import com.just.agentweb.ActionActivity;
 import com.lxj.xpopup.XPopup;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
-import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.zhihu.matisse.Matisse;
-import com.zhihu.matisse.internal.entity.CaptureStrategy;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,7 +40,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import okhttp3.Call;
 
 /**
  * package name: com.feitianzhu.huangliwo.pushshop.adapter

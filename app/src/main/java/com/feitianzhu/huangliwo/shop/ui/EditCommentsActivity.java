@@ -15,7 +15,7 @@ import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
-import com.feitianzhu.huangliwo.me.base.BaseActivity;
+import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.model.EvaluateMode;
 import com.feitianzhu.huangliwo.model.MultiItemComment;
 import com.feitianzhu.huangliwo.shop.adapter.EditCommentAdapter;
