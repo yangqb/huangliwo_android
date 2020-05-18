@@ -51,8 +51,9 @@ public abstract class BaseRequest extends BaseApiRequest {
             //网络不可用
         } else if (errorCode == kErrorTypeResponseHandleError) {
             //外部数据处理错误
+        } else if (errorCode == kErrorTypeResponsePraseError) {
+            //json解析错误
         }
-
     }
 }
 

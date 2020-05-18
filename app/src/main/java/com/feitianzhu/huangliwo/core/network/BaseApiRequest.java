@@ -39,7 +39,7 @@ import static com.feitianzhu.huangliwo.core.network.networkcheck.NetWorkState.NO
 public abstract class BaseApiRequest extends AbsApiRequest {
 
     /**
-     * 数据解析错误(已正常返回) 其他错误
+     * 数据解析错误(已正常返回) json错误
      */
     public static final int kErrorTypeResponsePraseError = -100001;
     /**

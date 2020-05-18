@@ -54,7 +54,6 @@ public abstract class AbsApiRequest {
         return headers;
     }
 
-    ;
 
     /**
      * 是否使用post请求
