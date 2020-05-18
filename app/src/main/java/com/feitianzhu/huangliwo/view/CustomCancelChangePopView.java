@@ -12,6 +12,7 @@ import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.model.CustomTgqChangeModel;
 import com.feitianzhu.huangliwo.model.RefundChangeInfo;
 import com.feitianzhu.huangliwo.plane.PlaneCancelChangeAdapter;
+import com.feitianzhu.huangliwo.utils.MathUtils;
 import com.lxj.xpopup.core.CenterPopupView;
 
 import java.util.ArrayList;
@@ -103,9 +104,19 @@ public class CustomCancelChangePopView extends CenterPopupView {
             CustomTgqChangeModel changeModel1 = new CustomTgqChangeModel();
             CustomTgqChangeModel changeModel2 = new CustomTgqChangeModel();
             changeModel1.timeText = goRefundChangeInfo.tgqPointCharges.get(i).timeText;
+            if (goRefundChangeInfo.tgqPointCharges.get(i).returnFee == -1) {
+                changeModel1.amountText = "不可退票";
+            } else {
+                changeModel1.amountText = "¥" + MathUtils.subZero(String.valueOf(goRefundChangeInfo.tgqPointCharges.get(i).returnFee)) + "/人";
+            }
             changeModel1.amount = goRefundChangeInfo.tgqPointCharges.get(i).returnFee;
             changeModel2.timeText = goRefundChangeInfo.tgqPointCharges.get(i).timeText;
             changeModel2.amount = goRefundChangeInfo.tgqPointCharges.get(i).changeFee;
+            if (goRefundChangeInfo.tgqPointCharges.get(i).changeFee == -1) {
+                changeModel2.amountText = "不可改期";
+            } else {
+                changeModel2.amountText = "¥" + MathUtils.subZero(String.valueOf(goRefundChangeInfo.tgqPointCharges.get(i).changeFee)) + "/人";
+            }
             list1.add(changeModel1);
             list2.add(changeModel2);
         }
@@ -116,8 +127,18 @@ public class CustomCancelChangePopView extends CenterPopupView {
                 CustomTgqChangeModel changeModel6 = new CustomTgqChangeModel();
                 changeModel5.timeText = backRefundChangeInfo.tgqPointCharges.get(i).timeText;
                 changeModel5.amount = backRefundChangeInfo.tgqPointCharges.get(i).returnFee;
+                if (backRefundChangeInfo.tgqPointCharges.get(i).returnFee == -1) {
+                    changeModel5.amountText = "不可退票";
+                } else {
+                    changeModel5.amountText = "¥" + MathUtils.subZero(String.valueOf(backRefundChangeInfo.tgqPointCharges.get(i).returnFee)) + "/人";
+                }
                 changeModel6.timeText = backRefundChangeInfo.tgqPointCharges.get(i).timeText;
                 changeModel6.amount = backRefundChangeInfo.tgqPointCharges.get(i).changeFee;
+                if (backRefundChangeInfo.tgqPointCharges.get(i).changeFee == -1) {
+                    changeModel6.amountText = "不可改期";
+                } else {
+                    changeModel6.amountText = "¥" + MathUtils.subZero(String.valueOf(backRefundChangeInfo.tgqPointCharges.get(i).changeFee)) + "/人";
+                }
                 list5.add(changeModel5);
                 list6.add(changeModel6);
             }
