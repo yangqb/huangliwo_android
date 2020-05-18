@@ -50,7 +50,11 @@ public abstract class AbsApiRequest {
      *
      * @return
      */
-    public abstract HttpHeaders addHeads(HttpHeaders headers);
+    public HttpHeaders addHeads(HttpHeaders headers) {
+        return headers;
+    }
+
+    ;
 
     /**
      * 是否使用post请求
@@ -107,7 +111,7 @@ public abstract class AbsApiRequest {
      * @param errorCode
      * @param errorMsg
      */
-    public abstract void handleError( int errorCode, String errorMsg);
+    public abstract void handleError(int errorCode, String errorMsg);
 
     public abstract void onFinsh();
 
