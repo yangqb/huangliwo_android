@@ -49,7 +49,6 @@ public abstract class SFActivity extends AppCompatActivity {
         mBinder = ButterKnife.bind(this);
 
 
-        GlobalUtil.setCurrentActivity(this);
         sfContext = this;
     }
 
@@ -65,6 +64,8 @@ public abstract class SFActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        GlobalUtil.setCurrentActivity(this);
+
         onBaseResume();
     }
 

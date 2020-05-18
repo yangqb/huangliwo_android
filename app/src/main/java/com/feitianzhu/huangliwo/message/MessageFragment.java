@@ -4,12 +4,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
@@ -33,6 +36,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
@@ -41,6 +45,10 @@ import butterknife.Unbinder;
  * create an instance of this fragment.
  */
 public class MessageFragment extends SFFragment {
+    @BindView(R.id.scrollView)
+    NestedScrollView scrollView;
+    @BindView(R.id.back_top)
+    LinearLayout backTop;
     private DiscoverAdapter mAdapter;
     private StaggeredGridLayoutManager staggeredGridLayoutManager;
     private boolean isLoadMore;
@@ -135,6 +143,17 @@ public class MessageFragment extends SFFragment {
                 getData();
             }
         });
+        scrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                int height = getResources().getDisplayMetrics().heightPixels;
+                if (height != 0 && scrollY > height / 2) {
+                    backTop.setVisibility(View.VISIBLE);
+                } else {
+                    backTop.setVisibility(View.GONE);
+                }
+            }
+        });
     }
 
     public void getData() {
@@ -170,9 +189,22 @@ public class MessageFragment extends SFFragment {
                 });
     }
 
+    @OnClick(R.id.back_top)
+    public void onViewClicked(View view) {
+        scrollView.fling(0);
+        scrollView.smoothScrollTo(0, 0);
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
         unbinder.unbind();
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
 }
