@@ -63,6 +63,9 @@ public class PlaneCalendarActivity extends BaseActivity {
         miui10Calendar = findViewById(R.id.miui10Calendar);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);// HH:mm:ss
         Calendar rightNow = Calendar.getInstance();
+        Calendar rightNow2 = Calendar.getInstance();
+        rightNow2.add(Calendar.YEAR, 1);
+        miui10Calendar.setDateInterval(simpleDateFormat.format(rightNow.getTime()), simpleDateFormat.format(rightNow2.getTime()));//初始化日期选择范围
         //当前时间 加10天
         rightNow.add(Calendar.DAY_OF_YEAR, 2);
         //new SimgpleDateFormat 进行格式化
@@ -114,7 +117,6 @@ public class PlaneCalendarActivity extends BaseActivity {
         workdayList.add("2019-7-25");*/
 
         //innerPainter.setLegalHolidayList(holidayList, workdayList);
-
         miui10Calendar.setCalendarPainter(innerPainter);
 
         miui10Calendar.setOnCalendarChangedListener(new OnCalendarChangedListener() {
