@@ -17,6 +17,9 @@
             android:textColor="@color/color_333333"
             android:textSize="17sp" />
     </LinearLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
 
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
@@ -26,18 +29,54 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:background="@color/white">
+      <android.support.v4.widget.NestedScrollView
+          android:id="@+id/scrollView"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/color_f7f7f7"
+            android:nestedScrollingEnabled="false"
             android:visibility="visible">
 
 
         </android.support.v7.widget.RecyclerView>
+      </android.support.v4.widget.NestedScrollView>
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+        <LinearLayout
+            android:id="@+id/back_top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="25dp"
+            android:layout_marginBottom="25dp"
+            android:background="@drawable/shape_back_top"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone"
+            >
 
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@mipmap/fanhuidingbu" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:text="顶部"
+                android:textColor="@color/color_333333"
+                android:textSize="11sp" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
 
     <ImageView
         android:id="@+id/img_empty"

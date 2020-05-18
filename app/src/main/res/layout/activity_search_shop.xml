@@ -56,6 +56,8 @@
                 android:singleLine="true"
                 android:textColor="@color/color_333333"
                 android:textColorHint="@color/color_666666"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:textSize="14sp" />
         </LinearLayout>
 

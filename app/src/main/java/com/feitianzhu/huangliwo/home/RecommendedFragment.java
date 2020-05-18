@@ -46,6 +46,7 @@ import com.feitianzhu.huangliwo.travel.TravelHomeActivity;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.utils.UserInfoUtils;
+import com.feitianzhu.huangliwo.utils.doubleclick.SingleClick;
 import com.feitianzhu.huangliwo.vip.VipActivity;
 import com.itheima.roundedimageview.RoundedImageView;
 import com.lzy.okgo.OkGo;
@@ -165,7 +166,6 @@ public class RecommendedFragment extends SFFragment {
         initData();
         initListener();
         getNotice();
-
         return view;
     }
     public void getNotice() {
@@ -212,9 +212,9 @@ public class RecommendedFragment extends SFFragment {
         recommendedRecyclerView.setNestedScrollingEnabled(false);
         refreshLayout.setEnableLoadMore(false);
     }
-
     public void initListener() {
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @SingleClick()
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                 initData();
@@ -222,6 +222,7 @@ public class RecommendedFragment extends SFFragment {
         });
 
         optAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @SingleClick()
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 //商铺详情页
@@ -241,6 +242,7 @@ public class RecommendedFragment extends SFFragment {
         });
 
         hotGoodsAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @SingleClick()
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 //商品详情
@@ -251,6 +253,7 @@ public class RecommendedFragment extends SFFragment {
         });
 
         hotGoodsAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @SingleClick()
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                 Intent intent = new Intent(getContext(), VipActivity.class);
@@ -260,6 +263,7 @@ public class RecommendedFragment extends SFFragment {
         });
 
         recommendedAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @SingleClick()
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 //商品详情
@@ -291,7 +295,7 @@ public class RecommendedFragment extends SFFragment {
         });
     }
 
-
+  @SingleClick()
     @OnClick({R.id.discounts_img1, R.id.discounts_img2, R.id.discounts_img3, R.id.discounts_img4, R.id.discounts_img5, R.id.activityImg, R.id.hotImg, R.id.rl_ticket, R.id.rl_travel, R.id.rl_mall, R.id.rl_merchants, R.id.back_top})
     public void onClick(View view) {
         Intent intent;
@@ -437,7 +441,6 @@ public class RecommendedFragment extends SFFragment {
         }).create(mBanners);
         mViewpager.startLoop();
     }
-
     public void onClickBanner(int i) {
         //链接类型（1：VIP，2：商品详情，3：文章，4：外部链接）
         Intent intent;
