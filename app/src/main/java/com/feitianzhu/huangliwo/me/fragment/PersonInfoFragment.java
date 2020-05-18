@@ -3,20 +3,16 @@ package com.feitianzhu.huangliwo.me.fragment;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 
 import com.feitianzhu.huangliwo.R;
-import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.me.adapter.PersonInfoAdapter;
-import com.feitianzhu.huangliwo.me.base.BaseFragment;
+import com.feitianzhu.huangliwo.common.base.BaseFragment;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
-import com.hjq.toast.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import okhttp3.Call;
 
 /**
  * Created by Vya on 2017/8/29 0029.

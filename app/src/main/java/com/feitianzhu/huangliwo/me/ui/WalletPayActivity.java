@@ -9,7 +9,7 @@ import android.widget.RelativeLayout;
 import butterknife.BindView;
 import butterknife.OnClick;
 import com.feitianzhu.huangliwo.R;
-import com.feitianzhu.huangliwo.common.base.LazyBaseActivity;
+import com.feitianzhu.huangliwo.common.base.activity.LazyBaseActivity;
 import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.huangliwo.model.PayInfo;
 import com.feitianzhu.huangliwo.shop.ShopDao;
@@ -34,7 +34,9 @@ public class WalletPayActivity extends LazyBaseActivity {
   @BindView(R.id.ly_two) RelativeLayout mLyTwo;
   @BindView(R.id.rl_bottomContainer) Button mRlBottomContainer;
 
-  @Override protected int setView() {
+
+  @Override
+  protected int getChildLayoutId() {
     return R.layout.activity_wallet_pay;
   }
 
@@ -48,9 +50,6 @@ public class WalletPayActivity extends LazyBaseActivity {
     EventBus.getDefault().unregister(this);
   }
 
-  @Override protected void initLocal() {
-
-  }
 
   @Override protected void initData() {
 

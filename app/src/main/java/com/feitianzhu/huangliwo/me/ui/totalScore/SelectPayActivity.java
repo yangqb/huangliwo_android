@@ -15,7 +15,7 @@ import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.huangliwo.dao.NetworkDao;
 import com.feitianzhu.huangliwo.home.WebViewActivity;
-import com.feitianzhu.huangliwo.me.base.BaseActivity;
+import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.me.helper.CityModel;
 import com.feitianzhu.huangliwo.me.helper.DialogHelper;
 import com.feitianzhu.huangliwo.model.PayInfo;

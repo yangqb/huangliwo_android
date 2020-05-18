@@ -5,7 +5,7 @@ import android.support.v7.widget.RecyclerView;
 
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.me.adapter.GoodsAdapter;
-import com.feitianzhu.huangliwo.me.base.BaseFragment;
+import com.feitianzhu.huangliwo.common.base.BaseFragment;
 
 import java.util.ArrayList;
 import java.util.List;

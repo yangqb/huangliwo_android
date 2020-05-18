@@ -1,7 +1,7 @@
 package com.feitianzhu.huangliwo.me.fragment;
 
 import com.feitianzhu.huangliwo.R;
-import com.feitianzhu.huangliwo.me.base.BaseFragment;
+import com.feitianzhu.huangliwo.common.base.BaseFragment;
 
 /**
  * Created by Vya on 2017/9/6 0006.

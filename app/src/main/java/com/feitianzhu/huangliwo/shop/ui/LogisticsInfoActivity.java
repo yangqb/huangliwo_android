@@ -11,21 +11,11 @@ import android.widget.TextView;
 
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
-import com.feitianzhu.huangliwo.http.JsonCallback;
-import com.feitianzhu.huangliwo.http.LzyResponse;
-import com.feitianzhu.huangliwo.me.base.BaseActivity;
-import com.feitianzhu.huangliwo.model.LogisticsInfo;
+import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.model.LogisticsModel;
 import com.feitianzhu.huangliwo.shop.adapter.LogisticsAdapter;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.Urls;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.hjq.toast.ToastUtils;
-import com.lzy.okgo.OkGo;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;

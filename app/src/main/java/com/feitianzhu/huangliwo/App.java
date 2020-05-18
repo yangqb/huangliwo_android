@@ -4,11 +4,17 @@ import android.app.Application;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.multidex.MultiDex;
+import android.util.Log;
 
 import com.baidu.mapapi.SDKInitializer;
+import com.feitianzhu.huangliwo.analyze.UMengAnalyze;
+import com.feitianzhu.huangliwo.core.network.networkcheck.NetWorkState;
+import com.feitianzhu.huangliwo.core.network.networkcheck.NetworkConnectChangedReceiver;
+import com.feitianzhu.huangliwo.core.rxbus.RxBus;
 import com.feitianzhu.huangliwo.utils.ToastWhiteStyle2;
 import com.feitianzhu.huangliwo.view.MRefreshFooter;
 import com.feitianzhu.huangliwo.view.MRefreshHeader;
+import com.google.gson.Gson;
 import com.hjq.toast.ToastUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheEntity;
@@ -29,7 +35,9 @@ import com.scwang.smartrefresh.layout.api.RefreshHeader;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.footer.BallPulseFooter;
 import com.tencent.bugly.crashreport.CrashReport;
+
 import com.uuzuche.lib_zxing.activity.ZXingLibrary;
+
 import java.util.concurrent.TimeUnit;
 
 import me.jessyan.autosize.AutoSizeConfig;
@@ -81,6 +89,8 @@ public class App extends Application {
                 return new MRefreshHeader(context);
             }
         });
+
+
     }
 
     @Override
@@ -98,7 +108,20 @@ public class App extends Application {
         ToastUtils.init(this);
         ToastUtils.initStyle(new ToastWhiteStyle2(this));
 
+//        UMengAnalyze.getInstance().init(context);
+//        UMengAnalyze.getInstance().openLog(true);
+
+
+        //网络监听日志
+        NetworkConnectChangedReceiver.addNetworkConnectChangedListener(context, new NetworkConnectChangedReceiver.NetworkChangedListener() {
+            @Override
+            public void onNetworkChanged(NetWorkState networkStatus) {
+                RxBus.getDefault().post(RxCodeConstants.NETWORKSTATUS, networkStatus);
+            }
+        });
+        GlobalUtil.setApplication(context);
     }
+
 
     public void initOkgo() {
         //---------这里给出的是示例代码,告诉你可以这么传,实际使用的时候,根据需要传,不需要就不传-------------//

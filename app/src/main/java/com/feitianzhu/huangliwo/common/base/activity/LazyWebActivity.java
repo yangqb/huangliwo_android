@@ -1,9 +1,8 @@
-package com.feitianzhu.huangliwo.common.base;
+package com.feitianzhu.huangliwo.common.base.activity;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -15,7 +14,6 @@ import android.widget.TextView;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.gyf.immersionbar.ImmersionBar;
 import com.just.agentweb.AgentWeb;
 import com.just.agentweb.AgentWebConfig;
 import com.just.agentweb.DefaultWebClient;
@@ -23,14 +21,18 @@ import com.just.agentweb.WebChromeClient;
 import com.just.agentweb.WebViewClient;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
  * Created by jiangdikai on 2017/9/24.
+ * <p>
+ * * updata by bch on 2020/5/6.
+ * * 修改 ButterKnife  下沉到最底层
+ * * 带header的Activity
+ * * 取消状态栏适配 ,下沉
  */
 
-public class LazyWebActivity extends AppCompatActivity {
+public class LazyWebActivity extends SFActivity {
     @BindView(R.id.container)
     LinearLayout container;
     private AgentWeb mAgentWeb;
@@ -43,15 +45,6 @@ public class LazyWebActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_web);
-        ButterKnife.bind(this);
-        ImmersionBar.with(this)
-                .fitsSystemWindows(true)
-                .navigationBarColor(R.color.white)
-                .navigationBarDarkIcon(true)
-                .statusBarDarkFont(true, 0.2f)
-                .statusBarColor(R.color.white)
-                .init();
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         String url = getIntent().getStringExtra(Constant.URL);
         //url = "https://www.baidu.com/";
@@ -83,6 +76,11 @@ public class LazyWebActivity extends AppCompatActivity {
         //设置自适应屏幕
         webSettings.setUseWideViewPort(true);
         webSettings.setLoadWithOverviewMode(true);
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_web;
     }
 
     private WebChromeClient chromeClient = new WebChromeClient() {

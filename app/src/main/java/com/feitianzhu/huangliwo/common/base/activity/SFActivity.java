@@ -1,4 +1,4 @@
-package com.feitianzhu.huangliwo.common.base;
+package com.feitianzhu.huangliwo.common.base.activity;
 
 import android.content.Context;
 import android.content.res.Configuration;
@@ -11,19 +11,65 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.feitianzhu.huangliwo.GlobalUtil;
+import com.feitianzhu.huangliwo.R;
+import com.gyf.immersionbar.ImmersionBar;
+
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * Created by jiangdikai on 2017/9/4.
+ * <p>
+ * updata by bch on 2020/5/6.
+ * 添加ButterKnife
+ * 添加状态栏适配
  */
 
-public class SFActivity extends AppCompatActivity {
+public abstract class SFActivity extends AppCompatActivity {
     private MaterialDialog mDialog;
     protected Context sfContext;
+    private Unbinder mBinder;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (getLayoutId() != 0) {
+            setContentView(getLayoutId());
+        }
+        if (getOpenImmersionBar()) {
+            ImmersionBar.with(this)
+                    .fitsSystemWindows(true)
+                    .statusBarDarkFont(true, 0.2f)
+                    .statusBarColor(R.color.transparent)
+                    .init();
+        }
+
+        mBinder = ButterKnife.bind(this);
+
+
+        GlobalUtil.setCurrentActivity(this);
         sfContext = this;
+    }
+
+    public boolean getOpenImmersionBar() {
+        return true;
+    }
+
+    /**
+     * 子类传入一个布局,父类创建View
+     */
+    protected abstract int getLayoutId();
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        onBaseResume();
+    }
+
+    protected void onBaseResume() {
+
     }
 
     protected void showloadDialog(String title) {
@@ -48,6 +94,9 @@ public class SFActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        if (mBinder != null) {
+            mBinder.unbind();
+        }
         super.onDestroy();
         mDialog = null;
     }

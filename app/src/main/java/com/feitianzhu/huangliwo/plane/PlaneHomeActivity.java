@@ -8,12 +8,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cretin.tools.cityselect.model.CityModel;
-import com.feitianzhu.huangliwo.MainActivity;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
-import com.feitianzhu.huangliwo.common.base.LazyWebActivity;
+import com.feitianzhu.huangliwo.common.base.activity.LazyWebActivity;
 import com.feitianzhu.huangliwo.login.LoginActivity;
-import com.feitianzhu.huangliwo.me.base.BaseActivity;
+import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.model.CustomFightCityInfo;
 import com.feitianzhu.huangliwo.utils.DateUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
@@ -22,8 +21,6 @@ import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;

@@ -1,4 +1,4 @@
-package com.feitianzhu.huangliwo.core.networkcheck;
+package com.feitianzhu.huangliwo.core.network.networkcheck;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

@@ -10,7 +10,7 @@ import butterknife.OnClick;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.feitianzhu.huangliwo.R;
-import com.feitianzhu.huangliwo.common.base.LazyBaseActivity;
+import com.feitianzhu.huangliwo.common.base.activity.LazyBaseActivity;
 import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.huangliwo.model.ShopOrderModel;
 import com.feitianzhu.huangliwo.shop.ShopDao;
@@ -32,11 +32,14 @@ public class OrdeRevaluateActivity extends LazyBaseActivity {
   @BindView(R.id.rl_bottomContainer) Button mRlBottomContainer;
   private ShopOrderModel.ListEntity mOrderModel;
 
-  @Override protected int setView() {
+  @Override
+  protected int getChildLayoutId() {
     return R.layout.activity_orde_revaluate;
   }
 
   @Override protected void initView() {
+    mOrderModel = getIntent().getParcelableExtra("model");
+    KLog.e(mOrderModel);
     ShopOrderModel.ListEntity.MerchantEntity mMerchant = mOrderModel.merchant;
     setTitleName("评价");
     if (null != mMerchant) {
@@ -52,11 +55,6 @@ public class OrdeRevaluateActivity extends LazyBaseActivity {
           + "");
       mShopMoney.setText(mOrderModel.consumeAmount + "");
     }
-  }
-
-  @Override protected void initLocal() {
-    mOrderModel = getIntent().getParcelableExtra("model");
-    KLog.e(mOrderModel);
   }
 
   @Override protected void initData() {

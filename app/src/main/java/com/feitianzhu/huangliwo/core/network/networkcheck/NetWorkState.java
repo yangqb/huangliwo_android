@@ -1,4 +1,4 @@
-package com.feitianzhu.huangliwo.core.networkcheck;
+package com.feitianzhu.huangliwo.core.network.networkcheck;
 
 /**
  * 网络状态枚举

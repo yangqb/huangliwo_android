@@ -21,7 +21,7 @@ import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.http.PlaneResponse;
-import com.feitianzhu.huangliwo.me.base.BaseActivity;
+import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.model.ApplyChangeParams;
 import com.feitianzhu.huangliwo.model.DocOrderDetailInfo;
 import com.feitianzhu.huangliwo.model.DocOrderDetailPassengersInfo;

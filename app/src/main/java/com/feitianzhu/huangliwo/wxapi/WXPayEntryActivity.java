@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.model.PayInfo;
 import com.hjq.toast.ToastUtils;
 import com.socks.library.KLog;
@@ -22,7 +23,7 @@ import org.greenrobot.eventbus.EventBus;
  * Created by jiangdikai on 2017/9/26.
  */
 
-public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
+public class WXPayEntryActivity extends BaseActivity implements IWXAPIEventHandler {
     private IWXAPI api;
 
     @Override
@@ -31,6 +32,21 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
         api = WXAPIFactory.createWXAPI(this, Constant.WX_APP_ID);
         api.registerApp(Constant.WX_APP_ID);
         api.handleIntent(getIntent(), this);
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return 0;
+    }
+
+    @Override
+    protected void initView() {
+
+    }
+
+    @Override
+    protected void initData() {
+
     }
 
     @Override
