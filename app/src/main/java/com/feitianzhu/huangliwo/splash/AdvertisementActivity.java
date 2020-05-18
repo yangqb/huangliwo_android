@@ -90,6 +90,9 @@ public class AdvertisementActivity extends BaseActivity {
 
             super.handleMessage(msg);
             index--;
+            if (btnAdv == null) {
+                return;
+            }
             btnAdv.setText("跳过 " + index);
 
             switch (msg.what) {
@@ -117,6 +120,7 @@ public class AdvertisementActivity extends BaseActivity {
     }
 
     private void startMainActivity() {
+        handler.removeMessages(index);
         Intent intent = new Intent(AdvertisementActivity.this, MainActivity.class);
         startActivity(intent);
         finish();

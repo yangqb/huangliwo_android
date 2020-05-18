@@ -39,8 +39,9 @@ public class UMengAnalyze {
          * 参数4:设备类型，UMConfigure.DEVICE_TYPE_PHONE为手机、UMConfigure.DEVICE_TYPE_BOX为盒子，默认为手机
          * 参数5:Push推送业务的secret
          */
-        UMConfigure.init(context, APPKEY, Channel, UMConfigure.DEVICE_TYPE_PHONE, MessageSecret);
-//        getTestDeviceInfo(context);
+        UMConfigure.init(context, APPKEY, Channel, UMConfigure.DEVICE_TYPE_PHONE, "");
+//        UMConfigure.init(context, APPKEY, Channel, UMConfigure.DEVICE_TYPE_PHONE, MessageSecret);
+        getTestDeviceInfo(context);
         //获取消息推送代理示例
 //        PushAgent mPushAgent = PushAgent.getInstance(context);
 ////注册推送服务，每次调用register方法都会回调该接口
