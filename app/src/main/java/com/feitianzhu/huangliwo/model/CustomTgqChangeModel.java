@@ -12,4 +12,5 @@ import java.io.Serializable;
 public class CustomTgqChangeModel implements Serializable {
     public String timeText;
     public double amount;
+    public String amountText;
 }

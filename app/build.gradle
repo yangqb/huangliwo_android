@@ -61,16 +61,16 @@ android {
             storeFile file('../key/feitianzhu.jks')
             storePassword 'kaisa008'
         }
-        /*debug {
-            keyAlias 'feitianzhu'
+        debug {
+            /*keyAlias 'feitianzhu'
             keyPassword 'kaisa008'
             storeFile file('../key/feitianzhu.jks')
-            storePassword 'kaisa008'
+            storePassword 'kaisa008'*/
             keyAlias 'androiddebugkey'
             keyPassword 'android'
             storeFile file('../key/debug.keystore')
             storePassword 'android'
-        }*/
+        }
     }
 
     compileOptions {
