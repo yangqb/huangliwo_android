@@ -26,8 +26,8 @@ public class GoodsListRequest extends BaseRequest {
 
     @Override
     public ParamsBuilder appendParams(ParamsBuilder builder) {
-        return builder.append("accessToken", token).append("userId", userId).append("limitNum", Constant.PAGE_SIZE)
-                .append("curPage", pageNo + "");
+        return super.appendParams(builder.append("accessToken", token).append("userId", userId).append("limitNum", Constant.PAGE_SIZE)
+                .append("curPage", pageNo + ""));
     }
 
     @Override
