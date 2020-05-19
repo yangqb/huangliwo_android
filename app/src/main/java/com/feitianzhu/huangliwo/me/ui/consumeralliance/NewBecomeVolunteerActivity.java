@@ -59,7 +59,6 @@ public class NewBecomeVolunteerActivity extends BaseActivity {
 
                 @Override
                 public void onPageSelected(int position) {
-                    defaultNavigationBar.setCurrentTab(position);
                 }
 
                 @Override

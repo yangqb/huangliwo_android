@@ -1,5 +1,7 @@
 package com.feitianzhu.huangliwo.model;
 
+import com.feitianzhu.huangliwo.http.LzyResponse;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -11,7 +13,7 @@ import java.util.List;
  * email: 694125155@qq.com
  */
 public class HomeShops implements Serializable {
-    private List<BaseGoodsListBean> goodsList;
+    public List<BaseGoodsListBean> goodsList;
 
     public List<BaseGoodsListBean> getGoodsList() {
         return goodsList;
@@ -20,4 +22,5 @@ public class HomeShops implements Serializable {
     public void setGoodsList(List<BaseGoodsListBean> goodsList) {
         this.goodsList = goodsList;
     }
+
 }

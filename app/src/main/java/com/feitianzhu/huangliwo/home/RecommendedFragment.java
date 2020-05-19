@@ -24,16 +24,19 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.SFFragment;
+import com.feitianzhu.huangliwo.core.network.ApiLifeCallBack;
 import com.feitianzhu.huangliwo.home.adapter.HotGoodsAdapter2;
 import com.feitianzhu.huangliwo.home.adapter.OptAdapter;
 import com.feitianzhu.huangliwo.home.adapter.RecommendedAdapter;
 import com.feitianzhu.huangliwo.home.entity.HomeEntity;
 import com.feitianzhu.huangliwo.home.entity.NoticeModel;
+import com.feitianzhu.huangliwo.home.request.GoodsListRequest;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.login.LoginActivity;
 import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
 import com.feitianzhu.huangliwo.model.HomeModel;
+import com.feitianzhu.huangliwo.model.HomeShops;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.MyPoint;
 import com.feitianzhu.huangliwo.plane.PlaneHomeActivity;
@@ -48,11 +51,14 @@ import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 import com.feitianzhu.huangliwo.utils.doubleclick.SingleClick;
 import com.feitianzhu.huangliwo.vip.VipActivity;
+import com.hjq.toast.ToastUtils;
 import com.itheima.roundedimageview.RoundedImageView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.base.Request;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 import com.zhpan.bannerview.BannerViewPager;
 import com.zhpan.bannerview.constants.IndicatorSlideMode;
 import com.zhpan.bannerview.constants.IndicatorStyle;
@@ -88,7 +94,9 @@ public class RecommendedFragment extends SFFragment {
     private MineInfoModel userInfo;
     private String token;
     private String userId;
+    private boolean isLoadMore = false;
     private OptAdapter optAdapter;
+    private int pageNo = 1;
     private HotGoodsAdapter2 hotGoodsAdapter;
     private RecommendedAdapter recommendedAdapter;
     private CallbackBFragment mCallbackBFragment;
@@ -166,8 +174,10 @@ public class RecommendedFragment extends SFFragment {
         initData();
         initListener();
         getNotice();
+        getGoodsList(); //推荐商品
         return view;
     }
+
     public void getNotice() {
         OkGo.<LzyResponse<NoticeModel>>get(Urls.GET_HOME_NOTICE)
                 .tag(this)
@@ -210,14 +220,24 @@ public class RecommendedFragment extends SFFragment {
         recommendedRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         recommendedRecyclerView.setAdapter(recommendedAdapter);
         recommendedRecyclerView.setNestedScrollingEnabled(false);
-        refreshLayout.setEnableLoadMore(false);
     }
+
     public void initListener() {
-        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
-            @SingleClick()
+
+        refreshLayout.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
+            @Override
+            public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+                pageNo++;
+                isLoadMore = true;
+                getGoodsList();
+            }
+
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                pageNo = 1;
+                isLoadMore = false;
                 initData();
+                getGoodsList();
             }
         });
 
@@ -295,7 +315,7 @@ public class RecommendedFragment extends SFFragment {
         });
     }
 
-  @SingleClick()
+    @SingleClick()
     @OnClick({R.id.discounts_img1, R.id.discounts_img2, R.id.discounts_img3, R.id.discounts_img4, R.id.discounts_img5, R.id.activityImg, R.id.hotImg, R.id.rl_ticket, R.id.rl_travel, R.id.rl_mall, R.id.rl_merchants, R.id.back_top})
     public void onClick(View view) {
         Intent intent;
@@ -374,9 +394,15 @@ public class RecommendedFragment extends SFFragment {
                 .params("latitude", latitude + "")
                 .execute(new JsonCallback<LzyResponse<HomeModel>>() {
                     @Override
+                    public void onStart(Request<LzyResponse<HomeModel>, ? extends Request> request) {
+                        super.onStart(request);
+                        showloadDialog("");
+                    }
+
+                    @Override
                     public void onSuccess(Response<LzyResponse<HomeModel>> response) {
                         super.onSuccess(getActivity(), response.body().msg, response.body().code);
-                        refreshLayout.finishRefresh();
+                        goneloadDialog();
                         if (response.body().code == 0 && response.body().data != null) {
                             mHomeMode = response.body().data;
                             if (mHomeMode.bannerList != null && mHomeMode.bannerList.size() > 0) {
@@ -400,20 +426,65 @@ public class RecommendedFragment extends SFFragment {
                                 hotGoodsAdapter.setNewData(hotGoodsList);
                                 hotGoodsAdapter.notifyDataSetChanged();
                             }
-                            if (mHomeMode.goodsList != null) {
+                            /*if (mHomeMode.goodsList != null) {
                                 recGoodsList = mHomeMode.goodsList;
                                 recommendedAdapter.setNewData(recGoodsList);
                                 recommendedAdapter.notifyDataSetChanged();
-                            }
+                            }*/
                         }
                     }
 
                     @Override
                     public void onError(Response<LzyResponse<HomeModel>> response) {
                         super.onError(response);
-                        refreshLayout.finishRefresh(false);
+                        goneloadDialog();
                     }
                 });
+    }
+
+
+    public void getGoodsList() {
+        GoodsListRequest goodsListRequest = new GoodsListRequest(token, userId, pageNo);
+        goodsListRequest.call(new ApiLifeCallBack<HomeShops>() {
+            @Override
+            public void onStart() {
+            }
+
+            @Override
+            public void onFinsh() {
+
+            }
+
+            @Override
+            public void onAPIResponse(HomeShops response) {
+                if (!isLoadMore) {
+                    refreshLayout.finishRefresh();
+                } else {
+                    refreshLayout.finishLoadMore();
+                }
+                if (!isLoadMore) {
+                    recGoodsList.clear();
+                }
+                if (response != null && response.getGoodsList() != null && response.getGoodsList().size() > 0) {
+                    recGoodsList.addAll(response.getGoodsList());
+                    recommendedAdapter.setNewData(recGoodsList);
+                } else {
+                    if (isLoadMore) {
+                        ToastUtils.show("没有更多数据了");
+                    }
+                }
+                recommendedAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onAPIError(int errorCode, String errorMsg) {
+                if (!isLoadMore) {
+                    refreshLayout.finishRefresh(false);
+                } else {
+                    refreshLayout.finishLoadMore(false);
+                }
+            }
+        });
     }
 
     public void showDiscountsImg() {
@@ -441,6 +512,7 @@ public class RecommendedFragment extends SFFragment {
         }).create(mBanners);
         mViewpager.startLoop();
     }
+
     public void onClickBanner(int i) {
         //链接类型（1：VIP，2：商品详情，3：文章，4：外部链接）
         Intent intent;

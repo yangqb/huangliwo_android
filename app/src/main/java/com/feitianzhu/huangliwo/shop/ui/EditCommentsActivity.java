@@ -1,7 +1,9 @@
 package com.feitianzhu.huangliwo.shop.ui;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.net.Uri;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -18,12 +20,17 @@ import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.model.EvaluateMode;
 import com.feitianzhu.huangliwo.model.MultiItemComment;
+import com.feitianzhu.huangliwo.pushshop.EditMerchantsActivity;
+import com.feitianzhu.huangliwo.pushshop.bean.MultiShopFront;
 import com.feitianzhu.huangliwo.shop.adapter.EditCommentAdapter;
 import com.feitianzhu.huangliwo.utils.Glide4Engine;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.utils.doubleclick.SingleClick;
+import com.feitianzhu.huangliwo.view.CustomSelectPhotoView;
 import com.google.gson.Gson;
+import com.hjq.permissions.OnPermission;
+import com.hjq.permissions.XXPermissions;
 import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
@@ -31,6 +38,8 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.request.PostRequest;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
+import com.zhihu.matisse.internal.entity.CaptureStrategy;
+import com.zhihu.matisse.internal.utils.MediaStoreCompat;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -48,13 +57,13 @@ import static com.feitianzhu.huangliwo.common.Constant.USERID;
  * */
 public class EditCommentsActivity extends BaseActivity {
     private static final int REQUEST_CODE_CHOOSE = 1000;
+    private static final int REQUEST_CODE_CAPTURE = 999;
     public static final String EVALUATE_DATA = "evaluate_data";
-    private int maxSize = 3;
-    private boolean isAdd = false; //是否还可以添加图片
+    private int maxSize = 6;
     private EditCommentAdapter mAdapter;
     private List<MultiItemComment> multiItemCommentList = new ArrayList<>();
-    private List<String> mSelected = new ArrayList<>();
     private EvaluateMode evaluateMode;
+    private MediaStoreCompat mMediaStoreCompat;
     @BindView(R.id.title_name)
     TextView titleName;
     @BindView(R.id.right_text)
@@ -78,6 +87,7 @@ public class EditCommentsActivity extends BaseActivity {
         titleName.setText("评价");
         rightText.setText("发布");
         rightText.setVisibility(View.VISIBLE);
+        mMediaStoreCompat = new MediaStoreCompat(this);
         evaluateMode = (EvaluateMode) getIntent().getSerializableExtra(EVALUATE_DATA);
         MultiItemComment comment = new MultiItemComment(MultiItemComment.upImg);
         comment.setId(R.mipmap.g01_01shangchuan);
@@ -97,7 +107,7 @@ public class EditCommentsActivity extends BaseActivity {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 if (adapter.getItemViewType(position) == MultiItemComment.upImg) {
-                    selectPhoto();
+                    selectPhoto(maxSize);
                 } else {
                     // 仅需一行代码,默认配置为：
                     //      显示顶部进度指示器、
@@ -140,57 +150,99 @@ public class EditCommentsActivity extends BaseActivity {
                 mAdapter.setNewData(multiItemCommentList);
                 mAdapter.notifyDataSetChanged();
                 allSelect.remove(position);
-                maxSize = 3 - allSelect.size();
-                if (isAdd) {
+                maxSize = 6 - allSelect.size();
+                if (maxSize == 1) {
                     MultiItemComment comment = new MultiItemComment(MultiItemComment.upImg);
                     comment.setId(R.mipmap.g01_01shangchuan);
                     multiItemCommentList.add(comment);
                 }
-                isAdd = false;
             }
         });
     }
 
-    public void selectPhoto() {
-        Matisse.from(EditCommentsActivity.this)
-                .choose(MimeType.ofImage())
-                //自定义选择选择的类型
-                //.choose(MimeType.of(MimeType.JPEG,MimeType.AVI))
-                //是否只显示选择的类型的缩略图，就不会把所有图片视频都放在一起，而是需要什么展示什么
-                .showSingleMediaType(true)
-                /*.capture(true)  // 使用相机，和 captureStrategy 一起使用
-                .captureStrategy(new CaptureStrategy(true, "com.feitianzhu.fu700.fileprovider"))*/
-                //有序选择图片 123456...
-                .countable(true)
-                //最大选择数量为6
-                .maxSelectable(maxSize)
-                //选择方向
-                .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
-                //图片过滤
-                //.addFilter()
-                //界面中缩略图的质量
-                .thumbnailScale(0.85f)
-                //蓝色主题
-                .theme(R.style.Matisse_Zhihu)
-                //黑色主题
-                //.theme(R.style.Matisse_Dracula)
-                //Picasso加载方式
-                //.imageEngine(new PicassoEngine())
-                //Glide加载方式
-                .imageEngine(new Glide4Engine())
-                .forResult(REQUEST_CODE_CHOOSE);
+    public void selectPhoto(int maxNum) {
+        new XPopup.Builder(this)
+                .asCustom(new CustomSelectPhotoView(EditCommentsActivity.this)
+                        .setOnSelectTakePhotoListener(new CustomSelectPhotoView.OnSelectTakePhotoListener() {
+                            @Override
+                            public void onTakePhotoClick() {
+                                //TakePhoto(false, 1);
+                                Matisse.from(EditCommentsActivity.this)
+                                        .choose(MimeType.ofImage())
+                                        //自定义选择选择的类型
+                                        //.choose(MimeType.of(MimeType.JPEG,MimeType.AVI))
+                                        //是否只显示选择的类型的缩略图，就不会把所有图片视频都放在一起，而是需要什么展示什么
+                                        .showSingleMediaType(true)
+                                        /*.capture(true)  // 使用相机，和 captureStrategy 一起使用
+                                        .captureStrategy(new CaptureStrategy(true, "com.feitianzhu.fu700.fileprovider"))*/
+                                        //有序选择图片 123456...
+                                        .countable(true)
+                                        //最大选择数量
+                                        .maxSelectable(maxNum)
+                                        //选择方向
+                                        .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
+                                        //图片过滤
+                                        //.addFilter()
+                                        //界面中缩略图的质量
+                                        .thumbnailScale(0.85f)
+                                        //蓝色主题
+                                        .theme(R.style.Matisse_Zhihu)
+                                        //黑色主题
+                                        //.theme(R.style.Matisse_Dracula)
+                                        //Picasso加载方式
+                                        //.imageEngine(new PicassoEngine())
+                                        //Glide加载方式
+                                        .originalEnable(true)
+                                        .maxOriginalSize(10)
+                                        .imageEngine(new Glide4Engine())
+                                        .forResult(REQUEST_CODE_CHOOSE);
+                            }
+                        })
+                        .setSelectCameraListener(new CustomSelectPhotoView.OnSelectCameraListener() {
+                            @Override
+                            public void onCameraClick() {
+                                //TakeCamera(false);
+                                requestPermission();
+                            }
+                        }))
+                .show();
     }
 
-    /*public String getPath() {
-        String cachePath = null;
-        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())
-                || !Environment.isExternalStorageRemovable()) {
-            cachePath = Environment.getExternalStorageDirectory().getPath() + "/huangLiWo";
-        } else {
-            cachePath = getCacheDir().getPath();
-        }
-        return cachePath;
-    }*/
+
+    private void requestPermission() {
+        XXPermissions.with(EditCommentsActivity.this)
+                // 可设置被拒绝后继续申请，直到用户授权或者永久拒绝
+                //.constantRequest()
+                // 支持请求6.0悬浮窗权限8.0请求安装权限
+                //.permission(Permission.REQUEST_INSTALL_PACKAGES)
+                // 不指定权限则自动获取清单中的危险权限
+                .permission(Manifest.permission.CAMERA)
+                .request(new OnPermission() {
+
+                    @Override
+                    public void hasPermission(List<String> granted, boolean all) {
+                        if (all) {
+                            Matisse.from(EditCommentsActivity.this)
+                                    .capture()
+                                    .captureStrategy(new CaptureStrategy(true, "com.feitianzhu.huangliwo.fileprovider", "bldby"))
+                                    .forResult(REQUEST_CODE_CAPTURE, mMediaStoreCompat);
+                        } else {
+                            ToastUtils.show("获取权限成功，部分权限未正常授予");
+                        }
+                    }
+
+                    @Override
+                    public void noPermission(List<String> denied, boolean quick) {
+                        if (quick) {
+                            ToastUtils.show("被永久拒绝授权，请手动授予权限");
+                            //如果是被永久拒绝就跳转到应用权限系统设置页面
+                            XXPermissions.gotoPermissionSettings(mContext);
+                        } else {
+                            ToastUtils.show("获取权限失败");
+                        }
+                    }
+                });
+    }
 
 
     @OnClick({R.id.left_button, R.id.right_button})
@@ -274,22 +326,38 @@ public class EditCommentsActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_CHOOSE && resultCode == RESULT_OK) {
-            mSelected = Matisse.obtainPathResult(data);
-            allSelect.addAll(Matisse.obtainPathResult(data));
-            for (int i = 0; i < mSelected.size(); i++) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_CODE_CHOOSE) {
+                List<Uri> uris = Matisse.obtainResult(data);
+                List<String> currSelect = Matisse.obtainPathResult(data);
+                allSelect.addAll(currSelect);
+                for (int i = 0; i < currSelect.size(); i++) {
+                    MultiItemComment comment = new MultiItemComment(MultiItemComment.LookImg);
+                    comment.setPath(currSelect.get(i));
+                    multiItemCommentList.add(multiItemCommentList.size() - 1, comment);
+                }
+                maxSize = 6 - allSelect.size();
+                if (maxSize <= 0) {
+                    multiItemCommentList.remove(multiItemCommentList.size() - 1);
+                }
+                mAdapter.setNewData(multiItemCommentList);
+                mAdapter.notifyDataSetChanged();
+                Log.d("Matisse", "mSelected: " + currSelect);
+            } else if (requestCode == REQUEST_CODE_CAPTURE) {
+                Uri contentUri = mMediaStoreCompat.getCurrentPhotoUri();
+                String path = mMediaStoreCompat.getCurrentPhotoPath();
+                allSelect.add(path);
                 MultiItemComment comment = new MultiItemComment(MultiItemComment.LookImg);
-                comment.setPath(mSelected.get(i));
+                comment.setPath(path);
                 multiItemCommentList.add(multiItemCommentList.size() - 1, comment);
+
+                maxSize = 6 - allSelect.size();
+                if (maxSize <= 0) {
+                    multiItemCommentList.remove(multiItemCommentList.size() - 1);
+                }
+                mAdapter.setNewData(multiItemCommentList);
+                mAdapter.notifyDataSetChanged();
             }
-            maxSize = 3 - allSelect.size();
-            if (maxSize <= 0) {
-                multiItemCommentList.remove(multiItemCommentList.size() - 1);
-                isAdd = true;
-            }
-            mAdapter.setNewData(multiItemCommentList);
-            mAdapter.notifyDataSetChanged();
-            Log.d("Matisse", "mSelected: " + mSelected);
         }
     }
 }

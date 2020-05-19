@@ -538,10 +538,10 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, Pager
     }
 
     public void getGoodsData() {
-        GoodsListRequest goodsListRequest = new GoodsListRequest(token,userId,pageNo);
-        goodsListRequest.token=token;
-        goodsListRequest.userId=userId;
-        goodsListRequest.pageNo=pageNo;
+        /*GoodsListRequest goodsListRequest = new GoodsListRequest(token, userId, pageNo);
+        goodsListRequest.token = token;
+        goodsListRequest.userId = userId;
+        goodsListRequest.pageNo = pageNo;
         goodsListRequest.call(new ApiLifeCallBack<HomeShops>() {
             @Override
             public void onStart() {
@@ -601,7 +601,7 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, Pager
                     mSwipeLayout.finishLoadMore(false);
                 }
             }
-        });
+        });*/
     /*    OkGo.<LzyResponse<HomeShops>>get(Urls.GET_HOME_GOODS_LIST)
                 .tag(this)
                 .params("accessToken", token)

@@ -7,12 +7,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.feitianzhu.huangliwo.R;
-import com.feitianzhu.huangliwo.me.navigationbar.DefaultNavigationBar;
 import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.enums.PopupAnimation;
 import com.lxj.xpopup.impl.LoadingPopupView;
-
 import java.util.TreeMap;
 
 import butterknife.Unbinder;
@@ -25,7 +23,6 @@ import butterknife.Unbinder;
  * * 取消状态栏适配 ,下沉
  */
 public abstract class BaseActivity extends SFActivity {
-    public DefaultNavigationBar defaultNavigationBar;
     protected TreeMap<String, String> maps;
     /**
      * 代替Context
