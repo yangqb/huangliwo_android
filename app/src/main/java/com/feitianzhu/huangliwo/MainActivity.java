@@ -27,6 +27,7 @@ import com.feitianzhu.huangliwo.model.LocationPost;
 import com.feitianzhu.huangliwo.model.MyPoint;
 import com.feitianzhu.huangliwo.model.UpdateAppModel;
 import com.feitianzhu.huangliwo.shop.CommodityClassificationFragment;
+import com.feitianzhu.huangliwo.shop.CommodityClassificationFragment1;
 import com.feitianzhu.huangliwo.shop.NewYearShoppingActivity;
 import com.feitianzhu.huangliwo.update.UpdateMyDialogFragment;
 import com.feitianzhu.huangliwo.utils.LocationUtils;
@@ -91,7 +92,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @BindView(R.id.ly_me)
     LinearLayout mLyMe;
     private HomeFragment mHomeFragment;
-    private CommodityClassificationFragment mShopFragment;
+    private CommodityClassificationFragment1 mShopFragment;
     private MessageFragment mMessageFragment;
     private MyCenterFragment mMeFragment;
     private FragmentTransaction mTransaction;
@@ -180,7 +181,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 mTxtShop.setSelected(true);
                 mImgShop.setSelected(true);
                 if (mShopFragment == null) {
-                    mShopFragment = CommodityClassificationFragment.newInstance(type, "");
+                    mShopFragment = CommodityClassificationFragment1.newInstance(type, "");
                     mTransaction.add(R.id.fragment_container, mShopFragment);
                 } else {
                     mTransaction.show(mShopFragment);
@@ -192,7 +193,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 selected();
                 mTxtShop.setSelected(true);
                 mImgShop.setSelected(true);
-                mShopFragment = CommodityClassificationFragment.newInstance(type, "");
+                mShopFragment = CommodityClassificationFragment1.newInstance(type, "");
                 mTransaction.add(R.id.fragment_container, mShopFragment);
                 mTransaction.commit();
                 break;
@@ -201,7 +202,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 selected();
                 mTxtShop.setSelected(true);
                 mImgShop.setSelected(true);
-                mShopFragment = CommodityClassificationFragment.newInstance(type, "");
+                mShopFragment = CommodityClassificationFragment1.newInstance(type, "");
                 mTransaction.add(R.id.fragment_container, mShopFragment);
                 mTransaction.commit();
                 break;
@@ -219,6 +220,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 break;
 
             case R.id.ly_me:
+                token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
                 if (token == null || TextUtils.isEmpty(token)) {
                     Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                     startActivity(intent);

@@ -125,13 +125,13 @@
                             <ImageView
                                 android:layout_width="60dp"
                                 android:layout_height="60dp"
-                                android:background="@mipmap/a02_05lvyou" />
+                                android:background="@mipmap/a02_06tuanyou" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="10dp"
-                                android:text="休闲旅游"
+                                android:text="团油"
                                 android:textColor="@color/color_000000"
                                 android:textSize="14sp" />
 

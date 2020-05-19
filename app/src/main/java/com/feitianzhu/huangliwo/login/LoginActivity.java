@@ -21,12 +21,15 @@ import com.feitianzhu.huangliwo.MainActivity;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 
+import com.feitianzhu.huangliwo.core.network.ApiCallBack;
 import com.feitianzhu.huangliwo.core.network.networkcheck.NetWorkState;
 import com.feitianzhu.huangliwo.core.network.networkcheck.NetworkConnectChangedReceiver;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.login.entity.LoginEntity;
 import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
+import com.feitianzhu.huangliwo.login.model.UserInfo;
+import com.feitianzhu.huangliwo.login.request.LoginRequest;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.WXLoginInfo;
 import com.feitianzhu.huangliwo.model.WXLoginModel;
@@ -213,6 +216,21 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         }
 
         String base64Ps = EncryptUtils.encodePassword(mPassword);
+        LoginRequest loginRequest = new LoginRequest();
+        loginRequest.password = base64Ps;
+        loginRequest.phone = mAccount;
+        loginRequest.call(new ApiCallBack<UserInfo>() {
+            @Override
+            public void onAPIResponse(UserInfo response) {
+
+            }
+
+            @Override
+            public void onAPIError(int errorCode, String errorMsg) {
+
+            }
+        });
+
         OkGo.<LzyResponse<LoginEntity>>post(Urls.LOGIN)
                 .tag(this)
                 .params("phone", mAccount)

@@ -26,9 +26,9 @@ public class UpdataRequest extends BaseRequest {
 
     @Override
     public ParamsBuilder appendParams(ParamsBuilder builder) {
-        return builder.append("accessToken", accessToken)
+        return super.appendParams(builder.append("accessToken", accessToken)
                 .append("userId", userId)
-                .append("type", "1");
+                .append("type", "1"));
     }
 
     @Override
@@ -44,9 +44,6 @@ public class UpdataRequest extends BaseRequest {
 
 
     //    http://8.129.218.83:8088/fhwl/soft/newv?accessToken=5fde8fdbb42c406b96d06b9a7c3e86e1&userId=321276&type=1
-
-
-
 
 
 }

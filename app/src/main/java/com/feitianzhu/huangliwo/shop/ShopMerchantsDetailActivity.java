@@ -189,6 +189,7 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.img_collect:
+                token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
                 if (token == null || TextUtils.isEmpty(token)) {
                     Intent intent = new Intent(this, LoginActivity.class);
                     startActivity(intent);
@@ -240,6 +241,8 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
                 }
                 break;
             case R.id.ll_rebate:
+                token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
+
                 if (token == null || TextUtils.isEmpty(token)) {
                     Intent intent = new Intent(this, LoginActivity.class);
                     startActivity(intent);
@@ -399,6 +402,8 @@ public class ShopMerchantsDetailActivity extends BaseActivity {
             @SingleClick()
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                token = SPUtils.getString(getBaseContext(), Constant.SP_ACCESS_TOKEN);
+
                 if (token == null || TextUtils.isEmpty(token)) {
                     Intent intent = new Intent(ShopMerchantsDetailActivity.this, LoginActivity.class);
                     startActivity(intent);

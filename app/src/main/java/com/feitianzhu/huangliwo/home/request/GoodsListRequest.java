@@ -13,7 +13,7 @@ public class GoodsListRequest extends BaseRequest {
     public String userId;
     public int pageNo = 1;
 
-      public GoodsListRequest(String token, String userId, int pageNo) {
+    public GoodsListRequest(String token, String userId, int pageNo) {
         this.token = token;
         this.userId = userId;
         this.pageNo = pageNo;
@@ -34,7 +34,6 @@ public class GoodsListRequest extends BaseRequest {
     public ParamsBuilder appendParams(ParamsBuilder builder) {
         return builder.append("accessToken", token).append("userId", userId).append("limitNum", Constant.PAGE_SIZE)
                 .append("curPage", pageNo + "");
-
     }
 
     @Override
@@ -45,5 +44,8 @@ public class GoodsListRequest extends BaseRequest {
     @Override
     public TypeReference getDatatype() {
         return new TypeReference<HomeShops>() {
-        };    }
+        };
+    }
+
+
 }

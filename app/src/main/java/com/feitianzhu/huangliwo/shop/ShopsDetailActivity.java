@@ -63,12 +63,14 @@ import com.zhpan.bannerview.utils.BannerUtils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cc.shinichi.library.ImagePreview;
 
 import static com.feitianzhu.huangliwo.shop.ShareShopActivity.GOODS_DATA;
 
@@ -316,6 +318,7 @@ public class ShopsDetailActivity extends BaseActivity {
         //String urlLogo = goodsListBean.getGoodsImg() == null ? "" : goodsListBean.getGoodsImg();
         //Glide.with(this).load(urlLogo).apply(new RequestOptions().placeholder(R.mipmap.g10_03weijiazai).error(R.mipmap.g10_03weijiazai)).into(GlideUtils.getImageView(this, urlLogo, bannerImage));
         if (goodsListBean.getGoodsImgsList() != null) {
+            List<BaseGoodsListBean.GoodsImgsListBean> goodsImgsList = goodsListBean.getGoodsImgsList();
             mViewpager.setCanLoop(true)
                     .setAutoPlay(true)
                     .setIndicatorStyle(IndicatorStyle.CIRCLE)
@@ -350,6 +353,37 @@ public class ShopsDetailActivity extends BaseActivity {
         public void onBind(View itemView, BaseGoodsListBean.GoodsImgsListBean data, int position, int size) {
             mImageView = itemView.findViewById(R.id.banner_image);
             Glide.with(mContext).load(data.getGoodsImg()).apply(new RequestOptions().error(R.mipmap.g10_03weijiazai).placeholder(R.mipmap.g10_03weijiazai).dontAnimate()).into(mImageView);
+          /*  mImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ImagePreview
+                            .getInstance()
+
+                            // 上下文，必须是activity，不需要担心内存泄漏，本框架已经处理好；
+                            .setShowIndicator(true)
+                            .setContext(mContext)
+                            .setEnableDragClose(false) //下拉图片关闭
+                            // 设置从第0张开始看（索引从0开始）
+                            .setIndex(position)
+                            .setShowErrorToast(true)//加载失败提示
+                            //=================================================================================================
+                            // 有三种设置数据集合的方式，根据自己的需求进行三选一：
+                            // 1：第一步生成的imageInfo List
+                            //.setImageInfoList(imageInfoList)
+
+                            // 2：直接传url List
+                            .setImageList(Arrays.asList(data.getGoodsImg()))
+
+                            // 3：只有一张图片的情况，可以直接传入这张图片的url
+                            //.setImage(String image)
+                            //=================================================================================================
+
+                            // 开启预览
+                            .start();
+                }
+            });
+*/
+
         }
     }
 
@@ -362,6 +396,7 @@ public class ShopsDetailActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.tv_pay:
+                token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
                 if (token == null || TextUtils.isEmpty(token)) {
                     intent = new Intent(this, LoginActivity.class);
                     startActivity(intent);
@@ -395,6 +430,7 @@ public class ShopsDetailActivity extends BaseActivity {
                 startActivity(intent);
                 break;
             case R.id.add_shopping_cart:
+                token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
                 if (token == null || TextUtils.isEmpty(token)) {
                     intent = new Intent(this, LoginActivity.class);
                     startActivity(intent);
@@ -409,6 +445,8 @@ public class ShopsDetailActivity extends BaseActivity {
                 }
                 break;
             case R.id.shopping_cart:
+                token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
+
                 if (token == null || TextUtils.isEmpty(token)) {
                     intent = new Intent(this, LoginActivity.class);
                     startActivity(intent);
@@ -431,6 +469,8 @@ public class ShopsDetailActivity extends BaseActivity {
                 }
                 break;
             case R.id.collect:
+                token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
+
                 if (token == null || TextUtils.isEmpty(token)) {
                     intent = new Intent(this, LoginActivity.class);
                     startActivity(intent);
@@ -443,6 +483,8 @@ public class ShopsDetailActivity extends BaseActivity {
                 }
                 break;
             case R.id.right_img:
+                token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
+
                 if (token == null || TextUtils.isEmpty(token)) {
                     intent = new Intent(this, LoginActivity.class);
                     startActivity(intent);
@@ -458,6 +500,8 @@ public class ShopsDetailActivity extends BaseActivity {
                 showSpeDialog();
                 break;
             case R.id.ll_rebate:
+                token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
+
                 if (token == null || TextUtils.isEmpty(token)) {
                     intent = new Intent(this, LoginActivity.class);
                     startActivity(intent);
