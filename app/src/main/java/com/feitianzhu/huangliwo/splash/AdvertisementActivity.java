@@ -62,8 +62,13 @@ public class AdvertisementActivity extends BaseActivity {
     }
 
     @Override
-    public boolean getOpenImmersionBar() {
-        return false;
+    public ImmersionBar getOpenImmersionBar() {
+        return ImmersionBar.with(this)
+                .fitsSystemWindows(false)
+                .navigationBarColor(R.color.white)
+                .navigationBarDarkIcon(true)
+                .statusBarDarkFont(true, 0.2f)
+                .statusBarColor(R.color.transparent);
     }
 
     @Override

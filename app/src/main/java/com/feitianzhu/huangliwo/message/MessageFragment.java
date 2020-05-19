@@ -201,10 +201,4 @@ public class MessageFragment extends SFFragment {
         unbinder.unbind();
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
-    }
-
 }
