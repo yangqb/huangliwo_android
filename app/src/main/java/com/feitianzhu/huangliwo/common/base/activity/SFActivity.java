@@ -41,8 +41,10 @@ public abstract class SFActivity extends AppCompatActivity {
         if (getOpenImmersionBar()) {
             ImmersionBar.with(this)
                     .fitsSystemWindows(true)
+                    .navigationBarColor(R.color.white)
+                    .navigationBarDarkIcon(true)
                     .statusBarDarkFont(true, 0.2f)
-                    .statusBarColor(R.color.transparent)
+                    .statusBarColor(R.color.white)
                     .init();
         }
 

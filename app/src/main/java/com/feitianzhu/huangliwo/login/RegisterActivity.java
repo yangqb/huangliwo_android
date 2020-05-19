@@ -122,7 +122,11 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 DisplayMetrics outMetrics = new DisplayMetrics();
                 manager.getDefaultDisplay().getMetrics(outMetrics);
                 int screenHeight = outMetrics.heightPixels;
-                loginViewtoBottom = screenHeight - viewLocation[1] - registerLayout.getHeight(); //屏幕高度-控件距离顶部高度-控件高度
+                if (ImmersionBar.hasNavigationBar(RegisterActivity.this)) {
+                    loginViewtoBottom = screenHeight - viewLocation[1] - registerLayout.getHeight() + 40;//屏幕高度-控件距离顶部高度-控件高度
+                } else {
+                    loginViewtoBottom = screenHeight - viewLocation[1] - registerLayout.getHeight() + 120;//屏幕高度-控件距离顶部高度-控件高度
+                }
             }
         });
 
@@ -155,7 +159,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             public void keyBoardShow(int height) {
                 //Toast.makeText(AppActivity.this, "键盘显示 高度" + height, Toast.LENGTH_SHORT).show();
                 //if (animatorUp == null) { //如果每次弹出的键盘高度不一致，就不要这个判断，每次都新创建动画（密码键盘可能和普通键盘高度不一致）
-                int translationY = height - loginViewtoBottom - 140;
+                int translationY = height - loginViewtoBottom;
                 animatorUp = ObjectAnimator.ofFloat(registerLayout, "translationY", 0, -translationY);
                 animatorUp.setDuration(360);
                 animatorUp.setInterpolator(new AccelerateDecelerateInterpolator());
@@ -166,7 +170,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             @Override
             public void keyBoardHide(int height) {
                 //if (animatorDown == null) {//如果每次弹出的键盘高度不一致，就不要这个判断，每次都新创建动画（密码键盘可能和普通键盘高度不一致）
-                int translationY = height - loginViewtoBottom - 140;
+                int translationY = height - loginViewtoBottom;
                 animatorDown = ObjectAnimator.ofFloat(registerLayout, "translationY", -translationY, 0);
                 animatorDown.setDuration(360);
                 animatorDown.setInterpolator(new AccelerateDecelerateInterpolator());

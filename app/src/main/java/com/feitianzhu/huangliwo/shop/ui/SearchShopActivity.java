@@ -119,12 +119,12 @@ public class SearchShopActivity extends BaseActivity {
                         } else {
                             mSwipeLayout.finishLoadMore();
                         }
+                        if (!isLoadMore) {
+                            shopAndMerchants.clear();
+                        }
                         if (response.body().data != null) {
                             emptyView.setVisibility(View.GONE);
                             goodsListBeans = response.body().data.getList();
-                            if (!isLoadMore) {
-                                shopAndMerchants.clear();
-                            }
                             //商品
                             if (goodsListBeans != null && goodsListBeans.size() > 0) {
                                 emptyView.setVisibility(View.GONE);
@@ -134,7 +134,6 @@ public class SearchShopActivity extends BaseActivity {
                                     shopAndMerchants.add(entity);
                                 }
                                 mAdapter.setNewData(shopAndMerchants);
-                                mAdapter.notifyDataSetChanged();
                             } else {
                                 if (!isLoadMore) {
                                     emptyView.setVisibility(View.VISIBLE);
@@ -147,6 +146,7 @@ public class SearchShopActivity extends BaseActivity {
                                 emptyView.setVisibility(View.VISIBLE);
                             }
                         }
+                        mAdapter.notifyDataSetChanged();
                     }
 
                     @Override
