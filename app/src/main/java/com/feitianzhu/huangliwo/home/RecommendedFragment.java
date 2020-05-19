@@ -3,6 +3,7 @@ package com.feitianzhu.huangliwo.home;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,7 +20,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.resource.gif.GifDrawable;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
@@ -409,7 +416,24 @@ public class RecommendedFragment extends SFFragment {
                             if (mHomeMode.bannerList != null && mHomeMode.bannerList.size() > 0) {
                                 showBanner();
                             }
-                            Glide.with(getActivity()).load(mHomeMode.activityImg).apply(new RequestOptions().placeholder(R.mipmap.g10_01weijiazai).error(R.mipmap.g10_01weijiazai).dontAnimate()).into(activityImageView);
+                            Glide.with(getActivity()).asGif().load(mHomeMode.activityImg)
+                                    .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE).placeholder(R.mipmap.g10_01weijiazai).error(R.mipmap.g10_01weijiazai))
+                                    /*.listener(new RequestListener<Drawable>() {
+                                        @Override
+                                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                            return false;
+                                        }
+
+                                        @Override
+                                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                            if (resource instanceof GifDrawable) {
+                                                //加载一次
+                                                ((GifDrawable) resource).setLoopCount(5);
+                                            }
+                                            return false;
+                                        }
+                                    })*/
+                                    .into(activityImageView);
                             if (mHomeMode.hotGood != null) {
                                 Glide.with(getActivity()).load(mHomeMode.hotGood.hotGoodImg).apply(new RequestOptions().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai).dontAnimate()).into(hotImg);
                             }
