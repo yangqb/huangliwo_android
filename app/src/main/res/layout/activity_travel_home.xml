@@ -11,13 +11,84 @@
         android:layout_height="match_parent">
 
         <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <ImageView
-                android:id="@+id/imageView"
+            <View
+                android:id="@+id/viewfour"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/viewthree"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="0.5dp"
+                android:background="#cecece"
+                ></View>
+            <RelativeLayout
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="35dp">
+                <RelativeLayout
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/distance"
+                        android:layout_marginLeft="@dimen/dp_108"
+                        android:layout_centerVertical="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="5km"
+                        android:textSize="@dimen/sp_13"
+                        android:textColor="@color/black"
+
+                        />
+                    <ImageView
+                        android:layout_width="@dimen/dp_10"
+                        android:layout_height="@dimen/dp_7"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@+id/distance"
+                        android:layout_marginLeft="@dimen/dp_7"
+                        android:layout_marginTop="@dimen/dp_4"
+                        android:src="@mipmap/e01_02fanhui" />
+                </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/oilnumbert"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/oilnumber"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/dp_103"
+                        android:text="92#"
+                        android:textSize="@dimen/sp_13"
+                        android:textColor="@color/black"
+                        />
+                    <ImageView
+                        android:layout_width="@dimen/dp_10"
+                        android:layout_height="@dimen/dp_7"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="@dimen/dp_89"
+                        android:layout_marginTop="@dimen/dp_2"
+                        android:src="@mipmap/e01_02fanhui"
+                        />
+                </RelativeLayout>
+
+
+            </RelativeLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/oilrecy"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
+
+            </android.support.v7.widget.RecyclerView>
         </LinearLayout>
+
     </android.support.v4.widget.NestedScrollView>
 
 </LinearLayout>
