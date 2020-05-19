@@ -347,6 +347,7 @@ public class PlaneDetailActivity extends BaseActivity {
                 Intent intent;
                 switch (view.getId()) {
                     case R.id.ll_rebate:
+                        token = SPUtils.getString(getBaseContext(), Constant.SP_ACCESS_TOKEN);
                         if (token == null || TextUtils.isEmpty(token)) {
                             intent = new Intent(PlaneDetailActivity.this, LoginActivity.class);
                             startActivity(intent);

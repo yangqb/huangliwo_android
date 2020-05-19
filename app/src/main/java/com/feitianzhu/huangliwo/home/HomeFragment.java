@@ -220,6 +220,7 @@ public class HomeFragment extends SFFragment implements ProvinceCallBack {
                 branchDialog.show(getChildFragmentManager());
                 break;
             case R.id.iv_head: //
+                token = SPUtils.getString(getContext(), Constant.SP_ACCESS_TOKEN);
                 if (token == null || TextUtils.isEmpty(token)) {
                     intent = new Intent(getActivity(), LoginActivity.class);
                     startActivity(intent);

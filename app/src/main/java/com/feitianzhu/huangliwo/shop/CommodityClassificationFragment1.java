@@ -2,6 +2,7 @@ package com.feitianzhu.huangliwo.shop;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -20,35 +21,35 @@ import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.SFFragment;
 import com.feitianzhu.huangliwo.core.network.ApiCallBack;
-import com.feitianzhu.huangliwo.http.JsonCallback;
-import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.login.LoginActivity;
 import com.feitianzhu.huangliwo.login.LoginEvent;
 import com.feitianzhu.huangliwo.me.ui.PersonalCenterActivity2;
 import com.feitianzhu.huangliwo.me.ui.ScannerActivity;
-import com.feitianzhu.huangliwo.model.MerchantsInfoNew;
+import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.MyPoint;
 import com.feitianzhu.huangliwo.model.Province;
+import com.feitianzhu.huangliwo.pushshop.bean.MerchantsModel;
 import com.feitianzhu.huangliwo.shop.adapter.LeftAdapter1;
+import com.feitianzhu.huangliwo.shop.adapter.RightAdapterMerchantMain;
 import com.feitianzhu.huangliwo.shop.adapter.RightAdapterShopMain;
+import com.feitianzhu.huangliwo.shop.model.MerchantBean;
 import com.feitianzhu.huangliwo.shop.model.ShopClassifyBean;
 import com.feitianzhu.huangliwo.shop.request.ClassifyGoodsListRequest;
+import com.feitianzhu.huangliwo.shop.request.MerchantListRequest;
 import com.feitianzhu.huangliwo.shop.ui.SearchShopActivity;
 import com.feitianzhu.huangliwo.shop.ui.dialog.ProvinceCallBack;
 import com.feitianzhu.huangliwo.shop.ui.dialog.ProvinceDialog2;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 import com.feitianzhu.huangliwo.view.CircleImageView;
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
 import com.hjq.toast.ToastUtils;
-import com.lzy.okgo.OkGo;
-import com.lzy.okgo.model.Response;
-import com.lzy.okgo.request.base.Request;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -61,8 +62,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
-import static com.feitianzhu.huangliwo.common.Constant.USERID;
 import static com.feitianzhu.huangliwo.login.LoginEvent.EDITOR_INFO;
 
 /**
@@ -100,6 +99,8 @@ public class CommodityClassificationFragment1 extends SFFragment implements Prov
     View line;
     @BindView(R.id.rightRecycle)
     RecyclerView rightRecycle;
+    @BindView(R.id.empty_view)
+    LinearLayout emptyView;
 
 
     private int mParam1 = 2;
@@ -150,116 +151,83 @@ public class CommodityClassificationFragment1 extends SFFragment implements Prov
 
 
         mSwipeLayout.setEnableLoadMore(false);
-//
-//        if (mParam1 == 1) { //商家
-//            line1.setVisibility(View.GONE);
-//            line.setVisibility(View.VISIBLE);
-////            button1.setSelected(true);
-////            button2.setSelected(false);
-//        } else {//商城
-//            line1.setVisibility(View.VISIBLE);
-//            line.setVisibility(View.GONE);
-////            button1.setSelected(false);
-////            button2.setSelected(true);
-//        }
-        getShops();
+
+        if (mParam1 == 1) { //商家
+            line1.setVisibility(View.GONE);
+            line.setVisibility(View.VISIBLE);
+//            button1.setSelected(false);
+//            button2.setSelected(true);
+            getMerchants();
+        } else {//商城
+            line1.setVisibility(View.VISIBLE);
+            line.setVisibility(View.GONE);
+
+//            button1.setSelected(true);
+//            button2.setSelected(false);
+            getShops();
+
+        }
+
         showHeadImg();
-        initListener();
+        mSwipeLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+                if (mParam1 == 1) { //商家
+                    getMerchants();
+                } else {//商城
+                    getShops();
+                }
+            }
+        });
+        rightRecycle.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+//                    linearLayoutManager.
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+
+        leftRecyclerView.setLayoutManager(linearLayoutManager);
+        rightRecycle.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) rightRecycle.getLayoutManager();
+                int firstVisibleItemPosition = linearLayoutManager.findLastVisibleItemPosition();
+
+                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                int firstCompletelyVisibleItemPosition = layoutManager.findFirstCompletelyVisibleItemPosition();
+                if (firstCompletelyVisibleItemPosition == 0) {
+                    leftAdapter.setSelect(0);
+                    leftRecyclerView.scrollToPosition(0);
+//顶部
+                } else {
+                    leftAdapter.setSelect(firstVisibleItemPosition);
+                    leftRecyclerView.scrollToPosition(firstVisibleItemPosition);
+                }
+                leftAdapter.notifyDataSetChanged();
+
+//                int lastCompletelyVisibleItemPosition = layoutManager.findLastCompletelyVisibleItemPosition();
+//                if(lastCompletelyVisibleItemPosition==layoutManager.getItemCount()-1){
+////底部
+////                    leftAdapter.setSelect(0);
+////                    leftRecyclerView.scrollToPosition(0);
+//                }
+
+            }
+        });
+
         return view;
     }
 
 
-    public void initListener() {
-//        leftAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-//                leftAdapter.setSelect(position);
-//                leftAdapter.notifyDataSetChanged();
-//                if (leftAdapter.getItemViewType(position) == MultiItemShopAndMerchants.SHOP_TYPE) {
-//                    //获取当前分类的商品
-//                    clsShopId = shopClassifyLsit.get(position).getClsId();
-//                    getShops(clsShopId);
-//                } else {
-//                    //获取当前分类的商品
-//                    clsMearchantsId = merchantsClassifyList.get(position).getClsId();
-//                    getMerchants(clsMearchantsId);
-//                }
-//            }
-//        });
-
-//        rightAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-//                if (rightAdapter.getItemViewType(position) == MultipleItem.MERCHANTS) {
-//                    //商铺详情页
-//                    Intent intent = new Intent(getActivity(), ShopMerchantsDetailActivity.class);
-//                    intent.putExtra(ShopMerchantsDetailActivity.MERCHANTS_ID, merchantsList.get(position).getMerchantId());
-//                    startActivity(intent);
-//                } else {
-//                    //商品详情
-//                    Intent intent = new Intent(getActivity(), ShopsDetailActivity.class);
-//                    intent.putExtra(ShopsDetailActivity.GOODS_DETAIL_DATA, goodsListBeans.get(position).getGoodsId());
-//                    startActivity(intent);
-//                }
-//            }
-//        });
-//        rightAdapterRecomm.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-//                if (rightAdapterRecomm.getItemViewType(position) == MultipleItem.MERCHANTS) {
-//                    //商铺详情页
-//                    Intent intent = new Intent(getActivity(), ShopMerchantsDetailActivity.class);
-//                    intent.putExtra(ShopMerchantsDetailActivity.MERCHANTS_ID, merchantsRecommList.get(position).getMerchantId());
-//                    startActivity(intent);
-//                } else {
-//                    //商品详情
-//                    Intent intent = new Intent(getActivity(), ShopsDetailActivity.class);
-//                    intent.putExtra(ShopsDetailActivity.GOODS_DETAIL_DATA, goodsRecommListBeans.get(position).getGoodsId());
-//                    startActivity(intent);
-//                }
-//            }
-//        });
-//
-//        rightAdapterBou.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-//                if (rightAdapterBou.getItemViewType(position) == MultipleItem.MERCHANTS) {
-//                    //商铺详情页
-//                    Intent intent = new Intent(getActivity(), ShopMerchantsDetailActivity.class);
-//                    intent.putExtra(ShopMerchantsDetailActivity.MERCHANTS_ID, merchantsBouList.get(position).getMerchantId());
-//                    startActivity(intent);
-//                } else {
-//                    //商品详情
-//                    Intent intent = new Intent(getActivity(), ShopsDetailActivity.class);
-//                    intent.putExtra(ShopsDetailActivity.GOODS_DETAIL_DATA, goodsBouListBeans.get(position).getGoodsId());
-//                    startActivity(intent);
-//                }
-//            }
-//        });
-//        rightAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
-//            @Override
-//            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-//                Intent intent = new Intent(getContext(), VipActivity.class);
-//                intent.putExtra(VipActivity.MINE_INFO, mineInfoModel);
-//                startActivity(intent);
-//            }
-//        });
-
-//        mSwipeLayout.setOnRefreshListener(new OnRefreshListener() {
-//            @Override
-//            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-//                if (mParam1 == 1) {
-//                    getMerchants(clsMearchantsId);
-//                } else {
-//                    getShops(clsShopId);
-//                }
-//            }
-//        });
-    }
-
-
     public void getShops() {
+        Log.e("TAG", "getShops: ");
         ClassifyGoodsListRequest goodsListRequest = new ClassifyGoodsListRequest();
+        goodsListRequest.isShowLoading = true;
         goodsListRequest.accessToken = token;
         goodsListRequest.userId = userId;
         goodsListRequest.call(new ApiCallBack<List<ShopClassifyBean>>() {
@@ -268,12 +236,6 @@ public class CommodityClassificationFragment1 extends SFFragment implements Prov
                 //初始化左边列表
                 if (leftAdapter == null) {
                     leftAdapter = new LeftAdapter1(ShopClassifyBean.getTitleList(response));
-                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity()) {
-
-                    };
-//                    linearLayoutManager.
-                    linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-                    leftRecyclerView.setLayoutManager(linearLayoutManager);
                     leftRecyclerView.setAdapter(leftAdapter);
                     leftAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                         @Override
@@ -297,84 +259,94 @@ public class CommodityClassificationFragment1 extends SFFragment implements Prov
                     rightAdapterShopMain.setNewData(response);
                 } else {
                     rightAdapterShopMain = new RightAdapterShopMain(response);
-                    rightRecycle.setLayoutManager(new LinearLayoutManager(getActivity()));
-                    rightRecycle.setAdapter(rightAdapterShopMain);
-                    rightRecycle.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                    rightAdapterShopMain.callback = new RightAdapterShopMain.Callback() {
                         @Override
-                        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                            super.onScrollStateChanged(recyclerView, newState);
-                            LinearLayoutManager linearLayoutManager = (LinearLayoutManager) rightRecycle.getLayoutManager();
-                            int firstVisibleItemPosition = linearLayoutManager.findFirstVisibleItemPosition();
-                            leftAdapter.setSelect(firstVisibleItemPosition);
-                            leftAdapter.notifyDataSetChanged();
-//                        rightRecycle.getLayoutManager().getPosition()
-//                        leftAdapter.setSelect();
+                        public void callBack(BaseGoodsListBean baseGoodsListBean) {
+                            Intent intent = new Intent(getActivity(), ShopsDetailActivity.class);
+                            intent.putExtra(ShopsDetailActivity.GOODS_DETAIL_DATA, baseGoodsListBean.getGoodsId());
+                            startActivity(intent);
                         }
+                    };
 
-                        @Override
-                        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                            super.onScrolled(recyclerView, dx, dy);
-                        }
-                    });
                 }
-
+                rightRecycle.setAdapter(rightAdapterShopMain);
                 rightAdapterShopMain.notifyDataSetChanged();
+                emptyView.setVisibility(View.GONE);
+
             }
 
             @Override
             public void onAPIError(int errorCode, String errorMsg) {
+                emptyView.setVisibility(View.VISIBLE);
 
             }
         });
 
     }
 
-    public void getMerchants(int clsId) {
+    public void getMerchants() {
         if (Constant.mPoint != null) {
             MyPoint myPoint = Constant.mPoint;
             longitude = myPoint.longitude;
             latitude = myPoint.latitude;
         }
+        MerchantListRequest merchantListRequest = new MerchantListRequest();
+        merchantListRequest.latitude = latitude + "";
+        merchantListRequest.longitude = longitude + "";
+        merchantListRequest.isShowLoading = true;
+        merchantListRequest.call(new ApiCallBack<List<MerchantBean>>() {
 
-        OkGo.<LzyResponse<MerchantsInfoNew>>get(Urls.GET_MERCHANTS1)
-                .tag(this)
-                .params(ACCESSTOKEN, token)
-                .params(USERID, userId)
-                .params("clsId", clsId + "")
-                .params("longitude", longitude + "")
-                .params("latitude", latitude + "")
-                .execute(new JsonCallback<LzyResponse<MerchantsInfoNew>>() {
-                    @Override
-                    public void onStart(Request<LzyResponse<MerchantsInfoNew>, ? extends Request> request) {
-                        super.onStart(request);
-                        showloadDialog("");
-                    }
+            private RightAdapterMerchantMain rightAdapterMerchantMain;
 
-                    @Override
-                    public void onSuccess(Response<LzyResponse<MerchantsInfoNew>> response) {
-                        super.onSuccess(getActivity(), "", response.body().code);
-                        goneloadDialog();
+            @Override
+            public void onAPIResponse(List<MerchantBean> response) {
+                //初始化左边列表
+                if (leftAdapter == null) {
+                    leftAdapter = new LeftAdapter1(MerchantBean.getTitleList(response));
+                    leftRecyclerView.setAdapter(leftAdapter);
+                    leftAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                            leftAdapter.setSelect(position);
+                            leftAdapter.notifyDataSetChanged();
+//点击左边滚动右边
+                            rightRecycle.stopScroll();
+                            LinearLayoutManager linearLayoutManager = (LinearLayoutManager) rightRecycle.getLayoutManager();
+                            linearLayoutManager.scrollToPositionWithOffset(position, 0);
 
-                        mSwipeLayout.finishRefresh();
+                        }
+                    });
+                } else {
+                    leftAdapter.setNewData(MerchantBean.getTitleList(response));
+                }
+                leftAdapter.notifyDataSetChanged();
+                //初始化分类
 
-//                        rightAdapterRecomm.setNewData(multipleRecommItemList);
-//                        rightAdapterRecomm.notifyDataSetChanged();
-//
-//                        rightAdapterBou.setNewData(multipleBouItemList);
-//                        rightAdapterBou.notifyDataSetChanged();
+                if (rightAdapterMerchantMain != null) {
+                    rightAdapterMerchantMain.setNewData(response);
+                } else {
+                    rightAdapterMerchantMain = new RightAdapterMerchantMain(response);
+                    rightAdapterMerchantMain.callback = new RightAdapterMerchantMain.Callback() {
+                        @Override
+                        public void callBack(MerchantsModel baseGoodsListBean) {
+                            Intent intent = new Intent(getActivity(), ShopMerchantsDetailActivity.class);
+                            intent.putExtra(ShopMerchantsDetailActivity.MERCHANTS_ID, baseGoodsListBean.getMerchantId());
+                            startActivity(intent);
+                        }
+                    };
+                }
 
-                    }
+                rightRecycle.setAdapter(rightAdapterMerchantMain);
+                rightAdapterMerchantMain.notifyDataSetChanged();
+                emptyView.setVisibility(View.GONE);
 
-                    @Override
-                    public void onError(Response<LzyResponse<MerchantsInfoNew>> response) {
-                        super.onError(response);
-                        mSwipeLayout.finishRefresh(false);
-                        ToastUtils.show(response.body().msg);
+            }
 
-
-                        goneloadDialog();
-                    }
-                });
+            @Override
+            public void onAPIError(int errorCode, String errorMsg) {
+                emptyView.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
     @OnClick({R.id.ll_location, R.id.iv_head, R.id.search, R.id.button1, R.id.button2, R.id.iv_home_nv_right})
@@ -389,6 +361,7 @@ public class CommodityClassificationFragment1 extends SFFragment implements Prov
                 branchDialog.show(getChildFragmentManager());
                 break;
             case R.id.iv_head: //
+                token = SPUtils.getString(getContext(), Constant.SP_ACCESS_TOKEN);
                 if (token == null || TextUtils.isEmpty(token)) {
                     intent = new Intent(getActivity(), LoginActivity.class);
                     startActivity(intent);
@@ -407,7 +380,7 @@ public class CommodityClassificationFragment1 extends SFFragment implements Prov
 //                button2.setSelected(false);
                 line1.setVisibility(View.GONE);
                 line.setVisibility(View.VISIBLE);
-//                getMerchantsClass();
+                getMerchants();
                 break;
             case R.id.button2:
                 mParam1 = 2;
@@ -415,7 +388,7 @@ public class CommodityClassificationFragment1 extends SFFragment implements Prov
                 line.setVisibility(View.GONE);
 //                button1.setSelected(false);
 //                button2.setSelected(true);
-//                getShopClass();
+                getShops();
                 break;
             case R.id.iv_home_nv_right:
                 requestPermission();

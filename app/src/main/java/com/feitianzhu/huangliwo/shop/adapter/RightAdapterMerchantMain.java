@@ -1,23 +1,17 @@
 package com.feitianzhu.huangliwo.shop.adapter;
 
-import android.content.Intent;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
-import com.feitianzhu.huangliwo.model.MultipleItem;
-import com.feitianzhu.huangliwo.shop.ShopsDetailActivity;
+import com.feitianzhu.huangliwo.pushshop.bean.MerchantsModel;
+import com.feitianzhu.huangliwo.shop.model.MerchantBean;
 import com.feitianzhu.huangliwo.shop.model.ShopClassifyBean;
-import com.itheima.roundedimageview.RoundedImageView;
 
 import java.util.List;
 
@@ -27,20 +21,20 @@ import java.util.List;
  * @email QQ:694125155
  * @Date 2019/11/20 0020 下午 2:53
  */
-public class RightAdapterShopMain extends BaseQuickAdapter<ShopClassifyBean, BaseViewHolder> {
+public class RightAdapterMerchantMain extends BaseQuickAdapter<MerchantBean, BaseViewHolder> {
     public Callback callback;
 
-    public RightAdapterShopMain(List<ShopClassifyBean> data) {
+    public RightAdapterMerchantMain(List<MerchantBean> data) {
         super(R.layout.shop_right_item4, data);
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, ShopClassifyBean item) {
+    protected void convert(BaseViewHolder helper, MerchantBean item) {
         LinearLayout view = helper.getView(R.id.hot);
         if (item.hot != null && item.hot.size() > 0) {
             view.setVisibility(View.VISIBLE);
-            helper.setText(R.id.title1, "热门商品");
-            RightAdapterShopChild rightAdapterShopChild = new RightAdapterShopChild(item.hot);
+            helper.setText(R.id.title1, "热门商铺");
+            RightAdapterMerchantChild rightAdapterShopChild = new RightAdapterMerchantChild(item.hot);
             GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext, 3);
             RecyclerView hotView = helper.getView(R.id.recyclerView);
             hotView.setLayoutManager(gridLayoutManager);
@@ -49,8 +43,8 @@ public class RightAdapterShopMain extends BaseQuickAdapter<ShopClassifyBean, Bas
             rightAdapterShopChild.setOnItemClickListener(new OnItemClickListener() {
                 @Override
                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                    BaseGoodsListBean baseGoodsListBean = item.hot.get(position);
-                    setGoods(baseGoodsListBean);
+                    MerchantsModel baseGoodsListBean = item.hot.get(position);
+                    setMerchant(baseGoodsListBean);
                 }
             });
         } else {
@@ -58,10 +52,10 @@ public class RightAdapterShopMain extends BaseQuickAdapter<ShopClassifyBean, Bas
         }
 
         View view1 = helper.getView(R.id.boutique);
-        if (item.boutique != null && item.boutique.size() > 0) {
+        if (item.veryGood != null && item.veryGood.size() > 0) {
             view1.setVisibility(View.VISIBLE);
-            helper.setText(R.id.title2, "精品推荐");
-            RightAdapterShopChild rightAdapterBoutique = new RightAdapterShopChild(item.boutique);
+            helper.setText(R.id.title2, "优质商家");
+            RightAdapterMerchantChild rightAdapterBoutique = new RightAdapterMerchantChild(item.veryGood);
             GridLayoutManager gridLayoutManager1 = new GridLayoutManager(mContext, 3);
             RecyclerView boutiqueView = helper.getView(R.id.recyclerView1);
             boutiqueView.setLayoutManager(gridLayoutManager1);
@@ -70,8 +64,8 @@ public class RightAdapterShopMain extends BaseQuickAdapter<ShopClassifyBean, Bas
             rightAdapterBoutique.setOnItemClickListener(new OnItemClickListener() {
                 @Override
                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                    BaseGoodsListBean baseGoodsListBean = item.boutique.get(position);
-                    setGoods(baseGoodsListBean);
+                    MerchantsModel baseGoodsListBean = item.veryGood.get(position);
+                    setMerchant(baseGoodsListBean);
 
                 }
             });
@@ -85,7 +79,7 @@ public class RightAdapterShopMain extends BaseQuickAdapter<ShopClassifyBean, Bas
         if (item.recommendFor != null && item.recommendFor.size() > 0) {
             view2.setVisibility(View.VISIBLE);
             helper.setText(R.id.title3, "为您推荐");
-            RightAdapterShopChild rightAdapterShopChild1 = new RightAdapterShopChild(item.recommendFor);
+            RightAdapterMerchantChild rightAdapterShopChild1 = new RightAdapterMerchantChild(item.recommendFor);
             GridLayoutManager gridLayoutManager2 = new GridLayoutManager(mContext, 3);
             RecyclerView recommendForView = helper.getView(R.id.recyclerView2);
             recommendForView.setLayoutManager(gridLayoutManager2);
@@ -94,8 +88,8 @@ public class RightAdapterShopMain extends BaseQuickAdapter<ShopClassifyBean, Bas
             rightAdapterShopChild1.setOnItemClickListener(new OnItemClickListener() {
                 @Override
                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                    BaseGoodsListBean baseGoodsListBean = item.recommendFor.get(position);
-                    setGoods(baseGoodsListBean);
+                    MerchantsModel baseGoodsListBean = item.recommendFor.get(position);
+                    setMerchant(baseGoodsListBean);
 
                 }
             });
@@ -106,7 +100,7 @@ public class RightAdapterShopMain extends BaseQuickAdapter<ShopClassifyBean, Bas
 
     }
 
-    private void setGoods(BaseGoodsListBean baseGoodsListBean) {
+    private void setMerchant(MerchantsModel baseGoodsListBean) {
         if (callback != null) {
             callback.callBack(baseGoodsListBean);
         }
@@ -114,6 +108,6 @@ public class RightAdapterShopMain extends BaseQuickAdapter<ShopClassifyBean, Bas
 
 
     public interface Callback {
-        public void callBack(BaseGoodsListBean baseGoodsListBean);
+        public void callBack(MerchantsModel baseGoodsListBean);
     }
 }

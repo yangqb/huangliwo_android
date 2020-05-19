@@ -362,6 +362,7 @@ public class ShopsDetailActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.tv_pay:
+                token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
                 if (token == null || TextUtils.isEmpty(token)) {
                     intent = new Intent(this, LoginActivity.class);
                     startActivity(intent);
@@ -395,6 +396,7 @@ public class ShopsDetailActivity extends BaseActivity {
                 startActivity(intent);
                 break;
             case R.id.add_shopping_cart:
+                token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
                 if (token == null || TextUtils.isEmpty(token)) {
                     intent = new Intent(this, LoginActivity.class);
                     startActivity(intent);
@@ -409,6 +411,8 @@ public class ShopsDetailActivity extends BaseActivity {
                 }
                 break;
             case R.id.shopping_cart:
+                token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
+
                 if (token == null || TextUtils.isEmpty(token)) {
                     intent = new Intent(this, LoginActivity.class);
                     startActivity(intent);
@@ -431,6 +435,8 @@ public class ShopsDetailActivity extends BaseActivity {
                 }
                 break;
             case R.id.collect:
+                token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
+
                 if (token == null || TextUtils.isEmpty(token)) {
                     intent = new Intent(this, LoginActivity.class);
                     startActivity(intent);
@@ -443,6 +449,8 @@ public class ShopsDetailActivity extends BaseActivity {
                 }
                 break;
             case R.id.right_img:
+                token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
+
                 if (token == null || TextUtils.isEmpty(token)) {
                     intent = new Intent(this, LoginActivity.class);
                     startActivity(intent);
@@ -458,6 +466,8 @@ public class ShopsDetailActivity extends BaseActivity {
                 showSpeDialog();
                 break;
             case R.id.ll_rebate:
+                token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
+
                 if (token == null || TextUtils.isEmpty(token)) {
                     intent = new Intent(this, LoginActivity.class);
                     startActivity(intent);

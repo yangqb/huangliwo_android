@@ -132,6 +132,7 @@ public class ShopSetMealDetailActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.tv_pay:
+                token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
                 if (token == null || TextUtils.isEmpty(token)) {
                     Intent intent = new Intent(this, LoginActivity.class);
                     startActivity(intent);

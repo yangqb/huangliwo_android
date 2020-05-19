@@ -316,6 +316,7 @@ public class RecommendedFragment extends SFFragment {
                 jumpActivity(mHomeMode.goodClsImgs.get(4).clsId);
                 break;
             case R.id.activityImg:
+                token = SPUtils.getString(getContext(), Constant.SP_ACCESS_TOKEN);
                 if (token == null || TextUtils.isEmpty(token)) {
                     intent = new Intent(getContext(), LoginActivity.class);
                     startActivity(intent);
