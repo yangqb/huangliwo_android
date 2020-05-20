@@ -25,6 +25,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:gravity="center_vertical"
             android:orientation="vertical">
 
@@ -41,6 +43,8 @@
                     android:text="北京市丰台区公交马场加油站"
                     android:textColor="#ff333333"
                     android:textSize="17sp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:textStyle="bold" />
 
                 <ImageView
@@ -63,6 +67,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:text="北京市丰台区富丰园340总站内"
                     android:textColor="#ff999999"
                     android:textSize="12sp" />
