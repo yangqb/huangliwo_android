@@ -80,6 +80,7 @@ public class WXEntryActivity extends WechatHandlerActivity implements IWXAPIEven
 
     @Override
     public void onResp(BaseResp baseResp) {
+
         //登录回调
         switch (baseResp.errCode) {
             case BaseResp.ErrCode.ERR_OK:

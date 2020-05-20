@@ -13,13 +13,11 @@ public class MerchantBean {
     //分类标题
     public String title;
     //优质
-    public List<MerchantsModel> veryGood;
+    public List<MerchantsModel> boutique;
     //推荐
     public List<MerchantsModel> recommendFor;
     //热门
     public List<MerchantsModel> hot;
-
-
 
 
     public static ArrayList<String> getTitleList(List<MerchantBean> list) {

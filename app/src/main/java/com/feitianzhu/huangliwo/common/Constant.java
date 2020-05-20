@@ -248,7 +248,8 @@ public class Constant {
     public static final String PAY_FOR_ME_START_PAGE = "1";
     public static final String PAY_FOR_ME_PAGE_SIZE = "10";
     public static final String PAGE_SIZE = "10";
-    public static final String WX_APP_ID = "wxc0ddc8f9cd49d83b";
+    public static final String WX_APP_ID = "wx83bab37c41605f96";
+//    public static final String WX_APP_ID = "wxc0ddc8f9cd49d83b";
     //客服电话
     public static final String CUSTOMER_SERVICE_TELEPHONE = "0755-27080621";
 

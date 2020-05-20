@@ -13,6 +13,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.feitianzhu.huangliwo.GlobalUtil;
 import com.feitianzhu.huangliwo.R;
 import com.gyf.immersionbar.ImmersionBar;
+import com.umeng.message.PushAgent;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -31,6 +32,8 @@ public abstract class AbsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        PushAgent.getInstance(this).onAppStart();
+
         if (getOpenImmersionBar() != null) {
             getOpenImmersionBar().init();
 
@@ -38,6 +41,7 @@ public abstract class AbsActivity extends AppCompatActivity {
             ImmersionBar.with(this)
                     .fitsSystemWindows(true)
                     .statusBarDarkFont(true, 0.2f)
+                    .navigationBarColor(R.color.white)
                     .statusBarColor(R.color.transparent)
                     .init();
         }
