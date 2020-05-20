@@ -26,8 +26,7 @@ import butterknife.Unbinder;
  * 添加状态栏适配
  */
 
-public abstract class SFActivity extends AppCompatActivity {
-    private MaterialDialog mDialog;
+public abstract class SFActivity extends AbsActivity {
     protected Context sfContext;
     private Unbinder mBinder;
 
@@ -38,24 +37,12 @@ public abstract class SFActivity extends AppCompatActivity {
         if (getLayoutId() != 0) {
             setContentView(getLayoutId());
         }
-        if (getOpenImmersionBar()) {
-            ImmersionBar.with(this)
-                    .fitsSystemWindows(true)
-                    .statusBarDarkFont(true, 0.2f)
-                    .statusBarColor(R.color.transparent)
-                    .init();
-        }
 
         mBinder = ButterKnife.bind(this);
 
-
-        GlobalUtil.setCurrentActivity(this);
         sfContext = this;
     }
 
-    public boolean getOpenImmersionBar() {
-        return true;
-    }
 
     /**
      * 子类传入一个布局,父类创建View
@@ -65,31 +52,12 @@ public abstract class SFActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
         onBaseResume();
     }
 
     protected void onBaseResume() {
 
-    }
-
-    protected void showloadDialog(String title) {
-        mDialog = new MaterialDialog.Builder(this)
-                .content("加载中,请稍等")
-                .progress(true, 0)
-                .progressIndeterminateStyle(false)
-                .show();
-    }
-
-    protected void showloadDialogText(String title) {
-        mDialog = new MaterialDialog.Builder(this)
-                .content(title)
-                .progress(true, 0)
-                .progressIndeterminateStyle(false)
-                .show();
-    }
-
-    protected void goneloadDialog() {
-        if (null != mDialog && mDialog.isShowing()) mDialog.dismiss();
     }
 
     @Override
@@ -98,29 +66,6 @@ public abstract class SFActivity extends AppCompatActivity {
             mBinder.unbind();
         }
         super.onDestroy();
-        mDialog = null;
     }
 
-    @Override
-    public Resources getResources() {
-        Resources res = super.getResources();
-        Configuration newConfig = new Configuration();
-        //控制字体缩放 1.0为默认
-        newConfig.fontScale = 1.0f;
-        DisplayMetrics displayMetrics = res.getDisplayMetrics();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            //7.0以上系统手机 显示大小 对APP的影响
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                if (displayMetrics.density < DisplayMetrics.DENSITY_DEVICE_STABLE / (float) DisplayMetrics.DENSITY_DEFAULT) {
-                    displayMetrics.densityDpi = (int) (DisplayMetrics.DENSITY_DEVICE_STABLE * 0.92);
-                } else {
-                    displayMetrics.densityDpi = DisplayMetrics.DENSITY_DEVICE_STABLE;
-                }
-                newConfig.densityDpi = displayMetrics.densityDpi;
-            }
-            createConfigurationContext(newConfig);
-        }
-        res.updateConfiguration(newConfig, displayMetrics);
-        return res;
-    }
 }

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.TypeReference;
 import com.feitianzhu.huangliwo.core.network.BaseRequest;
 import com.feitianzhu.huangliwo.core.network.BaseResponse;
 import com.feitianzhu.huangliwo.core.network.ParamsBuilder;
+import com.feitianzhu.huangliwo.model.HomeShops;
 import com.feitianzhu.huangliwo.model.UpdateAppModel;
 import com.lzy.okgo.model.HttpHeaders;
 import com.vector.update_app.UpdateAppBean;
@@ -17,6 +18,7 @@ public class UpdataRequest extends BaseRequest {
     public String accessToken = "";
     public String userId = "";
 
+
     @Override
     public String getAPIName() {
         return UAPDATE;
@@ -24,9 +26,9 @@ public class UpdataRequest extends BaseRequest {
 
     @Override
     public ParamsBuilder appendParams(ParamsBuilder builder) {
-        return builder.append("accessToken", accessToken)
+        return super.appendParams(builder.append("accessToken", accessToken)
                 .append("userId", userId)
-                .append("type", "1");
+                .append("type", "1"));
     }
 
     @Override
@@ -36,18 +38,12 @@ public class UpdataRequest extends BaseRequest {
 
     @Override
     public TypeReference getDatatype() {
-        return new TypeReference<UpdateAppBean>() {
+        return new TypeReference<HomeShops>() {
         };
     }
 
 
     //    http://8.129.218.83:8088/fhwl/soft/newv?accessToken=5fde8fdbb42c406b96d06b9a7c3e86e1&userId=321276&type=1
-
-
-    @Override
-    public HttpHeaders addHeads(HttpHeaders headers) {
-        return null;
-    }
 
 
 }

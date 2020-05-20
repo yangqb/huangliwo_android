@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.SFFragment;
+import com.feitianzhu.huangliwo.home.adapter.MyInnerPagerAdapter;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.login.LoginActivity;
@@ -34,6 +36,7 @@ import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 import com.feitianzhu.huangliwo.view.CircleImageView;
+import com.feitianzhu.huangliwo.view.CustomScrollViewPager;
 import com.flyco.tablayout.SlidingTabLayout;
 import com.flyco.tablayout.listener.OnTabSelectListener;
 import com.hjq.permissions.OnPermission;
@@ -77,11 +80,12 @@ public class HomeFragment extends SFFragment implements ProvinceCallBack {
     @BindView(R.id.tabLayout)
     SlidingTabLayout slidingTabLayout;
     @BindView(R.id.viewPager)
-    ViewPager mViewPager;
+    CustomScrollViewPager mViewPager;
     @BindView(R.id.iv_head)
     CircleImageView ivHead;
     @BindView(R.id.txt_location)
     TextView mTxtLocation;
+
     public HomeFragment() {
 
     }
@@ -112,6 +116,7 @@ public class HomeFragment extends SFFragment implements ProvinceCallBack {
         initListener();
         return view;
     }
+
 
     public void showHeadImg() {
         userInfo = UserInfoUtils.getUserInfo(getActivity());
@@ -145,7 +150,7 @@ public class HomeFragment extends SFFragment implements ProvinceCallBack {
                 int length = mList.size();
                 for (int i = 0; i < length; i++) {
                     TextView titleView = slidingTabLayout.getTitleView(i);
-                        titleView.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+                    titleView.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
                 }
 
                 //将当前选中的tab设置为粗体
@@ -174,7 +179,9 @@ public class HomeFragment extends SFFragment implements ProvinceCallBack {
 //      无需编写适配器，一行代码关联TabLayout与ViewPager
         String[] strArray = new String[mList.size()];
         mList.toArray(strArray);
-        slidingTabLayout.setViewPager(mViewPager, strArray, getActivity(), mFragments);
+        mViewPager.setAdapter(new MyInnerPagerAdapter(getChildFragmentManager(), mFragments, strArray));
+
+        slidingTabLayout.setViewPager(mViewPager);
         TextView titleView = slidingTabLayout.getTitleView(0);
         titleView.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
     }
@@ -214,6 +221,7 @@ public class HomeFragment extends SFFragment implements ProvinceCallBack {
                 branchDialog.show(getChildFragmentManager());
                 break;
             case R.id.iv_head: //
+                token = SPUtils.getString(getContext(), Constant.SP_ACCESS_TOKEN);
                 if (token == null || TextUtils.isEmpty(token)) {
                     intent = new Intent(getActivity(), LoginActivity.class);
                     startActivity(intent);
@@ -269,10 +277,16 @@ public class HomeFragment extends SFFragment implements ProvinceCallBack {
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
+        if (!hidden) {
+            if (slidingTabLayout != null) {
+                slidingTabLayout.setCurrentTab(0);
+            }
+        }
         if (!TextUtils.isEmpty(Constant.mCity)) {
             mTxtLocation.setText(Constant.mCity);
         }
     }
+
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void onMessageEvent(LoginEvent event) {

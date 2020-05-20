@@ -155,33 +155,33 @@
 
                     <TextView
                         android:id="@+id/button1"
-                        android:layout_width="70dp"
-                        android:layout_height="27dp"
+                        android:layout_width="50dp"
+                        android:layout_height="20dp"
                         android:background="@drawable/button_selecter_shopdetail"
                         android:gravity="center"
                         android:text="套餐"
                         android:textColor="@color/color_333333"
-                        android:textSize="16sp" />
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/button3"
-                        android:layout_width="70dp"
-                        android:layout_height="27dp"
+                        android:layout_width="50dp"
+                        android:layout_height="20dp"
                         android:background="@drawable/button_selecter_shopdetail"
                         android:gravity="center"
                         android:text="赠品"
                         android:textColor="@color/color_333333"
-                        android:textSize="16sp" />
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/button2"
-                        android:layout_width="70dp"
-                        android:layout_height="27dp"
+                        android:layout_width="50dp"
+                        android:layout_height="20dp"
                         android:background="@drawable/button_selecter_shopdetail"
                         android:gravity="center"
                         android:text="评价"
                         android:textColor="@color/color_333333"
-                        android:textSize="16sp" />
+                        android:textSize="14sp" />
                 </LinearLayout>
 
                 <TextView

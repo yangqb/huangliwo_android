@@ -26,6 +26,7 @@
     <color name="sf_red">#FE113E</color>
     <color name="sf_yellow">#FFB940</color>
     <color name="sf_hint_color">#B8B8B9</color>
+    <color name="distancegay"></color>
 
     <color name="text_b5b5b5">#b5b5b5</color>
     <color name="color_80ffffff">#80FFFFFF</color>
@@ -79,13 +80,12 @@
     <color name="color_ffece9">#ffece9</color>
     <color name="color_ff3528">#FF3528</color>
     <color name="color_fffae5">#fffae5</color>
-
     <color name="color_wheel_sel">#1c1c1d</color>
     <color name="color_wheel_unsel">#4d4f54</color>
     <color name="color_wheel_sel_bg">#f3fbfe</color>
     <color name="color_wheel_nosel_bg">#4d4f54</color>
     <color name="dialog_rect_bg">#f3fbfe</color>
-
+    <color name="oil_color">#F88D03</color>
     <color name="bonus_button_right">#1576c3</color>
     <color name="consumer_alliance">#ff7f21</color>
 

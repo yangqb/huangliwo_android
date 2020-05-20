@@ -13,6 +13,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,8 @@ import com.feitianzhu.huangliwo.App;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.SFFragment;
+import com.feitianzhu.huangliwo.core.network.ApiCallBack;
+import com.feitianzhu.huangliwo.core.network.ApiLifeCallBack;
 import com.feitianzhu.huangliwo.financial.FinancialHomeActivity;
 import com.feitianzhu.huangliwo.home.adapter.HAdapter;
 import com.feitianzhu.huangliwo.home.adapter.HomeRecommendAdapter2;
@@ -38,6 +41,7 @@ import com.feitianzhu.huangliwo.home.entity.HomeEntity;
 import com.feitianzhu.huangliwo.home.entity.IndicatorEntity;
 import com.feitianzhu.huangliwo.home.entity.NoticeModel;
 import com.feitianzhu.huangliwo.home.entity.ShopAndMerchants;
+import com.feitianzhu.huangliwo.home.request.GoodsListRequest;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.login.LoginActivity;
@@ -357,6 +361,7 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, Pager
                 isLoadMore = true;
                 pageNo++;
                 getGoodsData();
+                Log.i("aaaaaaaaaaaa", "onLoadMore: ");
             }
 
             @Override
@@ -533,8 +538,71 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, Pager
     }
 
     public void getGoodsData() {
+        /*GoodsListRequest goodsListRequest = new GoodsListRequest(token, userId, pageNo);
+        goodsListRequest.token = token;
+        goodsListRequest.userId = userId;
+        goodsListRequest.pageNo = pageNo;
+        goodsListRequest.call(new ApiLifeCallBack<HomeShops>() {
+            @Override
+            public void onStart() {
+                if (isLoadMore) {
+                    if (shopsLists.size() == 10) {
+                        showloadDialog("");
+                    }
+                } else {
+                    showloadDialog("");
+                }
+            }
 
-        OkGo.<LzyResponse<HomeShops>>get(Urls.GET_HOME_GOODS_LIST)
+            @Override
+            public void onFinsh() {
+
+            }
+
+            @Override
+            public void onAPIResponse(HomeShops response) {
+                goneloadDialog();
+                if (!isLoadMore) {
+                    mSwipeLayout.finishRefresh();
+                } else {
+                    mSwipeLayout.finishLoadMore();
+                }
+                if (!isLoadMore) {
+                    shopAndMerchants.clear();
+                    indicatorEntityList.clear();
+                }
+                //商品
+                if (response != null) {
+                    shopsLists = response.getGoodsList();
+                    if (shopsLists != null && shopsLists.size() > 0) {
+                        for (int i = 0; i < shopsLists.size(); i++) {
+                            ShopAndMerchants entity = new ShopAndMerchants(ShopAndMerchants.TYPE_GOODS);
+                            entity.setShopsList(shopsLists.get(i));
+                            shopAndMerchants.add(entity);
+                        }
+                        mAdapter.setNewData(shopAndMerchants);
+                        mAdapter.notifyDataSetChanged();
+                    }
+                }
+
+                if (isLoadMore) {
+                    if (shopsLists != null && shopsLists.size() == 0) {
+                        ToastUtils.show("没有更多数据了");
+                    }
+                }
+            }
+
+            @Override
+            public void onAPIError(int errorCode, String errorMsg) {
+                goneloadDialog();
+                if (!isLoadMore) {
+                    mSwipeLayout.finishRefresh(false);
+                } else {
+                    mSwipeLayout.finishLoadMore(false);
+                }
+            }
+        });*/
+    /*    OkGo.<LzyResponse<HomeShops>>get(Urls.GET_HOME_GOODS_LIST)
                 .tag(this)
                 .params("accessToken", token)
                 .params("userId", userId)
@@ -598,11 +666,10 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, Pager
                             mSwipeLayout.finishLoadMore(false);
                         }
                     }
-                });
+                });*/
     }
 
     public void getClasses() {
-
         OkGo.<LzyResponse<ShopClassify>>post(Urls.GET_SHOP_CLASS)
                 .tag(this)
                 .params(ACCESSTOKEN, token)

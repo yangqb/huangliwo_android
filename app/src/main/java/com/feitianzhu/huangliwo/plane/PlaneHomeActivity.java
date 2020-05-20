@@ -253,6 +253,8 @@ public class PlaneHomeActivity extends BaseActivity {
                 startActivity(intent);
                 break;
             case R.id.ll_order:
+                token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
+
                 if (token == null || TextUtils.isEmpty(token)) {
                     intent = new Intent(PlaneHomeActivity.this, LoginActivity.class);
                     startActivity(intent);

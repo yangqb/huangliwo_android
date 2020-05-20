@@ -21,12 +21,15 @@ import com.feitianzhu.huangliwo.MainActivity;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 
+import com.feitianzhu.huangliwo.core.network.ApiCallBack;
 import com.feitianzhu.huangliwo.core.network.networkcheck.NetWorkState;
 import com.feitianzhu.huangliwo.core.network.networkcheck.NetworkConnectChangedReceiver;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.login.entity.LoginEntity;
 import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
+import com.feitianzhu.huangliwo.login.model.UserInfo;
+import com.feitianzhu.huangliwo.login.request.LoginRequest;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.WXLoginInfo;
 import com.feitianzhu.huangliwo.model.WXLoginModel;
@@ -86,11 +89,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     @Override
     protected void initView() {
-        ImmersionBar.with(this)
-                .fitsSystemWindows(true)
-                .statusBarDarkFont(true, 0.2f)
-                .statusBarColor(R.color.white)
-                .init();
         EventBus.getDefault().register(this);
         mSignInButton.setOnClickListener(this);
         mRegister.setOnClickListener(this);
@@ -111,7 +109,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 DisplayMetrics outMetrics = new DisplayMetrics();
                 manager.getDefaultDisplay().getMetrics(outMetrics);
                 int screenHeight = outMetrics.heightPixels;
-                loginViewtoBottom = screenHeight - viewLocation[1] - layoutLogin.getHeight(); //屏幕高度-控件距离顶部高度-控件高度
+                if (ImmersionBar.hasNavigationBar(LoginActivity.this)) {
+                    loginViewtoBottom = screenHeight - viewLocation[1] - layoutLogin.getHeight();//屏幕高度-控件距离顶部高度-控件高度
+                } else {
+                    loginViewtoBottom = screenHeight - viewLocation[1] - layoutLogin.getHeight() + 80;//屏幕高度-控件距离顶部高度-控件高度
+                }
             }
         });
 
@@ -124,7 +126,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             public void keyBoardShow(int height) {
                 //Toast.makeText(AppActivity.this, "键盘显示 高度" + height, Toast.LENGTH_SHORT).show();
                 //if (animatorUp == null) { //如果每次弹出的键盘高度不一致，就不要这个判断，每次都新创建动画（密码键盘可能和普通键盘高度不一致）
-                int translationY = height - loginViewtoBottom - 100;
+                int translationY = height - loginViewtoBottom;
                 animatorUp = ObjectAnimator.ofFloat(layoutLogin, "translationY", 0, -translationY);
                 animatorUp.setDuration(360);
                 animatorUp.setInterpolator(new AccelerateDecelerateInterpolator());
@@ -135,7 +137,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             @Override
             public void keyBoardHide(int height) {
                 //if (animatorDown == null) {//如果每次弹出的键盘高度不一致，就不要这个判断，每次都新创建动画（密码键盘可能和普通键盘高度不一致）
-                int translationY = height - loginViewtoBottom - 100;
+                int translationY = height - loginViewtoBottom;
                 animatorDown = ObjectAnimator.ofFloat(layoutLogin, "translationY", -translationY, 0);
                 animatorDown.setDuration(360);
                 animatorDown.setInterpolator(new AccelerateDecelerateInterpolator());
@@ -159,6 +161,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         mRegister.setText(R.string.no_account);
         mSignInButton.setText(R.string.sign_in);
         mAccountLayout.setText(mAccount);
+        mAccountLayout.requestFocus();
+        mAccountLayout.setSelection(mAccount.length());
     }
 
     @Override
@@ -212,6 +216,21 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         }
 
         String base64Ps = EncryptUtils.encodePassword(mPassword);
+//        LoginRequest loginRequest = new LoginRequest();
+//        loginRequest.password = base64Ps;
+//        loginRequest.phone = mAccount;
+//        loginRequest.call(new ApiCallBack<UserInfo>() {
+//            @Override
+//            public void onAPIResponse(UserInfo response) {
+//
+//            }
+//
+//            @Override
+//            public void onAPIError(int errorCode, String errorMsg) {
+//
+//            }
+//        });
+
         OkGo.<LzyResponse<LoginEntity>>post(Urls.LOGIN)
                 .tag(this)
                 .params("phone", mAccount)
@@ -395,12 +414,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             return true;
         }
         return super.onKeyDown(keyCode, event);
-    }
-
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
     }
 
 }

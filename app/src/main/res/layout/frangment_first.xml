@@ -45,7 +45,6 @@
                         android:paddingBottom="15dp">
 
 
-
                         <LinearLayout
                             android:id="@+id/rl_mall"
                             android:layout_width="0dp"
@@ -68,6 +67,7 @@
                                 android:textSize="14sp" />
 
                         </LinearLayout>
+
                         <LinearLayout
                             android:id="@+id/rl_merchants"
                             android:layout_width="0dp"
@@ -125,27 +125,30 @@
                             <ImageView
                                 android:layout_width="60dp"
                                 android:layout_height="60dp"
-                                android:background="@mipmap/a02_05lvyou" />
+                                android:background="@mipmap/a02_06tuanyou" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="10dp"
-                                android:text="休闲旅游"
+                                android:text="加油优惠"
                                 android:textColor="@color/color_000000"
                                 android:textSize="14sp" />
 
                         </LinearLayout>
                     </LinearLayout>
 
+
                     <ImageView
                         android:id="@+id/activityImg"
                         android:layout_width="match_parent"
-                        android:layout_height="60dp"
+                        android:layout_height="@dimen/dp_61"
                         android:layout_marginStart="10dp"
                         android:layout_marginEnd="10dp"
                         android:layout_marginBottom="5dp"
                         android:scaleType="fitXY" />
+
+
                     <LinearLayout
                         android:id="@+id/ll_notice"
                         android:layout_width="match_parent"

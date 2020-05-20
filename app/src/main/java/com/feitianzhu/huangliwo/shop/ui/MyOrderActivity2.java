@@ -29,6 +29,7 @@ import com.feitianzhu.huangliwo.shop.SetMealPayActivity;
 import com.feitianzhu.huangliwo.shop.adapter.OrderAdapter;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
+import com.feitianzhu.huangliwo.utils.doubleclick.SingleClick;
 import com.feitianzhu.huangliwo.view.CustomRefundView;
 import com.flyco.tablayout.CommonTabLayout;
 import com.flyco.tablayout.listener.CustomTabEntity;
@@ -251,6 +252,7 @@ public class MyOrderActivity2 extends BaseActivity {
 
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
+            @SingleClick()
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Intent intent;
                 if (mAdapter.getItemViewType(position) == MultipleItemOrderModel.GOODS_ORDER) {
@@ -271,6 +273,7 @@ public class MyOrderActivity2 extends BaseActivity {
 
         mAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
+            @SingleClick()
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                 //根据订单类型来跳转1.等待付款(下单成功未支付)2.等待发货(付款成功)3.等待收货(已发货)4.交易成功(已收货,已评价,未评价)5.退款中6.退款成功7.订单失效(支付超时)
                 Intent intent;

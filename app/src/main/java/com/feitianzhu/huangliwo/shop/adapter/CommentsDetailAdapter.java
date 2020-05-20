@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
@@ -47,7 +48,12 @@ public class CommentsDetailAdapter extends BaseQuickAdapter<BaseGoodsListBean.Go
         helper.setText(R.id.userName, item.getNickName());
         helper.setText(R.id.tvContent, item.getContent());
         helper.setText(R.id.tvDate, item.getEvalDate());
-        helper.setText(R.id.specifications, item.getNorms() + "/" + item.getGoodsName());
+        if (item.getNorms() != null && !TextUtils.isEmpty(item.getNorms())) {
+            helper.setText(R.id.specifications, item.getNorms() + "/" + item.getGoodsName());
+        } else {
+            helper.setText(R.id.specifications, item.getGoodsName());
+        }
+
         Glide.with(mContext).load(item.getHeadImg())
                 .apply(new RequestOptions().placeholder(R.mipmap.b08_01touxiang).error(R.mipmap.b08_01touxiang)).into((CircleImageView) helper.getView(R.id.iv_head));
         RecyclerView recyclerView = helper.getView(R.id.recyclerView);
