@@ -13,9 +13,12 @@ import android.view.View;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.base.activity.BaseBindingActivity;
+import com.feitianzhu.huangliwo.core.network.ApiCallBack;
 import com.feitianzhu.huangliwo.databinding.ActivityTraveDetailBinding;
 import com.feitianzhu.huangliwo.travel.adapter.Distance1Adapter;
 import com.feitianzhu.huangliwo.travel.adapter.DistanceAdapter;
+import com.feitianzhu.huangliwo.travel.base.BaseTravelRequest;
+import com.feitianzhu.huangliwo.travel.request.OilStationsRequest;
 import com.feitianzhu.huangliwo.utils.StringUtils;
 
 import java.util.ArrayList;
@@ -34,6 +37,18 @@ public class TraveDetailActivity extends BaseBindingActivity {
 
     @Override
     public void init() {
+        OilStationsRequest oilStationsRequest = new OilStationsRequest();
+        oilStationsRequest.call(new ApiCallBack() {
+            @Override
+            public void onAPIResponse(Object response) {
+
+            }
+
+            @Override
+            public void onAPIError(int errorCode, String errorMsg) {
+
+            }
+        });
         ArrayList<String> strings = new ArrayList<>();
         strings.add("汽油");
         strings.add("柴油");

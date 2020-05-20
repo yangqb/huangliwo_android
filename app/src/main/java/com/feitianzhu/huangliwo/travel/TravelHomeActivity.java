@@ -68,7 +68,6 @@ public class TravelHomeActivity extends BaseActivity {
         rightImg.setVisibility(View.VISIBLE);
         titleName.setText("加油优惠");
         rightText.setText("订单");
-        //Glide.with(this).load(R.mipmap.lvyou).into(GlideUtils.getImageView2(this, R.mipmap.lvyou, imageView));
     }
 
     @OnClick(R.id.left_button)
@@ -78,14 +77,6 @@ public class TravelHomeActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
         dinstance.add("5km");
         dinstance.add("10km");
         dinstance.add("15km");
@@ -106,6 +97,8 @@ public class TravelHomeActivity extends BaseActivity {
         strings1.add("-10#");
         strings1.add("-0#");
     }
+
+
     @OnClick({R.id.distance, R.id.oilnumber})
     public void onViewClicked(View view) {
         switch (view.getId()) {
