@@ -268,7 +268,11 @@ public class ShopsDetailActivity extends BaseActivity {
             userName.setText(evalList.get(0).getNickName());
             tvDate.setText(evalList.get(0).getEvalDate());
             tvContent.setText(evalList.get(0).getContent());
-            evaSpecifications.setText(evalList.get(0).getNorms() + "/" + goodsListBean.getGoodsName());
+            if (evalList.get(0).getNorms() != null && !TextUtils.isEmpty(evalList.get(0).getNorms())) {
+                evaSpecifications.setText(evalList.get(0).getNorms() + "/" + goodsListBean.getGoodsName());
+            } else {
+                evaSpecifications.setText(goodsListBean.getGoodsName());
+            }
         } else {
             llEvaluate.setVisibility(View.GONE);
             tvCount.setText("评价(0)");
