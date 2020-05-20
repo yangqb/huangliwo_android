@@ -151,7 +151,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     public void onLocationDataSynEvent(LocationPost mMoel) {
         KLog.e("onLocationDataSynEvent" + Constant.mPoint);
         if (!mMoel.isLocationed || null == Constant.mPoint || 0 == Constant.mPoint.longitude) {
-            ToastUtils.show("当前无法定位，选择城市为北京");
+            ToastUtils.show("定位失败");
             Constant.mPoint = new MyPoint(116.232934, 39.541997);
             Constant.mCity = "北京";
         } else {
