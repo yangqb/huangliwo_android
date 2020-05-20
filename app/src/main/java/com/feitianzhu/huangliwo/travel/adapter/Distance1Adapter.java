@@ -12,6 +12,7 @@ import java.util.List;
 
 public class Distance1Adapter extends BaseQuickAdapter <String, BaseViewHolder>{
     private int posion=-1;
+    private String posion1="";
     public Distance1Adapter(@Nullable List<String> data) {
         super(R.layout.popup_item_oil1, data);
 
@@ -27,8 +28,15 @@ public class Distance1Adapter extends BaseQuickAdapter <String, BaseViewHolder>{
                 TextView view = helper.getView(R.id.oilname);
                 view.setEnabled(false);
             }
+            if (posion1.equals(item)){
+                TextView view = helper.getView(R.id.oilname);
+                view.setEnabled(true);
+            }
     }
     public void chengtextcolor(int posion){
         this.posion=posion;
+    }
+    public void chengtextcolor1(String posion){
+        this.posion1=posion;
     }
 }

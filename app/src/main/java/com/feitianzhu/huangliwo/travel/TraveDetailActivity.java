@@ -37,18 +37,6 @@ public class TraveDetailActivity extends BaseBindingActivity {
 
     @Override
     public void init() {
-        OilStationsRequest oilStationsRequest = new OilStationsRequest();
-        oilStationsRequest.call(new ApiCallBack() {
-            @Override
-            public void onAPIResponse(Object response) {
-
-            }
-
-            @Override
-            public void onAPIError(int errorCode, String errorMsg) {
-
-            }
-        });
         ArrayList<String> strings = new ArrayList<>();
         strings.add("汽油");
         strings.add("柴油");

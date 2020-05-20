@@ -361,7 +361,6 @@ public class HomeFragment2 extends SFFragment implements ProvinceCallBack, Pager
                 isLoadMore = true;
                 pageNo++;
                 getGoodsData();
-                Log.i("aaaaaaaaaaaa", "onLoadMore: ");
             }
 
             @Override
