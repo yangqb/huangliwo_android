@@ -16,7 +16,7 @@ public abstract class BaseTravelRequest extends BaseRequest {
      */
     @Override
     public String getAPIBaseURL() {
-        return "http://192.168.0.142:8089/";
+        return "http://192.168.0.142:8087/";
     }
 
     /**

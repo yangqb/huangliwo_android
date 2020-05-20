@@ -314,7 +314,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         OkGo.<WXLoginModel>get("https://api.weixin.qq.com/sns/oauth2/access_token")
                 .tag(this)
                 .params("appid", Constant.WX_APP_ID)
-                .params("secret", "dfd64a9483d48766f13cf3b2fa70fbe0")
+                .params("secret", "9e4574f38b2b81b24f5305105626bd03")
+//                .params("secret", "dfd64a9483d48766f13cf3b2fa70fbe0")
                 .params("code", code)
                 .params("grant_type", "authorization_code")
                 .execute(new JsonCallback<WXLoginModel>() {

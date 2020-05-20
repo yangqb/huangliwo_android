@@ -92,8 +92,6 @@ public abstract class BaseApiRequest extends AbsApiRequest {
      */
     @Override
     public boolean usePost() {
-        //开始请求
-        onStart();
         return true;
     }
 

@@ -52,10 +52,10 @@ public class RightAdapterMerchantMain extends BaseQuickAdapter<MerchantBean, Bas
         }
 
         View view1 = helper.getView(R.id.boutique);
-        if (item.veryGood != null && item.veryGood.size() > 0) {
+        if (item.boutique != null && item.boutique.size() > 0) {
             view1.setVisibility(View.VISIBLE);
             helper.setText(R.id.title2, "优质商家");
-            RightAdapterMerchantChild rightAdapterBoutique = new RightAdapterMerchantChild(item.veryGood);
+            RightAdapterMerchantChild rightAdapterBoutique = new RightAdapterMerchantChild(item.boutique);
             GridLayoutManager gridLayoutManager1 = new GridLayoutManager(mContext, 3);
             RecyclerView boutiqueView = helper.getView(R.id.recyclerView1);
             boutiqueView.setLayoutManager(gridLayoutManager1);
@@ -64,7 +64,7 @@ public class RightAdapterMerchantMain extends BaseQuickAdapter<MerchantBean, Bas
             rightAdapterBoutique.setOnItemClickListener(new OnItemClickListener() {
                 @Override
                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                    MerchantsModel baseGoodsListBean = item.veryGood.get(position);
+                    MerchantsModel baseGoodsListBean = item.boutique.get(position);
                     setMerchant(baseGoodsListBean);
 
                 }
