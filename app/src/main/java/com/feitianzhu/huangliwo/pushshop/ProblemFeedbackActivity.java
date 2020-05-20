@@ -31,6 +31,7 @@ import com.hjq.permissions.XXPermissions;
 import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
+import com.lxj.xpopup.util.KeyboardUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.request.PostRequest;
 import com.zhihu.matisse.Matisse;
@@ -102,6 +103,7 @@ public class ProblemFeedbackActivity extends BaseActivity {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 if (adapter.getItemViewType(position) == MultiItemComment.upImg) {
+                    KeyboardUtils.hideSoftInput(editContent);
                     selectPhoto(maxSize);
                 } else {
                     // 仅需一行代码,默认配置为：

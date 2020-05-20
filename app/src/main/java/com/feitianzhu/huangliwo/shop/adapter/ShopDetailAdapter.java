@@ -95,6 +95,7 @@ public class ShopDetailAdapter extends BaseMultiItemQuickAdapter<MultipleMerchan
                 helper.setText(R.id.userName, item.getEvalDetailModel().getNickName());
                 helper.setText(R.id.tvContent, item.getEvalDetailModel().getContent());
                 helper.setText(R.id.tvDate, item.getEvalDetailModel().getEvalDate());
+                helper.setText(R.id.specifications, item.getEvalDetailModel().getSmContent());
                 RecyclerView recyclerView = helper.getView(R.id.recyclerView);
                 recyclerView.setLayoutManager(new GridLayoutManager(mContext, 3));
                 recyclerView.setNestedScrollingEnabled(false);

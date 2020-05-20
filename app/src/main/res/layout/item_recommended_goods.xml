@@ -97,7 +97,6 @@
             android:layout_width="wrap_content"
             android:layout_height="19dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="5dp"
             android:background="@drawable/vip_r8"
             android:gravity="center"
             android:paddingLeft="10dp"
