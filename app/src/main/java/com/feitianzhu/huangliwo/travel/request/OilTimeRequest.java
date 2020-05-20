@@ -3,27 +3,28 @@ package com.feitianzhu.huangliwo.travel.request;
 import com.alibaba.fastjson.TypeReference;
 import com.feitianzhu.huangliwo.core.network.ParamsBuilder;
 import com.feitianzhu.huangliwo.travel.base.BaseTravelRequest;
-import com.feitianzhu.huangliwo.travel.model.OilStationsDetailBean;
-import com.feitianzhu.huangliwo.utils.StringUtils;
+import com.feitianzhu.huangliwo.travel.bean.OilListBean;
 
 import java.util.List;
 
 /**
  * Created by bch on 2020/5/20
  */
-public class OilStationsDetailRequest extends BaseTravelRequest {
-    public String gasIds;
+public class OilTimeRequest extends OilTimeBaseRequest {
+    public String platformId;
     public String phone;
+
 
     @Override
     public String getAPIName() {
-        return "fleetin/getOilStationsDetail";
+        return "services/v3/begin/getSecretCode";
     }
 
     @Override
     public ParamsBuilder appendParams(ParamsBuilder builder) {
-        return super.appendParams(builder.append("gasIds", gasIds)
-                .append("phone", phone));
+        return super.appendParams(builder.append("platformId", platformId)
+                .append("phone", phone)
+        );
     }
 
     @Override
@@ -33,7 +34,7 @@ public class OilStationsDetailRequest extends BaseTravelRequest {
 
     @Override
     public TypeReference getDatatype() {
-        return new TypeReference<List<OilStationsDetailBean>>() {
+        return new TypeReference<String>() {
         };
     }
 }

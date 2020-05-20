@@ -1,5 +1,7 @@
 package com.feitianzhu.huangliwo.travel.model;
 
+import com.feitianzhu.huangliwo.utils.StringUtils;
+
 import java.util.List;
 
 /**
@@ -7,80 +9,76 @@ import java.util.List;
  */
 public class OilStationsDetailBean {
 
+
     /**
-     * gasId : QP000001559
-     * gasName : 壳牌天马加油站（R70）
-     * gasType : null
-     * provinceCode : null
-     * cityCode : null
-     * countyCode : null
-     * provinceName : null
-     * cityName : null
-     * countyName : null
-     * gasLogoSmall : null
-     * gasLogoBig : null
-     * gasAddress : null
-     * gasAddressLongitude : null
-     * gasAddressLatitude : null
-     * isInvoice : null
-     * distance : null
-     * distanceStr : null
-     * oilPriceList : [{"oilNo":0,"oilType":2,"oilName":"0#","priceYfq":"6.64","priceGun":"6.74","priceOfficial":"7.02","gunNos":[{"gunNo":302},{"gunNo":402},{"gunNo":702},{"gunNo":802}]},{"oilNo":92,"oilType":1,"oilName":"92#","priceYfq":"5.90","priceGun":"6.00","priceOfficial":"7.38","gunNos":[{"gunNo":1},{"gunNo":2},{"gunNo":301},{"gunNo":401},{"gunNo":5},{"gunNo":6},{"gunNo":701},{"gunNo":801},{"gunNo":901},{"gunNo":1001},{"gunNo":11},{"gunNo":12},{"gunNo":1301},{"gunNo":1401},{"gunNo":15},{"gunNo":16}]},{"oilNo":95,"oilType":1,"oilName":"95#","priceYfq":"7.70","priceGun":"7.80","priceOfficial":"7.80","gunNos":[{"gunNo":902},{"gunNo":1002},{"gunNo":1302},{"gunNo":1402}]}]
+     * oilInfo : [{"oilNo":92,"oilType":1,"oilName":"92#","priceYfq":"5.90","priceGun":"6.00","priceOfficial":"7.38","gunNos":[{"gunNo":1},{"gunNo":2},{"gunNo":301},{"gunNo":401},{"gunNo":5},{"gunNo":6},{"gunNo":701},{"gunNo":801},{"gunNo":901},{"gunNo":1001},{"gunNo":11},{"gunNo":12},{"gunNo":1301},{"gunNo":1401},{"gunNo":15},{"gunNo":16}]},{"oilNo":95,"oilType":1,"oilName":"95#","priceYfq":"7.70","priceGun":"7.80","priceOfficial":"7.80","gunNos":[{"gunNo":902},{"gunNo":1002},{"gunNo":1302},{"gunNo":1402}]}]
+     * oilType : 1
      */
+//    油号类别: 1汽油，2柴油，3天然气
+    private int oilType;
 
-    private String gasId;
-    private String gasName;
-    private List<OilPriceListBean> oilPriceList;
+    private List<OilInfoBean> oilInfo;
 
-    public String getGasId() {
-        return gasId;
+    public int getOilType() {
+        return oilType;
     }
 
-    public void setGasId(String gasId) {
-        this.gasId = gasId;
+    public String getOilTypeString() {
+        String s;
+        switch (oilType) {
+            case 1:
+                s = "汽油";
+                break;
+            case 2:
+                s = "柴油";
+                break;
+            case 3:
+                s = "天然气";
+                break;
+            default:
+                s = "其他";
+                break;
+        }
+        return s;
     }
 
-    public String getGasName() {
-        return gasName;
+    public void setOilType(int oilType) {
+        this.oilType = oilType;
     }
 
-    public void setGasName(String gasName) {
-        this.gasName = gasName;
+    public List<OilInfoBean> getOilInfo() {
+        return oilInfo;
     }
 
-
-    public List<OilPriceListBean> getOilPriceList() {
-        return oilPriceList;
+    public void setOilInfo(List<OilInfoBean> oilInfo) {
+        this.oilInfo = oilInfo;
     }
 
-    public void setOilPriceList(List<OilPriceListBean> oilPriceList) {
-        this.oilPriceList = oilPriceList;
-    }
-
-    public static class OilPriceListBean {
+    public static class OilInfoBean {
         /**
-         * oilNo : 0
-         * oilType : 2
-         * oilName : 0#
-         * priceYfq : 6.64
-         * priceGun : 6.74
-         * priceOfficial : 7.02
-         * gunNos : [{"gunNo":302},{"gunNo":402},{"gunNo":702},{"gunNo":802}]
+         * oilNo : 92
+         * oilType : 1
+         * oilName : 92#
+         * priceYfq : 5.90
+         * priceGun : 6.00
+         * priceOfficial : 7.38
+         * gunNos : [{"gunNo":1},{"gunNo":2},{"gunNo":301},{"gunNo":401},{"gunNo":5},{"gunNo":6},{"gunNo":701},{"gunNo":801},{"gunNo":901},{"gunNo":1001},{"gunNo":11},{"gunNo":12},{"gunNo":1301},{"gunNo":1401},{"gunNo":15},{"gunNo":16}]
          */
 //        油号名称
         private int oilNo;
+
+        //        枪号
+        private List<GunNosBean> gunNos;
         //        油号类别: 1汽油，2柴油，3天然气
         private int oilType;
         //        油号名称
         private String oilName;
         //        团油价格
-        private String priceYfq;
+        private double priceYfq;
         //        枪价
         private String priceGun;
         //        国标价
-        private String priceOfficial;
-        //        枪号
-        private List<GunNosBean> gunNos;
+        private double priceOfficial;
 
         public int getOilNo() {
             return oilNo;
@@ -106,11 +104,11 @@ public class OilStationsDetailBean {
             this.oilName = oilName;
         }
 
-        public String getPriceYfq() {
+        public double getPriceYfq() {
             return priceYfq;
         }
 
-        public void setPriceYfq(String priceYfq) {
+        public void setPriceYfq(double priceYfq) {
             this.priceYfq = priceYfq;
         }
 
@@ -122,11 +120,11 @@ public class OilStationsDetailBean {
             this.priceGun = priceGun;
         }
 
-        public String getPriceOfficial() {
+        public double getPriceOfficial() {
             return priceOfficial;
         }
 
-        public void setPriceOfficial(String priceOfficial) {
+        public void setPriceOfficial(double priceOfficial) {
             this.priceOfficial = priceOfficial;
         }
 
@@ -140,18 +138,32 @@ public class OilStationsDetailBean {
 
         public static class GunNosBean {
             /**
-             * gunNo : 302
+             * gunNo : 1
              */
 
-            private int gunNo;
+            private String gunNo;
 
-            public int getGunNo() {
+            public String getGunNo() {
                 return gunNo;
             }
 
-            public void setGunNo(int gunNo) {
+            public void setGunNo(String gunNo) {
                 this.gunNo = gunNo;
             }
         }
     }
 }
+//    //        油号名称
+//    private int oilNo;
+//    //
+//    private int oilType;
+//    //        油号名称
+//    private String oilName;
+//    //        团油价格
+//    private String priceYfq;
+//    //        枪价
+//    private String priceGun;
+//    //        国标价
+//    private String priceOfficial;
+//    //        枪号
+//    private List<OilPriceListBean.GunNosBean> gunNos;

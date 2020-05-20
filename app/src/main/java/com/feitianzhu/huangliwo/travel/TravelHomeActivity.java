@@ -22,6 +22,7 @@ import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.core.network.ApiCallBack;
 import com.feitianzhu.huangliwo.model.MyPoint;
 import com.feitianzhu.huangliwo.travel.adapter.Distance1Adapter;
+import com.feitianzhu.huangliwo.travel.adapter.Distance2Adapter;
 import com.feitianzhu.huangliwo.travel.adapter.DistanceAdapter;
 import com.feitianzhu.huangliwo.travel.adapter.MyOilAdapter;
 import com.feitianzhu.huangliwo.travel.bean.OilListBean;
@@ -34,6 +35,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.baidu.location.h.a.p;
 import static com.baidu.location.h.a.s;
 
 /**
@@ -90,12 +92,12 @@ public class TravelHomeActivity extends BaseActivity {
 
     @OnClick({R.id.left_button, R.id.right_button})
     public void onClick(View view) {
-        switch(view.getId()){
+        switch (view.getId()) {
             case R.id.left_button:
                 finish();
                 break;
             case R.id.right_button:
-                startActivity(new Intent(this,TraveFormActivity.class));
+                startActivity(new Intent(this, TraveFormActivity.class));
                 break;
         }
     }
@@ -125,20 +127,21 @@ public class TravelHomeActivity extends BaseActivity {
     }
 
     private void initoil() {
-         dinstancenumber = (String) distance.getText();
+        dinstancenumber = (String) distance.getText();
         oilnumbersum = (String) oilnumber.getText();
         if (Constant.mPoint != null) {
             MyPoint myPoint = Constant.mPoint;
-            longitude = myPoint.longitude+"";
-            latitude = myPoint.latitude+"";
+            longitude = myPoint.longitude + "";
+            latitude = myPoint.latitude + "";
         }
-        initwork(dinstancenumber,oilnumbersum);
+        initwork(dinstancenumber, oilnumbersum);
     }
+
     @OnClick({R.id.distance, R.id.oilnumber})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.distance:
-               String text1 = (String) distance.getText();
+                String text1 = (String) distance.getText();
                 view = LayoutInflater.from(TravelHomeActivity.this).inflate(
                         R.layout.popup_item_distance, null);
                 popupWindow = new PopupWindow(view,
@@ -156,7 +159,7 @@ public class TravelHomeActivity extends BaseActivity {
                         String dinstancenumber = dinstance.get(position);
                         distance.setText(dinstancenumber);
                         oilnumbersum = (String) oilnumber.getText();
-                        initwork(dinstancenumber,oilnumbersum);
+                        initwork(dinstancenumber, oilnumbersum);
                         popupWindow.dismiss();
                     }
                 });
@@ -164,7 +167,7 @@ public class TravelHomeActivity extends BaseActivity {
                 popupWindow.showAsDropDown(distancerela);
                 break;
             case R.id.oilnumber:
-               String text = (String) oilnumber.getText();
+                String text = (String) oilnumber.getText();
                 view = LayoutInflater.from(TravelHomeActivity.this).inflate(
                         R.layout.popup_item_oilnumber, null);
                 popupWindow = new PopupWindow(view,
@@ -173,7 +176,7 @@ public class TravelHomeActivity extends BaseActivity {
                 RecyclerView oilClass = view.findViewById(R.id.oilClass);
                 RecyclerView oilLevel = view.findViewById(R.id.oilLevel);
                 oilClass.setLayoutManager(new GridLayoutManager(this, 4));
-                Distance1Adapter distanceAdapter = new Distance1Adapter(strings);
+                Distance2Adapter distanceAdapter = new Distance2Adapter(strings);
                 oilClass.setAdapter(distanceAdapter);
                 distanceAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                     @Override
@@ -183,7 +186,7 @@ public class TravelHomeActivity extends BaseActivity {
                         String oilnumbersum = strings.get(position);
                         oilnumber.setText(oilnumbersum);
                         dinstancenumber = (String) distance.getText();
-                        initwork(dinstancenumber,oilnumbersum);
+                        initwork(dinstancenumber, oilnumbersum);
                         popupWindow.dismiss();
                     }
                 });
@@ -191,7 +194,7 @@ public class TravelHomeActivity extends BaseActivity {
                 distanceAdapter.chengtextcolor1(oilnumbersum);
                 distanceAdapter.notifyDataSetChanged();
                 oilLevel.setLayoutManager(new GridLayoutManager(this, 4));
-                Distance1Adapter distanceAdapter1 = new Distance1Adapter(strings1);
+                Distance2Adapter distanceAdapter1 = new Distance2Adapter(strings1);
                 oilLevel.setAdapter(distanceAdapter1);
                 distanceAdapter1.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                     @Override
@@ -201,7 +204,7 @@ public class TravelHomeActivity extends BaseActivity {
                         String oilnumbersum = strings1.get(position);
                         oilnumber.setText(oilnumbersum);
                         dinstancenumber = (String) distance.getText();
-                        initwork(dinstancenumber,oilnumbersum);
+                        initwork(dinstancenumber, oilnumbersum);
                         popupWindow.dismiss();
                     }
                 });
@@ -212,20 +215,26 @@ public class TravelHomeActivity extends BaseActivity {
         }
     }
 
-    private void initwork(String dinstancenumber,String oilnumbersum) {
+    private void initwork(String dinstancenumber, String oilnumbersum) {
         kms = dinstancenumber.split("km");
         split = oilnumbersum.split("#");
-        oilrecy.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false));
-        OilStationsRequest oilStationsRequest = new OilStationsRequest(longitude,latitude,Integer.valueOf(kms[0]),Integer.valueOf(split[0]),20,1);
+        oilrecy.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        OilStationsRequest oilStationsRequest = new OilStationsRequest(longitude, latitude, Integer.valueOf(kms[0]), Integer.valueOf(split[0]), 20, 1);
         oilStationsRequest.call(new ApiCallBack<List<OilListBean>>() {
             @Override
             public void onAPIResponse(List<OilListBean> response) {
-                        if (response!=null&&response.size()>0){
-                            MyOilAdapter myoiladapter=new  MyOilAdapter(response);
-                            oilrecy.setAdapter(myoiladapter);
-                            myoiladapter.chengtextcolor1(oilnumbersum);
-                            myoiladapter.notifyDataSetChanged();
+                if (response != null && response.size() > 0) {
+                    MyOilAdapter myoiladapter = new MyOilAdapter(response);
+                    oilrecy.setAdapter(myoiladapter);
+                    myoiladapter.chengtextcolor1(oilnumbersum);
+                    myoiladapter.notifyDataSetChanged();
+                    myoiladapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                            TraveDetailActivity.toTraveDetailActivity(TravelHomeActivity.this, response.get(position));
                         }
+                    });
+                }
             }
 
             @Override
