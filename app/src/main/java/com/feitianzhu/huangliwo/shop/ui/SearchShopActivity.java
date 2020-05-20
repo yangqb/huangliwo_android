@@ -78,6 +78,8 @@ public class SearchShopActivity extends BaseActivity {
     RecyclerView historyRecyclerView;
     @BindView(R.id.historyLayout)
     LinearLayout historyLayout;
+    @BindView(R.id.edit_parent_view)
+    LinearLayout editParentView;
     private String token;
     private String userId;
     private GoodsHistoryKeyAdapter historyKeyAdapter;
@@ -178,7 +180,7 @@ public class SearchShopActivity extends BaseActivity {
                             emptyView.setVisibility(View.GONE);
                             goodsListBeans.addAll(response.body().data.getList());
                             //商品
-                            if (goodsListBeans.size() > 0) {
+                            if (response.body().data.getList().size() > 0) {
                                 emptyView.setVisibility(View.GONE);
                                 mAdapter.setNewData(goodsListBeans);
                             } else {
@@ -246,6 +248,7 @@ public class SearchShopActivity extends BaseActivity {
         historyKeyAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                searchText = newList.get(position);
                 editText.setText(newList.get(position));
                 editText.setSelection(editText.getText().toString().length());
                 searchData(newList.get(position));
@@ -294,6 +297,22 @@ public class SearchShopActivity extends BaseActivity {
                 return false;
             }
         });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        /*
+         * 防止返回本页面弹出输入框
+         * */
+        editParentView.setFocusable(true);
+        editParentView.setFocusableInTouchMode(true);
+        editParentView.requestFocus();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @OnClick({R.id.back, R.id.btn_search, R.id.cleanHistory})
