@@ -88,15 +88,16 @@ public class TravelHomeActivity extends BaseActivity {
 
     @OnClick({R.id.left_button, R.id.right_button})
     public void onClick(View view) {
-        switch(view.getId()){
+        switch (view.getId()) {
             case R.id.left_button:
                 finish();
                 break;
             case R.id.right_button:
-                startActivity(new Intent(this,TraveFormActivity.class));
+                startActivity(new Intent(this, TraveFormActivity.class));
                 break;
         }
     }
+
     @Override
     protected void initData() {
         dinstance.add("5km");
@@ -123,18 +124,18 @@ public class TravelHomeActivity extends BaseActivity {
     }
 
     private void initoil() {
-         text1 = (String) distance.getText();
-         text = (String) oilnumber.getText();
+        text1 = (String) distance.getText();
+        text = (String) oilnumber.getText();
         if (Constant.mPoint != null) {
             MyPoint myPoint = Constant.mPoint;
-            longitude = myPoint.longitude+"";
-            latitude = myPoint.latitude+"";
+            longitude = myPoint.longitude + "";
+            latitude = myPoint.latitude + "";
         }
     }
 
     private void initwork() {
-        oilrecy.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false));
-        OilStationsRequest oilStationsRequest = new OilStationsRequest(latitude,latitude,50,92,20,1);
+        oilrecy.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        OilStationsRequest oilStationsRequest = new OilStationsRequest(latitude, latitude, 50, 92, 20, 1);
         oilStationsRequest.call(new ApiCallBack<List<OilListBean>>() {
             @Override
             public void onAPIResponse(List<OilListBean> response) {
@@ -210,7 +211,7 @@ public class TravelHomeActivity extends BaseActivity {
                     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                         distanceAdapter1.chengtextcolor(position);
                         distanceAdapter1.notifyDataSetChanged();
-                        String s = strings1.get(position).replace("#","");
+                        String s = strings1.get(position).replace("#", "");
                         oilnumber.setText(s);
                         popupWindow.dismiss();
                     }
