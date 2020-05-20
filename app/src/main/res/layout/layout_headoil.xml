@@ -84,7 +84,7 @@
                 android:id="@+id/right_img"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@mipmap/e01_02fenxiang"
+                android:background="@mipmap/k01_04dingdan"
                 android:visibility="gone" />
 
             <TextView

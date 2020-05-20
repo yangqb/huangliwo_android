@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/layout_head" />
+    <include layout="@layout/layout_headoil" />
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -27,6 +27,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="35dp">
                 <RelativeLayout
+                    android:id="@+id/distancerela"
                     android:layout_marginTop="@dimen/dp_10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
@@ -39,8 +40,8 @@
                         android:text="5km"
                         android:clickable="true"
                         android:textSize="@dimen/sp_13"
-                        android:textColor="@drawable/shape_text_color"
-                        android:enabled="false"
+                        android:textColor="@color/black"
+
                         />
                     <ImageView
                         android:layout_width="@dimen/dp_10"
@@ -52,7 +53,7 @@
                         android:src="@mipmap/e01_02fanhui" />
                 </RelativeLayout>
                 <RelativeLayout
-                    android:id="@+id/oilnumbert"
+                    android:id="@+id/oilnumberrela"
                     android:layout_marginTop="@dimen/dp_10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">

@@ -374,8 +374,7 @@ public class RecommendedFragment extends SFFragment {
                 startActivity(intent);
                 break;*/
             case R.id.rl_travel:
-                intent = new Intent(getActivity(), TraveDetailActivity.class);
-//                intent = new Intent(getActivity(), TravelHomeActivity.class);
+                intent = new Intent(getActivity(), TravelHomeActivity.class);
                 startActivity(intent);
                 break;
             case R.id.back_top:

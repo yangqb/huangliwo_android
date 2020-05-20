@@ -46,9 +46,7 @@ public class TraveDetailActivity extends BaseBindingActivity {
         strings1.add("#95");
         Distance1Adapter distanceAdapter1 = new Distance1Adapter(strings1);
         dataBinding.oilLevel.setLayoutManager(new GridLayoutManager(this, 4));
-
         dataBinding.oilLevel.setAdapter(distanceAdapter1);
-
         ArrayList<String> strings2 = new ArrayList<>();
         strings2.add("1号");
         strings2.add("2号");
