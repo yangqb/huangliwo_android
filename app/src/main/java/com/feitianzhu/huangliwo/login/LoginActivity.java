@@ -216,20 +216,20 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         }
 
         String base64Ps = EncryptUtils.encodePassword(mPassword);
-        LoginRequest loginRequest = new LoginRequest();
-        loginRequest.password = base64Ps;
-        loginRequest.phone = mAccount;
-        loginRequest.call(new ApiCallBack<UserInfo>() {
-            @Override
-            public void onAPIResponse(UserInfo response) {
-
-            }
-
-            @Override
-            public void onAPIError(int errorCode, String errorMsg) {
-
-            }
-        });
+//        LoginRequest loginRequest = new LoginRequest();
+//        loginRequest.password = base64Ps;
+//        loginRequest.phone = mAccount;
+//        loginRequest.call(new ApiCallBack<UserInfo>() {
+//            @Override
+//            public void onAPIResponse(UserInfo response) {
+//
+//            }
+//
+//            @Override
+//            public void onAPIError(int errorCode, String errorMsg) {
+//
+//            }
+//        });
 
         OkGo.<LzyResponse<LoginEntity>>post(Urls.LOGIN)
                 .tag(this)
@@ -295,9 +295,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         if (response.body().code == 0 && response.body().data != null) {
                             MineInfoModel userInfo = response.body().data;
                             UserInfoUtils.saveUserInfo(LoginActivity.this, userInfo);
-//                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-//                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-//                            startActivity(intent);
+                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
                             finish();
                         }
                     }
@@ -404,16 +404,17 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         EventBus.getDefault().unregister(this);
     }
 
-//    @Override
-//    public boolean onKeyDown(int keyCode, KeyEvent event) {
-//        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-//            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-//            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-//            startActivity(intent);
-//            finish();
-//            return true;
-//        }
-//        return super.onKeyDown(keyCode, event);
-//    }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
 }
 

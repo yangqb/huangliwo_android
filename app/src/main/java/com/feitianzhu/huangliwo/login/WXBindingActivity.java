@@ -162,8 +162,8 @@ public class WXBindingActivity extends BaseActivity {
                     public void onSuccess(Response<LzyResponse<MineInfoModel>> response) {
                         if (response.body().code == 0 && response.body().data != null) {
                             UserInfoUtils.saveUserInfo(WXBindingActivity.this, response.body().data);
-//                            Intent intent = new Intent(WXBindingActivity.this, MainActivity.class);
-//                            startActivity(intent);
+                            Intent intent = new Intent(WXBindingActivity.this, MainActivity.class);
+                            startActivity(intent);
                             finish();
                         }
                     }

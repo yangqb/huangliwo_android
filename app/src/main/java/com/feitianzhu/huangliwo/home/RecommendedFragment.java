@@ -52,6 +52,7 @@ import com.feitianzhu.huangliwo.shop.NewYearShoppingActivity;
 import com.feitianzhu.huangliwo.shop.ShopMerchantsDetailActivity;
 import com.feitianzhu.huangliwo.shop.ShopsActivity;
 import com.feitianzhu.huangliwo.shop.ShopsDetailActivity;
+import com.feitianzhu.huangliwo.travel.TraveDetailActivity;
 import com.feitianzhu.huangliwo.travel.TravelHomeActivity;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
@@ -373,7 +374,8 @@ public class RecommendedFragment extends SFFragment {
                 startActivity(intent);
                 break;*/
             case R.id.rl_travel:
-                intent = new Intent(getActivity(), TravelHomeActivity.class);
+                intent = new Intent(getActivity(), TraveDetailActivity.class);
+//                intent = new Intent(getActivity(), TravelHomeActivity.class);
                 startActivity(intent);
                 break;
             case R.id.back_top:

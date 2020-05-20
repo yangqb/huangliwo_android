@@ -3,19 +3,19 @@ package com.feitianzhu.huangliwo.common.base.activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.view.View;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.feitianzhu.huangliwo.GlobalUtil;
 import com.feitianzhu.huangliwo.R;
 import com.gyf.immersionbar.ImmersionBar;
 
-import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 /**
@@ -26,46 +26,22 @@ import butterknife.Unbinder;
  * 添加状态栏适配
  */
 
-public abstract class SFActivity extends AbsActivity {
-    protected Context sfContext;
-    private Unbinder mBinder;
+public abstract class BaseBindingActivity extends AbsActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (getLayoutId() != 0) {
-            setContentView(getLayoutId());
-        }
-
-        mBinder = ButterKnife.bind(this);
-
-        sfContext = this;
+        bindingView();
+        init();
     }
 
 
-    /**
-     * 子类传入一个布局,父类创建View
-     */
-    protected abstract int getLayoutId();
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        onBaseResume();
+    public void onClickBack(View v) {
+        finish();
     }
 
-    protected void onBaseResume() {
+    public abstract void bindingView();
 
-    }
-
-    @Override
-    protected void onDestroy() {
-        if (mBinder != null) {
-            mBinder.unbind();
-        }
-        super.onDestroy();
-    }
+    public abstract void init();
 
 }

@@ -72,13 +72,6 @@ public class SplashActivity extends BaseActivity {
         } else {
             requestPermission();
         }
-        ImmersionBar.with(this)
-                .fitsSystemWindows(false)
-                .navigationBarColor(R.color.white)
-                .navigationBarDarkIcon(true)
-                .statusBarDarkFont(true, 0.2f)
-                .statusBarColor(R.color.transparent)
-                .init();
 
         SPUtils.putBoolean(this, Constant.LOGIN_DIALOG, true);//重新进入APP才弹出异地登录的弹框
         //获取本地图片
@@ -86,8 +79,13 @@ public class SplashActivity extends BaseActivity {
     }
 
     @Override
-    public boolean getOpenImmersionBar() {
-        return false;
+    public ImmersionBar getOpenImmersionBar() {
+        return ImmersionBar.with(this)
+                .fitsSystemWindows(false)
+                .navigationBarColor(R.color.white)
+                .navigationBarDarkIcon(true)
+                .statusBarDarkFont(true, 0.2f)
+                .statusBarColor(R.color.transparent);
     }
 
     @Override

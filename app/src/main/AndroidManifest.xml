@@ -48,7 +48,8 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:icon, android:theme">
-        <!-- 添加provider -->
+        <activity android:name=".travel.TraveFormActivity"></activity>
+        <activity android:name=".travel.TraveDetailActivity" /> <!-- 添加provider -->
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.feitianzhu.huangliwo.fileprovider"
@@ -79,7 +80,7 @@
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/SplashAdvertiseTheme"></activity>
+            android:theme="@style/SplashAdvertiseTheme" />
         <activity
             android:name=".login.LoginActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
@@ -164,7 +165,6 @@
             android:name=".settings.GetPasswordActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".bankcard.WithdrawResultActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"

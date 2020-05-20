@@ -1,6 +1,8 @@
 package com.feitianzhu.huangliwo.travel;
 
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,8 +10,13 @@ import android.view.ViewGroup;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
+import com.feitianzhu.huangliwo.travel.adapter.DistanceAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,6 +42,8 @@ public class TravelHomeActivity extends BaseActivity {
     private PopupWindow popupWindow;
     private String all = "";
     private String num;
+    private List<String> dinstance=new ArrayList<>();
+    private RecyclerView dinstancerecy;
 
     @Override
     protected int getLayoutId() {
@@ -62,6 +71,10 @@ public class TravelHomeActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         // TODO: add setContentView(...) invocation
         ButterKnife.bind(this);
+        dinstance.add("5km");
+        dinstance.add("10km");
+        dinstance.add("20km");
+        dinstance.add("30km");
     }
 
     @OnClick({R.id.distance, R.id.oilnumber})
@@ -73,52 +86,20 @@ public class TravelHomeActivity extends BaseActivity {
                 popupWindow = new PopupWindow(view,
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT, true);
-                TextView oilnameone = view.findViewById(R.id.distanceone);
-                TextView oilnametwodiesel = view.findViewById(R.id.distancetwo);
-                TextView oilnametendiesel = view.findViewById(R.id.distancethree);
-                TextView oilnametwo = view.findViewById(R.id.distancefour);
-                oilnameone.setOnClickListener(new View.OnClickListener() {
+                dinstancerecy = view.findViewById(R.id.dinstancerecy);
+                dinstancerecy.setLayoutManager(new GridLayoutManager(this,4));
+                DistanceAdapter dadapter =new DistanceAdapter(dinstance);
+                dinstancerecy.setAdapter(dadapter);
+                dadapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                     @Override
-                    public void onClick(View v) {
-                        all = "5km";
-                        distance.setText(all);
-                        num =all.substring(0,all.length()-1);
-                        int page=0;
+                    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                        dadapter.chengtextcolor(position);
+                        dadapter.notifyDataSetChanged();
+                        String s = dinstance.get(position);
+                        distance.setText(s);
                         popupWindow.dismiss();
                     }
                 });
-                oilnametwodiesel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        all = "10km";
-                        distance.setText(all);
-                        num =all.substring(0,all.length()-1);
-                        int page=0;
-                        popupWindow.dismiss();
-                    }
-                });
-                oilnametendiesel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        all = "20km";
-                        distance.setText(all);
-                        num =all.substring(0,all.length()-1);
-                        int page=0;
-                        popupWindow.dismiss();
-                    }
-                });
-                oilnametwo.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        all = "30km";
-                        distance.setText(all);
-                        num =all.substring(0,all.length()-1);
-                        int page=0;
-                        popupWindow.dismiss();
-                    }
-                });
-                //popupWindow.setAnimationStyle(R.style.MyPopupWindow_anim_style);
-                // popupWindow.showAtLocation(oilnumber, Gravity.TOP, 1,1);
                 popupWindow.showAsDropDown(oilnumber);
                 break;
             case R.id.oilnumber:
