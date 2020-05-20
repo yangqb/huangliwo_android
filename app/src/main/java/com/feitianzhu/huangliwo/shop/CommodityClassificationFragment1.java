@@ -50,6 +50,7 @@ import com.hjq.toast.ToastUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -169,9 +170,9 @@ public class CommodityClassificationFragment1 extends SFFragment implements Prov
         }
 
         showHeadImg();
-        mSwipeLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
+        mSwipeLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
-            public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                 if (mParam1 == 1) { //商家
                     getMerchants();
                 } else {//商城
@@ -181,7 +182,6 @@ public class CommodityClassificationFragment1 extends SFFragment implements Prov
         });
         rightRecycle.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-//                    linearLayoutManager.
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
         leftRecyclerView.setLayoutManager(linearLayoutManager);
@@ -196,27 +196,30 @@ public class CommodityClassificationFragment1 extends SFFragment implements Prov
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 LinearLayoutManager linearLayoutManager = (LinearLayoutManager) rightRecycle.getLayoutManager();
-                int firstVisibleItemPosition = linearLayoutManager.findLastVisibleItemPosition();
+                int firstVisibleItemPosition = linearLayoutManager.findFirstVisibleItemPosition();
 
                 LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-                int firstCompletelyVisibleItemPosition = layoutManager.findFirstCompletelyVisibleItemPosition();
-                if (firstCompletelyVisibleItemPosition == 0) {
-                    leftAdapter.setSelect(0);
-                    leftRecyclerView.scrollToPosition(0);
-//顶部
+//                int firstCompletelyVisibleItemPosition = layoutManager.findFirstCompletelyVisibleItemPosition();
+//                if (firstCompletelyVisibleItemPosition == 0) {
+//                    leftAdapter.setSelect(0);
+//                    leftRecyclerView.scrollToPosition(0);
+////顶部
+//                } else {
+//                    leftAdapter.setSelect(firstVisibleItemPosition);
+//                    leftRecyclerView.scrollToPosition(firstVisibleItemPosition);
+//                }
+
+
+                int lastCompletelyVisibleItemPosition = layoutManager.findLastCompletelyVisibleItemPosition();
+                if (lastCompletelyVisibleItemPosition == layoutManager.getItemCount() - 1) {
+//底部
+                    leftAdapter.setSelect(lastCompletelyVisibleItemPosition);
+                    leftRecyclerView.scrollToPosition(lastCompletelyVisibleItemPosition);
                 } else {
                     leftAdapter.setSelect(firstVisibleItemPosition);
                     leftRecyclerView.scrollToPosition(firstVisibleItemPosition);
                 }
                 leftAdapter.notifyDataSetChanged();
-
-//                int lastCompletelyVisibleItemPosition = layoutManager.findLastCompletelyVisibleItemPosition();
-//                if(lastCompletelyVisibleItemPosition==layoutManager.getItemCount()-1){
-////底部
-////                    leftAdapter.setSelect(0);
-////                    leftRecyclerView.scrollToPosition(0);
-//                }
-
             }
         });
 
@@ -307,8 +310,8 @@ public class CommodityClassificationFragment1 extends SFFragment implements Prov
                     leftAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                         @Override
                         public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                            leftAdapter.setSelect(position);
-                            leftAdapter.notifyDataSetChanged();
+//                            leftAdapter.setSelect(position);
+//                            leftAdapter.notifyDataSetChanged();
 //点击左边滚动右边
                             rightRecycle.stopScroll();
                             LinearLayoutManager linearLayoutManager = (LinearLayoutManager) rightRecycle.getLayoutManager();
