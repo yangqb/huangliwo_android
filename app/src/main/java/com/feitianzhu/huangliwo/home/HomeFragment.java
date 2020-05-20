@@ -36,6 +36,7 @@ import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 import com.feitianzhu.huangliwo.view.CircleImageView;
+import com.feitianzhu.huangliwo.view.CustomScrollViewPager;
 import com.flyco.tablayout.SlidingTabLayout;
 import com.flyco.tablayout.listener.OnTabSelectListener;
 import com.hjq.permissions.OnPermission;
@@ -79,7 +80,7 @@ public class HomeFragment extends SFFragment implements ProvinceCallBack {
     @BindView(R.id.tabLayout)
     SlidingTabLayout slidingTabLayout;
     @BindView(R.id.viewPager)
-    ViewPager mViewPager;
+    CustomScrollViewPager mViewPager;
     @BindView(R.id.iv_head)
     CircleImageView ivHead;
     @BindView(R.id.txt_location)

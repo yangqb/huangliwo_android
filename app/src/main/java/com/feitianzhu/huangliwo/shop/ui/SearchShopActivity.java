@@ -2,6 +2,7 @@ package com.feitianzhu.huangliwo.shop.ui;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -24,11 +25,22 @@ import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
+import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.SearchGoodsMode;
 import com.feitianzhu.huangliwo.shop.ShopMerchantsDetailActivity;
 import com.feitianzhu.huangliwo.shop.ShopsDetailActivity;
+import com.feitianzhu.huangliwo.shop.adapter.GoodsHistoryKeyAdapter;
+import com.feitianzhu.huangliwo.shop.adapter.SearchGoodsAdapter;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
+import com.feitianzhu.huangliwo.utils.UserInfoUtils;
+import com.feitianzhu.huangliwo.vip.VipActivity;
+import com.google.android.flexbox.FlexDirection;
+import com.google.android.flexbox.FlexWrap;
+import com.google.android.flexbox.FlexboxLayoutManager;
+import com.google.android.flexbox.JustifyContent;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.gyf.immersionbar.ImmersionBar;
 import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.util.KeyboardUtils;
@@ -37,7 +49,10 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -50,6 +65,7 @@ import butterknife.OnClick;
  * email: 694125155@qq.com
  */
 public class SearchShopActivity extends BaseActivity {
+    public static final String HISTORY_KEY = "history_key";
     @BindView(R.id.et_keyword)
     EditText editText;
     @BindView(R.id.recyclerView)
@@ -58,13 +74,19 @@ public class SearchShopActivity extends BaseActivity {
     RefreshLayout mSwipeLayout;
     @BindView(R.id.emptyView)
     LinearLayout emptyView;
+    @BindView(R.id.historyRecyclerView)
+    RecyclerView historyRecyclerView;
+    @BindView(R.id.historyLayout)
+    LinearLayout historyLayout;
     private String token;
     private String userId;
+    private GoodsHistoryKeyAdapter historyKeyAdapter;
+    private MineInfoModel userInfo;
     private int pageNo = 1;
     private String searchText;
-    private List<ShopAndMerchants> shopAndMerchants = new ArrayList<>();
     private List<BaseGoodsListBean> goodsListBeans = new ArrayList<>();
-    private HomeRecommendAdapter2 mAdapter;
+    private List<String> historyKey = new ArrayList<>();
+    private SearchGoodsAdapter mAdapter;
     private boolean isLoadMore;
 
     @Override
@@ -81,8 +103,25 @@ public class SearchShopActivity extends BaseActivity {
                 .init();
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter = new HomeRecommendAdapter2(shopAndMerchants);
+        userInfo = UserInfoUtils.getUserInfo(this);
+        String json = SPUtils.getString(this, HISTORY_KEY);
+
+        if (json != null) {
+            List<String> ps = new Gson().fromJson(json, new TypeToken<List<String>>() {
+            }.getType());
+            historyKey.addAll(ps);
+            newList.addAll(ps);
+        }
+        historyKeyAdapter = new GoodsHistoryKeyAdapter(historyKey);
+        FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(mContext);
+        layoutManager.setFlexWrap(FlexWrap.WRAP);
+        layoutManager.setFlexDirection(FlexDirection.ROW);
+        layoutManager.setJustifyContent(JustifyContent.FLEX_START);
+        historyRecyclerView.setLayoutManager(layoutManager);
+        historyRecyclerView.setAdapter(historyKeyAdapter);
+        historyKeyAdapter.notifyDataSetChanged();
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        mAdapter = new SearchGoodsAdapter(goodsListBeans);
         recyclerView.setAdapter(mAdapter);
         initListener();
         editText.setFocusable(true);
@@ -96,17 +135,30 @@ public class SearchShopActivity extends BaseActivity {
 
     }
 
+    private List<String> newList = new ArrayList<>();
+
     public void searchData(String searchText) {
         if (searchText == null || TextUtils.isEmpty(searchText)) {
             ToastUtils.show("请输入关键字进行搜索");
             mSwipeLayout.finishRefresh(false);
             return;
         }
-
+        historyKey.add(0, searchText);
+        newList.clear();
+        for (String s : historyKey) {
+            if (!newList.contains(s)) {
+                newList.add(s);
+            }
+        }
+        if (newList.size() > 20) {
+            newList.remove(newList.size() - 1);
+        }
+        String historyKeyJson = new Gson().toJson(newList);
+        SPUtils.putString(SearchShopActivity.this, HISTORY_KEY, historyKeyJson);
+        mSwipeLayout.getLayout().setVisibility(View.VISIBLE);
+        historyLayout.setVisibility(View.GONE);
         OkGo.<LzyResponse<SearchGoodsMode>>post(Urls.GET_SEARCH_LIST)
                 .tag(this)
-                .params("accessToken", token)
-                .params("userId", userId)
                 .params("limitNum", Constant.PAGE_SIZE)
                 .params("curPage", pageNo + "")
                 .params("searchName", searchText)
@@ -120,20 +172,15 @@ public class SearchShopActivity extends BaseActivity {
                             mSwipeLayout.finishLoadMore();
                         }
                         if (!isLoadMore) {
-                            shopAndMerchants.clear();
+                            goodsListBeans.clear();
                         }
-                        if (response.body().data != null) {
+                        if (response.body().data != null && response.body().data.getList() != null) {
                             emptyView.setVisibility(View.GONE);
-                            goodsListBeans = response.body().data.getList();
+                            goodsListBeans.addAll(response.body().data.getList());
                             //商品
-                            if (goodsListBeans != null && goodsListBeans.size() > 0) {
+                            if (goodsListBeans.size() > 0) {
                                 emptyView.setVisibility(View.GONE);
-                                for (int i = 0; i < goodsListBeans.size(); i++) {
-                                    ShopAndMerchants entity = new ShopAndMerchants(ShopAndMerchants.TYPE_GOODS);
-                                    entity.setShopsList(goodsListBeans.get(i));
-                                    shopAndMerchants.add(entity);
-                                }
-                                mAdapter.setNewData(shopAndMerchants);
+                                mAdapter.setNewData(goodsListBeans);
                             } else {
                                 if (!isLoadMore) {
                                     emptyView.setVisibility(View.VISIBLE);
@@ -181,18 +228,28 @@ public class SearchShopActivity extends BaseActivity {
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                int type = adapter.getItemViewType(position);
-                if (type == ShopAndMerchants.TYPE_GOODS) {
-                    //商品详情
-                    Intent intent = new Intent(SearchShopActivity.this, ShopsDetailActivity.class);
-                    intent.putExtra(ShopsDetailActivity.GOODS_DETAIL_DATA, shopAndMerchants.get(position).getShopsList().getGoodsId());
-                    startActivity(intent);
-                } else {
-                    //套餐详情页
-                    Intent intent = new Intent(SearchShopActivity.this, ShopMerchantsDetailActivity.class);
-                    startActivity(intent);
+                Intent intent = new Intent(SearchShopActivity.this, ShopsDetailActivity.class);
+                intent.putExtra(ShopsDetailActivity.GOODS_DETAIL_DATA, goodsListBeans.get(position).getGoodsId());
+                startActivity(intent);
+            }
+        });
 
-                }
+        mAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                Intent intent = new Intent(SearchShopActivity.this, VipActivity.class);
+                intent.putExtra(VipActivity.MINE_INFO, userInfo);
+                startActivity(intent);
+            }
+        });
+
+        historyKeyAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                editText.setText(newList.get(position));
+                editText.setSelection(editText.getText().toString().length());
+                searchData(newList.get(position));
+                KeyboardUtils.hideSoftInput(editText);
             }
         });
 
@@ -205,8 +262,10 @@ public class SearchShopActivity extends BaseActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (TextUtils.isEmpty(s)) {
-                    shopAndMerchants.clear();
-                    mAdapter.notifyDataSetChanged();
+                    mSwipeLayout.getLayout().setVisibility(View.GONE);
+                    historyLayout.setVisibility(View.VISIBLE);
+                    historyKeyAdapter.setNewData(newList);
+                    historyKeyAdapter.notifyDataSetChanged();
                 }
             }
 
@@ -237,7 +296,7 @@ public class SearchShopActivity extends BaseActivity {
         });
     }
 
-    @OnClick({R.id.back, R.id.btn_search})
+    @OnClick({R.id.back, R.id.btn_search, R.id.cleanHistory})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back:
@@ -248,6 +307,13 @@ public class SearchShopActivity extends BaseActivity {
                 searchData(searchText);
                 //  这里记得一定要将键盘隐藏了
                 KeyboardUtils.hideSoftInput(editText);
+                break;
+            case R.id.cleanHistory:
+                newList.clear();
+                String historyKeyJson = new Gson().toJson(newList);
+                SPUtils.putString(SearchShopActivity.this, HISTORY_KEY, historyKeyJson);
+                historyKeyAdapter.setNewData(newList);
+                historyKeyAdapter.notifyDataSetChanged();
                 break;
         }
     }

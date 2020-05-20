@@ -100,9 +100,9 @@ public class ShopsDetailActivity extends BaseActivity {
     private List<BaseGoodsListBean.GoodsEvaluateMode> evalList;
     private List<ProductParameters.GoodsSpecifications> specifications = new ArrayList<>();
     private MineInfoModel mineInfoModel;
-    private List<String> imgs = new ArrayList<>();
     private String token;
     private String userId;
+    private List<String> bannerImgList = new ArrayList<>();
     @BindView(R.id.tv_amount)
     TextView tvAmount;
     @BindView(R.id.title_name)
@@ -323,6 +323,9 @@ public class ShopsDetailActivity extends BaseActivity {
         //Glide.with(this).load(urlLogo).apply(new RequestOptions().placeholder(R.mipmap.g10_03weijiazai).error(R.mipmap.g10_03weijiazai)).into(GlideUtils.getImageView(this, urlLogo, bannerImage));
         if (goodsListBean.getGoodsImgsList() != null) {
             List<BaseGoodsListBean.GoodsImgsListBean> goodsImgsList = goodsListBean.getGoodsImgsList();
+            for (int i = 0; i < goodsImgsList.size(); i++) {
+                bannerImgList.add(goodsImgsList.get(i).getGoodsImg());
+            }
             mViewpager.setCanLoop(true)
                     .setAutoPlay(true)
                     .setIndicatorStyle(IndicatorStyle.CIRCLE)
@@ -332,10 +335,36 @@ public class ShopsDetailActivity extends BaseActivity {
                     .setHolderCreator(DataViewHolder::new).setOnPageClickListener(new BannerViewPager.OnPageClickListener() {
                 @Override
                 public void onPageClick(int position) {
+                    onClickBanner(position);
                 }
             }).create(goodsListBean.getGoodsImgsList());
             mViewpager.startLoop();
         }
+    }
+
+    public void onClickBanner(int pos) {
+        ImagePreview
+                .getInstance()
+                // 上下文，必须是activity，不需要担心内存泄漏，本框架已经处理好；
+                .setContext(mContext)
+                .setEnableDragClose(true) //下拉图片关闭
+                // 设置从第几张开始看（索引从0开始）
+                .setIndex(pos)
+                .setShowErrorToast(true)//加载失败提示
+                //=================================================================================================
+                // 有三种设置数据集合的方式，根据自己的需求进行三选一：
+                // 1：第一步生成的imageInfo List
+                //.setImageInfoList(imageInfoList)
+
+                // 2：直接传url List
+                .setImageList(bannerImgList)
+
+                // 3：只有一张图片的情况，可以直接传入这张图片的url
+                //.setImage(String image)
+                //=================================================================================================
+
+                // 开启预览
+                .start();
     }
 
     @Override
@@ -357,37 +386,6 @@ public class ShopsDetailActivity extends BaseActivity {
         public void onBind(View itemView, BaseGoodsListBean.GoodsImgsListBean data, int position, int size) {
             mImageView = itemView.findViewById(R.id.banner_image);
             Glide.with(mContext).load(data.getGoodsImg()).apply(new RequestOptions().error(R.mipmap.g10_03weijiazai).placeholder(R.mipmap.g10_03weijiazai).dontAnimate()).into(mImageView);
-          /*  mImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    ImagePreview
-                            .getInstance()
-
-                            // 上下文，必须是activity，不需要担心内存泄漏，本框架已经处理好；
-                            .setShowIndicator(true)
-                            .setContext(mContext)
-                            .setEnableDragClose(false) //下拉图片关闭
-                            // 设置从第0张开始看（索引从0开始）
-                            .setIndex(position)
-                            .setShowErrorToast(true)//加载失败提示
-                            //=================================================================================================
-                            // 有三种设置数据集合的方式，根据自己的需求进行三选一：
-                            // 1：第一步生成的imageInfo List
-                            //.setImageInfoList(imageInfoList)
-
-                            // 2：直接传url List
-                            .setImageList(Arrays.asList(data.getGoodsImg()))
-
-                            // 3：只有一张图片的情况，可以直接传入这张图片的url
-                            //.setImage(String image)
-                            //=================================================================================================
-
-                            // 开启预览
-                            .start();
-                }
-            });
-*/
-
         }
     }
 
