@@ -10,6 +10,7 @@ import android.view.View;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
+import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.activity.BaseBindingActivity;
 import com.feitianzhu.huangliwo.core.network.ApiCallBack;
 import com.feitianzhu.huangliwo.core.network.ApiLifeCallBack;
@@ -65,6 +66,7 @@ public class TraveDetailActivity extends BaseBindingActivity {
         intent.putExtra("GSON", s);
         appCompatActivity.startActivity(intent);
     }
+
     @Override
     public void init() {
         if (oilListBean != null) {
@@ -243,7 +245,7 @@ public class TraveDetailActivity extends BaseBindingActivity {
             public void onClick(View v) {
                 if (!StringUtils.isEmpty(n1) && !StringUtils.isEmpty(n2)) {
                     OilTimeRequest oilTimeRequest = new OilTimeRequest();
-                    oilTimeRequest.phone = SPUtils.getString(TraveDetailActivity.this, SP_PHONE);
+                    oilTimeRequest.phone = SPUtils.getString(TraveDetailActivity.this, Constant.SP_PHONE);
                     oilTimeRequest.platformId = "98647229";
                     oilTimeRequest.call(new ApiCallBack<String>() {
                         @Override
