@@ -109,9 +109,10 @@ public class TraveDetailActivity extends BaseBindingActivity {
 
 
         OilStationsDetailRequest oilStationsDetailRequest = new OilStationsDetailRequest();
+        oilStationsDetailRequest.isShowLoading = true;
         oilStationsDetailRequest.gasIds = oilListBean.getGasId();
         oilStationsDetailRequest.phone = SPUtils.getString(this, SP_PHONE);
-        oilStationsDetailRequest.call(new ApiLifeCallBack<List<OilStationsDetailBean>>() {
+        oilStationsDetailRequest.call(new ApiLifeCallBack<List<OilStationsDetailBean> >() {
 
             @Override
             public void onStart() {

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,13 +22,20 @@ import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.core.network.ApiCallBack;
 import com.feitianzhu.huangliwo.core.network.ApiLifeCallBack;
+import com.feitianzhu.huangliwo.login.LoginActivity;
 import com.feitianzhu.huangliwo.model.MyPoint;
 import com.feitianzhu.huangliwo.travel.adapter.Distance1Adapter;
 import com.feitianzhu.huangliwo.travel.adapter.Distance2Adapter;
 import com.feitianzhu.huangliwo.travel.adapter.DistanceAdapter;
 import com.feitianzhu.huangliwo.travel.adapter.MyOilAdapter;
 import com.feitianzhu.huangliwo.travel.bean.OilListBean;
+import com.feitianzhu.huangliwo.travel.request.OilLoginRequest;
 import com.feitianzhu.huangliwo.travel.request.OilStationsRequest;
+import com.feitianzhu.huangliwo.travel.request.OilTimeRequest;
+import com.feitianzhu.huangliwo.utils.SPUtils;
+import com.feitianzhu.huangliwo.utils.StringUtils;
+import com.feitianzhu.huangliwo.utils.UserInfoUtils;
+import com.hjq.toast.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,6 +85,7 @@ public class TravelHomeActivity extends BaseActivity {
     private String oilnumbersum;
     private String[] kms;
     private String[] split;
+    private MyOilAdapter myoiladapter;
 
     @Override
     protected int getLayoutId() {
@@ -85,6 +94,22 @@ public class TravelHomeActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+        View mEmptyView = View.inflate(TravelHomeActivity.this, R.layout.view_common_nodata, null);
+        ImageView img_empty = (ImageView) mEmptyView.findViewById(R.id.img_empty);
+        img_empty.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+
+        myoiladapter = new MyOilAdapter(null);
+        myoiladapter.setEmptyView(mEmptyView);
+        oilrecy.setAdapter(myoiladapter);
+        myoiladapter.notifyDataSetChanged();
+
+
         rightText.setVisibility(View.VISIBLE);
         rightImg.setVisibility(View.VISIBLE);
         titleName.setText("加油优惠");
@@ -235,14 +260,24 @@ public class TravelHomeActivity extends BaseActivity {
             @Override
             public void onAPIResponse(List<OilListBean> response) {
                 if (response != null && response.size() > 0) {
-                    MyOilAdapter myoiladapter = new MyOilAdapter(response);
-                    oilrecy.setAdapter(myoiladapter);
+                    myoiladapter.setNewData(response);
                     myoiladapter.chengtextcolor1(oilnumbersum);
                     myoiladapter.notifyDataSetChanged();
                     myoiladapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                         @Override
                         public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                            TraveDetailActivity.toTraveDetailActivity(TravelHomeActivity.this, response.get(position));
+                            String token = SPUtils.getString(TravelHomeActivity.this, Constant.SP_ACCESS_TOKEN);
+                            if (token == null || TextUtils.isEmpty(token)) {
+                                Intent intent = new Intent(TravelHomeActivity.this, LoginActivity.class);
+                                startActivity(intent);
+                            } else {
+                                if (UserInfoUtils.getUserInfo(TravelHomeActivity.this).getAccountType() != 0) {
+                                    TraveDetailActivity.toTraveDetailActivity(TravelHomeActivity.this, response.get(position));
+
+                                } else {
+                                    ToastUtils.show("您还不是会员");
+                                }
+                            }
                         }
                     });
                 }
@@ -250,7 +285,7 @@ public class TravelHomeActivity extends BaseActivity {
 
             @Override
             public void onAPIError(int errorCode, String errorMsg) {
-
+                myoiladapter.setNewData(null);
             }
         });
     }

@@ -47,7 +47,7 @@ public abstract class BaseRequest extends BaseApiRequest {
         if (errorCode == 100021105) {
 //            登录异常被踢
         } else if (errorCode == 404) {
-            ToastUtils.show("404");
+            ToastUtils.show("数据找不到");
             //找不到
         } else if (errorCode == kErrorTypeNoNetworkConnect) {
             ToastUtils.show("网络不可用");
