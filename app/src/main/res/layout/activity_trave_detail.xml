@@ -76,6 +76,7 @@
                             android:layout_height="@dimen/dp_47_5"
                             android:layout_marginEnd="@dimen/dp_11"
                             app:riv_corner_radius="@dimen/dp_23"
+                            app:riv_oval="false"
                             app:srcCompat="@mipmap/a01_01touxiang" />
 
                         <LinearLayout
@@ -145,8 +146,8 @@
                             android:layout_marginStart="@dimen/dp_12"
                             android:background="#fff88d03"
                             android:paddingStart="@dimen/dp_3"
-                            android:paddingEnd="@dimen/dp_3"
                             android:paddingTop="@dimen/dp_2_5"
+                            android:paddingEnd="@dimen/dp_3"
                             android:paddingBottom="@dimen/dp_2_5"
                             android:text="已降 "
                             android:textColor="#ffffffff"
@@ -158,8 +159,8 @@
                             android:layout_height="wrap_content"
                             android:background="@drawable/shape_trave_button"
                             android:paddingStart="@dimen/dp_3"
-                            android:paddingEnd="@dimen/dp_3"
                             android:paddingTop="@dimen/dp_2_5"
+                            android:paddingEnd="@dimen/dp_3"
                             android:paddingBottom="@dimen/dp_2_5"
                             android:text="￥0.77"
                             android:textColor="#fff88d03"

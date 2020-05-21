@@ -71,7 +71,7 @@ public class TraveDetailActivity extends BaseBindingActivity {
             dataBinding.submit.setEnabled(false);
             dataBinding.name.setText(oilListBean.getGasName());
             Glide.with(this)
-                    .load(oilListBean.getGasLogoBig())
+                    .load(oilListBean.getGasLogoSmall())
                     .into(dataBinding.imageView8);
             dataBinding.value.setText("￥0");
             dataBinding.downValue.setText("$0");
