@@ -23,6 +23,7 @@ import com.feitianzhu.huangliwo.travel.request.OilStationsDetailRequest;
 import com.feitianzhu.huangliwo.travel.request.OilTimeRequest;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.StringUtils;
+import com.feitianzhu.huangliwo.utils.doubleclick.SingleClick;
 import com.google.gson.Gson;
 
 import java.text.DecimalFormat;
@@ -252,11 +253,12 @@ public class TraveDetailActivity extends BaseBindingActivity {
 
 
         dataBinding.submit.setOnClickListener(new View.OnClickListener() {
+            @SingleClick()
             @Override
             public void onClick(View v) {
                 if (!StringUtils.isEmpty(n1) && !StringUtils.isEmpty(n2)) {
                     OilTimeRequest oilTimeRequest = new OilTimeRequest();
-                    oilTimeRequest.phone = "13671192850";
+                    oilTimeRequest.phone = SPUtils.getString(TraveDetailActivity.this, SP_PHONE);
                     oilTimeRequest.platformId = "98647229";
                     oilTimeRequest.call(new ApiCallBack<String>() {
                         @Override
