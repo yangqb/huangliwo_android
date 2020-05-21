@@ -14,6 +14,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.feitianzhu.huangliwo.GlobalUtil;
 import com.feitianzhu.huangliwo.R;
 import com.gyf.immersionbar.ImmersionBar;
+import com.lxj.xpopup.impl.LoadingPopupView;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -29,7 +30,6 @@ import butterknife.Unbinder;
 public abstract class SFActivity extends AbsActivity {
     protected Context sfContext;
     private Unbinder mBinder;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

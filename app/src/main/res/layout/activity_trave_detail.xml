@@ -51,7 +51,7 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <LinearLayout
+                <com.feitianzhu.huangliwo.view.CornerLinearView
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp_126"
                     android:layout_marginStart="@dimen/dp_10"
@@ -70,12 +70,13 @@
                         android:layout_marginTop="@dimen/dp_19"
                         android:orientation="horizontal">
 
-                        <ImageView
+                        <com.itheima.roundedimageview.RoundedImageView
                             android:id="@+id/imageView8"
                             android:layout_width="@dimen/dp_47_5"
                             android:layout_height="@dimen/dp_47_5"
                             android:layout_marginEnd="@dimen/dp_11"
-                            app:srcCompat="@mipmap/a01_01touxiang" />
+                            app:srcCompat="@mipmap/a01_01touxiang"
+                            app:riv_oval="true"/>
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -100,6 +101,7 @@
                                 android:orientation="horizontal">
 
                                 <TextView
+                                    android:id="@+id/address"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
@@ -108,6 +110,7 @@
                                     android:textSize="12sp" />
 
                                 <TextView
+                                    android:id="@+id/str"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="25.15km"
@@ -158,9 +161,9 @@
 
                     </LinearLayout>
 
-                </LinearLayout>
+                </com.feitianzhu.huangliwo.view.CornerLinearView>
 
-                <LinearLayout
+                <com.feitianzhu.huangliwo.view.CornerLinearView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/dp_10"
@@ -222,11 +225,12 @@
                         android:layout_marginTop="@dimen/dp_13">
 
                     </android.support.v7.widget.RecyclerView>
-                </LinearLayout>
+                </com.feitianzhu.huangliwo.view.CornerLinearView>
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
 
         <Button
+            android:id="@+id/submit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

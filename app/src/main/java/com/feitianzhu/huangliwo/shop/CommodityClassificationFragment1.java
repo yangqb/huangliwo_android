@@ -275,12 +275,14 @@ public class CommodityClassificationFragment1 extends SFFragment implements Prov
                 rightRecycle.setAdapter(rightAdapterShopMain);
                 rightAdapterShopMain.notifyDataSetChanged();
                 emptyView.setVisibility(View.GONE);
+                mSwipeLayout.finishRefresh();
 
             }
 
             @Override
             public void onAPIError(int errorCode, String errorMsg) {
                 emptyView.setVisibility(View.VISIBLE);
+                mSwipeLayout.finishRefresh();
 
             }
         });
@@ -342,12 +344,14 @@ public class CommodityClassificationFragment1 extends SFFragment implements Prov
                 rightRecycle.setAdapter(rightAdapterMerchantMain);
                 rightAdapterMerchantMain.notifyDataSetChanged();
                 emptyView.setVisibility(View.GONE);
-
+                mSwipeLayout.finishRefresh();
             }
 
             @Override
             public void onAPIError(int errorCode, String errorMsg) {
                 emptyView.setVisibility(View.VISIBLE);
+                mSwipeLayout.finishRefresh();
+
             }
         });
     }

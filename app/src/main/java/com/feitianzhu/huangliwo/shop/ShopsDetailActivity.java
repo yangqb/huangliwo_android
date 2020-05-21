@@ -231,7 +231,6 @@ public class ShopsDetailActivity extends BaseActivity {
     }
 
     public void getDetail(String goodsId) {
-
         GoodsDetailRequest goodsDetailRequest = new GoodsDetailRequest();
         goodsDetailRequest.goodsId = goodsId;
         goodsDetailRequest.call(new ApiLifeCallBack<BaseGoodsListBean>() {

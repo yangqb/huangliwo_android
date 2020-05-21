@@ -28,7 +28,7 @@ public abstract class BaseActivity extends SFActivity {
      * 代替Context
      */
     protected Context mContext;
-    LoadingPopupView loadingPopup;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,24 +45,7 @@ public abstract class BaseActivity extends SFActivity {
         initData();
     }
 
-    protected void showloadDialog(String title) {
-        loadingPopup = (LoadingPopupView) new XPopup.Builder(this)
-                .hasShadowBg(false)
-                .popupAnimation(PopupAnimation.NoAnimation)
-                .asLoading()
-                .bindLayout(R.layout.layout_loading_view)
-                .show();
-    }
 
-    protected void goneloadDialog() {
-        if (null != loadingPopup) {
-            loadingPopup.delayDismissWith(600, new Runnable() {
-                @Override
-                public void run() {
-                }
-            });
-        }
-    }
 
 
 
@@ -108,10 +91,5 @@ public abstract class BaseActivity extends SFActivity {
         return false;
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        loadingPopup = null;
-    }
 
 }

@@ -176,4 +176,8 @@
         <attr name="isCornerBottomLeftRadius" format="boolean" />
         <attr name="isCornerBottomRightRadius" format="boolean" />
     </declare-styleable>
+    <style name="MyPopupWindow_anim_style">
+        <item name="android:windowEnterAnimation">@anim/popupwindow_show_anim</item>
+        <item name="android:windowExitAnimation">@anim/popupwindow_hidden_anim</item>
+    </style>
 </resources>

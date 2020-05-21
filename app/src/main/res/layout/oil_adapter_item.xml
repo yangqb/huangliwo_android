@@ -7,7 +7,7 @@
     android:layout_height="@dimen/dp_126"
     android:layout_marginStart="@dimen/dp_10"
     android:layout_marginTop="@dimen/dp_10"
-
+    android:layout_marginEnd="@dimen/dp_10"
     android:background="@color/white"
     android:gravity="center"
     android:orientation="vertical"
@@ -25,6 +25,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:gravity="center_vertical"
             android:orientation="vertical">
 
@@ -41,6 +43,8 @@
                     android:text="北京市丰台区公交马场加油站"
                     android:textColor="#ff333333"
                     android:textSize="17sp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:textStyle="bold" />
 
                 <ImageView
@@ -63,6 +67,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:text="北京市丰台区富丰园340总站内"
                     android:textColor="#ff999999"
                     android:textSize="12sp" />
@@ -72,7 +78,6 @@
                     android:paddingEnd="@dimen/dp_8"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="25.15km"
                     android:textColor="#ff999999"
                     android:textSize="12sp" />
 

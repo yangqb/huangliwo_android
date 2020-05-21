@@ -2,6 +2,7 @@ package com.feitianzhu.huangliwo.core.network;
 
 import com.alibaba.fastjson.TypeReference;
 import com.feitianzhu.huangliwo.utils.Urls;
+import com.hjq.toast.ToastUtils;
 
 /**
  * Created by bch on 2020/5/11
@@ -46,13 +47,22 @@ public abstract class BaseRequest extends BaseApiRequest {
         if (errorCode == 100021105) {
 //            登录异常被踢
         } else if (errorCode == 404) {
+            ToastUtils.show("数据找不到");
             //找不到
         } else if (errorCode == kErrorTypeNoNetworkConnect) {
+            ToastUtils.show("网络不可用");
+
             //网络不可用
         } else if (errorCode == kErrorTypeResponseHandleError) {
+            ToastUtils.show("数据处理错误");
+
             //外部数据处理错误
         } else if (errorCode == kErrorTypeResponsePraseError) {
+            ToastUtils.show("解析错误");
+
             //json解析错误
+        } else {
+            ToastUtils.show("网络错误,请重试");
         }
     }
 }
