@@ -169,30 +169,22 @@ public class SearchShopActivity extends BaseActivity {
                     public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<SearchGoodsMode>> response) {
                         super.onSuccess(SearchShopActivity.this, "", response.body().code);
                         if (!isLoadMore) {
-                            mSwipeLayout.finishRefresh();
-                        } else {
-                            mSwipeLayout.finishLoadMore();
-                        }
-                        if (!isLoadMore) {
                             goodsListBeans.clear();
                         }
-                        if (response.body().data != null && response.body().data.getList() != null) {
+                        if (response.body().data != null && response.body().data.getList() != null && response.body().data.getList().size() > 0) {
+                            if (!isLoadMore) {
+                                mSwipeLayout.finishRefresh();
+                            } else {
+                                mSwipeLayout.finishLoadMore();
+                            }
                             emptyView.setVisibility(View.GONE);
                             goodsListBeans.addAll(response.body().data.getList());
-                            //商品
-                            if (response.body().data.getList().size() > 0) {
-                                emptyView.setVisibility(View.GONE);
-                                mAdapter.setNewData(goodsListBeans);
-                            } else {
-                                if (!isLoadMore) {
-                                    emptyView.setVisibility(View.VISIBLE);
-                                } else {
-                                    ToastUtils.show("没有更多数据了");
-                                }
-                            }
+                            mAdapter.setNewData(goodsListBeans);
                         } else {
                             if (!isLoadMore) {
                                 emptyView.setVisibility(View.VISIBLE);
+                            } else {
+                                mSwipeLayout.finishLoadMoreWithNoMoreData();
                             }
                         }
                         mAdapter.notifyDataSetChanged();

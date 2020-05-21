@@ -35,6 +35,8 @@ import com.scwang.smartrefresh.layout.api.RefreshFooter;
 import com.scwang.smartrefresh.layout.api.RefreshHeader;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.footer.BallPulseFooter;
+import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
+import com.scwang.smartrefresh.layout.footer.FalsifyFooter;
 import com.tencent.bugly.crashreport.CrashReport;
 
 import com.uuzuche.lib_zxing.activity.ZXingLibrary;
@@ -54,6 +56,7 @@ public class App extends Application {
 
     static {//使用static代码段可以防止内存泄漏
         //设置全局默认配置（优先级最低，会被其他设置覆盖）
+        ClassicsFooter.REFRESH_FOOTER_FINISH = "";
         SmartRefreshLayout.setDefaultRefreshInitializer(new DefaultRefreshInitializer() {
             @Override
             public void initialize(@NonNull Context context, @NonNull RefreshLayout layout) {
@@ -63,7 +66,7 @@ public class App extends Application {
                 layout.setDisableContentWhenLoading(false);//是否在加载更多的时候禁止列表的操作
                 layout.setDisableContentWhenRefresh(false);//是否在刷新的时候禁止列表的操作
                 layout.setEnableLoadMoreWhenContentNotFull(false);//在内容不满一页的时候，是否可以上拉加载更多
-                layout.autoLoadMore();//自动加载
+                layout.setEnableFooterFollowWhenNoMoreData(false);//置是否在没有更多数据之后 Footer 跟随内容
                 // layout.setPrimaryColorsId(R.color.colorPrimary, android.R.color.white);
             }
         });
@@ -75,8 +78,10 @@ public class App extends Application {
             public RefreshFooter createRefreshFooter(@NonNull Context context, @NonNull RefreshLayout layout) {
                 //开始设置全局的基本参数（这里设置的属性只跟下面的MaterialHeader绑定，其他Header不会生效，能覆盖DefaultRefreshInitializer的属性和Xml设置的属性）
                 layout.setEnableFooterTranslationContent(true);
-                return new BallPulseFooter(context).setAnimatingColor(context.getResources().getColor(R.color.bg_yellow)).setNormalColor(context.getResources().getColor(R.color.bg_yellow));
+                //return new BallPulseFooter(context).setAnimatingColor(context.getResources().getColor(R.color.bg_yellow)).setNormalColor(context.getResources().getColor(R.color.bg_yellow));
                 //return new MRefreshFooter(context);
+                //return new FalsifyFooter(context);
+                return new ClassicsFooter(context);
             }
         });
 
