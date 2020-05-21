@@ -297,6 +297,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     public void onSuccess(Response<LzyResponse<MineInfoModel>> response) {
                         if (response.body().code == 0 && response.body().data != null) {
                             MineInfoModel userInfo = response.body().data;
+                            SPUtils.putString(LoginActivity.this, Constant.SP_PHONE, userInfo.getPhone());
                             UserInfoUtils.saveUserInfo(LoginActivity.this, userInfo);
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
