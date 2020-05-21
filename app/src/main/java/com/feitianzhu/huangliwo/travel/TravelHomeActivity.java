@@ -196,10 +196,10 @@ public class TravelHomeActivity extends BaseActivity {
         initwork(dinstancenumber, oilnumbersum,true);
     }
 
-    @OnClick({R.id.distance, R.id.oilnumber})
+    @OnClick({R.id.distancerela, R.id.oilnumberrela})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.distance:
+            case R.id.distancerela:
                 String text1 = (String) distance.getText();
                 view = LayoutInflater.from(TravelHomeActivity.this).inflate(
                         R.layout.popup_item_distance, null);
@@ -225,7 +225,7 @@ public class TravelHomeActivity extends BaseActivity {
                 dadapter.chengtextcolor1(text1);
                 popupWindow.showAsDropDown(distancerela);
                 break;
-            case R.id.oilnumber:
+            case R.id.oilnumberrela:
                 String text = (String) oilnumber.getText();
                 view = LayoutInflater.from(TravelHomeActivity.this).inflate(
                         R.layout.popup_item_oilnumber, null);
