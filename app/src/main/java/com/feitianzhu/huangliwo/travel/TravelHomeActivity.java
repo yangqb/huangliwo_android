@@ -20,6 +20,7 @@ import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.core.network.ApiCallBack;
+import com.feitianzhu.huangliwo.core.network.ApiLifeCallBack;
 import com.feitianzhu.huangliwo.model.MyPoint;
 import com.feitianzhu.huangliwo.travel.adapter.Distance1Adapter;
 import com.feitianzhu.huangliwo.travel.adapter.Distance2Adapter;
@@ -220,7 +221,17 @@ public class TravelHomeActivity extends BaseActivity {
         split = oilnumbersum.split("#");
         oilrecy.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         OilStationsRequest oilStationsRequest = new OilStationsRequest(longitude, latitude, Integer.valueOf(kms[0]), Integer.valueOf(split[0]), 20, 1);
-        oilStationsRequest.call(new ApiCallBack<List<OilListBean>>() {
+        oilStationsRequest.call(new ApiLifeCallBack<List<OilListBean>>() {
+            @Override
+            public void onStart() {
+                showloadDialog("");
+            }
+
+            @Override
+            public void onFinsh() {
+                goneloadDialog();
+            }
+
             @Override
             public void onAPIResponse(List<OilListBean> response) {
                 if (response != null && response.size() > 0) {

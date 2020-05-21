@@ -19,6 +19,7 @@ import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.activity.BaseBindingActivity;
 import com.feitianzhu.huangliwo.core.network.ApiCallBack;
+import com.feitianzhu.huangliwo.core.network.ApiLifeCallBack;
 import com.feitianzhu.huangliwo.databinding.ActivityTraveDetailBinding;
 import com.feitianzhu.huangliwo.travel.adapter.Distance1Adapter;
 import com.feitianzhu.huangliwo.travel.adapter.DistanceAdapter;
@@ -39,6 +40,8 @@ import com.hjq.toast.ToastUtils;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.feitianzhu.huangliwo.common.Constant.SP_PHONE;
 
 public class TraveDetailActivity extends BaseBindingActivity {
 
@@ -106,9 +109,20 @@ public class TraveDetailActivity extends BaseBindingActivity {
 
 
         OilStationsDetailRequest oilStationsDetailRequest = new OilStationsDetailRequest();
-        oilStationsDetailRequest.gasIds = "QP000001559";
-        oilStationsDetailRequest.phone = "15110103189";
-        oilStationsDetailRequest.call(new ApiCallBack<List<OilStationsDetailBean>>() {
+        oilStationsDetailRequest.gasIds = oilListBean.getGasId();
+        oilStationsDetailRequest.phone = SPUtils.getString(this, SP_PHONE);
+        oilStationsDetailRequest.call(new ApiLifeCallBack<List<OilStationsDetailBean>>() {
+
+            @Override
+            public void onStart() {
+                showloadDialog("");
+            }
+
+            @Override
+            public void onFinsh() {
+                goneloadDialog();
+            }
+
             @Override
             public void onAPIResponse(List<OilStationsDetailBean> response) {
                 TraveDetailActivity.this.response = response;
