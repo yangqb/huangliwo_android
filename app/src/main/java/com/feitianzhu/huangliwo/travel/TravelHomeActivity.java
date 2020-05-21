@@ -104,8 +104,6 @@ public class TravelHomeActivity extends BaseActivity {
 
             }
         });
-
-
         myoiladapter = new MyOilAdapter(null);
         myoiladapter.setEmptyView(mEmptyView);
         oilrecy.setAdapter(myoiladapter);
@@ -114,7 +112,9 @@ public class TravelHomeActivity extends BaseActivity {
         rightImg.setVisibility(View.VISIBLE);
         titleName.setText("加油优惠");
         rightText.setText("订单");
+        token = SPUtils.getString(TravelHomeActivity.this, Constant.SP_ACCESS_TOKEN);
     }
+
 
     @OnClick({R.id.left_button, R.id.right_button})
     public void onClick(View view) {
@@ -129,7 +129,6 @@ public class TravelHomeActivity extends BaseActivity {
                 } else {
                     startActivity(new Intent(this, TraveFormActivity.class));
                 }
-
                 break;
         }
     }
@@ -169,7 +168,6 @@ public class TravelHomeActivity extends BaseActivity {
                 oilnumbersum = (String) oilnumber.getText();
                 initwork(dinstancenumber, oilnumbersum,true);
             }
-
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                 isLoadMore = false;
@@ -180,8 +178,6 @@ public class TravelHomeActivity extends BaseActivity {
             }
         });
     }
-
-
     private void initoil() {
         dinstancenumber = (String) distance.getText();
         oilnumbersum = (String) oilnumber.getText();
@@ -246,7 +242,6 @@ public class TravelHomeActivity extends BaseActivity {
                         popupWindow.dismiss();
                     }
                 });
-
                 distanceAdapter.chengtextcolor1(text);
                 distanceAdapter.notifyDataSetChanged();
                 oilLevel.setLayoutManager(new GridLayoutManager(this, 4));
@@ -270,7 +265,6 @@ public class TravelHomeActivity extends BaseActivity {
                 break;
         }
     }
-
     private void initwork(String dinstancenumber, String oilnumbersum,boolean isLoadM) {
         kms = dinstancenumber.split("km");
         split = oilnumbersum.split("#");
@@ -344,7 +338,6 @@ public class TravelHomeActivity extends BaseActivity {
                     });
                 }
             }
-
             @Override
             public void onAPIError(int errorCode, String errorMsg) {
                 myoiladapter.setNewData(null);
@@ -357,6 +350,5 @@ public class TravelHomeActivity extends BaseActivity {
             }
         });
     }
-
 
 }
