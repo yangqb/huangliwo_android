@@ -65,7 +65,6 @@ public class TraveDetailActivity extends BaseBindingActivity {
         intent.putExtra("GSON", s);
         appCompatActivity.startActivity(intent);
     }
-
     @Override
     public void init() {
         if (oilListBean != null) {
@@ -250,8 +249,6 @@ public class TraveDetailActivity extends BaseBindingActivity {
 
             }
         });
-
-
         dataBinding.submit.setOnClickListener(new View.OnClickListener() {
             @SingleClick()
             @Override

@@ -1,13 +1,11 @@
 package com.feitianzhu.huangliwo.travel;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,9 +18,9 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
-import com.feitianzhu.huangliwo.core.network.ApiCallBack;
 import com.feitianzhu.huangliwo.core.network.ApiLifeCallBack;
 import com.feitianzhu.huangliwo.login.LoginActivity;
+import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.MyPoint;
 import com.feitianzhu.huangliwo.travel.adapter.Distance2Adapter;
 import com.feitianzhu.huangliwo.travel.adapter.DistanceAdapter;
@@ -32,10 +30,8 @@ import com.feitianzhu.huangliwo.travel.request.OilLoginRequest;
 import com.feitianzhu.huangliwo.travel.request.OilStationsRequest;
 import com.feitianzhu.huangliwo.travel.request.OilTimeRequest;
 import com.feitianzhu.huangliwo.utils.SPUtils;
-import com.feitianzhu.huangliwo.utils.StringUtils;
 import com.feitianzhu.huangliwo.utils.UserInfoUtils;
-import com.hjq.toast.ToastUtils;
-import com.feitianzhu.huangliwo.utils.SPUtils;
+import com.feitianzhu.huangliwo.vip.VipActivity;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
@@ -92,6 +88,7 @@ public class TravelHomeActivity extends BaseActivity {
     private boolean isLoadMore;
     private MyOilAdapter myoiladapter;
     private String token;
+    private MineInfoModel userInfo;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_travel_home;
@@ -269,7 +266,7 @@ public class TravelHomeActivity extends BaseActivity {
                 });
                 distanceAdapter1.chengtextcolor1(text);
                 distanceAdapter1.notifyDataSetChanged();
-                popupWindow.showAsDropDown(distancerela);
+                popupWindow.showAsDropDown(oilnumberrela);
                 break;
         }
     }
@@ -308,9 +305,6 @@ public class TravelHomeActivity extends BaseActivity {
                     myoiladapter.chengtextcolor1(oilnumbersum);
                     myoiladapter.notifyDataSetChanged();
                     myoiladapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-
-
-
                         @Override
                         public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                             token = SPUtils.getString(TravelHomeActivity.this, Constant.SP_ACCESS_TOKEN);
@@ -322,7 +316,28 @@ public class TravelHomeActivity extends BaseActivity {
                                     TraveDetailActivity.toTraveDetailActivity(TravelHomeActivity.this, response.get(position));
 
                                 } else {
-                                    ToastUtils.show("您还不是会员");
+
+                                    View inflate = getLayoutInflater().inflate(R.layout.oil_dialog_item, null);
+                                    TextView dilagimagedimiss = inflate.findViewById(R.id.dilagimagedimiss);
+                                    TextView dilagimageupdate = inflate.findViewById(R.id.dilagimageupdate);
+                                    MyDialog myDialog = new MyDialog(TravelHomeActivity.this, 0, 0, inflate, R.style.DialogTheme);
+                                    myDialog.setCancelable(true);
+                                    dilagimagedimiss.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            myDialog.dismiss();
+                                        }
+                                    });
+                                    dilagimageupdate.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            Intent intent = new Intent(TravelHomeActivity.this, VipActivity.class);
+                                            intent.putExtra(VipActivity.MINE_INFO, userInfo);
+                                            startActivity(intent);
+                                            myDialog.dismiss();
+                                        }
+                                    });
+                                    myDialog.show();
                                 }
                             }
                         }
