@@ -96,6 +96,7 @@ public class RecommendedFragment extends SFFragment {
     private List<MerchantsModel> optMerchantList = new ArrayList<>();
     private List<BaseGoodsListBean> hotGoodsList = new ArrayList<>();
     private List<BaseGoodsListBean> recGoodsList = new ArrayList<>();
+    private List<BaseGoodsListBean> curGoodsList = new ArrayList<>();
     private double longitude = 116.289189;
     private double latitude = 39.826552;
     private HomeModel mHomeMode;
@@ -484,19 +485,19 @@ public class RecommendedFragment extends SFFragment {
             @Override
             public void onAPIResponse(HomeShops response) {
                 if (!isLoadMore) {
-                    refreshLayout.finishRefresh();
-                } else {
-                    refreshLayout.finishLoadMore();
-                }
-                if (!isLoadMore) {
                     recGoodsList.clear();
                 }
                 if (response != null && response.getGoodsList() != null && response.getGoodsList().size() > 0) {
+                    if (!isLoadMore) {
+                        refreshLayout.finishRefresh();
+                    } else {
+                        refreshLayout.finishLoadMore();
+                    }
                     recGoodsList.addAll(response.getGoodsList());
                     recommendedAdapter.setNewData(recGoodsList);
                 } else {
                     if (isLoadMore) {
-                        ToastUtils.show("没有更多数据了");
+                        refreshLayout.finishLoadMoreWithNoMoreData();
                     }
                 }
                 recommendedAdapter.notifyDataSetChanged();

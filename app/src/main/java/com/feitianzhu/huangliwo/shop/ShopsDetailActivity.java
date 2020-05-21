@@ -18,6 +18,7 @@ import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -28,6 +29,7 @@ import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.core.network.ApiLifeCallBack;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.login.LoginActivity;
@@ -38,6 +40,7 @@ import com.feitianzhu.huangliwo.model.CollectionBody;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.ProductParameters;
 import com.feitianzhu.huangliwo.shop.adapter.ShopsDetailImgAdapter;
+import com.feitianzhu.huangliwo.shop.request.GoodsDetailRequest;
 import com.feitianzhu.huangliwo.shop.ui.ShoppingCartActivity;
 import com.feitianzhu.huangliwo.utils.MathUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
@@ -147,6 +150,10 @@ public class ShopsDetailActivity extends BaseActivity {
     RecyclerView detailRecyclerView;
     @BindView(R.id.detail_img)
     SubsamplingScaleImageView detailImg;
+    @BindView(R.id.detail_view)
+    RelativeLayout detailView;
+    @BindView(R.id.empty_view)
+    LinearLayout emptyView;
 
     @Override
     protected int getLayoutId() {
@@ -224,24 +231,35 @@ public class ShopsDetailActivity extends BaseActivity {
     }
 
     public void getDetail(String goodsId) {
-        OkGo.<LzyResponse<BaseGoodsListBean>>get(Urls.GET_SHOP_DETAIL)
-                .tag(this)
-                .params("goodsId", goodsId)
-                .execute(new JsonCallback<LzyResponse<BaseGoodsListBean>>() {
-                    @Override
-                    public void onSuccess(Response<LzyResponse<BaseGoodsListBean>> response) {
-                        //super.onSuccess(ShopsDetailActivity.this, response.body().msg, response.body().code);
-                        if (response.body().data != null) {
-                            goodsListBean = response.body().data;
-                            showView();
-                        }
-                    }
 
-                    @Override
-                    public void onError(Response<LzyResponse<BaseGoodsListBean>> response) {
-                        super.onError(response);
-                    }
-                });
+        GoodsDetailRequest goodsDetailRequest = new GoodsDetailRequest();
+        goodsDetailRequest.goodsId = goodsId;
+        goodsDetailRequest.call(new ApiLifeCallBack<BaseGoodsListBean>() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onFinsh() {
+
+            }
+
+            @Override
+            public void onAPIResponse(BaseGoodsListBean response) {
+                if (response != null) {
+                    goodsListBean = response;
+                    showView();
+                }
+            }
+
+            @Override
+            public void onAPIError(int errorCode, String errorMsg) {
+                rightImg.setVisibility(View.GONE);
+                detailView.setVisibility(View.GONE);
+                emptyView.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
     public void showView() {
