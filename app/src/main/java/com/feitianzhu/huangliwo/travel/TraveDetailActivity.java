@@ -10,6 +10,7 @@ import android.view.View;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
+import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.activity.BaseBindingActivity;
 import com.feitianzhu.huangliwo.core.network.ApiCallBack;
 import com.feitianzhu.huangliwo.core.network.ApiLifeCallBack;
@@ -23,6 +24,7 @@ import com.feitianzhu.huangliwo.travel.request.OilStationsDetailRequest;
 import com.feitianzhu.huangliwo.travel.request.OilTimeRequest;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.StringUtils;
+import com.feitianzhu.huangliwo.utils.doubleclick.SingleClick;
 import com.google.gson.Gson;
 
 import java.text.DecimalFormat;
@@ -68,9 +70,10 @@ public class TraveDetailActivity extends BaseBindingActivity {
     @Override
     public void init() {
         if (oilListBean != null) {
+            dataBinding.submit.setEnabled(false);
             dataBinding.name.setText(oilListBean.getGasName());
             Glide.with(this)
-                    .load(oilListBean.getGasLogoBig())
+                    .load(oilListBean.getGasLogoSmall())
                     .into(dataBinding.imageView8);
             dataBinding.value.setText("￥0");
             dataBinding.downValue.setText("$0");
@@ -79,23 +82,15 @@ public class TraveDetailActivity extends BaseBindingActivity {
 
         }
 
-
         distanceAdapter = new Distance1Adapter(null);
         dataBinding.oilClass.setLayoutManager(new GridLayoutManager(TraveDetailActivity.this, 4));
         dataBinding.oilClass.setAdapter(distanceAdapter);
-
-
         distanceAdapter1 = new DistanceOilInfoAdapter(null);
         dataBinding.oilLevel.setLayoutManager(new GridLayoutManager(this, 4));
         dataBinding.oilLevel.setAdapter(distanceAdapter1);
-
-
         distanceAdapter2 = new DistanceGunAdapter(null);
         dataBinding.gun.setLayoutManager(new GridLayoutManager(this, 4));
-
         dataBinding.gun.setAdapter(distanceAdapter2);
-
-
         OilStationsDetailRequest oilStationsDetailRequest = new OilStationsDetailRequest();
         oilStationsDetailRequest.isShowLoading = true;
         oilStationsDetailRequest.gasIds = oilListBean.getGasId();
@@ -124,9 +119,7 @@ public class TraveDetailActivity extends BaseBindingActivity {
                     n = oilPriceArrList.get(0);
                     distanceAdapter.chengtextcolor(0);
                     distanceAdapter.notifyDataSetChanged();
-
                     List<OilStationsDetailBean.OilInfoBean> oilInfo = response.get(0).getOilInfo();
-
 
                     if (oilInfo != null && oilInfo.size() > 0) {
 
@@ -152,8 +145,6 @@ public class TraveDetailActivity extends BaseBindingActivity {
                             distanceAdapter2.notifyDataSetChanged();
                         }
                     }
-
-
                 }
             }
 
@@ -194,6 +185,7 @@ public class TraveDetailActivity extends BaseBindingActivity {
                 distanceAdapter2.notifyDataSetChanged();
                 n2 = "";
                 Log.e("TAG", "init: " + n2 + ".." + n1 + ".." + ".." + n);
+                dataBinding.submit.setEnabled(false);
 
             }
         });
@@ -201,6 +193,8 @@ public class TraveDetailActivity extends BaseBindingActivity {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 if (!StringUtils.isEmpty(n)) {
+                    dataBinding.submit.setEnabled(false);
+
                     n1 = distanceAdapter1.getData().get(position).getOilName();
                     distanceAdapter1.chengtextcolor(position);
                     distanceAdapter1.notifyDataSetChanged();
@@ -238,19 +232,20 @@ public class TraveDetailActivity extends BaseBindingActivity {
                     n2 = distanceAdapter2.getData().get(position).getGunNo();
                     distanceAdapter2.chengtextcolor(position);
                     distanceAdapter2.notifyDataSetChanged();
+                    dataBinding.submit.setEnabled(true);
+
                 }
                 Log.e("TAG", "init: " + n2 + ".." + n1 + ".." + ".." + n);
 
             }
         });
-
-
         dataBinding.submit.setOnClickListener(new View.OnClickListener() {
+            @SingleClick()
             @Override
             public void onClick(View v) {
                 if (!StringUtils.isEmpty(n1) && !StringUtils.isEmpty(n2)) {
                     OilTimeRequest oilTimeRequest = new OilTimeRequest();
-                    oilTimeRequest.phone = "13671192850";
+                    oilTimeRequest.phone = SPUtils.getString(TraveDetailActivity.this, Constant.SP_PHONE);
                     oilTimeRequest.platformId = "98647229";
                     oilTimeRequest.call(new ApiCallBack<String>() {
                         @Override

@@ -75,8 +75,9 @@
                             android:layout_width="@dimen/dp_47_5"
                             android:layout_height="@dimen/dp_47_5"
                             android:layout_marginEnd="@dimen/dp_11"
-                            app:srcCompat="@mipmap/a01_01touxiang"
-                            app:riv_oval="true"/>
+                            app:riv_corner_radius="@dimen/dp_23"
+                            app:riv_oval="false"
+                            app:srcCompat="@mipmap/a01_01touxiang" />
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -144,7 +145,10 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/dp_12"
                             android:background="#fff88d03"
-                            android:padding="@dimen/dp_3_5"
+                            android:paddingStart="@dimen/dp_3"
+                            android:paddingTop="@dimen/dp_2_5"
+                            android:paddingEnd="@dimen/dp_3"
+                            android:paddingBottom="@dimen/dp_2_5"
                             android:text="已降 "
                             android:textColor="#ffffffff"
                             android:textSize="12sp" />
@@ -154,7 +158,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@drawable/shape_trave_button"
-                            android:padding="@dimen/dp_3_5"
+                            android:paddingStart="@dimen/dp_3"
+                            android:paddingTop="@dimen/dp_2_5"
+                            android:paddingEnd="@dimen/dp_3"
+                            android:paddingBottom="@dimen/dp_2_5"
                             android:text="￥0.77"
                             android:textColor="#fff88d03"
                             android:textSize="12sp" />
@@ -231,6 +238,7 @@
 
         <Button
             android:id="@+id/submit"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -238,7 +246,8 @@
             android:layout_marginTop="@dimen/dp_20"
             android:layout_marginEnd="@dimen/dp_60"
             android:layout_marginBottom="@dimen/dp_20"
-            android:background="@drawable/shape_trave_submit"
+
+            android:background="@drawable/select_trave_subit"
             android:text="提交"
             android:textColor="#ff333333"
             android:textSize="@dimen/sp_20">

@@ -290,7 +290,7 @@ public abstract class BaseApiRequest extends AbsApiRequest {
 
     @Override
     public void handleError(int errorCode, String errorMsg) {
-        HttpLogUtil.e(getAPIName(), errorCode + "::" + errorMsg);
+        HttpLogUtil.e("handleError    " + getAPIName(), errorCode + "::" + errorMsg);
 
         if (listener != null) {
             listener.onAPIError(errorCode, errorMsg);

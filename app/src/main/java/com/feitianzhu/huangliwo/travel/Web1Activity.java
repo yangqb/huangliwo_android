@@ -60,6 +60,7 @@ public class Web1Activity extends SFActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
+        titleName.setText("支付详情");
         ImmersionBar.with(this)
                 .fitsSystemWindows(true)
                 .statusBarDarkFont(true, 0.2f)
