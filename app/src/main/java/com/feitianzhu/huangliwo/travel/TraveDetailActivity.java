@@ -1,41 +1,29 @@
 package com.feitianzhu.huangliwo.travel;
 
-import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.databinding.ViewDataBinding;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.BaseViewHolder;
 import com.feitianzhu.huangliwo.R;
-import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.activity.BaseBindingActivity;
 import com.feitianzhu.huangliwo.core.network.ApiCallBack;
 import com.feitianzhu.huangliwo.core.network.ApiLifeCallBack;
 import com.feitianzhu.huangliwo.databinding.ActivityTraveDetailBinding;
 import com.feitianzhu.huangliwo.travel.adapter.Distance1Adapter;
-import com.feitianzhu.huangliwo.travel.adapter.DistanceAdapter;
 import com.feitianzhu.huangliwo.travel.adapter.DistanceGunAdapter;
 import com.feitianzhu.huangliwo.travel.adapter.DistanceOilInfoAdapter;
-import com.feitianzhu.huangliwo.travel.base.BaseTravelRequest;
 import com.feitianzhu.huangliwo.travel.bean.OilListBean;
-import com.feitianzhu.huangliwo.travel.model.OilStationsDetailBean;
+import com.feitianzhu.huangliwo.travel.bean.OilStationsDetailBean;
 import com.feitianzhu.huangliwo.travel.request.OilStationsDetailRequest;
-import com.feitianzhu.huangliwo.travel.request.OilStationsRequest;
-import com.feitianzhu.huangliwo.travel.request.OilTimeData;
 import com.feitianzhu.huangliwo.travel.request.OilTimeRequest;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.StringUtils;
 import com.google.gson.Gson;
-import com.hjq.toast.ToastUtils;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;

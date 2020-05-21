@@ -7,7 +7,7 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.feitianzhu.huangliwo.R;
-import com.feitianzhu.huangliwo.travel.model.OilStationsDetailBean;
+import com.feitianzhu.huangliwo.travel.bean.OilStationsDetailBean;
 
 import java.util.List;
 

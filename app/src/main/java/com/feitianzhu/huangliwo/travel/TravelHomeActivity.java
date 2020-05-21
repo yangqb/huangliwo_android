@@ -2,6 +2,7 @@ package com.feitianzhu.huangliwo.travel;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -24,7 +24,6 @@ import com.feitianzhu.huangliwo.core.network.ApiCallBack;
 import com.feitianzhu.huangliwo.core.network.ApiLifeCallBack;
 import com.feitianzhu.huangliwo.login.LoginActivity;
 import com.feitianzhu.huangliwo.model.MyPoint;
-import com.feitianzhu.huangliwo.travel.adapter.Distance1Adapter;
 import com.feitianzhu.huangliwo.travel.adapter.Distance2Adapter;
 import com.feitianzhu.huangliwo.travel.adapter.DistanceAdapter;
 import com.feitianzhu.huangliwo.travel.adapter.MyOilAdapter;
@@ -36,6 +35,10 @@ import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.StringUtils;
 import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 import com.hjq.toast.ToastUtils;
+import com.feitianzhu.huangliwo.utils.SPUtils;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,9 +46,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
-import static com.baidu.location.h.a.p;
-import static com.baidu.location.h.a.s;
 
 /**
  * package name: com.feitianzhu.huangliwo.travel
@@ -72,6 +72,8 @@ public class TravelHomeActivity extends BaseActivity {
     RelativeLayout distancerela;
     @BindView(R.id.oilnumberrela)
     RelativeLayout oilnumberrela;
+    @BindView(R.id.swipeLayout)
+    SmartRefreshLayout swipeLayout;
     private PopupWindow popupWindow;
     private String all = "";
     private String num;
@@ -85,6 +87,9 @@ public class TravelHomeActivity extends BaseActivity {
     private String oilnumbersum;
     private String[] kms;
     private String[] split;
+    private int pageNo=1;
+    private int pagenum=20;
+    private boolean isLoadMore;
     private MyOilAdapter myoiladapter;
 
     @Override
@@ -108,8 +113,6 @@ public class TravelHomeActivity extends BaseActivity {
         myoiladapter.setEmptyView(mEmptyView);
         oilrecy.setAdapter(myoiladapter);
         myoiladapter.notifyDataSetChanged();
-
-
         rightText.setVisibility(View.VISIBLE);
         rightImg.setVisibility(View.VISIBLE);
         titleName.setText("加油优惠");
@@ -150,7 +153,29 @@ public class TravelHomeActivity extends BaseActivity {
         strings1.add("-10#");
         strings1.add("0#");
         initoil();
+        initswipeLayout();
     }
+
+    private void initswipeLayout() {
+        swipeLayout.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
+            @Override
+            public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+                isLoadMore = true;
+                pageNo++;
+                pagenum++;
+                initwork(dinstancenumber, oilnumbersum);
+            }
+
+            @Override
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                isLoadMore = false;
+                pageNo = 1;
+                pagenum=20;
+                initwork(dinstancenumber, oilnumbersum);
+            }
+        });
+    }
+
 
     private void initoil() {
         dinstancenumber = (String) distance.getText();
@@ -245,7 +270,7 @@ public class TravelHomeActivity extends BaseActivity {
         kms = dinstancenumber.split("km");
         split = oilnumbersum.split("#");
         oilrecy.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        OilStationsRequest oilStationsRequest = new OilStationsRequest(longitude, latitude, Integer.valueOf(kms[0]), Integer.valueOf(split[0]), 20, 1);
+        OilStationsRequest oilStationsRequest = new OilStationsRequest(longitude, latitude, Integer.valueOf(kms[0]), Integer.valueOf(split[0]), pagenum, pageNo);
         oilStationsRequest.call(new ApiLifeCallBack<List<OilListBean>>() {
             @Override
             public void onStart() {
@@ -260,7 +285,14 @@ public class TravelHomeActivity extends BaseActivity {
             @Override
             public void onAPIResponse(List<OilListBean> response) {
                 if (response != null && response.size() > 0) {
-                    myoiladapter.setNewData(response);
+                    myoiladapter.addData(response);
+                    if (!isLoadMore) {
+                        swipeLayout.finishRefresh();
+                        myoiladapter.notifyDataSetChanged();
+                    } else {
+                        myoiladapter.notifyDataSetChanged();
+                        swipeLayout.finishLoadMore();
+                    }
                     myoiladapter.chengtextcolor1(oilnumbersum);
                     myoiladapter.notifyDataSetChanged();
                     myoiladapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
@@ -286,6 +318,11 @@ public class TravelHomeActivity extends BaseActivity {
             @Override
             public void onAPIError(int errorCode, String errorMsg) {
                 myoiladapter.setNewData(null);
+                if (!isLoadMore) {
+                    swipeLayout.finishRefresh(false);
+                } else {
+                    swipeLayout.finishLoadMore(false);
+                }
             }
         });
     }
