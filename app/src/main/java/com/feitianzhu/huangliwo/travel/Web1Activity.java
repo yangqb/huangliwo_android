@@ -68,13 +68,6 @@ public class Web1Activity extends SFActivity {
                 .init();
         String url = getIntent().getStringExtra(Constant.URL);
         //url = "https://www.baidu.com/";
-        String title = getIntent().getStringExtra(Constant.H5_TITLE);
-        if (TextUtils.isEmpty(title) || title == null) {
-            head.setVisibility(View.GONE);
-        } else {
-            head.setVisibility(View.VISIBLE);
-            titleName.setText(title);
-        }
         mAgentWeb = AgentWeb.with(this)//传入Activity or Fragment
                 .setAgentWebParent(container, new LinearLayout.LayoutParams(-1, -1))//传入AgentWeb 的父控件 ，如果父控件为 RelativeLayout ， 那么第二参数需要传入 RelativeLayout.LayoutParams ,第一个参数和第二个参数应该对应。
                 .useDefaultIndicator()// 使用默认进度条
