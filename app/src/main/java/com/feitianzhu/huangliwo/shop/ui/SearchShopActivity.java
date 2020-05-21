@@ -303,6 +303,11 @@ public class SearchShopActivity extends BaseActivity {
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
     }
@@ -311,6 +316,7 @@ public class SearchShopActivity extends BaseActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back:
+                KeyboardUtils.hideSoftInput(editText);
                 finish();
                 break;
             case R.id.btn_search:
