@@ -68,6 +68,7 @@ public class TraveDetailActivity extends BaseBindingActivity {
     @Override
     public void init() {
         if (oilListBean != null) {
+            dataBinding.submit.setEnabled(false);
             dataBinding.name.setText(oilListBean.getGasName());
             Glide.with(this)
                     .load(oilListBean.getGasLogoBig())
@@ -194,6 +195,7 @@ public class TraveDetailActivity extends BaseBindingActivity {
                 distanceAdapter2.notifyDataSetChanged();
                 n2 = "";
                 Log.e("TAG", "init: " + n2 + ".." + n1 + ".." + ".." + n);
+                dataBinding.submit.setEnabled(false);
 
             }
         });
@@ -201,6 +203,8 @@ public class TraveDetailActivity extends BaseBindingActivity {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 if (!StringUtils.isEmpty(n)) {
+                    dataBinding.submit.setEnabled(false);
+
                     n1 = distanceAdapter1.getData().get(position).getOilName();
                     distanceAdapter1.chengtextcolor(position);
                     distanceAdapter1.notifyDataSetChanged();
@@ -238,6 +242,8 @@ public class TraveDetailActivity extends BaseBindingActivity {
                     n2 = distanceAdapter2.getData().get(position).getGunNo();
                     distanceAdapter2.chengtextcolor(position);
                     distanceAdapter2.notifyDataSetChanged();
+                    dataBinding.submit.setEnabled(true);
+
                 }
                 Log.e("TAG", "init: " + n2 + ".." + n1 + ".." + ".." + n);
 

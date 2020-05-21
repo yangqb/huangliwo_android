@@ -14,22 +14,19 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.feitianzhu.huangliwo.MainActivity;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
-
-import com.feitianzhu.huangliwo.core.network.ApiCallBack;
+import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.core.network.networkcheck.NetWorkState;
 import com.feitianzhu.huangliwo.core.network.networkcheck.NetworkConnectChangedReceiver;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.login.entity.LoginEntity;
-import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
-import com.feitianzhu.huangliwo.login.model.UserInfo;
-import com.feitianzhu.huangliwo.login.request.LoginRequest;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.WXLoginInfo;
 import com.feitianzhu.huangliwo.model.WXLoginModel;
@@ -57,11 +54,14 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 import static com.feitianzhu.huangliwo.common.Constant.POST_MINE_INFO;
 
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
+    @BindView(R.id.left_button)
+    RelativeLayout leftButton;
     private int loginViewtoBottom;
     private ObjectAnimator animatorUp, animatorDown;
     @BindView(R.id.account)
@@ -89,6 +89,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     @Override
     protected void initView() {
+
         EventBus.getDefault().register(this);
         mSignInButton.setOnClickListener(this);
         mRegister.setOnClickListener(this);
@@ -181,9 +182,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             case R.id.wx_login:
                 reqWeiXin();
                 break;
-            case R.id.left_button:
-                finish();
-                break;
+
         }
     }
 
@@ -420,5 +419,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         return super.onKeyDown(keyCode, event);
     }
 
+
+    @OnClick(R.id.left_button)
+    public void onViewClicked() {
+        finish();
+    }
 }
 
