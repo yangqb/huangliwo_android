@@ -153,7 +153,7 @@ public class App extends Application {
             }
         });
         httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        if (true) {
+        if (false) {
             builder.addInterceptor(httpLoggingInterceptor);
         }
         /*//https相关设置，以下几种方案根据需要自己设置

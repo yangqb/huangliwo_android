@@ -28,6 +28,7 @@ import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.core.network.ApiCallBack;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.login.LoginActivity;
@@ -38,6 +39,7 @@ import com.feitianzhu.huangliwo.model.CollectionBody;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.ProductParameters;
 import com.feitianzhu.huangliwo.shop.adapter.ShopsDetailImgAdapter;
+import com.feitianzhu.huangliwo.shop.request.ShopDetailRequest;
 import com.feitianzhu.huangliwo.shop.ui.ShoppingCartActivity;
 import com.feitianzhu.huangliwo.utils.MathUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
@@ -224,24 +226,38 @@ public class ShopsDetailActivity extends BaseActivity {
     }
 
     public void getDetail(String goodsId) {
-        OkGo.<LzyResponse<BaseGoodsListBean>>get(Urls.GET_SHOP_DETAIL)
-                .tag(this)
-                .params("goodsId", goodsId)
-                .execute(new JsonCallback<LzyResponse<BaseGoodsListBean>>() {
-                    @Override
-                    public void onSuccess(Response<LzyResponse<BaseGoodsListBean>> response) {
-                        //super.onSuccess(ShopsDetailActivity.this, response.body().msg, response.body().code);
-                        if (response.body().data != null) {
-                            goodsListBean = response.body().data;
-                            showView();
-                        }
-                    }
+        ShopDetailRequest shopDetailRequest = new ShopDetailRequest();
+        shopDetailRequest.goodsId = goodsId;
+        shopDetailRequest.call(new ApiCallBack<BaseGoodsListBean>() {
+            @Override
+            public void onAPIResponse(BaseGoodsListBean response) {
+                goodsListBean = response;
+                showView();
+            }
 
-                    @Override
-                    public void onError(Response<LzyResponse<BaseGoodsListBean>> response) {
-                        super.onError(response);
-                    }
-                });
+            @Override
+            public void onAPIError(int errorCode, String errorMsg) {
+
+            }
+        });
+//        OkGo.<LzyResponse<BaseGoodsListBean>>get(Urls.GET_SHOP_DETAIL)
+//                .tag(this)
+//                .params("goodsId", goodsId)
+//                .execute(new JsonCallback<LzyResponse<BaseGoodsListBean>>() {
+//                    @Override
+//                    public void onSuccess(Response<LzyResponse<BaseGoodsListBean>> response) {
+//                        //super.onSuccess(ShopsDetailActivity.this, response.body().msg, response.body().code);
+//                        if (response.body().data != null) {
+//                            goodsListBean = response.body().data;
+//                            showView();
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onError(Response<LzyResponse<BaseGoodsListBean>> response) {
+//                        super.onError(response);
+//                    }
+//                });
     }
 
     public void showView() {

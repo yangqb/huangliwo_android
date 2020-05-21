@@ -100,7 +100,7 @@ public class TraveDetailActivity extends BaseBindingActivity {
         oilStationsDetailRequest.isShowLoading = true;
         oilStationsDetailRequest.gasIds = oilListBean.getGasId();
         oilStationsDetailRequest.phone = SPUtils.getString(this, SP_PHONE);
-        oilStationsDetailRequest.call(new ApiLifeCallBack<List<OilStationsDetailBean> >() {
+        oilStationsDetailRequest.call(new ApiLifeCallBack<List<OilStationsDetailBean>>() {
 
             @Override
             public void onStart() {
@@ -248,7 +248,7 @@ public class TraveDetailActivity extends BaseBindingActivity {
         dataBinding.submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!StringUtils.isEmpty(n1)) {
+                if (!StringUtils.isEmpty(n1) && !StringUtils.isEmpty(n2)) {
                     OilTimeRequest oilTimeRequest = new OilTimeRequest();
                     oilTimeRequest.phone = "13671192850";
                     oilTimeRequest.platformId = "98647229";
@@ -259,7 +259,7 @@ public class TraveDetailActivity extends BaseBindingActivity {
 
 //                            http://test-mcs.czb365.com/services/v3/begin/getSecretCode?platformId=98647229&phone=13671192850
                             Web1Activity.toWeb1Activity(TraveDetailActivity.this, "https://test-open.czb365.com/redirection/todo/?platformType=98647229&authCode="
-                                    + response + "&gasId=FT000116344&gunNo=1");
+                                    + response + "&gasId=" + oilListBean.getGasId() + "&gunNo=" + n2);
 
                         }
 

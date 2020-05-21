@@ -70,12 +70,13 @@
                         android:layout_marginTop="@dimen/dp_19"
                         android:orientation="horizontal">
 
-                        <ImageView
+                        <com.itheima.roundedimageview.RoundedImageView
                             android:id="@+id/imageView8"
                             android:layout_width="@dimen/dp_47_5"
                             android:layout_height="@dimen/dp_47_5"
                             android:layout_marginEnd="@dimen/dp_11"
-                            app:srcCompat="@mipmap/a01_01touxiang" />
+                            app:srcCompat="@mipmap/a01_01touxiang"
+                            app:riv_oval="true"/>
 
                         <LinearLayout
                             android:layout_width="wrap_content"
