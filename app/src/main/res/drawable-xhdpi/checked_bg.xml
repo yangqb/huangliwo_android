@@ -4,7 +4,7 @@
     <stroke android:color="@color/oil_color" android:width="1dp" >
     </stroke>
 
-    <corners android:radius="5dp"/>
+    <corners android:radius="2.5dp"/>
     <padding
         android:bottom="5dp"
         android:left="15dp"

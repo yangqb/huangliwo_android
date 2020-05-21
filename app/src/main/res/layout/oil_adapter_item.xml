@@ -107,7 +107,10 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dp_12"
             android:background="#fff88d03"
-            android:padding="@dimen/dp_3_5"
+            android:paddingStart="@dimen/dp_3"
+            android:paddingEnd="@dimen/dp_3"
+            android:paddingTop="@dimen/dp_2_5"
+            android:paddingBottom="@dimen/dp_2_5"
             android:text="已降 "
             android:textColor="#ffffffff"
             android:textSize="12sp" />
@@ -117,7 +120,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/shape_trave_button"
-            android:padding="@dimen/dp_3_5"
+            android:paddingStart="@dimen/dp_3"
+            android:paddingEnd="@dimen/dp_3"
+            android:paddingTop="@dimen/dp_2_5"
+            android:paddingBottom="@dimen/dp_2_5"
             android:text="￥0.77"
             android:textColor="#fff88d03"
             android:textSize="12sp" />

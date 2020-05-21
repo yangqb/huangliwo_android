@@ -2,6 +2,7 @@ package com.feitianzhu.huangliwo.travel.request;
 
 import com.alibaba.fastjson.TypeReference;
 import com.feitianzhu.huangliwo.core.network.ParamsBuilder;
+import com.feitianzhu.huangliwo.travel.base.OilTimeBaseRequest;
 
 /**
  * Created by bch on 2020/5/20

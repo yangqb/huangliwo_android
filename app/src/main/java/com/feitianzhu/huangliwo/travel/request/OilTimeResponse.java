@@ -13,9 +13,9 @@ public class OilTimeResponse extends BaseApiResponse {
 
     @JSONField(name = "code")
     public int code = -1;
-//
-//    @JSONField(name = "msg")
-//    public String msg;
+    //
+    @JSONField(name = "message")
+    public String message;
 //
 //    @JSONField(name = "ret")
 //    public int ret;
@@ -28,9 +28,9 @@ public class OilTimeResponse extends BaseApiResponse {
         return code;
     }
 
-//    public String getMessage(){
-//        return msg;
-//    }
+    public String getMessage() {
+        return message;
+    }
 
     public boolean isRequestSuccess() {
         return (code == 200);
