@@ -181,6 +181,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             case R.id.wx_login:
                 reqWeiXin();
                 break;
+            case R.id.left_button:
+                finish();
+                break;
         }
     }
 

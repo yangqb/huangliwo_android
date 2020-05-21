@@ -204,24 +204,25 @@ public class MyCollectionActivity extends BaseActivity {
                     @Override
                     public void onSuccess(Response<LzyResponse<CollectionInfo>> response) {
                         super.onSuccess(MyCollectionActivity.this, response.body().msg, response.body().code);
-                        if (isLoad) {
-                            refreshLayout.finishLoadMore();
-                        } else {
-                            refreshLayout.finishRefresh();
+                        if (!isLoad) {
+                            collectionModelList.clear();
+                            locModelList.clear();
                         }
-                        if (response.body().code == 0 && response.body().data != null) {
-                            if (!isLoad) {
-                                collectionModelList.clear();
-                                locModelList.clear();
+                        if (response.body().code == 0 && response.body().data != null && response.body().data.collectList != null && response.body().data.collectList.size() > 0) {
+                            if (isLoad) {
+                                refreshLayout.finishLoadMore();
+                            } else {
+                                refreshLayout.finishRefresh();
                             }
-                            if (response.body().data.collectList != null && response.body().data.collectList.size() > 0) {
-                                locModelList.addAll(response.body().data.collectList);
-                                collectionModelList.addAll(response.body().data.collectList);
-                            }
+                            locModelList.addAll(response.body().data.collectList);
+                            collectionModelList.addAll(response.body().data.collectList);
                             mAdapter.setNewData(collectionModelList);
-                            mAdapter.notifyDataSetChanged();
+                        } else {
+                            if (isLoad) {
+                                refreshLayout.finishLoadMoreWithNoMoreData();
+                            }
                         }
-
+                        mAdapter.notifyDataSetChanged();
                         mAdapter.getEmptyView().setVisibility(View.VISIBLE);
                     }
 
