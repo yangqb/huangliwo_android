@@ -46,7 +46,6 @@ public class AddressManagementActivity extends BaseActivity {
     SmartRefreshLayout mSwipeLayout;
     private String token;
     private String userId;
-
     @Override
     protected int getLayoutId() {
         return R.layout.activity_address_manager;
