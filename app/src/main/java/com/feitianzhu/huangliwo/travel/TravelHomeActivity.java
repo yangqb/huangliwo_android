@@ -156,6 +156,7 @@ public class TravelHomeActivity extends BaseActivity {
         strings1.add("0#");
         initoil();
         initswipeLayout();
+        userInfo = UserInfoUtils.getUserInfo(TravelHomeActivity.this);
     }
 
     private void initswipeLayout() {
@@ -310,7 +311,6 @@ public class TravelHomeActivity extends BaseActivity {
                                     TraveDetailActivity.toTraveDetailActivity(TravelHomeActivity.this, response.get(position));
 
                                 } else {
-
                                     View inflate = getLayoutInflater().inflate(R.layout.oil_dialog_item, null);
                                     TextView dilagimagedimiss = inflate.findViewById(R.id.dilagimagedimiss);
                                     TextView dilagimageupdate = inflate.findViewById(R.id.dilagimageupdate);

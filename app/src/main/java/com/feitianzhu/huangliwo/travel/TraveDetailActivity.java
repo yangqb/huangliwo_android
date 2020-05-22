@@ -1,5 +1,6 @@
 package com.feitianzhu.huangliwo.travel;
 
+import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.support.v7.app.AppCompatActivity;
@@ -60,7 +61,7 @@ public class TraveDetailActivity extends BaseBindingActivity {
 
     public String n = "", n1 = "", n2 = "";
 
-    public static void toTraveDetailActivity(AppCompatActivity appCompatActivity, OilListBean oilListBean) {
+    public static void toTraveDetailActivity(Context appCompatActivity, OilListBean oilListBean) {
         String s = new Gson().toJson(oilListBean);
         Intent intent = new Intent(appCompatActivity, TraveDetailActivity.class);
         intent.putExtra("GSON", s);
