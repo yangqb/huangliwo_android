@@ -55,6 +55,7 @@ import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
 import com.hjq.toast.ToastUtils;
+import com.hyphenate.easeui.EaseUI;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.base.Request;
@@ -163,6 +164,7 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EaseUI.getInstance().getAvatarOptions();
         if (getArguments() != null) {
             mParam1 = getArguments().getInt(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
