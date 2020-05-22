@@ -18,9 +18,12 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.SFFragment;
+import com.feitianzhu.huangliwo.core.network.ApiLifeCallBack;
+import com.feitianzhu.huangliwo.home.request.GoodsListRequest;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
+import com.feitianzhu.huangliwo.model.HomeShops;
 import com.feitianzhu.huangliwo.model.NewYearGoodsModel;
 import com.feitianzhu.huangliwo.shop.ShopsDetailActivity;
 import com.feitianzhu.huangliwo.utils.SPUtils;
@@ -30,6 +33,7 @@ import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.base.Request;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -107,7 +111,6 @@ public class MessageFragment extends SFFragment {
         //recyclerView.setItemAnimator(null);
         // recyclerView.addItemDecoration(new StaggeredDividerItemDecoration(getActivity(), 10));
         mAdapter.notifyDataSetChanged();
-        refreshLayout.setEnableLoadMore(false);
         getData();
         initListener();
         return view;
@@ -137,9 +140,18 @@ public class MessageFragment extends SFFragment {
             }
         });
 
-        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
+        refreshLayout.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
+            @Override
+            public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+                pageNo++;
+                isLoadMore = true;
+                getData();
+            }
+
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                pageNo = 1;
+                isLoadMore = false;
                 getData();
             }
         });
@@ -157,36 +169,47 @@ public class MessageFragment extends SFFragment {
     }
 
     public void getData() {
-        OkGo.<LzyResponse<NewYearGoodsModel>>get(Urls.GET_NEW_YEAR)
-                .tag(this)
-                .params("accessToken", token)
-                .params("userId", userId)
-                .execute(new JsonCallback<LzyResponse<NewYearGoodsModel>>() {
-                    @Override
-                    public void onStart(Request<LzyResponse<NewYearGoodsModel>, ? extends Request> request) {
-                        super.onStart(request);
-                        showloadDialog("");
-                    }
+        GoodsListRequest goodsListRequest = new GoodsListRequest(token, userId, pageNo);
+        goodsListRequest.call(new ApiLifeCallBack<HomeShops>() {
+            @Override
+            public void onStart() {
+            }
 
-                    @Override
-                    public void onSuccess(Response<LzyResponse<NewYearGoodsModel>> response) {
-                        super.onSuccess(getActivity(), "", response.body().code);
-                        goneloadDialog();
+            @Override
+            public void onFinsh() {
+
+            }
+
+            @Override
+            public void onAPIResponse(HomeShops response) {
+                if (!isLoadMore) {
+                    goodsListBeans.clear();
+                }
+                if (response != null && response.getGoodsList() != null && response.getGoodsList().size() > 0) {
+                    if (!isLoadMore) {
                         refreshLayout.finishRefresh();
-                        if (response.body().data != null && response.body().data.getActivityList() != null) {
-                            goodsListBeans = response.body().data.getActivityList();
-                            mAdapter.setNewData(goodsListBeans);
-                            mAdapter.notifyDataSetChanged();
-                        }
+                    } else {
+                        refreshLayout.finishLoadMore();
                     }
+                    goodsListBeans.addAll(response.getGoodsList());
+                    mAdapter.setNewData(goodsListBeans);
+                } else {
+                    if (isLoadMore) {
+                        refreshLayout.finishLoadMoreWithNoMoreData();
+                    }
+                }
+                mAdapter.notifyDataSetChanged();
+            }
 
-                    @Override
-                    public void onError(Response<LzyResponse<NewYearGoodsModel>> response) {
-                        super.onError(response);
-                        refreshLayout.finishRefresh(false);
-                        goneloadDialog();
-                    }
-                });
+            @Override
+            public void onAPIError(int errorCode, String errorMsg) {
+                if (!isLoadMore) {
+                    refreshLayout.finishRefresh(false);
+                } else {
+                    refreshLayout.finishLoadMore(false);
+                }
+            }
+        });
     }
 
     @OnClick(R.id.back_top)

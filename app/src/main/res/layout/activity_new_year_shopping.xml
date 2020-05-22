@@ -2,23 +2,29 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_B71D23"
+    android:background="@color/color_1F9DFF"
     android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/color_B71D23">
+        android:layout_height="match_parent"
+        android:background="@color/color_1F9DFF">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="95dp"
+            android:scaleType="fitXY" />
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@mipmap/h01_03shangmian" />
+            android:layout_alignParentBottom="true"
+            android:background="@mipmap/p04_02dibu" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingStart="@dimen/dp_10"
             android:layout_marginTop="40dp"
             android:background="@color/transparent"
             android:orientation="vertical">
@@ -33,19 +39,22 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
                     android:src="@mipmap/ic_back" />
             </RelativeLayout>
 
             <com.scwang.smartrefresh.layout.SmartRefreshLayout
                 android:id="@+id/refreshLayout"
-                android:layout_marginTop="30dp"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:paddingBottom="30dp">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recyclerView"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp">
 
                 </android.support.v7.widget.RecyclerView>
             </com.scwang.smartrefresh.layout.SmartRefreshLayout>
