@@ -140,7 +140,7 @@ public class TraveDetailActivity extends BaseBindingActivity {
 
 
                         OilStationsDetailBean.OilInfoBean oilInfoBean = oilInfo.get(0);
-                        dataBinding.value.setText( oilInfoBean.getPriceYfq() + "");
+                        dataBinding.value.setText(oilInfoBean.getPriceYfq() + "");
                         double priceYfq = oilInfoBean.getPriceYfq();
                         double priceOfficial = oilInfoBean.getPriceOfficial();
                         double v = priceOfficial - priceYfq;
@@ -156,6 +156,8 @@ public class TraveDetailActivity extends BaseBindingActivity {
                             dataBinding.submit.setEnabled(true);
 
                         }
+                        Log.e("TAG", "onItemClick: "+n + n1 + n2);
+
                     }
                 }
             }
@@ -185,19 +187,28 @@ public class TraveDetailActivity extends BaseBindingActivity {
                     n1 = distanceAdapter1.getData().get(0).getOilName();
                 }
 
-
                 if (oilInfo != null && oilInfo.size() > 0) {
                     OilStationsDetailBean.OilInfoBean oilInfoBean = oilInfo.get(0);
                     List<OilStationsDetailBean.OilInfoBean.GunNosBean> gunNos = oilInfoBean.getGunNos();
                     if (gunNos != null && gunNos.size() > 0) {
                         distanceAdapter2.setNewData(gunNos);
+                        distanceAdapter2.chengtextcolor(0);
+                        distanceAdapter2.notifyDataSetChanged();
+                        n2 = gunNos.get(0).getGunNo();
+                        dataBinding.submit.setEnabled(true);
+                        dataBinding.value.setText(oilInfoBean.getPriceYfq() + "");
+                        double priceYfq = oilInfoBean.getPriceYfq();
+                        double priceOfficial = oilInfoBean.getPriceOfficial();
+                        double v = priceOfficial - priceYfq;
+                        String format = new DecimalFormat("0.00").format(v);
+                        dataBinding.downValue.setText("￥" + format);
+
+
+
                     }
                 }
-                distanceAdapter2.chengtextcolor(-1);
-                distanceAdapter2.notifyDataSetChanged();
-                n2 = "";
-                Log.e("TAG", "init: " + n2 + ".." + n1 + ".." + ".." + n);
-                dataBinding.submit.setEnabled(false);
+
+                Log.e("TAG", "onItemClick: "+n + n1 + n2);
 
             }
         });
@@ -212,7 +223,7 @@ public class TraveDetailActivity extends BaseBindingActivity {
                     distanceAdapter1.notifyDataSetChanged();
                     OilStationsDetailBean.OilInfoBean oilInfoBean1 = distanceAdapter1.getData().get(position);
 
-                    dataBinding.value.setText( oilInfoBean1.getPriceYfq() + "");
+                    dataBinding.value.setText(oilInfoBean1.getPriceYfq() + "");
                     double priceYfq = oilInfoBean1.getPriceYfq();
                     double priceOfficial = oilInfoBean1.getPriceOfficial();
                     double v = priceOfficial - priceYfq;
@@ -227,6 +238,8 @@ public class TraveDetailActivity extends BaseBindingActivity {
                             distanceAdapter2.chengtextcolor(0);
                             distanceAdapter2.notifyDataSetChanged();
                             n2 = gunNos.get(0).getGunNo();
+                            dataBinding.submit.setEnabled(true);
+
                         }
                     }
 

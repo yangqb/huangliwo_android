@@ -46,18 +46,6 @@ public class TraveFormActivity extends BaseBindingActivity {
 
     @Override
     public void init() {
-        ArrayList<String> strings = new ArrayList<>();
-        strings.add("dfsdfds");
-        strings.add("dfsdfds");
-        strings.add("dfsdfds");
-        strings.add("dfsdfds");
-        strings.add("dfsdfds");
-        strings.add("dfsdfds");
-        strings.add("dfsdfds");
-        strings.add("dfsdfds");
-        strings.add("dfsdfds");
-        strings.add("dfsdfds");
-        strings.add("dfsdfds");
         String phone = SPUtils.getString(this, Constant.SP_PHONE);
         View mEmptyView = View.inflate(this, R.layout.view_common_nodata, null);
         ImageView img_empty = (ImageView) mEmptyView.findViewById(R.id.img_empty);
