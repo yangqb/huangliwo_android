@@ -71,8 +71,7 @@
         <activity
             android:name=".splash.AdvertisementActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
+
             android:theme="@style/SplashAdvertiseTheme" />
         <activity
             android:name=".login.LoginActivity"
