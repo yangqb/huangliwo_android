@@ -254,9 +254,8 @@ dependencies {
 
     // 友盟基础组件库（所有友盟业务SDK都依赖基础组件库）
     implementation 'com.umeng.umsdk:analytics:8.0.0'
-    implementation 'com.umeng.umsdk:common:2.1.0'
 //基础组件库依赖(必须)
-    implementation 'com.umeng.umsdk:common:2.2.2'
+    implementation 'com.umeng.umsdk:common:2.2.5'
 //    implementation 'com.umeng.umsdk:utdid:1.5.2'
 //友盟push相关依赖(必须)
     implementation 'com.umeng.umsdk:push:6.0.5'
