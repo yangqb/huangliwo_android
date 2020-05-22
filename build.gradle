@@ -5,6 +5,7 @@ buildscript {
         google()
         jcenter()
         //友盟
+        maven { url 'http://developer.huawei.com/repo'} //如果需要使用华为推送HMS，则需要加上此句
 
         maven { url 'https://dl.bintray.com/umsdk/release' }
 
@@ -36,6 +37,7 @@ allprojects {
         maven { url 'https://dl.bintray.com/umsdk/release' }
 //友盟
         maven { url "http://lib.gcssloop.com/repository/gcssloop-central/" }
+        maven { url 'http://developer.huawei.com/repo'} //如果需要使用华为推送HMS，则需要加上此句
 
     }
 

@@ -147,6 +147,8 @@ android {
         exclude 'com.android'
         exclude 'com.alibaba'
     }
+    //use legacy for android 6.0
+    useLibrary 'org.apache.http.legacy'
 }
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
@@ -167,6 +169,7 @@ dependencies {
     //  compile(name: 'takephoto-release', ext: 'aar')
     implementation project(':cityselect')
     implementation project(':matisse')
+    implementation project(':easeui')
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.50'
     //必须使用
     implementation 'com.lzy.net:okgo:3.0.4'
