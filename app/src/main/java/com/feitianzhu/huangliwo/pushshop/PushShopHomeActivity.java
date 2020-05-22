@@ -14,6 +14,7 @@ import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
+import com.feitianzhu.huangliwo.utils.doubleclick.SingleClick;
 import com.hjq.toast.ToastUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
@@ -97,6 +98,7 @@ public class PushShopHomeActivity extends BaseActivity {
     }
 
     @OnClick({R.id.left_button, R.id.push_merchants, R.id.oneself_merchants})
+    @SingleClick()
     public void onClick(View view) {
         Intent intent;
         switch (view.getId()) {

@@ -4,7 +4,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "SHANGHAI",
-    "id": 1,
+    "id": 6717,
     "name": "上海虹桥机场",
     "szm": "SHA"
   },
@@ -13,7 +13,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "BEIJING",
-    "id": 7,
+    "id": 6723,
     "name": "北京首都机场",
     "szm": "PEK"
   },
@@ -22,7 +22,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "GUANGZHOU",
-    "id": 15,
+    "id": 6731,
     "name": "广州白云机场",
     "szm": "CAN"
   },
@@ -31,7 +31,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "SHENZHEN",
-    "id": 23,
+    "id": 6739,
     "name": "深圳宝安机场",
     "szm": "SZX"
   },
@@ -40,7 +40,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "TAIBEI",
-    "id": 39,
+    "id": 6755,
     "name": "台北松山机场",
     "szm": "TSA"
   },
@@ -49,7 +49,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "SHANGHAI",
-    "id": 69,
+    "id": 6785,
     "name": "上海浦东机场",
     "szm": "PVG"
   },
@@ -58,7 +58,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "TIANJIN",
-    "id": 73,
+    "id": 6789,
     "name": "天津滨海机场",
     "szm": "TSN"
   },
@@ -66,8 +66,8 @@
     "city": "香港",
     "country": "中国香港",
     "countryCode": "HK",
-    "egName": "HONG KONG",
-    "id": 81,
+    "egName": "HONGKONG",
+    "id": 6797,
     "name": "香港赤鱲角国际机场",
     "szm": "HKG"
   },
@@ -76,7 +76,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "GAOXIONG",
-    "id": 99,
+    "id": 6815,
     "name": "高雄机场",
     "szm": "KHH"
   },
@@ -85,7 +85,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "CHONGQING",
-    "id": 121,
+    "id": 6837,
     "name": "重庆江北机场",
     "szm": "CKG"
   },
@@ -94,7 +94,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "URUMQI",
-    "id": 127,
+    "id": 6843,
     "name": "乌鲁木齐地窝堡机场",
     "szm": "URC"
   },
@@ -103,7 +103,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "HANGZHOU",
-    "id": 139,
+    "id": 6855,
     "name": "杭州萧山机场",
     "szm": "HGH"
   },
@@ -112,7 +112,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "CHENGDU",
-    "id": 145,
+    "id": 6861,
     "name": "成都双流机场",
     "szm": "CTU"
   },
@@ -121,7 +121,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "QINGDAO",
-    "id": 163,
+    "id": 6879,
     "name": "青岛流亭机场",
     "szm": "TAO"
   },
@@ -130,7 +130,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "KUNMING",
-    "id": 167,
+    "id": 6883,
     "name": "昆明巫家坝机场",
     "szm": "KMG"
   },
@@ -139,7 +139,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "XIAN",
-    "id": 177,
+    "id": 6893,
     "name": "西安咸阳机场",
     "szm": "XIY"
   },
@@ -148,7 +148,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "WUHAN",
-    "id": 187,
+    "id": 6903,
     "name": "武汉天河机场",
     "szm": "WUH"
   },
@@ -157,7 +157,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "SHENYANG",
-    "id": 201,
+    "id": 6917,
     "name": "沈阳桃仙机场",
     "szm": "SHE"
   },
@@ -166,16 +166,25 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "DALIAN",
-    "id": 205,
+    "id": 6921,
     "name": "大连国际机场",
     "szm": "DLC"
+  },
+  {
+    "city": "蓬莱",
+    "country": "中国",
+    "countryCode": "CN",
+    "egName": "YANTAI",
+    "id": 6931,
+    "name": "蓬莱沙河口机场",
+    "szm": "PNJ"
   },
   {
     "city": "南京",
     "country": "中国",
     "countryCode": "CN",
     "egName": "NANJING",
-    "id": 217,
+    "id": 6933,
     "name": "南京禄口机场",
     "szm": "NKG"
   },
@@ -184,7 +193,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "HARBIN",
-    "id": 219,
+    "id": 6935,
     "name": "哈尔滨太平机场",
     "szm": "HRB"
   },
@@ -193,7 +202,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "LANZHOU",
-    "id": 227,
+    "id": 6943,
     "name": "兰州机场",
     "szm": "LHW"
   },
@@ -202,7 +211,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "CHANGCHUN",
-    "id": 247,
+    "id": 6963,
     "name": "长春龙嘉国际机场",
     "szm": "CGQ"
   },
@@ -211,7 +220,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "HOHHOT",
-    "id": 261,
+    "id": 6977,
     "name": "呼和浩特白塔国际机场",
     "szm": "HET"
   },
@@ -220,7 +229,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "JINGHONG",
-    "id": 273,
+    "id": 6989,
     "name": "景洪(西双版纳)机场",
     "szm": "JHG"
   },
@@ -229,7 +238,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "BEIJING",
-    "id": 281,
+    "id": 6997,
     "name": "北京南苑机场",
     "szm": "NAY"
   },
@@ -238,7 +247,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "FUZHOU",
-    "id": 287,
+    "id": 7003,
     "name": "福州长乐机场",
     "szm": "FOC"
   },
@@ -247,7 +256,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "JINZHOU",
-    "id": 335,
+    "id": 7051,
     "name": "锦州小岭子机场",
     "szm": "JNZ"
   },
@@ -256,7 +265,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "CHANGSHA",
-    "id": 337,
+    "id": 7053,
     "name": "长沙黄花机场",
     "szm": "CSX"
   },
@@ -265,7 +274,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "ZHANJIANG",
-    "id": 341,
+    "id": 7057,
     "name": "湛江机场",
     "szm": "ZHA"
   },
@@ -274,7 +283,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "SANYA",
-    "id": 343,
+    "id": 7059,
     "name": "三亚凤凰机场",
     "szm": "SYX"
   },
@@ -283,7 +292,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "NANCHANG",
-    "id": 353,
+    "id": 7069,
     "name": "南昌昌北机场",
     "szm": "KHN"
   },
@@ -292,7 +301,7 @@
     "country": "中国澳门",
     "countryCode": "MO",
     "egName": "MACAU",
-    "id": 357,
+    "id": 7073,
     "name": "澳门机场",
     "szm": "MFM"
   },
@@ -301,7 +310,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "WENZHOU",
-    "id": 363,
+    "id": 7079,
     "name": "温州永强机场",
     "szm": "WNZ"
   },
@@ -310,7 +319,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "GUIYANG",
-    "id": 367,
+    "id": 7083,
     "name": "贵阳龙洞堡机场",
     "szm": "KWE"
   },
@@ -319,7 +328,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "LHASA",
-    "id": 389,
+    "id": 7105,
     "name": "拉萨贡嘎机场",
     "szm": "LXA"
   },
@@ -328,7 +337,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "XIANGYANG",
-    "id": 405,
+    "id": 7121,
     "name": "襄阳刘集机场",
     "szm": "XFN"
   },
@@ -337,7 +346,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "QIQIHAER",
-    "id": 417,
+    "id": 7133,
     "name": "齐齐哈尔三家子机场",
     "szm": "NDG"
   },
@@ -346,7 +355,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "TAIYUAN",
-    "id": 419,
+    "id": 7135,
     "name": "太原武宿机场",
     "szm": "TYN"
   },
@@ -355,7 +364,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "ORDOS",
-    "id": 421,
+    "id": 7137,
     "name": "鄂尔多斯伊金霍洛机场",
     "szm": "DSN"
   },
@@ -364,7 +373,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "ZHUHAI",
-    "id": 429,
+    "id": 7145,
     "name": "珠海三灶机场",
     "szm": "ZUH"
   },
@@ -373,7 +382,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "ZUNYI",
-    "id": 431,
+    "id": 7147,
     "name": "遵义机场",
     "szm": "ZYI"
   },
@@ -382,7 +391,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "YINCHUAN",
-    "id": 441,
+    "id": 7157,
     "name": "银川河东机场",
     "szm": "INC"
   },
@@ -391,7 +400,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "BEIHAI",
-    "id": 457,
+    "id": 7173,
     "name": "北海福城机场",
     "szm": "BHY"
   },
@@ -400,7 +409,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "ALTAY",
-    "id": 481,
+    "id": 7197,
     "name": "阿勒泰机场",
     "szm": "AAT"
   },
@@ -409,7 +418,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "AKSU",
-    "id": 509,
+    "id": 7225,
     "name": "阿克苏机场",
     "szm": "AKU"
   },
@@ -418,7 +427,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "NANNING",
-    "id": 719,
+    "id": 7435,
     "name": "南宁吴圩机场",
     "szm": "NNG"
   },
@@ -427,7 +436,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "ZHENGZHOU",
-    "id": 723,
+    "id": 7439,
     "name": "郑州新郑机场",
     "szm": "CGO"
   },
@@ -436,7 +445,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "YIWU",
-    "id": 725,
+    "id": 7441,
     "name": "义乌机场",
     "szm": "YIW"
   },
@@ -445,7 +454,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "YIBIN",
-    "id": 727,
+    "id": 7443,
     "name": "宜宾(菜坝)机场",
     "szm": "YBP"
   },
@@ -454,7 +463,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "YANTAI",
-    "id": 729,
+    "id": 7445,
     "name": "烟台莱山机场",
     "szm": "YNT"
   },
@@ -463,7 +472,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "XUZHOU",
-    "id": 731,
+    "id": 7447,
     "name": "徐州观音机场",
     "szm": "XUZ"
   },
@@ -472,7 +481,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "XILINHOT",
-    "id": 733,
+    "id": 7449,
     "name": "锡林浩特机场",
     "szm": "XIL"
   },
@@ -481,7 +490,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "WUXI",
-    "id": 735,
+    "id": 7451,
     "name": "无锡硕放机场",
     "szm": "WUX"
   },
@@ -490,16 +499,25 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "SUZHOU",
-    "id": 737,
+    "id": 7453,
     "name": "苏州机场",
     "szm": "SZV"
+  },
+  {
+    "city": "攀枝花",
+    "country": "中国",
+    "countryCode": "CN",
+    "egName": "PANZHIHUA",
+    "id": 7455,
+    "name": "攀枝花保安营机场",
+    "szm": "PZI"
   },
   {
     "city": "洛阳",
     "country": "中国",
     "countryCode": "CN",
     "egName": "LUOYANG",
-    "id": 741,
+    "id": 7457,
     "name": "洛阳机场",
     "szm": "LYA"
   },
@@ -508,7 +526,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "LIUZHOU",
-    "id": 743,
+    "id": 7459,
     "name": "柳州白莲机场",
     "szm": "LZH"
   },
@@ -517,7 +535,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "JINAN",
-    "id": 745,
+    "id": 7461,
     "name": "济南遥墙机场",
     "szm": "TNA"
   },
@@ -526,7 +544,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "HAIKOU",
-    "id": 747,
+    "id": 7463,
     "name": "海口美兰机场",
     "szm": "HAK"
   },
@@ -535,7 +553,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "DALIXIAGUAN",
-    "id": 749,
+    "id": 7465,
     "name": "大理荒草坝机场",
     "szm": "DLU"
   },
@@ -544,7 +562,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "CHANGZHOU",
-    "id": 751,
+    "id": 7467,
     "name": "常州奔牛机场",
     "szm": "CZX"
   },
@@ -553,7 +571,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "ANKANG",
-    "id": 753,
+    "id": 7469,
     "name": "安康机场",
     "szm": "AKA"
   },
@@ -562,25 +580,88 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "XIAMEN",
-    "id": 755,
+    "id": 7471,
     "name": "厦门高崎机场",
     "szm": "XMN"
+  },
+  {
+    "city": "二连浩特",
+    "country": "蒙古",
+    "countryCode": "MN",
+    "egName": "ERLIANHOT",
+    "id": 7475,
+    "name": "二连浩特赛乌苏国际机场",
+    "szm": "ERL"
+  },
+  {
+    "city": "乌兰巴托",
+    "country": "蒙古",
+    "countryCode": "MN",
+    "egName": "ULANBUTOR",
+    "id": 7497,
+    "name": "乌兰巴托机场",
+    "szm": "ULN"
+  },
+  {
+    "city": "满洲里",
+    "country": "蒙古",
+    "countryCode": "MN",
+    "egName": "MANZHOULI",
+    "id": 7507,
+    "name": "呼伦贝尔满洲里西郊机场",
+    "szm": "NZH"
+  },
+  {
+    "city": "香港(香港直升机场)",
+    "country": "中国香港",
+    "countryCode": "HK",
+    "egName": "HongKong(HongKongHeliport)",
+    "id": 8775,
+    "name": "香港(香港直升机场)",
+    "szm": "HHP"
   },
   {
     "city": "台中",
     "country": "中国",
     "countryCode": "CN",
     "egName": "TAICHUNG",
-    "id": 2193,
+    "id": 8909,
     "name": "台中",
     "szm": "TXG"
+  },
+  {
+    "city": "乌兰固木",
+    "country": "蒙古",
+    "countryCode": "MN",
+    "egName": "ULAANGOM",
+    "id": 8923,
+    "name": "乌兰固木",
+    "szm": "ULO"
+  },
+  {
+    "city": "布尔干",
+    "country": "蒙古",
+    "countryCode": "MN",
+    "egName": "BULGAN",
+    "id": 8941,
+    "name": "布尔干",
+    "szm": "UGA"
+  },
+  {
+    "city": "西乌尔特",
+    "country": "蒙古",
+    "countryCode": "MN",
+    "egName": "BARUUN-URT",
+    "id": 8973,
+    "name": "西乌尔特",
+    "szm": "UUN"
   },
   {
     "city": "武汉(武汉王家墩国际机场)",
     "country": "中国",
     "countryCode": "CN",
     "egName": "WUHAN",
-    "id": 2577,
+    "id": 9293,
     "name": "武汉(武汉王家墩国际机场)",
     "szm": "WJD"
   },
@@ -589,7 +670,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "BARDUFOSS",
-    "id": 2703,
+    "id": 9419,
     "name": "昌都邦达",
     "szm": "BDU"
   },
@@ -598,43 +679,106 @@
     "country": "中国台湾",
     "countryCode": "TW",
     "egName": "GREENISLAND",
-    "id": 3107,
+    "id": 9823,
     "name": "格林艾兰",
     "szm": "GNI"
+  },
+  {
+    "city": "达兰扎达嗄德",
+    "country": "蒙古",
+    "countryCode": "MN",
+    "egName": "DALANZADGAD",
+    "id": 10375,
+    "name": "达兰扎达嗄德",
+    "szm": "DLZ"
   },
   {
     "city": "丽江(云南丽江机场)",
     "country": "中国",
     "countryCode": "CN",
     "egName": "Lijiang(LijiangAirport)",
-    "id": 3707,
+    "id": 10423,
     "name": "丽江(云南丽江机场)",
     "szm": "LZJ"
+  },
+  {
+    "city": "额尔登特",
+    "country": "蒙古",
+    "countryCode": "MN",
+    "egName": "ERDENET",
+    "id": 10609,
+    "name": "额尔登特",
+    "szm": "ERT"
+  },
+  {
+    "city": "阿尔泰(阿尔泰山脉)",
+    "country": "蒙古",
+    "countryCode": "MN",
+    "egName": "ALTAI",
+    "id": 10705,
+    "name": "阿尔泰(阿尔泰山脉)",
+    "szm": "LTI"
   },
   {
     "city": "花莲",
     "country": "中国",
     "countryCode": "CN",
     "egName": "HELENA(HelenaRegionalAirport)",
-    "id": 4951,
+    "id": 11667,
     "name": "花莲",
     "szm": "HLN"
+  },
+  {
+    "city": "科布多",
+    "country": "蒙古",
+    "countryCode": "MN",
+    "egName": "KHOVD",
+    "id": 11835,
+    "name": "科布多",
+    "szm": "HVD"
+  },
+  {
+    "city": "伊春",
+    "country": "中国",
+    "countryCode": "CN",
+    "egName": "YICHUN",
+    "id": 11997,
+    "name": "伊春林都机场",
+    "szm": "LDS"
   },
   {
     "city": "吉安",
     "country": "中国",
     "countryCode": "CN",
     "egName": "JIAN",
-    "id": 5285,
+    "id": 12001,
     "name": "吉安机场",
     "szm": "KNC"
+  },
+  {
+    "city": "连江",
+    "country": "中国",
+    "countryCode": "CN",
+    "egName": "LIANJIANG",
+    "id": 12003,
+    "name": "南竿机场",
+    "szm": "LZN"
+  },
+  {
+    "city": "佛山",
+    "country": "中国",
+    "countryCode": "CN",
+    "egName": "FOSHAN",
+    "id": 12005,
+    "name": "佛山沙堤机场",
+    "szm": "FUO"
   },
   {
     "city": "七美",
     "country": "中国台湾",
     "countryCode": "TW",
     "egName": "QIMEI",
-    "id": 5293,
+    "id": 12009,
     "name": "七美机场",
     "szm": "CMJ"
   },
@@ -643,34 +787,97 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "FUYANG",
-    "id": 5299,
+    "id": 12015,
     "name": "阜阳西关机场",
     "szm": "FUG"
+  },
+  {
+    "city": "井冈山",
+    "country": "中国",
+    "countryCode": "CN",
+    "egName": "JINGGANGSHAN",
+    "id": 12017,
+    "name": "井冈山机场",
+    "szm": "JGS"
   },
   {
     "city": "韶关",
     "country": "中国",
     "countryCode": "CN",
     "egName": "SHAOGUAN",
-    "id": 5303,
+    "id": 12019,
     "name": "韶关机场",
     "szm": "HSC"
+  },
+  {
+    "city": "永州",
+    "country": "中国",
+    "countryCode": "CN",
+    "egName": "YONGZHOU",
+    "id": 12021,
+    "name": "湖南永州零陵机场",
+    "szm": "LLF"
+  },
+  {
+    "city": "鸡西",
+    "country": "中国",
+    "countryCode": "CN",
+    "egName": "JIXI",
+    "id": 12023,
+    "name": "鸡西兴凯湖机场",
+    "szm": "JXA"
+  },
+  {
+    "city": "广元",
+    "country": "中国",
+    "countryCode": "CN",
+    "egName": "GUANGYUAN",
+    "id": 12025,
+    "name": "广元机场",
+    "szm": "GYS"
+  },
+  {
+    "city": "恒春",
+    "country": "中国台湾",
+    "countryCode": "TW",
+    "egName": "PINGDONG",
+    "id": 12027,
+    "name": "恒春五里亭机场",
+    "szm": "HCN"
   },
   {
     "city": "台中",
     "country": "中国台湾",
     "countryCode": "TW",
     "egName": "TAIZHONG",
-    "id": 5321,
+    "id": 12037,
     "name": "台中清泉岗机场",
     "szm": "RMQ"
+  },
+  {
+    "city": "屏东",
+    "country": "中国台湾",
+    "countryCode": "TW",
+    "egName": "PINGDONG",
+    "id": 12039,
+    "name": "屏东机场",
+    "szm": "PIF"
+  },
+  {
+    "city": "东引",
+    "country": "中国",
+    "countryCode": "CN",
+    "egName": "DONGYIN",
+    "id": 12041,
+    "name": "东引机场",
+    "szm": "MFK"
   },
   {
     "city": "金门",
     "country": "中国台湾",
     "countryCode": "TW",
     "egName": "JINMEN",
-    "id": 5327,
+    "id": 12043,
     "name": "尚义机场",
     "szm": "KNH"
   },
@@ -679,25 +886,52 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "ANYANG",
-    "id": 5329,
+    "id": 12045,
     "name": "安阳北郊机场",
     "szm": "AYN"
+  },
+  {
+    "city": "固原",
+    "country": "中国",
+    "countryCode": "CN",
+    "egName": "GUYUAN",
+    "id": 12047,
+    "name": "宁夏固原六盘山机场",
+    "szm": "GYU"
+  },
+  {
+    "city": "邢台",
+    "country": "中国",
+    "countryCode": "CN",
+    "egName": "SHAHE",
+    "id": 12049,
+    "name": "邢台褡裢机场",
+    "szm": "XNT"
   },
   {
     "city": "兴城",
     "country": "中国",
     "countryCode": "CN",
     "egName": "HULUDAO",
-    "id": 5335,
+    "id": 12051,
     "name": "兴城机场",
     "szm": "XEN"
+  },
+  {
+    "city": "吐鲁番",
+    "country": "中国",
+    "countryCode": "CN",
+    "egName": "TULUFAN",
+    "id": 12055,
+    "name": "吐鲁番交河机场",
+    "szm": "TLQ"
   },
   {
     "city": "马公",
     "country": "中国台湾",
     "countryCode": "TW",
     "egName": "PENGHU",
-    "id": 5343,
+    "id": 12059,
     "name": "马公机场",
     "szm": "MZG"
   },
@@ -706,7 +940,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "LINYI",
-    "id": 5413,
+    "id": 12127,
     "name": "临沂沭埠岭机场",
     "szm": "LYI"
   },
@@ -715,7 +949,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "NANCHONG",
-    "id": 5415,
+    "id": 12129,
     "name": "南充高坪机场",
     "szm": "NAO"
   },
@@ -724,7 +958,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "HEIHE",
-    "id": 5417,
+    "id": 12131,
     "name": "嫩江机场",
     "szm": "NNN"
   },
@@ -733,7 +967,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "NANYANG",
-    "id": 5419,
+    "id": 12133,
     "name": "南阳姜营机场",
     "szm": "NNY"
   },
@@ -742,7 +976,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "NANTONG",
-    "id": 5421,
+    "id": 12135,
     "name": "南通兴东机场",
     "szm": "NTG"
   },
@@ -751,7 +985,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "MIANYANG",
-    "id": 5423,
+    "id": 12137,
     "name": "绵阳南郊机场",
     "szm": "MIG"
   },
@@ -760,7 +994,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "MUDANJIANG",
-    "id": 5425,
+    "id": 12139,
     "name": "牡丹江海浪机场",
     "szm": "MDG"
   },
@@ -769,7 +1003,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "MEIXIAN",
-    "id": 5427,
+    "id": 12141,
     "name": "梅县机场",
     "szm": "MXZ"
   },
@@ -778,7 +1012,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "QIEMO",
-    "id": 5429,
+    "id": 12143,
     "name": "且末机场",
     "szm": "IQM"
   },
@@ -787,7 +1021,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "LUZHOU",
-    "id": 5431,
+    "id": 12145,
     "name": "泸州蓝田机场",
     "szm": "LZO"
   },
@@ -796,7 +1030,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "QINGYANG",
-    "id": 5433,
+    "id": 12147,
     "name": "庆阳机场",
     "szm": "IQN"
   },
@@ -805,7 +1039,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "LIJIANG",
-    "id": 5435,
+    "id": 12149,
     "name": "丽江三义机场",
     "szm": "LJG"
   },
@@ -814,7 +1048,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "LIANYUNGANG",
-    "id": 5437,
+    "id": 12151,
     "name": "连云港白塔埠机场",
     "szm": "LYG"
   },
@@ -823,7 +1057,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "LINCANG",
-    "id": 5439,
+    "id": 12153,
     "name": "临沧机场",
     "szm": "LNJ"
   },
@@ -832,7 +1066,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "KUQA",
-    "id": 5441,
+    "id": 12155,
     "name": "库车机场",
     "szm": "KCA"
   },
@@ -841,7 +1075,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "KORLA",
-    "id": 5443,
+    "id": 12157,
     "name": "库尔勒机场",
     "szm": "KRL"
   },
@@ -850,7 +1084,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "KASHGAR",
-    "id": 5445,
+    "id": 12159,
     "name": "喀什机场",
     "szm": "KHG"
   },
@@ -859,7 +1093,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "KARAMAY",
-    "id": 5447,
+    "id": 12161,
     "name": "克拉玛依机场",
     "szm": "KRY"
   },
@@ -868,7 +1102,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "JIUJIANG",
-    "id": 5449,
+    "id": 12163,
     "name": "九江庐山机场",
     "szm": "JIU"
   },
@@ -877,7 +1111,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "MANGSHI",
-    "id": 5451,
+    "id": 12165,
     "name": "芒市机场",
     "szm": "LUM"
   },
@@ -886,7 +1120,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "TONGLIAO",
-    "id": 5453,
+    "id": 12167,
     "name": "通辽机场",
     "szm": "TGO"
   },
@@ -895,7 +1129,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "XICHANG",
-    "id": 5455,
+    "id": 12169,
     "name": "西昌青山机场",
     "szm": "XIC"
   },
@@ -904,7 +1138,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "WUZHOU",
-    "id": 5457,
+    "id": 12171,
     "name": "广西梧州长洲岛机场",
     "szm": "WUZ"
   },
@@ -913,7 +1147,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "WUYISHAN",
-    "id": 5459,
+    "id": 12173,
     "name": "武夷山机场",
     "szm": "WUS"
   },
@@ -922,7 +1156,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "ULANHOT",
-    "id": 5461,
+    "id": 12175,
     "name": "乌兰浩特机场",
     "szm": "HLH"
   },
@@ -931,7 +1165,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "WEIHAI",
-    "id": 5465,
+    "id": 12179,
     "name": "威海文登大水泊机场",
     "szm": "WEH"
   },
@@ -940,7 +1174,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "WEIFANG",
-    "id": 5467,
+    "id": 12181,
     "name": "潍坊机场",
     "szm": "WEF"
   },
@@ -949,7 +1183,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "NINGBO",
-    "id": 5469,
+    "id": 12183,
     "name": "宁波栎社机场",
     "szm": "NGB"
   },
@@ -958,7 +1192,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "TONGREN",
-    "id": 5471,
+    "id": 12185,
     "name": "铜仁凤凰机场",
     "szm": "TEN"
   },
@@ -967,7 +1201,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "JINGDEZHEN",
-    "id": 5473,
+    "id": 12187,
     "name": "景德镇罗家机场",
     "szm": "JDZ"
   },
@@ -976,7 +1210,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "TONGHUA",
-    "id": 5475,
+    "id": 12189,
     "name": "通化机场",
     "szm": "TNH"
   },
@@ -985,7 +1219,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "TACHENG",
-    "id": 5477,
+    "id": 12191,
     "name": "塔城机场",
     "szm": "TCG"
   },
@@ -994,7 +1228,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "PUER",
-    "id": 5479,
+    "id": 12193,
     "name": "普洱(思茅)机场",
     "szm": "SYM"
   },
@@ -1003,7 +1237,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "SHIJIAZHUANG",
-    "id": 5481,
+    "id": 12195,
     "name": "石家庄正定机场",
     "szm": "SJW"
   },
@@ -1012,7 +1246,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "SHASHI",
-    "id": 5483,
+    "id": 12197,
     "name": "荆州沙市机场",
     "szm": "SHS"
   },
@@ -1021,7 +1255,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "JIEYANG",
-    "id": 5485,
+    "id": 12199,
     "name": "揭阳潮汕机场",
     "szm": "SWA"
   },
@@ -1030,7 +1264,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "QUZHOU",
-    "id": 5487,
+    "id": 12201,
     "name": "衢州机场",
     "szm": "JUZ"
   },
@@ -1039,7 +1273,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "QINHUANGDAO",
-    "id": 5489,
+    "id": 12203,
     "name": "秦皇岛山海关机场",
     "szm": "SHP"
   },
@@ -1048,7 +1282,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "CHONGQING",
-    "id": 5491,
+    "id": 12205,
     "name": "重庆万州五桥机场",
     "szm": "WXN"
   },
@@ -1057,7 +1291,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "CHANGDE",
-    "id": 5493,
+    "id": 12207,
     "name": "常德桃花源(斗姆湖)机场",
     "szm": "CGD"
   },
@@ -1066,7 +1300,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "DUNHUANG",
-    "id": 5495,
+    "id": 12209,
     "name": "敦煌机场",
     "szm": "DNH"
   },
@@ -1075,7 +1309,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "ZHANGJIAJIE",
-    "id": 5497,
+    "id": 12211,
     "name": "张家界荷花机场",
     "szm": "DYG"
   },
@@ -1084,7 +1318,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "DATONG",
-    "id": 5499,
+    "id": 12213,
     "name": "山西大同机场",
     "szm": "DAT"
   },
@@ -1093,7 +1327,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "DANDONG",
-    "id": 5501,
+    "id": 12215,
     "name": "丹东浪头机场",
     "szm": "DDG"
   },
@@ -1102,7 +1336,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "DIQING",
-    "id": 5503,
+    "id": 12217,
     "name": "迪庆香格里拉机场",
     "szm": "DIG"
   },
@@ -1111,7 +1345,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "DAZHOU",
-    "id": 5505,
+    "id": 12219,
     "name": "达州(河市)机场",
     "szm": "DAX"
   },
@@ -1120,7 +1354,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "CHIFENG",
-    "id": 5507,
+    "id": 12221,
     "name": "赤峰玉龙机场",
     "szm": "CIF"
   },
@@ -1129,7 +1363,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "JIUQUAN",
-    "id": 5509,
+    "id": 12223,
     "name": "酒泉机场",
     "szm": "CHW"
   },
@@ -1138,7 +1372,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "CHANGZHI",
-    "id": 5511,
+    "id": 12225,
     "name": "长治王村机场",
     "szm": "CIH"
   },
@@ -1147,7 +1381,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "FUYUN",
-    "id": 5513,
+    "id": 12227,
     "name": "富蕴机场",
     "szm": "FYN"
   },
@@ -1156,7 +1390,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "BENGBU",
-    "id": 5517,
+    "id": 12231,
     "name": "蚌埠机场",
     "szm": "BFU"
   },
@@ -1165,7 +1399,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "CHAMDO",
-    "id": 5519,
+    "id": 12233,
     "name": "西藏昌都邦达机场",
     "szm": "BPX"
   },
@@ -1174,7 +1408,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "BAOTOU",
-    "id": 5521,
+    "id": 12235,
     "name": "包头二里半机场",
     "szm": "BAV"
   },
@@ -1183,7 +1417,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "BAOSHAN",
-    "id": 5523,
+    "id": 12237,
     "name": "保山云瑞机场",
     "szm": "BSD"
   },
@@ -1192,7 +1426,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "ANSHAN",
-    "id": 5525,
+    "id": 12239,
     "name": "鞍山机场",
     "szm": "AOG"
   },
@@ -1201,7 +1435,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "ANQING",
-    "id": 5527,
+    "id": 12241,
     "name": "安庆(天柱山）机场",
     "szm": "AQG"
   },
@@ -1210,7 +1444,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "CHAOYANG",
-    "id": 5531,
+    "id": 12245,
     "name": "辽宁朝阳机场",
     "szm": "CHG"
   },
@@ -1219,7 +1453,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "HEFEI",
-    "id": 5533,
+    "id": 12247,
     "name": "合肥骆岗机场",
     "szm": "HFE"
   },
@@ -1228,7 +1462,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "YANJI",
-    "id": 5535,
+    "id": 12249,
     "name": "延吉朝阳川机场",
     "szm": "YNJ"
   },
@@ -1237,7 +1471,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "JINING",
-    "id": 5537,
+    "id": 12251,
     "name": "济宁机场",
     "szm": "JNG"
   },
@@ -1246,7 +1480,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "JILIN",
-    "id": 5539,
+    "id": 12253,
     "name": "吉林二台子机场",
     "szm": "JIL"
   },
@@ -1255,7 +1489,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "JIAYUGUAN",
-    "id": 5541,
+    "id": 12255,
     "name": "嘉峪关机场",
     "szm": "JGN"
   },
@@ -1264,7 +1498,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "JIAMUSI",
-    "id": 5543,
+    "id": 12257,
     "name": "佳木斯机场",
     "szm": "JMU"
   },
@@ -1273,7 +1507,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "TAIZHOU",
-    "id": 5545,
+    "id": 12259,
     "name": "台州路桥（原黄岩路桥）机场",
     "szm": "HYN"
   },
@@ -1282,7 +1516,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "HUANGSHAN",
-    "id": 5547,
+    "id": 12261,
     "name": "黄山屯溪机场",
     "szm": "TXN"
   },
@@ -1291,7 +1525,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "HETIAN",
-    "id": 5549,
+    "id": 12263,
     "name": "和田机场",
     "szm": "HTN"
   },
@@ -1300,7 +1534,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "ENSHI",
-    "id": 5551,
+    "id": 12265,
     "name": "恩施机场",
     "szm": "ENH"
   },
@@ -1309,7 +1543,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "HEIHE",
-    "id": 5553,
+    "id": 12267,
     "name": "黑河机场",
     "szm": "HEK"
   },
@@ -1318,7 +1552,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "HANZHONG",
-    "id": 5557,
+    "id": 12271,
     "name": "汉中西关机场",
     "szm": "HZG"
   },
@@ -1327,7 +1561,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "HAMI",
-    "id": 5559,
+    "id": 12273,
     "name": "哈密机场",
     "szm": "HMI"
   },
@@ -1336,7 +1570,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "HAILAR",
-    "id": 5561,
+    "id": 12275,
     "name": "内蒙古海拉尔东山机场",
     "szm": "HLD"
   },
@@ -1345,7 +1579,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "GUILIN",
-    "id": 5563,
+    "id": 12277,
     "name": "桂林两江机场",
     "szm": "KWL"
   },
@@ -1354,7 +1588,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "GUANGHAN",
-    "id": 5565,
+    "id": 12279,
     "name": "广汉机场",
     "szm": "GHN"
   },
@@ -1363,7 +1597,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "GOLMUD",
-    "id": 5567,
+    "id": 12281,
     "name": "格尔木机场",
     "szm": "GOQ"
   },
@@ -1372,7 +1606,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "GANZHOU",
-    "id": 5569,
+    "id": 12283,
     "name": "赣州黄金机场",
     "szm": "KOW"
   },
@@ -1381,7 +1615,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "QUANZHOU",
-    "id": 5571,
+    "id": 12285,
     "name": "泉州晋江机场",
     "szm": "JJN"
   },
@@ -1390,16 +1624,25 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "HENGYANG",
-    "id": 5573,
+    "id": 12287,
     "name": "衡阳东江机场",
     "szm": "HNY"
+  },
+  {
+    "city": "龙岩",
+    "country": "中国",
+    "countryCode": "CN",
+    "egName": "LONGYAN",
+    "id": 12309,
+    "name": "福建龙岩冠豸山机场",
+    "szm": "LCX"
   },
   {
     "city": "西宁",
     "country": "中国",
     "countryCode": "CN",
     "egName": "XINING",
-    "id": 5611,
+    "id": 12325,
     "name": "西宁曹家堡机场",
     "szm": "XNN"
   },
@@ -1408,7 +1651,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "DAQING",
-    "id": 5635,
+    "id": 12349,
     "name": "大庆萨尔图机场",
     "szm": "DQA"
   },
@@ -1417,25 +1660,61 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "TAIDONG",
-    "id": 5657,
+    "id": 12371,
     "name": "台东志航机场",
     "szm": "TTG"
+  },
+  {
+    "city": "邯郸",
+    "country": "中国",
+    "countryCode": "CN",
+    "egName": "HANDAN",
+    "id": 12373,
+    "name": "河北邯郸机场机场",
+    "szm": "HDG"
   },
   {
     "city": "怀化",
     "country": "中国",
     "countryCode": "CN",
     "egName": "HUAIHUA",
-    "id": 5661,
+    "id": 12375,
     "name": "怀化芷江机场",
     "szm": "HJJ"
+  },
+  {
+    "city": "康定",
+    "country": "中国",
+    "countryCode": "CN",
+    "egName": "KANGDING",
+    "id": 12377,
+    "name": "康定机场",
+    "szm": "KGT"
+  },
+  {
+    "city": "乌海",
+    "country": "中国",
+    "countryCode": "CN",
+    "egName": "WUHAI",
+    "id": 12379,
+    "name": "乌海机场",
+    "szm": "WUA"
+  },
+  {
+    "city": "林芝",
+    "country": "中国",
+    "countryCode": "CN",
+    "egName": "NYINGCHI",
+    "id": 12381,
+    "name": "林芝机场",
+    "szm": "LZY"
   },
   {
     "city": "那拉提",
     "country": "中国",
     "countryCode": "CN",
     "egName": "NALATI",
-    "id": 5669,
+    "id": 12383,
     "name": "那拉提机场",
     "szm": "NLT"
   },
@@ -1444,7 +1723,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "JIUZHAIGOU",
-    "id": 5671,
+    "id": 12385,
     "name": "九寨沟黄龙(九黄）机场",
     "szm": "JZH"
   },
@@ -1453,16 +1732,25 @@
     "country": "中国台湾",
     "countryCode": "TW",
     "egName": "HUALIAN",
-    "id": 5675,
+    "id": 12389,
     "name": "花莲机场",
     "szm": "HUN"
+  },
+  {
+    "city": "百色",
+    "country": "中国",
+    "countryCode": "CN",
+    "egName": "BAISE",
+    "id": 12391,
+    "name": "广西百色(田阳)机场",
+    "szm": "AEB"
   },
   {
     "city": "台南",
     "country": "中国",
     "countryCode": "CN",
     "egName": "TAINAN",
-    "id": 5679,
+    "id": 12393,
     "name": "台南机场",
     "szm": "TNN"
   },
@@ -1471,7 +1759,7 @@
     "country": "中国台湾",
     "countryCode": "TW",
     "egName": "TAIBEI",
-    "id": 5681,
+    "id": 12395,
     "name": "桃园/桃園(原中正)机场",
     "szm": "TPE"
   },
@@ -1480,7 +1768,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "ZHOUSHAN",
-    "id": 5683,
+    "id": 12397,
     "name": "舟山普陀山朱家尖机场",
     "szm": "HSN"
   },
@@ -1489,7 +1777,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "ZHAOTONG",
-    "id": 5685,
+    "id": 12399,
     "name": "昭通机场",
     "szm": "ZAT"
   },
@@ -1498,7 +1786,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "YULIN",
-    "id": 5687,
+    "id": 12401,
     "name": "榆林西沙机场",
     "szm": "UYN"
   },
@@ -1507,7 +1795,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "YINING",
-    "id": 5689,
+    "id": 12403,
     "name": "伊宁机场",
     "szm": "YIN"
   },
@@ -1516,7 +1804,7 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "YICHANG",
-    "id": 5691,
+    "id": 12405,
     "name": "宜昌三峡机场",
     "szm": "YIH"
   },
@@ -1525,34 +1813,142 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "JIAYI",
-    "id": 5695,
+    "id": 12409,
     "name": "嘉义机场",
     "szm": "CYI"
+  },
+  {
+    "city": "腾冲",
+    "country": "中国",
+    "countryCode": "CN",
+    "egName": "TENGCHONG",
+    "id": 12411,
+    "name": "腾冲（驼峰）机场",
+    "szm": "TCZ"
+  },
+  {
+    "city": "兴义",
+    "country": "中国",
+    "countryCode": "CN",
+    "egName": "XINGYI",
+    "id": 12421,
+    "name": "兴义机场",
+    "szm": "ACX"
   },
   {
     "city": "长海",
     "country": "中国",
     "countryCode": "CN",
     "egName": "DALIAN",
-    "id": 5709,
+    "id": 12423,
     "name": "长海（大长山岛）机场",
     "szm": "CNI"
+  },
+  {
+    "city": "天水",
+    "country": "中国",
+    "countryCode": "CN",
+    "egName": "TIANSHUI",
+    "id": 12425,
+    "name": "甘肃天水机场",
+    "szm": "THQ"
+  },
+  {
+    "city": "东营",
+    "country": "中国",
+    "countryCode": "CN",
+    "egName": "DONGYING",
+    "id": 12427,
+    "name": "东营永安机场",
+    "szm": "DOY"
   },
   {
     "city": "盐城",
     "country": "中国",
     "countryCode": "CN",
     "egName": "YANCHENG",
-    "id": 5715,
+    "id": 12429,
     "name": "江苏盐城南洋机场",
     "szm": "YNZ"
+  },
+  {
+    "city": "中卫",
+    "country": "中国",
+    "countryCode": "CN",
+    "egName": "ZHONGWEI",
+    "id": 12431,
+    "name": "中卫(香山、沙坡头)机场",
+    "szm": "ZHY"
+  },
+  {
+    "city": "安顺",
+    "country": "中国",
+    "countryCode": "CN",
+    "egName": "ANSHUN",
+    "id": 12433,
+    "name": "贵州安顺黄果树机场",
+    "szm": "AVA"
+  },
+  {
+    "city": "长白山",
+    "country": "中国",
+    "countryCode": "CN",
+    "egName": "CHANGBAISHAN",
+    "id": 12435,
+    "name": "长白山机场",
+    "szm": "NBS"
+  },
+  {
+    "city": "漠河",
+    "country": "中国",
+    "countryCode": "CN",
+    "egName": "MOHE",
+    "id": 12437,
+    "name": "漠河古莲机场",
+    "szm": "OHE"
+  },
+  {
+    "city": "黎平",
+    "country": "中国",
+    "countryCode": "CN",
+    "egName": "LIPING",
+    "id": 12439,
+    "name": "贵州黎平机场",
+    "szm": "HZH"
+  },
+  {
+    "city": "喀纳斯",
+    "country": "中国",
+    "countryCode": "CN",
+    "egName": "BUERJIN",
+    "id": 12441,
+    "name": "新疆喀纳斯机场",
+    "szm": "KJI"
+  },
+  {
+    "city": "荔波",
+    "country": "中国",
+    "countryCode": "CN",
+    "egName": "LIBO",
+    "id": 12443,
+    "name": "荔波机场",
+    "szm": "LLB"
+  },
+  {
+    "city": "玉树",
+    "country": "中国",
+    "countryCode": "CN",
+    "egName": "YUSHU",
+    "id": 12445,
+    "name": "青海玉树三江源(巴塘)机场",
+    "szm": "YUS"
   },
   {
     "city": "文山",
     "country": "中国",
     "countryCode": "CN",
     "egName": "WENSHAN",
-    "id": 5733,
+    "id": 12447,
     "name": "云南文山普者黑机场",
     "szm": "WNH"
   },
@@ -1561,17 +1957,125 @@
     "country": "中国",
     "countryCode": "CN",
     "egName": "YANAN",
-    "id": 5735,
+    "id": 12449,
     "name": "延安二十里铺机场",
     "szm": "ENY"
+  },
+  {
+    "city": "巴彦淖尔",
+    "country": "中国",
+    "countryCode": "CN",
+    "egName": "BAYANNUR",
+    "id": 12729,
+    "name": "巴彦淖尔天吉泰机场",
+    "szm": "RLK"
+  },
+  {
+    "city": "扬州",
+    "country": "中国",
+    "countryCode": "CN",
+    "egName": "YANGZHOU",
+    "id": 12731,
+    "name": "扬州泰州机场",
+    "szm": "YTY"
+  },
+  {
+    "city": "张掖",
+    "country": "中国",
+    "countryCode": "CN",
+    "egName": "ZHANGYE",
+    "id": 12745,
+    "name": "张掖机场",
+    "szm": "YZY"
   },
   {
     "city": "台东",
     "country": "中国台湾",
     "countryCode": "TW",
     "egName": "TAIDONG",
-    "id": 6087,
+    "id": 12801,
     "name": "台东丰年机场",
     "szm": "TTT"
+  },
+  {
+    "city": "承德",
+    "country": "中国",
+    "countryCode": "CN",
+    "egName": "CHENGDE",
+    "id": 12831,
+    "name": "承德机场",
+    "szm": "CEH"
+  },
+  {
+    "city": "黔江",
+    "country": "中国",
+    "countryCode": "CN",
+    "egName": "ZHOUBAI",
+    "id": 12833,
+    "name": "黔江舟白机场",
+    "szm": "JIQ"
+  },
+  {
+    "city": "金昌",
+    "country": "中国",
+    "countryCode": "CN",
+    "egName": "JINCHANG",
+    "id": 12885,
+    "name": "金昌机场",
+    "szm": "JIC"
+  },
+  {
+    "city": "阿尔山",
+    "country": "中国",
+    "countryCode": "CN",
+    "egName": "ARXAN",
+    "id": 12921,
+    "name": "阿尔山伊尔施机场",
+    "szm": "YIE"
+  },
+  {
+    "city": "日喀则",
+    "country": "中国",
+    "countryCode": "CN",
+    "egName": "RIKAZE",
+    "id": 12931,
+    "name": "日喀则和平机场",
+    "szm": "RKZ"
+  },
+  {
+    "city": "博乐",
+    "country": "中国",
+    "countryCode": "CN",
+    "egName": "BOLE",
+    "id": 12955,
+    "name": "新疆博乐机场",
+    "szm": "BPL"
+  },
+  {
+    "city": "淮安",
+    "country": "中国",
+    "countryCode": "CN",
+    "egName": "HUAIAN",
+    "id": 12991,
+    "name": "淮安涟水机场",
+    "szm": "HIA"
+  },
+  {
+    "city": "唐山",
+    "country": "中国",
+    "countryCode": "CN",
+    "egName": "TANGSHAN",
+    "id": 13035,
+    "name": "唐山三女河机场",
+    "szm": "TVS"
+  },
+  {
+    "city": "阿里",
+    "country": "中国",
+    "countryCode": "CN",
+    "egName": "SHIQUANHE",
+    "id": 13077,
+    "name": "阿里昆莎机场",
+    "szm": "NGQ"
   }
 ]
