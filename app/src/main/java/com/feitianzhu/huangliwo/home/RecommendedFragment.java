@@ -96,7 +96,6 @@ public class RecommendedFragment extends SFFragment {
     private List<MerchantsModel> optMerchantList = new ArrayList<>();
     private List<BaseGoodsListBean> hotGoodsList = new ArrayList<>();
     private List<BaseGoodsListBean> recGoodsList = new ArrayList<>();
-    private List<BaseGoodsListBean> curGoodsList = new ArrayList<>();
     private double longitude = 116.289189;
     private double latitude = 39.826552;
     private HomeModel mHomeMode;

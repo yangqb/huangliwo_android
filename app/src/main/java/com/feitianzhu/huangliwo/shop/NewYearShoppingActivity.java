@@ -5,7 +5,11 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
@@ -18,6 +22,7 @@ import com.feitianzhu.huangliwo.model.NewYearGoodsModel;
 import com.feitianzhu.huangliwo.shop.adapter.NewYearShoppingAdapter;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
+import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 import com.feitianzhu.huangliwo.vip.VipActivity;
 import com.gyf.immersionbar.ImmersionBar;
 import com.lzy.okgo.OkGo;
@@ -52,6 +57,8 @@ public class NewYearShoppingActivity extends BaseActivity {
     RecyclerView recyclerView;
     @BindView(R.id.refreshLayout)
     RefreshLayout refreshLayout;
+    @BindView(R.id.imageView)
+    ImageView imageView;
 
     @Override
     protected int getLayoutId() {
@@ -65,6 +72,7 @@ public class NewYearShoppingActivity extends BaseActivity {
                 .statusBarDarkFont(true, 0.2f)
                 .statusBarColor(R.color.transparent)
                 .init();
+        mineInfoModel = UserInfoUtils.getUserInfo(this);
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         adapter = new NewYearShoppingAdapter(goodsListBeans);
@@ -72,7 +80,9 @@ public class NewYearShoppingActivity extends BaseActivity {
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
         refreshLayout.setEnableLoadMore(false);
-        requestData();
+
+        Glide.with(this).asGif().load(R.drawable.holiday)
+                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE).placeholder(R.color.color_1F9DFF).error(R.color.color_1F9DFF)).into(imageView);
         initListener();
     }
 
@@ -109,8 +119,6 @@ public class NewYearShoppingActivity extends BaseActivity {
 
         OkGo.<LzyResponse<NewYearGoodsModel>>get(Urls.GET_NEW_YEAR)
                 .tag(this)
-                .params("accessToken", token)
-                .params("userId", userId)
                 .execute(new JsonCallback<LzyResponse<NewYearGoodsModel>>() {
                     @Override
                     public void onSuccess(Response<LzyResponse<NewYearGoodsModel>> response) {
@@ -131,26 +139,6 @@ public class NewYearShoppingActivity extends BaseActivity {
                 });
     }
 
-    private void requestData() {
-        OkGo.<LzyResponse<MineInfoModel>>get(Urls.BASE_URL + POST_MINE_INFO)
-                .tag(this)
-                .params(ACCESSTOKEN, token)//
-                .params(USERID, userId)
-                .execute(new JsonCallback<LzyResponse<MineInfoModel>>() {
-                    @Override
-                    public void onSuccess(Response<LzyResponse<MineInfoModel>> response) {
-                        super.onSuccess(NewYearShoppingActivity.this, "", response.body().code);
-                        if (response.body().data != null) {
-                            mineInfoModel = response.body().data;
-                        }
-                    }
-
-                    @Override
-                    public void onError(Response<LzyResponse<MineInfoModel>> response) {
-                        super.onError(response);
-                    }
-                });
-    }
 
     @OnClick(R.id.back)
     public void onClick() {

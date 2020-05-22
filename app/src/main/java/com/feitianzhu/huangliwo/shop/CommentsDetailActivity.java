@@ -56,6 +56,8 @@ public class CommentsDetailActivity extends BaseActivity {
         }
         View mEmptyView = View.inflate(mContext, R.layout.view_common_nodata, null);
         ImageView img_empty = (ImageView) mEmptyView.findViewById(R.id.img_empty);
+        TextView tvNoData = mEmptyView.findViewById(R.id.no_data);
+        tvNoData.setText("暂无评论");
         img_empty.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
