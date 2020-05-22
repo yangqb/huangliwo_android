@@ -45,6 +45,7 @@ import com.feitianzhu.huangliwo.shop.ui.ShoppingCartActivity;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.utils.UserInfoUtils;
+import com.feitianzhu.huangliwo.utils.doubleclick.SingleClick;
 import com.feitianzhu.huangliwo.view.CircleImageView;
 import com.feitianzhu.huangliwo.view.CustomVerificationView;
 import com.feitianzhu.huangliwo.vip.VipActivity;
@@ -370,6 +371,7 @@ public class MyCenterFragment extends SFFragment {
     @OnClick({R.id.ll_userInfo, R.id.iv_setting, R.id.btn_withdrawal, R.id.detailed_rules, R.id.withdrawCount, R.id.wages_detailed_rules, R.id.btn_wages_withdrawal,
             R.id.goodsAllOrder, R.id.merchantAllOrder, R.id.upgrade_Vip, R.id.goods_wait_pay, R.id.goods_wait_deliver, R.id.goods_wait_receiving, R.id.goods_wait_comments, R.id.goods_after_sales,
             R.id.merchant_wait_pay, R.id.merchant_wait_use, R.id.merchant_wait_comments, R.id.merchant_after_sales})
+    @SingleClick()
     public void onClick(View view) {
         Intent intent;
         switch (view.getId()) {

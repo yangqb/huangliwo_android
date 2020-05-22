@@ -109,6 +109,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
         LocationUtils.getInstance().start();
+        ImmersionBar.with(this)
+                .fitsSystemWindows(true)
+                .navigationBarColor(R.color.white)
+                .navigationBarDarkIcon(true)
+                .statusBarDarkFont(true, 0.2f)
+                .statusBarColor(R.color.bg_yellow)
+                .init();
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         initView();
@@ -117,13 +124,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mHomeFragment = HomeFragment.newInstance();
         mTransaction.add(R.id.fragment_container, mHomeFragment);
         mTransaction.commit();
-        ImmersionBar.with(this)
-                .fitsSystemWindows(true)
-                .navigationBarColor(R.color.white)
-                .navigationBarDarkIcon(true)
-                .statusBarDarkFont(true, 0.2f)
-                .statusBarColor(R.color.bg_yellow)
-                .init();
         GlobalUtil.setMainActivity(this);
     }
 
