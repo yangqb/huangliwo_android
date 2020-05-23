@@ -123,7 +123,6 @@ public class WXPayEntryActivity extends BaseActivity implements IWXAPIEventHandl
             }
         } else {
             ToastUtils.show(resp.getType() + "");
-
         }
         finish();
     }

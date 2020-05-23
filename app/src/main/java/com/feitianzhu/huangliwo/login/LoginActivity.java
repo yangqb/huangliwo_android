@@ -47,10 +47,17 @@ import com.socks.library.KLog;
 import com.tencent.mm.opensdk.modelmsg.SendAuth;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
+import com.umeng.socialize.UMAuthListener;
+import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.UMShareConfig;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -90,7 +97,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     @Override
     protected void initView() {
 
-        EventBus.getDefault().register(this);
+        //EventBus.getDefault().register(this);
         mSignInButton.setOnClickListener(this);
         mRegister.setOnClickListener(this);
         mForgetLayout.setOnClickListener(this);
@@ -180,18 +187,48 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 startActivity(new Intent(this, ForgetPasswordActivity.class));
                 break;
             case R.id.wx_login:
-                reqWeiXin();
+                if (UMShareAPI.get(this).isInstall(this, SHARE_MEDIA.WEIXIN)) {
+                    reqWeiXin();
+                } else {
+                    ToastUtils.show("请先安装微信");
+                }
                 break;
 
         }
     }
 
     public void reqWeiXin() {
-        final SendAuth.Req req = new SendAuth.Req();
-        req.scope = "snsapi_userinfo";
-        req.state = "wechat_sdk_demo_test";
-        IWXAPI api = WXAPIFactory.createWXAPI(LoginActivity.this, Constant.WX_APP_ID);
-        api.sendReq(req);
+        UMShareAPI.get(this).getPlatformInfo(this, SHARE_MEDIA.WEIXIN, new UMAuthListener() {
+            @Override
+            public void onStart(SHARE_MEDIA share_media) {
+
+            }
+
+            @Override
+            public void onComplete(SHARE_MEDIA share_media, int i, Map<String, String> map) {
+                WXUserInfo wxUserInfo = new WXUserInfo();
+                wxUserInfo.city = map.get("city");
+                wxUserInfo.country = map.get("country");
+                wxUserInfo.headimgurl = map.get("iconurl");
+                wxUserInfo.nickname = map.get("name");
+                wxUserInfo.openid = map.get("openid");
+                //wxUserInfo.privilege
+                wxUserInfo.province = map.get("province");
+                //wxUserInfo.sex = 1;
+                wxUserInfo.unionid = map.get("unionid");
+                wxLogin(wxUserInfo);
+            }
+
+            @Override
+            public void onError(SHARE_MEDIA share_media, int i, Throwable throwable) {
+                ToastUtils.show("授权失败：" + throwable.getMessage());
+            }
+
+            @Override
+            public void onCancel(SHARE_MEDIA share_media, int i) {
+                ToastUtils.show("取消登录");
+            }
+        });
     }
 
 
@@ -312,7 +349,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 });
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    /*@Subscribe(threadMode = ThreadMode.MAIN)
     public void onWXLogin(String code) {
         OkGo.<WXLoginModel>get("https://api.weixin.qq.com/sns/oauth2/access_token")
                 .tag(this)
@@ -337,30 +374,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     }
                 });
 
-    }
-
-    public void getWXUserInfo(WXLoginModel wxLoginModel) {
-        OkGo.<WXUserInfo>get("https://api.weixin.qq.com/sns/userinfo")
-                .tag(this)
-                .params("access_token", wxLoginModel.access_token)
-                .params("openid", wxLoginModel.openid)
-                // .params("lang")//国家地区语言版本，zh_CN 简体，zh_TW 繁体，en 英语，默认为 zh-CN
-                .execute(new JsonCallback<WXUserInfo>() {
-                    @Override
-                    public void onSuccess(Response<WXUserInfo> response) {
-                        if (response.body().errcode == null) {
-                            wxLogin(response.body());
-                        } else {
-                            ToastUtils.show(response.body().errmsg);
-                        }
-                    }
-
-                    @Override
-                    public void onError(Response<WXUserInfo> response) {
-                        super.onError(response);
-                    }
-                });
-    }
+    }*/
 
     public void wxLogin(WXUserInfo userInfo) {
         String json = new Gson().toJson(userInfo);
@@ -405,7 +419,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
+        // EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -427,6 +441,13 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
+
     }
 }
 
