@@ -62,12 +62,11 @@ public class MyOilAdapter extends BaseQuickAdapter<OilListBean, BaseViewHolder> 
             if (item.getOilPriceList().get(i).getOilNo() == Integer.valueOf(split[0])) {
                 /*String priceOfficial = item.getOilPriceList().get(i).getPriceOfficial();
                 String priceYfq = item.getOilPriceList().get(i).getPriceYfq();*/
-                String priceOfficial = item.getOilPriceList().get(0).getPriceOfficial();
-                String priceYfq = item.getOilPriceList().get(0).getPriceYfq();
+                String priceOfficial = item.getOilPriceList().get(i).getPriceOfficial();
+                String priceYfq = item.getOilPriceList().get(i).getPriceYfq();
                 double v = Double.valueOf(priceOfficial) - Double.valueOf(priceYfq);
                 java.text.DecimalFormat df = new java.text.DecimalFormat("0.00");
                 String format = df.format(v);
-                Log.i("initwork", "convert: " + split[0] + priceYfq + priceOfficial + format);
                 helper.setText(R.id.oilprice, "￥" + priceYfq);
                 helper.setText(R.id.oildiscountprice, format);
                 break;

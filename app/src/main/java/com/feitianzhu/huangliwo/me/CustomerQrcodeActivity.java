@@ -1,5 +1,6 @@
 package com.feitianzhu.huangliwo.me;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.view.View;
 import android.widget.ImageView;
@@ -9,16 +10,20 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
+import com.feitianzhu.huangliwo.share.ShareUtils;
 import com.feitianzhu.huangliwo.utils.ShareImageUtils;
 import com.socks.library.KLog;
+import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.UMShareListener;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.editorpage.ShareActivity;
+import com.umeng.socialize.media.UMImage;
 
 import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import cn.sharesdk.framework.Platform;
-import cn.sharesdk.framework.PlatformActionListener;
-import cn.sharesdk.onekeyshare.OnekeyShare;
 
 /**
  * package name: com.feitianzhu.huangliwo.me
@@ -70,7 +75,8 @@ public class CustomerQrcodeActivity extends BaseActivity {
 
     private void showShare() {
         Bitmap bitmap = ShareImageUtils.viewToBitmap(shareLayout);
-        OnekeyShare oks = new OnekeyShare();
+        ShareUtils.shareImg(this, bitmap, "便利大本营");
+       /* OnekeyShare oks = new OnekeyShare();
         //关闭sso授权
         // oks.disableSSOWhenAuthorize();
         oks.setImageData(bitmap);
@@ -93,6 +99,19 @@ public class CustomerQrcodeActivity extends BaseActivity {
             }
         });
         // 启动分享GUI
-        oks.show(CustomerQrcodeActivity.this);
+        oks.show(CustomerQrcodeActivity.this);*/
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        UMShareAPI.get(this).release();
+    }
+
 }

@@ -23,19 +23,9 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
-
--keep class cn.sharesdk.**{*;}
--keep class com.sina.**{*;}
--keep class com.mob.**{*;}
--keep class com.bytedance.**{*;}
--dontwarn cn.sharesdk.**
--dontwarn com.sina.**
--dontwarn com.mob.**
 -dontwarn com.lxj.xpopup.widget.**
 -keep class com.lxj.xpopup.widget.**{*;}
 -dontwarn com.bumptech.glide.**
--dontwarn com.tencent.bugly.**
--keep public class com.tencent.bugly.**{*;}
 -keep class com.baidu.** {*;}
 -keep class mapsdkvi.com.** {*;}
 -dontwarn com.baidu.**
@@ -60,3 +50,9 @@
 -keep public class [com.feitianzhu.huangliwo].R$*{
 public static final int *;
 }
+-keep class com.hyphenate.** {*;}
+-dontwarn  com.hyphenate.**
+-keep class internal.org.apache.http.entity.** {*;}
+#//如果使用了实时音视频功能
+-keep class com.superrtc.** {*;}
+-dontwarn  com.superrtc.**

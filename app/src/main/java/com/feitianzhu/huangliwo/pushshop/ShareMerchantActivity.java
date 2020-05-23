@@ -1,5 +1,6 @@
 package com.feitianzhu.huangliwo.pushshop;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.util.Log;
@@ -18,6 +19,7 @@ import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.MineQRcodeModel;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsModel;
+import com.feitianzhu.huangliwo.share.ShareUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.ShareImageUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
@@ -27,6 +29,7 @@ import com.hjq.toast.ToastUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.socks.library.KLog;
+import com.umeng.socialize.UMShareAPI;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 
 import java.io.ByteArrayOutputStream;
@@ -34,9 +37,6 @@ import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import cn.sharesdk.framework.Platform;
-import cn.sharesdk.framework.PlatformActionListener;
-import cn.sharesdk.onekeyshare.OnekeyShare;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.huangliwo.common.Constant.USERID;
@@ -112,30 +112,7 @@ public class ShareMerchantActivity extends BaseActivity {
 
     private void showShare() {
         Bitmap bitmap = ShareImageUtils.viewToBitmap(shareLayout);
-        OnekeyShare oks = new OnekeyShare();
-        //关闭sso授权
-        // oks.disableSSOWhenAuthorize();
-        oks.setImageData(bitmap);
-        oks.setTitle("便利大本营");  //最顶部的Title
-        //oks.setImagePath(imgPath);
-        oks.setCallback(new PlatformActionListener() {
-            @Override
-            public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
-                KLog.i("share onComplete...");
-            }
-
-            @Override
-            public void onError(Platform platform, int i, Throwable throwable) {
-                KLog.i("share onError..." + throwable);
-            }
-
-            @Override
-            public void onCancel(Platform platform, int i) {
-                KLog.i("share onCancel...");
-            }
-        });
-        // 启动分享GUI
-        oks.show(ShareMerchantActivity.this);
+        ShareUtils.shareImg(this, bitmap, "便利大本营");
     }
 
     @Override
@@ -176,5 +153,17 @@ public class ShareMerchantActivity extends BaseActivity {
         if (bytes != null && bytes.length > 0) {
             Glide.with(mContext).load(bytes).apply(RequestOptions.placeholderOf(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai)).into(shareImg);
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        UMShareAPI.get(this).release();
     }
 }

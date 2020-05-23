@@ -10,6 +10,7 @@ import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
 import com.feitianzhu.huangliwo.shop.adapter.CommentsDetailAdapter;
+import com.hyphenate.easeui.EaseUI;
 
 import java.util.ArrayList;
 import java.util.Arrays;
