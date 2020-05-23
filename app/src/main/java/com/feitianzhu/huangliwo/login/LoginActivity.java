@@ -437,6 +437,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     @OnClick(R.id.left_button)
     public void onViewClicked() {
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
         finish();
     }
 

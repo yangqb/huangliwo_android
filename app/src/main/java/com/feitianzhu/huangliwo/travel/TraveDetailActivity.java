@@ -2,7 +2,10 @@ package com.feitianzhu.huangliwo.travel;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.util.Log;
@@ -16,6 +19,7 @@ import com.feitianzhu.huangliwo.common.base.activity.BaseBindingActivity;
 import com.feitianzhu.huangliwo.core.network.ApiCallBack;
 import com.feitianzhu.huangliwo.core.network.ApiLifeCallBack;
 import com.feitianzhu.huangliwo.databinding.ActivityTraveDetailBinding;
+import com.feitianzhu.huangliwo.shop.ShopMerchantsDetailActivity;
 import com.feitianzhu.huangliwo.travel.adapter.Distance1Adapter;
 import com.feitianzhu.huangliwo.travel.adapter.DistanceGunAdapter;
 import com.feitianzhu.huangliwo.travel.adapter.DistanceOilInfoAdapter;
@@ -26,7 +30,10 @@ import com.feitianzhu.huangliwo.travel.request.OilTimeRequest;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.StringUtils;
 import com.feitianzhu.huangliwo.utils.doubleclick.SingleClick;
+import com.feitianzhu.huangliwo.view.CustomRefundView;
 import com.google.gson.Gson;
+import com.hjq.toast.ToastUtils;
+import com.lxj.xpopup.XPopup;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -70,14 +77,16 @@ public class TraveDetailActivity extends BaseBindingActivity {
 
     @Override
     public void init() {
+        appHasMap(this);
+
         if (oilListBean != null) {
             dataBinding.submit.setEnabled(false);
             dataBinding.name.setText(oilListBean.getGasName());
             Glide.with(this)
                     .load(oilListBean.getGasLogoSmall())
                     .into(dataBinding.imageView8);
-            dataBinding.value.setText("￥0");
-            dataBinding.downValue.setText("$0");
+            dataBinding.value.setText("0");
+            dataBinding.downValue.setText("￥0");
             dataBinding.address.setText(oilListBean.getGasAddress());
             dataBinding.str.setText(oilListBean.getDistanceStr());
 
@@ -136,15 +145,19 @@ public class TraveDetailActivity extends BaseBindingActivity {
                         double priceOfficial = oilInfoBean.getPriceOfficial();
                         double v = priceOfficial - priceYfq;
                         String format = new DecimalFormat("0.00").format(v);
-                        dataBinding.downValue.setText(format);
+                        dataBinding.downValue.setText("￥" + format);
 
                         List<OilStationsDetailBean.OilInfoBean.GunNosBean> gunNos = oilInfoBean.getGunNos();
                         if (gunNos != null && gunNos.size() > 0) {
                             distanceAdapter2.setNewData(gunNos);
-                            n2 = "";
-                            distanceAdapter2.chengtextcolor(-1);
+                            distanceAdapter2.chengtextcolor(0);
                             distanceAdapter2.notifyDataSetChanged();
+                            n2 = gunNos.get(0).getGunNo();
+                            dataBinding.submit.setEnabled(true);
+
                         }
+                        Log.e("TAG", "onItemClick: "+n + n1 + n2);
+
                     }
                 }
             }
@@ -174,19 +187,28 @@ public class TraveDetailActivity extends BaseBindingActivity {
                     n1 = distanceAdapter1.getData().get(0).getOilName();
                 }
 
-
                 if (oilInfo != null && oilInfo.size() > 0) {
                     OilStationsDetailBean.OilInfoBean oilInfoBean = oilInfo.get(0);
                     List<OilStationsDetailBean.OilInfoBean.GunNosBean> gunNos = oilInfoBean.getGunNos();
                     if (gunNos != null && gunNos.size() > 0) {
                         distanceAdapter2.setNewData(gunNos);
+                        distanceAdapter2.chengtextcolor(0);
+                        distanceAdapter2.notifyDataSetChanged();
+                        n2 = gunNos.get(0).getGunNo();
+                        dataBinding.submit.setEnabled(true);
+                        dataBinding.value.setText(oilInfoBean.getPriceYfq() + "");
+                        double priceYfq = oilInfoBean.getPriceYfq();
+                        double priceOfficial = oilInfoBean.getPriceOfficial();
+                        double v = priceOfficial - priceYfq;
+                        String format = new DecimalFormat("0.00").format(v);
+                        dataBinding.downValue.setText("￥" + format);
+
+
+
                     }
                 }
-                distanceAdapter2.chengtextcolor(-1);
-                distanceAdapter2.notifyDataSetChanged();
-                n2 = "";
-                Log.e("TAG", "init: " + n2 + ".." + n1 + ".." + ".." + n);
-                dataBinding.submit.setEnabled(false);
+
+                Log.e("TAG", "onItemClick: "+n + n1 + n2);
 
             }
         });
@@ -205,7 +227,7 @@ public class TraveDetailActivity extends BaseBindingActivity {
                     double priceYfq = oilInfoBean1.getPriceYfq();
                     double priceOfficial = oilInfoBean1.getPriceOfficial();
                     double v = priceOfficial - priceYfq;
-                    dataBinding.downValue.setText(new DecimalFormat("0.00").format(v));
+                    dataBinding.downValue.setText("￥" + new DecimalFormat("0.00").format(v));
 
                     List<OilStationsDetailBean.OilInfoBean> oilInfo = response.get(TraveDetailActivity.this.position).getOilInfo();
                     if (oilInfo != null && oilInfo.size() > 0) {
@@ -213,9 +235,11 @@ public class TraveDetailActivity extends BaseBindingActivity {
                         List<OilStationsDetailBean.OilInfoBean.GunNosBean> gunNos = oilInfoBean.getGunNos();
                         if (gunNos != null && gunNos.size() > 0) {
                             distanceAdapter2.setNewData(gunNos);
-                            distanceAdapter2.chengtextcolor(-1);
+                            distanceAdapter2.chengtextcolor(0);
                             distanceAdapter2.notifyDataSetChanged();
-                            n2 = "";
+                            n2 = gunNos.get(0).getGunNo();
+                            dataBinding.submit.setEnabled(true);
+
                         }
                     }
 
@@ -270,4 +294,75 @@ public class TraveDetailActivity extends BaseBindingActivity {
             }
         });
     }
+
+    public void onClickedTOMap(View view) {
+        if (mapList.size() <= 0) {
+            ToastUtils.show("请先安装百度地图或高德地图");
+            return;
+        } else {
+            new XPopup.Builder(this)
+                    .asCustom(new CustomRefundView(TraveDetailActivity.this)
+                            .setData(mapList)
+                            .setOnItemClickListener(new CustomRefundView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(int position) {
+                                    if ("百度地图".equals(mapList.get(position))) {
+                                        Intent i1 = new Intent();
+                                        i1.setData(Uri.parse("baidumap://map/geocoder?src=andr.baidu.openAPIdemo&address=" + oilListBean.getProvinceName() + oilListBean.getCityName() + oilListBean.getCountyName() + oilListBean.getGasName()));
+                                        startActivity(i1);
+                                    } else if ("高德地图".equals(mapList.get(position))) {
+                                        Intent intent_gdmap = new Intent();
+                                        intent_gdmap.setAction("android.intent.action.VIEW");
+                                        intent_gdmap.setPackage("com.autonavi.minimap");
+                                        intent_gdmap.addCategory("android.intent.category.DEFAULT");
+                                        intent_gdmap.setData(Uri.parse("androidamap://poi?sourceApplication=com.feitianzhu.huangliwo&keywords=" + oilListBean.getProvinceName() + oilListBean.getCityName() + oilListBean.getCountyName() + oilListBean.getGasName() + "&dev=0"));
+                                        startActivity(intent_gdmap);
+                                    }
+                                }
+                            }))
+                    .show();
+        }
+    }
+
+    //1.百度地图包名
+    public static final String BAIDUMAP_PACKAGENAME = "com.baidu.BaiduMap";
+    //2.高德地图包名
+    public static final String AUTONAVI_PACKAGENAME = "com.autonavi.minimap";
+    private List<String> mapList = new ArrayList<>();
+
+    public List<String> appHasMap(Context context) {
+        if (isAvilible(context, BAIDUMAP_PACKAGENAME)) {
+            mapList.add("百度地图");
+        }
+        if (isAvilible(context, AUTONAVI_PACKAGENAME)) {
+            mapList.add("高德地图");
+        }
+        return mapList;
+    }
+
+    /**
+     * 检查手机上是否安装了指定的软件
+     *
+     * @param context
+     * @param packageName：应用包名
+     * @return
+     */
+    public static boolean isAvilible(Context context, String packageName) {
+        //获取packagemanager
+        final PackageManager packageManager = context.getPackageManager();
+        //获取所有已安装程序的包信息
+        List<PackageInfo> packageInfos = packageManager.getInstalledPackages(0);
+        //用于存储所有已安装程序的包名
+        List<String> packageNames = new ArrayList<String>();
+        //从pinfo中将包名字逐一取出，压入pName list中
+        if (packageInfos != null) {
+            for (int i = 0; i < packageInfos.size(); i++) {
+                String packName = packageInfos.get(i).packageName;
+                packageNames.add(packName);
+            }
+        }
+        //判断packageNames中是否有目标程序的包名，有TRUE，没有FALSE
+        return packageNames.contains(packageName);
+    }
+
 }
