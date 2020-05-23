@@ -3,12 +3,16 @@ package com.feitianzhu.huangliwo.analyze;
 import android.content.Context;
 import android.util.Log;
 
+import com.feitianzhu.huangliwo.common.Constant;
 import com.google.gson.Gson;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.commonsdk.statistics.common.DeviceConfig;
 import com.umeng.message.IUmengRegisterCallback;
 import com.umeng.message.PushAgent;
+import com.umeng.socialize.PlatformConfig;
+import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.UMShareConfig;
 
 //import com.umeng.message.IUmengRegisterCallback;
 //import com.umeng.message.PushAgent;

@@ -40,7 +40,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
-        tools:replace="android:icon, android:theme">
+        tools:replace="android:icon,android:theme,android:label">
         <activity android:name=".travel.TraveFormActivity"></activity>
         <activity android:name=".travel.TraveDetailActivity" /> <!-- 添加provider -->
         <provider
@@ -192,12 +192,8 @@
         <activity
             android:name=".common.base.activity.LazyWebActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
-            android:screenOrientation="portrait" /> <!-- ShareSdk  start -->
-        <activity
-            android:name="com.mob.tools.MobUIShell"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:windowSoftInputMode="stateHidden|adjustResize" /> <!-- 微信分享回调 -->
+            android:screenOrientation="portrait" />
+        <!-- ShareSdk  start -->
         <activity
             android:name=".wxapi.WXEntryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -741,6 +737,25 @@
             <grant-uri-permission android:pathPattern=".*" />
         </provider>
         <!-- 以下为基本配置信息，需要自行添加至您的AndroidManifest文件中 end-->
+
+        <!--友盟分享-->
+        <activity
+            android:name="com.tencent.tauth.AuthActivity"
+            android:launchMode="singleTask"
+            android:noHistory="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="tencent${qqappid}" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.tencent.connect.common.AssistActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
     </application>
 
 </manifest>

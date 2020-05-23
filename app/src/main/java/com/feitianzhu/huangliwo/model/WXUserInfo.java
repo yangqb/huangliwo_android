@@ -11,8 +11,6 @@ import java.util.List;
  * email: 694125155@qq.com
  */
 public class WXUserInfo implements Serializable {
-    public String errcode;//": 40029,
-    public String errmsg;//": "invalid code"
     public String openid;//": "OPENID",
     public String nickname;//": "NICKNAME",
     public int sex;//": 1,

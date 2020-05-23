@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.feitianzhu.huangliwo.analyze.UMengAnalyze;
+import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.core.log.HttpLogUtil;
 import com.feitianzhu.huangliwo.core.network.networkcheck.NetWorkState;
 import com.feitianzhu.huangliwo.core.network.networkcheck.NetworkConnectChangedReceiver;
@@ -23,9 +24,6 @@ import com.lzy.okgo.cache.CacheMode;
 import com.lzy.okgo.cookie.CookieJarImpl;
 import com.lzy.okgo.cookie.store.DBCookieStore;
 import com.lzy.okgo.https.HttpsUtils;
-import com.mob.MobApplication;
-
-import com.mob.MobSDK;
 import com.scwang.smartrefresh.header.MaterialHeader;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.DefaultRefreshFooterCreator;
@@ -37,8 +35,11 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.footer.BallPulseFooter;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.footer.FalsifyFooter;
-import com.tencent.bugly.crashreport.CrashReport;
 
+import com.umeng.commonsdk.UMConfigure;
+import com.umeng.socialize.PlatformConfig;
+import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.UMShareConfig;
 import com.uuzuche.lib_zxing.activity.ZXingLibrary;
 
 import java.util.concurrent.TimeUnit;
@@ -100,6 +101,13 @@ public class App extends Application {
 
     }
 
+    {
+
+        PlatformConfig.setWeixin(Constant.WX_APP_ID, "9e4574f38b2b81b24f5305105626bd03");
+        PlatformConfig.setQQZone("1110519400", "YenznwVDRAFyMEgf");
+        PlatformConfig.setQQFileProvider("com.feitianzhu.huangliwo.fileprovider");
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -107,10 +115,7 @@ public class App extends Application {
         ZXingLibrary.initDisplayOpinion(this);
         initOkgo();
         initPush();
-        MobSDK.init(this, "2cfea20c40b5c", "d05a96dcf8c7c603f1429933d6dd957f");
-        MobSDK.submitPolicyGrantResult(true, null); //调用位置开发者可以自己制定，只需要在使用SDK功能之前调用即可。该接口必须接入，否则可能造成无法使用MobTech各SDK提供的相关服务。
         AutoSizeConfig.getInstance().setCustomFragment(true);//屏幕适配
-        CrashReport.initCrashReport(getApplicationContext(), "ad4dea9550", false); //Bugly正式发布改为false
         SDKInitializer.initialize(this);
         ToastUtils.init(this);
         ToastUtils.initStyle(new ToastWhiteStyle2(this));
@@ -118,7 +123,11 @@ public class App extends Application {
         UMengAnalyze.getInstance().openLog(true);
 
         UMengAnalyze.getInstance().init(context);
-
+        //微信登录是否每次授权============
+        UMShareConfig config = new UMShareConfig();
+        config.isNeedAuthOnGetUserInfo(true);
+        UMShareAPI.get(this).setShareConfig(config);
+        //微信登录是否每次授权===========
 
         //网络监听日志
         NetworkConnectChangedReceiver.addNetworkConnectChangedListener(context, new NetworkConnectChangedReceiver.NetworkChangedListener() {
