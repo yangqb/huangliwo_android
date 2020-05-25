@@ -73,7 +73,7 @@ public class Customerservice extends BaseActivity {
                 finish();
                 break;
             case R.id.shopissues:
-                EMClient.getInstance().login("yishun","123456",new EMCallBack() {//回调
+                EMClient.getInstance().login("15011462696","123456",new EMCallBack() {//回调
                     @Override
                     public void onSuccess() {
                         EMClient.getInstance().groupManager().loadAllGroups();
