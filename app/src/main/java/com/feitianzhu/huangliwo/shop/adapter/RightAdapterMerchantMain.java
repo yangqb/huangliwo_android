@@ -8,10 +8,8 @@ import android.widget.LinearLayout;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.feitianzhu.huangliwo.R;
-import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsModel;
 import com.feitianzhu.huangliwo.shop.model.MerchantBean;
-import com.feitianzhu.huangliwo.shop.model.ShopClassifyBean;
 
 import java.util.List;
 

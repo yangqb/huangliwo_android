@@ -1,23 +1,15 @@
 package com.feitianzhu.huangliwo.shop.adapter;
 
-import android.content.Intent;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
-import com.feitianzhu.huangliwo.model.MultipleItem;
-import com.feitianzhu.huangliwo.shop.ShopsDetailActivity;
 import com.feitianzhu.huangliwo.shop.model.ShopClassifyBean;
-import com.itheima.roundedimageview.RoundedImageView;
 
 import java.util.List;
 

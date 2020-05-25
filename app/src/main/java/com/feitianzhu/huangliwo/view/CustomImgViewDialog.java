@@ -1,4 +1,5 @@
 package com.feitianzhu.huangliwo.view;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.net.Uri;
@@ -8,12 +9,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.feitianzhu.huangliwo.R;
+
 import java.io.File;
 
 /**

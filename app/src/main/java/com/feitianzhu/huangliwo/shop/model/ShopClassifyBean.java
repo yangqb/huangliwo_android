@@ -1,6 +1,5 @@
 package com.feitianzhu.huangliwo.shop.model;
 
-import com.chad.library.adapter.base.entity.MultiItemEntity;
 import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
 
 import java.util.ArrayList;

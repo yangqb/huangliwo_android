@@ -13,9 +13,9 @@ import android.widget.TextView;
 
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
-import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.me.ui.ScannerActivity;
 import com.feitianzhu.huangliwo.model.MerchantGiftOrderInfo;
 import com.feitianzhu.huangliwo.model.MerchantGiftOrderModel;

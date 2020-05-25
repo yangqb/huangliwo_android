@@ -3,7 +3,6 @@ package com.feitianzhu.huangliwo.model;
 import com.chad.library.adapter.base.entity.MultiItemEntity;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * package name: com.feitianzhu.huangliwo.model

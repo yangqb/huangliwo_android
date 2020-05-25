@@ -27,7 +27,6 @@ import com.feitianzhu.huangliwo.travel.adapter.DistanceAdapter;
 import com.feitianzhu.huangliwo.travel.adapter.MyOilAdapter;
 import com.feitianzhu.huangliwo.travel.bean.OilListBean;
 import com.feitianzhu.huangliwo.travel.request.OilStationsRequest;
-import com.feitianzhu.huangliwo.travel.request.OilTimeRequest;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 import com.feitianzhu.huangliwo.vip.VipActivity;
@@ -39,7 +38,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**

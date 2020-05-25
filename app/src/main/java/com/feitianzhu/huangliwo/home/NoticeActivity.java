@@ -7,12 +7,12 @@ import android.view.View;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
+import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.huangliwo.dao.NetworkDao;
 import com.feitianzhu.huangliwo.events.NotifyEvent;
 import com.feitianzhu.huangliwo.home.adapter.NoticeAdapter;
 import com.feitianzhu.huangliwo.home.entity.NoticeEntity;
-import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 
 import org.greenrobot.eventbus.EventBus;
 

@@ -1,7 +1,6 @@
 package com.feitianzhu.huangliwo;
 
 import android.app.Application;
-import android.content.Context;
 import android.support.v4.app.FragmentActivity;
 import android.text.Html;
 import android.text.Spanned;

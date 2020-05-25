@@ -1,7 +1,6 @@
 package com.feitianzhu.huangliwo.utils;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;

@@ -4,7 +4,6 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
@@ -29,7 +28,6 @@ import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.login.entity.LoginEntity;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.WXLoginInfo;
-import com.feitianzhu.huangliwo.model.WXLoginModel;
 import com.feitianzhu.huangliwo.model.WXUserInfo;
 import com.feitianzhu.huangliwo.utils.EncryptUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
@@ -44,23 +42,13 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.base.Request;
 import com.socks.library.KLog;
-import com.tencent.mm.opensdk.modelmsg.SendAuth;
-import com.tencent.mm.opensdk.openapi.IWXAPI;
-import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
-import com.umeng.socialize.UMShareConfig;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
-import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.feitianzhu.huangliwo.common.Constant.POST_MINE_INFO;

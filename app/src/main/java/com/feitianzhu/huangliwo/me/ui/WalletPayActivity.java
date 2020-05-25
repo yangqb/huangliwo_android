@@ -6,8 +6,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import butterknife.BindView;
-import butterknife.OnClick;
+
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.base.activity.LazyBaseActivity;
 import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
@@ -20,6 +19,9 @@ import com.hjq.toast.ToastUtils;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * dicallc

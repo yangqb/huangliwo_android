@@ -4,8 +4,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.feitianzhu.huangliwo.R;
-import com.feitianzhu.huangliwo.me.adapter.OrderUseAdapter;
 import com.feitianzhu.huangliwo.common.base.BaseFragment;
+import com.feitianzhu.huangliwo.me.adapter.OrderUseAdapter;
 
 import java.util.ArrayList;
 import java.util.List;

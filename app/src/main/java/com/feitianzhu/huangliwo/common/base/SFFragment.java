@@ -1,13 +1,10 @@
 package com.feitianzhu.huangliwo.common.base;
 
 import android.content.Context;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.feitianzhu.huangliwo.R;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.enums.PopupAnimation;

@@ -2,8 +2,6 @@ package com.feitianzhu.huangliwo.travel.base;
 
 import com.alibaba.fastjson.TypeReference;
 import com.feitianzhu.huangliwo.core.network.BaseRequest;
-import com.feitianzhu.huangliwo.core.network.ParamsBuilder;
-import com.feitianzhu.huangliwo.travel.base.BaseTravelRequest;
 import com.feitianzhu.huangliwo.travel.request.OilTimeResponse;
 import com.hjq.toast.ToastUtils;
 

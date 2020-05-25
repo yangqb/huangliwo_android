@@ -1,7 +1,6 @@
 package com.feitianzhu.huangliwo.model;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * package name: com.feitianzhu.huangliwo.model

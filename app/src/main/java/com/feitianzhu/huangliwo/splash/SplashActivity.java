@@ -6,9 +6,7 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -40,7 +38,6 @@ import com.lzy.okgo.model.Response;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 

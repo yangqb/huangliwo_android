@@ -12,15 +12,7 @@ import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.share.ShareUtils;
 import com.feitianzhu.huangliwo.utils.ShareImageUtils;
-import com.socks.library.KLog;
-import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareAPI;
-import com.umeng.socialize.UMShareListener;
-import com.umeng.socialize.bean.SHARE_MEDIA;
-import com.umeng.socialize.editorpage.ShareActivity;
-import com.umeng.socialize.media.UMImage;
-
-import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.OnClick;

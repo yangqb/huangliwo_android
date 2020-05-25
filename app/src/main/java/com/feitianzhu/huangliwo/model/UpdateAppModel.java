@@ -1,7 +1,5 @@
 package com.feitianzhu.huangliwo.model;
 
-import com.feitianzhu.huangliwo.http.LzyResponse;
-
 import java.io.Serializable;
 
 /**

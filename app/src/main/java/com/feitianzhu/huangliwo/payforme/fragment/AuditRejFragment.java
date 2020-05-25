@@ -1,6 +1,5 @@
 package com.feitianzhu.huangliwo.payforme.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,7 +10,6 @@ import android.view.ViewGroup;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
-import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.LazyFragment;
 import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.huangliwo.dao.NetworkDao;

@@ -1,16 +1,9 @@
 package com.feitianzhu.huangliwo.shop.adapter;
 
-import android.view.View;
-import android.widget.TextView;
-
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.model.MultiItemShopAndMerchants;
-import com.feitianzhu.huangliwo.model.ShopClassify;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 

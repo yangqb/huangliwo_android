@@ -5,8 +5,6 @@ import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.feitianzhu.huangliwo.R;
-import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
-import com.feitianzhu.huangliwo.model.MerchantsInfoNew;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsModel;
 import com.itheima.roundedimageview.RoundedImageView;
 

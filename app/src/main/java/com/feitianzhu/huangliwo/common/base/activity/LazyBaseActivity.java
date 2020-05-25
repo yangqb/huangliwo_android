@@ -6,10 +6,10 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.feitianzhu.huangliwo.R;
+
 import butterknife.BindView;
 import butterknife.OnClick;
-
-import com.feitianzhu.huangliwo.R;
 
 /**
  * Created by dicallc on 2017/9/11 0011.

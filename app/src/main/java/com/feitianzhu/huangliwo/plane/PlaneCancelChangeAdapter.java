@@ -7,8 +7,6 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.model.CustomTgqChangeModel;
-import com.feitianzhu.huangliwo.model.TgqPointCharges;
-import com.feitianzhu.huangliwo.utils.MathUtils;
 
 import java.util.List;
 

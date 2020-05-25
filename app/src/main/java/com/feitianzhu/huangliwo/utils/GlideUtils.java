@@ -1,7 +1,6 @@
 package com.feitianzhu.huangliwo.utils;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.DisplayMetrics;
 import android.view.ViewGroup;
@@ -13,9 +12,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.feitianzhu.huangliwo.R;
-import com.feitianzhu.huangliwo.common.Constant;
 import com.itheima.roundedimageview.RoundedImageView;
 import com.tencent.mm.opensdk.utils.Log;
 

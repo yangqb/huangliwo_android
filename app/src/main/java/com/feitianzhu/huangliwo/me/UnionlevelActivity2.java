@@ -7,8 +7,8 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
-import com.feitianzhu.huangliwo.me.adapter.UnionlevelAdapter2;
 import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
+import com.feitianzhu.huangliwo.me.adapter.UnionlevelAdapter2;
 import com.feitianzhu.huangliwo.me.helper.DialogHelper;
 import com.feitianzhu.huangliwo.model.FuFriendModel;
 

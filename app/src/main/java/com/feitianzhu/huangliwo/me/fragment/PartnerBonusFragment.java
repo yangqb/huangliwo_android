@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.feitianzhu.huangliwo.R;
-import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.LazyFragment;
 import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.huangliwo.me.adapter.ReleaseBonusAdapter;
@@ -30,7 +29,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import okhttp3.Call;
 
 /**
  * Created by Vya on 2017/9/4 0004.

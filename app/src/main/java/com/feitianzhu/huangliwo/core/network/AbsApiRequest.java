@@ -3,9 +3,6 @@ package com.feitianzhu.huangliwo.core.network;
 import com.alibaba.fastjson.TypeReference;
 import com.lzy.okgo.model.HttpHeaders;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import rx.Subscription;
 
 /**

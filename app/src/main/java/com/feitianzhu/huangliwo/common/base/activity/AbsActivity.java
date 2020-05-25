@@ -1,6 +1,5 @@
 package com.feitianzhu.huangliwo.common.base.activity;
 
-import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
@@ -17,9 +16,6 @@ import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.enums.PopupAnimation;
 import com.lxj.xpopup.impl.LoadingPopupView;
 import com.umeng.message.PushAgent;
-
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 /**
  * Created by jiangdikai on 2017/9/4.

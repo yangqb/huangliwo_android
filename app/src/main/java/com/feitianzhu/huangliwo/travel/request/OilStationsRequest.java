@@ -4,7 +4,6 @@ import com.alibaba.fastjson.TypeReference;
 import com.feitianzhu.huangliwo.core.network.ParamsBuilder;
 import com.feitianzhu.huangliwo.travel.base.BaseTravelRequest;
 import com.feitianzhu.huangliwo.travel.bean.OilListBean;
-import com.feitianzhu.huangliwo.utils.SPUtils;
 
 import java.util.List;
 

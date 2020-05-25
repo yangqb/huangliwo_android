@@ -4,8 +4,6 @@ import com.chad.library.adapter.base.entity.MultiItemEntity;
 import com.feitianzhu.huangliwo.model.MerchantGiftOrderModel;
 import com.feitianzhu.huangliwo.model.MerchantsEarnRulesInfo;
 
-import java.util.List;
-
 /**
  * package name: com.feitianzhu.huangliwo.pushshop.bean
  * user: yangqinbo

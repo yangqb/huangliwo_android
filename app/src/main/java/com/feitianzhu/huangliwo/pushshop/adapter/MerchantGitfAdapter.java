@@ -13,7 +13,6 @@ import android.text.style.StyleSpan;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseItemDraggableAdapter;
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.model.MerchantGitModel;

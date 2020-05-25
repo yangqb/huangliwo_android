@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.view.View;
 
 import com.hjq.toast.ToastUtils;
@@ -14,7 +13,6 @@ import com.tencent.mm.opensdk.utils.Log;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 

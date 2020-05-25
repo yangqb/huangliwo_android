@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,21 +11,16 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.feitianzhu.huangliwo.R;
+import com.feitianzhu.huangliwo.model.ShopsInfo;
+import com.feitianzhu.huangliwo.utils.MapUtils;
+import com.hjq.toast.ToastUtils;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-
-import com.afollestad.materialdialogs.MaterialDialog;
-import com.feitianzhu.huangliwo.R;
-import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
-import com.feitianzhu.huangliwo.model.ShopsInfo;
-import com.feitianzhu.huangliwo.shop.ShopDao;
-import com.feitianzhu.huangliwo.utils.MapUtils;
-import com.hjq.toast.ToastUtils;
-import com.socks.library.KLog;
-
-import static com.feitianzhu.huangliwo.common.Constant.FailCode;
 
 /**
  * description: 商鋪信息展示頁面

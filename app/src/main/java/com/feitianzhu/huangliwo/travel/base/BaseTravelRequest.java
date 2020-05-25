@@ -3,7 +3,6 @@ package com.feitianzhu.huangliwo.travel.base;
 import com.alibaba.fastjson.TypeReference;
 import com.feitianzhu.huangliwo.core.network.BaseRequest;
 import com.feitianzhu.huangliwo.core.network.BaseResponse;
-import com.feitianzhu.huangliwo.utils.Urls;
 import com.hjq.toast.ToastUtils;
 
 /**

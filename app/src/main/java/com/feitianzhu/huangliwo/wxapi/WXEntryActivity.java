@@ -7,7 +7,9 @@
  */
 
 package com.feitianzhu.huangliwo.wxapi;
+
 import android.os.Bundle;
+
 import com.tencent.mm.opensdk.modelbase.BaseReq;
 import com.tencent.mm.opensdk.modelbase.BaseResp;
 import com.umeng.socialize.weixin.view.WXCallbackActivity;

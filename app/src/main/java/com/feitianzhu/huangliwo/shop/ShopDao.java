@@ -1,6 +1,7 @@
 package com.feitianzhu.huangliwo.shop;
 
 import android.content.Context;
+
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.huangliwo.common.impl.onNetFinishLinstenerT;
@@ -13,6 +14,7 @@ import com.feitianzhu.huangliwo.model.WXModel;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.lzy.okgo.OkGo;
+
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.huangliwo.common.Constant.LOAD_USER_AUTH;
 import static com.feitianzhu.huangliwo.common.Constant.USERID;

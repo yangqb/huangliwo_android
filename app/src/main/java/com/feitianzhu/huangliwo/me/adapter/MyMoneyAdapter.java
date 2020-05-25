@@ -1,10 +1,12 @@
 package com.feitianzhu.huangliwo.me.adapter;
 
 import android.support.annotation.Nullable;
+
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.model.WalletModel;
+
 import java.util.List;
 
 /**

@@ -8,9 +8,12 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
-import butterknife.ButterKnife;
+
 import com.feitianzhu.huangliwo.R;
+
 import java.lang.ref.WeakReference;
+
+import butterknife.ButterKnife;
 
 public abstract class BaseDialog extends DialogFragment {
 

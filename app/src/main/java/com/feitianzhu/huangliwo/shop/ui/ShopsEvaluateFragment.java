@@ -8,10 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
-
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.base.LazyFragment;
@@ -23,6 +19,10 @@ import com.hjq.toast.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * description: 店铺评价列表

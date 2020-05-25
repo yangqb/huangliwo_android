@@ -1,6 +1,7 @@
 package com.feitianzhu.huangliwo.payforme;
 
 import android.support.annotation.IntDef;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 

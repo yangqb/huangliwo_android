@@ -3,7 +3,6 @@ package com.feitianzhu.huangliwo.core.log;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.MotionEvent;
 
 import com.alibaba.fastjson.JSON;
 

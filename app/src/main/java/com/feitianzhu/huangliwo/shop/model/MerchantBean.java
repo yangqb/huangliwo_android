@@ -1,6 +1,5 @@
 package com.feitianzhu.huangliwo.shop.model;
 
-import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsModel;
 
 import java.util.ArrayList;

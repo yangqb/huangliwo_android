@@ -2,12 +2,10 @@ package com.feitianzhu.huangliwo.shop.adapter;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
-import com.feitianzhu.huangliwo.model.MultipleItem;
 import com.itheima.roundedimageview.RoundedImageView;
 
 import java.util.List;

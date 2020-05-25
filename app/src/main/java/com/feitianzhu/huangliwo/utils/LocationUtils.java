@@ -13,9 +13,9 @@ import com.feitianzhu.huangliwo.common.impl.Manager;
 import com.feitianzhu.huangliwo.model.LocationPost;
 import com.feitianzhu.huangliwo.model.MyPoint;
 
-import java.util.List;
-
 import org.greenrobot.eventbus.EventBus;
+
+import java.util.List;
 
 /**
  * Created by jiangdikai on 2017/3/9.

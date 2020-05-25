@@ -3,9 +3,6 @@ package com.feitianzhu.huangliwo.model;
 import com.chad.library.adapter.base.entity.MultiItemEntity;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsClassifyModel;
 
-import java.io.Serializable;
-import java.util.List;
-
 /**
  * package name: com.feitianzhu.huangliwo.model
  * user: yangqinbo

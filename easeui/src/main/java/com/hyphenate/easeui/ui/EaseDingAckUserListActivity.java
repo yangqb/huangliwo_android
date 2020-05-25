@@ -9,10 +9,6 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.hyphenate.EMValueCallBack;
-import com.hyphenate.chat.EMClient;
-import com.hyphenate.chat.EMCursorResult;
-import com.hyphenate.chat.EMGroupReadAck;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.R;
 import com.hyphenate.easeui.model.EaseDingMessageHelper;

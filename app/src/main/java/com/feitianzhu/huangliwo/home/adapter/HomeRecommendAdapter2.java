@@ -24,7 +24,6 @@ import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 import com.itheima.roundedimageview.RoundedImageView;
 
 import java.util.List;
-import java.util.Locale;
 
 
 /**

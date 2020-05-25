@@ -7,7 +7,6 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.model.LogisticsInfo;
-import com.feitianzhu.huangliwo.model.LogisticsModel;
 import com.feitianzhu.huangliwo.utils.DateUtils;
 
 import java.util.List;

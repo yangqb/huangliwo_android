@@ -10,7 +10,6 @@ import android.text.Spanned;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;

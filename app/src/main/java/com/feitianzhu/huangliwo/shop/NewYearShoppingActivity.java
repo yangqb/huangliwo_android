@@ -13,9 +13,9 @@ import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
-import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.NewYearGoodsModel;
@@ -35,10 +35,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-
-import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
-import static com.feitianzhu.huangliwo.common.Constant.POST_MINE_INFO;
-import static com.feitianzhu.huangliwo.common.Constant.USERID;
 
 /**
  * package name: com.feitianzhu.huangliwo.shop

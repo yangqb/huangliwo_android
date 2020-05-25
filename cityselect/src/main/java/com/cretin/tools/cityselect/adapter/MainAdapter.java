@@ -8,14 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cretin.tools.cityselect.R;
 import com.cretin.tools.cityselect.callback.OnItemClickListener;
 import com.cretin.tools.cityselect.callback.OnLocationListener;
 import com.cretin.tools.cityselect.model.CityInfoModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MainAdapter extends RecyclerView.Adapter<MainAdapter.BaseViewHolder> {

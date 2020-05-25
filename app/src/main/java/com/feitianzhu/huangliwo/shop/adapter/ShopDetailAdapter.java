@@ -20,7 +20,6 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
-import com.feitianzhu.huangliwo.model.MultipleItem;
 import com.feitianzhu.huangliwo.model.MultipleMerchantsItem;
 import com.feitianzhu.huangliwo.utils.MathUtils;
 import com.feitianzhu.huangliwo.utils.UserInfoUtils;
@@ -30,9 +29,6 @@ import com.itheima.roundedimageview.RoundedImageView;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
-
-import cc.shinichi.library.ImagePreview;
 
 /**
  * @class name：com.feitianzhu.fu700.shop.adapter

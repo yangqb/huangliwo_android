@@ -2,12 +2,8 @@ package com.feitianzhu.huangliwo.core.network.test;
 
 import com.alibaba.fastjson.TypeReference;
 import com.feitianzhu.huangliwo.core.network.BaseRequest;
-import com.feitianzhu.huangliwo.core.network.BaseResponse;
 import com.feitianzhu.huangliwo.core.network.ParamsBuilder;
 import com.feitianzhu.huangliwo.model.HomeShops;
-import com.feitianzhu.huangliwo.model.UpdateAppModel;
-import com.lzy.okgo.model.HttpHeaders;
-import com.vector.update_app.UpdateAppBean;
 
 import static com.feitianzhu.huangliwo.common.Constant.UAPDATE;
 

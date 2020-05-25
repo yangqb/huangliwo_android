@@ -17,7 +17,6 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.feitianzhu.huangliwo.R;
-import com.feitianzhu.huangliwo.shop.ui.dialog.ProvinceDialog2;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;

@@ -20,9 +20,9 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
-import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.MineQRcodeModel;
@@ -37,12 +37,10 @@ import com.feitianzhu.huangliwo.view.CircleImageView;
 import com.hjq.toast.ToastUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
-import com.socks.library.KLog;
 import com.umeng.socialize.UMShareAPI;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 
 import java.io.ByteArrayOutputStream;
-import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.OnClick;

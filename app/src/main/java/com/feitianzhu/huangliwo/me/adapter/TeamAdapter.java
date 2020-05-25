@@ -8,7 +8,6 @@ import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.feitianzhu.huangliwo.R;
-import com.feitianzhu.huangliwo.me.MyTeamActivity;
 import com.feitianzhu.huangliwo.model.TeamModel;
 import com.feitianzhu.huangliwo.utils.DateUtils;
 import com.feitianzhu.huangliwo.utils.MathUtils;
