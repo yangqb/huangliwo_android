@@ -25,14 +25,35 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/dp_10">
+                <LinearLayout
+                    android:id="@+id/service"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="8dp">
 
+                    <ImageView
+                        android:id="@+id/serviceimg"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@mipmap/e01_28kefu" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:text="客服"
+                        android:textColor="@color/color_666666"
+                        android:textSize="@dimen/sp_12" />
+                </LinearLayout>
                 <LinearLayout
                     android:id="@+id/collect"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:padding="15dp">
+                    android:padding="8dp">
 
                     <ImageView
                         android:id="@+id/imgCollect"
@@ -55,7 +76,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:padding="15dp">
+                    android:padding="8dp">
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -423,7 +444,7 @@
 
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="13dp"
                         android:layout_margin="@dimen/dp_10"
                         android:text="商品详情"
                         android:textColor="@color/color_333333"
