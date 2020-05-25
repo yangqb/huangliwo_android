@@ -113,7 +113,7 @@ public class OrderAdapter extends BaseMultiItemQuickAdapter<MultipleItemOrderMod
                     helper.setText(R.id.tvStatus, "等待收货");
                     helper.setText(R.id.btn_confirm_goods, "确认收货");
                     helper.setText(R.id.btn_logistics, " 查看物流");
-                    helper.setText(R.id.btn_refund, "申请退款");
+                    helper.setText(R.id.btn_refund, "申请退货");
                     helper.setGone(R.id.btn_confirm_goods, true);
                     helper.setGone(R.id.btn_logistics, true);
                     helper.setGone(R.id.btn_refund, true);
