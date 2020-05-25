@@ -100,6 +100,11 @@ android {
     }
     //use legacy for android 6.0
     useLibrary 'org.apache.http.legacy'
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+
 }
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')

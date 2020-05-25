@@ -47,6 +47,7 @@ public abstract class AbsActivity extends AppCompatActivity {
                     .statusBarDarkFont(true, 0.2f)
                     .navigationBarColor(R.color.white)
                     .statusBarColor(R.color.transparent)
+                    .navigationBarDarkIcon(true)
                     .init();
         }
     }
