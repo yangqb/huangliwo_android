@@ -14,7 +14,7 @@ public abstract class OilTimeBaseRequest extends BaseRequest {
 
     @Override
     public String getAPIBaseURL() {
-        return "http://test-mcs.czb365.com/";
+        return "http://mcs.czb365.com/";
     }
 
 

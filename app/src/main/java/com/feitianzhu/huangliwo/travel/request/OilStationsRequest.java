@@ -4,6 +4,7 @@ import com.alibaba.fastjson.TypeReference;
 import com.feitianzhu.huangliwo.core.network.ParamsBuilder;
 import com.feitianzhu.huangliwo.travel.base.BaseTravelRequest;
 import com.feitianzhu.huangliwo.travel.bean.OilListBean;
+import com.feitianzhu.huangliwo.utils.SPUtils;
 
 import java.util.List;
 
@@ -13,6 +14,8 @@ import java.util.List;
 public class OilStationsRequest extends BaseTravelRequest {
     public String longitude;
     public String latitude;
+    public String accessToken;
+    public String userId;
     public int kilometre;
     public int oilNum;
     public int limitNum;
@@ -38,6 +41,8 @@ public class OilStationsRequest extends BaseTravelRequest {
                 .append("latitude", latitude).append("kilometre", kilometre)
                 .append("oilNum", oilNum).append("limitNum", limitNum)
                 .append("curPage", curPage)
+                .append("userId", userId)
+                .append("accessToken",accessToken)
 
         );
     }

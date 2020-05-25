@@ -11,6 +11,9 @@ public class OilOrderRequest extends BaseTravelRequest {
     public int limitNum;
     public int curPage;
     public String phone;
+    public String accessToken;
+    public String userId;
+
     @Override
     public String getAPIName() {
         return "fleetin/getOrderInfo";
@@ -29,7 +32,11 @@ public class OilOrderRequest extends BaseTravelRequest {
 
     @Override
     public ParamsBuilder appendParams(ParamsBuilder builder) {
-        return super.appendParams(builder.append("limitNum",limitNum).append("curPage",curPage).append("phone",phone));
+        return super.appendParams(builder
+                .append("limitNum",limitNum)
+                .append("accessToken",accessToken)
+                .append("userId",userId)
+                .append("curPage",curPage).append("phone",phone));
     }
 
     @Override

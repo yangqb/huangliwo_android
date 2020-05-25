@@ -164,8 +164,7 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EaseUI.getInstance().getAvatarOptions();
-        if (getArguments() != null) {
+         if (getArguments() != null) {
             mParam1 = getArguments().getInt(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }

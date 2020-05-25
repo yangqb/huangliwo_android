@@ -26,7 +26,6 @@ import com.feitianzhu.huangliwo.travel.adapter.Distance2Adapter;
 import com.feitianzhu.huangliwo.travel.adapter.DistanceAdapter;
 import com.feitianzhu.huangliwo.travel.adapter.MyOilAdapter;
 import com.feitianzhu.huangliwo.travel.bean.OilListBean;
-import com.feitianzhu.huangliwo.travel.request.OilLoginRequest;
 import com.feitianzhu.huangliwo.travel.request.OilStationsRequest;
 import com.feitianzhu.huangliwo.travel.request.OilTimeRequest;
 import com.feitianzhu.huangliwo.utils.SPUtils;
@@ -83,12 +82,13 @@ public class TravelHomeActivity extends BaseActivity {
     private String oilnumbersum;
     private String[] kms;
     private String[] split;
-    private int pageNo=1;
-    private int pagenum=20;
+    private int pageNo = 1;
+    private int pagenum = 20;
     private boolean isLoadMore;
     private MyOilAdapter myoiladapter;
     private String token;
     private MineInfoModel userInfo;
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_travel_home;
@@ -167,18 +167,20 @@ public class TravelHomeActivity extends BaseActivity {
                 pageNo++;
                 dinstancenumber = (String) distance.getText();
                 oilnumbersum = (String) oilnumber.getText();
-                initwork(dinstancenumber, oilnumbersum,true);
+                initwork(dinstancenumber, oilnumbersum, true);
             }
+
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                 isLoadMore = false;
                 pageNo = 1;
                 dinstancenumber = (String) distance.getText();
                 oilnumbersum = (String) oilnumber.getText();
-                initwork(dinstancenumber, oilnumbersum,true);
+                initwork(dinstancenumber, oilnumbersum, true);
             }
         });
     }
+
     private void initoil() {
         dinstancenumber = (String) distance.getText();
         oilnumbersum = (String) oilnumber.getText();
@@ -187,7 +189,7 @@ public class TravelHomeActivity extends BaseActivity {
             longitude = myPoint.longitude + "";
             latitude = myPoint.latitude + "";
         }
-        initwork(dinstancenumber, oilnumbersum,true);
+        initwork(dinstancenumber, oilnumbersum, true);
     }
 
     @OnClick({R.id.distancerela, R.id.oilnumberrela})
@@ -212,7 +214,7 @@ public class TravelHomeActivity extends BaseActivity {
                         String dinstancenumber = dinstance.get(position);
                         distance.setText(dinstancenumber);
                         oilnumbersum = (String) oilnumber.getText();
-                        initwork(dinstancenumber, oilnumbersum,false);
+                        initwork(dinstancenumber, oilnumbersum, false);
                         popupWindow.dismiss();
                     }
                 });
@@ -239,7 +241,7 @@ public class TravelHomeActivity extends BaseActivity {
                         String oilnumbersum = strings.get(position);
                         oilnumber.setText(oilnumbersum);
                         dinstancenumber = (String) distance.getText();
-                        initwork(dinstancenumber, oilnumbersum,false);
+                        initwork(dinstancenumber, oilnumbersum, false);
                         popupWindow.dismiss();
                     }
                 });
@@ -256,7 +258,7 @@ public class TravelHomeActivity extends BaseActivity {
                         String oilnumbersum = strings1.get(position);
                         oilnumber.setText(oilnumbersum);
                         dinstancenumber = (String) distance.getText();
-                        initwork(dinstancenumber, oilnumbersum,false);
+                        initwork(dinstancenumber, oilnumbersum, false);
                         popupWindow.dismiss();
                     }
                 });
@@ -266,11 +268,14 @@ public class TravelHomeActivity extends BaseActivity {
                 break;
         }
     }
-    private void initwork(String dinstancenumber, String oilnumbersum,boolean isLoadM) {
+
+    private void initwork(String dinstancenumber, String oilnumbersum, boolean isLoadM) {
         kms = dinstancenumber.split("km");
         split = oilnumbersum.split("#");
         oilrecy.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         OilStationsRequest oilStationsRequest = new OilStationsRequest(longitude, latitude, Integer.valueOf(kms[0]), Integer.valueOf(split[0]), pagenum, pageNo);
+        oilStationsRequest.userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
+        oilStationsRequest.accessToken = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         oilStationsRequest.call(new ApiLifeCallBack<List<OilListBean>>() {
             @Override
             public void onStart() {
@@ -285,9 +290,9 @@ public class TravelHomeActivity extends BaseActivity {
             @Override
             public void onAPIResponse(List<OilListBean> response) {
                 if (response != null && response.size() > 0) {
-                    if (isLoadM){
+                    if (isLoadM) {
                         myoiladapter.addData(response);
-                    }else{
+                    } else {
                         myoiladapter.setNewData(response);
                     }
                     if (!isLoadMore) {
@@ -338,6 +343,7 @@ public class TravelHomeActivity extends BaseActivity {
                     });
                 }
             }
+
             @Override
             public void onAPIError(int errorCode, String errorMsg) {
                 myoiladapter.setNewData(null);

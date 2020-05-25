@@ -63,16 +63,19 @@ public class TraveFormActivity extends BaseBindingActivity {
         traveFormAdapter.notifyDataSetChanged();
 
 
-        dataBinding.recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
-        OilOrderRequest oilOrderRequest=new OilOrderRequest(50,1,phone);
+        dataBinding.recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        OilOrderRequest oilOrderRequest = new OilOrderRequest(50, 1, phone);
+        oilOrderRequest.userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
+        oilOrderRequest.accessToken = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         oilOrderRequest.call(new ApiCallBack<List<OilOrederBean>>() {
             @Override
             public void onAPIResponse(List<OilOrederBean> response) {
-                if (response!=null && response.size()>0){
+                if (response != null && response.size() > 0) {
                     TraveFormAdapter traveFormAdapter = new TraveFormAdapter(response);
                     dataBinding.recyclerView.setAdapter(traveFormAdapter);
                 }
             }
+
             @Override
             public void onAPIError(int errorCode, String errorMsg) {
 
