@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#13AAFF</color>
     <color name="colorAccent">#13AAFF</color>
     <color name="transparent">@android:color/transparent</color>
+    <color name="transparent_50">#80000000</color>
     <color name="text_gray">#A4ACB0</color>
     <color name="sf_blue">#FED428</color>
     <color name="sf_black">#1c1d20</color>
