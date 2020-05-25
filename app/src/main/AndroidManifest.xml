@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.feitianzhu.huangliwo">
+    package="com.feitianzhu.huangliwo" >
     <!-- 这个权限用于进行网络定位 -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- 这个权限用于访问GPS定位 -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- 用于访问wifi网络信息，wifi信息会用于进行网络定位 -->
@@ -32,7 +32,8 @@
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 
-    <application xmlns:tools="http://schemas.android.com/tools"
+    <application
+        xmlns:tools="http://schemas.android.com/tools"
         android:name=".App"
         android:allowBackup="true"
         android:icon="@mipmap/logo"
@@ -41,8 +42,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
-        tools:replace="android:icon,android:theme,android:label">
-        <activity android:name=".shop.ImActivity"></activity>
+        tools:replace="android:icon,android:theme,android:label" >
+        <activity android:name=".shop.ImActivity" >
+        </activity>
         <activity android:name=".shop.Customerservice" />
         <activity android:name=".travel.TraveFormActivity" />
         <activity android:name=".travel.TraveDetailActivity" /> <!-- 添加provider -->
@@ -50,7 +52,7 @@
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.feitianzhu.huangliwo.fileprovider"
             android:exported="false"
-            android:grantUriPermissions="true">
+            android:grantUriPermissions="true" >
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
@@ -95,7 +97,7 @@
             android:name=".splash.SplashActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait"
-            android:theme="@style/SplashTheme">
+            android:theme="@style/SplashTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -596,7 +598,7 @@
         <service
             android:name="com.taobao.accs.ChannelService"
             android:exported="true"
-            android:process=":channel">
+            android:process=":channel" >
             <intent-filter>
                 <action android:name="com.taobao.accs.intent.action.SERVICE" />
             </intent-filter>
@@ -606,7 +608,7 @@
         </service>
         <service
             android:name="com.taobao.accs.data.MsgDistributeService"
-            android:exported="true">
+            android:exported="true" >
             <intent-filter>
                 <action android:name="com.taobao.accs.intent.action.RECEIVE" />
             </intent-filter>
@@ -614,7 +616,7 @@
 
         <receiver
             android:name="com.taobao.accs.EventReceiver"
-            android:process=":channel">
+            android:process=":channel" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
@@ -632,7 +634,7 @@
         </receiver>
         <receiver
             android:name="com.taobao.accs.ServiceReceiver"
-            android:process=":channel">
+            android:process=":channel" >
             <intent-filter>
                 <action android:name="com.taobao.accs.intent.action.COMMAND" />
             </intent-filter>
@@ -650,7 +652,7 @@
             android:process=":channel" />
         <service
             android:name="org.android.agoo.accs.AgooService"
-            android:exported="true">
+            android:exported="true" >
             <intent-filter>
                 <action android:name="com.taobao.accs.intent.action.RECEIVE" />
             </intent-filter>
@@ -658,7 +660,7 @@
         <service
             android:name="com.umeng.message.UmengIntentService"
             android:exported="true"
-            android:process=":channel">
+            android:process=":channel" >
             <intent-filter>
                 <action android:name="org.agoo.android.intent.action.RECEIVE" />
             </intent-filter>
@@ -666,7 +668,7 @@
         <service
             android:name="com.umeng.message.XiaomiIntentService"
             android:exported="true"
-            android:process=":channel">
+            android:process=":channel" >
             <intent-filter>
                 <action android:name="org.agoo.android.intent.action.RECEIVE" />
             </intent-filter>
@@ -675,7 +677,7 @@
         <receiver
             android:name="com.taobao.agoo.AgooCommondReceiver"
             android:exported="true"
-            android:process=":channel">
+            android:process=":channel" >
             <intent-filter>
                 <action android:name="${applicationId}.intent.action.COMMAND" />
             </intent-filter>
@@ -689,7 +691,7 @@
         <service
             android:name="com.umeng.message.UmengMessageIntentReceiverService"
             android:exported="true"
-            android:process=":channel">
+            android:process=":channel" >
             <intent-filter>
                 <action android:name="org.android.agoo.client.MessageReceiverService" />
             </intent-filter>
@@ -702,7 +704,7 @@
         <service
             android:name="com.umeng.message.UmengMessageCallbackHandlerService"
             android:exported="false"
-            android:permission="android.permission.BIND_JOB_SERVICE">
+            android:permission="android.permission.BIND_JOB_SERVICE" >
             <intent-filter>
                 <action android:name="com.umeng.messge.registercallback.action" />
             </intent-filter>
@@ -727,14 +729,14 @@
         <provider
             android:name="com.umeng.message.provider.MessageProvider"
             android:authorities="${applicationId}.umeng.message"
-            android:exported="false">
+            android:exported="false" >
             <grant-uri-permission android:pathPattern=".*" />
         </provider> <!-- 以下为基本配置信息，需要自行添加至您的AndroidManifest文件中 end -->
         <!-- 友盟分享 -->
         <activity
             android:name="com.tencent.tauth.AuthActivity"
             android:launchMode="singleTask"
-            android:noHistory="true">
+            android:noHistory="true" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -750,7 +752,7 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" /> <!-- 设置环信应用的AppKey -->
         <meta-data
             android:name="EASEMOB_APPKEY"
-            android:value="1125200507181191" /> <!-- 声明SDK所需的service SDK核心功能 -->
+            android:value="1125200507181191#bianlidabenying" /> <!-- 声明SDK所需的service SDK核心功能 -->
         <service
             android:name="com.hyphenate.chat.EMChatService"
             android:exported="true" />
@@ -758,7 +760,7 @@
             android:name="com.hyphenate.chat.EMJobService"
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE" /> <!-- 声明SDK所需的receiver -->
-        <receiver android:name="com.hyphenate.chat.EMMonitorReceiver">
+        <receiver android:name="com.hyphenate.chat.EMMonitorReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_REMOVED" />
 

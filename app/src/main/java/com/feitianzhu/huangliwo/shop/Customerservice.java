@@ -43,6 +43,12 @@ public class Customerservice extends BaseActivity {
     protected void initView() {
         titleName.setText("在线客服");
 
+//        try {
+//            EMClient.getInstance().createAccount("yishun", "123456");
+//        } catch (HyphenateException e) {
+//            e.printStackTrace();
+//        }
+
     }
 
     @Override
@@ -67,12 +73,6 @@ public class Customerservice extends BaseActivity {
                 finish();
                 break;
             case R.id.shopissues:
-                try {
-                    EMClient.getInstance().createAccount("yishun", "123456");
-
-                } catch (HyphenateException e) {
-                    e.printStackTrace();
-                }
                 EMClient.getInstance().login("yishun","123456",new EMCallBack() {//回调
                     @Override
                     public void onSuccess() {
@@ -93,6 +93,7 @@ public class Customerservice extends BaseActivity {
 
                     @Override
                     public void onError(int code, String message) {
+                        Log.i("onError", "onError: "+code+message);
                         Log.d("main", "登录聊天服务器失败！");
                     }
                 });
