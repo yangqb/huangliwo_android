@@ -3,14 +3,12 @@ package com.feitianzhu.huangliwo.me.fragment;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
-import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.LazyFragment;
 import com.feitianzhu.huangliwo.me.adapter.ShopRecordDetailAdapter;
 import com.feitianzhu.huangliwo.model.ShopRecordDetailModel;
@@ -20,7 +18,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import okhttp3.Call;
 
 
 /**

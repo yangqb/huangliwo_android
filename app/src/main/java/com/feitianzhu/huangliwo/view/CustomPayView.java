@@ -19,8 +19,6 @@ import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.utils.MathUtils;
 import com.lxj.xpopup.core.BottomPopupView;
 
-import butterknife.BindView;
-
 /**
  * package name: com.feitianzhu.huangliwo.view
  * user: yangqinbo

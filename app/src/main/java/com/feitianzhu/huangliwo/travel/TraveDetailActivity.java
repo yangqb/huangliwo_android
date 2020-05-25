@@ -6,7 +6,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.util.Log;
 import android.view.View;
@@ -19,7 +18,6 @@ import com.feitianzhu.huangliwo.common.base.activity.BaseBindingActivity;
 import com.feitianzhu.huangliwo.core.network.ApiCallBack;
 import com.feitianzhu.huangliwo.core.network.ApiLifeCallBack;
 import com.feitianzhu.huangliwo.databinding.ActivityTraveDetailBinding;
-import com.feitianzhu.huangliwo.shop.ShopMerchantsDetailActivity;
 import com.feitianzhu.huangliwo.travel.adapter.Distance1Adapter;
 import com.feitianzhu.huangliwo.travel.adapter.DistanceGunAdapter;
 import com.feitianzhu.huangliwo.travel.adapter.DistanceOilInfoAdapter;
@@ -105,6 +103,8 @@ public class TraveDetailActivity extends BaseBindingActivity {
         oilStationsDetailRequest.isShowLoading = true;
         oilStationsDetailRequest.gasIds = oilListBean.getGasId();
         oilStationsDetailRequest.phone = SPUtils.getString(this, SP_PHONE);
+        oilStationsDetailRequest.userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
+        oilStationsDetailRequest.accessToken = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         oilStationsDetailRequest.call(new ApiLifeCallBack<List<OilStationsDetailBean>>() {
 
             @Override
@@ -278,7 +278,7 @@ public class TraveDetailActivity extends BaseBindingActivity {
                             Log.e("TAG", "onAPIResponse: " + response);
 
 //                            http://test-mcs.czb365.com/services/v3/begin/getSecretCode?platformId=98647229&phone=13671192850
-                            Web1Activity.toWeb1Activity(TraveDetailActivity.this, "https://test-open.czb365.com/redirection/todo/?platformType=98647229&authCode="
+                            Web1Activity.toWeb1Activity(TraveDetailActivity.this, "https://open.czb365.com/redirection/todo/?platformType=98647229&authCode="
                                     + response + "&gasId=" + oilListBean.getGasId() + "&gunNo=" + n2);
 
                         }

@@ -9,8 +9,8 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
-import com.feitianzhu.huangliwo.me.adapter.ReleaseTotalDetailAdapter;
 import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
+import com.feitianzhu.huangliwo.me.adapter.ReleaseTotalDetailAdapter;
 import com.feitianzhu.huangliwo.model.ReleaseTotalDetailModel;
 
 import java.util.ArrayList;

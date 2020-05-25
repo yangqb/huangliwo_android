@@ -4,8 +4,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 
 import com.feitianzhu.huangliwo.R;
-import com.feitianzhu.huangliwo.me.adapter.NewBecomeVolunteerAdapter;
 import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
+import com.feitianzhu.huangliwo.me.adapter.NewBecomeVolunteerAdapter;
 import com.feitianzhu.huangliwo.me.fragment.ApplyCityAgentFragment;
 import com.feitianzhu.huangliwo.me.fragment.BecomVolunteerFragment;
 

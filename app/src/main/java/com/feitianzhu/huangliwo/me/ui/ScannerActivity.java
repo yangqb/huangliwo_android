@@ -12,8 +12,8 @@ import android.widget.Toast;
 
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
-import com.feitianzhu.huangliwo.common.base.activity.LazyWebActivity;
 import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
+import com.feitianzhu.huangliwo.common.base.activity.LazyWebActivity;
 import com.feitianzhu.huangliwo.me.helper.ImageUtil;
 import com.feitianzhu.huangliwo.pushshop.MyPaymentActivity;
 import com.feitianzhu.huangliwo.pushshop.RecordOrderActivity;

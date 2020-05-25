@@ -22,8 +22,6 @@ import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.MultipleItem;
 import com.feitianzhu.huangliwo.model.Shops;
-import com.feitianzhu.huangliwo.shop.ShopMerchantsDetailActivity;
-import com.feitianzhu.huangliwo.shop.ShopsActivity;
 import com.feitianzhu.huangliwo.shop.ShopsDetailActivity;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
@@ -31,9 +29,7 @@ import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 import com.feitianzhu.huangliwo.vip.VipActivity;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.request.base.Request;
-import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.api.ScrollBoundaryDecider;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;

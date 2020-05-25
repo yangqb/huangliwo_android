@@ -1,37 +1,15 @@
 package com.feitianzhu.huangliwo.dao;
 
 import android.content.Context;
-import android.text.TextUtils;
 
-import com.feitianzhu.huangliwo.bankcard.entity.BankCardEntity;
-import com.feitianzhu.huangliwo.bankcard.entity.UserBankCardEntity;
-import com.feitianzhu.huangliwo.bankcard.entity.WithdrawFeeRateEntity;
 import com.feitianzhu.huangliwo.common.Constant;
-import com.feitianzhu.huangliwo.common.entity.DefaultRate;
 import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
-import com.feitianzhu.huangliwo.home.entity.NoticeEntity;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
-import com.feitianzhu.huangliwo.login.entity.LoginEntity;
-import com.feitianzhu.huangliwo.login.entity.UserInfoEntity;
 import com.feitianzhu.huangliwo.me.helper.CityModel;
-import com.feitianzhu.huangliwo.model.OfflineModel;
-import com.feitianzhu.huangliwo.payforme.entity.PayForMeEntity;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.lzy.okgo.OkGo;
-import com.socks.library.KLog;
-
-import org.json.JSONObject;
-
-import java.io.File;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-
-import okhttp3.Call;
-import okhttp3.Response;
 
 
 /**

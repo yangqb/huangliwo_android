@@ -5,8 +5,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import butterknife.BindView;
-import butterknife.OnClick;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.feitianzhu.huangliwo.R;
@@ -16,6 +15,9 @@ import com.feitianzhu.huangliwo.model.ShopOrderModel;
 import com.feitianzhu.huangliwo.shop.ShopDao;
 import com.hjq.toast.ToastUtils;
 import com.socks.library.KLog;
+
+import butterknife.BindView;
+import butterknife.OnClick;
 import me.zhanghai.android.materialratingbar.MaterialRatingBar;
 
 public class OrdeRevaluateActivity extends LazyBaseActivity {

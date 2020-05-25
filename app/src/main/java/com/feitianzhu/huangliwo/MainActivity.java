@@ -14,9 +14,8 @@ import android.widget.TextView;
 
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
-import com.feitianzhu.huangliwo.common.base.activity.SFActivity;
-import com.feitianzhu.huangliwo.home.RecommendedFragment;
 import com.feitianzhu.huangliwo.home.HomeFragment;
+import com.feitianzhu.huangliwo.home.RecommendedFragment;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.login.LoginActivity;
@@ -26,7 +25,6 @@ import com.feitianzhu.huangliwo.model.HomePopModel;
 import com.feitianzhu.huangliwo.model.LocationPost;
 import com.feitianzhu.huangliwo.model.MyPoint;
 import com.feitianzhu.huangliwo.model.UpdateAppModel;
-import com.feitianzhu.huangliwo.shop.CommodityClassificationFragment;
 import com.feitianzhu.huangliwo.shop.CommodityClassificationFragment1;
 import com.feitianzhu.huangliwo.shop.NewYearShoppingActivity;
 import com.feitianzhu.huangliwo.update.UpdateMyDialogFragment;
@@ -54,8 +52,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 import static com.feitianzhu.huangliwo.common.Constant.UAPDATE;
 

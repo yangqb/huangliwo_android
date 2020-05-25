@@ -17,7 +17,6 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.model.UserGoodVo;
 import com.feitianzhu.huangliwo.view.CircleImageView;
-import com.itheima.roundedimageview.RoundedImageView;
 
 import java.util.List;
 import java.util.Locale;

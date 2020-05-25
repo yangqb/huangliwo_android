@@ -2,9 +2,6 @@ package com.feitianzhu.huangliwo.model;
 
 import com.chad.library.adapter.base.entity.MultiItemEntity;
 
-import java.io.Serializable;
-import java.util.List;
-
 public class MultiCollectionModel implements MultiItemEntity {
     public static final int GOODS = 2;
     public static final int MERCHANT = 1;

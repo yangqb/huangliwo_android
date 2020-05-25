@@ -1,16 +1,10 @@
 package com.feitianzhu.huangliwo.core.log;
 
-import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
-import com.feitianzhu.huangliwo.GlobalUtil;
 import com.feitianzhu.huangliwo.core.DateUtil;
-
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 /**
  * Created by bch on 2020/5/15

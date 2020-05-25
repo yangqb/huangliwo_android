@@ -1,37 +1,26 @@
 package com.feitianzhu.huangliwo.core.network;
 
-import android.util.Log;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
-import com.alibaba.fastjson.TypeReference;
 import com.feitianzhu.huangliwo.GlobalUtil;
 import com.feitianzhu.huangliwo.core.ApiErrorException;
 import com.feitianzhu.huangliwo.core.log.HttpLogUtil;
 import com.feitianzhu.huangliwo.core.network.networkcheck.NetWorkState;
 import com.feitianzhu.huangliwo.core.network.networkcheck.NetworkConnectChangedReceiver;
-import com.feitianzhu.huangliwo.model.UpdateAppModel;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.convert.StringConvert;
 import com.lzy.okgo.exception.HttpException;
-import com.lzy.okgo.request.PostRequest;
 import com.lzy.okgo.request.base.Request;
 import com.lzy.okrx.adapter.ObservableBody;
 
-import java.lang.reflect.Type;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
-import okhttp3.OkHttpClient;
-import okhttp3.RequestBody;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
-
-import static com.feitianzhu.huangliwo.core.network.networkcheck.NetWorkState.NONE;
 
 /**
  * Created by bch on 2020/5/11

@@ -15,18 +15,13 @@
  */
 package com.feitianzhu.huangliwo.http;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.text.TextUtils;
 
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.login.LoginActivity;
 import com.feitianzhu.huangliwo.settings.ChangeLoginPassword;
-import com.feitianzhu.huangliwo.settings.ChangePasswordActivity;
-import com.feitianzhu.huangliwo.settings.SettingsActivity;
-import com.feitianzhu.huangliwo.splash.SplashActivity;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
@@ -35,7 +30,6 @@ import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.impl.ConfirmPopupView;
 import com.lxj.xpopup.interfaces.OnCancelListener;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
-import com.lxj.xpopup.interfaces.XPopupCallback;
 import com.lzy.okgo.callback.AbsCallback;
 import com.lzy.okgo.request.base.Request;
 

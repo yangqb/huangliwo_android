@@ -1,7 +1,5 @@
 package com.feitianzhu.huangliwo.home.adapter;
 
-import android.widget.ImageView;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;

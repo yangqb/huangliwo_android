@@ -11,8 +11,8 @@ import android.widget.TextView;
 
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
-import com.feitianzhu.huangliwo.me.adapter.UnionLevelAdapter;
 import com.feitianzhu.huangliwo.common.base.BaseFragment;
+import com.feitianzhu.huangliwo.me.adapter.UnionLevelAdapter;
 import com.feitianzhu.huangliwo.me.ui.totalScore.SelectPayActivity;
 import com.feitianzhu.huangliwo.model.SelectPayNeedModel;
 import com.feitianzhu.huangliwo.model.UnionLevelModel;

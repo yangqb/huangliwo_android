@@ -3,12 +3,14 @@ package com.feitianzhu.huangliwo.me.adapter;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.widget.ImageView;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.model.FuFriendModel;
+
 import java.util.List;
 
 /**

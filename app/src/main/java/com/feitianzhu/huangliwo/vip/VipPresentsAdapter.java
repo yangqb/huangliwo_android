@@ -10,20 +10,15 @@ import android.text.Spanned;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.feitianzhu.huangliwo.R;
-import com.feitianzhu.huangliwo.model.PresentsModel;
 import com.feitianzhu.huangliwo.model.VipGifListInfo;
 import com.feitianzhu.huangliwo.utils.MathUtils;
 
 import java.util.List;
-import java.util.Locale;
 
 /**
  * package name: com.feitianzhu.fu700.vip

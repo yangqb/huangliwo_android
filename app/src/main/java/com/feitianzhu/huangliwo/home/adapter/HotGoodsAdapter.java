@@ -21,7 +21,6 @@ import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
 import com.feitianzhu.huangliwo.utils.DoubleUtil;
 import com.feitianzhu.huangliwo.utils.MathUtils;
-import com.itheima.roundedimageview.RoundedImageView;
 
 import java.util.List;
 

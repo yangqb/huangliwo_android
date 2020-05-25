@@ -5,23 +5,17 @@ import android.support.annotation.NonNull;
 
 import com.feitianzhu.huangliwo.common.Constant;
 import com.lzy.okgo.OkGo;
-import com.lzy.okgo.callback.FileCallback;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Progress;
 import com.lzy.okgo.model.Response;
 import com.vector.update_app.HttpManager;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Map;
-
-import okhttp3.Call;
-import okhttp3.Request;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.huangliwo.common.Constant.TYPE;
 import static com.feitianzhu.huangliwo.common.Constant.USERID;
-import static java.lang.String.valueOf;
 
 public class UpdateAppHttpUtil implements HttpManager {
     private String token;

@@ -13,7 +13,8 @@ import java.util.List;
 public class OilStationsDetailRequest extends BaseTravelRequest {
     public String gasIds;
     public String phone;
-
+    public String accessToken;
+    public String userId;
     @Override
     public String getAPIName() {
         return "fleetin/getOilStationsDetail";
@@ -21,7 +22,10 @@ public class OilStationsDetailRequest extends BaseTravelRequest {
 
     @Override
     public ParamsBuilder appendParams(ParamsBuilder builder) {
-        return super.appendParams(builder.append("gasIds", gasIds)
+        return super.appendParams(builder
+                .append("gasIds", gasIds)
+                .append("accessToken", accessToken)
+                .append("userId", userId)
                 .append("phone", phone));
     }
 

@@ -1,17 +1,11 @@
 package com.feitianzhu.huangliwo.shop.adapter;
 
-import android.util.Log;
-import android.view.View;
-import android.widget.TextView;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.feitianzhu.huangliwo.R;
-import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.MultipleItem;
-import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 import com.itheima.roundedimageview.RoundedImageView;
 
 import java.util.List;

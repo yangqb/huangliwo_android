@@ -6,9 +6,9 @@ import android.text.TextUtils;
 import android.util.SparseArray;
 
 import com.feitianzhu.huangliwo.R;
+import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.huangliwo.dao.NetworkDao;
-import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.payforme.entity.PayForMeEntity;
 import com.feitianzhu.huangliwo.payforme.fragment.AuditComFragment;
 import com.feitianzhu.huangliwo.payforme.fragment.AuditIngFragment;

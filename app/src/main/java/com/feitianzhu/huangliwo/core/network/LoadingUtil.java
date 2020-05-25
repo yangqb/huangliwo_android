@@ -1,11 +1,5 @@
 package com.feitianzhu.huangliwo.core.network;
 
-import android.app.AlertDialog;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.TextView;
-
 import com.feitianzhu.huangliwo.GlobalUtil;
 import com.feitianzhu.huangliwo.R;
 import com.lxj.xpopup.XPopup;

@@ -1,20 +1,8 @@
 package com.feitianzhu.huangliwo.common.base.activity;
 
 import android.content.Context;
-import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.util.DisplayMetrics;
-
-import com.afollestad.materialdialogs.MaterialDialog;
-import com.feitianzhu.huangliwo.GlobalUtil;
-import com.feitianzhu.huangliwo.R;
-import com.gyf.immersionbar.ImmersionBar;
-import com.lxj.xpopup.impl.LoadingPopupView;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;

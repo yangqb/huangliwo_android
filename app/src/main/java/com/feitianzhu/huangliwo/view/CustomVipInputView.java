@@ -2,9 +2,7 @@ package com.feitianzhu.huangliwo.view;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;

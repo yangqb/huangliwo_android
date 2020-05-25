@@ -2,7 +2,6 @@ package com.feitianzhu.huangliwo.travel.request;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.feitianzhu.huangliwo.core.network.BaseApiResponse;
-import com.feitianzhu.huangliwo.core.network.BaseResponse;
 
 /**
  * Created by bch on 2020/5/20

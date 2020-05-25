@@ -1,12 +1,11 @@
 package com.feitianzhu.huangliwo.home.request;
 
+import com.alibaba.fastjson.TypeReference;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.core.network.BaseRequest;
 import com.feitianzhu.huangliwo.core.network.ParamsBuilder;
 import com.feitianzhu.huangliwo.model.HomeShops;
 import com.lzy.okgo.model.HttpHeaders;
-import com.vector.update_app.UpdateAppBean;
-import com.alibaba.fastjson.TypeReference;
 
 public class GoodsListRequest extends BaseRequest {
     public String token;

@@ -14,11 +14,9 @@ import android.widget.TextView;
 import com.feitianzhu.huangliwo.MainActivity;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
-import com.feitianzhu.huangliwo.common.base.activity.SFActivity;
 import com.gyf.immersionbar.ImmersionBar;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class AdvertisementActivity extends BaseActivity {

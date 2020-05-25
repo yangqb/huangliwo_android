@@ -3,8 +3,6 @@ package com.feitianzhu.huangliwo.utils;
 import android.content.Context;
 import android.os.Environment;
 
-import com.feitianzhu.huangliwo.common.Constant;
-
 import java.io.File;
 
 

@@ -3,12 +3,8 @@ package com.feitianzhu.huangliwo.share;
 import android.Manifest;
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.view.View;
-import android.widget.TextView;
 
-import com.feitianzhu.huangliwo.splash.SplashActivity;
 import com.hjq.permissions.OnPermission;
-import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
 import com.hjq.toast.ToastUtils;
 import com.umeng.socialize.ShareAction;

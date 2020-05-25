@@ -6,14 +6,9 @@ import android.text.TextUtils;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.feitianzhu.huangliwo.R;
 import com.hjq.toast.ToastUtils;
-import com.lxj.xpopup.XPopup;
-import com.lxj.xpopup.enums.PopupAnimation;
-import com.lxj.xpopup.impl.LoadingPopupView;
-import java.util.TreeMap;
 
-import butterknife.Unbinder;
+import java.util.TreeMap;
 
 /**
  * Created by Administrator on 2016/3/22.

@@ -1,10 +1,8 @@
 package com.feitianzhu.huangliwo.shop.adapter;
 
-import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.feitianzhu.huangliwo.R;
-import com.feitianzhu.huangliwo.model.MultiItemShopAndMerchants;
 
 import java.util.List;
 

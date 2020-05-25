@@ -1,11 +1,11 @@
 package com.feitianzhu.huangliwo.utils;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;  
-import java.util.Calendar;  
-import java.util.GregorianCalendar;  
-import java.util.Hashtable;  
-import java.util.regex.Matcher;  
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.Hashtable;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;  
   
 public class IDCardValidate {

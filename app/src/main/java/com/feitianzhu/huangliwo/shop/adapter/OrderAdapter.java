@@ -10,13 +10,11 @@ import android.text.Spanned;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
-import android.view.View;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.model.GoodsOrderInfo;
@@ -115,7 +113,7 @@ public class OrderAdapter extends BaseMultiItemQuickAdapter<MultipleItemOrderMod
                     helper.setText(R.id.tvStatus, "等待收货");
                     helper.setText(R.id.btn_confirm_goods, "确认收货");
                     helper.setText(R.id.btn_logistics, " 查看物流");
-                    helper.setText(R.id.btn_refund, "申请退款");
+                    helper.setText(R.id.btn_refund, "申请退货");
                     helper.setGone(R.id.btn_confirm_goods, true);
                     helper.setGone(R.id.btn_logistics, true);
                     helper.setGone(R.id.btn_refund, true);

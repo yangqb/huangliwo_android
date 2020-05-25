@@ -1,7 +1,5 @@
 package com.feitianzhu.huangliwo.travel.bean;
 
-import com.feitianzhu.huangliwo.utils.StringUtils;
-
 import java.util.List;
 
 /**

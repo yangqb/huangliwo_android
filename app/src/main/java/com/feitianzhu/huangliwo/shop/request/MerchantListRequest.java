@@ -4,7 +4,6 @@ import com.alibaba.fastjson.TypeReference;
 import com.feitianzhu.huangliwo.core.network.BaseRequest;
 import com.feitianzhu.huangliwo.core.network.ParamsBuilder;
 import com.feitianzhu.huangliwo.shop.model.MerchantBean;
-import com.feitianzhu.huangliwo.shop.model.ShopClassifyBean;
 
 import java.util.List;
 

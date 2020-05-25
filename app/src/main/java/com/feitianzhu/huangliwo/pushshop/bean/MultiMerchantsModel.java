@@ -3,8 +3,6 @@ package com.feitianzhu.huangliwo.pushshop.bean;
 import com.chad.library.adapter.base.entity.MultiItemEntity;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * package name: com.feitianzhu.huangliwo.pushshop.bean

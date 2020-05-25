@@ -3,7 +3,6 @@ package com.feitianzhu.huangliwo.utils;
 import android.content.Context;
 
 import com.feitianzhu.huangliwo.common.Constant;
-import com.feitianzhu.huangliwo.login.RegisterActivity;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.google.gson.Gson;
 

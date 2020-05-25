@@ -1,9 +1,6 @@
 package com.feitianzhu.huangliwo.travel;
 
 import android.databinding.DataBindingUtil;
-import android.databinding.ViewDataBinding;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.widget.ImageView;
@@ -13,14 +10,12 @@ import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.activity.BaseBindingActivity;
 import com.feitianzhu.huangliwo.core.network.ApiCallBack;
 import com.feitianzhu.huangliwo.databinding.ActivityTraveFormBinding;
-import com.feitianzhu.huangliwo.travel.adapter.MyOilAdapter;
 import com.feitianzhu.huangliwo.travel.adapter.TraveFormAdapter;
 import com.feitianzhu.huangliwo.travel.bean.OilOrederBean;
 import com.feitianzhu.huangliwo.travel.request.OilOrderRequest;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.gyf.immersionbar.ImmersionBar;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class TraveFormActivity extends BaseBindingActivity {
@@ -63,16 +58,19 @@ public class TraveFormActivity extends BaseBindingActivity {
         traveFormAdapter.notifyDataSetChanged();
 
 
-        dataBinding.recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
-        OilOrderRequest oilOrderRequest=new OilOrderRequest(50,1,phone);
+        dataBinding.recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        OilOrderRequest oilOrderRequest = new OilOrderRequest(50, 1, phone);
+        oilOrderRequest.userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
+        oilOrderRequest.accessToken = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         oilOrderRequest.call(new ApiCallBack<List<OilOrederBean>>() {
             @Override
             public void onAPIResponse(List<OilOrederBean> response) {
-                if (response!=null && response.size()>0){
+                if (response != null && response.size() > 0) {
                     TraveFormAdapter traveFormAdapter = new TraveFormAdapter(response);
                     dataBinding.recyclerView.setAdapter(traveFormAdapter);
                 }
             }
+
             @Override
             public void onAPIError(int errorCode, String errorMsg) {
 

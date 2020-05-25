@@ -12,9 +12,9 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
-import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.model.EvaluateMode;
 import com.feitianzhu.huangliwo.model.GoodOrderCountMode;
 import com.feitianzhu.huangliwo.model.GoodsOrderInfo;
@@ -280,13 +280,13 @@ public class MyOrderActivity2 extends BaseActivity {
                 if (mAdapter.getItemViewType(position) == MultipleItemOrderModel.GOODS_ORDER) {
                     switch (view.getId()) {
                         case R.id.btn_refund:
-                            //退款
+                            //退货
                             if (goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_WAIT_RECEIVING) {
-                                intent = new Intent(MyOrderActivity2.this, EditApplyRefundActivity.class);
+                               /* intent = new Intent(MyOrderActivity2.this, EditApplyRefundActivity.class);
                                 intent.putExtra(EditApplyRefundActivity.ORDER_NO, goodsOrderList.get(position).getOrderNo());
                                 intent.putExtra(EditApplyRefundActivity.ORDER_AMOUNT, goodsOrderList.get(position).getAmount());
                                 intent.putExtra(EditApplyRefundActivity.ORDER_TYPE, type);
-                                startActivityForResult(intent, REFUND_REQUEST_CODE);
+                                startActivityForResult(intent, REFUND_REQUEST_CODE);*/
                             } else if (goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_COMPLETED ||
                                     goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_REFUNDED || goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_CANCEL) {
                                 //删除订单，

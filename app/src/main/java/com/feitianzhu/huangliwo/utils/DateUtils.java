@@ -1,7 +1,6 @@
 package com.feitianzhu.huangliwo.utils;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.net.ParseException;
 
 import java.text.DateFormat;
