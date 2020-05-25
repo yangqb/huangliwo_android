@@ -29,11 +29,9 @@ public class StrategyChildFragment extends BaseBindingFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_strategy_child_list, container, false);
         binding = FragmentStrategyChildListBinding.inflate(inflater, container, false);
         binding.setViewModel(this);
-
-        return view;
+        return binding.getRoot();
     }
 
 
@@ -53,7 +51,7 @@ public class StrategyChildFragment extends BaseBindingFragment {
             strings.add("fsdfsdfsdf");
             strings.add("fsdfsdfsdf");
             binding.list.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-            StrategyItemAdapter strategyItemAdapter = new StrategyItemAdapter(strings);
+            StrategyItem1Adapter strategyItemAdapter = new StrategyItem1Adapter(strings);
             binding.list.setAdapter(strategyItemAdapter);
         } else {
             ArrayList<String> strings1 = new ArrayList<>();
@@ -68,7 +66,7 @@ public class StrategyChildFragment extends BaseBindingFragment {
             strings1.add("fsdfsdfsdf");
             strings1.add("fsdfsdfsdf");
             binding.list.setLayoutManager(new GridLayoutManager(getContext(), 2));
-            StrategyItem1Adapter strategyItemAdapter = new StrategyItem1Adapter(strings1);
+            StrategyItemAdapter strategyItemAdapter = new StrategyItemAdapter(strings1);
             binding.list.setAdapter(strategyItemAdapter);
         }
 
