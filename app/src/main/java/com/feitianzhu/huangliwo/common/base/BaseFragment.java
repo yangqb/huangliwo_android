@@ -3,7 +3,6 @@ package com.feitianzhu.huangliwo.common.base;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +10,7 @@ import android.view.ViewGroup;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.feitianzhu.huangliwo.R;
+import com.feitianzhu.huangliwo.common.base.fragment.SFFragment;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -18,8 +18,7 @@ import butterknife.Unbinder;
 /**
  * Created by Administrator on 2016/3/29.
  */
-public abstract class BaseFragment extends Fragment {
-    protected Context mContext;
+public abstract class BaseFragment extends SFFragment {
 
     protected View rootView;
     private Context contextThemeWrapper;
@@ -35,8 +34,6 @@ public abstract class BaseFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        this.mContext = getActivity();
         rootView = View.inflate(mContext,getLayoutId(),null);
         if(getStyleId()>0){
             contextThemeWrapper = new ContextThemeWrapper(getActivity(), getStyleId());
