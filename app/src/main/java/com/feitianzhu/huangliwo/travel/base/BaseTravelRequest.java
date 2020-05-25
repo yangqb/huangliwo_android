@@ -3,6 +3,7 @@ package com.feitianzhu.huangliwo.travel.base;
 import com.alibaba.fastjson.TypeReference;
 import com.feitianzhu.huangliwo.core.network.BaseRequest;
 import com.feitianzhu.huangliwo.core.network.BaseResponse;
+import com.feitianzhu.huangliwo.utils.Urls;
 import com.hjq.toast.ToastUtils;
 
 /**
@@ -19,8 +20,8 @@ public abstract class BaseTravelRequest extends BaseRequest {
      */
     @Override
     public String getAPIBaseURL() {
-        return "http://192.168.0.142:8087/";
-//        return Urls.TICKET_BASE_URL;
+//        return "http://192.168.0.142:8087/";
+        return Urls.TICKET_BASE_URL;
     }
 
     /**
