@@ -8,14 +8,48 @@
     <include layout="@layout/layout_head" />
 
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/ll_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_66"
+            android:layout_alignParentBottom="true"
+            android:background="@color/white"
+            android:gravity="end|center_vertical"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/cancel_order"
+                android:layout_width="75dp"
+                android:layout_height="26dp"
+                android:background="@drawable/shape_999999_r13"
+                android:gravity="center"
+                android:text="取消订单"
+                android:textColor="@color/color_999999"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/shopPay"
+                android:layout_width="75dp"
+                android:layout_height="26dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="@dimen/dp_20"
+                android:background="@drawable/shape_fed428_r13"
+                android:gravity="center"
+                android:text="付款"
+                android:textColor="@color/color_333333"
+                android:textSize="14sp" />
+
+        </LinearLayout>
 
         <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="80dp">
+            android:layout_above="@id/ll_bottom">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -50,9 +84,9 @@
                         android:id="@+id/tvStatusContent"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:gravity="center_vertical"
                         android:layout_marginRight="10dp"
                         android:ellipsize="end"
+                        android:gravity="center_vertical"
                         android:maxLines="1"
                         android:text=""
                         android:textColor="@color/white"
@@ -60,6 +94,217 @@
 
                 </LinearLayout>
 
+                <!--退货信息填写-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:background="@drawable/shape_ffffff_r5"
+                    android:orientation="vertical"
+                    android:paddingStart="@dimen/dp_10"
+                    android:paddingEnd="@dimen/dp_10">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_45">
+
+                        <TextView
+                            android:id="@+id/tag"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="@dimen/dp_5"
+                            android:text="选择快递："
+                            android:textColor="@color/color_333333"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_toRightOf="@id/tag"
+                            android:text=""
+                            android:textColor="@color/color_333333"
+                            android:textSize="14sp" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:src="@mipmap/b08_04jinru" />
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/dp_0_5"
+                        android:background="@color/color_eeeeee" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_45"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/dp_5"
+                            android:text="快递单号："
+                            android:textColor="@color/color_333333"
+                            android:textSize="14sp" />
+
+                        <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@null"
+                            android:gravity="start|center_vertical"
+                            android:hint="请输入快递单号"
+                            android:text=""
+                            android:textColor="@color/color_333333"
+                            android:textColorHint="@color/color_999999"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_0_5"
+                        android:background="@color/color_eeeeee" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_45"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/dp_5"
+                            android:text="收货人姓名："
+                            android:textColor="@color/color_333333"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:textColor="@color/color_333333"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_0_5"
+                        android:background="@color/color_eeeeee" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_45"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/dp_5"
+                            android:text="收货人电话："
+                            android:textColor="@color/color_333333"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:textColor="@color/color_333333"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_0_5"
+                        android:background="@color/color_eeeeee" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:minHeight="@dimen/dp_45"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/dp_5"
+                            android:text="收货人地址："
+                            android:textColor="@color/color_333333"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:textColor="@color/color_333333"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+                </LinearLayout>
+                <!--退货信息填写end-->
+
+                <!--退货物流信心-->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:background="@drawable/shape_ffffff_r5"
+                    android:paddingStart="@dimen/dp_10"
+                    android:paddingTop="@dimen/dp_15"
+                    android:paddingEnd="10dp"
+                    android:paddingBottom="@dimen/dp_15">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dp_5"
+                            android:text="退货物流：韵达快递(12345678912010)"
+                            android:textColor="@color/color_333333"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dp_5"
+                            android:autoLink="phone"
+                            android:text="已签收，投递员：小黄鹂，电话：13866668888"
+                            android:textColor="@color/color_333333"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dp_5"
+                            android:text="2020.05.25 14:46"
+                            android:textColor="@color/color_999999"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:src="@mipmap/b08_04jinru" />
+
+                </RelativeLayout>
+
+
+                <!--退货物流信心end-->
                 <RelativeLayout
                     android:id="@+id/rl_address"
                     android:layout_width="match_parent"
@@ -207,11 +452,11 @@
                                 android:textSize="12sp" />
 
                             <TextView
-                                android:layout_width="52dp"
+                                android:layout_width="57dp"
                                 android:layout_height="14dp"
                                 android:background="@drawable/shape_fed428_r7"
                                 android:gravity="center"
-                                android:text="7天退还"
+                                android:text="7天无理由"
                                 android:textColor="@color/color_333333"
                                 android:textSize="10sp" />
 
@@ -373,44 +618,69 @@
 
                 </LinearLayout>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:background="@drawable/shape_ffffff_r5"
+                    android:orientation="vertical"
+                    android:paddingStart="@dimen/dp_10"
+                    android:paddingTop="@dimen/dp_15"
+                    android:paddingEnd="@dimen/dp_10"
+                    android:paddingBottom="@dimen/dp_15">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="退货理由"
+                            android:textColor="@color/color_333333"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:text="七天无理由退换货"
+                            android:textColor="@color/color_333333"
+                            android:textSize="15sp" />
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dp_10"
+                            android:layout_marginBottom="@dimen/dp_10"
+                            android:text="凭证图片"
+                            android:textColor="@color/color_333333"
+                            android:textSize="15sp" />
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/recyclerView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                        </android.support.v7.widget.RecyclerView>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_20"
+                    android:background="@color/color_f7f7f7" />
+
             </LinearLayout>
 
         </android.support.v4.widget.NestedScrollView>
 
-        <LinearLayout
-            android:id="@+id/ll_bottom"
-            android:layout_width="match_parent"
-            android:layout_height="66dp"
-            android:layout_gravity="bottom"
-            android:background="@color/white"
-            android:gravity="end|center_vertical"
-            android:orientation="horizontal"
-            android:visibility="gone">
-
-            <TextView
-                android:id="@+id/cancel_order"
-                android:layout_width="75dp"
-                android:layout_height="26dp"
-                android:background="@drawable/shape_999999_r13"
-                android:gravity="center"
-                android:text="取消订单"
-                android:textColor="@color/color_999999"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/shopPay"
-                android:layout_width="75dp"
-                android:layout_height="26dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="@dimen/dp_20"
-                android:background="@drawable/shape_fed428_r13"
-                android:gravity="center"
-                android:text="付款"
-                android:textColor="@color/color_333333"
-                android:textSize="14sp" />
-
-        </LinearLayout>
-    </FrameLayout>
-
-
+    </RelativeLayout>
 </LinearLayout>

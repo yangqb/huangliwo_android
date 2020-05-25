@@ -87,11 +87,11 @@
 
                 <TextView
                     android:id="@+id/refund_tag"
-                    android:layout_width="52dp"
+                    android:layout_width="57dp"
                     android:layout_height="14dp"
                     android:background="@drawable/shape_fed428_r7"
                     android:gravity="center"
-                    android:text="7天退还"
+                    android:text="7天无理由"
                     android:textColor="@color/color_333333"
                     android:textSize="10sp" />
 

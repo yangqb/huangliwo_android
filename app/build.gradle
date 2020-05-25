@@ -2,11 +2,6 @@ apply plugin: 'com.android.application'
 //apply plugin: 'com.jakewharton.butterknife'
 apply plugin: 'com.hujiang.android-aspectjx'
 
-aspectjx {
-    //排除所有package路径中包含`com.alipay`的class文件及库（jar文件）
-    exclude 'com.alipay', 'com.baidu'
-}
-
 android {
     signingConfigs {
         release {
@@ -97,6 +92,8 @@ android {
         exclude 'com.umeng'
         exclude 'com.android'
         exclude 'com.alibaba'
+        exclude 'com.alipay'
+        exclude 'com.baidu'
     }
     //use legacy for android 6.0
     useLibrary 'org.apache.http.legacy'
@@ -119,7 +116,7 @@ dependencies {
     implementation 'com.github.bumptech.glide:okhttp3-integration:4.8.0'/*{
         exclude group: "com.android.support", module: "support-annotations"
     }*/
-    implementation(name: 'wheel-release', ext: 'aar'){
+    implementation(name: 'wheel-release', ext: 'aar') {
         exclude group: "com.android.support", module: "support-annotations"
     }
     //  compile(name: 'takephoto-release', ext: 'aar')
