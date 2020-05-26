@@ -255,7 +255,7 @@ public class ApplyReturnGoodsActivity extends BaseActivity {
                 break;
             case R.id.right_button:
                 if (TextUtils.isEmpty(problem)) {
-                    ToastUtils.show("请选择问题类型");
+                    ToastUtils.show("请选择退货原因");
                     return;
                 }
                 submit();

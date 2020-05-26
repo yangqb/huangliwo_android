@@ -282,11 +282,13 @@ public class MyOrderActivity2 extends BaseActivity {
                         case R.id.btn_refund:
                             //退货
                             if (goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_WAIT_RECEIVING) {
-                               /* intent = new Intent(MyOrderActivity2.this, EditApplyRefundActivity.class);
+                                intent = new Intent(MyOrderActivity2.this, EditApplyRefundActivity.class);
                                 intent.putExtra(EditApplyRefundActivity.ORDER_NO, goodsOrderList.get(position).getOrderNo());
                                 intent.putExtra(EditApplyRefundActivity.ORDER_AMOUNT, goodsOrderList.get(position).getAmount());
                                 intent.putExtra(EditApplyRefundActivity.ORDER_TYPE, type);
-                                startActivityForResult(intent, REFUND_REQUEST_CODE);*/
+                                startActivityForResult(intent, REFUND_REQUEST_CODE);
+                               /* intent = new Intent(MyOrderActivity2.this, ApplyReturnGoodsActivity.class);
+                                startActivity(intent);*/
                             } else if (goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_COMPLETED ||
                                     goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_REFUNDED || goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_CANCEL) {
                                 //删除订单，
