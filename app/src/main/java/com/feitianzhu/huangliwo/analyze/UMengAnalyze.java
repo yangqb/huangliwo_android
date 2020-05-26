@@ -52,29 +52,22 @@ public class UMengAnalyze {
         //获取消息推送代理示例
         PushAgent mPushAgent = PushAgent.getInstance(context);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-//注册推送服务，每次调用register方法都会回调该接口
-                    mPushAgent.register(new IUmengRegisterCallback() {
-                        @Override
-                        public void onSuccess(String deviceToken) {
-                            UMengAnalyze.this.deviceToken = deviceToken;
-                            //注册成功会返回deviceToken deviceToken是推送消息的唯一标志
-                            Log.i(TAG, "注册成功：deviceToken：-------->  " + deviceToken);
-                        }
 
-                        @Override
-                        public void onFailure(String s, String s1) {
-                            Log.e(TAG, "注册失败：-------->  " + "s:" + s + ",s1:" + s1);
-                        }
-                    });
-                } catch (Exception x) {
-                    x.printStackTrace();
-                }
+//注册推送服务，每次调用register方法都会回调该接口
+        mPushAgent.register(new IUmengRegisterCallback() {
+            @Override
+            public void onSuccess(String deviceToken) {
+                UMengAnalyze.this.deviceToken = deviceToken;
+                //注册成功会返回deviceToken deviceToken是推送消息的唯一标志
+                Log.i(TAG, "注册成功：deviceToken：-------->  " + deviceToken);
             }
-        }).start();
+
+            @Override
+            public void onFailure(String s, String s1) {
+                Log.e(TAG, "注册失败：-------->  " + "s:" + s + ",s1:" + s1);
+            }
+        });
+
 
     }
 
