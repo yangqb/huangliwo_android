@@ -1,11 +1,15 @@
 package com.feitianzhu.huangliwo.me.ui;
 
 import android.Manifest;
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -18,6 +22,7 @@ import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
+import com.feitianzhu.huangliwo.login.LoginActivity;
 import com.feitianzhu.huangliwo.model.Province;
 import com.feitianzhu.huangliwo.model.UserAuth;
 import com.feitianzhu.huangliwo.model.UserVeriModel;
@@ -141,7 +146,6 @@ public class VerificationActivity2 extends BaseActivity implements ProvinceCallB
         } else {
             lyShiming.setVisibility(View.VISIBLE);
         }
-
     }
 
     @Override
@@ -153,8 +157,8 @@ public class VerificationActivity2 extends BaseActivity implements ProvinceCallB
                 .navigationBarColor(R.color.white)
                 .statusBarColor(R.color.transparent)
                 .navigationBarDarkIcon(true);
-
     }
+
 
     @Override
     protected void initData() {

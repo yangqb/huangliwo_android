@@ -18,6 +18,7 @@ import butterknife.Unbinder;
 public abstract class SFActivity extends AbsActivity {
     protected Context sfContext;
     private Unbinder mBinder;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,8 +30,12 @@ public abstract class SFActivity extends AbsActivity {
         mBinder = ButterKnife.bind(this);
 
         sfContext = this;
+        initBind();
     }
 
+    protected void initBind() {
+
+    }
 
     /**
      * 子类传入一个布局,父类创建View

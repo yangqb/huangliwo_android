@@ -153,9 +153,9 @@ public class MineQrcodeActivity extends BaseActivity {
                 break;
             case R.id.bt_save:
                 if (shareType == 1) {
-                    ShareImageUtils.saveImg(this, ShareImageUtils.viewToBitmap(shareLayout), "zxing_image");
+                    ShareImageUtils.saveImg(this, ShareImageUtils.viewToBitmap(shareLayout), "zxing_image"+System.currentTimeMillis());
                 } else {
-                    ShareImageUtils.saveImg(this, ShareImageUtils.viewToBitmap(shareLayout), "zxing_recruit_image");
+                    ShareImageUtils.saveImg(this, ShareImageUtils.viewToBitmap(shareLayout), "zxing_recruit_image"+System.currentTimeMillis());
                 }
                 // 通知图库更新
                 //sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse(Environment.getExternalStorageDirectory().getPath())));

@@ -125,7 +125,7 @@
                             <ImageView
                                 android:layout_width="60dp"
                                 android:layout_height="60dp"
-                                android:background="@mipmap/a02_06tuanyou" />
+                                android:background="@mipmap/a02_06tuanyou2" />
 
                             <TextView
                                 android:layout_width="wrap_content"

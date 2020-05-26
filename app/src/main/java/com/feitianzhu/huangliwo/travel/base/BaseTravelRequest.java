@@ -39,6 +39,7 @@ public abstract class BaseTravelRequest extends BaseRequest {
     public void handleError(int errorCode, String errorMsg) {
         if (errorCode == 100021105) {
 //            登录异常被踢
+            super.handleError(errorCode, errorMsg);
         } else if (errorCode == 404) {
             ToastUtils.show("数据找不到");
             //找不到
