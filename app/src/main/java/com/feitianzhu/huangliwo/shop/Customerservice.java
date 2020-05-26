@@ -81,7 +81,7 @@ public class Customerservice extends BaseActivity {
                         //startActivity(new Intent(Customerservice.this,ImActivity.class));
                         Intent intent = new Intent(Customerservice.this, ImActivity.class);
 //username为对方的环信id
-                        intent.putExtra(EaseConstant.EXTRA_USER_ID, "1");
+                        intent.putExtra(EaseConstant.EXTRA_USER_ID, "13671192850");
                         startActivity(intent);
                         Log.d("main", "登录聊天服务器成功！");
                     }

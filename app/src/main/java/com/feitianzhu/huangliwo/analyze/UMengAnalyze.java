@@ -10,6 +10,8 @@ import com.umeng.commonsdk.statistics.common.DeviceConfig;
 import com.umeng.message.IUmengRegisterCallback;
 import com.umeng.message.PushAgent;
 
+import java.util.logging.Handler;
+
 //import com.umeng.message.IUmengRegisterCallback;
 //import com.umeng.message.PushAgent;
 
@@ -48,25 +50,32 @@ public class UMengAnalyze {
 //        UMConfigure.init(context, APPKEY, Channel, UMConfigure.DEVICE_TYPE_PHONE, MessageSecret);
 //        getTestDeviceInfo(context);
         //获取消息推送代理示例
-        try {
-            PushAgent mPushAgent = PushAgent.getInstance(context);
-//注册推送服务，每次调用register方法都会回调该接口
-            mPushAgent.register(new IUmengRegisterCallback() {
-                @Override
-                public void onSuccess(String deviceToken) {
-                    UMengAnalyze.this.deviceToken = deviceToken;
-                    //注册成功会返回deviceToken deviceToken是推送消息的唯一标志
-                    Log.i(TAG, "注册成功：deviceToken：-------->  " + deviceToken);
-                }
+        PushAgent mPushAgent = PushAgent.getInstance(context);
 
-                @Override
-                public void onFailure(String s, String s1) {
-                    Log.e(TAG, "注册失败：-------->  " + "s:" + s + ",s1:" + s1);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+//注册推送服务，每次调用register方法都会回调该接口
+                    mPushAgent.register(new IUmengRegisterCallback() {
+                        @Override
+                        public void onSuccess(String deviceToken) {
+                            UMengAnalyze.this.deviceToken = deviceToken;
+                            //注册成功会返回deviceToken deviceToken是推送消息的唯一标志
+                            Log.i(TAG, "注册成功：deviceToken：-------->  " + deviceToken);
+                        }
+
+                        @Override
+                        public void onFailure(String s, String s1) {
+                            Log.e(TAG, "注册失败：-------->  " + "s:" + s + ",s1:" + s1);
+                        }
+                    });
+                } catch (Exception x) {
+                    x.printStackTrace();
                 }
-            });
-        } catch (Exception x) {
-            x.printStackTrace();
-        }
+            }
+        }).start();
+
     }
 
     /**
