@@ -143,6 +143,8 @@ public class EditMerchantsActivity extends BaseActivity implements OnGetGeoCoder
     RelativeLayout llCode;
     @BindView(R.id.parent_view)
     LinearLayout parentView;
+    @BindView(R.id.submit)
+    TextView btnSubmit;
     private List<MerchantsClassifyModel.ListBean> listBean;
     private double latitude;
     private double longitude;
@@ -304,11 +306,12 @@ public class EditMerchantsActivity extends BaseActivity implements OnGetGeoCoder
             @Override
             public void keyBoardShow(int height) {
                 //Toast.makeText(AppActivity.this, "键盘显示 高度" + height, Toast.LENGTH_SHORT).show();
-
+                btnSubmit.setVisibility(View.GONE);
             }
 
             @Override
             public void keyBoardHide(int height) {
+                btnSubmit.setVisibility(View.VISIBLE);
                 if (!isConfirm && !TextUtils.isEmpty(editPercentage.getText().toString().trim()) && Double.valueOf(editPercentage.getText().toString().trim()) <= 40) {
                     isConfirm = true;
                     new XPopup.Builder(EditMerchantsActivity.this)

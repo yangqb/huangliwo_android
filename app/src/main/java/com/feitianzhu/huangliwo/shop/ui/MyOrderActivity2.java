@@ -258,9 +258,15 @@ public class MyOrderActivity2 extends BaseActivity {
                 if (mAdapter.getItemViewType(position) == MultipleItemOrderModel.GOODS_ORDER) {
                     //商品订单详情，不包含399订单
                     if (goodsOrderList.get(position).getIsVipOrder() == 0) {
-                        intent = new Intent(MyOrderActivity2.this, OrderDetailActivity.class);
-                        intent.putExtra(OrderDetailActivity.ORDER_NO, goodsOrderList.get(position).getOrderNo());
-                        startActivity(intent);
+                        if (goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_AGREE_REFUND_GOODS) {
+                            intent = new Intent(MyOrderActivity2.this, OrderDetailActivity.class);
+                            intent.putExtra(OrderDetailActivity.ORDER_NO, goodsOrderList.get(position).getOrderNo());
+                            startActivityForResult(intent, REFUND_REQUEST_CODE);
+                        } else {
+                            intent = new Intent(MyOrderActivity2.this, OrderDetailActivity.class);
+                            intent.putExtra(OrderDetailActivity.ORDER_NO, goodsOrderList.get(position).getOrderNo());
+                            startActivity(intent);
+                        }
                     }
                 } else {
                     //商铺订单详情
@@ -282,15 +288,17 @@ public class MyOrderActivity2 extends BaseActivity {
                         case R.id.btn_refund:
                             //退货
                             if (goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_WAIT_RECEIVING) {
-                                intent = new Intent(MyOrderActivity2.this, EditApplyRefundActivity.class);
+                              /*  intent = new Intent(MyOrderActivity2.this, EditApplyRefundActivity.class);
                                 intent.putExtra(EditApplyRefundActivity.ORDER_NO, goodsOrderList.get(position).getOrderNo());
                                 intent.putExtra(EditApplyRefundActivity.ORDER_AMOUNT, goodsOrderList.get(position).getAmount());
                                 intent.putExtra(EditApplyRefundActivity.ORDER_TYPE, type);
+                                startActivityForResult(intent, REFUND_REQUEST_CODE);*/
+                                intent = new Intent(MyOrderActivity2.this, ApplyReturnGoodsActivity.class);
+                                intent.putExtra(ApplyReturnGoodsActivity.ORDER_NO, goodsOrderList.get(position).getOrderNo());
                                 startActivityForResult(intent, REFUND_REQUEST_CODE);
-                               /* intent = new Intent(MyOrderActivity2.this, ApplyReturnGoodsActivity.class);
-                                startActivity(intent);*/
                             } else if (goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_COMPLETED ||
-                                    goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_REFUNDED || goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_CANCEL) {
+                                    goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_REFUNDED || goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_CANCEL ||
+                                    goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_COMPLETED_REFUND_GOODS) {
                                 //删除订单，
                                 new XPopup.Builder(MyOrderActivity2.this)
                                         .asConfirm("确定要删除该订单？", "", "关闭", "确定", new OnConfirmListener() {
@@ -370,7 +378,9 @@ public class MyOrderActivity2 extends BaseActivity {
                                         .bindLayout(R.layout.layout_dialog_login) //绑定已有布局
                                         .show();
                             } else if (goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_REFUND
-                                    || goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_REFUNDED) {
+                                    || goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_REFUNDED || goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_AGREE_REFUND_GOODS ||
+                                    goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_WAIT_MERCHANT_RECEIVING || goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_WAIT_MERCHANT_REFUND ||
+                                    goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_REFUNDING_GOODS) {
                                 //查看详情
                                 intent = new Intent(MyOrderActivity2.this, OrderDetailActivity.class);
                                 intent.putExtra(OrderDetailActivity.ORDER_NO, goodsOrderList.get(position).getOrderNo());

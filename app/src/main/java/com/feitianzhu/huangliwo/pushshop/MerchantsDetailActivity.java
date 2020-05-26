@@ -367,11 +367,12 @@ public class MerchantsDetailActivity extends BaseActivity implements BusinessHou
             @Override
             public void keyBoardShow(int height) {
                 //Toast.makeText(AppActivity.this, "键盘显示 高度" + height, Toast.LENGTH_SHORT).show();
-
+                btnSubmit.setVisibility(View.GONE);
             }
 
             @Override
             public void keyBoardHide(int height) {
+                btnSubmit.setVisibility(View.VISIBLE);
                 if (!isConfirm && !TextUtils.isEmpty(editMerchantsDiscount.getText().toString().trim()) && Double.valueOf(editMerchantsDiscount.getText().toString().trim()) <= 40) {
                     isConfirm = true;
                     new XPopup.Builder(MerchantsDetailActivity.this)

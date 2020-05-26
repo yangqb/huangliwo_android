@@ -1,5 +1,7 @@
 package com.feitianzhu.huangliwo.model;
 
+import com.feitianzhu.huangliwo.utils.PayUtils;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -12,7 +14,7 @@ import java.util.List;
  */
 public class GoodsOrderInfo implements Serializable {
     /*
-     * 1 未支付，2 待发货，3 待收货(已发货)，4 已完成（已收货），5 退款中，6 已退款，7 订单取消（未支付的）
+     * 1 未支付，2 待发货，3 待收货(已发货)，4 已完成（已收货），5 退款中，6 已退款，7 订单取消（未支付的）9退货申请中，10同意退货申请 11待商家收货12待商家退款，13退货完成
      * */
     public static final int TYPE_NO_PAY = 1;
     public static final int TYPE_WAIT_DELIVERY = 2;
@@ -23,6 +25,11 @@ public class GoodsOrderInfo implements Serializable {
     public static final int TYPE_CANCEL = 7;
     public static final int TYPE_All = -1;
     public static final int TYPE_WAIT_COMMENTS = 0;
+    public static final int TYPE_REFUNDING_GOODS = 9;
+    public static final int TYPE_AGREE_REFUND_GOODS = 10;
+    public static final int TYPE_WAIT_MERCHANT_RECEIVING = 11;
+    public static final int TYPE_WAIT_MERCHANT_REFUND = 12;
+    public static final int TYPE_COMPLETED_REFUND_GOODS = 13;
 
     private List<GoodsOrderListBean> goodsOrderList;
 
@@ -95,6 +102,69 @@ userName (string, optional): 用户名
         private String connectPhone;//客服电话
         private String refuseReason;//拒绝退款原因
         private int isVipOrder;//1是399,0是商品
+        private String supplierName;
+        private String supplierPhone;
+        private String supplierAddress;
+        private String refundImg;
+        private String returnReason; //拒绝退货原因
+        private String refundExpressNum;
+        private String refundExpressCom;
+
+        public String getRefundExpressNum() {
+            return refundExpressNum;
+        }
+
+        public void setRefundExpressNum(String refundExpressNum) {
+            this.refundExpressNum = refundExpressNum;
+        }
+
+        public String getRefundExpressCom() {
+            return refundExpressCom;
+        }
+
+        public void setRefundExpressCom(String refundExpressCom) {
+            this.refundExpressCom = refundExpressCom;
+        }
+
+        public String getReturnReason() {
+            return returnReason;
+        }
+
+        public void setReturnReason(String returnReason) {
+            this.returnReason = returnReason;
+        }
+
+        public String getRefundImg() {
+            return refundImg;
+        }
+
+        public void setRefundImg(String refundImg) {
+            this.refundImg = refundImg;
+        }
+
+        public String getSupplierName() {
+            return supplierName;
+        }
+
+        public void setSupplierName(String supplierName) {
+            this.supplierName = supplierName;
+        }
+
+        public String getSupplierPhone() {
+            return supplierPhone;
+        }
+
+        public void setSupplierPhone(String supplierPhone) {
+            this.supplierPhone = supplierPhone;
+        }
+
+        public String getSupplierAddress() {
+            return supplierAddress;
+        }
+
+        public void setSupplierAddress(String supplierAddress) {
+            this.supplierAddress = supplierAddress;
+        }
 
         public int getIsVipOrder() {
             return isVipOrder;
