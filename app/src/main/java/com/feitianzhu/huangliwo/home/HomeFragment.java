@@ -189,12 +189,15 @@ public class HomeFragment extends SFFragment implements ProvinceCallBack {
                 .execute(new JsonCallback<LzyResponse<ShopClassify>>() {
                     @Override
                     public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<ShopClassify>> response) {
-                        super.onSuccess(getActivity(), "", response.body().code);
-                        ShopClassify shopClassify = response.body().data;
-                        if (shopClassify != null && shopClassify.getGGoodsClsList() != null) {
-                            shopClassifyLsit = shopClassify.getGGoodsClsList();
-                            initTab();
+                        if(response.body()!=null){
+                            super.onSuccess(getActivity(), "", response.body().code);
+                            ShopClassify shopClassify = response.body().data;
+                            if (shopClassify != null && shopClassify.getGGoodsClsList() != null) {
+                                shopClassifyLsit = shopClassify.getGGoodsClsList();
+                                initTab();
+                            }
                         }
+
                     }
 
                     @Override
