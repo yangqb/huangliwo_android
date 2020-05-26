@@ -42,7 +42,9 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:icon,android:theme,android:label">
-        <activity android:name=".shop.ImActivity"></activity>
+        <activity android:name=".im.SessionlistActivity"></activity>
+        <activity android:name=".shop.CustomerservicelistActivity" />
+        <activity android:name=".shop.ImActivity" />
         <activity android:name=".shop.Customerservice" />
         <activity android:name=".travel.TraveFormActivity" />
         <activity android:name=".travel.TraveDetailActivity" /> <!-- 添加provider -->
@@ -592,8 +594,7 @@
         <activity
             android:name=".me.WagesDetailActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
-            android:screenOrientation="portrait" />
-        <!-- 以下为基本配置信息，需要自行添加至您的AndroidManifest文件中 start -->
+            android:screenOrientation="portrait" /> <!-- 以下为基本配置信息，需要自行添加至您的AndroidManifest文件中 start -->
         <service
             android:name="com.taobao.accs.ChannelService"
             android:exported="true"
@@ -728,7 +729,7 @@
         <provider
             android:name="com.umeng.message.provider.MessageProvider"
             android:authorities="${applicationId}.umeng.message"
-            android:exported="false" >
+            android:exported="false">
             <grant-uri-permission android:pathPattern=".*" />
         </provider> <!-- 以下为基本配置信息，需要自行添加至您的AndroidManifest文件中 end -->
         <!-- 友盟分享 -->

@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
@@ -32,8 +33,6 @@ public class Customerservice extends BaseActivity {
     LinearLayout returnissue;
     @BindView(R.id.platformissues)
     LinearLayout platformissues;
-
-
     @Override
     protected int getLayoutId() {
         return R.layout.activity_customerservice;
@@ -42,13 +41,6 @@ public class Customerservice extends BaseActivity {
     @Override
     protected void initView() {
         titleName.setText("在线客服");
-
-//        try {
-//            EMClient.getInstance().createAccount("yishun", "123456");
-//        } catch (HyphenateException e) {
-//            e.printStackTrace();
-//        }
-
     }
 
     @Override
@@ -80,8 +72,8 @@ public class Customerservice extends BaseActivity {
                         EMClient.getInstance().chatManager().loadAllConversations();
                         //startActivity(new Intent(Customerservice.this,ImActivity.class));
                         Intent intent = new Intent(Customerservice.this, ImActivity.class);
-//username为对方的环信id
-                        intent.putExtra(EaseConstant.EXTRA_USER_ID, "13671192850");
+                       //username为对方的环信id
+                        intent.putExtra(EaseConstant.EXTRA_USER_ID, "14701776629");
                         startActivity(intent);
                         Log.d("main", "登录聊天服务器成功！");
                     }
@@ -97,12 +89,12 @@ public class Customerservice extends BaseActivity {
                         Log.d("main", "登录聊天服务器失败！");
                     }
                 });
-                //
                 break;
             case R.id.returnissue:
-
+                 startActivity(new Intent(Customerservice.this,CustomerservicelistActivity.class));
                 break;
             case R.id.platformissues:
+                startActivity(new Intent(Customerservice.this,CustomerservicelistActivity.class));
                 break;
         }
     }
