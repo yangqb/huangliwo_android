@@ -27,6 +27,7 @@ import butterknife.OnClick;
 public class VipEquityActivity extends BaseBindingActivity {
 
     private ActivityVipEquityBinding viewDataBinding;
+    private double num;
 
     @OnClick(R.id.left_button)
     public void onClick() {
@@ -44,6 +45,8 @@ public class VipEquityActivity extends BaseBindingActivity {
                 .statusBarColor(R.color.transparent)
                 .init();
         viewDataBinding.titleName.setText("会员中心");
+        num = getIntent().getDoubleExtra("num", -1);
+        viewDataBinding.num.setText(num + "");
     }
 
     @Override

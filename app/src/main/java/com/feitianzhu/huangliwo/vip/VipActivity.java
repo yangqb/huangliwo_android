@@ -164,8 +164,12 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
                         .show();
                 break;
             case R.id.more_vip:
-                intent = new Intent(VipActivity.this, VipEquityActivity.class);
-                startActivity(intent);
+                if (presentsModel != null) {
+
+                    intent = new Intent(VipActivity.this, VipEquityActivity.class);
+                    intent.putExtra("num", presentsModel.totalPrice);
+                    startActivity(intent);
+                }
                 //跳转更多权益
                 break;
             case R.id.btn_submit:
