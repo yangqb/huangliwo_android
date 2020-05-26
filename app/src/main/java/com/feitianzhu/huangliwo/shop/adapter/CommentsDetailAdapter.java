@@ -61,7 +61,7 @@ public class CommentsDetailAdapter extends BaseQuickAdapter<BaseGoodsListBean.Go
         List<String> imgs = new ArrayList<>();
         recyclerView.setLayoutManager(new GridLayoutManager(mContext, 3));
         recyclerView.setNestedScrollingEnabled(false);
-        if (item.getEvalImgs() != null) {
+        if (item.getEvalImgs() != null && !TextUtils.isEmpty(item.getEvalImgs())) {
             String[] strings = item.getEvalImgs().split(",");
             imgs = Arrays.asList(strings);
         }

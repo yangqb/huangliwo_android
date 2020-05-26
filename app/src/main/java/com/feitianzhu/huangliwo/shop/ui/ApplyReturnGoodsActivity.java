@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
+import android.os.Environment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -13,11 +14,19 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
+import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
+import com.feitianzhu.huangliwo.core.network.ApiLifeCallBack;
+import com.feitianzhu.huangliwo.http.JsonCallback;
+import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.model.MultiItemComment;
 import com.feitianzhu.huangliwo.pushshop.ProblemFeedbackActivity;
 import com.feitianzhu.huangliwo.shop.adapter.EditCommentAdapter;
+import com.feitianzhu.huangliwo.shop.model.FileModel;
+import com.feitianzhu.huangliwo.shop.request.UpLoadFilesRequest;
 import com.feitianzhu.huangliwo.utils.Glide4Engine;
+import com.feitianzhu.huangliwo.utils.SPUtils;
+import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.utils.doubleclick.SingleClick;
 import com.feitianzhu.huangliwo.view.CustomRefundView;
 import com.feitianzhu.huangliwo.view.CustomSelectPhotoView;
@@ -25,11 +34,16 @@ import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.XXPermissions;
 import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.base.Request;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.internal.entity.CaptureStrategy;
 import com.zhihu.matisse.internal.utils.MediaStoreCompat;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -37,6 +51,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cc.shinichi.library.ImagePreview;
+
+import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
+import static com.feitianzhu.huangliwo.common.Constant.USERID;
 
 /**
  * package name: com.feitianzhu.huangliwo.shop.ui
@@ -46,6 +63,7 @@ import cc.shinichi.library.ImagePreview;
  * email: 694125155@qq.com
  */
 public class ApplyReturnGoodsActivity extends BaseActivity {
+    public static final String ORDER_NO = "order_no";
     private static final int REQUEST_CODE_CHOOSE = 1000;
     private static final int REQUEST_CODE_CAPTURE = 999;
     private List<MultiItemComment> multiItemCommentList = new ArrayList<>();
@@ -54,6 +72,7 @@ public class ApplyReturnGoodsActivity extends BaseActivity {
     private String[] strings = new String[]{"七天无理由退货", "收到商品破损", "商品错发/漏发", "商品需要维修", "收到商品与描述不符", "商品质量问题", "其他"};
     private String userId;
     private String token;
+    private String orderNo;
     private String problem = "";
     private int maxSize = 3;
     @BindView(R.id.title_name)
@@ -75,6 +94,9 @@ public class ApplyReturnGoodsActivity extends BaseActivity {
         titleName.setText("申请退货");
         rightText.setText("提交");
         rightText.setVisibility(View.VISIBLE);
+        token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
+        userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
+        orderNo = getIntent().getStringExtra(ORDER_NO);
         mMediaStoreCompat = new MediaStoreCompat(this);
         MultiItemComment comment = new MultiItemComment(MultiItemComment.upImg);
         comment.setId(R.mipmap.g01_01shangchuan);
@@ -255,16 +277,108 @@ public class ApplyReturnGoodsActivity extends BaseActivity {
                 break;
             case R.id.right_button:
                 if (TextUtils.isEmpty(problem)) {
-                    ToastUtils.show("请选择问题类型");
+                    ToastUtils.show("请选择退货原因");
                     return;
                 }
-                submit();
+                if (allSelect.size() <= 0) {
+                    ToastUtils.show("请上传图片");
+                    return;
+                }
+                upLoadImg();
                 break;
         }
     }
 
 
-    public void submit() {
+    public void upLoadImg() {
+        List<File> fileList = new ArrayList<>();
+        if (allSelect.size() > 0) {
+            for (int i = 0; i < allSelect.size(); i++) {
+                fileList.add(new File(allSelect.get(i)));
+            }
+        }
+
+        OkGo.<LzyResponse<FileModel>>post(Urls.UP_LOAD_FILES)
+                .tag(this)
+                .addFileParams("files", fileList)
+                .params("filedir", "order/refund/")
+                .execute(new JsonCallback<LzyResponse<FileModel>>() {
+                    @Override
+                    public void onStart(Request<LzyResponse<FileModel>, ? extends Request> request) {
+                        super.onStart(request);
+                        showloadDialog("");
+                    }
+
+                    @Override
+                    public void onSuccess(Response<LzyResponse<FileModel>> response) {
+                        if (response.body().code == 0) {
+                            submit(response.body().data.url);
+                        } else {
+                            ToastUtils.show(response.body().msg);
+                            goneloadDialog();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<LzyResponse<FileModel>> response) {
+                        super.onError(response);
+                        goneloadDialog();
+                    }
+                });
+
+        /*UpLoadFilesRequest upLoadFilesRequest = new UpLoadFilesRequest();
+        upLoadFilesRequest.fileList = fileList;
+        upLoadFilesRequest.call(new ApiLifeCallBack() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onFinsh() {
+
+            }
+
+            @Override
+            public void onAPIResponse(Object response) {
+                Object object = response;
+            }
+
+            @Override
+            public void onAPIError(int errorCode, String errorMsg) {
+
+            }
+        });*/
+    }
+
+
+    public void submit(String url) {
+        OkGo.<LzyResponse>post(Urls.REFUND_ORDER)
+                .tag(this)
+                .params(ACCESSTOKEN, token)
+                .params(USERID, userId)
+                .params("orderNo", orderNo)
+                .params("reason", problem)
+                .params("status", "9")
+                .params("imgs", url)
+                .execute(new JsonCallback<LzyResponse>() {
+                    @Override
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onSuccess(ApplyReturnGoodsActivity.this, response.body().msg, response.body().code);
+                        goneloadDialog();
+                        if (response.body().code == 0) {
+                            ToastUtils.show("申请成功");
+                            setResult(RESULT_OK);
+                            finish();
+                        }
+                    }
+
+                    @Override
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onError(response);
+                        goneloadDialog();
+                    }
+                });
 
     }
 

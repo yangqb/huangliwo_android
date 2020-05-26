@@ -7,8 +7,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.CountDownTimer;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -21,12 +24,16 @@ import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.model.GoodsOrderInfo;
+import com.feitianzhu.huangliwo.model.LogisticsModel;
 import com.feitianzhu.huangliwo.shop.SelectPayActivity;
 import com.feitianzhu.huangliwo.shop.ShopsDetailActivity;
+import com.feitianzhu.huangliwo.shop.adapter.CommentImgAdapter;
+import com.feitianzhu.huangliwo.shop.adapter.RefundImgAdapter;
 import com.feitianzhu.huangliwo.utils.DateUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.utils.doubleclick.SingleClick;
+import com.google.gson.Gson;
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.XXPermissions;
 import com.hjq.toast.ToastUtils;
@@ -35,7 +42,10 @@ import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnCancelListener;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.Response;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -48,6 +58,8 @@ import static com.feitianzhu.huangliwo.common.Constant.USERID;
 public class OrderDetailActivity extends BaseActivity {
     public static final String ORDER_NO = "order_no";
     private static final int PAY_REQUEST_CODE = 1000;
+    private LogisticsModel logisticsModel;
+    private RefundImgAdapter refundImgAdapter;
     private long time;
     private GoodsOrderInfo.GoodsOrderListBean goodsOrderBean;
     private String orderNo;
@@ -89,6 +101,32 @@ public class OrderDetailActivity extends BaseActivity {
     RelativeLayout rlAddress;
     @BindView(R.id.remark)
     TextView remark;
+    @BindView(R.id.ll_recipient_info)
+    LinearLayout llRecipientInfo;
+    @BindView(R.id.rl_logistics_info)
+    RelativeLayout rlLogisticsInfo;
+    @BindView(R.id.ll_refund_img)
+    LinearLayout llRefundImg;
+    @BindView(R.id.right_text)
+    TextView rightText;
+    @BindView(R.id.supplierName)
+    TextView tvSupplierName;
+    @BindView(R.id.supplierPhone)
+    TextView tvSupplierPhone;
+    @BindView(R.id.supplierAddress)
+    TextView tvSupplierAddress;
+    @BindView(R.id.edit_express_name)
+    EditText editExpressName;
+    @BindView(R.id.edit_express_no)
+    EditText editExpressNo;
+    @BindView(R.id.logistics_name)
+    TextView logisticsName;
+    @BindView(R.id.itemInfo)
+    TextView itemInfo;
+    @BindView(R.id.time)
+    TextView logisticsTime;
+    @BindView(R.id.recyclerView)
+    RecyclerView recyclerView;
     private String token;
     private String userId;
 
@@ -102,10 +140,11 @@ public class OrderDetailActivity extends BaseActivity {
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         titleName.setText("订单详情");
+        rightText.setText("提交");
         orderNo = getIntent().getStringExtra(ORDER_NO);
     }
 
-    @OnClick({R.id.left_button, R.id.tv_copy, R.id.call_phone, R.id.cancel_order, R.id.shopPay, R.id.ll_order_detail, R.id.tvStatusContent})
+    @OnClick({R.id.left_button, R.id.tv_copy, R.id.call_phone, R.id.cancel_order, R.id.shopPay, R.id.ll_order_detail, R.id.tvStatusContent, R.id.right_button, R.id.rl_logistics_info})
     @SingleClick()
     public void onClick(View view) {
         switch (view.getId()) {
@@ -168,23 +207,80 @@ public class OrderDetailActivity extends BaseActivity {
                 startActivity(intent);
                 break;
             case R.id.tvStatusContent:
+                String content = "";
+                if ((goodsOrderBean != null && goodsOrderBean.getRefuseReason() != null && !TextUtils.isEmpty(goodsOrderBean.getRefuseReason())) || (goodsOrderBean != null && goodsOrderBean.getRefuseReason() != null && !TextUtils.isEmpty(goodsOrderBean.getRefuseReason()))) {
+                    return;
+                }
                 if (goodsOrderBean != null && goodsOrderBean.getRefuseReason() != null && !TextUtils.isEmpty(goodsOrderBean.getRefuseReason())) {
-                    new XPopup.Builder(this)
-                            .asConfirm("", goodsOrderBean.getRefuseReason(), "关闭", "确定", new OnConfirmListener() {
-                                @Override
-                                public void onConfirm() {
-                                }
-                            }, new OnCancelListener() {
-                                @Override
-                                public void onCancel() {
+                    content = goodsOrderBean.getRefuseReason();
+                } else if (goodsOrderBean != null && goodsOrderBean.getReturnReason() != null && !TextUtils.isEmpty(goodsOrderBean.getReturnReason())) {
+                    content = goodsOrderBean.getReturnReason();
+                }
+                new XPopup.Builder(this)
+                        .asConfirm("", content, "关闭", "确定", new OnConfirmListener() {
+                            @Override
+                            public void onConfirm() {
+                            }
+                        }, new OnCancelListener() {
+                            @Override
+                            public void onCancel() {
 
-                                }
-                            }, true)
-                            .bindLayout(R.layout.layout_dialog_login)
-                            .show();//绑定已有布局
+                            }
+                        }, true)
+                        .bindLayout(R.layout.layout_dialog_login)
+                        .show();//绑定已有布局
+
+                break;
+
+            case R.id.right_button:
+                submit();
+                break;
+            case R.id.rl_logistics_info:
+                if (logisticsModel != null) {
+                    intent = new Intent(OrderDetailActivity.this, LogisticsInfoActivity.class);
+                    intent.putExtra(LogisticsInfoActivity.LOGISTICS_COMPANY, goodsOrderBean.getRefundExpressCom());
+                    intent.putExtra(LogisticsInfoActivity.LOGISTICS_DATA, logisticsModel);
+                    startActivity(intent);
                 }
                 break;
+
+
         }
+    }
+
+    public void submit() {
+        String expressNum = editExpressNo.getText().toString().trim();
+        String expressName = editExpressName.getText().toString().trim();
+        if (TextUtils.isEmpty(expressName)) {
+            ToastUtils.show("请填写快递公司名称");
+            return;
+        }
+        if (TextUtils.isEmpty(expressNum)) {
+            ToastUtils.show("请填写快递单号");
+            return;
+        }
+        OkGo.<LzyResponse>post(Urls.COMMIT_EXPRESS)
+                .tag(this)
+                .params(ACCESSTOKEN, token)
+                .params(USERID, userId)
+                .params("expressNum", expressNum)
+                .params("expressName", expressName)
+                .params("orderNo", goodsOrderBean.getOrderNo())
+                .execute(new JsonCallback<LzyResponse>() {
+                    @Override
+                    public void onSuccess(Response<LzyResponse> response) {
+                        super.onSuccess(OrderDetailActivity.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0) {
+                            setResult(RESULT_OK);
+                            finish();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<LzyResponse> response) {
+                        super.onError(response);
+                    }
+                });
     }
 
 
@@ -227,12 +323,48 @@ public class OrderDetailActivity extends BaseActivity {
                         if (response.body().code == 0 && response.body().data != null) {
                             goodsOrderBean = response.body().data;
                             time = (goodsOrderBean.getExpiresDate() - goodsOrderBean.getNowTimeStamp()) / 1000;
+                            if (goodsOrderBean.getStatus() == GoodsOrderInfo.TYPE_WAIT_MERCHANT_RECEIVING || goodsOrderBean.getStatus() == GoodsOrderInfo.TYPE_WAIT_MERCHANT_REFUND || goodsOrderBean.getStatus() == GoodsOrderInfo.TYPE_COMPLETED_REFUND_GOODS) {
+                                if (goodsOrderBean.getRefundExpressNum() != null && !TextUtils.isEmpty(goodsOrderBean.getRefundExpressNum())) {
+                                    getLogisticsInfo(goodsOrderBean.getRefundExpressNum(), goodsOrderBean.getRefundExpressCom());
+                                }
+                            }
                             showView();
                         }
                     }
 
                     @Override
                     public void onError(com.lzy.okgo.model.Response<LzyResponse<GoodsOrderInfo.GoodsOrderListBean>> response) {
+                        super.onError(response);
+                    }
+                });
+    }
+
+    public void getLogisticsInfo(String expressNo, String expressCom) {
+        OkGo.<LzyResponse<String>>get(Urls.GET_LOGISTICS_INFO)
+                .tag(this)
+                .params(Constant.ACCESSTOKEN, token)
+                .params(Constant.USERID, userId)
+                .params("expressNo", expressNo)
+                .execute(new JsonCallback<LzyResponse<String>>() {
+                    @Override
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<String>> response) {
+                        if (response.body().code == 0 && response.body().data != null && !TextUtils.isEmpty(response.body().data)) {
+                            String jsonStr = response.body().data;
+                            logisticsModel = new Gson().fromJson(jsonStr, LogisticsModel.class);
+                            if (logisticsModel.getData() != null && logisticsModel.getData().size() > 0) {
+                                logisticsName.setText("退货物流：" + expressCom + "(" + expressNo + ")");
+                                itemInfo.setText(logisticsModel.getData().get(0).getContext());
+                                logisticsTime.setText(logisticsModel.getData().get(0).getFtime());
+                            } else {
+                                itemInfo.setText("暂无物流信息");
+                            }
+                        } else {
+                            itemInfo.setText("暂无物流信息");
+                        }
+                    }
+
+                    @Override
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse<String>> response) {
                         super.onError(response);
                     }
                 });
@@ -263,25 +395,115 @@ public class OrderDetailActivity extends BaseActivity {
         if (goodsOrderBean.getStatus() == GoodsOrderInfo.TYPE_NO_PAY) {
             llStatus.setVisibility(View.VISIBLE);
             llBottom.setVisibility(View.VISIBLE);
+            rightText.setVisibility(View.GONE);
+            llRecipientInfo.setVisibility(View.GONE);
+            rlLogisticsInfo.setVisibility(View.GONE);
+            llRefundImg.setVisibility(View.GONE);
             tvStatus.setText("等待付款");
             countDownTimer();
         } else if (goodsOrderBean.getStatus() == GoodsOrderInfo.TYPE_REFUND) {
             llStatus.setVisibility(View.VISIBLE);
             llBottom.setVisibility(View.GONE);
+            rightText.setVisibility(View.GONE);
+            llRecipientInfo.setVisibility(View.GONE);
+            rlLogisticsInfo.setVisibility(View.GONE);
+            llRefundImg.setVisibility(View.GONE);
             tvStatus.setText("退款中");
             tvStatusContent.setText("等待商家处理");
         } else if (goodsOrderBean.getStatus() == GoodsOrderInfo.TYPE_REFUNDED) {
             llStatus.setVisibility(View.VISIBLE);
+            rightText.setVisibility(View.GONE);
             llBottom.setVisibility(View.GONE);
+            llRecipientInfo.setVisibility(View.GONE);
+            rlLogisticsInfo.setVisibility(View.GONE);
+            llRefundImg.setVisibility(View.GONE);
             tvStatus.setText("退款成功");
+            tvStatusContent.setText("");
+        } else if (goodsOrderBean.getStatus() == GoodsOrderInfo.TYPE_REFUNDING_GOODS) {
+            llStatus.setVisibility(View.VISIBLE);
+            rightText.setVisibility(View.GONE);
+            llBottom.setVisibility(View.GONE);
+            llRecipientInfo.setVisibility(View.GONE);
+            rlLogisticsInfo.setVisibility(View.GONE);
+            llRefundImg.setVisibility(View.GONE);
+            tvStatus.setText("退货中");
+            tvStatusContent.setText("等待商家处理");
+        } else if (goodsOrderBean.getStatus() == GoodsOrderInfo.TYPE_AGREE_REFUND_GOODS) {
+            llStatus.setVisibility(View.VISIBLE);
+            rightText.setVisibility(View.VISIBLE);
+            llBottom.setVisibility(View.GONE);
+            rlLogisticsInfo.setVisibility(View.GONE);
+            llRefundImg.setVisibility(View.VISIBLE);
+            tvStatus.setText("退货中");
+            llRecipientInfo.setVisibility(View.VISIBLE);
+            showSupplierInfo();
+            showRefundImg();
+            tvStatusContent.setText("商家已同意，请尽快将商品发回");
+        } else if (goodsOrderBean.getStatus() == GoodsOrderInfo.TYPE_WAIT_MERCHANT_RECEIVING) {
+            llStatus.setVisibility(View.VISIBLE);
+            llBottom.setVisibility(View.GONE);
+            rightText.setVisibility(View.GONE);
+            llRecipientInfo.setVisibility(View.GONE);
+            rlLogisticsInfo.setVisibility(View.VISIBLE);
+            llRefundImg.setVisibility(View.VISIBLE);
+            tvStatus.setText("退货中");
+            tvStatusContent.setText("等待商家收货");
+            showRefundImg();
+        } else if (goodsOrderBean.getStatus() == GoodsOrderInfo.TYPE_WAIT_MERCHANT_REFUND) {
+            llStatus.setVisibility(View.VISIBLE);
+            llBottom.setVisibility(View.GONE);
+            rightText.setVisibility(View.GONE);
+            llRecipientInfo.setVisibility(View.GONE);
+            rlLogisticsInfo.setVisibility(View.VISIBLE);
+            llRefundImg.setVisibility(View.VISIBLE);
+            tvStatus.setText("退货中");
+            tvStatusContent.setText("等待商家退款");
+            showRefundImg();
+        } else if (goodsOrderBean.getStatus() == GoodsOrderInfo.TYPE_COMPLETED_REFUND_GOODS) {
+            llStatus.setVisibility(View.VISIBLE);
+            llBottom.setVisibility(View.GONE);
+            rightText.setVisibility(View.GONE);
+            rlLogisticsInfo.setVisibility(View.VISIBLE);
+            llRecipientInfo.setVisibility(View.GONE);
+            llRefundImg.setVisibility(View.VISIBLE);
+            tvStatus.setText("退货完成");
+            showRefundImg();
             tvStatusContent.setText("");
         } else {
             llStatus.setVisibility(View.GONE);
             llBottom.setVisibility(View.GONE);
+            rlLogisticsInfo.setVisibility(View.GONE);
+            llRecipientInfo.setVisibility(View.GONE);
+            rightText.setVisibility(View.GONE);
+            llRefundImg.setVisibility(View.GONE);
         }
         if (goodsOrderBean.getRefuseReason() != null && !TextUtils.isEmpty(goodsOrderBean.getRefuseReason())) {
             tvStatusContent.setText(goodsOrderBean.getRefuseReason());
         }
+
+        if (goodsOrderBean.getReturnReason() != null && !TextUtils.isEmpty(goodsOrderBean.getReturnReason())) {
+            tvStatusContent.setText(goodsOrderBean.getRefuseReason());
+        }
+    }
+
+
+    public void showSupplierInfo() {
+        tvSupplierName.setText(goodsOrderBean.getSupplierName());
+        tvSupplierPhone.setText(goodsOrderBean.getSupplierPhone());
+        tvSupplierAddress.setText(goodsOrderBean.getSupplierAddress());
+    }
+
+    public void showRefundImg() {
+        List<String> imgs = new ArrayList<>();
+        recyclerView.setLayoutManager(new GridLayoutManager(mContext, 3));
+        recyclerView.setNestedScrollingEnabled(false);
+        if (goodsOrderBean.getRefundImg() != null && !TextUtils.isEmpty(goodsOrderBean.getRefundImg())) {
+            String[] strings = goodsOrderBean.getRefundImg().split(",");
+            imgs = Arrays.asList(strings);
+        }
+        refundImgAdapter = new RefundImgAdapter(imgs);
+        recyclerView.setAdapter(refundImgAdapter);
+        refundImgAdapter.notifyDataSetChanged();
     }
 
     private void requestPermission() {

@@ -37,6 +37,8 @@ import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.SoftKeyBoardListener;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.google.gson.Gson;
+import com.gyf.immersionbar.ImmersionBar;
+import com.gyf.immersionbar.OnKeyboardListener;
 import com.hjq.toast.ToastUtils;
 import com.lzy.okgo.OkGo;
 import com.tencent.mm.opensdk.modelpay.PayReq;
@@ -129,7 +131,6 @@ public class SettlementShoppingCartActivity extends BaseActivity {
                 selectCartModels.get(position).remark = text;
             }
         });
-
         SoftKeyBoardListener.setListener(SettlementShoppingCartActivity.this, new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
             @Override
             public void keyBoardShow(int height) {
@@ -143,7 +144,6 @@ public class SettlementShoppingCartActivity extends BaseActivity {
                 rlBottom.setVisibility(View.VISIBLE);
             }
         });
-
     }
 
     @Override
