@@ -156,7 +156,7 @@ public class TraveDetailActivity extends BaseBindingActivity {
                             dataBinding.submit.setEnabled(true);
 
                         }
-                        Log.e("TAG", "onItemClick: "+n + n1 + n2);
+                        Log.e("TAG", "onItemClick: " + n + n1 + n2);
 
                     }
                 }
@@ -204,11 +204,10 @@ public class TraveDetailActivity extends BaseBindingActivity {
                         dataBinding.downValue.setText("￥" + format);
 
 
-
                     }
                 }
 
-                Log.e("TAG", "onItemClick: "+n + n1 + n2);
+                Log.e("TAG", "onItemClick: " + n + n1 + n2);
 
             }
         });
@@ -272,14 +271,15 @@ public class TraveDetailActivity extends BaseBindingActivity {
                     OilTimeRequest oilTimeRequest = new OilTimeRequest();
                     oilTimeRequest.phone = SPUtils.getString(TraveDetailActivity.this, Constant.SP_PHONE);
                     oilTimeRequest.platformId = "98647229";
+                    oilTimeRequest.app_key = "appm_api_h598647229";
+                    oilTimeRequest.timestamp = System.currentTimeMillis() + "";
                     oilTimeRequest.call(new ApiCallBack<String>() {
                         @Override
                         public void onAPIResponse(String response) {
-                            Log.e("TAG", "onAPIResponse: " + response);
-
+                            String u = "https://open.czb365.com/redirection/todo/?platformType=98647229&authCode=" + response + "&gasId=" + oilListBean.getGasId() + "&gunNo=" + n2;
 //                            http://test-mcs.czb365.com/services/v3/begin/getSecretCode?platformId=98647229&phone=13671192850
-                            Web1Activity.toWeb1Activity(TraveDetailActivity.this, "https://open.czb365.com/redirection/todo/?platformType=98647229&authCode="
-                                    + response + "&gasId=" + oilListBean.getGasId() + "&gunNo=" + n2);
+                            Web1Activity.toWeb1Activity(TraveDetailActivity.this, u);
+                            Log.e("TAG", "onAPIResponse: " + u);
 
                         }
 
