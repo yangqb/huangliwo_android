@@ -146,7 +146,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="便利大本营339礼包"
+                                android:text="便利大本营399礼包"
                                 android:textColor="@color/color_333333"
                                 android:textSize="14sp" />
 

@@ -360,6 +360,7 @@
         <activity
             android:name=".me.ui.VerificationActivity2"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:windowSoftInputMode="adjustNothing"
             android:screenOrientation="portrait" />
         <activity
             android:name=".shop.ui.SearchShopActivity"

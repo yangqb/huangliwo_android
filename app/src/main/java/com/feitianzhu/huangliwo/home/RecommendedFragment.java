@@ -365,9 +365,14 @@ public class RecommendedFragment extends SFFragment {
                 startActivity(intent);
                 break;*/
             case R.id.rl_travel:
-
-                intent = new Intent(getActivity(), TravelHomeActivity.class);
-                startActivity(intent);
+                token = SPUtils.getString(getContext(), Constant.SP_ACCESS_TOKEN);
+                if (token == null || TextUtils.isEmpty(token)) {
+                    Intent intent1 = new Intent(getActivity(), LoginActivity.class);
+                    startActivity(intent1);
+                }else {
+                    intent = new Intent(getActivity(), TravelHomeActivity.class);
+                    startActivity(intent);
+                }
                 break;
             case R.id.back_top:
                 scrollView.fling(0);

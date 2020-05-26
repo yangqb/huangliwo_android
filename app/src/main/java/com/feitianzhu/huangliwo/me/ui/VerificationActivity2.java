@@ -1,11 +1,15 @@
 package com.feitianzhu.huangliwo.me.ui;
 
 import android.Manifest;
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -18,6 +22,7 @@ import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
+import com.feitianzhu.huangliwo.login.LoginActivity;
 import com.feitianzhu.huangliwo.model.Province;
 import com.feitianzhu.huangliwo.model.UserAuth;
 import com.feitianzhu.huangliwo.model.UserVeriModel;
@@ -25,10 +30,12 @@ import com.feitianzhu.huangliwo.shop.ui.dialog.ProvinceCallBack;
 import com.feitianzhu.huangliwo.shop.ui.dialog.ProvinceDialog2;
 import com.feitianzhu.huangliwo.utils.Glide4Engine;
 import com.feitianzhu.huangliwo.utils.SPUtils;
+import com.feitianzhu.huangliwo.utils.SoftKeyBoardListener;
 import com.feitianzhu.huangliwo.utils.StringUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.view.CustomRefundView;
 import com.feitianzhu.huangliwo.view.CustomSelectPhotoView;
+import com.gyf.immersionbar.ImmersionBar;
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.XXPermissions;
 import com.hjq.toast.ToastUtils;
@@ -107,7 +114,8 @@ public class VerificationActivity2 extends BaseActivity implements ProvinceCallB
     private int index = -1;
     @BindView(R.id.txt_permanent_address)
     TextView txtPermanentAddress;
-
+    private int loginViewtoBottom;
+    private ObjectAnimator animatorUp, animatorDown;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_verification2;
@@ -140,13 +148,59 @@ public class VerificationActivity2 extends BaseActivity implements ProvinceCallB
         } else {
             lyShiming.setVisibility(View.VISIBLE);
         }
+
+        lyShiming.post(new Runnable() {
+            @Override
+            public void run() {
+                //不可以直接获取控件位置，放在这个里面获取；
+                int[] viewLocation = new int[2];
+                lyShiming.getLocationOnScreen(viewLocation); //获取该控价在屏幕中的位置（左上角的点）
+//              loginViewtoBottom = UiUtils.getScreenHeight(mContext) - layoutLogin.getBottom(); //getBottom是该控件最底部距离父控件顶部的距离
+                WindowManager manager = getWindowManager();
+                DisplayMetrics outMetrics = new DisplayMetrics();
+                manager.getDefaultDisplay().getMetrics(outMetrics);
+                int screenHeight = outMetrics.heightPixels;
+                if (ImmersionBar.hasNavigationBar(VerificationActivity2.this)) {
+                    loginViewtoBottom = screenHeight - viewLocation[1] - lyShiming.getHeight();//屏幕高度-控件距离顶部高度-控件高度
+                } else {
+                    loginViewtoBottom = screenHeight - viewLocation[1] - lyShiming.getHeight() + 80;//屏幕高度-控件距离顶部高度-控件高度
+                }
+            }
+        });
+        initListener();
+    }
+
+    public void initListener() {
+        SoftKeyBoardListener.setListener(VerificationActivity2.this, new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
+            @Override
+            public void keyBoardShow(int height) {
+                //Toast.makeText(AppActivity.this, "键盘显示 高度" + height, Toast.LENGTH_SHORT).show();
+                //if (animatorUp == null) { //如果每次弹出的键盘高度不一致，就不要这个判断，每次都新创建动画（密码键盘可能和普通键盘高度不一致）
+                int translationY = height - loginViewtoBottom;
+                animatorUp = ObjectAnimator.ofFloat(lyShiming, "translationY", 0, -translationY);
+                animatorUp.setDuration(360);
+                animatorUp.setInterpolator(new AccelerateDecelerateInterpolator());
+                //}
+                animatorUp.start();
+            }
+
+            @Override
+            public void keyBoardHide(int height) {
+                //if (animatorDown == null) {//如果每次弹出的键盘高度不一致，就不要这个判断，每次都新创建动画（密码键盘可能和普通键盘高度不一致）
+                int translationY = height - loginViewtoBottom;
+                animatorDown = ObjectAnimator.ofFloat(lyShiming, "translationY", -translationY, 0);
+                animatorDown.setDuration(360);
+                animatorDown.setInterpolator(new AccelerateDecelerateInterpolator());
+                //}
+                animatorDown.start();
+            }
+        });
     }
 
     @Override
     protected void initData() {
 
     }
-
     public void getAuthInfo() {
 
         OkGo.<LzyResponse<UserVeriModel>>get(Urls.BASE_URL + LOADER_VERI_USER_INFO)
