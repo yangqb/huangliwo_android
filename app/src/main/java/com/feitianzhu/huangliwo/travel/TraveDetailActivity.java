@@ -273,6 +273,7 @@ public class TraveDetailActivity extends BaseBindingActivity {
                     oilTimeRequest.platformId = "98647229";
                     oilTimeRequest.app_key = "appm_api_h598647229";
                     oilTimeRequest.timestamp = System.currentTimeMillis() + "";
+                    oilTimeRequest.isShowLoading = true;
                     oilTimeRequest.call(new ApiCallBack<String>() {
                         @Override
                         public void onAPIResponse(String response) {
@@ -285,11 +286,11 @@ public class TraveDetailActivity extends BaseBindingActivity {
 
                         @Override
                         public void onAPIError(int errorCode, String errorMsg) {
+                            ToastUtils.show("网络错误");
 
                         }
                     });
                 }
-//                ToastUtils.show("init: " + n2 + ".." + n1 + ".." + ".." + n);
 //
             }
         });
