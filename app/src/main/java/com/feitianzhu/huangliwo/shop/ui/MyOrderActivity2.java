@@ -165,26 +165,29 @@ public class MyOrderActivity2 extends BaseActivity {
         tabLayout.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
             public void onTabSelect(int position) {
+
+
                 if (position == 0) {
                     butType = 0;
                     status = GoodsOrderInfo.TYPE_All;
-                    getOrderList(status);
+//                    getOrderList(status);
                 } else if (position == 1) {
                     butType = 1;
                     status = GoodsOrderInfo.TYPE_NO_PAY;
-                    getOrderList(status);
+//                    getOrderList(status);
                 } else if (position == 2) {
                     butType = 2;
                     status = GoodsOrderInfo.TYPE_WAIT_DELIVERY;
-                    getOrderList(status);
+//                    getOrderList(status);
                 } else if (position == 3) {
                     status = GoodsOrderInfo.TYPE_WAIT_RECEIVING;
-                    getOrderList(status);
+//                    getOrderList(status);
                 } else if (position == 4) {
                     butType = 4;
                     status = GoodsOrderInfo.TYPE_WAIT_COMMENTS;
-                    getOrderList(status);
+//                    getOrderList(status);
                 }
+                getGoodsOrderList();
             }
 
             @Override
