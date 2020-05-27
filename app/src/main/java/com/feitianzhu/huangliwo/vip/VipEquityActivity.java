@@ -71,24 +71,24 @@ public class VipEquityActivity extends BaseBindingActivity {
         ArrayList<VipBean> strings = new ArrayList<>();
 
         strings.add(new VipBean("品质大牌", R.mipmap.vip_equ1));
-        strings.add(new VipBean("工厂价格", R.mipmap.vip_equ2));
-        strings.add(new VipBean("行业齐全", R.mipmap.vip_equ4));
-        strings.add(new VipBean("一件包邮", R.mipmap.vip_equ5));
+        strings.add(new VipBean("工厂价格", R.mipmap.vip_equ3));
+        strings.add(new VipBean("行业齐全", R.mipmap.vip_equ2));
+        strings.add(new VipBean("一件包邮", R.mipmap.vip_equ4));
 
-        strings.add(new VipBean("自购省钱", R.mipmap.vip_equ6));
-        strings.add(new VipBean("分享赚钱", R.mipmap.vip_equ7));
-        strings.add(new VipBean("代理特权", R.mipmap.vip_equ8));
-        strings.add(new VipBean("福利多多", R.mipmap.vip_equ9));
+        strings.add(new VipBean("自购省钱", R.mipmap.vip_equ5));
+        strings.add(new VipBean("分享赚钱", R.mipmap.vip_equ6));
+        strings.add(new VipBean("代理特权", R.mipmap.vip_equ7));
+        strings.add(new VipBean("福利多多", R.mipmap.vip_equ8));
 
-        strings.add(new VipBean("终身油惠", R.mipmap.vip_equ10));
-        strings.add(new VipBean("质量保证", R.mipmap.vip_equ11));
-        strings.add(new VipBean("专属售后", R.mipmap.vip_equ12));
-        strings.add(new VipBean("贴心服务", R.mipmap.vip_equ13));
+        strings.add(new VipBean("终身油惠", R.mipmap.vip_equ9));
+        strings.add(new VipBean("质量保证", R.mipmap.vip_equ10));
+        strings.add(new VipBean("专属售后", R.mipmap.vip_equ11));
+        strings.add(new VipBean("贴心服务", R.mipmap.vip_equ12));
 
-        strings.add(new VipBean("运营指导", R.mipmap.vip_equ14));
-        strings.add(new VipBean("素材分享", R.mipmap.vip_equ15));
-        strings.add(new VipBean("流量支持", R.mipmap.vip_equ16));
-        strings.add(new VipBean("全程无忧", R.mipmap.vip_equ1));
+        strings.add(new VipBean("运营指导", R.mipmap.vip_equ13));
+        strings.add(new VipBean("素材分享", R.mipmap.vip_equ14));
+        strings.add(new VipBean("流量支持", R.mipmap.vip_equ15));
+        strings.add(new VipBean("全程无忧", R.mipmap.vip_equ16));
 
 
         VipShowAdapter vipShowAdapter = new VipShowAdapter(strings);

@@ -41,18 +41,20 @@ public abstract class BaseTravelRequest extends BaseRequest {
 //            登录异常被踢
             super.handleError(errorCode, errorMsg);
         } else if (errorCode == 404) {
-            ToastUtils.show("数据找不到");
             //找不到
-        } else if (errorCode == kErrorTypeNoNetworkConnect) {
-            ToastUtils.show("网络不可用");
+            ToastUtils.show("404 ,网络连接错误  重新加载");
 
+        } else if (errorCode == kErrorTypeNoNetworkConnect) {
             //网络不可用
+            ToastUtils.show("网络未开启,请打开网络");
+
         } else if (errorCode == kErrorTypeResponseHandleError) {
+            //外部数据处理错误
             ToastUtils.show("数据处理错误");
 
-            //外部数据处理错误
         } else if (errorCode == kErrorTypeResponsePraseError) {
-            ToastUtils.show("解析错误");
+            //json解析错误
+            ToastUtils.show("网络正在开小差 重新加载");
 
             //json解析错误
         } else {
