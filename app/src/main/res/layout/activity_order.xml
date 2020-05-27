@@ -33,10 +33,10 @@
             android:drawableRight="@mipmap/i01_01xiala"
             android:drawablePadding="5dp"
             android:gravity="center"
-            android:visibility="gone"
             android:text=""
             android:textColor="@color/color_333333"
-            android:textSize="17sp" />
+            android:textSize="17sp"
+            android:visibility="gone" />
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -78,7 +78,8 @@
                 app:tl_indicator_bounce_enable="false"
                 app:tl_indicator_color="@color/bg_yellow"
                 app:tl_indicator_height="2dp"
-                app:tl_indicator_width="20dp"
+                app:tl_indicator_margin_left="@dimen/dp_10"
+                app:tl_indicator_margin_right="@dimen/dp_10"
                 app:tl_indicator_width_equal_title="false"
                 app:tl_textSelectColor="@color/color_333333"
                 app:tl_textUnselectColor="@color/color_999999"
@@ -104,7 +105,8 @@
                 app:tl_indicator_bounce_enable="false"
                 app:tl_indicator_color="@color/bg_yellow"
                 app:tl_indicator_height="2dp"
-                app:tl_indicator_width="20dp"
+                app:tl_indicator_margin_left="@dimen/dp_20"
+                app:tl_indicator_margin_right="@dimen/dp_20"
                 app:tl_indicator_width_equal_title="false"
                 app:tl_textSelectColor="@color/color_333333"
                 app:tl_textUnselectColor="@color/color_999999"
