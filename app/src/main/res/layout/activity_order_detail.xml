@@ -128,7 +128,7 @@
                             android:layout_height="match_parent"
                             android:layout_toRightOf="@id/tag"
                             android:gravity="start|center_vertical"
-                            android:text=""
+                            android:text="请选择快递物流"
                             android:textColor="@color/color_333333"
                             android:textSize="14sp" />
 

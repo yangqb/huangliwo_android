@@ -1,15 +1,23 @@
 package com.feitianzhu.huangliwo.shop.ui;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.CountDownTimer;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.AbsoluteSizeSpan;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -35,6 +43,7 @@ import com.feitianzhu.huangliwo.shop.model.ExpressModel;
 import com.feitianzhu.huangliwo.shop.request.ExpressInfoRequest;
 import com.feitianzhu.huangliwo.shop.request.ExpressListRequest;
 import com.feitianzhu.huangliwo.utils.DateUtils;
+import com.feitianzhu.huangliwo.utils.MathUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.utils.doubleclick.SingleClick;
@@ -71,8 +80,10 @@ public class OrderDetailActivity extends BaseActivity {
     private List<ExpressModel> expressModelList;
     private List<String> stringList = new ArrayList<>();
     private List<String> imgs = new ArrayList<>();
-    private int selectPos;
+    private int selectPos = -1;
     private long time;
+    private String str1 = "合计：";
+    private String str2 = "¥ ";
     private GoodsOrderInfo.GoodsOrderListBean goodsOrderBean;
     private String orderNo;
     @BindView(R.id.title_name)
@@ -85,6 +96,8 @@ public class OrderDetailActivity extends BaseActivity {
     TextView createTime;
     @BindView(R.id.tv_price)
     TextView tvPrice;
+    @BindView(R.id.amount)
+    TextView amount;
     @BindView(R.id.userName)
     TextView userName;
     @BindView(R.id.phone)
@@ -345,8 +358,8 @@ public class OrderDetailActivity extends BaseActivity {
     public void submit() {
         String expressNum = editExpressNo.getText().toString().trim();
         String expressName = editExpressName.getText().toString().trim();
-        if (TextUtils.isEmpty(expressName)) {
-            ToastUtils.show("请选择快递公司");
+        if (selectPos == -1) {
+            ToastUtils.show("请选择快递物流");
             return;
         }
         if (TextUtils.isEmpty(expressNum)) {
@@ -425,9 +438,13 @@ public class OrderDetailActivity extends BaseActivity {
                         if (response.body().code == 0 && response.body().data != null) {
                             goodsOrderBean = response.body().data;
                             time = (goodsOrderBean.getExpiresDate() - goodsOrderBean.getNowTimeStamp()) / 1000;
+                            setSpannableString(String.format(Locale.getDefault(), "%.2f", goodsOrderBean.getAmount()), amount);
                             if (goodsOrderBean.getStatus() == GoodsOrderInfo.TYPE_WAIT_MERCHANT_RECEIVING || goodsOrderBean.getStatus() == GoodsOrderInfo.TYPE_WAIT_MERCHANT_REFUND || goodsOrderBean.getStatus() == GoodsOrderInfo.TYPE_COMPLETED_REFUND_GOODS) {
                                 if (goodsOrderBean.getRefundExpressNum() != null && !TextUtils.isEmpty(goodsOrderBean.getRefundExpressNum())) {
-                                    getLogisticsInfo(goodsOrderBean.getRefundExpressNum(), goodsOrderBean.getRefundExpressCom());
+                                    logisticsName.setText("退货物流：" + goodsOrderBean.getRefundExpressCom() + "(" + goodsOrderBean.getRefundExpressNum() + ")");
+                                    getLogisticsInfo(goodsOrderBean.getRefundExpressNum());
+                                } else {
+                                    itemInfo.setText("暂无物流信息");
                                 }
                             }
                             showView();
@@ -441,7 +458,7 @@ public class OrderDetailActivity extends BaseActivity {
                 });
     }
 
-    public void getLogisticsInfo(String expressNo, String expressCom) {
+    public void getLogisticsInfo(String expressNo) {
         OkGo.<LzyResponse<String>>get(Urls.GET_LOGISTICS_INFO)
                 .tag(this)
                 .params(Constant.ACCESSTOKEN, token)
@@ -454,7 +471,6 @@ public class OrderDetailActivity extends BaseActivity {
                             String jsonStr = response.body().data;
                             logisticsModel = new Gson().fromJson(jsonStr, LogisticsModel.class);
                             if (logisticsModel.getData() != null && logisticsModel.getData().size() > 0) {
-                                logisticsName.setText("退货物流：" + expressCom + "(" + expressNo + ")");
                                 itemInfo.setText(logisticsModel.getData().get(0).getContext());
                                 logisticsTime.setText(logisticsModel.getData().get(0).getFtime());
                             } else {
@@ -571,6 +587,32 @@ public class OrderDetailActivity extends BaseActivity {
             tvStatus.setText("退货完成");
             showRefundImg();
             tvStatusContent.setText("");
+        } else if (goodsOrderBean.getStatus() == GoodsOrderInfo.TYPE_WAIT_DELIVERY) {
+            if (goodsOrderBean.getRefuseReason() != null && !TextUtils.isEmpty(goodsOrderBean.getRefuseReason())) {
+                tvStatusContent.setText(goodsOrderBean.getRefuseReason());
+            } else {
+                tvStatusContent.setText("");
+            }
+            tvStatus.setText("待发货");
+            llStatus.setVisibility(View.VISIBLE);
+            llBottom.setVisibility(View.GONE);
+            rlLogisticsInfo.setVisibility(View.GONE);
+            llRecipientInfo.setVisibility(View.GONE);
+            rightText.setVisibility(View.GONE);
+            llRefundImg.setVisibility(View.GONE);
+        } else if (goodsOrderBean.getStatus() == GoodsOrderInfo.TYPE_WAIT_RECEIVING) {
+            if (goodsOrderBean.getRefuseReason() != null && !TextUtils.isEmpty(goodsOrderBean.getRefuseReason())) {
+                tvStatusContent.setText(goodsOrderBean.getRefuseReason());
+            } else {
+                tvStatusContent.setText("");
+            }
+            tvStatus.setText("待收货");
+            llStatus.setVisibility(View.VISIBLE);
+            llBottom.setVisibility(View.GONE);
+            rlLogisticsInfo.setVisibility(View.GONE);
+            llRecipientInfo.setVisibility(View.GONE);
+            rightText.setVisibility(View.GONE);
+            llRefundImg.setVisibility(View.GONE);
         } else {
             llStatus.setVisibility(View.GONE);
             llBottom.setVisibility(View.GONE);
@@ -578,9 +620,6 @@ public class OrderDetailActivity extends BaseActivity {
             llRecipientInfo.setVisibility(View.GONE);
             rightText.setVisibility(View.GONE);
             llRefundImg.setVisibility(View.GONE);
-        }
-        if (goodsOrderBean.getRefuseReason() != null && !TextUtils.isEmpty(goodsOrderBean.getRefuseReason())) {
-            tvStatusContent.setText(goodsOrderBean.getRefuseReason());
         }
     }
 
@@ -677,5 +716,31 @@ public class OrderDetailActivity extends BaseActivity {
             countDownTimer.cancel();
             countDownTimer = null;
         }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void setSpannableString(String str3, TextView view) {
+        view.setText("");
+        SpannableString span1 = new SpannableString(str1);
+        SpannableString span2 = new SpannableString(str2);
+        SpannableString span3 = new SpannableString(str3);
+        ForegroundColorSpan colorSpan1 = new ForegroundColorSpan(Color.parseColor("#666666"));
+        span1.setSpan(new AbsoluteSizeSpan(14, true), 0, str1.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        span1.setSpan(colorSpan1, 0, str1.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+
+        ForegroundColorSpan colorSpan2 = new ForegroundColorSpan(Color.parseColor("#F88D03"));
+        span2.setSpan(new AbsoluteSizeSpan(13, true), 0, str2.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        span2.setSpan(new StyleSpan(Typeface.BOLD), 0, str2.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        span2.setSpan(colorSpan2, 0, str2.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+
+        ForegroundColorSpan colorSpan3 = new ForegroundColorSpan(Color.parseColor("#F88D03"));
+        span3.setSpan(new AbsoluteSizeSpan(18, true), 0, str3.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        span3.setSpan(new StyleSpan(Typeface.BOLD), 0, str3.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        span3.setSpan(colorSpan3, 0, str3.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+
+        view.append(span1);
+        view.append(span2);
+        view.append(span3);
+
     }
 }
