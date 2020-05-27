@@ -58,12 +58,8 @@ public abstract class BaseRequest extends BaseApiRequest {
     @Override
     public void handleError(int errorCode, String errorMsg) {
         super.handleError(errorCode, errorMsg);
-
         if (errorCode == 100021105) {
-            Log.e("TAG11", "handleError: " );
 //            登录异常被踢
-            boolean loginDialog = SPUtils.getBoolean(GlobalUtil.getCurrentActivity(), Constant.LOGIN_DIALOG);
-            String token = SPUtils.getString(GlobalUtil.getCurrentActivity(), Constant.SP_ACCESS_TOKEN, "");
             if (confirmPopupView == null) {
                 confirmPopupView = new XPopup.Builder(GlobalUtil.getCurrentActivity())
                         .autoDismiss(false)
@@ -95,21 +91,24 @@ public abstract class BaseRequest extends BaseApiRequest {
             }
             SPUtils.putBoolean(GlobalUtil.getCurrentActivity(), Constant.LOGIN_DIALOG, false);
         } else if (errorCode == 404) {
-            ToastUtils.show("数据找不到");
             //找不到
-        } else if (errorCode == kErrorTypeNoNetworkConnect) {
-            ToastUtils.show("网络不可用");
+            ToastUtils.show("404 ,网络连接错误  重新加载");
 
+        } else if (errorCode == kErrorTypeNoNetworkConnect) {
             //网络不可用
+            ToastUtils.show("网络未开启,请打开网络");
+
         } else if (errorCode == kErrorTypeResponseHandleError) {
+            //外部数据处理错误
             ToastUtils.show("数据处理错误");
 
-            //外部数据处理错误
         } else if (errorCode == kErrorTypeResponsePraseError) {
-            ToastUtils.show("解析错误");
-
             //json解析错误
+            ToastUtils.show("网络正在开小差 重新加载");
+
+
         } else {
+            //未知情况
             ToastUtils.show("网络错误,请重试");
         }
     }
