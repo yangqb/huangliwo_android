@@ -27,11 +27,7 @@ public class UpLoadFilesRequest extends BaseRequest {
 
     @Override
     public ParamsBuilder appendParams(ParamsBuilder builder) {
-        for (File file : fileList
-        ) {
-            builder.append("files", file);
-        }
-        return builder.append("filedir", filedir);
+        return builder.append("files", fileList).append("filedir", filedir);
     }
 
     @Override
