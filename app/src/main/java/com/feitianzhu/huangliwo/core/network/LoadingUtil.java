@@ -2,6 +2,7 @@ package com.feitianzhu.huangliwo.core.network;
 
 import com.feitianzhu.huangliwo.GlobalUtil;
 import com.feitianzhu.huangliwo.R;
+import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.enums.PopupAnimation;
 import com.lxj.xpopup.impl.LoadingPopupView;
@@ -28,6 +29,7 @@ public class LoadingUtil {
             usefulCount++;
             loadingPopup = (LoadingPopupView) new XPopup.Builder(GlobalUtil.getCurrentActivity())
                     .hasShadowBg(false)
+                    .dismissOnTouchOutside(false)
                     .popupAnimation(PopupAnimation.NoAnimation)
                     .asLoading()
                     .bindLayout(R.layout.layout_loading_view)
@@ -52,13 +54,16 @@ public class LoadingUtil {
                         map.clear();
                     }
                 }
+                //TODO 如何处理请求 2020-5-27
             } else {
                 if (baseApiRequest != null) {
                     if (map.containsKey(baseApiRequest.requestTag)) {
+                        ToastUtils.show("取消请求");
                         map.remove(baseApiRequest.requestTag);
                     }
 //        loadingPopup
                     //TODO 加载条 添加退出按钮 ,点击取消所有请求 2020-5-15
+                    //TODO 取消请求时要有提示，最好调用请求的回调，传递到顶层2020-5-27
                 }
             }
 
