@@ -441,7 +441,7 @@ public class OrderDetailActivity extends BaseActivity {
                             if (goodsOrderBean.getStatus() == GoodsOrderInfo.TYPE_WAIT_MERCHANT_RECEIVING || goodsOrderBean.getStatus() == GoodsOrderInfo.TYPE_WAIT_MERCHANT_REFUND || goodsOrderBean.getStatus() == GoodsOrderInfo.TYPE_COMPLETED_REFUND_GOODS) {
                                 if (goodsOrderBean.getRefundExpressNum() != null && !TextUtils.isEmpty(goodsOrderBean.getRefundExpressNum())) {
                                     logisticsName.setText("退货物流：" + goodsOrderBean.getRefundExpressCom() + "(" + goodsOrderBean.getRefundExpressNum() + ")");
-                                    getLogisticsInfo(goodsOrderBean.getRefundExpressNum());
+                                    getLogisticsInfo(goodsOrderBean.getRefundExpressNum(), goodsOrderBean.getRefundExpressCode());
                                 } else {
                                     itemInfo.setText("暂无物流信息");
                                 }
@@ -457,13 +457,13 @@ public class OrderDetailActivity extends BaseActivity {
                 });
     }
 
-    public void getLogisticsInfo(String expressNo) {
+    public void getLogisticsInfo(String expressNo, String companyCode) {
         OkGo.<LzyResponse<String>>get(Urls.GET_LOGISTICS_INFO)
                 .tag(this)
                 .params(Constant.ACCESSTOKEN, token)
                 .params(Constant.USERID, userId)
                 .params("expressNo", expressNo)
-                .params("companyCode", expressModelList.get(selectPos).companyCode)
+                .params("companyCode", companyCode)
                 .execute(new JsonCallback<LzyResponse<String>>() {
                     @Override
                     public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<String>> response) {
