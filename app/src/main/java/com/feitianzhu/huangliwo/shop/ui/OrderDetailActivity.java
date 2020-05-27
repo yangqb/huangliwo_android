@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
@@ -30,11 +31,15 @@ import com.feitianzhu.huangliwo.shop.SelectPayActivity;
 import com.feitianzhu.huangliwo.shop.ShopsDetailActivity;
 import com.feitianzhu.huangliwo.shop.adapter.CommentImgAdapter;
 import com.feitianzhu.huangliwo.shop.adapter.RefundImgAdapter;
+import com.feitianzhu.huangliwo.shop.model.ExpressModel;
 import com.feitianzhu.huangliwo.shop.request.ExpressInfoRequest;
+import com.feitianzhu.huangliwo.shop.request.ExpressListRequest;
 import com.feitianzhu.huangliwo.utils.DateUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.utils.doubleclick.SingleClick;
+import com.feitianzhu.huangliwo.view.CustomClassificationView;
+import com.feitianzhu.huangliwo.vip.VipActivity;
 import com.google.gson.Gson;
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.XXPermissions;
@@ -53,6 +58,7 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import cc.shinichi.library.ImagePreview;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.huangliwo.common.Constant.USERID;
@@ -62,6 +68,10 @@ public class OrderDetailActivity extends BaseActivity {
     private static final int PAY_REQUEST_CODE = 1000;
     private LogisticsModel logisticsModel;
     private RefundImgAdapter refundImgAdapter;
+    private List<ExpressModel> expressModelList;
+    private List<String> stringList = new ArrayList<>();
+    private List<String> imgs = new ArrayList<>();
+    private int selectPos;
     private long time;
     private GoodsOrderInfo.GoodsOrderListBean goodsOrderBean;
     private String orderNo;
@@ -118,7 +128,7 @@ public class OrderDetailActivity extends BaseActivity {
     @BindView(R.id.supplierAddress)
     TextView tvSupplierAddress;
     @BindView(R.id.edit_express_name)
-    EditText editExpressName;
+    TextView editExpressName;
     @BindView(R.id.edit_express_no)
     EditText editExpressNo;
     @BindView(R.id.logistics_name)
@@ -130,7 +140,7 @@ public class OrderDetailActivity extends BaseActivity {
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     @BindView(R.id.return_reason)
-    TextView returnReason;
+    TextView tvReturnReason;
     private String token;
     private String userId;
 
@@ -146,9 +156,15 @@ public class OrderDetailActivity extends BaseActivity {
         titleName.setText("订单详情");
         rightText.setText("提交");
         orderNo = getIntent().getStringExtra(ORDER_NO);
+        recyclerView.setLayoutManager(new GridLayoutManager(mContext, 3));
+        recyclerView.setNestedScrollingEnabled(false);
+        refundImgAdapter = new RefundImgAdapter(imgs);
+        recyclerView.setAdapter(refundImgAdapter);
+        getExpressList();
+        initListener();
     }
 
-    @OnClick({R.id.left_button, R.id.tv_copy, R.id.call_phone, R.id.cancel_order, R.id.shopPay, R.id.ll_order_detail, R.id.tvStatusContent, R.id.right_button, R.id.rl_logistics_info})
+    @OnClick({R.id.left_button, R.id.tv_copy, R.id.call_phone, R.id.cancel_order, R.id.shopPay, R.id.ll_order_detail, R.id.tvStatusContent, R.id.right_button, R.id.rl_logistics_info, R.id.rl_select_express})
     @SingleClick()
     public void onClick(View view) {
         switch (view.getId()) {
@@ -227,8 +243,6 @@ public class OrderDetailActivity extends BaseActivity {
                             .bindLayout(R.layout.layout_dialog_login)
                             .show();//绑定已有布局
                 }
-
-
                 break;
 
             case R.id.right_button:
@@ -242,16 +256,97 @@ public class OrderDetailActivity extends BaseActivity {
                     startActivity(intent);
                 }
                 break;
-
-
+            case R.id.rl_select_express:
+                if (expressModelList != null && expressModelList.size() > 0) {
+                    showExpressDialog();
+                }
+                break;
         }
+    }
+
+    public void showExpressDialog() {
+        new XPopup.Builder(this)
+                .asCustom(new CustomClassificationView(OrderDetailActivity.this)
+                        .setData(stringList)
+                        .setOnItemClickListener(new CustomClassificationView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(int position) {
+                                selectPos = position;
+                                editExpressName.setText(stringList.get(position));
+                            }
+                        }))
+                .show();
+    }
+
+
+    public void getExpressList() {
+        ExpressListRequest request = new ExpressListRequest();
+        request.userId = userId;
+        request.token = token;
+        request.call(new ApiLifeCallBack<List<ExpressModel>>() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onFinsh() {
+
+            }
+
+            @Override
+            public void onAPIResponse(List<ExpressModel> response) {
+                expressModelList = response;
+                if (expressModelList != null && expressModelList.size() > 0) {
+                    for (ExpressModel expressModel : expressModelList
+                    ) {
+                        stringList.add(expressModel.companyName);
+                    }
+                }
+            }
+
+            @Override
+            public void onAPIError(int errorCode, String errorMsg) {
+                ToastUtils.show(errorMsg);
+            }
+        });
+    }
+
+    public void initListener() {
+        refundImgAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                ImagePreview
+                        .getInstance()
+                        // 上下文，必须是activity，不需要担心内存泄漏，本框架已经处理好；
+                        .setContext(mContext)
+                        .setEnableDragClose(true) //下拉图片关闭
+                        // 设置从第几张开始看（索引从0开始）
+                        .setIndex(position)
+                        .setShowErrorToast(true)//加载失败提示
+                        //=================================================================================================
+                        // 有三种设置数据集合的方式，根据自己的需求进行三选一：
+                        // 1：第一步生成的imageInfo List
+                        //.setImageInfoList(imageInfoList)
+
+                        // 2：直接传url List
+                        .setImageList(imgs)
+
+                        // 3：只有一张图片的情况，可以直接传入这张图片的url
+                        //.setImage(String image)
+                        //=================================================================================================
+
+                        // 开启预览
+                        .start();
+            }
+        });
     }
 
     public void submit() {
         String expressNum = editExpressNo.getText().toString().trim();
         String expressName = editExpressName.getText().toString().trim();
         if (TextUtils.isEmpty(expressName)) {
-            ToastUtils.show("请填写快递公司名称");
+            ToastUtils.show("请选择快递公司");
             return;
         }
         if (TextUtils.isEmpty(expressNum)) {
@@ -264,6 +359,7 @@ public class OrderDetailActivity extends BaseActivity {
         request.expressName = expressName;
         request.expressNum = expressNum;
         request.orderNo = orderNo;
+        request.expressCode = expressModelList.get(selectPos).companyCode;
         request.call(new ApiLifeCallBack<Boolean>() {
             @Override
             public void onStart() {
@@ -486,10 +582,6 @@ public class OrderDetailActivity extends BaseActivity {
         if (goodsOrderBean.getRefuseReason() != null && !TextUtils.isEmpty(goodsOrderBean.getRefuseReason())) {
             tvStatusContent.setText(goodsOrderBean.getRefuseReason());
         }
-
-        if (goodsOrderBean.getReturnReason() != null && !TextUtils.isEmpty(goodsOrderBean.getReturnReason())) {
-            returnReason.setText(goodsOrderBean.getRefuseReason());
-        }
     }
 
 
@@ -500,16 +592,12 @@ public class OrderDetailActivity extends BaseActivity {
     }
 
     public void showRefundImg() {
-        returnReason.setText(goodsOrderBean.getReturnReason());
-        List<String> imgs = new ArrayList<>();
-        recyclerView.setLayoutManager(new GridLayoutManager(mContext, 3));
-        recyclerView.setNestedScrollingEnabled(false);
+        tvReturnReason.setText(goodsOrderBean.getReturnReason());
         if (goodsOrderBean.getRefundImg() != null && !TextUtils.isEmpty(goodsOrderBean.getRefundImg())) {
             String[] strings = goodsOrderBean.getRefundImg().split(",");
             imgs = Arrays.asList(strings);
         }
-        refundImgAdapter = new RefundImgAdapter(imgs);
-        recyclerView.setAdapter(refundImgAdapter);
+        refundImgAdapter.setNewData(imgs);
         refundImgAdapter.notifyDataSetChanged();
     }
 

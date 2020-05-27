@@ -103,7 +103,7 @@ public class MyOrderActivity2 extends BaseActivity {
             tabLayout.setVisibility(View.VISIBLE);
             tabLayout2.setVisibility(View.GONE);
             titleName.setText(strings[0]);
-            tabs.add(new PlaneOrderTableEntity("全部"));
+            tabs.add(new PlaneOrderTableEntity("   全部  "));
             tabs.add(new PlaneOrderTableEntity("待付款(0)"));
             tabs.add(new PlaneOrderTableEntity("待发货(0)"));
             tabs.add(new PlaneOrderTableEntity("待收货(0)"));
@@ -124,7 +124,7 @@ public class MyOrderActivity2 extends BaseActivity {
             tabLayout.setVisibility(View.GONE);
             tabLayout2.setVisibility(View.VISIBLE);
             titleName.setText(strings[1]);
-            tabs.add(new PlaneOrderTableEntity("全部"));
+            tabs.add(new PlaneOrderTableEntity("   全部  "));
             tabs.add(new PlaneOrderTableEntity("待付款(0)"));
             tabs.add(new PlaneOrderTableEntity("待使用(0)"));
             tabs.add(new PlaneOrderTableEntity("待评价(0)"));
@@ -486,7 +486,7 @@ public class MyOrderActivity2 extends BaseActivity {
                                         if (position == 0) {
                                             tabLayout.setVisibility(View.VISIBLE);
                                             tabLayout2.setVisibility(View.GONE);
-                                            tabs.add(new PlaneOrderTableEntity("全部"));
+                                            tabs.add(new PlaneOrderTableEntity("   全部  "));
                                             tabs.add(new PlaneOrderTableEntity("待付款(0)"));
                                             tabs.add(new PlaneOrderTableEntity("待发货(0)"));
                                             tabs.add(new PlaneOrderTableEntity("待收货(0)"));
@@ -496,7 +496,7 @@ public class MyOrderActivity2 extends BaseActivity {
                                         } else {
                                             tabLayout.setVisibility(View.GONE);
                                             tabLayout2.setVisibility(View.VISIBLE);
-                                            tabs.add(new PlaneOrderTableEntity("全部"));
+                                            tabs.add(new PlaneOrderTableEntity("   全部  "));
                                             tabs.add(new PlaneOrderTableEntity("待付款(0)"));
                                             tabs.add(new PlaneOrderTableEntity("待使用(0)"));
                                             tabs.add(new PlaneOrderTableEntity("待评价(0)"));
@@ -537,7 +537,7 @@ public class MyOrderActivity2 extends BaseActivity {
                         if (response.body().code == 0 && response.body().data != null) {
                             GoodOrderCountMode orderCountMode = response.body().data;
                             tabs.clear();
-                            tabs.add(new PlaneOrderTableEntity("全部"));
+                            tabs.add(new PlaneOrderTableEntity("   全部  "));
                             tabs.add(new PlaneOrderTableEntity("待付款(" + orderCountMode.getWaitPay() + ")"));
                             tabs.add(new PlaneOrderTableEntity("待发货(" + orderCountMode.getWaitDeliver() + ")"));
                             tabs.add(new PlaneOrderTableEntity("待收货(" + orderCountMode.getWaitReceiving() + ")"));
@@ -574,7 +574,7 @@ public class MyOrderActivity2 extends BaseActivity {
                         refreshLayout.finishRefresh();
                         if (response.body().code == 0 && response.body().data != null) {
                             tabs.clear();
-                            tabs.add(new PlaneOrderTableEntity("全部"));
+                            tabs.add(new PlaneOrderTableEntity("   全部  "));
                             tabs.add(new PlaneOrderTableEntity("待付款(" + response.body().data.getWaitPayCount() + ")"));
                             tabs.add(new PlaneOrderTableEntity("待使用(" + response.body().data.getWaitUseCount() + ")"));
                             tabs.add(new PlaneOrderTableEntity("待评价(" + response.body().data.getWaitEvalCount() + ")"));

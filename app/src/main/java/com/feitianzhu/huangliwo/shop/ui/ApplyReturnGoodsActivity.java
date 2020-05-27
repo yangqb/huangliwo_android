@@ -311,10 +311,10 @@ public class ApplyReturnGoodsActivity extends BaseActivity {
         UpLoadFilesRequest request = new UpLoadFilesRequest();
         request.fileList = fileList;
         request.filedir = "order/refund/";
+        request.isShowLoading = true;
         request.call(new ApiLifeCallBack<FileModel>() {
             @Override
             public void onStart() {
-                showloadDialog("");
             }
 
             @Override
@@ -330,7 +330,6 @@ public class ApplyReturnGoodsActivity extends BaseActivity {
             @Override
             public void onAPIError(int errorCode, String errorMsg) {
                 ToastUtils.show(errorMsg);
-                goneloadDialog();
             }
         });
     }
