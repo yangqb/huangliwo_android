@@ -109,6 +109,15 @@ userName (string, optional): 用户名
         private String returnReason; //拒绝退货原因
         private String refundExpressNum;
         private String refundExpressCom;
+        private String refundExpressCode;
+
+        public String getRefundExpressCode() {
+            return refundExpressCode;
+        }
+
+        public void setRefundExpressCode(String refundExpressCode) {
+            this.refundExpressCode = refundExpressCode;
+        }
 
         public String getRefundExpressNum() {
             return refundExpressNum;
