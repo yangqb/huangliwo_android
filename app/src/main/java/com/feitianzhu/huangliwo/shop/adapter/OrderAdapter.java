@@ -138,17 +138,17 @@ public class OrderAdapter extends BaseMultiItemQuickAdapter<MultipleItemOrderMod
                         helper.setGone(R.id.btn_confirm_goods, true);
                         helper.setGone(R.id.btn_refund, false);
                     } else if (item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_AGREE_REFUND_GOODS) {
-                        helper.setText(R.id.tvStatus, "退货中");
+                        helper.setText(R.id.tvStatus, "退货待发货");
                         helper.setText(R.id.btn_confirm_goods, "退货进度");
                         helper.setGone(R.id.btn_refund, false);
                         helper.setGone(R.id.btn_confirm_goods, true);
                     } else if (item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_WAIT_MERCHANT_RECEIVING) {
-                        helper.setText(R.id.tvStatus, "退货中");
+                        helper.setText(R.id.tvStatus, "退货待商家收货");
                         helper.setText(R.id.btn_confirm_goods, "退货进度");
                         helper.setGone(R.id.btn_refund, false);
                         helper.setGone(R.id.btn_confirm_goods, true);
                     } else if (item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_WAIT_MERCHANT_REFUND) {
-                        helper.setText(R.id.tvStatus, "退货中");
+                        helper.setText(R.id.tvStatus, "退货待商家退款");
                         helper.setText(R.id.btn_confirm_goods, "退货进度");
                         helper.setGone(R.id.btn_refund, false);
                         helper.setGone(R.id.btn_confirm_goods, true);
