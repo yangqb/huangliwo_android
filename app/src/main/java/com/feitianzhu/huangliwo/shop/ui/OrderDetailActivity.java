@@ -438,11 +438,10 @@ public class OrderDetailActivity extends BaseActivity {
                         if (response.body().code == 0 && response.body().data != null) {
                             goodsOrderBean = response.body().data;
                             time = (goodsOrderBean.getExpiresDate() - goodsOrderBean.getNowTimeStamp()) / 1000;
-                            setSpannableString(String.format(Locale.getDefault(), "%.2f", goodsOrderBean.getAmount()), amount);
                             if (goodsOrderBean.getStatus() == GoodsOrderInfo.TYPE_WAIT_MERCHANT_RECEIVING || goodsOrderBean.getStatus() == GoodsOrderInfo.TYPE_WAIT_MERCHANT_REFUND || goodsOrderBean.getStatus() == GoodsOrderInfo.TYPE_COMPLETED_REFUND_GOODS) {
                                 if (goodsOrderBean.getRefundExpressNum() != null && !TextUtils.isEmpty(goodsOrderBean.getRefundExpressNum())) {
                                     logisticsName.setText("退货物流：" + goodsOrderBean.getRefundExpressCom() + "(" + goodsOrderBean.getRefundExpressNum() + ")");
-                                    getLogisticsInfo(goodsOrderBean.getRefundExpressNum());
+                                    getLogisticsInfo(goodsOrderBean.getRefundExpressNum(), goodsOrderBean.getRefundExpressCode());
                                 } else {
                                     itemInfo.setText("暂无物流信息");
                                 }
@@ -458,12 +457,13 @@ public class OrderDetailActivity extends BaseActivity {
                 });
     }
 
-    public void getLogisticsInfo(String expressNo) {
+    public void getLogisticsInfo(String expressNo, String companyCode) {
         OkGo.<LzyResponse<String>>get(Urls.GET_LOGISTICS_INFO)
                 .tag(this)
                 .params(Constant.ACCESSTOKEN, token)
                 .params(Constant.USERID, userId)
                 .params("expressNo", expressNo)
+                .params("companyCode", companyCode)
                 .execute(new JsonCallback<LzyResponse<String>>() {
                     @Override
                     public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<String>> response) {
@@ -505,7 +505,8 @@ public class OrderDetailActivity extends BaseActivity {
         }
         userName.setText(goodsOrderBean.getBuyerName());
         tvPhone.setText(goodsOrderBean.getBuyerPhone());
-        tvPrice.setText(String.format(Locale.getDefault(), "%.2f", goodsOrderBean.getPrice()));
+        setSpannableString2(String.format(Locale.getDefault(), "%.2f", goodsOrderBean.getPrice()), tvPrice);
+        setSpannableString(String.format(Locale.getDefault(), "%.2f", goodsOrderBean.getAmount()), amount);
         merchantsName.setText(goodsOrderBean.getShopName());
         Glide.with(mContext).load(goodsOrderBean.getGoodsImg())
                 .apply(new RequestOptions().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai)).into(imageView);
@@ -589,7 +590,7 @@ public class OrderDetailActivity extends BaseActivity {
             tvStatusContent.setText("");
         } else if (goodsOrderBean.getStatus() == GoodsOrderInfo.TYPE_WAIT_DELIVERY) {
             if (goodsOrderBean.getRefuseReason() != null && !TextUtils.isEmpty(goodsOrderBean.getRefuseReason())) {
-                tvStatusContent.setText(goodsOrderBean.getRefuseReason());
+                tvStatusContent.setText(goodsOrderBean.getRefuseReason());//商家拒绝退款
             } else {
                 tvStatusContent.setText("");
             }
@@ -602,7 +603,7 @@ public class OrderDetailActivity extends BaseActivity {
             llRefundImg.setVisibility(View.GONE);
         } else if (goodsOrderBean.getStatus() == GoodsOrderInfo.TYPE_WAIT_RECEIVING) {
             if (goodsOrderBean.getRefuseReason() != null && !TextUtils.isEmpty(goodsOrderBean.getRefuseReason())) {
-                tvStatusContent.setText(goodsOrderBean.getRefuseReason());
+                tvStatusContent.setText(goodsOrderBean.getRefuseReason()); //商家拒绝退货
             } else {
                 tvStatusContent.setText("");
             }
@@ -742,5 +743,21 @@ public class OrderDetailActivity extends BaseActivity {
         view.append(span2);
         view.append(span3);
 
+    }
+
+    public void setSpannableString2(String str3, TextView view) {
+        view.setText("");
+        SpannableString span4 = new SpannableString(str2);
+        SpannableString span5 = new SpannableString(str3);
+        ForegroundColorSpan colorSpan4 = new ForegroundColorSpan(Color.parseColor("#333333"));
+        span4.setSpan(new AbsoluteSizeSpan(10, true), 0, str2.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        span4.setSpan(colorSpan4, 0, str2.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+
+        ForegroundColorSpan colorSpan5 = new ForegroundColorSpan(Color.parseColor("#333333"));
+        span5.setSpan(new AbsoluteSizeSpan(14, true), 0, str3.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        span5.setSpan(colorSpan5, 0, str3.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+
+        view.append(span4);
+        view.append(span5);
     }
 }
