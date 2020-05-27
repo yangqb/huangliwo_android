@@ -104,14 +104,16 @@
                     android:orientation="vertical"
                     android:paddingStart="@dimen/dp_10"
                     android:paddingEnd="@dimen/dp_10"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
-                    <LinearLayout
+                    <RelativeLayout
+                        android:id="@+id/rl_select_express"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/dp_45"
                         android:orientation="horizontal">
 
                         <TextView
+                            android:id="@+id/tag"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
@@ -120,19 +122,25 @@
                             android:textColor="@color/color_333333"
                             android:textSize="14sp" />
 
-                        <EditText
+                        <TextView
                             android:id="@+id/edit_express_name"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:background="@null"
+                            android:layout_toRightOf="@id/tag"
                             android:gravity="start|center_vertical"
-                            android:hint="请输入快递公司名称"
                             android:text=""
                             android:textColor="@color/color_333333"
-                            android:textColorHint="@color/color_999999"
                             android:textSize="14sp" />
 
-                    </LinearLayout>
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="@dimen/dp_10"
+                            android:src="@mipmap/b08_04jinru" />
+
+                    </RelativeLayout>
 
                     <View
                         android:layout_width="wrap_content"
