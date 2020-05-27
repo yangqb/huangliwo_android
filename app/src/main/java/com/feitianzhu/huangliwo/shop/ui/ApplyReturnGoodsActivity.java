@@ -23,6 +23,7 @@ import com.feitianzhu.huangliwo.model.MultiItemComment;
 import com.feitianzhu.huangliwo.pushshop.ProblemFeedbackActivity;
 import com.feitianzhu.huangliwo.shop.adapter.EditCommentAdapter;
 import com.feitianzhu.huangliwo.shop.model.FileModel;
+import com.feitianzhu.huangliwo.shop.request.ApplyReturnGoodsRequest;
 import com.feitianzhu.huangliwo.shop.request.UpLoadFilesRequest;
 import com.feitianzhu.huangliwo.utils.Glide4Engine;
 import com.feitianzhu.huangliwo.utils.SPUtils;
@@ -34,6 +35,7 @@ import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.XXPermissions;
 import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
+import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.base.Request;
@@ -284,7 +286,15 @@ public class ApplyReturnGoodsActivity extends BaseActivity {
                     ToastUtils.show("请上传图片");
                     return;
                 }
-                upLoadImg();
+                new XPopup.Builder(ApplyReturnGoodsActivity.this)
+                        .asConfirm("确定要退货吗？", "", "关闭", "确定", new OnConfirmListener() {
+                            @Override
+                            public void onConfirm() {
+                                upLoadImg();
+                            }
+                        }, null, false)
+                        .bindLayout(R.layout.layout_dialog) //绑定已有布局
+                        .show();
                 break;
         }
     }
@@ -298,40 +308,13 @@ public class ApplyReturnGoodsActivity extends BaseActivity {
             }
         }
 
-        OkGo.<LzyResponse<FileModel>>post(Urls.UP_LOAD_FILES)
-                .tag(this)
-                .addFileParams("files", fileList)
-                .params("filedir", "order/refund/")
-                .execute(new JsonCallback<LzyResponse<FileModel>>() {
-                    @Override
-                    public void onStart(Request<LzyResponse<FileModel>, ? extends Request> request) {
-                        super.onStart(request);
-                        showloadDialog("");
-                    }
-
-                    @Override
-                    public void onSuccess(Response<LzyResponse<FileModel>> response) {
-                        if (response.body().code == 0) {
-                            submit(response.body().data.url);
-                        } else {
-                            ToastUtils.show(response.body().msg);
-                            goneloadDialog();
-                        }
-                    }
-
-                    @Override
-                    public void onError(Response<LzyResponse<FileModel>> response) {
-                        super.onError(response);
-                        goneloadDialog();
-                    }
-                });
-
-        /*UpLoadFilesRequest upLoadFilesRequest = new UpLoadFilesRequest();
-        upLoadFilesRequest.fileList = fileList;
-        upLoadFilesRequest.call(new ApiLifeCallBack() {
+        UpLoadFilesRequest request = new UpLoadFilesRequest();
+        request.fileList = fileList;
+        request.filedir = "order/refund/";
+        request.call(new ApiLifeCallBack<FileModel>() {
             @Override
             public void onStart() {
-
+                showloadDialog("");
             }
 
             @Override
@@ -340,46 +323,50 @@ public class ApplyReturnGoodsActivity extends BaseActivity {
             }
 
             @Override
-            public void onAPIResponse(Object response) {
-                Object object = response;
+            public void onAPIResponse(FileModel response) {
+                submit(response.url);
             }
 
             @Override
             public void onAPIError(int errorCode, String errorMsg) {
-
+                ToastUtils.show(errorMsg);
+                goneloadDialog();
             }
-        });*/
+        });
     }
 
 
     public void submit(String url) {
-        OkGo.<LzyResponse>post(Urls.REFUND_ORDER)
-                .tag(this)
-                .params(ACCESSTOKEN, token)
-                .params(USERID, userId)
-                .params("orderNo", orderNo)
-                .params("reason", problem)
-                .params("status", "9")
-                .params("imgs", url)
-                .execute(new JsonCallback<LzyResponse>() {
-                    @Override
-                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
-                        super.onSuccess(ApplyReturnGoodsActivity.this, response.body().msg, response.body().code);
-                        goneloadDialog();
-                        if (response.body().code == 0) {
-                            ToastUtils.show("申请成功");
-                            setResult(RESULT_OK);
-                            finish();
-                        }
-                    }
+        ApplyReturnGoodsRequest request = new ApplyReturnGoodsRequest();
+        request.token = token;
+        request.userId = userId;
+        request.orderNo = orderNo;
+        request.reason = problem;
+        request.status = "9";
+        request.imgs = url;
+        request.call(new ApiLifeCallBack<Boolean>() {
+            @Override
+            public void onStart() {
 
-                    @Override
-                    public void onError(com.lzy.okgo.model.Response<LzyResponse> response) {
-                        super.onError(response);
-                        goneloadDialog();
-                    }
-                });
+            }
 
+            @Override
+            public void onFinsh() {
+                goneloadDialog();
+            }
+
+            @Override
+            public void onAPIResponse(Boolean response) {
+                ToastUtils.show("申请成功");
+                setResult(RESULT_OK);
+                finish();
+            }
+
+            @Override
+            public void onAPIError(int errorCode, String errorMsg) {
+                ToastUtils.show(errorMsg);
+            }
+        });
     }
 
     private List<String> allSelect = new ArrayList<>();

@@ -21,6 +21,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
+import com.feitianzhu.huangliwo.core.network.ApiLifeCallBack;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.model.GoodsOrderInfo;
@@ -29,6 +30,7 @@ import com.feitianzhu.huangliwo.shop.SelectPayActivity;
 import com.feitianzhu.huangliwo.shop.ShopsDetailActivity;
 import com.feitianzhu.huangliwo.shop.adapter.CommentImgAdapter;
 import com.feitianzhu.huangliwo.shop.adapter.RefundImgAdapter;
+import com.feitianzhu.huangliwo.shop.request.ExpressInfoRequest;
 import com.feitianzhu.huangliwo.utils.DateUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
@@ -127,6 +129,8 @@ public class OrderDetailActivity extends BaseActivity {
     TextView logisticsTime;
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
+    @BindView(R.id.return_reason)
+    TextView returnReason;
     private String token;
     private String userId;
 
@@ -207,28 +211,23 @@ public class OrderDetailActivity extends BaseActivity {
                 startActivity(intent);
                 break;
             case R.id.tvStatusContent:
-                String content = "";
-                if ((goodsOrderBean != null && goodsOrderBean.getRefuseReason() != null && !TextUtils.isEmpty(goodsOrderBean.getRefuseReason())) || (goodsOrderBean != null && goodsOrderBean.getRefuseReason() != null && !TextUtils.isEmpty(goodsOrderBean.getRefuseReason()))) {
-                    return;
-                }
                 if (goodsOrderBean != null && goodsOrderBean.getRefuseReason() != null && !TextUtils.isEmpty(goodsOrderBean.getRefuseReason())) {
-                    content = goodsOrderBean.getRefuseReason();
-                } else if (goodsOrderBean != null && goodsOrderBean.getReturnReason() != null && !TextUtils.isEmpty(goodsOrderBean.getReturnReason())) {
-                    content = goodsOrderBean.getReturnReason();
-                }
-                new XPopup.Builder(this)
-                        .asConfirm("", content, "关闭", "确定", new OnConfirmListener() {
-                            @Override
-                            public void onConfirm() {
-                            }
-                        }, new OnCancelListener() {
-                            @Override
-                            public void onCancel() {
+                    String content = goodsOrderBean.getRefuseReason();
+                    new XPopup.Builder(this)
+                            .asConfirm("", content, "关闭", "确定", new OnConfirmListener() {
+                                @Override
+                                public void onConfirm() {
+                                }
+                            }, new OnCancelListener() {
+                                @Override
+                                public void onCancel() {
 
-                            }
-                        }, true)
-                        .bindLayout(R.layout.layout_dialog_login)
-                        .show();//绑定已有布局
+                                }
+                            }, true)
+                            .bindLayout(R.layout.layout_dialog_login)
+                            .show();//绑定已有布局
+                }
+
 
                 break;
 
@@ -259,28 +258,35 @@ public class OrderDetailActivity extends BaseActivity {
             ToastUtils.show("请填写快递单号");
             return;
         }
-        OkGo.<LzyResponse>post(Urls.COMMIT_EXPRESS)
-                .tag(this)
-                .params(ACCESSTOKEN, token)
-                .params(USERID, userId)
-                .params("expressNum", expressNum)
-                .params("expressName", expressName)
-                .params("orderNo", goodsOrderBean.getOrderNo())
-                .execute(new JsonCallback<LzyResponse>() {
-                    @Override
-                    public void onSuccess(Response<LzyResponse> response) {
-                        super.onSuccess(OrderDetailActivity.this, response.body().msg, response.body().code);
-                        if (response.body().code == 0) {
-                            setResult(RESULT_OK);
-                            finish();
-                        }
-                    }
+        ExpressInfoRequest request = new ExpressInfoRequest();
+        request.userId = userId;
+        request.token = token;
+        request.expressName = expressName;
+        request.expressNum = expressNum;
+        request.orderNo = orderNo;
+        request.call(new ApiLifeCallBack<Boolean>() {
+            @Override
+            public void onStart() {
 
-                    @Override
-                    public void onError(Response<LzyResponse> response) {
-                        super.onError(response);
-                    }
-                });
+            }
+
+            @Override
+            public void onFinsh() {
+
+            }
+
+            @Override
+            public void onAPIResponse(Boolean response) {
+                ToastUtils.show("提交成功");
+                setResult(RESULT_OK);
+                finish();
+            }
+
+            @Override
+            public void onAPIError(int errorCode, String errorMsg) {
+                ToastUtils.show(errorMsg);
+            }
+        });
     }
 
 
@@ -482,7 +488,7 @@ public class OrderDetailActivity extends BaseActivity {
         }
 
         if (goodsOrderBean.getReturnReason() != null && !TextUtils.isEmpty(goodsOrderBean.getReturnReason())) {
-            tvStatusContent.setText(goodsOrderBean.getRefuseReason());
+            returnReason.setText(goodsOrderBean.getRefuseReason());
         }
     }
 
@@ -494,6 +500,7 @@ public class OrderDetailActivity extends BaseActivity {
     }
 
     public void showRefundImg() {
+        returnReason.setText(goodsOrderBean.getReturnReason());
         List<String> imgs = new ArrayList<>();
         recyclerView.setLayoutManager(new GridLayoutManager(mContext, 3));
         recyclerView.setNestedScrollingEnabled(false);
