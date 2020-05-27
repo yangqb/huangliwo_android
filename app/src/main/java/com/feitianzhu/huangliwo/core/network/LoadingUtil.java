@@ -58,7 +58,7 @@ public class LoadingUtil {
             } else {
                 if (baseApiRequest != null) {
                     if (map.containsKey(baseApiRequest.requestTag)) {
-                        ToastUtils.show("取消请求");
+//                        ToastUtils.show("取消请求");
                         map.remove(baseApiRequest.requestTag);
                     }
 //        loadingPopup
