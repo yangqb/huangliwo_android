@@ -27,7 +27,7 @@ public class LogisticsInfoActivity extends BaseActivity {
     public static final String LOGISTICS_DATA = "logistics_data";
     public static final String LOGISTICS_COMPANY = "logistics_company";
     private LogisticsAdapter adapter;
-    private String logisticsNo = "";
+    private LogisticsModel logisticsModel;
     private String logisticsCompany = "";
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
@@ -54,7 +54,7 @@ public class LogisticsInfoActivity extends BaseActivity {
     protected void initView() {
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
-        LogisticsModel logisticsModel = (LogisticsModel) getIntent().getSerializableExtra(LOGISTICS_DATA);
+        logisticsModel = (LogisticsModel) getIntent().getSerializableExtra(LOGISTICS_DATA);
 
         logisticsCompany = getIntent().getStringExtra(LOGISTICS_COMPANY);
         titleName.setText("物流信息");
@@ -88,7 +88,7 @@ public class LogisticsInfoActivity extends BaseActivity {
                 //创建ClipData对象
                 //第一个参数只是一个标记，随便传入。
                 //第二个参数是要复制到剪贴版的内容
-                ClipData clip = ClipData.newPlainText("simple text", logisticsNo);
+                ClipData clip = ClipData.newPlainText("simple text", logisticsModel.getNu());
                 //传入clipdata对象.
                 clipboard.setPrimaryClip(clip);
                 ToastUtils.show("已复制");
