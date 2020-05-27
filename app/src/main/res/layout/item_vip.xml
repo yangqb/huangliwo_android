@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/dp_17"
+    android:layout_marginTop="@dimen/dp_13"
+    android:layout_marginEnd="@dimen/dp_17"
+    android:layout_marginBottom="@dimen/dp_13"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <com.itheima.roundedimageview.RoundedImageView
+        android:id="@+id/img"
+        android:layout_width="@dimen/dp_46"
+        android:layout_height="@dimen/dp_46"
+        app:riv_corner_radius="@dimen/dp_23"
+        app:riv_oval="false">
+
+    </com.itheima.roundedimageview.RoundedImageView>
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_8"
+        android:text=""
+        android:textColor="#fffde29a"
+        android:textSize="12sp" />
+</LinearLayout>

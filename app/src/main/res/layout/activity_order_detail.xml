@@ -96,20 +96,22 @@
 
                 <!--退货信息填写-->
                 <LinearLayout
+                    android:id="@+id/ll_recipient_info"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp_10"
                     android:background="@drawable/shape_ffffff_r5"
                     android:orientation="vertical"
                     android:paddingStart="@dimen/dp_10"
-                    android:paddingEnd="@dimen/dp_10">
+                    android:paddingEnd="@dimen/dp_10"
+                    android:visibility="gone">
 
-                    <RelativeLayout
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/dp_45">
+                        android:layout_height="@dimen/dp_45"
+                        android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/tag"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
@@ -118,22 +120,19 @@
                             android:textColor="@color/color_333333"
                             android:textSize="14sp" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_toRightOf="@id/tag"
+                        <EditText
+                            android:id="@+id/edit_express_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@null"
+                            android:gravity="start|center_vertical"
+                            android:hint="请输入快递公司名称"
                             android:text=""
                             android:textColor="@color/color_333333"
+                            android:textColorHint="@color/color_999999"
                             android:textSize="14sp" />
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:src="@mipmap/b08_04jinru" />
-                    </RelativeLayout>
+                    </LinearLayout>
 
                     <View
                         android:layout_width="wrap_content"
@@ -155,6 +154,7 @@
                             android:textSize="14sp" />
 
                         <EditText
+                            android:id="@+id/edit_express_no"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="@null"
@@ -186,6 +186,7 @@
                             android:textSize="14sp" />
 
                         <TextView
+                            android:id="@+id/supplierName"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text=""
@@ -213,6 +214,7 @@
                             android:textSize="14sp" />
 
                         <TextView
+                            android:id="@+id/supplierPhone"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text=""
@@ -241,6 +243,7 @@
                             android:textSize="14sp" />
 
                         <TextView
+                            android:id="@+id/supplierAddress"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text=""
@@ -252,6 +255,7 @@
 
                 <!--退货物流信心-->
                 <RelativeLayout
+                    android:id="@+id/rl_logistics_info"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp_10"
@@ -259,16 +263,19 @@
                     android:paddingStart="@dimen/dp_10"
                     android:paddingTop="@dimen/dp_15"
                     android:paddingEnd="10dp"
-                    android:paddingBottom="@dimen/dp_15">
+                    android:paddingBottom="@dimen/dp_15"
+                    android:visibility="gone">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
+                        android:layout_marginRight="@dimen/dp_50"
                         android:gravity="center_vertical"
                         android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/logistics_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/dp_5"
@@ -277,6 +284,7 @@
                             android:textSize="14sp" />
 
                         <TextView
+                            android:id="@+id/itemInfo"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/dp_5"
@@ -286,10 +294,11 @@
                             android:textSize="14sp" />
 
                         <TextView
+                            android:id="@+id/time"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/dp_5"
-                            android:text="2020.05.25 14:46"
+                            android:text=""
                             android:textColor="@color/color_999999"
                             android:textSize="13sp" />
                     </LinearLayout>
@@ -618,7 +627,9 @@
 
                 </LinearLayout>
 
+                <!--申请退货凭证信息展示-->
                 <LinearLayout
+                    android:id="@+id/ll_refund_img"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp_10"
@@ -627,7 +638,8 @@
                     android:paddingStart="@dimen/dp_10"
                     android:paddingTop="@dimen/dp_15"
                     android:paddingEnd="@dimen/dp_10"
-                    android:paddingBottom="@dimen/dp_15">
+                    android:paddingBottom="@dimen/dp_15"
+                    android:visibility="gone">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -641,6 +653,7 @@
                             android:textSize="15sp" />
 
                         <TextView
+                            android:id="@+id/return_reason"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"

@@ -1,11 +1,15 @@
 package com.feitianzhu.huangliwo.me.ui;
 
 import android.Manifest;
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -18,17 +22,21 @@ import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
+import com.feitianzhu.huangliwo.login.LoginActivity;
 import com.feitianzhu.huangliwo.model.Province;
 import com.feitianzhu.huangliwo.model.UserAuth;
 import com.feitianzhu.huangliwo.model.UserVeriModel;
+import com.feitianzhu.huangliwo.shop.SettlementShoppingCartActivity;
 import com.feitianzhu.huangliwo.shop.ui.dialog.ProvinceCallBack;
 import com.feitianzhu.huangliwo.shop.ui.dialog.ProvinceDialog2;
 import com.feitianzhu.huangliwo.utils.Glide4Engine;
 import com.feitianzhu.huangliwo.utils.SPUtils;
+import com.feitianzhu.huangliwo.utils.SoftKeyBoardListener;
 import com.feitianzhu.huangliwo.utils.StringUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.view.CustomRefundView;
 import com.feitianzhu.huangliwo.view.CustomSelectPhotoView;
+import com.gyf.immersionbar.ImmersionBar;
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.XXPermissions;
 import com.hjq.toast.ToastUtils;
@@ -66,8 +74,6 @@ import static com.feitianzhu.huangliwo.common.Constant.USERID;
  * 实名认证
  */
 public class VerificationActivity2 extends BaseActivity implements ProvinceCallBack {
-    private static final int REQUEST_CODE_PERMISSION = 100;
-    private static final int REQUEST_CODE_SETTING = 300;
     private static final int REQUEST_CODE_CHOOSE = 23;
     private static final int REQUEST_CODE_CAPTURE = 24;
     private Province province;
@@ -141,6 +147,18 @@ public class VerificationActivity2 extends BaseActivity implements ProvinceCallB
             lyShiming.setVisibility(View.VISIBLE);
         }
     }
+
+    @Override
+    public ImmersionBar getOpenImmersionBar() {
+        return ImmersionBar.with(this)
+                .fitsSystemWindows(true)
+                .keyboardEnable(true)
+                .statusBarDarkFont(true, 0.2f)
+                .navigationBarColor(R.color.white)
+                .statusBarColor(R.color.transparent)
+                .navigationBarDarkIcon(true);
+    }
+
 
     @Override
     protected void initData() {
@@ -337,7 +355,7 @@ public class VerificationActivity2 extends BaseActivity implements ProvinceCallB
                             @Override
                             public void onCameraClick() {
                                 //TakeCamera(false);
-                               requestPermission();
+                                requestPermission();
                             }
                         }))
                 .show();

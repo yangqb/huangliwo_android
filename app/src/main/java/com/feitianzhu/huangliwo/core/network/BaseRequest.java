@@ -1,8 +1,21 @@
 package com.feitianzhu.huangliwo.core.network;
 
+import android.content.Intent;
+import android.util.Log;
+
 import com.alibaba.fastjson.TypeReference;
+import com.feitianzhu.huangliwo.GlobalUtil;
+import com.feitianzhu.huangliwo.R;
+import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.login.LoginActivity;
+import com.feitianzhu.huangliwo.settings.ChangeLoginPassword;
+import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.hjq.toast.ToastUtils;
+import com.lxj.xpopup.XPopup;
+import com.lxj.xpopup.impl.ConfirmPopupView;
+import com.lxj.xpopup.interfaces.OnCancelListener;
+import com.lxj.xpopup.interfaces.OnConfirmListener;
 
 /**
  * Created by bch on 2020/5/11
@@ -10,6 +23,8 @@ import com.hjq.toast.ToastUtils;
  */
 public abstract class BaseRequest extends BaseApiRequest {
 
+
+    private ConfirmPopupView confirmPopupView;
 
     /**
      * 设置域名 端口
@@ -45,7 +60,40 @@ public abstract class BaseRequest extends BaseApiRequest {
         super.handleError(errorCode, errorMsg);
 
         if (errorCode == 100021105) {
+            Log.e("TAG11", "handleError: " );
 //            登录异常被踢
+            boolean loginDialog = SPUtils.getBoolean(GlobalUtil.getCurrentActivity(), Constant.LOGIN_DIALOG);
+            String token = SPUtils.getString(GlobalUtil.getCurrentActivity(), Constant.SP_ACCESS_TOKEN, "");
+            if (confirmPopupView == null) {
+                confirmPopupView = new XPopup.Builder(GlobalUtil.getCurrentActivity())
+                        .autoDismiss(false)
+                        .dismissOnTouchOutside(false)
+                        .enableDrag(false)
+                        .asConfirm("", "您的账号已在其他设备登陆，如果这不是您的操作，请及时修改密码并重新登陆。", "重新登录", "找回密码", new OnConfirmListener() {
+                            @Override
+                            public void onConfirm() {
+                                //context.startActivity(new Intent(context, ForgetPasswordActivity.class));
+                                Intent intent = new Intent(GlobalUtil.getCurrentActivity(), ChangeLoginPassword.class);
+                                GlobalUtil.getCurrentActivity().startActivity(intent);
+                            }
+                        }, new OnCancelListener() {
+                            @Override
+                            public void onCancel() {
+                                SPUtils.putString(GlobalUtil.getCurrentActivity(), Constant.SP_PASSWORD, "");
+                                SPUtils.putString(GlobalUtil.getCurrentActivity(), Constant.SP_LOGIN_USERID, "");
+                                SPUtils.putString(GlobalUtil.getCurrentActivity(), Constant.SP_ACCESS_TOKEN, "");
+                                Constant.ACCESS_TOKEN = "";
+                                Constant.LOGIN_USERID = "";
+                                Constant.PHONE = "";
+                                Intent intent = new Intent(GlobalUtil.getCurrentActivity(), LoginActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                GlobalUtil.getCurrentActivity().startActivity(intent);
+                            }
+                        }, false)
+                        .bindLayout(R.layout.layout_dialog_login);
+                confirmPopupView.show();//绑定已有布局
+            }
+            SPUtils.putBoolean(GlobalUtil.getCurrentActivity(), Constant.LOGIN_DIALOG, false);
         } else if (errorCode == 404) {
             ToastUtils.show("数据找不到");
             //找不到
