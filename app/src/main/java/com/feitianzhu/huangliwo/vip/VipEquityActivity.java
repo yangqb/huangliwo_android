@@ -46,7 +46,7 @@ public class VipEquityActivity extends BaseBindingActivity {
                 .init();
         viewDataBinding.titleName.setText("会员中心");
         num = getIntent().getDoubleExtra("num", -1);
-        viewDataBinding.num.setText(num + "");
+        viewDataBinding.num.setText(num + "元起");
     }
 
     @Override

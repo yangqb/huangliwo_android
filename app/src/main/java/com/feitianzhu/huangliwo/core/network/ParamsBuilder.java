@@ -39,7 +39,7 @@ public class ParamsBuilder {
                     // MyType object
                     httpParams.putFileParams(entry.getKey(), value);
                 } else {
-                    httpParams.put(entry.getKey(), getStringValue(entry.getValue()));//
+                    httpParams.put(entry.getKey(), getStringValue(entry.getValue()));
                     HttpLogUtil.e("HttpParams", "如果请求出错,且出现本日志,请查看请求参数和设置的是否一样,或者联系我修改代码");
                 }
 
