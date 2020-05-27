@@ -25,9 +25,10 @@ public abstract class BaseActivity extends SFActivity {
     protected Context mContext;
 
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void initBind() {
+        super.initBind();
         mContext = BaseActivity.this;
         maps = new TreeMap<String, String>();
         // 初始化头部
@@ -39,11 +40,6 @@ public abstract class BaseActivity extends SFActivity {
         // 初始化数据
         initData();
     }
-
-
-
-
-
 
     /**
      * 创建一个titlebar

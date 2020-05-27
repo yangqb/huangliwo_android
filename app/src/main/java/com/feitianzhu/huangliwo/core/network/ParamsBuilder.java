@@ -1,9 +1,12 @@
 package com.feitianzhu.huangliwo.core.network;
 
+import com.feitianzhu.huangliwo.core.log.HttpLogUtil;
 import com.lzy.okgo.model.HttpParams;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -29,15 +32,18 @@ public class ParamsBuilder {
             if (entry.getValue() instanceof File) {
                 if (entry.getValue() != null) {
                     httpParams.put(entry.getKey(), (File) entry.getValue());
-                } else {
                 }
+            } else if (entry.getValue() instanceof List) {
+                List value = (List) entry.getValue();
+                if (!value.isEmpty() && value.get(0) instanceof File) {
+                    // MyType object
+                    httpParams.putFileParams(entry.getKey(), value);
+                } else {
+                    httpParams.put(entry.getKey(), getStringValue(entry.getValue()));
+                    HttpLogUtil.e("HttpParams", "如果请求出错,且出现本日志,请查看请求参数和设置的是否一样,或者联系我修改代码");
+                }
+
             } else {
-                /*if (entry.getValue() instanceof ArrayList) {
-                    ArrayList value = (ArrayList) entry.getValue();
-                    if (value.size() > 0 && value.get(0) instanceof File) {
-                        httpParams.put(entry.getKey(), value);//
-                    }
-                }*/
                 httpParams.put(entry.getKey(), getStringValue(entry.getValue()));//
             }
         }

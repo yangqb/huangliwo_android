@@ -94,7 +94,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         mRegister.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
         mForgetLayout.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
 
-        layoutLogin.post(new Runnable() {
+               layoutLogin.post(new Runnable() {
             @Override
             public void run() {
                 //不可以直接获取控件位置，放在这个里面获取；

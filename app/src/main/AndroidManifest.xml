@@ -359,6 +359,7 @@
         <activity
             android:name=".me.ui.VerificationActivity2"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:windowSoftInputMode="adjustNothing"
             android:screenOrientation="portrait" />
         <activity
             android:name=".shop.ui.SearchShopActivity"
@@ -590,7 +591,13 @@
         <activity
             android:name=".me.WagesDetailActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
-            android:screenOrientation="portrait" /> <!-- 以下为基本配置信息，需要自行添加至您的AndroidManifest文件中 start -->
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".shop.ui.ApplyReturnGoodsActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:screenOrientation="portrait" />
+
+        <!-- 以下为基本配置信息，需要自行添加至您的AndroidManifest文件中 start -->
         <service
             android:name="com.taobao.accs.ChannelService"
             android:exported="true"
@@ -745,7 +752,8 @@
         <activity
             android:name="com.tencent.connect.common.AssistActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" /> <!-- 设置环信应用的AppKey -->
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <!-- 设置环信应用的AppKey -->
         <meta-data
             android:name="EASEMOB_APPKEY"
             android:value="1125200507181191" /> <!-- 声明SDK所需的service SDK核心功能 -->

@@ -105,7 +105,7 @@ public class OrderAdapter extends BaseMultiItemQuickAdapter<MultipleItemOrderMod
                     helper.setGone(R.id.btn_refund, false);
                 } else if (item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_WAIT_DELIVERY) {
                     helper.setText(R.id.tvStatus, "等待发货");
-                    helper.setText(R.id.btn_logistics, "申请退款 ");
+                    helper.setText(R.id.btn_logistics, "申请退款");
                     helper.setGone(R.id.btn_confirm_goods, false);
                     helper.setGone(R.id.btn_logistics, true);
                     helper.setGone(R.id.btn_refund, false);
@@ -113,11 +113,14 @@ public class OrderAdapter extends BaseMultiItemQuickAdapter<MultipleItemOrderMod
                     helper.setText(R.id.tvStatus, "等待收货");
                     helper.setText(R.id.btn_confirm_goods, "确认收货");
                     helper.setText(R.id.btn_logistics, " 查看物流");
-                    helper.setText(R.id.btn_refund, "申请退款");
+                    helper.setText(R.id.btn_refund, "申请退货");
                     helper.setGone(R.id.btn_confirm_goods, true);
                     helper.setGone(R.id.btn_logistics, true);
                     helper.setGone(R.id.btn_refund, true);
-                } else if (item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_REFUND || item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_REFUNDED || item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_CANCEL) {
+                } else if (item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_REFUND || item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_REFUNDED ||
+                        item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_CANCEL || item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_REFUNDING_GOODS ||
+                        item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_AGREE_REFUND_GOODS || item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_WAIT_MERCHANT_RECEIVING ||
+                        item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_WAIT_MERCHANT_REFUND || item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_COMPLETED_REFUND_GOODS) {
                     if (item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_REFUND) {
                         helper.setText(R.id.tvStatus, "退款中");
                         helper.setText(R.id.btn_confirm_goods, "退款进度");
@@ -127,6 +130,32 @@ public class OrderAdapter extends BaseMultiItemQuickAdapter<MultipleItemOrderMod
                         helper.setText(R.id.tvStatus, "退款完成");
                         helper.setText(R.id.btn_refund, "删除订单");
                         helper.setText(R.id.btn_confirm_goods, "查看订单");
+                        helper.setGone(R.id.btn_refund, true);
+                        helper.setGone(R.id.btn_confirm_goods, true);
+                    } else if (item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_REFUNDING_GOODS) {
+                        helper.setText(R.id.tvStatus, "退货中");
+                        helper.setText(R.id.btn_confirm_goods, "退货进度");
+                        helper.setGone(R.id.btn_confirm_goods, true);
+                        helper.setGone(R.id.btn_refund, false);
+                    } else if (item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_AGREE_REFUND_GOODS) {
+                        helper.setText(R.id.tvStatus, "退货待发货");
+                        helper.setText(R.id.btn_confirm_goods, "退货进度");
+                        helper.setGone(R.id.btn_refund, false);
+                        helper.setGone(R.id.btn_confirm_goods, true);
+                    } else if (item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_WAIT_MERCHANT_RECEIVING) {
+                        helper.setText(R.id.tvStatus, "退货待商家收货");
+                        helper.setText(R.id.btn_confirm_goods, "退货进度");
+                        helper.setGone(R.id.btn_refund, false);
+                        helper.setGone(R.id.btn_confirm_goods, true);
+                    } else if (item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_WAIT_MERCHANT_REFUND) {
+                        helper.setText(R.id.tvStatus, "退货待商家退款");
+                        helper.setText(R.id.btn_confirm_goods, "退货进度");
+                        helper.setGone(R.id.btn_refund, false);
+                        helper.setGone(R.id.btn_confirm_goods, true);
+                    } else if (item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_COMPLETED_REFUND_GOODS) {
+                        helper.setText(R.id.tvStatus, "退货完成");
+                        helper.setText(R.id.btn_confirm_goods, "查看订单");
+                        helper.setText(R.id.btn_refund, "删除订单");
                         helper.setGone(R.id.btn_refund, true);
                         helper.setGone(R.id.btn_confirm_goods, true);
                     } else {
