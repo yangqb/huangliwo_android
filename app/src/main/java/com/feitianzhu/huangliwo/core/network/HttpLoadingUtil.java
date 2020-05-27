@@ -1,12 +1,17 @@
 package com.feitianzhu.huangliwo.core.network;
 
+import android.util.Log;
+
 import com.feitianzhu.huangliwo.GlobalUtil;
 import com.feitianzhu.huangliwo.R;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.enums.PopupAnimation;
 import com.lxj.xpopup.impl.LoadingPopupView;
+import com.lxj.xpopup.interfaces.SimpleCallback;
+import com.lxj.xpopup.interfaces.XPopupCallback;
 
 import java.util.HashMap;
+import java.util.Set;
 
 /**
  * Created by bch on 2020/5/15
@@ -19,17 +24,59 @@ public class HttpLoadingUtil {
     private static LoadingPopupView loadingPopup;
     private static HashMap<String, BaseApiRequest> map = new HashMap<>();
 
+    //TODO 加载条 添加退出按钮 ,点击取消所有请求 2020-5-15
 
     synchronized private static void setLoadingViewShowWithContent(BaseApiRequest baseApiRequest, Boolean show, String content) {
         if (show) {
             usefulCount++;
-            loadingPopup = (LoadingPopupView) new XPopup.Builder(GlobalUtil.getCurrentActivity())
-                    .hasShadowBg(false)
-                    .dismissOnTouchOutside(false)
-                    .popupAnimation(PopupAnimation.NoAnimation)
-                    .asLoading()
-                    .bindLayout(R.layout.layout_loading_view)
-                    .show();
+            if (loadingPopup == null) {
+                loadingPopup = (LoadingPopupView) new XPopup.Builder(GlobalUtil.getCurrentActivity())
+                        .hasShadowBg(false)
+                        .dismissOnTouchOutside(false)
+                        .dismissOnBackPressed(false)
+                        .setPopupCallback(new XPopupCallback() {
+                            @Override
+                            public void onCreated() {
+
+                            }
+
+                            @Override
+                            public void beforeShow() {
+
+                            }
+
+                            @Override
+                            public void onShow() {
+
+                            }
+
+                            @Override
+                            public void onDismiss() {
+//TODO 感觉取消的逻辑有问题，先不用，等什么时候有这需求在试试，测试测试
+                                if (map != null && !map.isEmpty()) {
+                                    for (String key : map.keySet()) {
+                                        map.get(key).cancelRequest();
+                                    }
+                                    map.clear();
+//                                    if (map.containsKey(baseApiRequest.requestTag)) {
+//                                        map.remove(baseApiRequest.requestTag);
+//                                        baseApiRequest.cancelRequest();
+//                                    }
+                                    //TODO 加载条 添加退出按钮 ,点击取消所有请求 2020-5-15
+                                }
+                            }
+
+                            @Override
+                            public boolean onBackPressed() {
+                                return false;
+                            }
+                        })
+                        .popupAnimation(PopupAnimation.NoAnimation)
+                        .asLoading()
+                        .bindLayout(R.layout.layout_loading_view)
+                        .show();
+            }
+
             if (baseApiRequest != null) {
                 if (!map.containsKey(baseApiRequest.requestTag)) {
                     map.put(baseApiRequest.requestTag, baseApiRequest);
@@ -44,22 +91,20 @@ public class HttpLoadingUtil {
 
                     }
                 });
+                loadingPopup = null;
                 //取消进度条取消展示,清空
                 if (baseApiRequest != null) {
+                    // TODO 这里需要取消请求，如果要的话
                     if (!map.isEmpty()) {
                         map.clear();
                     }
                 }
-                //TODO 如何处理请求 2020-5-27
             } else {
                 if (baseApiRequest != null) {
                     if (map.containsKey(baseApiRequest.requestTag)) {
-//                        ToastUtils.show("取消请求");
                         map.remove(baseApiRequest.requestTag);
+                        baseApiRequest.cancelRequest();
                     }
-//        loadingPopup
-                    //TODO 加载条 添加退出按钮 ,点击取消所有请求 2020-5-15
-                    //TODO 取消请求时要有提示，最好调用请求的回调，传递到顶层2020-5-27
                 }
             }
 
@@ -69,6 +114,7 @@ public class HttpLoadingUtil {
     }
 
     public static void setLoadingViewShow(BaseApiRequest baseApiRequest, Boolean show) {
+        Log.e("TAG", "setLoadingViewShow: " + baseApiRequest.requestTag + "..." + show);
         setLoadingViewShowWithContent(baseApiRequest, show, "加载中");
     }
 
