@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
+import android.os.Environment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -21,6 +22,7 @@ import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.model.EvaluateMode;
 import com.feitianzhu.huangliwo.model.MultiItemComment;
 import com.feitianzhu.huangliwo.shop.adapter.EditCommentAdapter;
+import com.feitianzhu.huangliwo.utils.FileUtils;
 import com.feitianzhu.huangliwo.utils.Glide4Engine;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
@@ -41,12 +43,21 @@ import com.zhihu.matisse.internal.entity.CaptureStrategy;
 import com.zhihu.matisse.internal.utils.MediaStoreCompat;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import cc.shinichi.library.ImagePreview;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
+import top.zibin.luban.CompressionPredicate;
+import top.zibin.luban.Luban;
+import top.zibin.luban.OnCompressListener;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.huangliwo.common.Constant.USERID;
@@ -270,51 +281,88 @@ public class EditCommentsActivity extends BaseActivity {
                     return;
                 }
 
-                evaluateMode.setContent(editContent.getText().toString());
-                String json = new Gson().toJson(evaluateMode);
-                List<File> fileList = new ArrayList<>();
-
                 if (allSelect.size() > 0) {
-                    for (int i = 0; i < allSelect.size(); i++) {
-                        fileList.add(new File(allSelect.get(i)));
-                    }
-                }
-                String url;
-                if (evaluateMode.getMerchantId() != 0) {
-                    url = Urls.EVALUATE_SETMEAL_ORDER;
+                    compressImg();
                 } else {
-                    url = Urls.EVALUATE_ORDER;
+                    submit(null);
                 }
-
-                PostRequest<LzyResponse> postRequest = OkGo.<LzyResponse>post(url)
-                        .tag(this);
-                if (fileList.size() > 0) {
-                    postRequest.addFileParams("files", fileList);
-                } else {
-                    postRequest.isMultipart(true);
-                }
-                postRequest.params(ACCESSTOKEN, token)
-                        .params(USERID, userId)
-                        .params("evaluateBody", json)
-                        .execute(new JsonCallback<LzyResponse>() {
-                            @Override
-                            public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
-                                super.onSuccess(EditCommentsActivity.this, response.body().msg, response.body().code);
-                                if (response.body().code == 0) {
-                                    ToastUtils.show("发布成功");
-                                    setResult(RESULT_OK);
-                                    finish();
-                                }
-                            }
-
-                            @Override
-                            public void onError(com.lzy.okgo.model.Response<LzyResponse> response) {
-                                super.onError(response);
-                            }
-                        });
                 break;
         }
     }
+
+
+    public void submit(List<File> compressList) {
+        String url;
+        evaluateMode.setContent(editContent.getText().toString());
+        String json = new Gson().toJson(evaluateMode);
+        if (evaluateMode.getMerchantId() != 0) {
+            url = Urls.EVALUATE_SETMEAL_ORDER;
+        } else {
+            url = Urls.EVALUATE_ORDER;
+        }
+
+        PostRequest<LzyResponse> postRequest = OkGo.<LzyResponse>post(url)
+                .tag(this);
+        if (compressList != null && compressList.size() > 0) {
+            postRequest.addFileParams("files", compressList);
+        } else {
+            postRequest.isMultipart(true);
+        }
+        postRequest.params(ACCESSTOKEN, token)
+                .params(USERID, userId)
+                .params("evaluateBody", json)
+                .execute(new JsonCallback<LzyResponse>() {
+                    @Override
+                    public void onSuccess(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onSuccess(EditCommentsActivity.this, response.body().msg, response.body().code);
+                        if (response.body().code == 0) {
+                            ToastUtils.show("发布成功");
+                            setResult(RESULT_OK);
+                            finish();
+                        }
+                    }
+
+                    @Override
+                    public void onError(com.lzy.okgo.model.Response<LzyResponse> response) {
+                        super.onError(response);
+                    }
+                });
+    }
+
+
+    /*
+     * 图片压缩同步
+     * */
+    public void compressImg() {
+        Observable.just(allSelect).observeOn(Schedulers.io())
+                .map(new Func1<List<String>, List<File>>() {
+                    @Override
+                    public List<File> call(List<String> strings) {
+                        try {
+                            return Luban.with(EditCommentsActivity.this)
+                                    .setTargetDir(getPath())
+                                    .load(strings)
+                                    .get();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        return null;
+                    }
+                }).observeOn(AndroidSchedulers.mainThread())
+                .doOnError(new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+
+                    }
+                }).onErrorResumeNext(Observable.empty())
+                .subscribe(new Action1<List<File>>() {
+                    @Override
+                    public void call(List<File> files) {
+                        submit(files);
+                    }
+                });
+    }
+
 
     @Override
     protected void initData() {
@@ -359,5 +407,14 @@ public class EditCommentsActivity extends BaseActivity {
                 mAdapter.notifyDataSetChanged();
             }
         }
+    }
+
+    private String getPath() {
+        String path = Environment.getExternalStorageDirectory() + "/bydby/image/";
+        File file = new File(path);
+        if (file.mkdirs()) {
+            return path;
+        }
+        return path;
     }
 }
