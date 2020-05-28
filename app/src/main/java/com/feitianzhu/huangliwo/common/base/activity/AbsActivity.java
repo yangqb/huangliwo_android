@@ -15,7 +15,6 @@ import com.gyf.immersionbar.ImmersionBar;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.enums.PopupAnimation;
 import com.lxj.xpopup.impl.LoadingPopupView;
-import com.umeng.message.PushAgent;
 
 /**
  * Created by jiangdikai on 2017/9/4.
@@ -32,7 +31,6 @@ public abstract class AbsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        PushAgent.getInstance(this).onAppStart();
         GlobalUtil.setCurrentActivity(this);
 
         if (getOpenImmersionBar() != null) {

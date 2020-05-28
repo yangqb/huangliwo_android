@@ -25,6 +25,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.fragment.SFFragment;
+import com.feitianzhu.huangliwo.core.base.BaseWebviewActivity;
 import com.feitianzhu.huangliwo.core.network.ApiLifeCallBack;
 import com.feitianzhu.huangliwo.home.adapter.HotGoodsAdapter2;
 import com.feitianzhu.huangliwo.home.adapter.OptAdapter;
@@ -365,11 +366,16 @@ public class RecommendedFragment extends SFFragment {
                 startActivity(intent);
                 break;*/
             case R.id.rl_travel:
+                if (true) {
+                    BaseWebviewActivity.toBaseWebviewActivity(getActivity(), "https://skylxl.com/javascript/clieck.html");
+//                    BaseWebviewActivity.toBaseWebviewActivity(getActivity(), "http://49.233.14.216/one.html");
+                    return;
+                }
                 token = SPUtils.getString(getContext(), Constant.SP_ACCESS_TOKEN);
                 if (token == null || TextUtils.isEmpty(token)) {
                     Intent intent1 = new Intent(getActivity(), LoginActivity.class);
                     startActivity(intent1);
-                }else {
+                } else {
                     intent = new Intent(getActivity(), TravelHomeActivity.class);
                     startActivity(intent);
                 }
