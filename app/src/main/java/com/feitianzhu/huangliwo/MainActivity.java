@@ -90,7 +90,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @BindView(R.id.ly_me)
     LinearLayout mLyMe;
     private HomeFragment mHomeFragment;
-    private CommodityClassificationFragment1 mShopFragment;
+    private CommodityClassificationFragment mShopFragment;
     private StrategyFragment mMessageFragment;
     private MyCenterFragment mMeFragment;
     private FragmentTransaction mTransaction;
@@ -179,7 +179,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 mTxtShop.setSelected(true);
                 mImgShop.setSelected(true);
                 if (mShopFragment == null) {
-                    mShopFragment = CommodityClassificationFragment1.newInstance(type, "");
+                    mShopFragment = CommodityClassificationFragment.newInstance(type, "");
                     mTransaction.add(R.id.fragment_container, mShopFragment);
                 } else {
                     mTransaction.show(mShopFragment);
@@ -191,7 +191,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 selected();
                 mTxtShop.setSelected(true);
                 mImgShop.setSelected(true);
-                mShopFragment = CommodityClassificationFragment1.newInstance(type, "");
+                mShopFragment = CommodityClassificationFragment.newInstance(type, "");
                 mTransaction.add(R.id.fragment_container, mShopFragment);
                 mTransaction.commit();
                 break;
@@ -200,7 +200,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 selected();
                 mTxtShop.setSelected(true);
                 mImgShop.setSelected(true);
-                mShopFragment = CommodityClassificationFragment1.newInstance(type, "");
+                mShopFragment = CommodityClassificationFragment.newInstance(type, "");
                 mTransaction.add(R.id.fragment_container, mShopFragment);
                 mTransaction.commit();
                 break;
