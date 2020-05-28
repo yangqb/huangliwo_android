@@ -6,13 +6,13 @@ package com.feitianzhu.huangliwo.utils;
 
 public class Urls {
     //public static final String BASE_URL = "http://182.92.177.234/"; //正式环境
-    public static final String BASE_URL = "http://8.129.218.83:8088/"; //测试地址
+        public static final String BASE_URL = "http://8.129.218.83:8088/"; //测试地址
     //public static final String BASE_URL = "http://192.168.0.9:8089/";//钟工本地地址
     //public static final String BASE_URL = "http://192.168.0.142:8089/"; //周工本地地址
     // public static final String TICKET_BASE_URL = "http://192.168.0.142:8087/"; //周工本地地址机票
     public static final String TICKET_BASE_URL = "http://8.129.218.83:8087/"; //机票测试
     //public static final String TICKET_BASE_URL = "http://192.168.0.7:8087/"; //周工机票本地
-    // public static final String TICKET_BASE_URL = "http://182.92.177.234:8087/"; //机票正式
+    //public static final String TICKET_BASE_URL = "http://182.92.177.234:8087/"; //机票正式
 
 
     /**

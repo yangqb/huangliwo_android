@@ -4,9 +4,11 @@ import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.feitianzhu.huangliwo.R;
@@ -15,9 +17,11 @@ import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.model.LogisticsModel;
 import com.feitianzhu.huangliwo.shop.adapter.LogisticsAdapter;
 import com.feitianzhu.huangliwo.utils.SPUtils;
+import com.feitianzhu.huangliwo.utils.StringUtils;
 import com.hjq.toast.ToastUtils;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /*
@@ -26,6 +30,10 @@ import butterknife.OnClick;
 public class LogisticsInfoActivity extends BaseActivity {
     public static final String LOGISTICS_DATA = "logistics_data";
     public static final String LOGISTICS_COMPANY = "logistics_company";
+    @BindView(R.id.data)
+    LinearLayout data;
+    @BindView(R.id.rootView)
+    LinearLayout rootView;
     private LogisticsAdapter adapter;
     private LogisticsModel logisticsModel;
     private String logisticsCompany = "";
@@ -58,17 +66,25 @@ public class LogisticsInfoActivity extends BaseActivity {
 
         logisticsCompany = getIntent().getStringExtra(LOGISTICS_COMPANY);
         titleName.setText("物流信息");
-        tvLogisticsNo.setText("物流编号" + logisticsModel.getNu());
-        tvCopy.setVisibility(View.VISIBLE);
-        line.setVisibility(View.VISIBLE);
-        if (logisticsCompany != null) {
+
+        if (logisticsCompany != null && !StringUtils.isEmpty(logisticsModel.getNu()) && !logisticsModel.getNu().equals("null")) {
+            data.setVisibility(View.VISIBLE);
+            rootView.setVisibility(View.GONE);
+            tvLogisticsNo.setText("物流编号" + logisticsModel.getNu());
+            tvCopy.setVisibility(View.VISIBLE);
+            line.setVisibility(View.VISIBLE);
             tvCompanyName.setText(logisticsCompany);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            recyclerView.setNestedScrollingEnabled(false);
+            adapter = new LogisticsAdapter(logisticsModel.getData());
+            recyclerView.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+        } else {
+            data.setVisibility(View.GONE);
+            rootView.setVisibility(View.VISIBLE);
         }
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setNestedScrollingEnabled(false);
-        adapter = new LogisticsAdapter(logisticsModel.getData());
-        recyclerView.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
+
+
     }
 
     @Override
@@ -95,4 +111,5 @@ public class LogisticsInfoActivity extends BaseActivity {
                 break;
         }
     }
+
 }
