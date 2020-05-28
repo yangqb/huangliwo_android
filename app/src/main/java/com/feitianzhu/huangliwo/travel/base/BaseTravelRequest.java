@@ -57,6 +57,8 @@ public abstract class BaseTravelRequest extends BaseRequest {
             ToastUtils.show("网络正在开小差 重新加载");
 
             //json解析错误
+        } else if (errorCode == kErrorTypeNoNetworkCancel) {
+            ToastUtils.show("取消请求");
         } else {
             ToastUtils.show(errorMsg);
         }

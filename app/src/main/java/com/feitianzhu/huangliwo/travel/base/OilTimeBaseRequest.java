@@ -33,8 +33,11 @@ public abstract class OilTimeBaseRequest extends BaseRequest {
     @Override
     public void handleError(int errorCode, String errorMsg) {
 //        super.handleError(errorCode, errorMsg);
-
-        ToastUtils.show(errorMsg);
+        if (errorCode == kErrorTypeNoNetworkCancel) {
+            ToastUtils.show("取消请求");
+        } else {
+            ToastUtils.show(errorMsg);
+        }
     }
 
 }

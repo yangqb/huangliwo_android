@@ -23,7 +23,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
-import com.feitianzhu.huangliwo.common.base.SFFragment;
+import com.feitianzhu.huangliwo.common.base.fragment.SFFragment;
 import com.feitianzhu.huangliwo.financial.FinancialHomeActivity;
 import com.feitianzhu.huangliwo.home.adapter.HAdapter;
 import com.feitianzhu.huangliwo.home.adapter.HomeRecommendAdapter2;

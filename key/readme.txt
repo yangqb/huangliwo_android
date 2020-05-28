@@ -2,3 +2,6 @@
 生产MD5 0db0cb1fdfe7a7757d3d3de545de36e6
 开发key:97:64:5F:2F:2F:93:BA:D9:69:01:FF:09:5E:3B:50:A4:F3:DD:18:9E
 开发MD5 03:f8:eb:69:9e:42:2c:93:52:e8:e8:c1:b9:44:01:78
+
+
+空白包签名：jarsigner -verbose -keystore feitianzhu.jks -signedjar demo_signed.apk one.apk feitianzhu

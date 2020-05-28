@@ -22,7 +22,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
-import com.feitianzhu.huangliwo.common.base.SFFragment;
+import com.feitianzhu.huangliwo.common.base.fragment.SFFragment;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.login.LoginEvent;

@@ -42,7 +42,6 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:icon,android:theme,android:label">
-        <activity android:name=".strategy.StrategyActivity"></activity>
         <activity android:name=".travel.TraveFormActivity" />
         <activity android:name=".travel.TraveDetailActivity" /> <!-- 添加provider -->
         <provider
