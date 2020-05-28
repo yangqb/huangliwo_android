@@ -1,6 +1,7 @@
 package com.feitianzhu.huangliwo.shop.adapter;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -24,10 +25,13 @@ public class RightAdapterShopChild extends BaseQuickAdapter<BaseGoodsListBean, B
     @Override
     protected void convert(BaseViewHolder helper, BaseGoodsListBean item) {
         helper.setText(R.id.text1, item.getGoodsName());
-        Glide.with(mContext).load(item.getGoodsImg())
+        Glide.with(mContext)
+                .asDrawable()
+                .load(item.getGoodsImg())
                 .apply(new RequestOptions()
                         .placeholder(R.mipmap.g10_04weijiazai)
                         .error(R.mipmap.g10_04weijiazai)
+                        .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                         .dontAnimate())
                 .into((RoundedImageView) helper.getView(R.id.image));
     }

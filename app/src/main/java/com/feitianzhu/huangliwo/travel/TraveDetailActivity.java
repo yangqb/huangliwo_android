@@ -309,14 +309,14 @@ public class TraveDetailActivity extends BaseBindingActivity {
                                 public void onItemClick(int position) {
                                     if ("百度地图".equals(mapList.get(position))) {
                                         Intent i1 = new Intent();
-                                        i1.setData(Uri.parse("baidumap://map/geocoder?src=andr.baidu.openAPIdemo&address=" + oilListBean.getProvinceName() + oilListBean.getCityName() + oilListBean.getCountyName() + oilListBean.getGasName()));
+                                        i1.setData(Uri.parse("baidumap://map/geocoder?src=andr.baidu.openAPIdemo&address=" + oilListBean.getGasAddress()));
                                         startActivity(i1);
                                     } else if ("高德地图".equals(mapList.get(position))) {
                                         Intent intent_gdmap = new Intent();
                                         intent_gdmap.setAction("android.intent.action.VIEW");
                                         intent_gdmap.setPackage("com.autonavi.minimap");
                                         intent_gdmap.addCategory("android.intent.category.DEFAULT");
-                                        intent_gdmap.setData(Uri.parse("androidamap://poi?sourceApplication=com.feitianzhu.huangliwo&keywords=" + oilListBean.getProvinceName() + oilListBean.getCityName() + oilListBean.getCountyName() + oilListBean.getGasName() + "&dev=0"));
+                                        intent_gdmap.setData(Uri.parse("androidamap://poi?sourceApplication=com.feitianzhu.huangliwo&keywords=" + oilListBean.getGasAddress()  + oilListBean.getGasName() + "&dev=0"));
                                         startActivity(intent_gdmap);
                                     }
                                 }

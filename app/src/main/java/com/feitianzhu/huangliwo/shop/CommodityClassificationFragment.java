@@ -3,6 +3,8 @@ package com.feitianzhu.huangliwo.shop;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.NestedScrollView;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -19,7 +21,6 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.SFFragment;
-import com.feitianzhu.huangliwo.core.network.ApiCallBack;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.login.LoginActivity;
@@ -39,8 +40,6 @@ import com.feitianzhu.huangliwo.pushshop.bean.MerchantsClassifyModel;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsModel;
 import com.feitianzhu.huangliwo.shop.adapter.LeftAdapter;
 import com.feitianzhu.huangliwo.shop.adapter.RightAdapter1;
-import com.feitianzhu.huangliwo.shop.model.ShopClassifyBean;
-import com.feitianzhu.huangliwo.shop.request.ClassifyGoodsListRequest;
 import com.feitianzhu.huangliwo.shop.ui.SearchShopActivity;
 import com.feitianzhu.huangliwo.shop.ui.dialog.ProvinceCallBack;
 import com.feitianzhu.huangliwo.shop.ui.dialog.ProvinceDialog2;
@@ -48,6 +47,7 @@ import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 import com.feitianzhu.huangliwo.view.CircleImageView;
+import com.feitianzhu.huangliwo.view.CornerLinearView;
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
@@ -100,15 +100,37 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
     TextView button2;
     @BindView(R.id.left_recyclerView)
     RecyclerView leftRecyclerView;
+    @BindView(R.id.right_recyclerView)
+    RecyclerView rightRecyclerView;
     @BindView(R.id.iv_head)
     CircleImageView ivHead;
+    @BindView(R.id.recyclerView1)
+    RecyclerView recyclerView1;
+    @BindView(R.id.recyclerView2)
+    RecyclerView recyclerView2;
+
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     @BindView(R.id.line1)
     View line1;
     @BindView(R.id.line)
     View line;
-
+    @BindView(R.id.nescro)
+    NestedScrollView nescro;
+    @BindView(R.id.title1)
+    TextView title1;
+    @BindView(R.id.title2)
+    TextView title2;
+    @BindView(R.id.title3)
+    TextView title3;
+    @BindView(R.id.hot)
+    LinearLayout hot;
+    @BindView(R.id.boutique)
+    LinearLayout boutique;
+    @BindView(R.id.recommend)
+    LinearLayout recommend;
+    @BindView(R.id.backgroundImg)
+    LinearLayout backgroundImg;
 
     private int mParam1 = 2;
     private String mParam2;
@@ -142,7 +164,8 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
     private double longitude = 116.289189;
     private double latitude = 39.826552;
     private MineInfoModel mineInfoModel = new MineInfoModel();
-
+    private RightAdapter1 rightAdapterRecomm;
+    private RightAdapter1 rightAdapterBou;
 
     public CommodityClassificationFragment() {
 
@@ -160,7 +183,7 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-         if (getArguments() != null) {
+        if (getArguments() != null) {
             mParam1 = getArguments().getInt(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
@@ -170,7 +193,7 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_commodity_classification, container, false);
+        View view = inflater.inflate(R.layout.fragment_commodity_classification1, container, false);
         unbinder = ButterKnife.bind(this, view);
         if (!TextUtils.isEmpty(Constant.mCity)) {
             mTxtLocation.setText(Constant.mCity);
@@ -192,6 +215,23 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
 
             }
         });
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
+        rightRecyclerView.setLayoutManager(gridLayoutManager);
+        rightRecyclerView.setAdapter(rightAdapter);
+        rightAdapter.notifyDataSetChanged();
+
+
+        rightAdapterRecomm = new RightAdapter1(multipleRecommItemList);
+        GridLayoutManager gridLayoutManager1 = new GridLayoutManager(getContext(), 3);
+        recyclerView2.setLayoutManager(gridLayoutManager1);
+        recyclerView2.setAdapter(rightAdapterRecomm);
+        rightAdapterRecomm.notifyDataSetChanged();
+
+        rightAdapterBou = new RightAdapter1(multipleBouItemList);
+        GridLayoutManager gridLayoutManager2 = new GridLayoutManager(getContext(), 3);
+        recyclerView1.setLayoutManager(gridLayoutManager2);
+        recyclerView1.setAdapter(rightAdapterBou);
+        rightAdapterBou.notifyDataSetChanged();
 
 
         mSwipeLayout.setEnableLoadMore(false);
@@ -201,22 +241,111 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
             line.setVisibility(View.VISIBLE);
 //            button1.setSelected(true);
 //            button2.setSelected(false);
+            getMerchantsClass();
         } else {//商城
             line1.setVisibility(View.VISIBLE);
             line.setVisibility(View.GONE);
 //            button1.setSelected(false);
 //            button2.setSelected(true);
+            getShopClass();
         }
         showHeadImg();
         initListener();
         return view;
     }
 
+    public void getMerchantsClass() {
+        title1.setText("热门商铺");
+        title2.setText("优质商家");
+        title3.setText("为您推荐");
+        nescro.scrollTo(0, 0);
+        leftRecyclerView.scrollToPosition(0);
+        OkGo.<LzyResponse<MerchantsClassifyModel>>get(Urls.GET_MERCHANTS_TYPE)
+                .tag(this)
+                .params(ACCESSTOKEN, token)
+                .params(USERID, userId)
+                .execute(new JsonCallback<LzyResponse<MerchantsClassifyModel>>() {
+                    @Override
+                    public void onStart(Request<LzyResponse<MerchantsClassifyModel>, ? extends Request> request) {
+                        super.onStart(request);
+                    }
+
+                    @Override
+                    public void onSuccess(Response<LzyResponse<MerchantsClassifyModel>> response) {
+                        super.onSuccess(getActivity(), response.body().msg, response.body().code);
+                        if (response.body().data != null) {
+                            merchantsClassifyList = response.body().data.getList();
+                            multiItemShopAndMerchantsClass.clear();
+                            for (int i = 0; i < merchantsClassifyList.size(); i++) {
+                                MultiItemShopAndMerchants multiItemShopAndMerchants = new MultiItemShopAndMerchants(MultiItemShopAndMerchants.MERCHANTS_TYPE);
+                                multiItemShopAndMerchants.setMerchantsClassifyModel(merchantsClassifyList.get(i));
+                                multiItemShopAndMerchantsClass.add(multiItemShopAndMerchants);
+                            }
+                            leftAdapter.setSelect(0);
+                            leftAdapter.setNewData(multiItemShopAndMerchantsClass);
+                            leftAdapter.notifyDataSetChanged();
+                            clsMearchantsId = merchantsClassifyList.get(0).getClsId();
+                            getMerchants(clsMearchantsId);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<LzyResponse<MerchantsClassifyModel>> response) {
+                        super.onError(response);
+                    }
+                });
+    }
+
+    public void getShopClass() {
+        nescro.scrollTo(0, 0);
+        leftRecyclerView.scrollToPosition(0);
+
+        title1.setText("热门商品");
+        title2.setText("精品推荐");
+        title3.setText("为您推荐");
+        OkGo.<LzyResponse<ShopClassify>>post(Urls.GET_SHOP_CLASS)
+                .params(ACCESSTOKEN, token)
+                .params(USERID, userId)
+                .execute(new JsonCallback<LzyResponse<ShopClassify>>() {
+                    @Override
+                    public void onStart(Request<LzyResponse<ShopClassify>, ? extends Request> request) {
+                        super.onStart(request);
+                    }
+
+                    @Override
+                    public void onSuccess(Response<LzyResponse<ShopClassify>> response) {
+                        super.onSuccess(getActivity(), "", response.body().code);
+                        if (response.body().data != null) {
+                            ShopClassify shopClassify = response.body().data;
+                            shopClassifyLsit = shopClassify.getGGoodsClsList();
+                            multiItemShopAndMerchantsClass.clear();
+                            if (shopClassifyLsit != null && shopClassifyLsit.size() > 0) {
+                                for (int i = 0; i < shopClassifyLsit.size(); i++) {
+                                    MultiItemShopAndMerchants multiItemShopAndMerchants = new MultiItemShopAndMerchants(MultiItemShopAndMerchants.SHOP_TYPE);
+                                    multiItemShopAndMerchants.setShopClassifyModel(shopClassifyLsit.get(i));
+                                    multiItemShopAndMerchantsClass.add(multiItemShopAndMerchants);
+                                }
+                                leftAdapter.setSelect(0);
+                                leftAdapter.setNewData(multiItemShopAndMerchantsClass);
+                                leftAdapter.notifyDataSetChanged();
+                                clsShopId = shopClassifyLsit.get(0).getClsId();
+                                getShops(clsShopId);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<LzyResponse<ShopClassify>> response) {
+                        super.onError(response);
+                    }
+                });
+    }
 
     public void initListener() {
         leftAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                nescro.scrollTo(0, 0);
                 leftAdapter.setSelect(position);
                 leftAdapter.notifyDataSetChanged();
                 if (leftAdapter.getItemViewType(position) == MultiItemShopAndMerchants.SHOP_TYPE) {
@@ -247,39 +376,39 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                 }
             }
         });
-//        rightAdapterRecomm.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-//                if (rightAdapterRecomm.getItemViewType(position) == MultipleItem.MERCHANTS) {
-//                    //商铺详情页
-//                    Intent intent = new Intent(getActivity(), ShopMerchantsDetailActivity.class);
-//                    intent.putExtra(ShopMerchantsDetailActivity.MERCHANTS_ID, merchantsRecommList.get(position).getMerchantId());
-//                    startActivity(intent);
-//                } else {
-//                    //商品详情
-//                    Intent intent = new Intent(getActivity(), ShopsDetailActivity.class);
-//                    intent.putExtra(ShopsDetailActivity.GOODS_DETAIL_DATA, goodsRecommListBeans.get(position).getGoodsId());
-//                    startActivity(intent);
-//                }
-//            }
-//        });
-//
-//        rightAdapterBou.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-//                if (rightAdapterBou.getItemViewType(position) == MultipleItem.MERCHANTS) {
-//                    //商铺详情页
-//                    Intent intent = new Intent(getActivity(), ShopMerchantsDetailActivity.class);
-//                    intent.putExtra(ShopMerchantsDetailActivity.MERCHANTS_ID, merchantsBouList.get(position).getMerchantId());
-//                    startActivity(intent);
-//                } else {
-//                    //商品详情
-//                    Intent intent = new Intent(getActivity(), ShopsDetailActivity.class);
-//                    intent.putExtra(ShopsDetailActivity.GOODS_DETAIL_DATA, goodsBouListBeans.get(position).getGoodsId());
-//                    startActivity(intent);
-//                }
-//            }
-//        });
+        rightAdapterRecomm.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                if (rightAdapterRecomm.getItemViewType(position) == MultipleItem.MERCHANTS) {
+                    //商铺详情页
+                    Intent intent = new Intent(getActivity(), ShopMerchantsDetailActivity.class);
+                    intent.putExtra(ShopMerchantsDetailActivity.MERCHANTS_ID, merchantsRecommList.get(position).getMerchantId());
+                    startActivity(intent);
+                } else {
+                    //商品详情
+                    Intent intent = new Intent(getActivity(), ShopsDetailActivity.class);
+                    intent.putExtra(ShopsDetailActivity.GOODS_DETAIL_DATA, goodsRecommListBeans.get(position).getGoodsId());
+                    startActivity(intent);
+                }
+            }
+        });
+
+        rightAdapterBou.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                if (rightAdapterBou.getItemViewType(position) == MultipleItem.MERCHANTS) {
+                    //商铺详情页
+                    Intent intent = new Intent(getActivity(), ShopMerchantsDetailActivity.class);
+                    intent.putExtra(ShopMerchantsDetailActivity.MERCHANTS_ID, merchantsBouList.get(position).getMerchantId());
+                    startActivity(intent);
+                } else {
+                    //商品详情
+                    Intent intent = new Intent(getActivity(), ShopsDetailActivity.class);
+                    intent.putExtra(ShopsDetailActivity.GOODS_DETAIL_DATA, goodsBouListBeans.get(position).getGoodsId());
+                    startActivity(intent);
+                }
+            }
+        });
 //        rightAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
 //            @Override
 //            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
@@ -303,20 +432,7 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
 
 
     public void getShops(int clsId) {
-        ClassifyGoodsListRequest goodsListRequest = new ClassifyGoodsListRequest();
-        goodsListRequest.accessToken = token;
-        goodsListRequest.userId = userId;
-        goodsListRequest.call(new ApiCallBack<ShopClassifyBean>() {
-            @Override
-            public void onAPIResponse(ShopClassifyBean response) {
-                ToastUtils.show("sdfsdf");
-            }
 
-            @Override
-            public void onAPIError(int errorCode, String errorMsg) {
-
-            }
-        });
         OkGo.<LzyResponse<ShopsNew>>post(Urls.GET_SHOP1)
                 .tag(this)
                 .params(ACCESSTOKEN, token)
@@ -332,6 +448,7 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                     @Override
                     public void onSuccess(Response<LzyResponse<ShopsNew>> response) {
                         super.onSuccess(getActivity(), "", response.body().code);
+                        backgroundImg.setVisibility(View.GONE);
 
                         mSwipeLayout.finishRefresh();
                         goneloadDialog();
@@ -354,7 +471,9 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                             ShopsNew data = response.body().data;
 //
                             if (data.getBoutique() == null || data.getBoutique().size() == 0) {
+                                boutique.setVisibility(View.GONE);
                             } else {
+                                boutique.setVisibility(View.VISIBLE);
 
                                 goodsBouListBeans = data.getBoutique();
                                 for (int i = 0; i < goodsBouListBeans.size(); i++) {
@@ -365,8 +484,9 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                             }
 
                             if (data.getHot() == null || data.getHot().size() == 0) {
+                                hot.setVisibility(View.GONE);
                             } else {
-
+                                hot.setVisibility(View.VISIBLE);
 
                                 goodsListBeans = data.getHot();
                                 for (int i = 0; i < goodsListBeans.size(); i++) {
@@ -377,8 +497,9 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                             }
 
                             if (data.getRecommendFor() == null || data.getRecommendFor().size() == 0) {
+                                recommend.setVisibility(View.GONE);
                             } else {
-
+                                recommend.setVisibility(View.VISIBLE);
 
                                 goodsRecommListBeans = data.getRecommendFor();
                                 for (int i = 0; i < goodsRecommListBeans.size(); i++) {
@@ -394,12 +515,17 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                         rightAdapter.setNewData(multipleItemList);
                         rightAdapter.notifyDataSetChanged();
 
-//                        rightAdapterRecomm.setNewData(multipleRecommItemList);
-//                        rightAdapterRecomm.notifyDataSetChanged();
-//
-//                        rightAdapterBou.setNewData(multipleBouItemList);
-//                        rightAdapterBou.notifyDataSetChanged();
+                        rightAdapterRecomm.setNewData(multipleRecommItemList);
+                        rightAdapterRecomm.notifyDataSetChanged();
 
+                        rightAdapterBou.setNewData(multipleBouItemList);
+                        rightAdapterBou.notifyDataSetChanged();
+                        if (recommend.getVisibility() == View.GONE &&
+                                hot.getVisibility() == View.GONE &&
+                                boutique.getVisibility() == View.GONE) {
+                            backgroundImg.setVisibility(View.VISIBLE);
+//                            rightAdapter.setNewData(null);
+                        }
                     }
 
                     @Override
@@ -416,13 +542,13 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
 
                         multipleRecommItemList.clear();
                         goodsRecommListBeans.clear();
-//                        rightAdapterRecomm.setNewData(multipleRecommItemList);
-//                        rightAdapterRecomm.notifyDataSetChanged();
+                        rightAdapterRecomm.setNewData(multipleRecommItemList);
+                        rightAdapterRecomm.notifyDataSetChanged();
 
                         goodsBouListBeans.clear();
                         multipleBouItemList.clear();
-//                        rightAdapterBou.setNewData(multipleBouItemList);
-//                        rightAdapterBou.notifyDataSetChanged();
+                        rightAdapterBou.setNewData(multipleBouItemList);
+                        rightAdapterBou.notifyDataSetChanged();
                         goneloadDialog();
                     }
                 });
@@ -453,6 +579,7 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                     public void onSuccess(Response<LzyResponse<MerchantsInfoNew>> response) {
                         super.onSuccess(getActivity(), "", response.body().code);
                         goneloadDialog();
+                        backgroundImg.setVisibility(View.GONE);
 
                         mSwipeLayout.finishRefresh();
                         multipleItemList.clear();
@@ -468,7 +595,9 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
 
                             MerchantsInfoNew data = response.body().data;
                             if (data.getVeryGood() == null || data.getVeryGood().size() == 0) {
+                                boutique.setVisibility(View.GONE);
                             } else {
+                                boutique.setVisibility(View.VISIBLE);
 
                                 merchantsBouList = data.getVeryGood();
                                 for (int i = 0; i < merchantsBouList.size(); i++) {
@@ -479,8 +608,9 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                             }
 
                             if (data.getHot() == null || data.getHot().size() == 0) {
+                                hot.setVisibility(View.GONE);
                             } else {
-
+                                hot.setVisibility(View.VISIBLE);
                                 merchantsList = data.getHot();
                                 for (int i = 0; i < merchantsList.size(); i++) {
                                     MultipleItem multipleItem = new MultipleItem(MultipleItem.MERCHANTS);
@@ -490,8 +620,9 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                             }
 
                             if (data.getRecommendFor() == null || data.getRecommendFor().size() == 0) {
+                                recommend.setVisibility(View.GONE);
                             } else {
-
+                                recommend.setVisibility(View.VISIBLE);
 
                                 merchantsRecommList = data.getRecommendFor();
                                 for (int i = 0; i < merchantsRecommList.size(); i++) {
@@ -505,12 +636,17 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                         rightAdapter.setNewData(multipleItemList);
                         rightAdapter.notifyDataSetChanged();
 
-//                        rightAdapterRecomm.setNewData(multipleRecommItemList);
-//                        rightAdapterRecomm.notifyDataSetChanged();
-//
-//                        rightAdapterBou.setNewData(multipleBouItemList);
-//                        rightAdapterBou.notifyDataSetChanged();
+                        rightAdapterRecomm.setNewData(multipleRecommItemList);
+                        rightAdapterRecomm.notifyDataSetChanged();
 
+                        rightAdapterBou.setNewData(multipleBouItemList);
+                        rightAdapterBou.notifyDataSetChanged();
+                        if (recommend.getVisibility() == View.GONE &&
+                                hot.getVisibility() == View.GONE &&
+                                boutique.getVisibility() == View.GONE) {
+                            backgroundImg.setVisibility(View.VISIBLE);
+//                            rightAdapter.setNewData(null);
+                        }
                     }
 
                     @Override
@@ -526,13 +662,13 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
 
                         multipleRecommItemList.clear();
                         merchantsRecommList.clear();
-//                        rightAdapterRecomm.setNewData(multipleRecommItemList);
-//                        rightAdapterRecomm.notifyDataSetChanged();
+                        rightAdapterRecomm.setNewData(multipleRecommItemList);
+                        rightAdapterRecomm.notifyDataSetChanged();
 
                         merchantsBouList.clear();
-//                        multipleBouItemList.clear();
-//                        rightAdapterBou.setNewData(multipleBouItemList);
-//                        rightAdapterBou.notifyDataSetChanged();
+                        multipleBouItemList.clear();
+                        rightAdapterBou.setNewData(multipleBouItemList);
+                        rightAdapterBou.notifyDataSetChanged();
                         goneloadDialog();
                     }
                 });
@@ -550,7 +686,6 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                 branchDialog.show(getChildFragmentManager());
                 break;
             case R.id.iv_head: //
-                token = SPUtils.getString(getContext(), Constant.SP_ACCESS_TOKEN);
                 if (token == null || TextUtils.isEmpty(token)) {
                     intent = new Intent(getActivity(), LoginActivity.class);
                     startActivity(intent);
@@ -569,7 +704,7 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
 //                button2.setSelected(false);
                 line1.setVisibility(View.GONE);
                 line.setVisibility(View.VISIBLE);
-//                getMerchantsClass();
+                getMerchantsClass();
                 break;
             case R.id.button2:
                 mParam1 = 2;
@@ -577,7 +712,7 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                 line.setVisibility(View.GONE);
 //                button1.setSelected(false);
 //                button2.setSelected(true);
-//                getShopClass();
+                getShopClass();
                 break;
             case R.id.iv_home_nv_right:
                 requestPermission();

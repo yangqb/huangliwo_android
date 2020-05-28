@@ -25,6 +25,7 @@ import com.feitianzhu.huangliwo.shop.adapter.EditCommentAdapter;
 import com.feitianzhu.huangliwo.shop.model.FileModel;
 import com.feitianzhu.huangliwo.shop.request.ApplyReturnGoodsRequest;
 import com.feitianzhu.huangliwo.shop.request.UpLoadFilesRequest;
+import com.feitianzhu.huangliwo.utils.FileUtils;
 import com.feitianzhu.huangliwo.utils.Glide4Engine;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
@@ -53,6 +54,14 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cc.shinichi.library.ImagePreview;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
+import top.zibin.luban.CompressionPredicate;
+import top.zibin.luban.Luban;
+import top.zibin.luban.OnCompressListener;
 
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.huangliwo.common.Constant.USERID;
@@ -301,15 +310,12 @@ public class ApplyReturnGoodsActivity extends BaseActivity {
 
 
     public void upLoadImg() {
-        List<File> fileList = new ArrayList<>();
-        if (allSelect.size() > 0) {
-            for (int i = 0; i < allSelect.size(); i++) {
-                fileList.add(new File(allSelect.get(i)));
-            }
-        }
+        compressImg();
+    }
 
+    public void upFile(List<File> compressList) {
         UpLoadFilesRequest request = new UpLoadFilesRequest();
-        request.fileList = fileList;
+        request.fileList = compressList;
         request.filedir = "order/refund/";
         request.isShowLoading = true;
         request.call(new ApiLifeCallBack<FileModel>() {
@@ -332,6 +338,39 @@ public class ApplyReturnGoodsActivity extends BaseActivity {
                 ToastUtils.show(errorMsg);
             }
         });
+    }
+
+    /*
+     * 图片压缩同步
+     * */
+    public void compressImg() {
+        Observable.just(allSelect).observeOn(Schedulers.io())
+                .map(new Func1<List<String>, List<File>>() {
+                    @Override
+                    public List<File> call(List<String> strings) {
+                        try {
+                            return Luban.with(ApplyReturnGoodsActivity.this)
+                                    .setTargetDir(getPath())
+                                    .load(strings)
+                                    .get();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        return null;
+                    }
+                }).observeOn(AndroidSchedulers.mainThread())
+                .doOnError(new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+
+                    }
+                }).onErrorResumeNext(Observable.empty())
+                .subscribe(new Action1<List<File>>() {
+                    @Override
+                    public void call(List<File> files) {
+                        upFile(files);
+                    }
+                });
     }
 
 
@@ -406,5 +445,14 @@ public class ApplyReturnGoodsActivity extends BaseActivity {
                 mAdapter.notifyDataSetChanged();
             }
         }
+    }
+
+    private String getPath() {
+        String path = Environment.getExternalStorageDirectory() + "/bydby/image/";
+        File file = new File(path);
+        if (file.mkdirs()) {
+            return path;
+        }
+        return path;
     }
 }

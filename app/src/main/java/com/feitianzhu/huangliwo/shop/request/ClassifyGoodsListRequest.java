@@ -18,15 +18,16 @@ public class ClassifyGoodsListRequest extends BaseRequest {
 
     @Override
     public String getAPIName() {
-        return "/fhwl/shop/getGoodsList";
+        return "fhwl/shop/getGoodsList";
     }
 
-    @Override
-    public ParamsBuilder appendParams(ParamsBuilder builder) {
-        return super.appendParams(builder.append("accessToken", accessToken)
-                .append("userId", userId)
-                .append("clsId", clsId));
-    }
+    //
+//    @Override
+//    public ParamsBuilder appendParams(ParamsBuilder builder) {
+//        return super.appendParams(builder.append("accessToken", accessToken)
+//                .append("userId", userId)
+//                .append("clsId", clsId));
+//    }
 
     @Override
     public boolean usePost() {

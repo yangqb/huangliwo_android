@@ -257,6 +257,7 @@ public class MyCenterFragment extends SFFragment {
 
     public void initListener() {
         adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @SingleClick()
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Intent intent;

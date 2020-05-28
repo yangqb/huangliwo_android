@@ -44,26 +44,23 @@ public class MyOilAdapter extends BaseQuickAdapter<OilListBean, BaseViewHolder> 
         token = SPUtils.getString(mContext, Constant.SP_ACCESS_TOKEN);
         helper.setText(R.id.oilname, item.getGasName());
         helper.setText(R.id.oiladdress, item.getGasAddress());
-        helper.setText(R.id.oilprice, "￥" + item.getOilPriceList().get(0).getPriceYfq());
+        //helper.setText(R.id.oilprice, "￥" + item.getPriceYfq());
         String[] split = posion1.split("#");
         String gasAddress = item.getGasAddress();
         double gasAddressLatitude = item.getGasAddressLatitude();
         double gasAddressLongitude = item.getGasAddressLongitude();
         //helper.setText(R.id.oildiscountprice,format);
-        for (int i = 0; i < item.getOilPriceList().size(); i++) {
-            if (item.getOilPriceList().get(i).getOilNo() == Integer.valueOf(split[0])) {
+
                 /*String priceOfficial = item.getOilPriceList().get(i).getPriceOfficial();
                 String priceYfq = item.getOilPriceList().get(i).getPriceYfq();*/
-                String priceOfficial = item.getOilPriceList().get(i).getPriceOfficial();
-                String priceYfq = item.getOilPriceList().get(i).getPriceYfq();
+                String priceOfficial = item.getPriceOfficial();
+                String priceYfq = item.getPriceYfq();
                 double v = Double.valueOf(priceOfficial) - Double.valueOf(priceYfq);
                 java.text.DecimalFormat df = new java.text.DecimalFormat("0.00");
                 String format = df.format(v);
                 helper.setText(R.id.oilprice, "￥" + priceYfq);
                 helper.setText(R.id.oildiscountprice, format);
-                break;
-            }
-        }
+
         helper.setText(R.id.distancetext, item.getDistanceStr());
         ImageView oilnavigation = helper.getView(R.id.oilnavigation);
 
