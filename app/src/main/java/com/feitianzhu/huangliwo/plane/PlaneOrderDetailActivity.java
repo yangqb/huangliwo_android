@@ -4,6 +4,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.CountDownTimer;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -28,6 +29,7 @@ import com.feitianzhu.huangliwo.model.InterOrderDetailInfo;
 import com.feitianzhu.huangliwo.model.PayModel;
 import com.feitianzhu.huangliwo.model.PlaneOrderModel;
 import com.feitianzhu.huangliwo.model.PlaneOrderStatus;
+import com.feitianzhu.huangliwo.shop.ui.OrderDetailActivity;
 import com.feitianzhu.huangliwo.utils.DateUtils;
 import com.feitianzhu.huangliwo.utils.MathUtils;
 import com.feitianzhu.huangliwo.utils.PayUtils;
@@ -50,6 +52,7 @@ import butterknife.OnClick;
 
 public class PlaneOrderDetailActivity extends BaseActivity {
     public static final String ORDER_DATA = "order_data";
+    private long time;
     private PlaneOrderModel orderModel;
     private OrderPassengerAdapter mAdapter;
     private List<DocOrderDetailPassengersInfo> passengers = new ArrayList<>();
@@ -118,6 +121,8 @@ public class PlaneOrderDetailActivity extends BaseActivity {
     RelativeLayout rlLuggageChangeNotice;
     @BindView(R.id.tvStatus)
     TextView tvStatus;
+    @BindView(R.id.tvCountdown)
+    TextView tvCountdown;
 
     @Override
     protected int getLayoutId() {
@@ -264,6 +269,8 @@ public class PlaneOrderDetailActivity extends BaseActivity {
                             goneloadDialog();
                             if (response.body().code == 0) {
                                 docOrderDetailInfo = response.body().result;
+                                time = (docOrderDetailInfo.expiresDate - docOrderDetailInfo.nowTimeStamp) / 1000;
+                                countDownTimer();
                                 goDate.setText(DateUtils.strToStr(docOrderDetailInfo.flightInfo.get(0).deptTime) + DateUtils.strToDate2(DateUtils.strToStr2(docOrderDetailInfo.flightInfo.get(0).deptTime)));
                                 goCity.setText(docOrderDetailInfo.flightInfo.get(0).dptCity + "-" + docOrderDetailInfo.flightInfo.get(0).arrCity);
                                 goDepTime.setText(docOrderDetailInfo.flightInfo.get(0).deptTime.split("-")[3]);
@@ -340,6 +347,8 @@ public class PlaneOrderDetailActivity extends BaseActivity {
                             goneloadDialog();
                             if (response.body().code == 0) {
                                 docOrderDetailInfo = response.body().result;
+                                time = (docOrderDetailInfo.expiresDate - docOrderDetailInfo.nowTimeStamp) / 1000;
+                                countDownTimer();
                                 goDepDate.setText(DateUtils.strToStr(docOrderDetailInfo.flightInfo.get(0).deptTime) + DateUtils.strToDate2(DateUtils.strToStr2(docOrderDetailInfo.flightInfo.get(0).deptTime)));
                                 goCityName.setText(docOrderDetailInfo.flightInfo.get(0).dptCity + "-" + docOrderDetailInfo.flightInfo.get(0).arrCity);
                                 backDepDate.setText(DateUtils.strToStr(docOrderDetailInfo.flightInfo.get(1).deptTime) + DateUtils.strToDate2(DateUtils.strToStr2(docOrderDetailInfo.flightInfo.get(1).deptTime)));
@@ -462,7 +471,11 @@ public class PlaneOrderDetailActivity extends BaseActivity {
                         .asCustom(new CustomTotalPriceInfoView(PlaneOrderDetailActivity.this).setData(priceDetailInfo)).show();
                 break;
             case R.id.pay:
-                payValidate();
+                if (time <= 0) {
+                    ToastUtils.show("订单已关闭，请重新预定机票");
+                } else {
+                    payValidate();
+                }
                 break;
         }
     }
@@ -540,5 +553,38 @@ public class PlaneOrderDetailActivity extends BaseActivity {
                 ToastUtils.show("支付失败");
             }
         });
+    }
+
+    private CountDownTimer countDownTimer;
+
+    public void countDownTimer() {
+        countDownTimer = new CountDownTimer(time * 1000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                if (!PlaneOrderDetailActivity.this.isFinishing()) {
+                    time = millisUntilFinished / 1000;
+                    String formatLongToTimeStr = DateUtils.formatTime2(millisUntilFinished);
+                    tvCountdown.setText("剩" + formatLongToTimeStr + "自动取消订单");
+                }
+            }
+
+            /**
+             *倒计时结束后调用的
+             */
+            @Override
+            public void onFinish() {
+                ToastUtils.show("订单已关闭，请重新预定机票");
+            }
+
+        }.start();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+            countDownTimer = null;
+        }
     }
 }
