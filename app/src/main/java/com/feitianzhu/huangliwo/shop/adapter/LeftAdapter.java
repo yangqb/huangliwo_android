@@ -49,6 +49,10 @@ public class LeftAdapter extends BaseMultiItemQuickAdapter<MultiItemShopAndMerch
         }
     }
 
+    public int getPos() {
+        return pos;
+    }
+
     public void setSelect(int position) {
         this.pos = position;
     }

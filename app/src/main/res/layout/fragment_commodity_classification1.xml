@@ -102,7 +102,9 @@
                 android:id="@+id/nescro"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:fillViewport="true">
+                android:fillViewport="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -113,8 +115,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
-                        android:visibility="gone"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:visibility="gone">
 
                         <ImageView
                             android:id="@+id/img_empty"
@@ -144,6 +146,8 @@
                             android:layout_marginTop="8dp"
                             android:layout_marginEnd="8dp"
                             android:background="@drawable/shop_baground_shape_gray"
+                            android:focusable="true"
+                            android:focusableInTouchMode="true"
                             android:orientation="vertical"
                             android:padding="@dimen/dp_10"
                             android:visibility="gone">
@@ -175,6 +179,8 @@
                             android:layout_marginTop="8dp"
                             android:layout_marginEnd="8dp"
                             android:background="@drawable/shop_baground_shape_gray"
+                            android:focusable="true"
+                            android:focusableInTouchMode="true"
                             android:orientation="vertical"
                             android:padding="@dimen/dp_10"
                             android:visibility="gone">
@@ -208,6 +214,8 @@
                             android:layout_marginEnd="8dp"
                             android:layout_marginBottom="5dp"
                             android:background="@drawable/shop_baground_shape_gray"
+                            android:focusable="true"
+                            android:focusableInTouchMode="true"
                             android:orientation="vertical"
                             android:padding="@dimen/dp_10"
                             android:visibility="gone">

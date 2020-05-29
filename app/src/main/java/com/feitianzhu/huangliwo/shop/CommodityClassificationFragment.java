@@ -21,7 +21,6 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.fragment.SFFragment;
-import com.feitianzhu.huangliwo.core.network.ApiCallBack;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.login.LoginActivity;
@@ -57,7 +56,7 @@ import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.base.Request;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -71,6 +70,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
+import static android.view.ViewGroup.FOCUS_BLOCK_DESCENDANTS;
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.huangliwo.common.Constant.USERID;
 import static com.feitianzhu.huangliwo.login.LoginEvent.EDITOR_INFO;
@@ -234,7 +234,8 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
         rightAdapterBou.notifyDataSetChanged();
 
 
-        mSwipeLayout.setEnableLoadMore(false);
+        mSwipeLayout.setEnableLoadMore(true);
+        mSwipeLayout.setEnableRefresh(true);
 
         if (mParam1 == 1) { //商家
             line1.setVisibility(View.GONE);
@@ -285,7 +286,7 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                             leftAdapter.setNewData(multiItemShopAndMerchantsClass);
                             leftAdapter.notifyDataSetChanged();
                             clsMearchantsId = merchantsClassifyList.get(0).getClsId();
-                            getMerchants(clsMearchantsId);
+                            getMerchants(clsMearchantsId, -1);
                         }
                     }
 
@@ -329,7 +330,7 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                                 leftAdapter.setNewData(multiItemShopAndMerchantsClass);
                                 leftAdapter.notifyDataSetChanged();
                                 clsShopId = shopClassifyLsit.get(0).getClsId();
-                                getShops(clsShopId);
+                                getShops(clsShopId, -1);
                             }
                         }
                     }
@@ -351,11 +352,11 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                 if (leftAdapter.getItemViewType(position) == MultiItemShopAndMerchants.SHOP_TYPE) {
                     //获取当前分类的商品
                     clsShopId = shopClassifyLsit.get(position).getClsId();
-                    getShops(clsShopId);
+                    getShops(clsShopId, -1);
                 } else {
                     //获取当前分类的商品
                     clsMearchantsId = merchantsClassifyList.get(position).getClsId();
-                    getMerchants(clsMearchantsId);
+                    getMerchants(clsMearchantsId, -1);
                 }
             }
         });
@@ -418,20 +419,68 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
 //            }
 //        });
 
-        mSwipeLayout.setOnRefreshListener(new OnRefreshListener() {
+        mSwipeLayout.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
+            @Override
+            public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+
+                mSwipeLayout.finishLoadMore();
+
+                int pos = leftAdapter.getPos();
+
+                if (pos >= leftAdapter.getData().size() - 1) {
+                    leftAdapter.setSelect(pos);
+
+                } else {
+                    pos = pos + 1;
+                    leftAdapter.setSelect(pos);
+
+                }
+                leftAdapter.notifyDataSetChanged();
+                nescro.scrollTo(0, 0);
+                if (mParam1 == 1) {
+                    //获取当前分类的商品
+                    clsMearchantsId = merchantsClassifyList.get(pos).getClsId();
+                    getMerchants(clsMearchantsId, 0);
+                } else {
+                    //获取当前分类的商品
+                    clsShopId = shopClassifyLsit.get(pos).getClsId();
+                    getShops(clsShopId, 0);
+                }
+            }
+
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-                if (mParam1 == 1) {
-                    getMerchants(clsMearchantsId);
+
+
+                int pos = leftAdapter.getPos();
+
+                if (pos <= 0) {
+                    leftAdapter.setSelect(0);
+
                 } else {
-                    getShops(clsShopId);
+                    pos = pos - 1;
+                    leftAdapter.setSelect(pos);
+
+                }
+                leftAdapter.notifyDataSetChanged();
+                mSwipeLayout.finishRefresh();
+
+
+                if (mParam1 == 1) {
+                    //获取当前分类的商品
+                    clsMearchantsId = merchantsClassifyList.get(pos).getClsId();
+                    getMerchants(clsMearchantsId, 1);
+                } else {
+                    //获取当前分类的商品
+                    clsShopId = shopClassifyLsit.get(pos).getClsId();
+                    getShops(clsShopId, 1);
                 }
             }
         });
     }
 
 
-    public void getShops(int clsId) {
+    public void getShops(int clsId, int type) {
 
         OkGo.<LzyResponse<ShopsNew>>post(Urls.GET_SHOP1)
                 .tag(this)
@@ -449,8 +498,9 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                     public void onSuccess(Response<LzyResponse<ShopsNew>> response) {
                         super.onSuccess(getActivity(), "", response.body().code);
                         backgroundImg.setVisibility(View.GONE);
-
-                        mSwipeLayout.finishRefresh();
+                        if (type == 1) {
+                            mSwipeLayout.finishRefresh();
+                        }
                         goneloadDialog();
                         multipleItemList.clear();
                         goodsListBeans.clear();
@@ -520,6 +570,7 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
 
                         rightAdapterBou.setNewData(multipleBouItemList);
                         rightAdapterBou.notifyDataSetChanged();
+
                         if (recommend.getVisibility() == View.GONE &&
                                 hot.getVisibility() == View.GONE &&
                                 boutique.getVisibility() == View.GONE) {
@@ -531,7 +582,11 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                     @Override
                     public void onError(Response<LzyResponse<ShopsNew>> response) {
                         super.onError(response);
-                        mSwipeLayout.finishRefresh(false);
+                        if (type == 0) {
+                            mSwipeLayout.finishLoadMore(false);
+                        } else if (type == 1) {
+                            mSwipeLayout.finishRefresh(false);
+                        }
                         ToastUtils.show(response.body().msg);
 
                         multipleItemList.clear();
@@ -554,7 +609,7 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                 });
     }
 
-    public void getMerchants(int clsId) {
+    public void getMerchants(int clsId, int type) {
         if (Constant.mPoint != null) {
             MyPoint myPoint = Constant.mPoint;
             longitude = myPoint.longitude;
@@ -581,7 +636,11 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                         goneloadDialog();
                         backgroundImg.setVisibility(View.GONE);
 
-                        mSwipeLayout.finishRefresh();
+                        if (type == 0) {
+                            mSwipeLayout.finishLoadMore();
+                        } else if (type == 1) {
+                            mSwipeLayout.finishRefresh();
+                        }
                         multipleItemList.clear();
                         merchantsList.clear();
 
@@ -647,12 +706,17 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                             backgroundImg.setVisibility(View.VISIBLE);
 //                            rightAdapter.setNewData(null);
                         }
+
                     }
 
                     @Override
                     public void onError(Response<LzyResponse<MerchantsInfoNew>> response) {
                         super.onError(response);
-                        mSwipeLayout.finishRefresh(false);
+                        if (type == 0) {
+                            mSwipeLayout.finishLoadMore(false);
+                        } else if (type == 1) {
+                            mSwipeLayout.finishRefresh(false);
+                        }
                         ToastUtils.show(response.body().msg);
 
                         multipleItemList.clear();

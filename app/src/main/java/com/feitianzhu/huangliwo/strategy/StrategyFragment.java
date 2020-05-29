@@ -13,9 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.base.BaseBindingFragment;
-import com.feitianzhu.huangliwo.common.base.fragment.SFFragment;
 import com.feitianzhu.huangliwo.databinding.StrategyFragmentBinding;
 import com.feitianzhu.huangliwo.strategy.adapter.StrategyAdapter;
 
@@ -40,9 +38,12 @@ public class StrategyFragment extends BaseBindingFragment {
         ArrayList<Fragment> fragments = new ArrayList<>();
 
         fragments.add(new StrategyChildFragment());
+
         StrategyChildFragment strategyChildFragment = new StrategyChildFragment();
         strategyChildFragment.type = 1;
         fragments.add(strategyChildFragment);
+
+
         strategyAdapter.list = fragments;
         binding.pager.setAdapter(strategyAdapter);
         binding.tabLayout.setupWithViewPager(binding.pager);
