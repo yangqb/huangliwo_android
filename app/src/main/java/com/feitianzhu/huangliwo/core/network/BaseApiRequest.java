@@ -40,7 +40,10 @@ public abstract class BaseApiRequest extends AbsApiRequest {
      */
     public static final int kErrorTypeNoNetworkConnect = -100003;
 
-
+    /**
+     * 网络连接取消
+     */
+    public static final int kErrorTypeNoNetworkCancel = -100004;
     /**
      * 是否需要网络检测
      * 默认需要,
@@ -67,7 +70,7 @@ public abstract class BaseApiRequest extends AbsApiRequest {
         HttpLogUtil.e(getAPIName(), "onStart");
 
         if (isShowLoading) {
-            LoadingUtil.setLoadingViewShow(this, true);
+            HttpLoadingUtil.setLoadingViewShow(this, true);
         }
         if (listener != null && listener instanceof ApiLifeCallBack) {
             ((ApiLifeCallBack) listener).onStart();
@@ -117,7 +120,6 @@ public abstract class BaseApiRequest extends AbsApiRequest {
         //添加头参数
         req.headers(addHeads(OkGo.getInstance().getCommonHeaders()));
         HttpLogUtil.e(getAPIName(), "设置参数");
-
         return req.adapt(new ObservableBody<String>());
     }
 
@@ -291,7 +293,7 @@ public abstract class BaseApiRequest extends AbsApiRequest {
         HttpLogUtil.e(getAPIName(), "onFinsh");
 
         if (isShowLoading) {
-            LoadingUtil.setLoadingViewShow(this, false);
+            HttpLoadingUtil.setLoadingViewShow(this, false);
         }
         if (listener != null && listener instanceof ApiLifeCallBack) {
             ((ApiLifeCallBack) listener).onFinsh();
@@ -301,8 +303,8 @@ public abstract class BaseApiRequest extends AbsApiRequest {
     @Override
     public void cancelRequest() {
         HttpLogUtil.e(getAPIName(), "cancelRequest");
-
         OkGo.getInstance().cancelTag(requestTag);
+        handleError(kErrorTypeNoNetworkCancel, "请求取消");
     }
 
 

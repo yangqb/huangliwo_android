@@ -37,28 +37,7 @@ public abstract class BaseTravelRequest extends BaseRequest {
 
     @Override
     public void handleError(int errorCode, String errorMsg) {
-        if (errorCode == 100021105) {
-//            登录异常被踢
-            super.handleError(errorCode, errorMsg);
-        } else if (errorCode == 404) {
-            //找不到
-            ToastUtils.show("404 ,网络连接错误  重新加载");
+        super.handleError(errorCode, errorMsg);
 
-        } else if (errorCode == kErrorTypeNoNetworkConnect) {
-            //网络不可用
-            ToastUtils.show("网络未开启,请打开网络");
-
-        } else if (errorCode == kErrorTypeResponseHandleError) {
-            //外部数据处理错误
-            ToastUtils.show("数据处理错误");
-
-        } else if (errorCode == kErrorTypeResponsePraseError) {
-            //json解析错误
-            ToastUtils.show("网络正在开小差 重新加载");
-
-            //json解析错误
-        } else {
-            ToastUtils.show(errorMsg);
-        }
     }
 }

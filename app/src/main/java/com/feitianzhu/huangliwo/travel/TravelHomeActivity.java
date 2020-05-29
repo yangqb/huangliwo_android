@@ -6,6 +6,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
+import com.feitianzhu.huangliwo.core.network.ApiCallBack;
 import com.feitianzhu.huangliwo.core.network.ApiLifeCallBack;
 import com.feitianzhu.huangliwo.login.LoginActivity;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
@@ -165,16 +167,17 @@ public class TravelHomeActivity extends BaseActivity {
                 pageNo++;
                 dinstancenumber = (String) distance.getText();
                 oilnumbersum = (String) oilnumber.getText();
-                initwork(dinstancenumber, oilnumbersum, true);
+                initwork(dinstancenumber, oilnumbersum, true, pageNo);
             }
 
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                 isLoadMore = false;
                 pageNo = 1;
+                myoiladapter.setNewData(null);
                 dinstancenumber = (String) distance.getText();
                 oilnumbersum = (String) oilnumber.getText();
-                initwork(dinstancenumber, oilnumbersum, true);
+                initwork(dinstancenumber, oilnumbersum, true, pageNo);
             }
         });
     }
@@ -187,7 +190,7 @@ public class TravelHomeActivity extends BaseActivity {
             longitude = myPoint.longitude + "";
             latitude = myPoint.latitude + "";
         }
-        initwork(dinstancenumber, oilnumbersum, true);
+        initwork(dinstancenumber, oilnumbersum, true, pageNo);
     }
 
     @OnClick({R.id.distancerela, R.id.oilnumberrela})
@@ -212,7 +215,9 @@ public class TravelHomeActivity extends BaseActivity {
                         String dinstancenumber = dinstance.get(position);
                         distance.setText(dinstancenumber);
                         oilnumbersum = (String) oilnumber.getText();
-                        initwork(dinstancenumber, oilnumbersum, false);
+                        pageNo = 1;
+                        myoiladapter.setNewData(null);
+                        initwork(dinstancenumber, oilnumbersum, false, pageNo);
                         popupWindow.dismiss();
                     }
                 });
@@ -239,7 +244,9 @@ public class TravelHomeActivity extends BaseActivity {
                         String oilnumbersum = strings.get(position);
                         oilnumber.setText(oilnumbersum);
                         dinstancenumber = (String) distance.getText();
-                        initwork(dinstancenumber, oilnumbersum, false);
+                        pageNo = 1;
+                        myoiladapter.setNewData(null);
+                        initwork(dinstancenumber, oilnumbersum, false, pageNo);
                         popupWindow.dismiss();
                     }
                 });
@@ -256,7 +263,9 @@ public class TravelHomeActivity extends BaseActivity {
                         String oilnumbersum = strings1.get(position);
                         oilnumber.setText(oilnumbersum);
                         dinstancenumber = (String) distance.getText();
-                        initwork(dinstancenumber, oilnumbersum, false);
+                        pageNo = 1;
+                        myoiladapter.setNewData(null);
+                        initwork(dinstancenumber, oilnumbersum, false, pageNo);
                         popupWindow.dismiss();
                     }
                 });
@@ -267,23 +276,15 @@ public class TravelHomeActivity extends BaseActivity {
         }
     }
 
-    private void initwork(String dinstancenumber, String oilnumbersum, boolean isLoadM) {
+    private void initwork(String dinstancenumber, String oilnumbersum, boolean isLoadM, int pageNo) {
         kms = dinstancenumber.split("km");
         split = oilnumbersum.split("#");
         oilrecy.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         OilStationsRequest oilStationsRequest = new OilStationsRequest(longitude, latitude, Integer.valueOf(kms[0]), Integer.valueOf(split[0]), pagenum, pageNo);
         oilStationsRequest.userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         oilStationsRequest.accessToken = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
-        oilStationsRequest.call(new ApiLifeCallBack<List<OilListBean>>() {
-            @Override
-            public void onStart() {
-                showloadDialog("");
-            }
-
-            @Override
-            public void onFinsh() {
-                goneloadDialog();
-            }
+        oilStationsRequest.isShowLoading = true;
+        oilStationsRequest.call(new ApiCallBack<List<OilListBean>>() {
 
             @Override
             public void onAPIResponse(List<OilListBean> response) {
@@ -305,14 +306,14 @@ public class TravelHomeActivity extends BaseActivity {
                     myoiladapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                         @Override
                         public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                            OilListBean oilListBean = myoiladapter.getData().get(position);
                             token = SPUtils.getString(TravelHomeActivity.this, Constant.SP_ACCESS_TOKEN);
                             if (token == null || TextUtils.isEmpty(token)) {
                                 Intent intent = new Intent(TravelHomeActivity.this, LoginActivity.class);
                                 startActivity(intent);
                             } else {
                                 if (UserInfoUtils.getUserInfo(TravelHomeActivity.this).getAccountType() != 0) {
-                                    TraveDetailActivity.toTraveDetailActivity(TravelHomeActivity.this, response.get(position));
-
+                                    TraveDetailActivity.toTraveDetailActivity(TravelHomeActivity.this, oilListBean);
                                 } else {
                                     View inflate = getLayoutInflater().inflate(R.layout.oil_dialog_item, null);
                                     TextView dilagimagedimiss = inflate.findViewById(R.id.dilagimagedimiss);
@@ -339,13 +340,19 @@ public class TravelHomeActivity extends BaseActivity {
                             }
                         }
                     });
+                } else {
+                    if (!isLoadMore) {
+                        swipeLayout.finishRefresh(true);
+                    } else {
+                        swipeLayout.finishLoadMore(true);
+                    }
                 }
             }
 
             @Override
             public void onAPIError(int errorCode, String errorMsg) {
+                Log.e("TAG", "onAPIError: ");
                 myoiladapter.setNewData(null);
-                goneloadDialog();
                 if (!isLoadMore) {
                     swipeLayout.finishRefresh(false);
                 } else {

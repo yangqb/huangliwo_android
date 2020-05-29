@@ -11,6 +11,8 @@ import java.util.List;
  * email: 694125155@qq.com
  */
 public class DocOrderDetailInfo implements Serializable {
+    public long expiresDate;//":1585895495000,
+    public long nowTimeStamp;//":1590719796249
     public String message;
     public DocOrderDetail detail;
     public DocOrderDetailXcdInfo xcd;

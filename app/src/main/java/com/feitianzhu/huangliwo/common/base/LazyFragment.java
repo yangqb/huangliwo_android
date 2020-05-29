@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.feitianzhu.huangliwo.common.base.fragment.SFFragment;
+
 /**
  * <pre>
  * 若把初始化内容放到initData实现
@@ -34,7 +36,7 @@ import android.view.ViewGroup;
  * on 2015/11/2.
  * </pre>
  */
-public abstract class LazyFragment extends Fragment {
+public abstract class LazyFragment extends SFFragment {
     /**
      * Fragment title
      */
