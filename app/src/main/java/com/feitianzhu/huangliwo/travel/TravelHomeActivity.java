@@ -6,6 +6,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
+import com.feitianzhu.huangliwo.core.network.ApiCallBack;
 import com.feitianzhu.huangliwo.core.network.ApiLifeCallBack;
 import com.feitianzhu.huangliwo.login.LoginActivity;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
@@ -275,16 +277,7 @@ public class TravelHomeActivity extends BaseActivity {
         oilStationsRequest.userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         oilStationsRequest.accessToken = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         oilStationsRequest.isShowLoading = true;
-        oilStationsRequest.call(new ApiLifeCallBack<List<OilListBean>>() {
-            @Override
-            public void onStart() {
-
-            }
-
-            @Override
-            public void onFinsh() {
-
-            }
+        oilStationsRequest.call(new ApiCallBack<List<OilListBean>>() {
 
             @Override
             public void onAPIResponse(List<OilListBean> response) {
@@ -345,6 +338,7 @@ public class TravelHomeActivity extends BaseActivity {
 
             @Override
             public void onAPIError(int errorCode, String errorMsg) {
+                Log.e("TAG", "onAPIError: ");
                 myoiladapter.setNewData(null);
                 if (!isLoadMore) {
                     swipeLayout.finishRefresh(false);
