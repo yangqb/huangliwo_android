@@ -366,11 +366,6 @@ public class RecommendedFragment extends SFFragment {
                 startActivity(intent);
                 break;*/
             case R.id.rl_travel:
-                if (true) {
-                    BaseWebviewActivity.toBaseWebviewActivity(getActivity(), "https://skylxl.com/javascript/clieck.html");
-//                    BaseWebviewActivity.toBaseWebviewActivity(getActivity(), "http://49.233.14.216/one.html");
-                    return;
-                }
                 token = SPUtils.getString(getContext(), Constant.SP_ACCESS_TOKEN);
                 if (token == null || TextUtils.isEmpty(token)) {
                     Intent intent1 = new Intent(getActivity(), LoginActivity.class);
