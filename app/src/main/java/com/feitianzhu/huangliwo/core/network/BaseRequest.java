@@ -106,7 +106,8 @@ public abstract class BaseRequest extends BaseApiRequest {
             //json解析错误
             ToastUtils.show("网络正在开小差 重新加载");
 
-
+        } else if (errorCode == kErrorTypeNoNetworkCancel) {
+            ToastUtils.show("取消请求");
         } else {
             //未知情况
             ToastUtils.show("网络错误,请重试");

@@ -2,6 +2,7 @@ package com.feitianzhu.huangliwo.common.base.activity;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 
 import butterknife.ButterKnife;
@@ -20,14 +21,13 @@ public abstract class SFActivity extends AbsActivity {
     private Unbinder mBinder;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void initBase() {
+        super.initBase();
 
         if (getLayoutId() != 0) {
             setContentView(getLayoutId());
+            mBinder = ButterKnife.bind(this);
         }
-
-        mBinder = ButterKnife.bind(this);
 
         sfContext = this;
         initBind();
@@ -40,6 +40,7 @@ public abstract class SFActivity extends AbsActivity {
     /**
      * 子类传入一个布局,父类创建View
      */
+    @LayoutRes
     protected abstract int getLayoutId();
 
     @Override

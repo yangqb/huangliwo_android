@@ -28,6 +28,7 @@ import com.feitianzhu.huangliwo.model.UpdateAppModel;
 import com.feitianzhu.huangliwo.shop.CommodityClassificationFragment;
 import com.feitianzhu.huangliwo.shop.CommodityClassificationFragment1;
 import com.feitianzhu.huangliwo.shop.NewYearShoppingActivity;
+import com.feitianzhu.huangliwo.strategy.StrategyFragment;
 import com.feitianzhu.huangliwo.update.UpdateMyDialogFragment;
 import com.feitianzhu.huangliwo.utils.LocationUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
@@ -209,6 +210,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 mImgJiaoliu.setSelected(true);
                 if (mMessageFragment == null) {
                     mMessageFragment = MessageFragment.newInstance("", "");
+//                    mMessageFragment = new StrategyFragment();
                     mTransaction.add(R.id.fragment_container, mMessageFragment);
                 } else {
                     mTransaction.show(mMessageFragment);

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.feitianzhu.huangliwo.view.CornerLinearView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/dp_10"
+    android:layout_marginTop="@dimen/dp_10"
+    android:layout_marginEnd="@dimen/dp_10"
+    android:background="@color/white"
+    android:orientation="vertical"
+
+    app:cornerRadius="@dimen/dp_3">
+
+    <ImageView
+        android:id="@+id/imageView9"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_115"
+        android:src="@color/bank_bg01" />
+
+
+    <TextView
+        android:id="@+id/item_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_5"
+        android:layout_marginTop="@dimen/dp_10"
+        android:maxLines="2"
+        android:text="会员福利会员福利会员
+            福利会员福利"
+        android:textColor="#333333"
+        android:textSize="@dimen/sp_14" />
+
+    <TextView
+        android:id="@+id/content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_5"
+        android:layout_marginTop="@dimen/dp_9"
+        android:layout_marginBottom="@dimen/dp_11"
+        android:lines="1"
+        android:text="2020.05.18"
+        android:textAppearance="?attr/textAppearanceListItem"
+        android:textColor="#999999"
+        android:textSize="@dimen/sp_12" />
+
+
+</com.feitianzhu.huangliwo.view.CornerLinearView>

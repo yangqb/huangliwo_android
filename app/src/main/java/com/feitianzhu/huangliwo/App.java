@@ -12,6 +12,7 @@ import com.feitianzhu.huangliwo.core.log.HttpLogUtil;
 import com.feitianzhu.huangliwo.core.network.networkcheck.NetWorkState;
 import com.feitianzhu.huangliwo.core.network.networkcheck.NetworkConnectChangedReceiver;
 import com.feitianzhu.huangliwo.core.rxbus.RxBus;
+import com.feitianzhu.huangliwo.core.util.CrashHandler;
 import com.feitianzhu.huangliwo.utils.ToastWhiteStyle2;
 import com.feitianzhu.huangliwo.view.MRefreshHeader;
 import com.hjq.toast.ToastUtils;
@@ -129,6 +130,13 @@ public class App extends Application {
             }
         });
         GlobalUtil.setApplication(context);
+
+        CrashHandler.getInstance(this).setCallBack(new CrashHandler.CrashHandlerCallBack() {
+            @Override
+            public void onCatchException(Throwable ex) {
+
+            }
+        });
     }
 
 

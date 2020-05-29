@@ -15,7 +15,6 @@ import com.gyf.immersionbar.ImmersionBar;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.enums.PopupAnimation;
 import com.lxj.xpopup.impl.LoadingPopupView;
-import com.umeng.message.PushAgent;
 
 /**
  * Created by jiangdikai on 2017/9/4.
@@ -26,13 +25,11 @@ import com.umeng.message.PushAgent;
  */
 
 public abstract class AbsActivity extends AppCompatActivity {
-    private MaterialDialog mDialog;
     LoadingPopupView loadingPopup;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        PushAgent.getInstance(this).onAppStart();
         GlobalUtil.setCurrentActivity(this);
 
         if (getOpenImmersionBar() != null) {
@@ -47,6 +44,11 @@ public abstract class AbsActivity extends AppCompatActivity {
                     .navigationBarDarkIcon(true)
                     .init();
         }
+        initBase();
+    }
+
+    public void initBase() {
+
     }
 
     public ImmersionBar getOpenImmersionBar() {
@@ -79,15 +81,6 @@ public abstract class AbsActivity extends AppCompatActivity {
             });
         }
     }
-
-//    protected void showloadDialogText(String title) {
-//        mDialog = new MaterialDialog.Builder(this)
-//                .content(title)
-//                .progress(true, 0)
-//                .progressIndeterminateStyle(false)
-//                .show();
-//    }
-
 
     @Override
     protected void onDestroy() {

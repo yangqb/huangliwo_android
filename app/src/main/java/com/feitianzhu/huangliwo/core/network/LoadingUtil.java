@@ -11,6 +11,7 @@ import java.util.HashMap;
 
 /**
  * Created by bch on 2020/5/15
+ * 加载进度圈旋转
  */
 public class LoadingUtil {
     /**
@@ -18,26 +19,19 @@ public class LoadingUtil {
      */
     private static int usefulCount = 0;
     private static LoadingPopupView loadingPopup;
-    private static HashMap<String, BaseApiRequest> map = new HashMap<>();
 
-    public static void setLoadingViewShow(Boolean show) {
-        setLoadingViewShowWithContent(null, show, "加载中");
-    }
 
-    synchronized public static void setLoadingViewShowWithContent(BaseApiRequest baseApiRequest, Boolean show, String content) {
+    synchronized public static void setLoadingViewShowWithContent(Boolean show, String content) {
         if (show) {
             usefulCount++;
-            loadingPopup = (LoadingPopupView) new XPopup.Builder(GlobalUtil.getCurrentActivity())
-                    .hasShadowBg(false)
-                    .dismissOnTouchOutside(false)
-                    .popupAnimation(PopupAnimation.NoAnimation)
-                    .asLoading()
-                    .bindLayout(R.layout.layout_loading_view)
-                    .show();
-            if (baseApiRequest != null) {
-                if (!map.containsKey(baseApiRequest.requestTag)) {
-                    map.put(baseApiRequest.requestTag, baseApiRequest);
-                }
+            if (loadingPopup == null) {
+                loadingPopup = (LoadingPopupView) new XPopup.Builder(GlobalUtil.getCurrentActivity())
+                        .hasShadowBg(false)
+                        .dismissOnTouchOutside(false)
+                        .popupAnimation(PopupAnimation.NoAnimation)
+                        .asLoading()
+                        .bindLayout(R.layout.layout_loading_view)
+                        .show();
             }
         } else {
             usefulCount--;
@@ -48,32 +42,17 @@ public class LoadingUtil {
 
                     }
                 });
-                //取消进度条取消展示,清空
-                if (baseApiRequest != null) {
-                    if (!map.isEmpty()) {
-                        map.clear();
-                    }
-                }
-                //TODO 如何处理请求 2020-5-27
-            } else {
-                if (baseApiRequest != null) {
-                    if (map.containsKey(baseApiRequest.requestTag)) {
-//                        ToastUtils.show("取消请求");
-                        map.remove(baseApiRequest.requestTag);
-                    }
-//        loadingPopup
-                    //TODO 加载条 添加退出按钮 ,点击取消所有请求 2020-5-15
-                    //TODO 取消请求时要有提示，最好调用请求的回调，传递到顶层2020-5-27
-                }
+                loadingPopup = null;
             }
-
         }
-
-
     }
 
-    public static void setLoadingViewShow(BaseApiRequest baseApiRequest, Boolean show) {
-        setLoadingViewShowWithContent(baseApiRequest, show, "加载中");
+    public static void setLoadingViewShow(Boolean show, String c) {
+        setLoadingViewShowWithContent(show, c);
+    }
+
+    public static void setLoadingViewShow(Boolean show) {
+        setLoadingViewShowWithContent(show, "加载中");
     }
 
 }
