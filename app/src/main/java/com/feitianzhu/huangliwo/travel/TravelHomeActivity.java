@@ -167,16 +167,17 @@ public class TravelHomeActivity extends BaseActivity {
                 pageNo++;
                 dinstancenumber = (String) distance.getText();
                 oilnumbersum = (String) oilnumber.getText();
-                initwork(dinstancenumber, oilnumbersum, true);
+                initwork(dinstancenumber, oilnumbersum, true,pageNo);
             }
 
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                 isLoadMore = false;
                 pageNo = 1;
+                myoiladapter.setNewData(null);
                 dinstancenumber = (String) distance.getText();
                 oilnumbersum = (String) oilnumber.getText();
-                initwork(dinstancenumber, oilnumbersum, true);
+                initwork(dinstancenumber, oilnumbersum, true,pageNo);
             }
         });
     }
@@ -189,7 +190,7 @@ public class TravelHomeActivity extends BaseActivity {
             longitude = myPoint.longitude + "";
             latitude = myPoint.latitude + "";
         }
-        initwork(dinstancenumber, oilnumbersum, true);
+        initwork(dinstancenumber, oilnumbersum, true,pageNo);
     }
 
     @OnClick({R.id.distancerela, R.id.oilnumberrela})
@@ -214,7 +215,9 @@ public class TravelHomeActivity extends BaseActivity {
                         String dinstancenumber = dinstance.get(position);
                         distance.setText(dinstancenumber);
                         oilnumbersum = (String) oilnumber.getText();
-                        initwork(dinstancenumber, oilnumbersum, false);
+                        pageNo = 1;
+                        myoiladapter.setNewData(null);
+                        initwork(dinstancenumber, oilnumbersum, false,pageNo);
                         popupWindow.dismiss();
                     }
                 });
@@ -241,7 +244,9 @@ public class TravelHomeActivity extends BaseActivity {
                         String oilnumbersum = strings.get(position);
                         oilnumber.setText(oilnumbersum);
                         dinstancenumber = (String) distance.getText();
-                        initwork(dinstancenumber, oilnumbersum, false);
+                        pageNo = 1;
+                        myoiladapter.setNewData(null);
+                        initwork(dinstancenumber, oilnumbersum, false,pageNo);
                         popupWindow.dismiss();
                     }
                 });
@@ -258,7 +263,9 @@ public class TravelHomeActivity extends BaseActivity {
                         String oilnumbersum = strings1.get(position);
                         oilnumber.setText(oilnumbersum);
                         dinstancenumber = (String) distance.getText();
-                        initwork(dinstancenumber, oilnumbersum, false);
+                        pageNo = 1;
+                        myoiladapter.setNewData(null);
+                        initwork(dinstancenumber, oilnumbersum, false,pageNo);
                         popupWindow.dismiss();
                     }
                 });
@@ -269,7 +276,7 @@ public class TravelHomeActivity extends BaseActivity {
         }
     }
 
-    private void initwork(String dinstancenumber, String oilnumbersum, boolean isLoadM) {
+    private void initwork(String dinstancenumber, String oilnumbersum, boolean isLoadM,int pageNo) {
         kms = dinstancenumber.split("km");
         split = oilnumbersum.split("#");
         oilrecy.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
