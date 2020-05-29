@@ -352,7 +352,6 @@ public class TravelHomeActivity extends BaseActivity {
             @Override
             public void onAPIError(int errorCode, String errorMsg) {
                 Log.e("TAG", "onAPIError: ");
-                myoiladapter.setNewData(null);
                 if (!isLoadMore) {
                     swipeLayout.finishRefresh(false);
                 } else {
