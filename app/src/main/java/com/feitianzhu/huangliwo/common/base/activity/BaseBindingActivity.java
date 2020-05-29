@@ -15,12 +15,11 @@ import android.view.View;
 public abstract class BaseBindingActivity extends AbsActivity {
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void initBase() {
+        super.initBase();
         bindingView();
         init();
     }
-
 
     public void onClickBack(View v) {
         finish();

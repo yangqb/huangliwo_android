@@ -274,15 +274,16 @@ public class TravelHomeActivity extends BaseActivity {
         OilStationsRequest oilStationsRequest = new OilStationsRequest(longitude, latitude, Integer.valueOf(kms[0]), Integer.valueOf(split[0]), pagenum, pageNo);
         oilStationsRequest.userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         oilStationsRequest.accessToken = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
+        oilStationsRequest.isShowLoading = true;
         oilStationsRequest.call(new ApiLifeCallBack<List<OilListBean>>() {
             @Override
             public void onStart() {
-                showloadDialog("");
+
             }
 
             @Override
             public void onFinsh() {
-                goneloadDialog();
+
             }
 
             @Override
@@ -345,7 +346,6 @@ public class TravelHomeActivity extends BaseActivity {
             @Override
             public void onAPIError(int errorCode, String errorMsg) {
                 myoiladapter.setNewData(null);
-                goneloadDialog();
                 if (!isLoadMore) {
                     swipeLayout.finishRefresh(false);
                 } else {
