@@ -269,8 +269,8 @@ public class PlaneOrderDetailActivity extends BaseActivity {
                             goneloadDialog();
                             if (response.body().code == 0) {
                                 docOrderDetailInfo = response.body().result;
-                                //time = (docOrderDetailInfo.expiresDate - docOrderDetailInfo.nowTimeStamp) / 1000;
-                                //countDownTimer();
+                                time = (docOrderDetailInfo.expiresDate - docOrderDetailInfo.nowTimeStamp) / 1000;
+                                countDownTimer();
                                 goDate.setText(DateUtils.strToStr(docOrderDetailInfo.flightInfo.get(0).deptTime) + DateUtils.strToDate2(DateUtils.strToStr2(docOrderDetailInfo.flightInfo.get(0).deptTime)));
                                 goCity.setText(docOrderDetailInfo.flightInfo.get(0).dptCity + "-" + docOrderDetailInfo.flightInfo.get(0).arrCity);
                                 goDepTime.setText(docOrderDetailInfo.flightInfo.get(0).deptTime.split("-")[3]);
@@ -347,8 +347,8 @@ public class PlaneOrderDetailActivity extends BaseActivity {
                             goneloadDialog();
                             if (response.body().code == 0) {
                                 docOrderDetailInfo = response.body().result;
-                                //time = (docOrderDetailInfo.expiresDate - docOrderDetailInfo.nowTimeStamp) / 1000;
-                                //countDownTimer();
+                                time = (docOrderDetailInfo.expiresDate - docOrderDetailInfo.nowTimeStamp) / 1000;
+                                countDownTimer();
                                 goDepDate.setText(DateUtils.strToStr(docOrderDetailInfo.flightInfo.get(0).deptTime) + DateUtils.strToDate2(DateUtils.strToStr2(docOrderDetailInfo.flightInfo.get(0).deptTime)));
                                 goCityName.setText(docOrderDetailInfo.flightInfo.get(0).dptCity + "-" + docOrderDetailInfo.flightInfo.get(0).arrCity);
                                 backDepDate.setText(DateUtils.strToStr(docOrderDetailInfo.flightInfo.get(1).deptTime) + DateUtils.strToDate2(DateUtils.strToStr2(docOrderDetailInfo.flightInfo.get(1).deptTime)));
@@ -471,12 +471,11 @@ public class PlaneOrderDetailActivity extends BaseActivity {
                         .asCustom(new CustomTotalPriceInfoView(PlaneOrderDetailActivity.this).setData(priceDetailInfo)).show();
                 break;
             case R.id.pay:
-               /* if (time <= 0) {
+               if (time <= 0) {
                     ToastUtils.show("订单已关闭，请重新预定机票");
                 } else {
                     payValidate();
-                }*/
-                payValidate();
+                }
                 break;
         }
     }

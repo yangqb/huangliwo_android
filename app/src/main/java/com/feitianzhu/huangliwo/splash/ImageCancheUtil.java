@@ -15,11 +15,12 @@ import com.feitianzhu.huangliwo.http.MD5Utils;
 import java.io.File;
 import java.io.FileOutputStream;
 
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
 
 /**
@@ -80,12 +81,11 @@ public class ImageCancheUtil {
     }
 
     private static void saveBitmap(Bitmap bitmap, String filename, ApiCallBack<String> apiCallBack) {
-
         Observable.just(1)
                 .subscribeOn(Schedulers.io())
-                .map(new Func1<Integer, String>() {
+                .map(new Function<Integer, String>() {
                     @Override
-                    public String call(Integer integer) {
+                    public String apply(Integer integer) throws Exception {
                         String filePath = getFilePath(filename);
                         File file = new File(filePath);
                         try {
@@ -104,31 +104,34 @@ public class ImageCancheUtil {
                             e.printStackTrace();
                             return null;
                         }
-
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())  //切换到主线程
-                .subscribe(new Subscriber<String>() {
-                               @Override
-                               public void onCompleted() {
-                               }
+                .subscribe(new Observer<String>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
 
-                               @Override
-                               public void onError(Throwable e) {
-                                   apiCallBack.onAPIError(0, "");
-                               }
+                    }
 
-                               @Override
-                               public void onNext(String o) {
-                                   if (o == null) {
-                                       apiCallBack.onAPIError(0, "");
-                                   } else {
-                                       apiCallBack.onAPIResponse(o);
-                                   }
-                               }
-                           }
+                    @Override
+                    public void onNext(String s) {
+                        if (s == null) {
+                            apiCallBack.onAPIError(0, "");
+                        } else {
+                            apiCallBack.onAPIResponse(s);
+                        }
+                    }
 
-                );
+                    @Override
+                    public void onError(Throwable e) {
+                        apiCallBack.onAPIError(0, "");
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
 }
