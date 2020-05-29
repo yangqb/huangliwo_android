@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.multidex.MultiDex;
+import android.widget.Toast;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.feitianzhu.huangliwo.analyze.UMengAnalyze;
@@ -15,8 +16,11 @@ import com.feitianzhu.huangliwo.core.rxbus.RxBus;
 import com.feitianzhu.huangliwo.utils.ToastWhiteStyle2;
 import com.feitianzhu.huangliwo.view.MRefreshHeader;
 import com.hjq.toast.ToastUtils;
+import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMOptions;
+import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.easeui.EaseUI;
 import com.hyphenate.push.EMPushConfig;
 import com.lzy.okgo.OkGo;
@@ -125,10 +129,35 @@ public class App extends Application {
         EMPushConfig.Builder builder = new EMPushConfig.Builder(context);
         builder.enableVivoPush();
         options.setPushConfig(builder.build());
-
-
         initOkgo();
         initPush();
+
+        EMMessage message = EMMessage.createSendMessage(EMMessage.Type.TXT);
+        EMTextMessageBody txtBody = new EMTextMessageBody("test");
+        message.setTo("13671192850");
+// 设置自定义扩展字段
+        message.setAttribute("em_force_notification", true);
+// 设置消息回调
+        message.setMessageStatusCallback(new EMCallBack() {
+            @Override
+            public void onSuccess() {
+                Toast.makeText(context,"成功",Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onError(int i, String s) {
+
+            }
+
+            @Override
+            public void onProgress(int i, String s) {
+
+            }
+        });
+// 发送消息
+        EMClient.getInstance().chatManager().sendMessage(message);
+
+
         AutoSizeConfig.getInstance().setCustomFragment(true);//屏幕适配
         SDKInitializer.initialize(this);
         ToastUtils.init(this);

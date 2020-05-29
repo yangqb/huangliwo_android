@@ -20,7 +20,6 @@ public class ImActivity extends BaseActivity {
     @Override
     protected void initView() {
         activityInstance = this;
-
         //use EaseChatFratFragment
         chatFragment = new EaseChatFragment();
         //pass parameters to chat fragment

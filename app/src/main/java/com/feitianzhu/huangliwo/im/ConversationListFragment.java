@@ -59,10 +59,10 @@ public class ConversationListFragment extends EaseConversationListFragment {
                         }else{
                             intent.putExtra(Constant.EXTRA_CHAT_TYPE, Constant.CHATTYPE_GROUP);
                         }*/
-                        
+
                     }
                     // it's single chat
-                    intent.putExtra(EaseConstant.EXTRA_USER_ID, "13671192850");
+                    intent.putExtra(EaseConstant.EXTRA_USER_ID, "14701776629");
                     startActivity(intent);
                 }
             }
