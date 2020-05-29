@@ -48,6 +48,30 @@
         <activity android:name=".shop.Customerservice" />
         <activity android:name=".travel.TraveFormActivity" />
         <activity android:name=".travel.TraveDetailActivity" /> <!-- 添加provider -->
+
+        <service
+            android:name="com.vivo.push.sdk.service.CommandClientService"
+            android:exported="true" />
+        <activity
+            android:name="com.vivo.push.sdk.LinkProxyClientActivity"
+            android:exported="false"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <!--推送配置项-->
+        <meta-data
+            android:name="com.vivo.push.api_key"
+            android:value="9f4487969a20bfa150d1ffe8f7f99d43" />
+        <meta-data
+            android:name="com.vivo.push.app_id"
+            android:value="103906765" />
+
+        <receiver android:name="com.hyphenate.push.platform.vivo.EMVivoMsgReceiver" >
+            <intent-filter>
+                <!-- 接收 push 消息 -->
+                <action android:name="com.vivo.pushclient.action.RECEIVE" />
+            </intent-filter>
+        </receiver>
+
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.feitianzhu.huangliwo.fileprovider"
@@ -752,7 +776,7 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" /> <!-- 设置环信应用的AppKey -->
         <meta-data
             android:name="EASEMOB_APPKEY"
-            android:value="1125200507181191#bianlidabenying" /> <!-- 声明SDK所需的service SDK核心功能 -->
+            android:value="1108200528098080#bianlidabenying" /> <!-- 声明SDK所需的service SDK核心功能 -->
         <service
             android:name="com.hyphenate.chat.EMChatService"
             android:exported="true" />

@@ -18,6 +18,7 @@ import com.hjq.toast.ToastUtils;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMOptions;
 import com.hyphenate.easeui.EaseUI;
+import com.hyphenate.push.EMPushConfig;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheEntity;
 import com.lzy.okgo.cache.CacheMode;
@@ -120,6 +121,12 @@ public class App extends Application {
         EMClient.getInstance().setDebugMode(true);
 //EaseUI初始化成功之后再去调用注册消息监听的代码
         ZXingLibrary.initDisplayOpinion(this);
+        //vivo推送
+        EMPushConfig.Builder builder = new EMPushConfig.Builder(context);
+        builder.enableVivoPush();
+        options.setPushConfig(builder.build());
+
+
         initOkgo();
         initPush();
         AutoSizeConfig.getInstance().setCustomFragment(true);//屏幕适配
