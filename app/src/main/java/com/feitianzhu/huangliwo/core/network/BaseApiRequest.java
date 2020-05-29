@@ -11,16 +11,20 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.convert.StringConvert;
 import com.lzy.okgo.exception.HttpException;
 import com.lzy.okgo.request.base.Request;
-import com.lzy.okrx.adapter.ObservableBody;
+import com.lzy.okrx2.adapter.ObservableBody;
+
+import org.reactivestreams.Subscription;
 
 import java.util.Map;
 
-import rx.Observable;
-import rx.Subscriber;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by bch on 2020/5/11
@@ -130,64 +134,70 @@ public abstract class BaseApiRequest extends AbsApiRequest {
      * @return
      */
     @Override
-    public Subscription call(ApiCallBack listener) {
+    public void call(ApiCallBack listener) {
         this.listener = listener;
         NetWorkState networkStatus = NetworkConnectChangedReceiver.getNetworkStatus(GlobalUtil.getApplication());
         //检查网络
         if (RequestCheckNetwork && networkStatus == NetWorkState.NONE) {
             handleError(kErrorTypeNoNetworkConnect, "网络中断");
-            return null;
+            //return null;
         }
         try {
             //请求流程处理
-            sub = Observable.just(usePost())                   //观察判断是否使用http post
-                    .map(new Func1<Boolean, Request>() {
+           Observable.just(usePost())                   //观察判断是否使用http post
+                    .map(new Function<Boolean, Request>() {
                         @Override
-                        public Request call(Boolean aBoolean) {
+                        public Request apply(Boolean aBoolean) throws Exception {
                             //返回okgo request对象
                             return getRequest(aBoolean);
                         }
-                    })
-                    .flatMap(new Func1<Request, Observable<?>>() {
+                    }).flatMap(new Function<Request, ObservableSource<?>>() {
+                @Override
+                public ObservableSource<?> apply(Request request) throws Exception {
+                    //设置请求参数 https策略
+                    return getRequestObservable(request);
+                }
+            })
+                    .doOnSubscribe(new Consumer<Disposable>() {
                         @Override
-                        public Observable<?> call(Request request) {
-                            //设置请求参数 https策略
-                            return getRequestObservable(request);
+                        public void accept(Disposable disposable) throws Exception {
+                            onStart();//发起请求前 通知callback
                         }
                     })
-                    .doOnSubscribe(() -> onStart())  //发起请求前 通知callback
-                    .observeOn(Schedulers.io())                 //io线程
-                    .map(new Func1<Object, BaseApiResponse>() {
+                    .observeOn(Schedulers.io()) //io线程
+                    .map(new Function<Object, BaseApiResponse>() {
                         @Override
-                        public BaseApiResponse call(Object o) {
+                        public BaseApiResponse apply(Object o) throws Exception {
                             //解析json
                             return praseJson((String) o);
                         }
                     })
                     .map(baseRsq -> praseResponse(baseRsq))      //解析base对象（errorcode extra 字段）
                     .observeOn(AndroidSchedulers.mainThread())  //切换到主线程
-                    .subscribe(new Subscriber<Object>() {
+                    .subscribe(new Observer<Object>() {
                         @Override
-                        public void onCompleted() {
-
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-                            handleError_private(e);
+                        public void onSubscribe(Disposable d) {
 
                         }
 
                         @Override
                         public void onNext(Object o) {
                             handleRsponse_private(o);
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            handleError_private(e);
+                        }
+
+                        @Override
+                        public void onComplete() {
 
                         }
                     });
         } catch (Exception error) {
             handleError_private(error);
         }
-        return sub;
 
     }
 
