@@ -305,14 +305,14 @@ public class TravelHomeActivity extends BaseActivity {
                     myoiladapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                         @Override
                         public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                            OilListBean oilListBean = myoiladapter.getData().get(position);
                             token = SPUtils.getString(TravelHomeActivity.this, Constant.SP_ACCESS_TOKEN);
                             if (token == null || TextUtils.isEmpty(token)) {
                                 Intent intent = new Intent(TravelHomeActivity.this, LoginActivity.class);
                                 startActivity(intent);
                             } else {
                                 if (UserInfoUtils.getUserInfo(TravelHomeActivity.this).getAccountType() != 0) {
-                                    TraveDetailActivity.toTraveDetailActivity(TravelHomeActivity.this, response.get(position));
-
+                                    TraveDetailActivity.toTraveDetailActivity(TravelHomeActivity.this, oilListBean);
                                 } else {
                                     View inflate = getLayoutInflater().inflate(R.layout.oil_dialog_item, null);
                                     TextView dilagimagedimiss = inflate.findViewById(R.id.dilagimagedimiss);
