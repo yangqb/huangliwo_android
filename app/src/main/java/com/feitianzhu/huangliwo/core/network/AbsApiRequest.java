@@ -2,9 +2,6 @@ package com.feitianzhu.huangliwo.core.network;
 
 import com.alibaba.fastjson.TypeReference;
 import com.lzy.okgo.model.HttpHeaders;
-
-import rx.Subscription;
-
 /**
  * Created by bch on 2020/5/11
  */
@@ -102,7 +99,7 @@ public abstract class AbsApiRequest {
      * @param listener
      * @return
      */
-    public abstract Subscription call(ApiCallBack listener);
+    public abstract void call(ApiCallBack listener);
 
     /**
      * 错误处理

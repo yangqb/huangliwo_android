@@ -54,17 +54,13 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cc.shinichi.library.ImagePreview;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
-import top.zibin.luban.CompressionPredicate;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 import top.zibin.luban.Luban;
-import top.zibin.luban.OnCompressListener;
-
-import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
-import static com.feitianzhu.huangliwo.common.Constant.USERID;
 
 /**
  * package name: com.feitianzhu.huangliwo.shop.ui
@@ -80,6 +76,7 @@ public class ApplyReturnGoodsActivity extends BaseActivity {
     private List<MultiItemComment> multiItemCommentList = new ArrayList<>();
     private EditCommentAdapter mAdapter;
     private MediaStoreCompat mMediaStoreCompat;
+    private CompositeDisposable mDisposable;
     private String[] strings = new String[]{"七天无理由退货", "收到商品破损", "商品错发/漏发", "商品需要维修", "收到商品与描述不符", "商品质量问题", "其他"};
     private String userId;
     private String token;
@@ -118,6 +115,7 @@ public class ApplyReturnGoodsActivity extends BaseActivity {
         recyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
 
+        mDisposable = new CompositeDisposable();
         initListener();
     }
 
@@ -344,34 +342,31 @@ public class ApplyReturnGoodsActivity extends BaseActivity {
      * 图片压缩同步
      * */
     public void compressImg() {
-        Observable.just(allSelect).observeOn(Schedulers.io())
-                .map(new Func1<List<String>, List<File>>() {
+        mDisposable.add(Observable.just(allSelect).observeOn(Schedulers.io())
+                .map(new Function<List<String>, List<File>>() {
                     @Override
-                    public List<File> call(List<String> strings) {
-                        try {
-                            return Luban.with(ApplyReturnGoodsActivity.this)
-                                    .ignoreBy(1024)
-                                    .setTargetDir(getPath())
-                                    .load(strings)
-                                    .get();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        return null;
+                    public List<File> apply(List<String> strings) throws Exception {
+                        return Luban.with(ApplyReturnGoodsActivity.this)
+                                .ignoreBy(1024)
+                                .setTargetDir(getPath())
+                                .load(strings)
+                                .get();
                     }
-                }).observeOn(AndroidSchedulers.mainThread())
-                .doOnError(new Action1<Throwable>() {
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnError(new Consumer<Throwable>() {
                     @Override
-                    public void call(Throwable throwable) {
+                    public void accept(Throwable throwable) throws Exception {
 
                     }
-                }).onErrorResumeNext(Observable.empty())
-                .subscribe(new Action1<List<File>>() {
+                })
+                .onErrorResumeNext(Observable.empty())
+                .subscribe(new Consumer<List<File>>() {
                     @Override
-                    public void call(List<File> files) {
+                    public void accept(List<File> files) throws Exception {
                         upFile(files);
                     }
-                });
+                }));
     }
 
 
@@ -455,5 +450,13 @@ public class ApplyReturnGoodsActivity extends BaseActivity {
             return path;
         }
         return path;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mDisposable != null) {
+            mDisposable.clear();
+        }
     }
 }
