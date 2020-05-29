@@ -91,7 +91,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     LinearLayout mLyMe;
     private HomeFragment mHomeFragment;
     private CommodityClassificationFragment mShopFragment;
-    private StrategyFragment mMessageFragment;
+    private MessageFragment mMessageFragment;
     private MyCenterFragment mMeFragment;
     private FragmentTransaction mTransaction;
     private ObjectAnimator animator;
@@ -209,8 +209,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 mTxtJiaoliu.setSelected(true);
                 mImgJiaoliu.setSelected(true);
                 if (mMessageFragment == null) {
-//                    mMessageFragment = MessageFragment.newInstance("", "");
-                    mMessageFragment = new StrategyFragment();
+                    mMessageFragment = MessageFragment.newInstance("", "");
+//                    mMessageFragment = new StrategyFragment();
                     mTransaction.add(R.id.fragment_container, mMessageFragment);
                 } else {
                     mTransaction.show(mMessageFragment);

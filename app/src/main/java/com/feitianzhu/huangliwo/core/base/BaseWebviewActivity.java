@@ -4,26 +4,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.databinding.ViewDataBinding;
 import android.graphics.Bitmap;
-import android.os.Build;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.DownloadListener;
 import android.webkit.JavascriptInterface;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.activity.BaseBindingActivity;
@@ -36,10 +25,8 @@ import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.StringUtils;
 import com.google.gson.Gson;
 import com.hjq.toast.ToastUtils;
-
 import java.util.HashMap;
-import java.util.Locale;
-import java.util.Random;
+
 
 public class BaseWebviewActivity extends BaseBindingActivity {
 
@@ -58,6 +45,7 @@ public class BaseWebviewActivity extends BaseBindingActivity {
     @Override
     public void bindingView() {
         dataBinding = DataBindingUtil.setContentView(this, R.layout.activity_base_webview);
+        dataBinding.setViewModel(this);
         WebView webview = dataBinding.webView;
 
         webview.onResume();
@@ -81,8 +69,9 @@ public class BaseWebviewActivity extends BaseBindingActivity {
 //        url += "&platform=Android&language=" + language;
 //        url += extraParam();
         HashMap<String, String> stringStringHashMap = new HashMap<>();
-        stringStringHashMap.put("", SPUtils.getString(getApplication(), Constant.SP_ACCESS_TOKEN));
-        stringStringHashMap.put("", SPUtils.getString(getApplication(), Constant.SP_LOGIN_USERID));
+        stringStringHashMap.put("bldbyapp", "1");
+        stringStringHashMap.put("token", SPUtils.getString(getApplication(), Constant.SP_ACCESS_TOKEN));
+        stringStringHashMap.put("userId", SPUtils.getString(getApplication(), Constant.SP_LOGIN_USERID));
         webview.loadUrl(url, stringStringHashMap);
         webview.addJavascriptInterface(this, "jsBridge");
 
@@ -105,6 +94,12 @@ public class BaseWebviewActivity extends BaseBindingActivity {
         });
 
         webview.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public void onReceivedTitle(WebView view, String title) {
+                super.onReceivedTitle(view, title);
+                dataBinding.titleName.setText(title);
+            }
+
             @Override
             public boolean onJsAlert(WebView view, String url, String message, final JsResult result) {
                 if (BaseWebviewActivity.this == null) {
@@ -148,6 +143,7 @@ public class BaseWebviewActivity extends BaseBindingActivity {
 //外部浏览器
             SkipToUtil.toBrowser(this, baseWebviewModel.url);
         } else {
+            //    bly://
             Intent intent;
             switch (baseWebviewModel.url) {
                 case "goodsDetail":

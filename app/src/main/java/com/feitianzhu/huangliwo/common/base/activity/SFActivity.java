@@ -21,8 +21,8 @@ public abstract class SFActivity extends AbsActivity {
     private Unbinder mBinder;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void initBase() {
+        super.initBase();
 
         if (getLayoutId() != 0) {
             setContentView(getLayoutId());

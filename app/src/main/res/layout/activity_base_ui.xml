@@ -1,19 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
 
         <variable
-            name="viewModel"
-            type="com.feitianzhu.huangliwo.core.base.BaseWebviewActivity" />
+            name="viewmodel"
+            type="com.feitianzhu.huangliwo.common.base.activity.BaseUiActivity" />
     </data>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
         android:orientation="vertical">
 
         <RelativeLayout
@@ -26,7 +23,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:onClick="@{viewModel::onClickBack}"
+                android:layout_marginStart="@dimen/dp_10"
                 android:padding="@dimen/dp_10">
 
                 <ImageView
@@ -130,11 +127,12 @@
 
         </RelativeLayout>
 
-        <WebView
-            android:id="@+id/webView"
+        <LinearLayout
+            android:id="@+id/ll_content"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-
+        </LinearLayout>
     </LinearLayout>
 </layout>
