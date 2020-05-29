@@ -120,7 +120,6 @@ public abstract class BaseApiRequest extends AbsApiRequest {
         //添加头参数
         req.headers(addHeads(OkGo.getInstance().getCommonHeaders()));
         HttpLogUtil.e(getAPIName(), "设置参数");
-
         return req.adapt(new ObservableBody<String>());
     }
 
