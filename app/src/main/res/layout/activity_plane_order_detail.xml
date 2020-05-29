@@ -77,14 +77,14 @@
                         android:textSize="18sp" />
 
                     <TextView
+                        android:id="@+id/tvCountdown"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_toRightOf="@id/tvStatus"
-                        android:text="剩 05:50:68 自动取消订单"
+                        android:text=""
                         android:textColor="@color/white"
-                        android:textSize="13sp"
-                        android:visibility="gone" />
+                        android:textSize="13sp" />
 
                     <TextView
                         android:id="@+id/price"

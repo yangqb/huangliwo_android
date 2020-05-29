@@ -340,6 +340,7 @@ public class EditCommentsActivity extends BaseActivity {
                     public List<File> call(List<String> strings) {
                         try {
                             return Luban.with(EditCommentsActivity.this)
+                                    .ignoreBy(1024)
                                     .setTargetDir(getPath())
                                     .load(strings)
                                     .get();
