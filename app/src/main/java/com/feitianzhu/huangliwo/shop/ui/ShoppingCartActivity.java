@@ -394,7 +394,7 @@ public class ShoppingCartActivity extends BaseActivity {
     public void showSpecDialog(int pos) {
         /* //商品规格
          */
-        new CustomSpecificationDialogtwo(this).setDate(specifications,shoppingCartModels)
+        new CustomSpecificationDialogtwo(this).setDate(specifications, shoppingCartModels.get(pos))
                 .setNegativeButton(new CustomSpecificationDialogtwo.OnOkClickListener() {
                     @Override
                     public void onOkClick(List<ProductParameters.GoodsSpecifications> data) {

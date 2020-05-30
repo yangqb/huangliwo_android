@@ -316,7 +316,7 @@ public class TraveDetailActivity extends BaseBindingActivity {
                                         intent_gdmap.setAction("android.intent.action.VIEW");
                                         intent_gdmap.setPackage("com.autonavi.minimap");
                                         intent_gdmap.addCategory("android.intent.category.DEFAULT");
-                                        intent_gdmap.setData(Uri.parse("androidamap://poi?sourceApplication=com.feitianzhu.huangliwo&keywords=" + oilListBean.getGasAddress()  + oilListBean.getGasName() + "&dev=0"));
+                                        intent_gdmap.setData(Uri.parse("androidamap://poi?sourceApplication=com.feitianzhu.huangliwo&keywords=" + oilListBean.getGasAddress() + oilListBean.getGasName() + "&dev=0"));
                                         startActivity(intent_gdmap);
                                     }
                                 }

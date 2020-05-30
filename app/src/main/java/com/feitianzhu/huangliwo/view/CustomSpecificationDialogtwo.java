@@ -40,7 +40,7 @@ public class CustomSpecificationDialogtwo extends Dialog {
     private RecyclerView recyclerView;
     private ProductParametersAdapter mAdapter;
     private List<ProductParameters.GoodsSpecifications> data;
-    List<ShoppingCartModel.CartGoodsModel> shoppingCartModels;
+    ShoppingCartModel.CartGoodsModel shoppingCartModels;
     private OnOkClickListener negativeButtonClickListener;
     private int count = 0;
 
@@ -68,15 +68,19 @@ public class CustomSpecificationDialogtwo extends Dialog {
         mAdapter = new ProductParametersAdapter(data);
         recyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
-        for (int i = 0; i <shoppingCartModels.size(); i++) {
-            String goodsName = shoppingCartModels.get(i).title;
-            shopdetailname.setText(goodsName);
-            double price = shoppingCartModels.get(i).price;
-            String pricec=String.format(Locale.getDefault(), "%.2f",price);
-            shopdetailprice.setText("￥ "+pricec);
-            Glide.with(context).load(shoppingCartModels.get(i).goodsImg)
-                    .apply(new RequestOptions().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai).dontAnimate()).into(shopdetailimg);
-        }
+        String goodsName = shoppingCartModels.title;
+        shopdetailname.setText(goodsName);
+        
+        double price = shoppingCartModels.price;
+        String pricec = String.format(Locale.getDefault(), "%.2f", price);
+        shopdetailprice.setText("￥ " + pricec);
+        Glide.with(context).load(shoppingCartModels.goodsImg)
+                .apply(new RequestOptions()
+                        .placeholder(R.mipmap.g10_04weijiazai)
+                        .error(R.mipmap.g10_04weijiazai)
+                        .dontAnimate())
+                .into(shopdetailimg);
+
 
         listener();
     }
@@ -128,9 +132,9 @@ public class CustomSpecificationDialogtwo extends Dialog {
         });
     }
 
-    public CustomSpecificationDialogtwo setDate(List<ProductParameters.GoodsSpecifications> data, List<ShoppingCartModel.CartGoodsModel> shoppingCartModels) {
+    public CustomSpecificationDialogtwo setDate(List<ProductParameters.GoodsSpecifications> data, ShoppingCartModel.CartGoodsModel shoppingCartModels) {
         this.data = data;
-        this.shoppingCartModels=shoppingCartModels;
+        this.shoppingCartModels = shoppingCartModels;
         return this;
     }
 
