@@ -15,14 +15,14 @@ import java.util.List;
 /**
  *
  */
-public class StrategyItem1Adapter extends BaseQuickAdapter<ListPageBean.RowsBean, BaseViewHolder> {
+public class StrategyItem1Adapter extends BaseQuickAdapter<ListPageBean.ListBean, BaseViewHolder> {
 
-    public StrategyItem1Adapter(List<ListPageBean.RowsBean> list) {
+    public StrategyItem1Adapter(List<ListPageBean.ListBean> list) {
         super(R.layout.fragment_strategy_child1, list);
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, ListPageBean.RowsBean item) {
+    protected void convert(BaseViewHolder helper, ListPageBean.ListBean item) {
         helper.setText(R.id.item_number, item.getTitle());
         helper.setText(R.id.content, item.getTitle());
         ImageView view = helper.getView(R.id.imageView9);

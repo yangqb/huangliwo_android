@@ -5,7 +5,7 @@ import com.feitianzhu.huangliwo.core.network.BaseRequest;
 import com.feitianzhu.huangliwo.core.network.ParamsBuilder;
 import com.feitianzhu.huangliwo.strategy.bean.ListPageBean;
 
-import static com.feitianzhu.huangliwo.utils.Urls.BASE_URL_JI;
+import static com.feitianzhu.huangliwo.utils.Urls.TICKET_BASE_URL;
 
 /**
  * Created by bch on 2020/5/29
@@ -20,7 +20,7 @@ public class ListPageRequest extends BaseRequest {
 
     @Override
     public String getAPIBaseURL() {
-        return BASE_URL_JI;
+        return TICKET_BASE_URL;
     }
 
     @Override

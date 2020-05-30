@@ -26,39 +26,11 @@ import com.lxj.xpopup.core.BottomPopupView;
  * time: 9:44
  * email: 694125155@qq.com
  */
-public class CustomPayView extends BottomPopupView implements View.OnClickListener {
+public class CustomPayView extends BottomPopupView {
     private RelativeLayout btnCancel;
     private TextView btnConfirm;
-    private ImageView weixinPayIcon;
-    private ImageView alipayIcon;
     private String payChannel = "alipay";
-    private ImageView balancePayIcon;
     private String data;
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.weixinPay_icon:
-                payChannel = "wx";
-                weixinPayIcon.setBackgroundResource(R.mipmap.e01_23xuanzhong);
-                alipayIcon.setBackgroundResource(R.mipmap.e01_24weixuanzhong);
-                balancePayIcon.setBackgroundResource(R.mipmap.e01_24weixuanzhong);
-                break;
-            case R.id.alipay_icon:
-                payChannel = "alipay";
-                weixinPayIcon.setBackgroundResource(R.mipmap.e01_24weixuanzhong);
-                alipayIcon.setBackgroundResource(R.mipmap.e01_23xuanzhong);
-                balancePayIcon.setBackgroundResource(R.mipmap.e01_24weixuanzhong);
-                break;
-            case R.id.balancePay_icon:
-                weixinPayIcon.setBackgroundResource(R.mipmap.e01_24weixuanzhong);
-                alipayIcon.setBackgroundResource(R.mipmap.e01_24weixuanzhong);
-                balancePayIcon.setBackgroundResource(R.mipmap.e01_23xuanzhong);
-                payChannel = "balance";
-                break;
-        }
-    }
-
     public interface OnItemClickListener {
         void onItemClick(String payChannel);
     }
@@ -90,13 +62,6 @@ public class CustomPayView extends BottomPopupView implements View.OnClickListen
 
         btnCancel = findViewById(R.id.btn_cancel);
         btnConfirm = findViewById(R.id.btn_confirm);
-        weixinPayIcon = findViewById(R.id.weixinPay_icon);
-        alipayIcon = findViewById(R.id.alipay_icon);
-        balancePayIcon = findViewById(R.id.balancePay_icon);
-        alipayIcon.setBackgroundResource(R.mipmap.e01_23xuanzhong);
-        weixinPayIcon.setOnClickListener(this);
-        alipayIcon.setOnClickListener(this);
-        balancePayIcon.setOnClickListener(this);
         TextView price = findViewById(R.id.price);
         setSpannableString(MathUtils.subZero(data), price);
 
@@ -127,13 +92,13 @@ public class CustomPayView extends BottomPopupView implements View.OnClickListen
         view.setText("");
         SpannableString span1 = new SpannableString(str1);
         SpannableString span3 = new SpannableString(str3);
-        ForegroundColorSpan colorSpan1 = new ForegroundColorSpan(Color.parseColor("#F88D03"));
-        span1.setSpan(new AbsoluteSizeSpan(15, true), 0, str1.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        ForegroundColorSpan colorSpan1 = new ForegroundColorSpan(Color.parseColor("#000000"));
+        span1.setSpan(new AbsoluteSizeSpan(24, true), 0, str1.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         span1.setSpan(colorSpan1, 0, str1.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 
-        ForegroundColorSpan colorSpan3 = new ForegroundColorSpan(Color.parseColor("#F88D03"));
-        span3.setSpan(new AbsoluteSizeSpan(21, true), 0, str3.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-        span3.setSpan(new StyleSpan(Typeface.BOLD), 0, str3.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        ForegroundColorSpan colorSpan3 = new ForegroundColorSpan(Color.parseColor("#000000"));
+        span3.setSpan(new AbsoluteSizeSpan(47, true), 0, str3.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        //span3.setSpan(new StyleSpan(Typeface.BOLD), 0, str3.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         span3.setSpan(colorSpan3, 0, str3.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 
         view.append(span1);

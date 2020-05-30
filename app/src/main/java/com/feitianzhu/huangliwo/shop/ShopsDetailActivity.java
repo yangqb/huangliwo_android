@@ -156,6 +156,7 @@ public class ShopsDetailActivity extends BaseActivity {
     RelativeLayout detailView;
     @BindView(R.id.empty_view)
     LinearLayout emptyView;
+    private WebView gooddetail_web;
 
     @Override
     protected int getLayoutId() {
@@ -171,7 +172,18 @@ public class ShopsDetailActivity extends BaseActivity {
         titleName.setText("商品详情");
         rightImg.setBackgroundResource(R.mipmap.e01_02fenxiang);
         rightImg.setVisibility(View.VISIBLE);
-        WebView gooddetail_web =findViewById(R.id.gooddetail_web);
+        gooddetail_web = findViewById(R.id.gooddetail_web);
+        initListener();
+    }
+
+    public void initListener() {
+    }
+
+    @Override
+    protected void initData() {
+        getDetail(goodsId + "");
+        getSpecifications();
+        getUserInfo();
         //webview设置
         WebSettings webSettings = gooddetail_web.getSettings();
         webSettings.setJavaScriptEnabled(true);
@@ -187,17 +199,6 @@ public class ShopsDetailActivity extends BaseActivity {
         gooddetail_web.setHorizontalScrollBarEnabled(false);//水平不显示
         gooddetail_web.setVerticalScrollBarEnabled(false);
         gooddetail_web.loadUrl("http://8.129.218.83/#/service");
-        initListener();
-    }
-
-    public void initListener() {
-    }
-
-    @Override
-    protected void initData() {
-        getDetail(goodsId + "");
-        getSpecifications();
-        getUserInfo();
     }
 
     public void getUserInfo() {
@@ -330,7 +331,8 @@ public class ShopsDetailActivity extends BaseActivity {
         tvAmount.append(span3);
 
         if (goodsListBean.getGoodsIntroduceImgList() == null || goodsListBean.getGoodsIntroduceImgList().size() <= 0) {
-            llGoodsDetail.setVisibility(View.GONE);
+           // llGoodsDetail.setVisibility(View.GONE);
+
         } else {
             if (goodsListBean.getGoodsIntroduceImgList().size() > 1) {
                 ShopsDetailImgAdapter adapter = new ShopsDetailImgAdapter(goodsListBean.getGoodsIntroduceImgList());
