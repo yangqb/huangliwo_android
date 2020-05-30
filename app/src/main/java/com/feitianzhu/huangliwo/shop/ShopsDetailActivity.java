@@ -414,7 +414,7 @@ public class ShopsDetailActivity extends BaseActivity {
 
         @Override
         public int getLayoutId() {
-            return R.layout.detail_banner_item;
+            return R.layout.detail_banner_item1;
         }
 
         @Override
