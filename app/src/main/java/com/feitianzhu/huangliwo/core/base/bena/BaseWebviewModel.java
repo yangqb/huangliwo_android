@@ -5,7 +5,7 @@ import java.util.HashMap;
 /**
  * Created by bch on 2020/5/28
  */
-public class BaseWebview {
+public class BaseWebviewModel {
 
 
     /**

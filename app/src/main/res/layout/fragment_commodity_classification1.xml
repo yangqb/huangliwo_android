@@ -14,56 +14,37 @@
         android:layout_height="wrap_content"
         android:background="@color/bg_yellow"
         android:orientation="horizontal"
-        android:paddingLeft="@dimen/dp_10">
+        android:paddingLeft="@dimen/dp_40"
+        android:paddingRight="@dimen/dp_40">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical">
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_30"
+            android:background="#FED428"
+            app:tabIndicatorColor="#333333"
+            app:tabIndicatorFullWidth="false"
+            app:tabIndicatorHeight="2dp"
+            app:tabSelectedTextColor="#333333"
+            app:tabTextAppearance="@style/ShopTabLayoutTextStyle"
+            app:tabTextColor="#333333">
 
-            <TextView
-                android:id="@+id/button2"
-                android:layout_width="58dp"
-                android:layout_height="22dp"
-                android:background="@drawable/button_selecter_commodity"
-                android:gravity="center"
-                android:text="商城"
-                android:textColor="@color/color_333333"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+            <android.support.design.widget.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="商城">
 
-            <View
-                android:id="@+id/line1"
-                android:layout_width="23dp"
-                android:layout_height="@dimen/dp_4"
-                android:background="@color/bank_bg01"></View>
-        </LinearLayout>
+            </android.support.design.widget.TabItem>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical">
+            <android.support.design.widget.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="商家">
 
-            <TextView
-                android:id="@+id/button1"
-                android:layout_width="58dp"
-                android:layout_height="22dp"
-                android:background="@drawable/button_selecter_commodity"
-                android:gravity="center"
-                android:text="商家"
-                android:textColor="@color/color_333333"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+            </android.support.design.widget.TabItem>
 
-            <View
-                android:id="@+id/line"
-                android:layout_width="23dp"
-                android:layout_height="@dimen/dp_4"
-                android:background="@color/bank_bg01"></View>
-        </LinearLayout>
 
+        </android.support.design.widget.TabLayout>
 
     </LinearLayout>
 
@@ -102,7 +83,9 @@
                 android:id="@+id/nescro"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:fillViewport="true">
+                android:fillViewport="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -113,8 +96,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
-                        android:visibility="gone"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:visibility="gone">
 
                         <ImageView
                             android:id="@+id/img_empty"
@@ -134,9 +117,10 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:descendantFocusability="blocksDescendants"
                         android:orientation="vertical">
 
-                        <LinearLayout
+                        <RelativeLayout
                             android:id="@+id/hot"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -144,6 +128,7 @@
                             android:layout_marginTop="8dp"
                             android:layout_marginEnd="8dp"
                             android:background="@drawable/shop_baground_shape_gray"
+                            android:descendantFocusability="blocksDescendants"
                             android:orientation="vertical"
                             android:padding="@dimen/dp_10"
                             android:visibility="gone">
@@ -161,11 +146,12 @@
                                 android:id="@+id/right_recyclerView"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/dp_10"
+                                android:layout_below="@+id/title1"
+                                android:layout_marginTop="10dp"
                                 android:nestedScrollingEnabled="false">
 
                             </android.support.v7.widget.RecyclerView>
-                        </LinearLayout>
+                        </RelativeLayout>
 
                         <LinearLayout
                             android:id="@+id/boutique"
@@ -175,6 +161,8 @@
                             android:layout_marginTop="8dp"
                             android:layout_marginEnd="8dp"
                             android:background="@drawable/shop_baground_shape_gray"
+                            android:focusable="true"
+                            android:focusableInTouchMode="true"
                             android:orientation="vertical"
                             android:padding="@dimen/dp_10"
                             android:visibility="gone">
@@ -208,6 +196,8 @@
                             android:layout_marginEnd="8dp"
                             android:layout_marginBottom="5dp"
                             android:background="@drawable/shop_baground_shape_gray"
+                            android:focusable="true"
+                            android:focusableInTouchMode="true"
                             android:orientation="vertical"
                             android:padding="@dimen/dp_10"
                             android:visibility="gone">

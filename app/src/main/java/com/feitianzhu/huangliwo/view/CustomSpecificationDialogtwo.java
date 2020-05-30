@@ -22,12 +22,9 @@ import com.feitianzhu.huangliwo.model.ProductParameters;
 import com.feitianzhu.huangliwo.model.ShoppingCartModel;
 import com.feitianzhu.huangliwo.shop.adapter.ProductParametersAdapter;
 import com.hjq.toast.ToastUtils;
-import com.itheima.roundedimageview.RoundedImageView;
 
 import java.util.List;
 import java.util.Locale;
-
-import butterknife.BindView;
 
 /**
  * package name: com.feitianzhu.fu700.view
@@ -36,24 +33,23 @@ import butterknife.BindView;
  * time: 12:37
  * email: 694125155@qq.com
  */
-public class CustomSpecificationDialog extends Dialog {
+public class CustomSpecificationDialogtwo extends Dialog {
     private Context context;
     private RelativeLayout btn_cancel;
     private TextView btn_ok;
     private RecyclerView recyclerView;
     private ProductParametersAdapter mAdapter;
     private List<ProductParameters.GoodsSpecifications> data;
-    List<ShoppingCartModel.CartGoodsModel> shoppingCartModels;
+    ShoppingCartModel.CartGoodsModel shoppingCartModels;
     private OnOkClickListener negativeButtonClickListener;
     private int count = 0;
-    private BaseGoodsListBean baseGoodsListBean;
 
 
     public interface OnOkClickListener {
         void onOkClick(List<ProductParameters.GoodsSpecifications> data);
     }
 
-    public CustomSpecificationDialog(Context context) {
+    public CustomSpecificationDialogtwo(Context context) {
         super(context, R.style.BottomDialog);
         this.context = context;
     }
@@ -72,13 +68,20 @@ public class CustomSpecificationDialog extends Dialog {
         mAdapter = new ProductParametersAdapter(data);
         recyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
-        String goodsName = baseGoodsListBean.getGoodsName();
+        String goodsName = shoppingCartModels.title;
         shopdetailname.setText(goodsName);
-        double price = baseGoodsListBean.getPrice();
-        String pricec=String.format(Locale.getDefault(), "%.2f",price);
-        shopdetailprice.setText("￥ "+pricec);
-        Glide.with(context).load(baseGoodsListBean.getGoodsImg())
-                .apply(new RequestOptions().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai).dontAnimate()).into(shopdetailimg);
+
+        double price = shoppingCartModels.price;
+        String pricec = String.format(Locale.getDefault(), "%.2f", price);
+        shopdetailprice.setText("￥ " + pricec);
+        Glide.with(context).load(shoppingCartModels.goodsImg)
+                .apply(new RequestOptions()
+                        .placeholder(R.mipmap.g10_04weijiazai)
+                        .error(R.mipmap.g10_04weijiazai)
+                        .dontAnimate())
+                .into(shopdetailimg);
+
+
         listener();
     }
 
@@ -129,14 +132,13 @@ public class CustomSpecificationDialog extends Dialog {
         });
     }
 
-    public CustomSpecificationDialog setData(List<ProductParameters.GoodsSpecifications> data, BaseGoodsListBean baseGoodsListBean) {
+    public CustomSpecificationDialogtwo setDate(List<ProductParameters.GoodsSpecifications> data, ShoppingCartModel.CartGoodsModel shoppingCartModels) {
         this.data = data;
-        this.baseGoodsListBean=baseGoodsListBean;
+        this.shoppingCartModels = shoppingCartModels;
         return this;
     }
 
-
-    public CustomSpecificationDialog setNegativeButton(
+    public CustomSpecificationDialogtwo setNegativeButton(
             OnOkClickListener listener) {
         this.negativeButtonClickListener = listener;
         return this;
