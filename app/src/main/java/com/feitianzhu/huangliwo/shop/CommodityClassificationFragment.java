@@ -2,6 +2,7 @@ package com.feitianzhu.huangliwo.shop;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.GridLayoutManager;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -124,7 +126,7 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
     @BindView(R.id.title3)
     TextView title3;
     @BindView(R.id.hot)
-    LinearLayout hot;
+    RelativeLayout hot;
     @BindView(R.id.boutique)
     LinearLayout boutique;
     @BindView(R.id.recommend)
@@ -422,9 +424,6 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
         mSwipeLayout.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-
-                mSwipeLayout.finishLoadMore();
-
                 int pos = leftAdapter.getPos();
 
                 if (pos >= leftAdapter.getData().size() - 1) {
@@ -436,7 +435,6 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
 
                 }
                 leftAdapter.notifyDataSetChanged();
-                nescro.scrollTo(0, 0);
                 if (mParam1 == 1) {
                     //获取当前分类的商品
                     clsMearchantsId = merchantsClassifyList.get(pos).getClsId();
@@ -577,6 +575,16 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                             backgroundImg.setVisibility(View.VISIBLE);
 //                            rightAdapter.setNewData(null);
                         }
+                        mSwipeLayout.finishLoadMore();
+//
+//                        if (type == 0) {
+//                            new Handler().postAtTime(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    nescro.scrollTo(0, 0);
+//                                }
+//                            }, 3000);
+//                        }
                     }
 
                     @Override
@@ -650,8 +658,6 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                         merchantsBouList.clear();
                         multipleBouItemList.clear();
                         if (response.body().data != null) {
-//
-
                             MerchantsInfoNew data = response.body().data;
                             if (data.getVeryGood() == null || data.getVeryGood().size() == 0) {
                                 boutique.setVisibility(View.GONE);

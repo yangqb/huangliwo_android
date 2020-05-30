@@ -136,9 +136,10 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:descendantFocusability="blocksDescendants"
                         android:orientation="vertical">
 
-                        <LinearLayout
+                        <RelativeLayout
                             android:id="@+id/hot"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -146,8 +147,7 @@
                             android:layout_marginTop="8dp"
                             android:layout_marginEnd="8dp"
                             android:background="@drawable/shop_baground_shape_gray"
-                            android:focusable="true"
-                            android:focusableInTouchMode="true"
+                            android:descendantFocusability="blocksDescendants"
                             android:orientation="vertical"
                             android:padding="@dimen/dp_10"
                             android:visibility="gone">
@@ -165,11 +165,12 @@
                                 android:id="@+id/right_recyclerView"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/dp_10"
+                                android:layout_below="@+id/title1"
+                                android:layout_marginTop="10dp"
                                 android:nestedScrollingEnabled="false">
 
                             </android.support.v7.widget.RecyclerView>
-                        </LinearLayout>
+                        </RelativeLayout>
 
                         <LinearLayout
                             android:id="@+id/boutique"
