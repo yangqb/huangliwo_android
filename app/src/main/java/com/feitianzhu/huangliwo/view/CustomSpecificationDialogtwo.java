@@ -70,7 +70,7 @@ public class CustomSpecificationDialogtwo extends Dialog {
         mAdapter.notifyDataSetChanged();
         String goodsName = shoppingCartModels.title;
         shopdetailname.setText(goodsName);
-        
+
         double price = shoppingCartModels.price;
         String pricec = String.format(Locale.getDefault(), "%.2f", price);
         shopdetailprice.setText("￥ " + pricec);
