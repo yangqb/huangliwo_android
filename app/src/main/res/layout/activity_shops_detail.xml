@@ -442,7 +442,6 @@
                             android:visibility="gone">
 
                         </android.support.v7.widget.RecyclerView>
-
                         <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
                             android:id="@+id/detail_img"
                             android:layout_width="match_parent"
@@ -453,13 +452,9 @@
                         <WebView
                             android:id="@+id/gooddetail_web"
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/dp_200">
-
+                            android:layout_height="wrap_content">
                         </WebView>
-
                     </LinearLayout>
-
-
                 </LinearLayout>
 
             </LinearLayout>
