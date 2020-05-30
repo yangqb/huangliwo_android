@@ -448,7 +448,7 @@ public class ShopsDetailActivity extends BaseActivity {
                 }*/
                 if (specifications.size() > 0) {
                     showSpeDialog();
-                    return;
+                    //return;
                 } else {
                     intent = new Intent(ShopsDetailActivity.this, ShopPayActivity.class);
                     if (valueId != null) {
