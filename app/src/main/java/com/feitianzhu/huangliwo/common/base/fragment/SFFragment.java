@@ -35,6 +35,7 @@ public class SFFragment extends Fragment {
                 .show();
     }
 
+
     protected void goneloadDialog() {
         if (null != loadingPopup) {
             loadingPopup.delayDismissWith(600, new Runnable() {
@@ -42,6 +43,7 @@ public class SFFragment extends Fragment {
                 public void run() {
                 }
             });
+            loadingPopup = null;
         }
     }
 

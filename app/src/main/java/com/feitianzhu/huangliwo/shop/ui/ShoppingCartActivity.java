@@ -14,6 +14,7 @@ import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -36,6 +37,7 @@ import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.utils.doubleclick.SingleClick;
 import com.feitianzhu.huangliwo.view.CustomInputView;
 import com.feitianzhu.huangliwo.view.CustomSpecificationDialog;
+import com.feitianzhu.huangliwo.view.CustomSpecificationDialogtwo;
 import com.google.gson.Gson;
 import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
@@ -392,8 +394,8 @@ public class ShoppingCartActivity extends BaseActivity {
     public void showSpecDialog(int pos) {
         /* //商品规格
          */
-        new CustomSpecificationDialog(this).setData(specifications)
-                .setNegativeButton(new CustomSpecificationDialog.OnOkClickListener() {
+        new CustomSpecificationDialogtwo(this).setDate(specifications, shoppingCartModels.get(pos))
+                .setNegativeButton(new CustomSpecificationDialogtwo.OnOkClickListener() {
                     @Override
                     public void onOkClick(List<ProductParameters.GoodsSpecifications> data) {
                         valueId = new StringBuffer();

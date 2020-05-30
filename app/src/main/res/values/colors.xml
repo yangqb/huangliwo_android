@@ -5,6 +5,7 @@
     <color name="colorAccent">#13AAFF</color>
     <color name="transparent">@android:color/transparent</color>
     <color name="transparent_50">#80000000</color>
+    <color name="F3D18A">#F3D18A</color>
     <color name="text_gray">#A4ACB0</color>
     <color name="sf_blue">#FED428</color>
     <color name="sf_black">#1c1d20</color>
@@ -74,6 +75,7 @@
     <color name="color_e8f6ff">#E8F6FF</color>
     <color name="color_ffd600">#FFD600</color>
     <color name="color_ff0800">#ff0800</color>
+    <color name="color_EAC07A">#EAC07A</color>
     <color name="color_DDDDDD">#DDDDDD</color>
     <color name="color_FF0101">#FF0101</color>
     <color name="color_fde29a">#FDE29A</color>

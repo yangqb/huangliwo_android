@@ -14,7 +14,7 @@ import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
-import com.feitianzhu.huangliwo.common.base.activity.BaseBindingActivity;
+import com.feitianzhu.huangliwo.core.base.activity.BaseBindingActivity;
 import com.feitianzhu.huangliwo.core.network.ApiCallBack;
 import com.feitianzhu.huangliwo.core.network.ApiLifeCallBack;
 import com.feitianzhu.huangliwo.databinding.ActivityTraveDetailBinding;
@@ -91,13 +91,13 @@ public class TraveDetailActivity extends BaseBindingActivity {
         }
 
         distanceAdapter = new Distance1Adapter(null);
-        dataBinding.oilClass.setLayoutManager(new GridLayoutManager(TraveDetailActivity.this, 4));
+        dataBinding.oilClass.setLayoutManager(new GridLayoutManager(TraveDetailActivity.this, 3));
         dataBinding.oilClass.setAdapter(distanceAdapter);
         distanceAdapter1 = new DistanceOilInfoAdapter(null);
-        dataBinding.oilLevel.setLayoutManager(new GridLayoutManager(this, 4));
+        dataBinding.oilLevel.setLayoutManager(new GridLayoutManager(this, 3));
         dataBinding.oilLevel.setAdapter(distanceAdapter1);
         distanceAdapter2 = new DistanceGunAdapter(null);
-        dataBinding.gun.setLayoutManager(new GridLayoutManager(this, 4));
+        dataBinding.gun.setLayoutManager(new GridLayoutManager(this, 3));
         dataBinding.gun.setAdapter(distanceAdapter2);
         OilStationsDetailRequest oilStationsDetailRequest = new OilStationsDetailRequest();
         oilStationsDetailRequest.isShowLoading = true;
@@ -316,7 +316,7 @@ public class TraveDetailActivity extends BaseBindingActivity {
                                         intent_gdmap.setAction("android.intent.action.VIEW");
                                         intent_gdmap.setPackage("com.autonavi.minimap");
                                         intent_gdmap.addCategory("android.intent.category.DEFAULT");
-                                        intent_gdmap.setData(Uri.parse("androidamap://poi?sourceApplication=com.feitianzhu.huangliwo&keywords=" + oilListBean.getGasAddress()  + oilListBean.getGasName() + "&dev=0"));
+                                        intent_gdmap.setData(Uri.parse("androidamap://poi?sourceApplication=com.feitianzhu.huangliwo&keywords=" + oilListBean.getGasAddress() + oilListBean.getGasName() + "&dev=0"));
                                         startActivity(intent_gdmap);
                                     }
                                 }

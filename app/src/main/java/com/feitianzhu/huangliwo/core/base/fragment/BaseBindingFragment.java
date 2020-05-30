@@ -1,4 +1,4 @@
-package com.feitianzhu.huangliwo.common.base;
+package com.feitianzhu.huangliwo.core.base.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -16,7 +16,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 /**
- * Created by Administrator on 2016/3/29.
+ * Created by bch on 2020.5.30.
  */
 public abstract class BaseBindingFragment extends SFFragment {
 
@@ -27,4 +27,6 @@ public abstract class BaseBindingFragment extends SFFragment {
     }
 
     protected abstract void init();
+
+
 }

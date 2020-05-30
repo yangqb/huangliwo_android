@@ -16,6 +16,9 @@ import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.view.View;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -168,6 +171,22 @@ public class ShopsDetailActivity extends BaseActivity {
         titleName.setText("商品详情");
         rightImg.setBackgroundResource(R.mipmap.e01_02fenxiang);
         rightImg.setVisibility(View.VISIBLE);
+        WebView gooddetail_web =findViewById(R.id.gooddetail_web);
+        //webview设置
+        WebSettings webSettings = gooddetail_web.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setUseWideViewPort(true);
+        webSettings.setLoadWithOverviewMode(true);
+        //启用js
+        webSettings.setBlockNetworkImage(false);
+        // 解决图片不显示
+        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
+        webSettings.setLoadsImagesAutomatically(true);
+        gooddetail_web.getSettings().setDomStorageEnabled(true);
+        gooddetail_web.setWebChromeClient(new WebChromeClient());
+        gooddetail_web.setHorizontalScrollBarEnabled(false);//水平不显示
+        gooddetail_web.setVerticalScrollBarEnabled(false);
+        gooddetail_web.loadUrl("http://8.129.218.83/#/service");
         initListener();
     }
 
@@ -535,7 +554,7 @@ public class ShopsDetailActivity extends BaseActivity {
 
 
     public void showSpeDialog() {
-        new CustomSpecificationDialog(this).setData(specifications)
+        new CustomSpecificationDialog(this).setData(specifications,goodsListBean)
                 .setNegativeButton(new CustomSpecificationDialog.OnOkClickListener() {
                     @Override
                     public void onOkClick(List<ProductParameters.GoodsSpecifications> data) {

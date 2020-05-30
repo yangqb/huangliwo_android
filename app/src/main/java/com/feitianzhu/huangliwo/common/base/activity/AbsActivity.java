@@ -17,11 +17,8 @@ import com.lxj.xpopup.enums.PopupAnimation;
 import com.lxj.xpopup.impl.LoadingPopupView;
 
 /**
- * Created by jiangdikai on 2017/9/4.
- * <p>
- * updata by bch on 2020/5/6.
- * 添加ButterKnife
- * 添加状态栏适配
+ * Created by  bch on 2020/5/6.
+
  */
 
 public abstract class AbsActivity extends AppCompatActivity {
@@ -31,7 +28,7 @@ public abstract class AbsActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         GlobalUtil.setCurrentActivity(this);
-
+        initBase();
         if (getOpenImmersionBar() != null) {
             getOpenImmersionBar().init();
 
@@ -44,7 +41,7 @@ public abstract class AbsActivity extends AppCompatActivity {
                     .navigationBarDarkIcon(true)
                     .init();
         }
-        initBase();
+
     }
 
     public void initBase() {
