@@ -49,7 +49,6 @@ public class StrategyChildFragment extends BaseBindingFragment {
     protected void init() {
         binding.refreshLayout.setEnableRefresh(true);
         binding.refreshLayout.setEnableLoadMore(true);
-
         binding.refreshLayout.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
@@ -118,7 +117,7 @@ public class StrategyChildFragment extends BaseBindingFragment {
                 public void onAPIResponse(ListPageRequest.Result response) {
                     ListPageBean pageResult = response.pageResult;
                     binding.list.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-                    strategyItemAdapter.setNewData(pageResult.getRows());
+                    strategyItemAdapter.setNewData(pageResult.getList());
                     if (i == 1) {
                         binding.refreshLayout.finishRefresh();
                     } else if (i == 0) {
@@ -145,9 +144,8 @@ public class StrategyChildFragment extends BaseBindingFragment {
                 @Override
                 public void onAPIResponse(ListPageRequest.Result response) {
                     ListPageBean pageResult = response.pageResult;
-
                     binding.list.setLayoutManager(new GridLayoutManager(getContext(), 2));
-                    strategyItemAdapter1.setNewData(pageResult.getRows());
+                    strategyItemAdapter1.setNewData(pageResult.getList());
                     if (i == 1) {
                         binding.refreshLayout.finishRefresh();
                     } else if (i == 0) {
