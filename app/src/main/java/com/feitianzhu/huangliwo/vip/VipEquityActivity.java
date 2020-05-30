@@ -1,18 +1,14 @@
 package com.feitianzhu.huangliwo.vip;
 
-import android.databinding.DataBindingUtil;
-import android.databinding.ViewDataBinding;
 import android.support.v7.widget.GridLayoutManager;
 import android.text.Html;
-import android.text.Spanned;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.TextView;
+import android.view.ViewGroup;
 
 import com.feitianzhu.huangliwo.R;
-import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
-import com.feitianzhu.huangliwo.common.base.activity.BaseBindingActivity;
+import com.feitianzhu.huangliwo.core.base.activity.BaseUiActivity;
 import com.feitianzhu.huangliwo.databinding.ActivityVipEquityBinding;
-import com.feitianzhu.huangliwo.travel.TravelHomeActivity;
 import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 import com.feitianzhu.huangliwo.vip.adapter.VipShowAdapter;
 import com.feitianzhu.huangliwo.vip.bean.VipBean;
@@ -21,10 +17,9 @@ import com.hjq.toast.ToastUtils;
 
 import java.util.ArrayList;
 
-import butterknife.BindView;
 import butterknife.OnClick;
 
-public class VipEquityActivity extends BaseBindingActivity {
+public class VipEquityActivity extends BaseUiActivity {
 
     private ActivityVipEquityBinding viewDataBinding;
     private double num;
@@ -36,17 +31,28 @@ public class VipEquityActivity extends BaseBindingActivity {
 
 
     @Override
-    public void bindingView() {
-        viewDataBinding = DataBindingUtil.setContentView(this, R.layout.activity_vip_equity);
+    protected View initContentView(LayoutInflater layoutInflater, ViewGroup viewGroup) {
+
+        viewDataBinding = ActivityVipEquityBinding.inflate(layoutInflater, viewGroup, false);
+//        DataBindingUtil.inflate()
+//        viewDataBinding= DataBindingUtil.setContentView(this, R.layout.activity_vip_equity);
         viewDataBinding.setViewModel(this);
-        ImmersionBar.with(this)
-                .fitsSystemWindows(false)
-                .statusBarDarkFont(true, 0.2f)
-                .statusBarColor(R.color.transparent)
-                .init();
-        viewDataBinding.titleName.setText("会员中心");
+        initTitle("会员中心");
+//        viewDataBinding.titleName.setText();
         num = getIntent().getDoubleExtra("num", -1);
         viewDataBinding.num.setText(num + "元起");
+        setBackground(R.color.transparent);
+        return viewDataBinding.getRoot();
+    }
+
+    @Override
+    public ImmersionBar getOpenImmersionBar() {
+        return  ImmersionBar.with(this)
+                .fitsSystemWindows(true)
+                .statusBarDarkFont(true, 0.2f)
+                .navigationBarColor(R.color.transparent)
+                .statusBarColor(R.color.F3D18A)
+                .navigationBarDarkIcon(true);
     }
 
     @Override

@@ -23,6 +23,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.fragment.SFFragment;
+import com.feitianzhu.huangliwo.core.network.LoadingUtil;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.login.LoginEvent;
@@ -50,6 +51,7 @@ import com.feitianzhu.huangliwo.vip.VipActivity;
 import com.lxj.xpopup.XPopup;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.base.Request;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
@@ -164,6 +166,11 @@ public class MyCenterFragment extends SFFragment {
                 .params(Constant.ACCESSTOKEN, token)
                 .params(Constant.USERID, userId)
                 .execute(new JsonCallback<LzyResponse<BalanceModel>>() {
+                    @Override
+                    public void onStart(Request<LzyResponse<BalanceModel>, ? extends Request> request) {
+                        super.onStart(request);
+                    }
+
                     @Override
                     public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<BalanceModel>> response) {
                         if (response.body().code == 0) {

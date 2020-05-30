@@ -425,7 +425,7 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
                 int pos = leftAdapter.getPos();
-
+                nescro.scrollTo(0, 0);
                 if (pos >= leftAdapter.getData().size() - 1) {
                     leftAdapter.setSelect(pos);
 

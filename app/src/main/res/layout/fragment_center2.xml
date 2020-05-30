@@ -212,7 +212,7 @@
                                         android:id="@+id/toBeReleased_Amount"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="0.00"
+                                        android:text="— —"
                                         android:textColor="@color/color_333333"
                                         android:textSize="17sp" />
 
@@ -253,7 +253,7 @@
                                     android:id="@+id/tv_profit"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="0.00"
+                                    android:text="— —"
                                     android:textColor="@color/color_333333"
                                     android:textSize="17sp" />
 
@@ -303,7 +303,7 @@
                                         android:id="@+id/tv_withdrawal"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="0.00"
+                                        android:text="— —"
                                         android:textColor="@color/color_333333"
                                         android:textSize="17sp" />
 

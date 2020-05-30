@@ -5,7 +5,6 @@
     android:layout_height="wrap_content"
     android:layout_margin="2.5dp"
     android:background="@drawable/bg_ffffff_r5"
-    android:descendantFocusability="blocksDescendants"
     android:gravity="center"
     android:orientation="vertical"
     android:paddingTop="8dp"

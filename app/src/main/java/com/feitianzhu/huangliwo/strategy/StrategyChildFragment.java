@@ -11,7 +11,7 @@ import android.widget.ImageView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
-import com.feitianzhu.huangliwo.common.base.BaseBindingFragment;
+import com.feitianzhu.huangliwo.core.base.fragment.BaseBindingFragment;
 import com.feitianzhu.huangliwo.core.base.BaseWebviewActivity;
 import com.feitianzhu.huangliwo.core.network.ApiCallBack;
 import com.feitianzhu.huangliwo.databinding.FragmentStrategyChildListBinding;

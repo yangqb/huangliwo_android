@@ -15,9 +15,9 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
-import com.feitianzhu.huangliwo.common.base.activity.BaseBindingActivity;
+import com.feitianzhu.huangliwo.core.base.activity.BaseBindingActivity;
 import com.feitianzhu.huangliwo.core.SkipToUtil;
-import com.feitianzhu.huangliwo.core.base.bena.BaseWebview;
+import com.feitianzhu.huangliwo.core.base.bena.BaseWebviewModel;
 import com.feitianzhu.huangliwo.databinding.ActivityBaseWebviewBinding;
 import com.feitianzhu.huangliwo.shop.ShopMerchantsDetailActivity;
 import com.feitianzhu.huangliwo.shop.ShopsDetailActivity;
@@ -138,7 +138,7 @@ public class BaseWebviewActivity extends BaseBindingActivity {
 
         Log.e("TAG", "openURL: " + command);
         Gson gson = new Gson();
-        BaseWebview baseWebviewModel = gson.fromJson(command, BaseWebview.class);
+        BaseWebviewModel baseWebviewModel = gson.fromJson(command, BaseWebviewModel.class);
         if (baseWebviewModel.url.startsWith("https://") || baseWebviewModel.url.startsWith("http://")) {
 //外部浏览器
             SkipToUtil.toBrowser(this, baseWebviewModel.url);

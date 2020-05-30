@@ -13,7 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.feitianzhu.huangliwo.common.base.BaseBindingFragment;
+import com.feitianzhu.huangliwo.core.base.fragment.BaseBindingFragment;
 import com.feitianzhu.huangliwo.databinding.StrategyFragmentBinding;
 import com.feitianzhu.huangliwo.strategy.adapter.StrategyAdapter;
 
