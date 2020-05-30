@@ -187,7 +187,7 @@ public class MyCenterFragment extends SFFragment {
                                     withdrawCount.setVisibility(View.INVISIBLE);
                                 }
                             } else {
-                                setSpannableString(toBeReleasedAmount, tvProfit, tvWithdrawal, tvWages, "0.00", "0.00", "0.00", "0.00");
+                                setSpannableString(toBeReleasedAmount, tvProfit, tvWithdrawal, tvWages, "— —", "— —", "— —", "— —");
                             }
                         }
                     }

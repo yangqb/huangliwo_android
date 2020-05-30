@@ -2,8 +2,8 @@ package com.feitianzhu.huangliwo.shop;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TabLayout;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -72,7 +72,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-import static android.view.ViewGroup.FOCUS_BLOCK_DESCENDANTS;
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.huangliwo.common.Constant.USERID;
 import static com.feitianzhu.huangliwo.login.LoginEvent.EDITOR_INFO;
@@ -96,10 +95,6 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
     TextView mTxtLocation;
     @BindView(R.id.iv_home_nv_right)
     ImageView ivRight;
-    @BindView(R.id.button1)
-    TextView button1;
-    @BindView(R.id.button2)
-    TextView button2;
     @BindView(R.id.left_recyclerView)
     RecyclerView leftRecyclerView;
     @BindView(R.id.right_recyclerView)
@@ -113,10 +108,6 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    @BindView(R.id.line1)
-    View line1;
-    @BindView(R.id.line)
-    View line;
     @BindView(R.id.nescro)
     NestedScrollView nescro;
     @BindView(R.id.title1)
@@ -133,6 +124,8 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
     LinearLayout recommend;
     @BindView(R.id.backgroundImg)
     LinearLayout backgroundImg;
+    @BindView(R.id.tabLayout)
+    TabLayout tabLayout;
 
     private int mParam1 = 2;
     private String mParam2;
@@ -240,18 +233,34 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
         mSwipeLayout.setEnableRefresh(true);
 
         if (mParam1 == 1) { //商家
-            line1.setVisibility(View.GONE);
-            line.setVisibility(View.VISIBLE);
-//            button1.setSelected(true);
-//            button2.setSelected(false);
+            tabLayout.getTabAt(1).select();
             getMerchantsClass();
         } else {//商城
-            line1.setVisibility(View.VISIBLE);
-            line.setVisibility(View.GONE);
-//            button1.setSelected(false);
-//            button2.setSelected(true);
+            tabLayout.getTabAt(0).select();
+
             getShopClass();
         }
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                int position = tab.getPosition();
+                if (position == 1) { //商家
+                    getMerchantsClass();
+                } else {//商城
+                    getShopClass();
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
         showHeadImg();
         initListener();
         return view;
@@ -744,7 +753,7 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                 });
     }
 
-    @OnClick({R.id.ll_location, R.id.iv_head, R.id.search, R.id.button1, R.id.button2, R.id.iv_home_nv_right})
+    @OnClick({R.id.ll_location, R.id.iv_head, R.id.search, R.id.iv_home_nv_right})
     public void onViewClicked(View view) {
         Intent intent;
         switch (view.getId()) {
@@ -768,22 +777,7 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                 intent = new Intent(getActivity(), SearchShopActivity.class);
                 startActivity(intent);
                 break;
-            case R.id.button1:
-                mParam1 = 1;
-//                button1.setSelected(true);
-//                button2.setSelected(false);
-                line1.setVisibility(View.GONE);
-                line.setVisibility(View.VISIBLE);
-                getMerchantsClass();
-                break;
-            case R.id.button2:
-                mParam1 = 2;
-                line1.setVisibility(View.VISIBLE);
-                line.setVisibility(View.GONE);
-//                button1.setSelected(false);
-//                button2.setSelected(true);
-                getShopClass();
-                break;
+
             case R.id.iv_home_nv_right:
                 requestPermission();
                 break;

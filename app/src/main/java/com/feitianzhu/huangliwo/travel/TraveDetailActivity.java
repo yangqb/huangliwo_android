@@ -91,13 +91,13 @@ public class TraveDetailActivity extends BaseBindingActivity {
         }
 
         distanceAdapter = new Distance1Adapter(null);
-        dataBinding.oilClass.setLayoutManager(new GridLayoutManager(TraveDetailActivity.this, 4));
+        dataBinding.oilClass.setLayoutManager(new GridLayoutManager(TraveDetailActivity.this, 3));
         dataBinding.oilClass.setAdapter(distanceAdapter);
         distanceAdapter1 = new DistanceOilInfoAdapter(null);
-        dataBinding.oilLevel.setLayoutManager(new GridLayoutManager(this, 4));
+        dataBinding.oilLevel.setLayoutManager(new GridLayoutManager(this, 3));
         dataBinding.oilLevel.setAdapter(distanceAdapter1);
         distanceAdapter2 = new DistanceGunAdapter(null);
-        dataBinding.gun.setLayoutManager(new GridLayoutManager(this, 4));
+        dataBinding.gun.setLayoutManager(new GridLayoutManager(this, 3));
         dataBinding.gun.setAdapter(distanceAdapter2);
         OilStationsDetailRequest oilStationsDetailRequest = new OilStationsDetailRequest();
         oilStationsDetailRequest.isShowLoading = true;
