@@ -157,7 +157,8 @@ public class ShopsDetailActivity extends BaseActivity {
     @BindView(R.id.empty_view)
     LinearLayout emptyView;
     private WebView gooddetail_web;
-
+    @BindView(R.id.service)
+    LinearLayout service;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_shops_detail;
@@ -426,7 +427,7 @@ public class ShopsDetailActivity extends BaseActivity {
         }
     }
 
-    @OnClick({R.id.left_button, R.id.tv_pay, R.id.rl_more_evaluation, R.id.add_shopping_cart, R.id.shopping_cart, R.id.call_phone, R.id.collect, R.id.select_specifications, R.id.right_img, R.id.ll_rebate})
+    @OnClick({R.id.left_button, R.id.tv_pay, R.id.rl_more_evaluation, R.id.add_shopping_cart, R.id.shopping_cart, R.id.call_phone, R.id.collect, R.id.select_specifications, R.id.right_img, R.id.ll_rebate,R.id.service})
     @SingleClick()
     public void onClick(View view) {
         Intent intent;
@@ -571,6 +572,9 @@ public class ShopsDetailActivity extends BaseActivity {
                 intent = new Intent(ShopsDetailActivity.this, VipActivity.class);
                 intent.putExtra(VipActivity.MINE_INFO, mineInfoModel);
                 startActivity(intent);
+                break;
+            case R.id.service:
+                startActivity(new Intent(ShopsDetailActivity.this, Customerservice.class));
                 break;
         }
 
