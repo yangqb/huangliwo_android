@@ -38,7 +38,6 @@ import com.feitianzhu.huangliwo.model.ShopClassify;
 import com.feitianzhu.huangliwo.model.ShopsNew;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsClassifyModel;
 import com.feitianzhu.huangliwo.pushshop.bean.MerchantsModel;
-import com.feitianzhu.huangliwo.shop.adapter.CommodityStringVm;
 import com.feitianzhu.huangliwo.shop.adapter.LeftAdapter;
 import com.feitianzhu.huangliwo.shop.adapter.RightAdapter1;
 import com.feitianzhu.huangliwo.shop.ui.SearchShopActivity;
@@ -119,7 +118,6 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
     private RightAdapter1 rightAdapterRecomm;
     private RightAdapter1 rightAdapterBou;
     private FragmentCommodityClassification1Binding binding;
-    private CommodityStringVm commodityStringVm;
 
     public CommodityClassificationFragment() {
 
