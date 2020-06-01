@@ -161,8 +161,12 @@ public class StrategyChildFragment extends BaseBindingFragment {
                 public void onAPIResponse(ListPageBean response) {
                     List<ListPageBean.ListBean> list = response.getList();
                     if (list != null && list.size() > 0) {
-
-                        strategyItemAdapter1.addData(list);
+                        if (currentPage == 1) {
+                            strategyItemAdapter1.getData().clear();
+                            strategyItemAdapter1.setNewData(list);
+                        } else {
+                            strategyItemAdapter1.addData(list);
+                        }
                     } else if (currentPage == 1) {
                         strategyItemAdapter1.setNewData(null);
                     }
