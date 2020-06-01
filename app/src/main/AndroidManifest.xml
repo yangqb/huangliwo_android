@@ -44,7 +44,9 @@
         tools:replace="android:icon,android:theme,android:label">
         <activity android:name=".im.SessionlistActivity"></activity>
         <activity android:name=".shop.CustomerservicelistActivity" />
-        <activity android:name=".shop.ImActivity" />
+        <activity android:name=".shop.ImActivity"
+            android:windowSoftInputMode="adjustResize"
+            />
         <activity android:name=".shop.Customerservice" />
         <activity android:name=".travel.TraveFormActivity" />
         <activity android:name=".travel.TraveDetailActivity" /> <!-- 添加provider -->
