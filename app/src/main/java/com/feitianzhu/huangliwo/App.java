@@ -123,7 +123,7 @@ public class App extends Application {
 //初始化
         EaseUI.getInstance().init(context, options);
 //在做打包混淆时，关闭debug模式，避免消耗不必要的资源
-        EMClient.getInstance().setDebugMode(true);
+//        EMClient.getInstance().setDebugMode(true);
 //EaseUI初始化成功之后再去调用注册消息监听的代码
         ZXingLibrary.initDisplayOpinion(this);
         //vivo推送
@@ -133,7 +133,7 @@ public class App extends Application {
         initOkgo();
         initPush();
 
-        EMMessage message = EMMessage.createSendMessage(EMMessage.Type.TXT);
+/*        EMMessage message = EMMessage.createSendMessage(EMMessage.Type.TXT);
         EMTextMessageBody txtBody = new EMTextMessageBody("test");
         message.setTo("13671192850");
 // 设置自定义扩展字段
@@ -156,7 +156,7 @@ public class App extends Application {
             }
         });
 // 发送消息
-        EMClient.getInstance().chatManager().sendMessage(message);
+        EMClient.getInstance().chatManager().sendMessage(message);*/
 
 
         AutoSizeConfig.getInstance().setCustomFragment(true);//屏幕适配
