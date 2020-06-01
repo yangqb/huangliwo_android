@@ -45,7 +45,9 @@
         <activity android:name=".core.base.BaseWebviewActivity"></activity>
         <activity android:name=".im.SessionlistActivity"></activity>
         <activity android:name=".shop.CustomerservicelistActivity" />
-        <activity android:name=".shop.ImActivity" android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name=".shop.ImActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".shop.Customerservice" />
         <activity android:name=".travel.TraveFormActivity" />
         <activity android:name=".travel.TraveDetailActivity" /> <!-- 添加provider -->
@@ -65,7 +67,7 @@
             android:name="com.vivo.push.app_id"
             android:value="103906765" />
 
-        <receiver android:name="com.hyphenate.push.platform.vivo.EMVivoMsgReceiver" >
+        <receiver android:name="com.hyphenate.push.platform.vivo.EMVivoMsgReceiver">
             <intent-filter>
                 <!-- 接收 push 消息 -->
                 <action android:name="com.vivo.pushclient.action.RECEIVE" />

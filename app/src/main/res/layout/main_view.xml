@@ -79,15 +79,15 @@
 
                 <ImageView
                     android:id="@+id/img_jiaoliu"
-                    android:layout_width="27dp"
-                    android:layout_height="27dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:src="@drawable/tab_jiaoliu_select" />
 
                 <TextView
                     android:id="@+id/txt_jiaoliu"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="发现"
+                    android:text="攻略"
                     android:textColor="@drawable/tab_select_text"
                     android:textSize="12sp" />
             </LinearLayout>

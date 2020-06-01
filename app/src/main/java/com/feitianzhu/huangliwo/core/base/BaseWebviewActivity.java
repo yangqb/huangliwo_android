@@ -67,7 +67,7 @@ public class BaseWebviewActivity extends BaseBindingActivity {
         }
         url = stringExtra;
 //        url += "nav=1";
-        Log.e("TAG", "bindingView: " + url);
+//        Log.e("TAG", "bindingView: " + url);
         if (url.contains("nav=1")) {
             dataBinding.headers.setVisibility(View.GONE);
             dataBinding.leftButton1.setVisibility(View.VISIBLE);
