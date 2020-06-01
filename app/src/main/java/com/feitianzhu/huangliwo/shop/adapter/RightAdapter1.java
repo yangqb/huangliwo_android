@@ -25,6 +25,7 @@ public class RightAdapter1 extends BaseMultiItemQuickAdapter<MultipleItem, BaseV
 
     @Override
     protected void convert(BaseViewHolder helper, MultipleItem item) {
+
         switch (helper.getItemViewType()) {
             case MultipleItem.MERCHANTS:
                 helper.setText(R.id.text1, item.getMerchantsModel().getMerchantName());

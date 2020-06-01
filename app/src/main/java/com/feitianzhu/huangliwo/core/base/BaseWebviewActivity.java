@@ -5,14 +5,19 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.View;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.webkit.DownloadListener;
 import android.webkit.JavascriptInterface;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.core.base.activity.BaseBindingActivity;
@@ -25,15 +30,15 @@ import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.StringUtils;
 import com.google.gson.Gson;
 import com.hjq.toast.ToastUtils;
+
 import java.util.HashMap;
+import java.util.Set;
 
 
 public class BaseWebviewActivity extends BaseBindingActivity {
 
     private ActivityBaseWebviewBinding dataBinding;
     private static final String kBaseUrlKey = "WebFrag_BaseUrl";
-
-    protected String command;
     protected String url = "";
 
     public static void toBaseWebviewActivity(Context context, String uri) {
@@ -61,18 +66,17 @@ public class BaseWebviewActivity extends BaseBindingActivity {
             return;
         }
         url = stringExtra;
-//        url = String.format(url + "?v=%d", new Random().nextInt(1000));
-//        String language = Locale.getDefault().getLanguage();
-//        if (language.indexOf("-") != -1) {
-//            language = language.split("-")[0];
-//        }
-//        url += "&platform=Android&language=" + language;
-//        url += extraParam();
-        HashMap<String, String> stringStringHashMap = new HashMap<>();
-        stringStringHashMap.put("bldbyapp", "1");
-        stringStringHashMap.put("token", SPUtils.getString(getApplication(), Constant.SP_ACCESS_TOKEN));
-        stringStringHashMap.put("userId", SPUtils.getString(getApplication(), Constant.SP_LOGIN_USERID));
-        webview.loadUrl(url, stringStringHashMap);
+        url = "nav=1";
+        Log.e("TAG", "bindingView: " + url);
+        if (url.contains("nav=1")) {
+            dataBinding.headers.setVisibility(View.GONE);
+            dataBinding.leftButton1.setVisibility(View.VISIBLE);
+        } else {
+            dataBinding.headers.setVisibility(View.VISIBLE);
+            dataBinding.leftButton1.setVisibility(View.GONE);
+        }
+        syncCookie(url);
+        webview.loadUrl(url);
         webview.addJavascriptInterface(this, "jsBridge");
 
         webview.setWebViewClient(new WebViewClient() {
@@ -121,6 +125,34 @@ public class BaseWebviewActivity extends BaseBindingActivity {
         });
     }
 
+    /**
+     * 同步cookie
+     *
+     * @param url 要加载的地址链接
+     */
+    private void syncCookie(String url) {
+
+        CookieSyncManager.createInstance(this);
+        CookieManager cookieManager = CookieManager.getInstance();
+        cookieManager.setAcceptCookie(true);
+        cookieManager.removeAllCookie();
+//        HashMap<String, String> stringStringHashMap = new HashMap<>();
+//        stringStringHashMap.put("bldbyapp", "1");
+//        stringStringHashMap.put("token", SPUtils.getString(getApplication(), Constant.SP_ACCESS_TOKEN));
+//        stringStringHashMap.put("userId", SPUtils.getString(getApplication(), Constant.SP_LOGIN_USERID));
+//        stringStringHashMap.toString()
+//        //设置cookie
+        cookieManager.setCookie(url, "bldbyapp=1");
+        cookieManager.setCookie(url, "token=" + SPUtils.getString(getApplication(), Constant.SP_ACCESS_TOKEN));
+        cookieManager.setCookie(url, "userId=" + SPUtils.getString(getApplication(), Constant.SP_LOGIN_USERID));
+
+        //获取Cookie
+        String mCookie = cookieManager.getCookie(url);
+
+        //sync
+        CookieSyncManager.getInstance().sync();
+    }
+
     @Override
     public void init() {
 
@@ -135,8 +167,6 @@ public class BaseWebviewActivity extends BaseBindingActivity {
 
     @JavascriptInterface
     public String openURL(String command) {
-
-        Log.e("TAG", "openURL: " + command);
         Gson gson = new Gson();
         BaseWebviewModel baseWebviewModel = gson.fromJson(command, BaseWebviewModel.class);
         if (baseWebviewModel.url.startsWith("https://") || baseWebviewModel.url.startsWith("http://")) {

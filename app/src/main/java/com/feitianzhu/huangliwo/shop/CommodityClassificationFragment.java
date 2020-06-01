@@ -7,6 +7,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.fragment.SFFragment;
+import com.feitianzhu.huangliwo.core.network.LoadingUtil;
 import com.feitianzhu.huangliwo.databinding.FragmentCommodityClassification1Binding;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
@@ -208,8 +210,10 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
             public void onTabSelected(TabLayout.Tab tab) {
                 int position = tab.getPosition();
                 if (position == 1) { //商家
+                    mParam1 = 1;
                     getMerchantsClass();
                 } else {//商城
+                    mParam1 = 2;
                     getShopClass();
                 }
             }
@@ -395,15 +399,16 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
         binding.swipeLayout.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-                int pos = leftAdapter.getPos();
-                binding.nescro.scrollTo(0, 0);
+                int i = leftAdapter.getPos();
+
+                int pos = i;
                 if (pos >= leftAdapter.getData().size() - 1) {
                     leftAdapter.setSelect(pos);
-
+                    binding.leftRecyclerView.scrollToPosition(pos);
                 } else {
                     pos = pos + 1;
                     leftAdapter.setSelect(pos);
-
+                    binding.leftRecyclerView.scrollToPosition(pos);
                 }
                 leftAdapter.notifyDataSetChanged();
                 if (mParam1 == 1) {
@@ -415,6 +420,7 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                     clsShopId = shopClassifyLsit.get(pos).getClsId();
                     getShops(clsShopId, 0);
                 }
+
             }
 
             @Override
@@ -425,15 +431,13 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
 
                 if (pos <= 0) {
                     leftAdapter.setSelect(0);
-
+                    binding.leftRecyclerView.scrollToPosition(pos);
                 } else {
                     pos = pos - 1;
                     leftAdapter.setSelect(pos);
-
+                    binding.leftRecyclerView.scrollToPosition(pos);
                 }
                 leftAdapter.notifyDataSetChanged();
-                binding.swipeLayout.finishRefresh();
-
 
                 if (mParam1 == 1) {
                     //获取当前分类的商品
@@ -460,17 +464,18 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                     @Override
                     public void onStart(Request<LzyResponse<ShopsNew>, ? extends Request> request) {
                         super.onStart(request);
-                        showloadDialog("");
+                        LoadingUtil.setLoadingViewShow(true);
                     }
 
                     @Override
                     public void onSuccess(Response<LzyResponse<ShopsNew>> response) {
                         super.onSuccess(getActivity(), "", response.body().code);
                         binding.backgroundImg.setVisibility(View.GONE);
-                        if (type == 1) {
+                        if (type == 0) {
+                            binding.swipeLayout.finishLoadMore();
+                        } else if (type == 1) {
                             binding.swipeLayout.finishRefresh();
                         }
-                        goneloadDialog();
                         multipleItemList.clear();
                         goodsListBeans.clear();
 
@@ -481,14 +486,7 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                         multipleBouItemList.clear();
 
                         if (response.body().data != null) {
-//                            goodsListBeans = response.body().data.getGoodslist();
-//                            for (int i = 0; i < goodsListBeans.size(); i++) {
-//                                MultipleItem multipleItem = new MultipleItem(MultipleItem.GOODS);
-//                                multipleItem.setGoodsListBean(goodsListBeans.get(i));
-//                                multipleItemList.add(multipleItem);
-//                            }
                             ShopsNew data = response.body().data;
-//
                             if (data.getBoutique() == null || data.getBoutique().size() == 0) {
                                 binding.boutique.setVisibility(View.GONE);
                             } else {
@@ -546,25 +544,27 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                             binding.backgroundImg.setVisibility(View.VISIBLE);
 //                            rightAdapter.setNewData(null);
                         }
-                        binding.swipeLayout.finishLoadMore();
-//
-//                        if (type == 0) {
-//                            new Handler().postAtTime(new Runnable() {
-//                                @Override
-//                                public void run() {
-//                                    nescro.scrollTo(0, 0);
-//                                }
-//                            }, 3000);
-//                        }
+                        if (type == 0) {
+                            binding.nescro.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    binding.nescro.scrollTo(0, 0);
+                                    LoadingUtil.setLoadingViewShow(false);
+                                }
+                            }, 1000);
+                        } else {
+                            LoadingUtil.setLoadingViewShow(false);
+                        }
+
                     }
 
                     @Override
                     public void onError(Response<LzyResponse<ShopsNew>> response) {
                         super.onError(response);
                         if (type == 0) {
-                            binding.swipeLayout.finishLoadMore(false);
+                            binding.swipeLayout.finishLoadMore();
                         } else if (type == 1) {
-                            binding.swipeLayout.finishRefresh(false);
+                            binding.swipeLayout.finishRefresh();
                         }
                         ToastUtils.show(response.body().msg);
 
@@ -583,7 +583,7 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                         multipleBouItemList.clear();
                         rightAdapterBou.setNewData(multipleBouItemList);
                         rightAdapterBou.notifyDataSetChanged();
-                        goneloadDialog();
+                        LoadingUtil.setLoadingViewShow(false);
                     }
                 });
     }
@@ -606,15 +606,13 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                     @Override
                     public void onStart(Request<LzyResponse<MerchantsInfoNew>, ? extends Request> request) {
                         super.onStart(request);
-                        showloadDialog("");
+                        LoadingUtil.setLoadingViewShow(true);
                     }
 
                     @Override
                     public void onSuccess(Response<LzyResponse<MerchantsInfoNew>> response) {
                         super.onSuccess(getActivity(), "", response.body().code);
-                        goneloadDialog();
                         binding.backgroundImg.setVisibility(View.GONE);
-
                         if (type == 0) {
                             binding.swipeLayout.finishLoadMore();
                         } else if (type == 1) {
@@ -683,16 +681,28 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                             binding.backgroundImg.setVisibility(View.VISIBLE);
 //                            rightAdapter.setNewData(null);
                         }
+                        if (type == 0) {
+                            binding.nescro.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Log.e("TAG", "run: ");
+                                    binding.nescro.scrollTo(0, 0);
+                                    LoadingUtil.setLoadingViewShow(false);
 
+                                }
+                            }, 500);
+                        } else {
+                            LoadingUtil.setLoadingViewShow(false);
+                        }
                     }
 
                     @Override
                     public void onError(Response<LzyResponse<MerchantsInfoNew>> response) {
                         super.onError(response);
                         if (type == 0) {
-                            binding.swipeLayout.finishLoadMore(false);
+                            binding.swipeLayout.finishLoadMore();
                         } else if (type == 1) {
-                            binding.swipeLayout.finishRefresh(false);
+                            binding.swipeLayout.finishRefresh();
                         }
                         ToastUtils.show(response.body().msg);
 
@@ -710,7 +720,7 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                         multipleBouItemList.clear();
                         rightAdapterBou.setNewData(multipleBouItemList);
                         rightAdapterBou.notifyDataSetChanged();
-                        goneloadDialog();
+                        LoadingUtil.setLoadingViewShow(false);
                     }
                 });
     }

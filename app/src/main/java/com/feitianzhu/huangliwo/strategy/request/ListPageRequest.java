@@ -44,17 +44,8 @@ public class ListPageRequest extends BaseRequest {
 
     @Override
     public TypeReference getDatatype() {
-        return new TypeReference<Result>() {
+        return new TypeReference<ListPageBean>() {
         };
     }
 
-    public static class Result {
-        /**
-         * pageResult : {"totalPage":2,"total":6,"rows":[{"id":2,"columnId":null,"title":"八卦猎奇","images":null,"video":null,"contentType":"2","context":null,"createTime":null,"updateTime":"2020-05-28T16:00:00.000+0000","operator":null,"status":null,"orders":null,"h5Url":"wwww"},{"id":3,"columnId":null,"title":"制造悬念颠倒常识","images":null,"video":null,"contentType":"3","context":null,"createTime":null,"updateTime":"2020-05-28T16:00:00.000+0000","operator":null,"status":null,"orders":null,"h5Url":"wwww"},{"id":18,"columnId":null,"title":"的好好","images":"http://bldby-dev.oss-cn-beijing.aliyuncs.com/titleImages/1590731482597.jpg?Expires=1906091478&OSSAccessKeyId=LTAI4GHEkb4SUqKsjoLMcw1d&Signature=20hD%2B77wSUVa8ob1HRgXm8KZE7Q%3D","video":"http://bldby-dev.oss-cn-beijing.aliyuncs.com/titleVideo/1590731492277.mp4?Expires=1906091484&OSSAccessKeyId=LTAI4GHEkb4SUqKsjoLMcw1d&Signature=pvuGrkh0h%2BDxDbewSC95A0NiSh8%3D","contentType":"2","context":null,"createTime":null,"updateTime":"2020-05-28T16:00:00.000+0000","operator":null,"status":null,"orders":null,"h5Url":"wwww"},{"id":4,"columnId":null,"title":"颠倒常识","images":null,"video":null,"contentType":"1","context":null,"createTime":null,"updateTime":"2020-05-28T16:00:00.000+0000","operator":null,"status":null,"orders":null,"h5Url":"wwww"},{"id":20,"columnId":null,"title":"大撒大撒大苏打","images":"http://bldby-dev.oss-cn-beijing.aliyuncs.com/titleImages/1590731722577.jpg?Expires=1906091720&OSSAccessKeyId=LTAI4GHEkb4SUqKsjoLMcw1d&Signature=FFyFNQGe%2BlSC%2BKgz9TYGPlhsHRg%3D","video":"","contentType":"2","context":null,"createTime":null,"updateTime":"2020-05-28T16:00:00.000+0000","operator":null,"status":null,"orders":null,"h5Url":"wwww"}]}
-         */
-
-        public ListPageBean pageResult;
-
-
-    }
 }

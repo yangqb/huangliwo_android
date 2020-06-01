@@ -22,14 +22,14 @@ public class StrategyItemAdapter extends BaseQuickAdapter<ListPageBean.ListBean,
     @Override
     protected void convert(BaseViewHolder helper, ListPageBean.ListBean item) {
         helper.setText(R.id.item_number, item.getTitle());
-        helper.setText(R.id.content, item.getTitle());
+        helper.setText(R.id.content, item.getUpdateTime());
 
         ImageView view = helper.getView(R.id.imageView9);
         Glide.with(mContext)
                 .load(item.getImages())
                 .apply(new RequestOptions()
-                        .placeholder(R.mipmap.g10_04weijiazai)
-                        .error(R.mipmap.g10_04weijiazai)
+                        .placeholder(R.color.color_CCCCCC)
+                        .error(R.color.color_CCCCCC)
                         .dontAnimate())
                 .into(view);
 

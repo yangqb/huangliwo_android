@@ -53,8 +53,8 @@ public class ListPageBean {
          */
 
         private String title;
-        private Object images;
-        private Object video;
+        private String images;
+        private String video;
         private String contentType;
         private String updateTime;
         private String h5Url;
@@ -71,15 +71,15 @@ public class ListPageBean {
             return images;
         }
 
-        public void setImages(Object images) {
+        public void setImages(String images) {
             this.images = images;
         }
 
-        public Object getVideo() {
+        public String getVideo() {
             return video;
         }
 
-        public void setVideo(Object video) {
+        public void setVideo(String video) {
             this.video = video;
         }
 

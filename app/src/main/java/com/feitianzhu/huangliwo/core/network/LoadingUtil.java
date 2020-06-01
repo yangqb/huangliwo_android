@@ -26,7 +26,7 @@ public class LoadingUtil {
             usefulCount++;
             if (loadingPopup == null) {
                 loadingPopup = (LoadingPopupView) new XPopup.Builder(GlobalUtil.getCurrentActivity())
-                        .hasShadowBg(true)
+                        .hasShadowBg(false)
                         .dismissOnTouchOutside(false)
                         .popupAnimation(PopupAnimation.NoAnimation)
                         .asLoading()
