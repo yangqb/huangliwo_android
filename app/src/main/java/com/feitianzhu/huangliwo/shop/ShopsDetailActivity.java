@@ -536,7 +536,29 @@ public class ShopsDetailActivity extends BaseActivity {
             case R.id.select_specifications:
                 /* //商品规格
                  */
-                showSpeDialog();
+
+                isBuyGoods = true;
+              /*  if (goodsListBean.getStockCount() <= 0) {
+                    ToastUtils.show("当前商品已售完");
+                    return;
+                }*/
+                if (specifications.size() > 0) {
+                    showSpeDialog();
+                    //return;
+                } else {
+                    intent = new Intent(ShopsDetailActivity.this, ShopPayActivity.class);
+                    if (valueId != null) {
+                        intent.putExtra(ShopPayActivity.GOODS_VALUE_ID, valueId.toString());
+                    }
+                    intent.putExtra(ShopPayActivity.IS_SHOW_ADDRESS, true);
+                    if (goodsListBean != null) {
+                        intent.putExtra(ShopPayActivity.PAY_DATA, goodsListBean);
+                    }
+                    startActivity(intent);
+                }
+
+
+                //showSpeDialog();
                 break;
             case R.id.ll_rebate:
                 token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
