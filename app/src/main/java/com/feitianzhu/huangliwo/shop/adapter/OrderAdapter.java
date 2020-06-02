@@ -26,10 +26,10 @@ import java.util.List;
 import java.util.Locale;
 
 public class OrderAdapter extends BaseMultiItemQuickAdapter<MultipleItemOrderModel, BaseViewHolder> {
-    private String str1;
     private String str2;
     private String amount;
     private String price;
+    private String rewardAmount;
 
     public OrderAdapter(@Nullable List<MultipleItemOrderModel> data) {
         super(data);
@@ -39,7 +39,6 @@ public class OrderAdapter extends BaseMultiItemQuickAdapter<MultipleItemOrderMod
 
     @Override
     protected void convert(@NonNull BaseViewHolder helper, MultipleItemOrderModel item) {
-        str1 = "合计：";
         str2 = "¥ ";
         helper.addOnClickListener(R.id.btn_refund);
         helper.addOnClickListener(R.id.btn_logistics);
@@ -47,8 +46,9 @@ public class OrderAdapter extends BaseMultiItemQuickAdapter<MultipleItemOrderMod
         if (helper.getItemViewType() == MultipleItemOrderModel.GOODS_ORDER) {
             amount = String.format(Locale.getDefault(), "%.2f", item.getGoodsOrderListBean().getAmount());
             price = String.format(Locale.getDefault(), "%.2f", item.getGoodsOrderListBean().getPrice());
-            setSpannableString(amount, helper.getView(R.id.amount));
             setSpannableString2(price, helper.getView(R.id.tv_amount));
+            rewardAmount = "¥" + String.format(Locale.getDefault(), "%.2f", item.getGoodsOrderListBean().getRebatePv());
+            helper.setText(R.id.reward_amount, rewardAmount);
             helper.setText(R.id.specifications, item.getGoodsOrderListBean().getAttributeVal());
             helper.setText(R.id.summary, item.getGoodsOrderListBean().getGoodName());
             helper.setText(R.id.count, "×" + item.getGoodsOrderListBean().getCount());
@@ -59,13 +59,14 @@ public class OrderAdapter extends BaseMultiItemQuickAdapter<MultipleItemOrderMod
                     .error(R.mipmap.g10_04weijiazai)).into((RoundedImageView) helper.getView(R.id.image));
             if (item.getGoodsOrderListBean().getIsVipOrder() == 1) {
                 helper.setGone(R.id.refund_tag, false);
+                helper.setGone(R.id.ll_reward, false);
+                setSpannableString("实付：", str2, amount, helper.getView(R.id.amount));
                 if (item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_WAIT_DELIVERY) {
                     helper.setText(R.id.tvStatus, "待发货");
                     helper.setGone(R.id.btn_logistics, false);
                     helper.setGone(R.id.btn_refund, false);
                     helper.setGone(R.id.btn_confirm_goods, false);
                 } else if (item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_WAIT_RECEIVING) {
-                    helper.setText(R.id.tvStatus, "待收货");
                     helper.setText(R.id.btn_logistics, "查看物流");
                     helper.setGone(R.id.btn_logistics, true);
                     helper.setGone(R.id.btn_refund, false);
@@ -90,6 +91,8 @@ public class OrderAdapter extends BaseMultiItemQuickAdapter<MultipleItemOrderMod
                     } else {
                         helper.setText(R.id.btn_confirm_goods, "晒评价");
                     }
+                    setSpannableString("实付：", str2, amount, helper.getView(R.id.amount));
+                    helper.setGone(R.id.ll_reward, true);
                     helper.setText(R.id.btn_refund, "删除订单");
                     helper.setText(R.id.tvStatus, "交易完成");
                     helper.setText(R.id.btn_logistics, "查看物流");
@@ -97,23 +100,29 @@ public class OrderAdapter extends BaseMultiItemQuickAdapter<MultipleItemOrderMod
                     helper.setGone(R.id.btn_refund, true);
                     helper.setGone(R.id.btn_confirm_goods, true);
                 } else if (item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_NO_PAY) {
+                    setSpannableString("合计：", str2, amount, helper.getView(R.id.amount));
                     helper.setText(R.id.tvStatus, "等待付款");
                     helper.setText(R.id.btn_confirm_goods, "去付款");
                     helper.setText(R.id.btn_logistics, " 取消订单");
                     helper.setGone(R.id.btn_confirm_goods, true);
                     helper.setGone(R.id.btn_logistics, true);
                     helper.setGone(R.id.btn_refund, false);
+                    helper.setGone(R.id.ll_reward, false);
                 } else if (item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_WAIT_DELIVERY) {
+                    setSpannableString("实付：", str2, amount, helper.getView(R.id.amount));
                     helper.setText(R.id.tvStatus, "等待发货");
                     helper.setText(R.id.btn_logistics, "申请退款");
+                    helper.setGone(R.id.ll_reward, false);
                     helper.setGone(R.id.btn_confirm_goods, false);
                     helper.setGone(R.id.btn_logistics, true);
                     helper.setGone(R.id.btn_refund, false);
                 } else if (item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_WAIT_RECEIVING) {
+                    setSpannableString("实付：", str2, amount, helper.getView(R.id.amount));
                     helper.setText(R.id.tvStatus, "等待收货");
                     helper.setText(R.id.btn_confirm_goods, "确认收货");
                     helper.setText(R.id.btn_logistics, " 查看物流");
                     helper.setText(R.id.btn_refund, "申请退货");
+                    helper.setGone(R.id.ll_reward, false);
                     helper.setGone(R.id.btn_confirm_goods, true);
                     helper.setGone(R.id.btn_logistics, true);
                     helper.setGone(R.id.btn_refund, true);
@@ -164,12 +173,16 @@ public class OrderAdapter extends BaseMultiItemQuickAdapter<MultipleItemOrderMod
                         helper.setGone(R.id.btn_refund, true);
                         helper.setGone(R.id.btn_confirm_goods, false);
                     }
+                    setSpannableString("实付：", str2, amount, helper.getView(R.id.amount));
                     helper.setGone(R.id.btn_logistics, false);
+                    helper.setGone(R.id.ll_reward, false);
                 } else {
+                    setSpannableString("合计：", str2, amount, helper.getView(R.id.amount));
                     helper.setText(R.id.tvStatus, "");
                     helper.setGone(R.id.btn_confirm_goods, false);
                     helper.setGone(R.id.btn_logistics, false);
                     helper.setGone(R.id.btn_refund, false);
+                    helper.setGone(R.id.ll_reward, false);
                 }
             }
         } else {
@@ -180,7 +193,6 @@ public class OrderAdapter extends BaseMultiItemQuickAdapter<MultipleItemOrderMod
             helper.setText(R.id.specifications, item.getSetMealOrderModel().getRemark());
             amount = String.format(Locale.getDefault(), "%.2f", item.getSetMealOrderModel().getAmount());
             price = String.format(Locale.getDefault(), "%.2f", item.getSetMealOrderModel().getAmount());
-            setSpannableString(amount, helper.getView(R.id.amount));
             setSpannableString2(price, helper.getView(R.id.tv_amount));
             if (item.getSetMealOrderModel().getSmImg() != null && item.getSetMealOrderModel().getSmImg().contains(",")) {
                 String[] imgUrls = item.getSetMealOrderModel().getSmImg().split(",");
@@ -195,6 +207,7 @@ public class OrderAdapter extends BaseMultiItemQuickAdapter<MultipleItemOrderMod
 
             helper.setVisible(R.id.btn_refund, false);
             if (item.getSetMealOrderModel().getStatus() == SetMealOrderInfo.WAIT_PAY) {
+                setSpannableString("合计：", str2, amount, helper.getView(R.id.amount));
                 helper.setGone(R.id.btn_logistics, true);
                 helper.setGone(R.id.btn_confirm_goods, true);
                 helper.setText(R.id.tvStatus, "等待付款");
@@ -202,27 +215,32 @@ public class OrderAdapter extends BaseMultiItemQuickAdapter<MultipleItemOrderMod
                 helper.setText(R.id.btn_confirm_goods, "去付款");
             } else if (item.getSetMealOrderModel().getStatus() == SetMealOrderInfo.WAIT_USE) {
                 //未使用
+                setSpannableString("实付：", str2, amount, helper.getView(R.id.amount));
                 helper.setText(R.id.btn_logistics, "申请退款");
                 helper.setText(R.id.tvStatus, "等待使用");
                 helper.setGone(R.id.btn_logistics, true);
                 helper.setGone(R.id.btn_confirm_goods, true);
                 helper.setText(R.id.btn_confirm_goods, "查看订单");
             } else if (item.getSetMealOrderModel().getStatus() == SetMealOrderInfo.REFUNDING) {
+                setSpannableString("实付：", str2, amount, helper.getView(R.id.amount));
                 helper.setText(R.id.tvStatus, "退款中");
                 helper.setGone(R.id.btn_logistics, false);
                 helper.setGone(R.id.btn_confirm_goods, true);
                 helper.setText(R.id.btn_confirm_goods, "查看订单");
             } else if (item.getSetMealOrderModel().getStatus() == SetMealOrderInfo.REFUNDED) {
+                setSpannableString("实付：", str2, amount, helper.getView(R.id.amount));
                 helper.setText(R.id.tvStatus, "退款完成");
                 helper.setGone(R.id.btn_logistics, false);
                 helper.setGone(R.id.btn_confirm_goods, true);
                 helper.setText(R.id.btn_confirm_goods, "查看详情");
             } else if (item.getSetMealOrderModel().getStatus() == SetMealOrderInfo.CANCEL) {
+                setSpannableString("合计：", str2, amount, helper.getView(R.id.amount));
                 helper.setText(R.id.tvStatus, "交易关闭");
                 helper.setText(R.id.btn_confirm_goods, "查看订单");
                 helper.setGone(R.id.btn_confirm_goods, true);
                 helper.setGone(R.id.btn_logistics, false);
             } else if (item.getSetMealOrderModel().getStatus() == SetMealOrderInfo.HAVE_USED) {
+                setSpannableString("实付：", str2, amount, helper.getView(R.id.amount));
                 if (item.getSetMealOrderModel().getIsConsume() == 1) {
                     //已使用
                     if (item.getSetMealOrderModel().getIsEval() == 1) {
@@ -234,6 +252,7 @@ public class OrderAdapter extends BaseMultiItemQuickAdapter<MultipleItemOrderMod
                     helper.setText(R.id.tvStatus, "交易完成");
                 }
             } else {
+                setSpannableString("合计：", str2, amount, helper.getView(R.id.amount));
                 helper.setText(R.id.tvStatus, "");
                 helper.setGone(R.id.btn_confirm_goods, false);
                 helper.setGone(R.id.btn_logistics, false);
@@ -243,7 +262,7 @@ public class OrderAdapter extends BaseMultiItemQuickAdapter<MultipleItemOrderMod
     }
 
     @SuppressLint("SetTextI18n")
-    private void setSpannableString(String str3, TextView view) {
+    private void setSpannableString(String str1, String str2, String str3, TextView view) {
         view.setText("");
         SpannableString span1 = new SpannableString(str1);
         SpannableString span2 = new SpannableString(str2);
