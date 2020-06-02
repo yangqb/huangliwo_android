@@ -126,15 +126,14 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
         titleName.setText("成为会员");
         mCheckBox.setChecked(true);
         mCheckBox.setOnCheckedChangeListener(this);
-        mCheckBox.setBackgroundResource(R.mipmap.f01_06xuanzhong5);
+        mCheckBox.setBackgroundResource(R.mipmap.vip_selected);
         adapter = new VipPresentsAdapter(shopGiftList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(adapter);
         recyclerView.setNestedScrollingEnabled(false);
         refreshLayout.setEnableLoadMore(false);
-
         adapter2 = new VipPresentsAdapter2(presentsList);
-        recyclerView2.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView2.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
         recyclerView2.setAdapter(adapter2);
         recyclerView2.setNestedScrollingEnabled(false);
         adapter2.notifyDataSetChanged();

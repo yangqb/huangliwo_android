@@ -1,7 +1,6 @@
 package com.feitianzhu.huangliwo.shop;
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.support.annotation.NonNull;
 
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
@@ -31,4 +30,5 @@ public class ImActivity extends BaseActivity {
     protected void initData() {
 
     }
+
 }

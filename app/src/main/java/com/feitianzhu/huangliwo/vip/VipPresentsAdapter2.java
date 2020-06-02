@@ -44,10 +44,10 @@ public class VipPresentsAdapter2 extends BaseQuickAdapter<VipGifListInfo.VipPres
         Glide.with(mContext).load(item.giftImg).apply(new RequestOptions().error(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai)).into((ImageView) helper.getView(R.id.present_img));
         if (item.isGet == 1) {
             helper.setBackgroundRes(R.id.item, R.color.color_eeeeee);
-            helper.setBackgroundRes(R.id.select_img, R.mipmap.g07_02quan);
+            helper.setBackgroundRes(R.id.select_img, R.mipmap.vip_selected);
         } else {
-            helper.setBackgroundRes(R.id.item, R.color.white);
-            helper.setBackgroundRes(R.id.select_img, R.mipmap.g07_01quan);
+            helper.setBackgroundRes(R.id.item, R.color.color_fde29a);
+            helper.setBackgroundRes(R.id.select_img, R.mipmap.vip_select);
         }
         helper.addOnClickListener(R.id.rl_select);
     }
