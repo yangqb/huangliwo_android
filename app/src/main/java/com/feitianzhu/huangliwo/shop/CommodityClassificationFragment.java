@@ -85,24 +85,9 @@ import static com.feitianzhu.huangliwo.login.LoginEvent.EDITOR_INFO;
 
 
 public class CommodityClassificationFragment extends SFFragment implements ProvinceCallBack {
-    @BindView(R.id.swipeLayout)
-    RefreshLayout mSwipeLayout;
-    @BindView(R.id.search)
-    LinearLayout mSearchLayout;
-    @BindView(R.id.txt_location)
-    TextView mTxtLocation;
-    @BindView(R.id.iv_home_nv_right)
-    ImageView ivRight;
-    @BindView(R.id.left_recyclerView)
-    RecyclerView leftRecyclerView;
-    @BindView(R.id.right_recyclerView)
-    RecyclerView rightRecyclerView;
-    @BindView(R.id.iv_head)
-    CircleImageView ivHead;
-    @BindView(R.id.recyclerView1)
-    RecyclerView recyclerView1;
-    @BindView(R.id.recyclerView2)
-    RecyclerView recyclerView2;
+
+
+
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -213,9 +198,9 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
         binding.recyclerView1.setAdapter(rightAdapterBou);
         rightAdapterBou.notifyDataSetChanged();
 
-        mSwipeLayout.setEnableLoadMore(true);
-        mSwipeLayout.setEnableRefresh(true);
-        mSwipeLayout.setEnableLoadMoreWhenContentNotFull(true);//在内容不满一页的时候，是否可以上拉加载更多
+        binding.swipeLayout.setEnableLoadMore(true);
+        binding.swipeLayout.setEnableRefresh(true);
+        binding.swipeLayout.setEnableLoadMoreWhenContentNotFull(true);//在内容不满一页的时候，是否可以上拉加载更多
 
         if (mParam1 == 1) { //商家
             binding.tabLayout.getTabAt(1).select();
@@ -272,6 +257,9 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
 
                     @Override
                     public void onSuccess(Response<LzyResponse<MerchantsClassifyModel>> response) {
+                        if (response.body() == null) {
+                            return;
+                        }
                         super.onSuccess(getActivity(), response.body().msg, response.body().code);
                         if (response.body().data != null) {
                             merchantsClassifyList = response.body().data.getList();
@@ -313,6 +301,9 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
 
                     @Override
                     public void onSuccess(Response<LzyResponse<ShopClassify>> response) {
+                        if (response.body() == null) {
+                            return;
+                        }
                         super.onSuccess(getActivity(), "", response.body().code);
                         if (response.body().data != null) {
                             ShopClassify shopClassify = response.body().data;
@@ -425,11 +416,16 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                 int pos = i;
                 if (pos >= leftAdapter.getData().size() - 1) {
                     leftAdapter.setSelect(pos);
-                    binding.leftRecyclerView.scrollToPosition(pos);
+
+                    LinearLayoutManager linearLayoutManager = (LinearLayoutManager)   binding.leftRecyclerView.getLayoutManager();
+                    linearLayoutManager.scrollToPositionWithOffset(pos, 0);
+//                    binding.leftRecyclerView.scrollToPosition(pos);
                 } else {
                     pos = pos + 1;
                     leftAdapter.setSelect(pos);
-                    binding.leftRecyclerView.scrollToPosition(pos);
+                    LinearLayoutManager linearLayoutManager = (LinearLayoutManager)   binding.leftRecyclerView.getLayoutManager();
+                    linearLayoutManager.scrollToPositionWithOffset(pos, 0);
+//                    binding.leftRecyclerView.scrollToPosition(pos);
                 }
                 leftAdapter.notifyDataSetChanged();
                 if (mParam1 == 1) {
@@ -452,12 +448,14 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
 
                 if (pos <= 0) {
                     leftAdapter.setSelect(0);
-                    binding.leftRecyclerView.scrollToPosition(pos);
+//                    binding.leftRecyclerView.scrollToPosition(pos);
                 } else {
                     pos = pos - 1;
                     leftAdapter.setSelect(pos);
-                    binding.leftRecyclerView.scrollToPosition(pos);
+//                    binding.leftRecyclerView.scrollToPosition(pos);
                 }
+                LinearLayoutManager linearLayoutManager = (LinearLayoutManager)   binding.leftRecyclerView.getLayoutManager();
+                linearLayoutManager.scrollToPositionWithOffset(pos, 0);
                 leftAdapter.notifyDataSetChanged();
 
                 if (mParam1 == 1) {
@@ -490,6 +488,9 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
 
                     @Override
                     public void onSuccess(Response<LzyResponse<ShopsNew>> response) {
+                        if (response.body() == null) {
+                            return;
+                        }
                         super.onSuccess(getActivity(), "", response.body().code);
                         binding.backgroundImg.setVisibility(View.GONE);
                         if (type == 0) {
@@ -632,6 +633,9 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
 
                     @Override
                     public void onSuccess(Response<LzyResponse<MerchantsInfoNew>> response) {
+                        if (response.body() == null) {
+                            return;
+                        }
                         super.onSuccess(getActivity(), "", response.body().code);
                         binding.backgroundImg.setVisibility(View.GONE);
                         if (type == 0) {

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.webkit.DownloadListener;
 import android.webkit.JavascriptInterface;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -39,7 +41,9 @@ public class BaseWebviewActivity extends BaseBindingActivity {
 
     private ActivityBaseWebviewBinding dataBinding;
     private static final String kBaseUrlKey = "WebFrag_BaseUrl";
+    private static final String kBaseUrlKeyVideo = "WebFrag_BaseUrl_Video";
     protected String url = "";
+    private boolean isVideo = false;
 
     public static void toBaseWebviewActivity(Context context, String uri) {
         Intent intent = new Intent(context, BaseWebviewActivity.class);
@@ -47,10 +51,23 @@ public class BaseWebviewActivity extends BaseBindingActivity {
         context.startActivity(intent);
     }
 
+    public static void toBaseWebviewActivity(Context context, String uri, boolean isVideo) {
+        Intent intent = new Intent(context, BaseWebviewActivity.class);
+        intent.putExtra(kBaseUrlKey, uri);
+        intent.putExtra(kBaseUrlKeyVideo, isVideo);
+        context.startActivity(intent);
+    }
+
     @Override
     public void bindingView() {
         dataBinding = DataBindingUtil.setContentView(this, R.layout.activity_base_webview);
         dataBinding.setViewModel(this);
+
+
+        url = getIntent().getStringExtra(kBaseUrlKey);
+        isVideo = getIntent().getBooleanExtra(kBaseUrlKeyVideo, false);
+
+
         WebView webview = dataBinding.webView;
 
         webview.onResume();
@@ -59,13 +76,26 @@ public class BaseWebviewActivity extends BaseBindingActivity {
         webview.getSettings().setDomStorageEnabled(true);
         webview.getSettings().setDatabaseEnabled(true);
         webview.getSettings().setDatabasePath(this.getApplicationContext().getCacheDir().getAbsolutePath());
-        String stringExtra = getIntent().getStringExtra(kBaseUrlKey);
-        if (StringUtils.isEmpty(stringExtra)) {
+        webview.getSettings().setPluginState(WebSettings.PluginState.ON);// 支持插件
+        webview.getSettings().setLoadsImagesAutomatically(true);  //支持自动加载图片
+        webview.getSettings().setUseWideViewPort(true);  //将图片调整到适合webview的大小  无效
+        webview.getSettings().setLoadWithOverviewMode(true); // 缩放至屏幕的大小
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            webview.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        }
+
+        if (isVideo) {
+//            视屏自动播放
+            webview.getSettings().setMediaPlaybackRequiresUserGesture(false);
+        }
+
+        if (StringUtils.isEmpty(url)) {
             ToastUtils.show("网址为空");
 //            finish();
             return;
         }
-        url = stringExtra;
+
 //        url += "nav=1";
 //        Log.e("TAG", "bindingView: " + url);
         if (url.contains("nav=1")) {
@@ -203,4 +233,9 @@ public class BaseWebviewActivity extends BaseBindingActivity {
         return "";
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        dataBinding.webView.destroy();
+    }
 }

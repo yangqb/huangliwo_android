@@ -1,7 +1,7 @@
 package com.feitianzhu.huangliwo.strategy;
 
-import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
@@ -37,18 +37,18 @@ public class StrategyChildFragment extends BaseBindingFragment {
     private StrategyItem1Adapter strategyItemAdapter;
     private StrategyItemAdapter strategyItemAdapter1;
     private int currentPage = 1;
+    public StrategyFragment strategyFragment;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    protected View initBindingView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container) {
         binding = FragmentStrategyChildListBinding.inflate(inflater, container, false);
         binding.setViewModel(this);
         return binding.getRoot();
     }
 
-
     @Override
     protected void init() {
+
         binding.refreshLayout.setEnableRefresh(true);
         binding.refreshLayout.setEnableLoadMore(true);
         binding.refreshLayout.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
@@ -83,7 +83,17 @@ public class StrategyChildFragment extends BaseBindingFragment {
             strategyItemAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                    BaseWebviewActivity.toBaseWebviewActivity(getActivity(), strategyItemAdapter.getData().get(position).getH5Url());
+                    ListPageBean.ListBean listBean = strategyItemAdapter.getData().get(position);
+                    if (listBean.getContentType().equals("2")) {
+                        BaseWebviewActivity.toBaseWebviewActivity(getActivity(), listBean.getH5Url(), true);
+
+                    } else if (listBean.getContentType().equals("1")) {
+                        VideoPlayActivity.to(getActivity(),listBean.getVideo());
+//                        strategyFragment.showVideo(listBean.getVideo());
+                    } else {
+                        BaseWebviewActivity.toBaseWebviewActivity(getActivity(), listBean.getH5Url());
+
+                    }
                 }
             });
         } else {
@@ -102,7 +112,16 @@ public class StrategyChildFragment extends BaseBindingFragment {
             strategyItemAdapter1.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                    BaseWebviewActivity.toBaseWebviewActivity(getActivity(), strategyItemAdapter1.getData().get(position).getH5Url());
+                    ListPageBean.ListBean listBean = strategyItemAdapter1.getData().get(position);
+                    if (listBean.getContentType().equals("2")) {
+                        BaseWebviewActivity.toBaseWebviewActivity(getActivity(), listBean.getH5Url(), true);
+                    } else if (listBean.getContentType().equals("1")) {
+                        VideoPlayActivity.to(getActivity(),listBean.getVideo());
+
+//                        strategyFragment.showVideo(listBean.getVideo());
+                    } else {
+                        BaseWebviewActivity.toBaseWebviewActivity(getActivity(), listBean.getH5Url());
+                    }
                 }
             });
         }
@@ -110,6 +129,7 @@ public class StrategyChildFragment extends BaseBindingFragment {
         request(-1);
 
     }
+
 
     private void request(int i) {
         ListPageRequest listPageRequest = new ListPageRequest();

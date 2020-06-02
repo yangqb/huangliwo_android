@@ -55,6 +55,7 @@ public class ListPageBean {
         private String title;
         private String images;
         private String video;
+        //        攻略类型 1-视频 2-视频文章 3-图文
         private String contentType;
         private String updateTime;
         private String h5Url;

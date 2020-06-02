@@ -56,24 +56,6 @@ public class SplashActivity extends BaseActivity {
     private String strVal;
     boolean service = false;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        //initPermision();
-        //请求广告数据
-        ImageCancheok();
-        GlideUtils.getImageView2(this, R.mipmap.dingbu, image);
-        service = SPUtils.getBoolean(this, "service");
-        if (service != true) {
-            showPrivateDialog();
-        } else {
-            requestPermission();
-        }
-
-        SPUtils.putBoolean(this, Constant.LOGIN_DIALOG, true);//重新进入APP才弹出异地登录的弹框
-        //获取本地图片
-        //判断本地时候存在动画
-    }
 
     @Override
     public ImmersionBar getOpenImmersionBar() {
@@ -92,7 +74,20 @@ public class SplashActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+        //initPermision();
+        //请求广告数据
+        ImageCancheok();
+        GlideUtils.getImageView2(this, R.mipmap.dingbu, image);
+        service = SPUtils.getBoolean(this, "service");
+        if (service != true) {
+            showPrivateDialog();
+        } else {
+            requestPermission();
+        }
 
+        SPUtils.putBoolean(this, Constant.LOGIN_DIALOG, true);//重新进入APP才弹出异地登录的弹框
+        //获取本地图片
+        //判断本地时候存在动画
     }
 
     @Override
