@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -26,22 +27,17 @@ public class EaseDingMsgSendActivity extends EaseBaseActivity {
     @Override
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
-
         setContentView(R.layout.ease_acitivity_ding_msg_send);
-
         titleBar = (EaseTitleBar) findViewById(R.id.title_bar);
         msgEidtText = (EditText) findViewById(R.id.et_sendmessage);
-
         setupView();
     }
 
     private void setupView() {
         titleBar.setTitle(getString(R.string.title_group_notification));
         titleBar.setRightLayoutVisibility(View.VISIBLE);
-
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.addRule(RelativeLayout.CENTER_IN_PARENT);
-
         TextView sendView = new TextView(this);
         sendView.setText(getString(R.string.button_send));
         sendView.setTextColor(Color.WHITE);
