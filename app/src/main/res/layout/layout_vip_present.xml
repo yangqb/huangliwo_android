@@ -19,9 +19,10 @@
             >
             <ImageView
                 android:id="@+id/present_img"
-                android:layout_width="@dimen/dp_108"
-                android:layout_height="@dimen/dp_78"
+                android:layout_width="@dimen/dp_100"
+                android:layout_height="@dimen/dp_70"
                 android:layout_marginRight="15dp"
+                android:layout_gravity="center_horizontal"
                 android:background="@mipmap/g10_04weijiazai"
                 android:scaleType="centerCrop" />
 
@@ -41,18 +42,18 @@
             <TextView
                 android:id="@+id/originalPrice"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="3999"
+                android:layout_height="@dimen/dp_20"
                 android:layout_marginLeft="@dimen/dp_7"
+                android:text="3999"
                 android:textColor="@color/color_999999"
-                android:textSize="14sp" />
+                android:textSize="@dimen/sp_12" />
 
             <TextView
                 android:id="@+id/discountPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="399"
                 android:layout_marginLeft="@dimen/dp_7"
+                android:text="399"
                 android:textColor="@color/color_F88D03"
                 android:textSize="18sp" />
 
