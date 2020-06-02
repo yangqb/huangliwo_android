@@ -13,9 +13,8 @@
         <RelativeLayout
             android:id="@+id/left_button"
             android:layout_width="@dimen/dp_30"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:padding="@dimen/dp_10">
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true">
 
             <ImageView
                 android:layout_width="@dimen/dp_10"
@@ -33,41 +32,6 @@
             android:text=""
             android:textColor="@color/color_333333"
             android:textSize="17sp" />
-
-        <LinearLayout
-            android:id="@+id/plane_title"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:visibility="gone">
-
-            <TextView
-                android:id="@+id/startCity"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="上海"
-                android:textColor="@color/color_333333"
-                android:textSize="17sp" />
-
-            <ImageView
-                android:id="@+id/center_img"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:background="@mipmap/k01_12quwang" />
-
-            <TextView
-                android:id="@+id/endCity"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="上海"
-                android:textColor="@color/color_333333"
-                android:textSize="17sp" />
-
-        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/right_button"
@@ -98,6 +62,48 @@
                 android:visibility="gone" />
 
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/plane_title"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:layout_toLeftOf="@id/right_button"
+            android:layout_toRightOf="@id/left_button"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/startCity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="上海"
+                android:textColor="@color/color_333333"
+                android:textSize="17sp" />
+
+            <ImageView
+                android:id="@+id/center_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@mipmap/k01_12quwang" />
+
+            <TextView
+                android:id="@+id/endCity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="上海"
+                android:textColor="@color/color_333333"
+                android:textSize="17sp" />
+
+        </LinearLayout>
+
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"

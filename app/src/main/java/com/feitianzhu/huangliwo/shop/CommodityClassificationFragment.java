@@ -6,12 +6,15 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -46,6 +49,7 @@ import com.feitianzhu.huangliwo.shop.ui.dialog.ProvinceDialog2;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.feitianzhu.huangliwo.utils.UserInfoUtils;
+import com.feitianzhu.huangliwo.view.CircleImageView;
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
@@ -64,6 +68,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+import butterknife.BindView;
+
 import static com.feitianzhu.huangliwo.common.Constant.ACCESSTOKEN;
 import static com.feitianzhu.huangliwo.common.Constant.USERID;
 import static com.feitianzhu.huangliwo.login.LoginEvent.EDITOR_INFO;
@@ -79,7 +85,24 @@ import static com.feitianzhu.huangliwo.login.LoginEvent.EDITOR_INFO;
 
 
 public class CommodityClassificationFragment extends SFFragment implements ProvinceCallBack {
-
+    @BindView(R.id.swipeLayout)
+    RefreshLayout mSwipeLayout;
+    @BindView(R.id.search)
+    LinearLayout mSearchLayout;
+    @BindView(R.id.txt_location)
+    TextView mTxtLocation;
+    @BindView(R.id.iv_home_nv_right)
+    ImageView ivRight;
+    @BindView(R.id.left_recyclerView)
+    RecyclerView leftRecyclerView;
+    @BindView(R.id.right_recyclerView)
+    RecyclerView rightRecyclerView;
+    @BindView(R.id.iv_head)
+    CircleImageView ivHead;
+    @BindView(R.id.recyclerView1)
+    RecyclerView recyclerView1;
+    @BindView(R.id.recyclerView2)
+    RecyclerView recyclerView2;
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -190,9 +213,9 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
         binding.recyclerView1.setAdapter(rightAdapterBou);
         rightAdapterBou.notifyDataSetChanged();
 
-
-        binding.swipeLayout.setEnableLoadMore(true);
-        binding.swipeLayout.setEnableRefresh(true);
+        mSwipeLayout.setEnableLoadMore(true);
+        mSwipeLayout.setEnableRefresh(true);
+        mSwipeLayout.setEnableLoadMoreWhenContentNotFull(true);//在内容不满一页的时候，是否可以上拉加载更多
 
         if (mParam1 == 1) { //商家
             binding.tabLayout.getTabAt(1).select();
