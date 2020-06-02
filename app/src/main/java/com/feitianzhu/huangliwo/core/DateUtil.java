@@ -18,10 +18,10 @@ public class DateUtil {
         return df.format(date);
     }
 
-    public static Date formatDateYYYYMMDDToDate(long time) {
+    public static String formatDateYYYYMMDDToDate(long time) {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date(time * 1000);
-        return date;
+        return df.format(date);
     }
 
     public static String formatDateYYYYMMDDWithDate(Date date) {

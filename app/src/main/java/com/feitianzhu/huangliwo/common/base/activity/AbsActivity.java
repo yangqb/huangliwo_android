@@ -29,6 +29,8 @@ public abstract class AbsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         GlobalUtil.setCurrentActivity(this);
         initBase();
+//        PushAgent.getInstance(this).onAppStart();
+
         if (getOpenImmersionBar() != null) {
             getOpenImmersionBar().init();
 

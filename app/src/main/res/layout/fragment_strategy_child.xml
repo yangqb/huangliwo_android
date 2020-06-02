@@ -8,13 +8,13 @@
     android:layout_marginEnd="@dimen/dp_10"
     android:background="@color/white"
     android:orientation="vertical"
-
     app:cornerRadius="@dimen/dp_3">
 
     <ImageView
         android:id="@+id/imageView9"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_115"
+        android:scaleType="fitXY"
         android:src="@color/bank_bg01" />
 
 

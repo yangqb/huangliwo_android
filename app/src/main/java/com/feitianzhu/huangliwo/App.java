@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.multidex.MultiDex;
+import android.widget.Toast;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.feitianzhu.huangliwo.analyze.UMengAnalyze;
@@ -16,6 +17,13 @@ import com.feitianzhu.huangliwo.core.util.CrashHandler;
 import com.feitianzhu.huangliwo.utils.ToastWhiteStyle2;
 import com.feitianzhu.huangliwo.view.MRefreshHeader;
 import com.hjq.toast.ToastUtils;
+import com.hyphenate.EMCallBack;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMMessage;
+import com.hyphenate.chat.EMOptions;
+import com.hyphenate.chat.EMTextMessageBody;
+import com.hyphenate.easeui.EaseUI;
+import com.hyphenate.push.EMPushConfig;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheEntity;
 import com.lzy.okgo.cache.CacheMode;
@@ -105,9 +113,52 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         context = this;
+        EMOptions options = new EMOptions();
+// 默认添加好友时，是不需要验证的，改成需要验证
+        options.setAcceptInvitationAlways(false);
+// 是否自动将消息附件上传到环信服务器，默认为True是使用环信服务器上传下载，如果设为 false，需要开发者自己处理附件消息的上传和下载
+        options.setAutoTransferMessageAttachments(true);
+// 是否自动下载附件类消息的缩略图等，默认为 true 这里和上边这个参数相关联
+        options.setAutoDownloadThumbnail(true);
+//初始化
+        EaseUI.getInstance().init(context, options);
+//在做打包混淆时，关闭debug模式，避免消耗不必要的资源
+//        EMClient.getInstance().setDebugMode(true);
+//EaseUI初始化成功之后再去调用注册消息监听的代码
         ZXingLibrary.initDisplayOpinion(this);
+        //vivo推送
+        EMPushConfig.Builder builder = new EMPushConfig.Builder(context);
+        builder.enableVivoPush();
+        options.setPushConfig(builder.build());
         initOkgo();
         initPush();
+
+/*        EMMessage message = EMMessage.createSendMessage(EMMessage.Type.TXT);
+        EMTextMessageBody txtBody = new EMTextMessageBody("test");
+        message.setTo("13671192850");
+// 设置自定义扩展字段
+        message.setAttribute("em_force_notification", true);
+// 设置消息回调
+        message.setMessageStatusCallback(new EMCallBack() {
+            @Override
+            public void onSuccess() {
+                Toast.makeText(context,"成功",Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onError(int i, String s) {
+
+            }
+
+            @Override
+            public void onProgress(int i, String s) {
+
+            }
+        });
+// 发送消息
+        EMClient.getInstance().chatManager().sendMessage(message);*/
+
+
         AutoSizeConfig.getInstance().setCustomFragment(true);//屏幕适配
         SDKInitializer.initialize(this);
         ToastUtils.init(this);

@@ -156,7 +156,9 @@ public class ShopsDetailActivity extends BaseActivity {
     RelativeLayout detailView;
     @BindView(R.id.empty_view)
     LinearLayout emptyView;
-
+    private WebView gooddetail_web;
+    @BindView(R.id.service)
+    LinearLayout service;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_shops_detail;
@@ -171,7 +173,18 @@ public class ShopsDetailActivity extends BaseActivity {
         titleName.setText("商品详情");
         rightImg.setBackgroundResource(R.mipmap.e01_02fenxiang);
         rightImg.setVisibility(View.VISIBLE);
-        WebView gooddetail_web =findViewById(R.id.gooddetail_web);
+        gooddetail_web = findViewById(R.id.gooddetail_web);
+        initListener();
+    }
+
+    public void initListener() {
+    }
+
+    @Override
+    protected void initData() {
+        getDetail(goodsId + "");
+        getSpecifications();
+        getUserInfo();
         //webview设置
         WebSettings webSettings = gooddetail_web.getSettings();
         webSettings.setJavaScriptEnabled(true);
@@ -187,17 +200,6 @@ public class ShopsDetailActivity extends BaseActivity {
         gooddetail_web.setHorizontalScrollBarEnabled(false);//水平不显示
         gooddetail_web.setVerticalScrollBarEnabled(false);
         gooddetail_web.loadUrl("http://8.129.218.83/#/service");
-        initListener();
-    }
-
-    public void initListener() {
-    }
-
-    @Override
-    protected void initData() {
-        getDetail(goodsId + "");
-        getSpecifications();
-        getUserInfo();
     }
 
     public void getUserInfo() {
@@ -330,7 +332,8 @@ public class ShopsDetailActivity extends BaseActivity {
         tvAmount.append(span3);
 
         if (goodsListBean.getGoodsIntroduceImgList() == null || goodsListBean.getGoodsIntroduceImgList().size() <= 0) {
-            llGoodsDetail.setVisibility(View.GONE);
+           // llGoodsDetail.setVisibility(View.GONE);
+
         } else {
             if (goodsListBean.getGoodsIntroduceImgList().size() > 1) {
                 ShopsDetailImgAdapter adapter = new ShopsDetailImgAdapter(goodsListBean.getGoodsIntroduceImgList());
@@ -414,7 +417,7 @@ public class ShopsDetailActivity extends BaseActivity {
 
         @Override
         public int getLayoutId() {
-            return R.layout.detail_banner_item;
+            return R.layout.detail_banner_item1;
         }
 
         @Override
@@ -424,7 +427,7 @@ public class ShopsDetailActivity extends BaseActivity {
         }
     }
 
-    @OnClick({R.id.left_button, R.id.tv_pay, R.id.rl_more_evaluation, R.id.add_shopping_cart, R.id.shopping_cart, R.id.call_phone, R.id.collect, R.id.select_specifications, R.id.right_img, R.id.ll_rebate})
+    @OnClick({R.id.left_button, R.id.tv_pay, R.id.rl_more_evaluation, R.id.add_shopping_cart, R.id.shopping_cart, R.id.call_phone, R.id.collect, R.id.select_specifications, R.id.right_img, R.id.ll_rebate,R.id.service})
     @SingleClick()
     public void onClick(View view) {
         Intent intent;
@@ -446,7 +449,7 @@ public class ShopsDetailActivity extends BaseActivity {
                 }*/
                 if (specifications.size() > 0) {
                     showSpeDialog();
-                    return;
+                    //return;
                 } else {
                     intent = new Intent(ShopsDetailActivity.this, ShopPayActivity.class);
                     if (valueId != null) {
@@ -534,7 +537,29 @@ public class ShopsDetailActivity extends BaseActivity {
             case R.id.select_specifications:
                 /* //商品规格
                  */
-                showSpeDialog();
+
+                isBuyGoods = true;
+              /*  if (goodsListBean.getStockCount() <= 0) {
+                    ToastUtils.show("当前商品已售完");
+                    return;
+                }*/
+                if (specifications.size() > 0) {
+                    showSpeDialog();
+                    //return;
+                } else {
+                    intent = new Intent(ShopsDetailActivity.this, ShopPayActivity.class);
+                    if (valueId != null) {
+                        intent.putExtra(ShopPayActivity.GOODS_VALUE_ID, valueId.toString());
+                    }
+                    intent.putExtra(ShopPayActivity.IS_SHOW_ADDRESS, true);
+                    if (goodsListBean != null) {
+                        intent.putExtra(ShopPayActivity.PAY_DATA, goodsListBean);
+                    }
+                    startActivity(intent);
+                }
+
+
+                //showSpeDialog();
                 break;
             case R.id.ll_rebate:
                 token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
@@ -547,6 +572,9 @@ public class ShopsDetailActivity extends BaseActivity {
                 intent = new Intent(ShopsDetailActivity.this, VipActivity.class);
                 intent.putExtra(VipActivity.MINE_INFO, mineInfoModel);
                 startActivity(intent);
+                break;
+            case R.id.service:
+                startActivity(new Intent(ShopsDetailActivity.this, Customerservice.class));
                 break;
         }
 
