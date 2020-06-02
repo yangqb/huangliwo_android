@@ -49,6 +49,7 @@ import com.feitianzhu.huangliwo.utils.doubleclick.SingleClick;
 import com.feitianzhu.huangliwo.view.CircleImageView;
 import com.feitianzhu.huangliwo.view.CustomVerificationView;
 import com.feitianzhu.huangliwo.vip.VipActivity;
+import com.hyphenate.chat.EMClient;
 import com.lxj.xpopup.XPopup;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
@@ -113,7 +114,7 @@ public class MyCenterFragment extends SFFragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     Integer[] integers = {R.mipmap.o05_01gouwuche, R.mipmap.o05_02dizhi, R.mipmap.o05_03renzheng, R.mipmap.o05_04bangding,
-            R.mipmap.shoucang, R.mipmap.o05_06tuidian, R.mipmap.o05_tuiguang, R.mipmap.o05_09bagnzhu,R.mipmap.o05_09bangzu,
+            R.mipmap.shoucang, R.mipmap.o05_06tuidian, R.mipmap.o05_tuiguang, R.mipmap.o05_09bagnzhu, R.mipmap.o05_09bangzu,
             R.mipmap.o05_kefu};
 
     public MyCenterFragment() {
@@ -567,6 +568,16 @@ public class MyCenterFragment extends SFFragment {
         super.onHiddenChanged(hidden);
         if (!hidden) {
             getUserInfo();
+            if (adapter != null) {
+//                获取所有未读消息数量
+                int unreadMessageCount = EMClient.getInstance().chatManager().getUnreadMessageCount();
+                if (unreadMessageCount > 0) {
+                    adapter.setMessageRed(true);
+                } else {
+                    adapter.setMessageRed(true);
+                }
+            }
+
         }
     }
 

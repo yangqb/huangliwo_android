@@ -13,6 +13,7 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
+            android:id="@+id/hList"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -34,11 +35,14 @@
         </LinearLayout>
 
         <com.feitianzhu.huangliwo.view.CornerLinearView
-            android:layout_width="@dimen/dp_2"
-            android:layout_height="@dimen/dp_2"
-            android:layout_alignParentBottom="true"
+            android:id="@+id/red"
+            android:layout_width="@dimen/dp_10"
+            android:layout_height="@dimen/dp_10"
+            android:layout_alignTop="@+id/hList"
+            android:layout_alignEnd="@+id/hList"
             android:background="@color/sf_red"
-            app:cornerRadius="@dimen/dp_2">
+            android:visibility="gone"
+            app:cornerRadius="@dimen/dp_5">
 
         </com.feitianzhu.huangliwo.view.CornerLinearView>
     </RelativeLayout>

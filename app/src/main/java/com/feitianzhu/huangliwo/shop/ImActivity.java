@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
+import com.hyphenate.chat.EMClient;
 import com.hyphenate.easeui.EaseUI;
 import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.ui.EaseChatFragment;
@@ -25,6 +26,9 @@ public class ImActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+        //所有未读消息数清零
+        EMClient.getInstance().chatManager().markAllConversationsAsRead();
+
         EaseUI easeUI = EaseUI.getInstance();
 //需要easeui库显示用户头像和昵称设置此provider
         easeUI.setUserProfileProvider(new EaseUI.EaseUserProfileProvider() {
