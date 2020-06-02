@@ -106,11 +106,6 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
 
     @Override
     protected void initView() {
-        ImmersionBar.with(this)
-                .fitsSystemWindows(false)
-                .statusBarDarkFont(true, 0.2f)
-                .statusBarColor(R.color.transparent)
-                .init();
         EventBus.getDefault().register(this);
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
@@ -133,7 +128,7 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
         recyclerView.setNestedScrollingEnabled(false);
         refreshLayout.setEnableLoadMore(false);
         adapter2 = new VipPresentsAdapter2(presentsList);
-        recyclerView2.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
+        recyclerView2.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         recyclerView2.setAdapter(adapter2);
         recyclerView2.setNestedScrollingEnabled(false);
         adapter2.notifyDataSetChanged();
@@ -141,6 +136,14 @@ public class VipActivity extends BaseActivity implements CompoundButton.OnChecke
         getVipGif(clsId);
     }
 
+
+    @Override
+    public ImmersionBar getOpenImmersionBar() {
+        return ImmersionBar.with(this)
+                .fitsSystemWindows(false)
+                .statusBarDarkFont(true, 0.2f)
+                .statusBarColor(R.color.transparent);
+    }
 
     @OnClick({R.id.left_button, R.id.more_vip, R.id.btn_submit, R.id.tv_protocol, R.id.all_gif, R.id.btnRecord, R.id.tvInstruction})
     @SingleClick()
