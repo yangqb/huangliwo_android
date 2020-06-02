@@ -335,6 +335,8 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
         leftAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                LinearLayoutManager linearLayoutManager = (LinearLayoutManager)   binding.leftRecyclerView.getLayoutManager();
+                linearLayoutManager.scrollToPositionWithOffset(position, 0);
                 binding.nescro.scrollTo(0, 0);
                 leftAdapter.setSelect(position);
                 leftAdapter.notifyDataSetChanged();

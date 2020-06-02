@@ -10,6 +10,7 @@ import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.login.LoginActivity;
 import com.feitianzhu.huangliwo.settings.ChangeLoginPassword;
 import com.feitianzhu.huangliwo.utils.SPUtils;
+import com.feitianzhu.huangliwo.utils.StringUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
 import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
@@ -108,9 +109,11 @@ public abstract class BaseRequest extends BaseApiRequest {
 
         } else if (errorCode == kErrorTypeNoNetworkCancel) {
             ToastUtils.show("取消请求");
+        } else if (!StringUtils.isEmpty(errorMsg)) {
+            ToastUtils.show(errorMsg);
         } else {
             //未知情况
-            ToastUtils.show("网络错误,请重试");
+            ToastUtils.show("网络错误,请重试" +errorCode +errorMsg);
         }
     }
 }
