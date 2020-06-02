@@ -12,6 +12,7 @@ import android.text.Spanned;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,9 +22,11 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
+import com.feitianzhu.huangliwo.RxCodeConstants;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.fragment.SFFragment;
 import com.feitianzhu.huangliwo.core.network.LoadingUtil;
+import com.feitianzhu.huangliwo.core.rxbus.RxBus;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.im.SessionlistActivity;
@@ -68,6 +71,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import io.reactivex.functions.Consumer;
 
 import static com.feitianzhu.huangliwo.common.Constant.POST_MINE_INFO;
 
@@ -159,6 +163,22 @@ public class MyCenterFragment extends SFFragment {
         ShopDao.loadUserAuthImpl(getActivity());
         initListener();
         getData();
+        RxBus.getDefault().toObservable(RxCodeConstants.IM_MESSAGE, Boolean.class).subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                if (adapter != null) {
+//                获取所有未读消息数量
+                    int unreadMessageCount = EMClient.getInstance().chatManager().getUnreadMessageCount();
+                    Log.e("TAG", "onHiddenChanged: " + unreadMessageCount);
+                    if (unreadMessageCount > 0) {
+                        adapter.setMessageRed(true);
+                    } else {
+                        adapter.setMessageRed(false);
+                    }
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        });
         return view;
     }
 
@@ -571,11 +591,13 @@ public class MyCenterFragment extends SFFragment {
             if (adapter != null) {
 //                获取所有未读消息数量
                 int unreadMessageCount = EMClient.getInstance().chatManager().getUnreadMessageCount();
+                Log.e("TAG", "onHiddenChanged: " + unreadMessageCount);
                 if (unreadMessageCount > 0) {
                     adapter.setMessageRed(true);
                 } else {
-                    adapter.setMessageRed(true);
+                    adapter.setMessageRed(false);
                 }
+                adapter.notifyDataSetChanged();
             }
 
         }

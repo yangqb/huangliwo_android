@@ -5,7 +5,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.feitianzhu.huangliwo.R;
+import com.feitianzhu.huangliwo.RxCodeConstants;
 import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
+import com.feitianzhu.huangliwo.core.rxbus.RxBus;
 import com.feitianzhu.huangliwo.home.HomeFragment;
 import com.hyphenate.chat.EMClient;
 
@@ -21,6 +23,8 @@ public class SessionlistActivity extends BaseActivity {
     protected void initView() {
         //所有未读消息数清零
         EMClient.getInstance().chatManager().markAllConversationsAsRead();
+        RxBus.getDefault().post(RxCodeConstants.IM_MESSAGE,false);
+
         mTransaction = getSupportFragmentManager().beginTransaction();
         conversationListFragment = new ConversationListFragment();
         mTransaction.add(R.id.fragment_container, conversationListFragment);

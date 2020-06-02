@@ -6,7 +6,9 @@ import android.view.WindowManager;
 import android.support.annotation.NonNull;
 
 import com.feitianzhu.huangliwo.R;
+import com.feitianzhu.huangliwo.RxCodeConstants;
 import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
+import com.feitianzhu.huangliwo.core.rxbus.RxBus;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.easeui.EaseUI;
 import com.hyphenate.easeui.domain.EaseUser;
@@ -28,6 +30,7 @@ public class ImActivity extends BaseActivity {
     protected void initView() {
         //所有未读消息数清零
         EMClient.getInstance().chatManager().markAllConversationsAsRead();
+        RxBus.getDefault().post(RxCodeConstants.IM_MESSAGE,false);
 
         EaseUI easeUI = EaseUI.getInstance();
 //需要easeui库显示用户头像和昵称设置此provider

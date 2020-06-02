@@ -552,7 +552,7 @@ public class RecommendedFragment extends SFFragment {
                 startActivity(intent);
                 break;
             case 3:
-                // ToastUtils.show("敬请期待");
+                BaseWebviewActivity.toBaseWebviewActivity(getContext(),mHomeMode.bannerList.get(i).outUrl);                // ToastUtils.show("敬请期待");
                 //WebViewActivity.startActivity(getActivity(), mHomeEntity.bannerList.get(i).outUrl, "");
                 break;
             case 4:
