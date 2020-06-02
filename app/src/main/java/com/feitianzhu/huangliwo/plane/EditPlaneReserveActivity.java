@@ -1122,7 +1122,10 @@ public class EditPlaneReserveActivity extends BaseActivity {
                     public void onSuccess(Response<PlaneResponse> response) {
                         super.onSuccess(EditPlaneReserveActivity.this, response.body().message, response.body().code);
                         goneloadDialog();
-                        if (response.body().code == 0) {
+                        /*
+                         * 1007是变价的code，需要提示用户机票变价
+                         * */
+                        if (response.body().code == 0 || response.body().code == 1007) {
                             new XPopup.Builder(EditPlaneReserveActivity.this)
                                     .enableDrag(false)
                                     .asCustom(new CustomPayView(EditPlaneReserveActivity.this)
