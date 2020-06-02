@@ -2,7 +2,7 @@ package com.feitianzhu.huangliwo.travel.request;
 
 import com.alibaba.fastjson.TypeReference;
 import com.feitianzhu.huangliwo.core.network.ParamsBuilder;
-import com.feitianzhu.huangliwo.travel.base.BaseTravelRequest;
+import com.feitianzhu.huangliwo.core.network.BaseTravelRequest;
 import com.feitianzhu.huangliwo.travel.bean.OilListBean;
 
 import java.util.List;

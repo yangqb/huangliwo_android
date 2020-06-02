@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
+import com.feitianzhu.huangliwo.core.network.LoadingUtil;
 import com.gyf.immersionbar.ImmersionBar;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
@@ -65,7 +66,8 @@ public class Customerservice extends BaseActivity {
                 finish();
                 break;
             case R.id.shopissues:
-                EMClient.getInstance().login("13671192850","123456",new EMCallBack() {//回调
+                LoadingUtil.setLoadingViewShow(false);
+                EMClient.getInstance().login("14701776629","123456",new EMCallBack() {//回调
                     @Override
                     public void onSuccess() {
                         EMClient.getInstance().groupManager().loadAllGroups();
@@ -73,9 +75,10 @@ public class Customerservice extends BaseActivity {
                         //startActivity(new Intent(Customerservice.this,ImActivity.class));
                         Intent intent = new Intent(Customerservice.this, ImActivity.class);
                        //username为对方的环信id
-                        intent.putExtra(EaseConstant.EXTRA_USER_ID, "14701776629");
+                        intent.putExtra(EaseConstant.EXTRA_USER_ID, "13671192850");
                         startActivity(intent);
                         Log.d("main", "登录聊天服务器成功！");
+                        LoadingUtil.setLoadingViewShow(false);
                     }
 
                     @Override
@@ -85,6 +88,7 @@ public class Customerservice extends BaseActivity {
 
                     @Override
                     public void onError(int code, String message) {
+                        LoadingUtil.setLoadingViewShow(false);
                         Log.i("onError", "onError: "+code+message);
                         Log.d("main", "登录聊天服务器失败！");
                     }

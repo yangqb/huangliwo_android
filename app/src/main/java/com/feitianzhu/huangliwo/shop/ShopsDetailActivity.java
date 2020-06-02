@@ -574,6 +574,11 @@ public class ShopsDetailActivity extends BaseActivity {
                 startActivity(intent);
                 break;
             case R.id.service:
+                if (token == null || TextUtils.isEmpty(token)) {
+                    intent = new Intent(this, LoginActivity.class);
+                    startActivity(intent);
+                    return;
+                }
                 startActivity(new Intent(ShopsDetailActivity.this, Customerservice.class));
                 break;
         }

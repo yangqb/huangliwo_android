@@ -1,4 +1,4 @@
-package com.feitianzhu.huangliwo.travel.base;
+package com.feitianzhu.huangliwo.core.network;
 
 import com.alibaba.fastjson.TypeReference;
 import com.feitianzhu.huangliwo.core.network.BaseRequest;
