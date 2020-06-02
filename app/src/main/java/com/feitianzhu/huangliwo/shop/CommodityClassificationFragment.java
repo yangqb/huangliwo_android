@@ -88,7 +88,7 @@ import static com.feitianzhu.huangliwo.login.LoginEvent.EDITOR_INFO;
 
 public class CommodityClassificationFragment extends SFFragment implements ProvinceCallBack {
     @BindView(R.id.swipeLayout)
-    SmartRefreshLayout mSwipeLayout;
+    RefreshLayout mSwipeLayout;
     @BindView(R.id.search)
     LinearLayout mSearchLayout;
     @BindView(R.id.txt_location)
@@ -231,6 +231,7 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
 
         mSwipeLayout.setEnableLoadMore(true);
         mSwipeLayout.setEnableRefresh(true);
+        mSwipeLayout.setEnableLoadMoreWhenContentNotFull(true);//在内容不满一页的时候，是否可以上拉加载更多
 
         if (mParam1 == 1) { //商家
             tabLayout.getTabAt(1).select();

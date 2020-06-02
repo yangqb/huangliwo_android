@@ -90,12 +90,15 @@ public class SearchShopActivity extends BaseActivity {
     }
 
     @Override
-    protected void initView() {
-        ImmersionBar.with(this)
+    public ImmersionBar getOpenImmersionBar() {
+        return ImmersionBar.with(this)
                 .fitsSystemWindows(true)
                 .statusBarDarkFont(true, 0.2f)
-                .statusBarColor(R.color.bg_yellow)
-                .init();
+                .statusBarColor(R.color.bg_yellow);
+    }
+
+    @Override
+    protected void initView() {
         token = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         userInfo = UserInfoUtils.getUserInfo(this);
@@ -172,7 +175,6 @@ public class SearchShopActivity extends BaseActivity {
                             }
                             emptyView.setVisibility(View.GONE);
                             goodsListBeans.addAll(response.body().data.getList());
-                            mAdapter.setNewData(goodsListBeans);
                         } else {
                             if (!isLoadMore) {
                                 emptyView.setVisibility(View.VISIBLE);
@@ -180,6 +182,7 @@ public class SearchShopActivity extends BaseActivity {
                                 mSwipeLayout.finishLoadMoreWithNoMoreData();
                             }
                         }
+                        mAdapter.setNewData(goodsListBeans);
                         mAdapter.notifyDataSetChanged();
                     }
 
@@ -250,7 +253,10 @@ public class SearchShopActivity extends BaseActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (TextUtils.isEmpty(s)) {
+                    emptyView.setVisibility(View.GONE);
                     mSwipeLayout.getLayout().setVisibility(View.GONE);
+                    goodsListBeans.clear();
+                    mAdapter.notifyDataSetChanged();
                     historyLayout.setVisibility(View.VISIBLE);
                     historyKeyAdapter.setNewData(newList);
                     historyKeyAdapter.notifyDataSetChanged();
@@ -268,6 +274,7 @@ public class SearchShopActivity extends BaseActivity {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 /*判断是否是“搜索”键*/
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    isLoadMore = false;
                     searchText = editText.getText().toString().trim();
                     if (TextUtils.isEmpty(searchText)) {
                         ToastUtils.show("请输入关键字查询");
@@ -313,6 +320,7 @@ public class SearchShopActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.btn_search:
+                isLoadMore = false;
                 searchText = editText.getText().toString().trim();
                 searchData(searchText);
                 //  这里记得一定要将键盘隐藏了
