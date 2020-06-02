@@ -1,233 +1,330 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/bg_yellow"
-    android:orientation="vertical">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <include layout="@layout/layer_classification_head_nav" />
+    <data>
 
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/bg_yellow"
-        android:orientation="horizontal"
-        android:paddingLeft="@dimen/dp_40"
-        android:paddingRight="@dimen/dp_40">
-
-        <android.support.design.widget.TabLayout
-            android:id="@+id/tabLayout"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_30"
-            android:background="#FED428"
-            app:tabIndicatorColor="#333333"
-            app:tabIndicatorFullWidth="false"
-            app:tabIndicatorHeight="2dp"
-            app:tabSelectedTextColor="#333333"
-            app:tabTextAppearance="@style/ShopTabLayoutTextStyle"
-            app:tabTextColor="#333333">
-
-            <android.support.design.widget.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="商城">
-
-            </android.support.design.widget.TabItem>
-
-            <android.support.design.widget.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="商家">
-
-            </android.support.design.widget.TabItem>
-
-
-        </android.support.design.widget.TabLayout>
-
-    </LinearLayout>
-
+        <variable
+            name="viewModel"
+            type="com.feitianzhu.huangliwo.shop.CommodityClassificationFragment" />
+    </data>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:paddingTop="15dp">
+        android:background="@color/bg_yellow"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@color/white"
-            android:orientation="vertical"
-            android:padding="@dimen/dp_10">
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/left_recyclerView"
-                android:layout_width="match_parent"
+            <com.feitianzhu.huangliwo.view.CircleImageView
+                android:id="@+id/iv_head"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:src="@mipmap/b08_01touxiang"
+                android:onClick="@{viewModel::onViewClicked}"
+                app:civ_border_color="@color/white"
+                app:civ_border_width="1dp" />
+
+            <LinearLayout
+                android:id="@+id/ll_location"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:nestedScrollingEnabled="false">
+                android:layout_marginRight="8dp"
+                android:ellipsize="end"
+                android:onClick="@{viewModel::onViewClicked}"
+                android:orientation="horizontal"
+                android:singleLine="true">
 
-            </android.support.v7.widget.RecyclerView>
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/txt_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="6dp"
+                    android:drawableRight="@mipmap/xiala"
+                    android:drawablePadding="3dp"
+                    android:text="北京"
+                    android:textColor="@color/color_333333"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
 
-        <com.scwang.smartrefresh.layout.SmartRefreshLayout
-            android:id="@+id/swipeLayout"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="3.5"
-            android:background="@color/color_f7f7f7">
+            </LinearLayout>
 
-            <android.support.v4.widget.NestedScrollView
-                android:id="@+id/nescro"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fillViewport="true"
-                android:focusable="true"
-                android:focusableInTouchMode="true">
+            <LinearLayout
+                android:id="@+id/search"
+                android:layout_width="0.0dip"
+                android:layout_height="35dp"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1.0"
+                android:gravity="center"
+                android:onClick="@{viewModel::onViewClicked}"
+                android:orientation="horizontal">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:background="@drawable/classify_search_bg"
+                    android:padding="5dp">
 
-                    <LinearLayout
-                        android:id="@+id/backgroundImg"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:visibility="gone">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:drawableLeft="@mipmap/icon_sousuo_gray"
+                        android:drawablePadding="5dp"
+                        android:gravity="center_vertical"
+                        android:text="搜索商品"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="#999999"
+                        android:textSize="12sp" />
 
-                        <ImageView
-                            android:id="@+id/img_empty"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@mipmap/fail" />
-
-                        <TextView
-                            android:id="@+id/no_data"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/dp_20"
-                            android:text="暂无数据"
-                            android:textColor="@color/txt_middle" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:descendantFocusability="blocksDescendants"
-                        android:orientation="vertical">
-
-                        <RelativeLayout
-                            android:id="@+id/hot"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="11dp"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginEnd="8dp"
-                            android:background="@drawable/shop_baground_shape_gray"
-                            android:descendantFocusability="blocksDescendants"
-                            android:orientation="vertical"
-                            android:padding="@dimen/dp_10"
-                            android:visibility="gone">
-
-                            <TextView
-                                android:id="@+id/title1"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="5dp"
-                                android:text="热门商铺"
-                                android:textColor="@color/bank_bg01"
-                                android:textSize="13sp"></TextView>
-
-                            <android.support.v7.widget.RecyclerView
-                                android:id="@+id/right_recyclerView"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_below="@+id/title1"
-                                android:layout_marginTop="10dp"
-                                android:nestedScrollingEnabled="false">
-
-                            </android.support.v7.widget.RecyclerView>
-                        </RelativeLayout>
-
-                        <LinearLayout
-                            android:id="@+id/boutique"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="11dp"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginEnd="8dp"
-                            android:background="@drawable/shop_baground_shape_gray"
-                            android:focusable="true"
-                            android:focusableInTouchMode="true"
-                            android:orientation="vertical"
-                            android:padding="@dimen/dp_10"
-                            android:visibility="gone">
-
-                            <TextView
-                                android:id="@+id/title2"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="5dp"
-                                android:text="优质商家"
-                                android:textColor="@color/bank_bg01"
-                                android:textSize="13sp"></TextView>
-
-                            <android.support.v7.widget.RecyclerView
-                                android:id="@+id/recyclerView1"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="10dp"
-                                android:background="@color/white"
-                                android:nestedScrollingEnabled="false">
-
-                            </android.support.v7.widget.RecyclerView>
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:id="@+id/recommend"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="11dp"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginEnd="8dp"
-                            android:layout_marginBottom="5dp"
-                            android:background="@drawable/shop_baground_shape_gray"
-                            android:focusable="true"
-                            android:focusableInTouchMode="true"
-                            android:orientation="vertical"
-                            android:padding="@dimen/dp_10"
-                            android:visibility="gone">
-
-                            <TextView
-                                android:id="@+id/title3"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="5dp"
-                                android:text="为您推荐"
-                                android:textColor="@color/bank_bg01"
-                                android:textSize="13sp"></TextView>
-
-                            <android.support.v7.widget.RecyclerView
-                                android:id="@+id/recyclerView2"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_marginTop="@dimen/dp_10"
-                                android:nestedScrollingEnabled="false">
-
-                            </android.support.v7.widget.RecyclerView>
-                        </LinearLayout>
-
-
-                    </LinearLayout>
 
                 </RelativeLayout>
+            </LinearLayout>
 
-            </android.support.v4.widget.NestedScrollView>
+            <ImageView
+                android:id="@+id/iv_home_nv_right"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:onClick="@{viewModel::onViewClicked}"
+                android:scaleType="centerInside"
+                android:src="@mipmap/a01_0saoyisao" />
 
-        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/bg_yellow"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/dp_40"
+            android:paddingRight="@dimen/dp_40">
+
+            <android.support.design.widget.TabLayout
+                android:id="@+id/tabLayout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_30"
+                android:background="#FED428"
+                app:tabIndicatorColor="#333333"
+                app:tabIndicatorFullWidth="false"
+                app:tabIndicatorHeight="2dp"
+                app:tabSelectedTextColor="#333333"
+                app:tabTextAppearance="@style/ShopTabLayoutTextStyle"
+                app:tabTextColor="#333333">
+
+                <android.support.design.widget.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="商城">
+
+                </android.support.design.widget.TabItem>
+
+                <android.support.design.widget.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="商家">
+
+                </android.support.design.widget.TabItem>
+
+
+            </android.support.design.widget.TabLayout>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:paddingTop="15dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:padding="@dimen/dp_10">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/left_recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:nestedScrollingEnabled="false">
+
+                </android.support.v7.widget.RecyclerView>
+            </LinearLayout>
+
+            <com.scwang.smartrefresh.layout.SmartRefreshLayout
+                android:id="@+id/swipeLayout"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3.5"
+                android:background="@color/color_f7f7f7">
+
+                <android.support.v4.widget.NestedScrollView
+                    android:id="@+id/nescro"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fillViewport="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <LinearLayout
+                            android:id="@+id/backgroundImg"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:visibility="gone">
+
+                            <ImageView
+                                android:id="@+id/img_empty"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@mipmap/fail" />
+
+                            <TextView
+                                android:id="@+id/no_data"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/dp_20"
+                                android:text="暂无数据"
+                                android:textColor="@color/txt_middle" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:descendantFocusability="blocksDescendants"
+                            android:orientation="vertical">
+
+                            <RelativeLayout
+                                android:id="@+id/hot"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="11dp"
+                                android:layout_marginTop="8dp"
+                                android:layout_marginEnd="8dp"
+                                android:background="@drawable/shop_baground_shape_gray"
+                                android:descendantFocusability="blocksDescendants"
+                                android:orientation="vertical"
+                                android:padding="@dimen/dp_10"
+                                android:visibility="gone">
+
+                                <TextView
+                                    android:id="@+id/title1"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="5dp"
+                                    android:text="热门商铺"
+                                    android:textColor="@color/bank_bg01"
+                                    android:textSize="13sp"></TextView>
+
+                                <android.support.v7.widget.RecyclerView
+                                    android:id="@+id/right_recyclerView"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@+id/title1"
+                                    android:layout_marginTop="10dp"
+                                    android:nestedScrollingEnabled="false">
+
+                                </android.support.v7.widget.RecyclerView>
+                            </RelativeLayout>
+
+                            <LinearLayout
+                                android:id="@+id/boutique"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="11dp"
+                                android:layout_marginTop="8dp"
+                                android:layout_marginEnd="8dp"
+                                android:background="@drawable/shop_baground_shape_gray"
+                                android:focusable="true"
+                                android:focusableInTouchMode="true"
+                                android:orientation="vertical"
+                                android:padding="@dimen/dp_10"
+                                android:visibility="gone">
+
+                                <TextView
+                                    android:id="@+id/title2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="5dp"
+                                    android:text="优质商家"
+                                    android:textColor="@color/bank_bg01"
+                                    android:textSize="13sp"></TextView>
+
+                                <android.support.v7.widget.RecyclerView
+                                    android:id="@+id/recyclerView1"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="10dp"
+                                    android:background="@color/white"
+                                    android:nestedScrollingEnabled="false">
+
+                                </android.support.v7.widget.RecyclerView>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/recommend"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="11dp"
+                                android:layout_marginTop="8dp"
+                                android:layout_marginEnd="8dp"
+                                android:layout_marginBottom="5dp"
+                                android:background="@drawable/shop_baground_shape_gray"
+                                android:focusable="true"
+                                android:focusableInTouchMode="true"
+                                android:orientation="vertical"
+                                android:padding="@dimen/dp_10"
+                                android:visibility="gone">
+
+                                <TextView
+                                    android:id="@+id/title3"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="5dp"
+                                    android:text="为您推荐"
+                                    android:textColor="@color/bank_bg01"
+                                    android:textSize="13sp"></TextView>
+
+                                <android.support.v7.widget.RecyclerView
+                                    android:id="@+id/recyclerView2"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginTop="@dimen/dp_10"
+                                    android:nestedScrollingEnabled="false">
+
+                                </android.support.v7.widget.RecyclerView>
+                            </LinearLayout>
+
+
+                        </LinearLayout>
+
+                    </RelativeLayout>
+
+                </android.support.v4.widget.NestedScrollView>
+
+            </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</layout>

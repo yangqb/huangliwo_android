@@ -22,6 +22,8 @@ import com.feitianzhu.huangliwo.strategy.request.ListPageRequest;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 
+import java.util.List;
+
 
 /**
  *
@@ -49,7 +51,6 @@ public class StrategyChildFragment extends BaseBindingFragment {
     protected void init() {
         binding.refreshLayout.setEnableRefresh(true);
         binding.refreshLayout.setEnableLoadMore(true);
-
         binding.refreshLayout.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
@@ -60,6 +61,7 @@ public class StrategyChildFragment extends BaseBindingFragment {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                 currentPage = 1;
+
                 request(1);
             }
         });
@@ -76,11 +78,12 @@ public class StrategyChildFragment extends BaseBindingFragment {
             });
             strategyItemAdapter = new StrategyItem1Adapter(null);
             strategyItemAdapter.setEmptyView(mEmptyView);
+            binding.list.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
             binding.list.setAdapter(strategyItemAdapter);
             strategyItemAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                    BaseWebviewActivity.toBaseWebviewActivity(getActivity(), "");
+                    BaseWebviewActivity.toBaseWebviewActivity(getActivity(), strategyItemAdapter.getData().get(position).getH5Url());
                 }
             });
         } else {
@@ -94,11 +97,12 @@ public class StrategyChildFragment extends BaseBindingFragment {
             });
             strategyItemAdapter1 = new StrategyItemAdapter(null);
             strategyItemAdapter1.setEmptyView(mEmptyView1);
+            binding.list.setLayoutManager(new GridLayoutManager(getContext(), 2));
             binding.list.setAdapter(strategyItemAdapter1);
             strategyItemAdapter1.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                    BaseWebviewActivity.toBaseWebviewActivity(getActivity(), "");
+                    BaseWebviewActivity.toBaseWebviewActivity(getActivity(), strategyItemAdapter1.getData().get(position).getH5Url());
                 }
             });
         }
@@ -109,21 +113,32 @@ public class StrategyChildFragment extends BaseBindingFragment {
 
     private void request(int i) {
         ListPageRequest listPageRequest = new ListPageRequest();
+        listPageRequest.isShowLoading = true;
         if (type == 0) {
             listPageRequest.columnId = 1;
             listPageRequest.currentPage = currentPage;
             listPageRequest.pageSize = 10;
-            listPageRequest.call(new ApiCallBack<ListPageRequest.Result>() {
+            listPageRequest.call(new ApiCallBack<ListPageBean>() {
                 @Override
-                public void onAPIResponse(ListPageRequest.Result response) {
-                    ListPageBean pageResult = response.pageResult;
-                    binding.list.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-                    strategyItemAdapter.setNewData(pageResult.getRows());
+                public void onAPIResponse(ListPageBean response) {
+                    List<ListPageBean.ListBean> list = response.getList();
+
+                    if (list != null && list.size() > 0) {
+                        if (currentPage == 1) {
+                            strategyItemAdapter.getData().clear();
+                            strategyItemAdapter.setNewData(list);
+                        } else {
+                            strategyItemAdapter.addData(list);
+                        }
+                    } else if (currentPage == 1) {
+                        strategyItemAdapter.setNewData(null);
+                    }
                     if (i == 1) {
                         binding.refreshLayout.finishRefresh();
                     } else if (i == 0) {
                         binding.refreshLayout.finishLoadMore();
                     }
+                    strategyItemAdapter.notifyDataSetChanged();
                 }
 
                 @Override
@@ -141,18 +156,22 @@ public class StrategyChildFragment extends BaseBindingFragment {
             listPageRequest.columnId = 2;
             listPageRequest.currentPage = currentPage;
             listPageRequest.pageSize = 10;
-            listPageRequest.call(new ApiCallBack<ListPageRequest.Result>() {
+            listPageRequest.call(new ApiCallBack<ListPageBean>() {
                 @Override
-                public void onAPIResponse(ListPageRequest.Result response) {
-                    ListPageBean pageResult = response.pageResult;
+                public void onAPIResponse(ListPageBean response) {
+                    List<ListPageBean.ListBean> list = response.getList();
+                    if (list != null && list.size() > 0) {
 
-                    binding.list.setLayoutManager(new GridLayoutManager(getContext(), 2));
-                    strategyItemAdapter1.setNewData(pageResult.getRows());
+                        strategyItemAdapter1.addData(list);
+                    } else if (currentPage == 1) {
+                        strategyItemAdapter1.setNewData(null);
+                    }
                     if (i == 1) {
                         binding.refreshLayout.finishRefresh();
                     } else if (i == 0) {
                         binding.refreshLayout.finishLoadMore();
                     }
+                    strategyItemAdapter1.notifyDataSetChanged();
                 }
 
                 @Override

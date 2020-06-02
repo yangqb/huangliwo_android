@@ -26,6 +26,7 @@ import com.feitianzhu.huangliwo.common.base.fragment.SFFragment;
 import com.feitianzhu.huangliwo.core.network.LoadingUtil;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
+import com.feitianzhu.huangliwo.im.SessionlistActivity;
 import com.feitianzhu.huangliwo.login.LoginEvent;
 import com.feitianzhu.huangliwo.me.adapter.CenterAdapter;
 import com.feitianzhu.huangliwo.me.ui.AuthEvent;
@@ -112,7 +113,7 @@ public class MyCenterFragment extends SFFragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     Integer[] integers = {R.mipmap.o05_01gouwuche, R.mipmap.o05_02dizhi, R.mipmap.o05_03renzheng, R.mipmap.o05_04bangding,
-            R.mipmap.shoucang, R.mipmap.o05_06tuidian, R.mipmap.o05_tuiguang, R.mipmap.o05_09bagnzhu,
+            R.mipmap.shoucang, R.mipmap.o05_06tuidian, R.mipmap.o05_tuiguang, R.mipmap.o05_09bagnzhu,R.mipmap.o05_09bangzu,
             R.mipmap.o05_kefu};
 
     public MyCenterFragment() {
@@ -360,6 +361,10 @@ public class MyCenterFragment extends SFFragment {
                         break;
                     case 8:
                         intent = new Intent(getActivity(), HelperActivity.class);
+                        startActivity(intent);
+                        break;
+                    case 9:
+                        intent = new Intent(getActivity(), SessionlistActivity.class);
                         startActivity(intent);
                         break;
                 }

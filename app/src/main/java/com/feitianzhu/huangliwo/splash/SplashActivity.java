@@ -43,8 +43,8 @@ import butterknife.OnClick;
 
 public class SplashActivity extends BaseActivity {
 
-    @BindView(R.id.videoview)
-    CustomVideoView mVideoView;
+   /* @BindView(R.id.videoview)
+    CustomVideoView mVideoView;*/
     @BindView(R.id.image)
     ImageView image;
     private static final int REQUEST_CODE_PERMISSION = 100;

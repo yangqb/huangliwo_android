@@ -25,14 +25,35 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/dp_10">
+                <LinearLayout
+                    android:id="@+id/service"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="8dp">
 
+                    <ImageView
+                        android:id="@+id/serviceimg"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@mipmap/e01_28kefu" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:text="客服"
+                        android:textColor="@color/color_666666"
+                        android:textSize="@dimen/sp_12" />
+                </LinearLayout>
                 <LinearLayout
                     android:id="@+id/collect"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:padding="15dp">
+                    android:padding="8dp">
 
                     <ImageView
                         android:id="@+id/imgCollect"
@@ -55,7 +76,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:padding="15dp">
+                    android:padding="8dp">
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -114,10 +135,21 @@
                 android:background="@color/color_f7f7f7"
                 android:orientation="vertical">
 
-                <com.zhpan.bannerview.BannerViewPager
-                    android:id="@+id/viewpager"
+                <android.support.constraint.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="370dp" />
+                    android:layout_height="wrap_content">
+
+                    <com.zhpan.bannerview.BannerViewPager
+                        android:id="@+id/viewpager"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintDimensionRatio="h,1:1"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </android.support.constraint.ConstraintLayout>
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -345,6 +377,7 @@
 
                     </RelativeLayout>
 
+
                     <LinearLayout
                         android:id="@+id/ll_evaluate"
                         android:layout_width="match_parent"
@@ -418,12 +451,12 @@
                 <LinearLayout
                     android:id="@+id/ll_goods_detail"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:orientation="vertical">
 
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="13dp"
                         android:layout_margin="@dimen/dp_10"
                         android:text="商品详情"
                         android:textColor="@color/color_333333"
@@ -431,7 +464,7 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:orientation="vertical"
                         >
 
@@ -442,6 +475,7 @@
                             android:visibility="gone">
 
                         </android.support.v7.widget.RecyclerView>
+
                         <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
                             android:id="@+id/detail_img"
                             android:layout_width="match_parent"
@@ -449,12 +483,16 @@
                             android:background="@mipmap/g10_03weijiazai"
                             android:scaleType="fitXY"
                             android:visibility="gone" />
-                        <WebView
-                            android:id="@+id/gooddetail_web"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-                        </WebView>
+
                     </LinearLayout>
+                    <WebView
+                        android:id="@+id/gooddetail_web"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="visible"
+                        >
+                    </WebView>
+
                 </LinearLayout>
 
             </LinearLayout>
