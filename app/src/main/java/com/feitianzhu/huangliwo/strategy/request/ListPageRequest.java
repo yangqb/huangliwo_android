@@ -2,6 +2,7 @@ package com.feitianzhu.huangliwo.strategy.request;
 
 import com.alibaba.fastjson.TypeReference;
 import com.feitianzhu.huangliwo.core.network.BaseRequest;
+import com.feitianzhu.huangliwo.core.network.BaseTravelRequest;
 import com.feitianzhu.huangliwo.core.network.ParamsBuilder;
 import com.feitianzhu.huangliwo.strategy.bean.ListPageBean;
 
@@ -10,7 +11,7 @@ import static com.feitianzhu.huangliwo.utils.Urls.TICKET_BASE_URL;
 /**
  * Created by bch on 2020/5/29
  */
-public class ListPageRequest extends BaseRequest {
+public class ListPageRequest extends BaseTravelRequest {
     //    当前页码
     public int currentPage;
     //    每页显示条数
@@ -18,10 +19,7 @@ public class ListPageRequest extends BaseRequest {
     //    栏目id 1-会员须知 2-正品保障
     public int columnId;
 
-    @Override
-    public String getAPIBaseURL() {
-        return TICKET_BASE_URL;
-    }
+
 
     @Override
     public ParamsBuilder appendParams(ParamsBuilder builder) {
