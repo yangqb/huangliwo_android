@@ -19,6 +19,7 @@ import com.feitianzhu.huangliwo.strategy.adapter.StrategyItem1Adapter;
 import com.feitianzhu.huangliwo.strategy.adapter.StrategyItemAdapter;
 import com.feitianzhu.huangliwo.strategy.bean.ListPageBean;
 import com.feitianzhu.huangliwo.strategy.request.ListPageRequest;
+import com.feitianzhu.huangliwo.utils.doubleclick.SingleClick;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 
@@ -82,13 +83,14 @@ public class StrategyChildFragment extends BaseBindingFragment {
             binding.list.setAdapter(strategyItemAdapter);
             strategyItemAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                 @Override
+                @SingleClick
                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                     ListPageBean.ListBean listBean = strategyItemAdapter.getData().get(position);
                     if (listBean.getContentType().equals("2")) {
                         BaseWebviewActivity.toBaseWebviewActivity(getActivity(), listBean.getH5Url(), true);
 
                     } else if (listBean.getContentType().equals("1")) {
-                        VideoPlayActivity.to(getActivity(),listBean.getVideo());
+                        VideoPlayActivity.to(getActivity(), listBean.getVideo());
 //                        strategyFragment.showVideo(listBean.getVideo());
                     } else {
                         BaseWebviewActivity.toBaseWebviewActivity(getActivity(), listBean.getH5Url());
@@ -111,12 +113,13 @@ public class StrategyChildFragment extends BaseBindingFragment {
             binding.list.setAdapter(strategyItemAdapter1);
             strategyItemAdapter1.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                 @Override
+                @SingleClick
                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                     ListPageBean.ListBean listBean = strategyItemAdapter1.getData().get(position);
                     if (listBean.getContentType().equals("2")) {
                         BaseWebviewActivity.toBaseWebviewActivity(getActivity(), listBean.getH5Url(), true);
                     } else if (listBean.getContentType().equals("1")) {
-                        VideoPlayActivity.to(getActivity(),listBean.getVideo());
+                        VideoPlayActivity.to(getActivity(), listBean.getVideo());
 
 //                        strategyFragment.showVideo(listBean.getVideo());
                     } else {

@@ -177,7 +177,7 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
         // hold to record voice
         //noinspection ConstantConditions
         voiceRecorderView = (EaseVoiceRecorderView) getView().findViewById(R.id.voice_recorder);
-        titleBar.setBackgroundColor(getResources().getColor(R.color.orange));
+//        titleBar.setBackgroundColor(getResources().getColor(R.color.orange));
 
         // message list layout
         messageList = (EaseChatMessageList) getView().findViewById(R.id.message_list);
@@ -295,7 +295,7 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
                 }
             }
         };
-
+//        initListener();
     }
 
     protected void setUpView() {

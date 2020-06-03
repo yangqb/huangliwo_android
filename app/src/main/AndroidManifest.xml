@@ -63,7 +63,7 @@
         <activity android:name=".im.SessionlistActivity"></activity>
         <activity android:name=".shop.CustomerservicelistActivity" />
         <activity android:name=".shop.ImActivity"   android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"  />
+            android:windowSoftInputMode="adjustPan"  />
         <activity android:name=".shop.Customerservice" />
         <activity android:name=".travel.TraveFormActivity" />
         <activity android:name=".travel.TraveDetailActivity" /> <!-- 添加provider -->

@@ -18,7 +18,6 @@ import com.lxj.xpopup.impl.LoadingPopupView;
 
 /**
  * Created by  bch on 2020/5/6.
-
  */
 
 public abstract class AbsActivity extends AppCompatActivity {
@@ -34,14 +33,6 @@ public abstract class AbsActivity extends AppCompatActivity {
         if (getOpenImmersionBar() != null) {
             getOpenImmersionBar().init();
 
-        } else {
-            ImmersionBar.with(this)
-                    .fitsSystemWindows(true)
-                    .statusBarDarkFont(true, 0.2f)
-                    .navigationBarColor(R.color.white)
-                    .statusBarColor(R.color.transparent)
-                    .navigationBarDarkIcon(true)
-                    .init();
         }
 
     }
@@ -51,7 +42,12 @@ public abstract class AbsActivity extends AppCompatActivity {
     }
 
     public ImmersionBar getOpenImmersionBar() {
-        return null;
+        return ImmersionBar.with(this)
+                .fitsSystemWindows(true)
+                .statusBarDarkFont(true, 0.2f)
+                .navigationBarColor(R.color.white)
+                .statusBarColor(R.color.transparent)
+                .navigationBarDarkIcon(true);
     }
 
 

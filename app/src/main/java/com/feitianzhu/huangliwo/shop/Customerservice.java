@@ -99,7 +99,7 @@ public class Customerservice extends BaseActivity {
 //                            intent.putExtra(EaseConstant.EXTRA_USER_ID, response.get(0).getUserId());
                             intent.putExtra(EaseConstant.EXTRA_USER_ID, "13671192850");
                             startActivity(intent);
-                            Log.d("main", "登录聊天服务器成功！");
+                            Log.d("main", "登录聊天服务器成功!");
                             LoadingUtil.setLoadingViewShow(false);
                         }
 
