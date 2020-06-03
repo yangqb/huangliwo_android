@@ -126,7 +126,7 @@ public class EaseConversationAdapter extends ArrayAdapter<EMConversation> {
         } else {
 //            EaseUserUtils.setUserAvatar(getContext(), username, holder.avatar);
 //            EaseUserUtils.setUserNick(username, holder.name);
-            EMMessage lastMessage = conversation.getLastMessage();
+            EMMessage lastMessage = conversation.getLatestMessageFromOthers();
             if (lastMessage.direct() == EMMessage.Direct.RECEIVE) {
                 String avatar = lastMessage.getStringAttribute("avatar", "");
                 Glide.with(getContext()).load(avatar)
@@ -139,8 +139,8 @@ public class EaseConversationAdapter extends ArrayAdapter<EMConversation> {
 
 //                holder.avatar.setImageResource(R.drawable.ease_app_panel_video_icon);
                 EaseUserUtils.setUserNick(userName, holder.name);
+            }else {
             }
-
             holder.motioned.setVisibility(View.GONE);
         }
         EaseAvatarOptions avatarOptions = EaseUI.getInstance().getAvatarOptions();
