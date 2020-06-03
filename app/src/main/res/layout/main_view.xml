@@ -87,7 +87,7 @@
                     android:id="@+id/txt_jiaoliu"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="攻略"
+                    android:text="会员"
                     android:textColor="@drawable/tab_select_text"
                     android:textSize="12sp" />
             </LinearLayout>

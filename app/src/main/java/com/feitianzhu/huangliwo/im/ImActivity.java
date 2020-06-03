@@ -38,7 +38,6 @@ public class ImActivity extends BaseActivity {
     @Override
     public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-
         return super.onCreateView(parent, name, context, attrs);
     }
 

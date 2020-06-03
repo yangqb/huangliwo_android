@@ -36,6 +36,8 @@ public class ShoppingCartModel implements Serializable {
         public int checks;
         public String speciName;
         public String remark;
+        public int sellOut;
+
 
         protected CartGoodsModel(Parcel in) {
             carId = in.readInt();
@@ -53,6 +55,7 @@ public class ShoppingCartModel implements Serializable {
             checks = in.readInt();
             speciName = in.readString();
             remark = in.readString();
+            sellOut = in.readInt();
         }
 
         public static final Creator<CartGoodsModel> CREATOR = new Creator<CartGoodsModel>() {
@@ -89,6 +92,7 @@ public class ShoppingCartModel implements Serializable {
             dest.writeInt(checks);
             dest.writeString(speciName);
             dest.writeString(remark);
+            dest.writeInt(sellOut);
         }
     }
 
