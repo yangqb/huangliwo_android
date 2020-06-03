@@ -10,21 +10,27 @@
             type="com.feitianzhu.huangliwo.strategy.StrategyChildFragment" />
     </data>
 
-    <com.scwang.smartrefresh.layout.SmartRefreshLayout
-        android:id="@+id/refreshLayout"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/list"
-            android:name="com.feitianzhu.huangliwo.strategy.StrategyChildFragment"
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:id="@+id/refreshLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/dp_16"
-            android:layout_marginRight="@dimen/dp_16"
-            android:background="#fff7f7f7"
-            tools:context=".strategy.StrategyChildFragment"
-            tools:listitem="@layout/fragment_strategy_child1" />
-    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/list"
+                android:name="com.feitianzhu.huangliwo.strategy.StrategyChildFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#fff7f7f7"
+                tools:context=".strategy.StrategyChildFragment"
+                tools:listitem="@layout/fragment_strategy_child1" />
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+
+    </RelativeLayout>
+
 
 </layout>

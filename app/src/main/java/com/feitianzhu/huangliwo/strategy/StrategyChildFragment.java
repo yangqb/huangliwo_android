@@ -1,7 +1,7 @@
 package com.feitianzhu.huangliwo.strategy;
 
-import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
@@ -19,6 +19,7 @@ import com.feitianzhu.huangliwo.strategy.adapter.StrategyItem1Adapter;
 import com.feitianzhu.huangliwo.strategy.adapter.StrategyItemAdapter;
 import com.feitianzhu.huangliwo.strategy.bean.ListPageBean;
 import com.feitianzhu.huangliwo.strategy.request.ListPageRequest;
+import com.feitianzhu.huangliwo.utils.doubleclick.SingleClick;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 
@@ -37,18 +38,18 @@ public class StrategyChildFragment extends BaseBindingFragment {
     private StrategyItem1Adapter strategyItemAdapter;
     private StrategyItemAdapter strategyItemAdapter1;
     private int currentPage = 1;
+    public StrategyFragment strategyFragment;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    protected View initBindingView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container) {
         binding = FragmentStrategyChildListBinding.inflate(inflater, container, false);
         binding.setViewModel(this);
         return binding.getRoot();
     }
 
-
     @Override
     protected void init() {
+
         binding.refreshLayout.setEnableRefresh(true);
         binding.refreshLayout.setEnableLoadMore(true);
         binding.refreshLayout.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
@@ -82,8 +83,19 @@ public class StrategyChildFragment extends BaseBindingFragment {
             binding.list.setAdapter(strategyItemAdapter);
             strategyItemAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                 @Override
+                @SingleClick
                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                    BaseWebviewActivity.toBaseWebviewActivity(getActivity(), strategyItemAdapter.getData().get(position).getH5Url());
+                    ListPageBean.ListBean listBean = strategyItemAdapter.getData().get(position);
+                    if (listBean.getContentType().equals("2")) {
+                        BaseWebviewActivity.toBaseWebviewActivity(getActivity(), listBean.getH5Url(), true);
+
+                    } else if (listBean.getContentType().equals("1")) {
+                        VideoPlayActivity.to(getActivity(), listBean.getVideo());
+//                        strategyFragment.showVideo(listBean.getVideo());
+                    } else {
+                        BaseWebviewActivity.toBaseWebviewActivity(getActivity(), listBean.getH5Url());
+
+                    }
                 }
             });
         } else {
@@ -101,8 +113,18 @@ public class StrategyChildFragment extends BaseBindingFragment {
             binding.list.setAdapter(strategyItemAdapter1);
             strategyItemAdapter1.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                 @Override
+                @SingleClick
                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                    BaseWebviewActivity.toBaseWebviewActivity(getActivity(), strategyItemAdapter1.getData().get(position).getH5Url());
+                    ListPageBean.ListBean listBean = strategyItemAdapter1.getData().get(position);
+                    if (listBean.getContentType().equals("2")) {
+                        BaseWebviewActivity.toBaseWebviewActivity(getActivity(), listBean.getH5Url(), true);
+                    } else if (listBean.getContentType().equals("1")) {
+                        VideoPlayActivity.to(getActivity(), listBean.getVideo());
+
+//                        strategyFragment.showVideo(listBean.getVideo());
+                    } else {
+                        BaseWebviewActivity.toBaseWebviewActivity(getActivity(), listBean.getH5Url());
+                    }
                 }
             });
         }
@@ -110,6 +132,7 @@ public class StrategyChildFragment extends BaseBindingFragment {
         request(-1);
 
     }
+
 
     private void request(int i) {
         ListPageRequest listPageRequest = new ListPageRequest();
@@ -161,8 +184,12 @@ public class StrategyChildFragment extends BaseBindingFragment {
                 public void onAPIResponse(ListPageBean response) {
                     List<ListPageBean.ListBean> list = response.getList();
                     if (list != null && list.size() > 0) {
-
-                        strategyItemAdapter1.addData(list);
+                        if (currentPage == 1) {
+                            strategyItemAdapter1.getData().clear();
+                            strategyItemAdapter1.setNewData(list);
+                        } else {
+                            strategyItemAdapter1.addData(list);
+                        }
                     } else if (currentPage == 1) {
                         strategyItemAdapter1.setNewData(null);
                     }

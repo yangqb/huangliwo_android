@@ -155,7 +155,7 @@ public class VerificationActivity2 extends BaseActivity implements ProvinceCallB
                 .keyboardEnable(true)
                 .statusBarDarkFont(true, 0.2f)
                 .navigationBarColor(R.color.white)
-                .statusBarColor(R.color.transparent)
+                .statusBarColor(R.color.white)
                 .navigationBarDarkIcon(true);
     }
 

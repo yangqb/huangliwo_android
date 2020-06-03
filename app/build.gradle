@@ -299,4 +299,7 @@ dependencies {
     implementation files('libs/BaiduLBS_Android.jar')
     //图片压缩
     implementation 'top.zibin:Luban:1.1.8'
+    implementation 'com.shuyu:GSYVideoPlayer:6.0.3'
+//    implementation 'com.shuyu:GSYVideoPlayer:7.1.4'
+
 }

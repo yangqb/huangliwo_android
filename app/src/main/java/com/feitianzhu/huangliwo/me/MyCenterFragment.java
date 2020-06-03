@@ -12,6 +12,7 @@ import android.text.Spanned;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,9 +22,11 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
+import com.feitianzhu.huangliwo.RxCodeConstants;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.fragment.SFFragment;
 import com.feitianzhu.huangliwo.core.network.LoadingUtil;
+import com.feitianzhu.huangliwo.core.rxbus.RxBus;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.im.SessionlistActivity;
@@ -49,6 +52,7 @@ import com.feitianzhu.huangliwo.utils.doubleclick.SingleClick;
 import com.feitianzhu.huangliwo.view.CircleImageView;
 import com.feitianzhu.huangliwo.view.CustomVerificationView;
 import com.feitianzhu.huangliwo.vip.VipActivity;
+import com.hyphenate.chat.EMClient;
 import com.lxj.xpopup.XPopup;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
@@ -67,6 +71,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import io.reactivex.functions.Consumer;
 
 import static com.feitianzhu.huangliwo.common.Constant.POST_MINE_INFO;
 
@@ -113,7 +118,7 @@ public class MyCenterFragment extends SFFragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     Integer[] integers = {R.mipmap.o05_01gouwuche, R.mipmap.o05_02dizhi, R.mipmap.o05_03renzheng, R.mipmap.o05_04bangding,
-            R.mipmap.shoucang, R.mipmap.o05_06tuidian, R.mipmap.o05_tuiguang, R.mipmap.o05_09bagnzhu,R.mipmap.o05_09bangzu,
+            R.mipmap.shoucang, R.mipmap.o05_06tuidian, R.mipmap.o05_tuiguang, R.mipmap.o05_09bagnzhu, R.mipmap.o05_09bangzu,
             R.mipmap.o05_kefu};
 
     public MyCenterFragment() {
@@ -158,6 +163,22 @@ public class MyCenterFragment extends SFFragment {
         ShopDao.loadUserAuthImpl(getActivity());
         initListener();
         getData();
+        RxBus.getDefault().toObservable(RxCodeConstants.IM_MESSAGE, Boolean.class).subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                if (adapter != null) {
+//                获取所有未读消息数量
+                    int unreadMessageCount = EMClient.getInstance().chatManager().getUnreadMessageCount();
+                    Log.e("TAG", "onHiddenChanged: " + unreadMessageCount);
+                    if (unreadMessageCount > 0) {
+                        adapter.setMessageRed(true);
+                    } else {
+                        adapter.setMessageRed(false);
+                    }
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        });
         return view;
     }
 
@@ -567,6 +588,18 @@ public class MyCenterFragment extends SFFragment {
         super.onHiddenChanged(hidden);
         if (!hidden) {
             getUserInfo();
+            if (adapter != null) {
+//                获取所有未读消息数量
+                int unreadMessageCount = EMClient.getInstance().chatManager().getUnreadMessageCount();
+                Log.e("TAG", "onHiddenChanged: " + unreadMessageCount);
+                if (unreadMessageCount > 0) {
+                    adapter.setMessageRed(true);
+                } else {
+                    adapter.setMessageRed(false);
+                }
+                adapter.notifyDataSetChanged();
+            }
+
         }
     }
 

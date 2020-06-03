@@ -79,15 +79,15 @@
 
                 <ImageView
                     android:id="@+id/img_jiaoliu"
-                    android:layout_width="27dp"
-                    android:layout_height="27dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:src="@drawable/tab_jiaoliu_select" />
 
                 <TextView
                     android:id="@+id/txt_jiaoliu"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="发现"
+                    android:text="会员"
                     android:textColor="@drawable/tab_select_text"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -124,5 +124,13 @@
         android:layout_height="match_parent"
         android:layout_above="@id/tab_menu"
         android:background="@color/transparent" />
+
+    <FrameLayout
+        android:id="@+id/diaglo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/transparent_50"
+        android:orientation="horizontal"
+        android:visibility="gone" />
 
 </RelativeLayout>

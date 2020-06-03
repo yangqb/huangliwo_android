@@ -20,15 +20,14 @@ import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.login.LoginActivity;
 import com.feitianzhu.huangliwo.me.MyCenterFragment;
-import com.feitianzhu.huangliwo.message.MessageFragment;
 import com.feitianzhu.huangliwo.model.HomePopModel;
 import com.feitianzhu.huangliwo.model.LocationPost;
 import com.feitianzhu.huangliwo.model.MyPoint;
 import com.feitianzhu.huangliwo.model.UpdateAppModel;
 import com.feitianzhu.huangliwo.shop.CommodityClassificationFragment;
-import com.feitianzhu.huangliwo.shop.CommodityClassificationFragment1;
 import com.feitianzhu.huangliwo.shop.NewYearShoppingActivity;
 import com.feitianzhu.huangliwo.strategy.StrategyFragment;
+import com.feitianzhu.huangliwo.strategy.VideoPlayActivity;
 import com.feitianzhu.huangliwo.update.UpdateMyDialogFragment;
 import com.feitianzhu.huangliwo.utils.LocationUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
@@ -89,6 +88,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     LinearLayout mLyJiaoliu;
     @BindView(R.id.ly_me)
     LinearLayout mLyMe;
+    @BindView(R.id.diaglo)
+    FrameLayout diaglo;
     private HomeFragment mHomeFragment;
     private CommodityClassificationFragment mShopFragment;
     private StrategyFragment mMessageFragment;
@@ -101,6 +102,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private int isShow; //是否弹出活动的框
     boolean constraint = false; //是否强制更新
     private HomePopModel.PopupBean popupBean = new HomePopModel.PopupBean();
+    private VideoPlayActivity videoPlayActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -211,6 +213,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 if (mMessageFragment == null) {
 //                    mMessageFragment = MessageFragment.newInstance("", "");
                     mMessageFragment = new StrategyFragment();
+                    mMessageFragment.mainActivity = this;
                     mTransaction.add(R.id.fragment_container, mMessageFragment);
                 } else {
                     mTransaction.show(mMessageFragment);
@@ -467,9 +470,35 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
      */
     private static final int QUIT_INTERVAL = 3000;
 
+
+    @Override
+    public void skipToCommodityFragment(int type, View view) {
+        this.type = type;
+        showFragment(view);
+    }
+//
+//    public void showVideo(String url) {
+//        videoPlayFragment = new VideoPlayFragment();
+//        videoPlayFragment.url = url;
+//        diaglo.setVisibility(View.VISIBLE);
+//        getSupportFragmentManager()
+//                .beginTransaction()
+//                .add(R.id.fragment_container, videoPlayFragment)
+//                .addToBackStack(null)
+//                .commit();
+//    }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+            if (videoPlayActivity != null) {
+                getSupportFragmentManager().popBackStack();
+                diaglo.setVisibility(View.GONE);
+
+                videoPlayActivity = null;
+                return false;
+            }
+
             long backPressed = System.currentTimeMillis();
             if (backPressed - lastBackPressed > QUIT_INTERVAL) {
                 lastBackPressed = backPressed;
@@ -481,12 +510,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             return true;
         }
         return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
-    public void skipToCommodityFragment(int type, View view) {
-        this.type = type;
-        showFragment(view);
     }
 
 }

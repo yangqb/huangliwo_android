@@ -2,15 +2,19 @@ package com.feitianzhu.huangliwo.strategy.request;
 
 import com.alibaba.fastjson.TypeReference;
 import com.feitianzhu.huangliwo.core.network.BaseRequest;
+import com.feitianzhu.huangliwo.core.network.BaseTravelRequest;
 import com.feitianzhu.huangliwo.core.network.ParamsBuilder;
 import com.feitianzhu.huangliwo.strategy.bean.ListPageBean;
+import com.feitianzhu.huangliwo.utils.StringUtils;
+
+import java.util.List;
 
 import static com.feitianzhu.huangliwo.utils.Urls.TICKET_BASE_URL;
 
 /**
  * Created by bch on 2020/5/29
  */
-public class ListPageRequest extends BaseRequest {
+public class ListPageRequest extends BaseTravelRequest {
     //    当前页码
     public int currentPage;
     //    每页显示条数
@@ -19,10 +23,20 @@ public class ListPageRequest extends BaseRequest {
     public int columnId;
 
     @Override
-    public String getAPIBaseURL() {
-        return TICKET_BASE_URL;
+    public Object handleRsponseAfterTransform(Object rsp) {
+        if (rsp instanceof ListPageBean) {
+            List<ListPageBean.ListBean> list = ((ListPageBean) rsp).getList();
+            if (list != null && list.size() >= 0) {
+                for (int i = list.size() - 1; i >= 0; i--) {
+                    ListPageBean.ListBean listBean = list.get(i);
+                    if (listBean.getContentType().equals("1") && StringUtils.isEmpty(listBean.getVideo())) {
+                        list.remove(i);
+                    }
+                }
+            }
+        }
+        return super.handleRsponseAfterTransform(rsp);
     }
-
     @Override
     public ParamsBuilder appendParams(ParamsBuilder builder) {
         return super.appendParams(builder

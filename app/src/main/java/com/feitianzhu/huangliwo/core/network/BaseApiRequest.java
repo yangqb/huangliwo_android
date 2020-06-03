@@ -139,8 +139,8 @@ public abstract class BaseApiRequest extends AbsApiRequest {
         NetWorkState networkStatus = NetworkConnectChangedReceiver.getNetworkStatus(GlobalUtil.getApplication());
         //检查网络
         if (RequestCheckNetwork && networkStatus == NetWorkState.NONE) {
-            handleError(kErrorTypeNoNetworkConnect, "网络中断");
-            //return null;
+            handleError(kErrorTypeNoNetworkConnect, "网络未开启,请打开网络");
+            return ;
         }
         try {
             //请求流程处理

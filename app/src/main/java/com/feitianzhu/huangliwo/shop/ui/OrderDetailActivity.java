@@ -82,7 +82,6 @@ public class OrderDetailActivity extends BaseActivity {
     private List<String> imgs = new ArrayList<>();
     private int selectPos = -1;
     private long time;
-    private String str1 = "合计：";
     private String str2 = "¥ ";
     private GoodsOrderInfo.GoodsOrderListBean goodsOrderBean;
     private String orderNo;
@@ -154,6 +153,10 @@ public class OrderDetailActivity extends BaseActivity {
     RecyclerView recyclerView;
     @BindView(R.id.return_reason)
     TextView tvReturnReason;
+    @BindView(R.id.reward_amount)
+    TextView tvRewardAmount;
+    @BindView(R.id.ll_reward)
+    LinearLayout llReward;
     private String token;
     private String userId;
 
@@ -262,7 +265,7 @@ public class OrderDetailActivity extends BaseActivity {
                 submit();
                 break;
             case R.id.rl_logistics_info:
-                if (logisticsModel != null && logisticsModel.getData().size() > 0) {
+                if (logisticsModel != null && logisticsModel.getData() != null && logisticsModel.getData().size() > 0) {
                     intent = new Intent(OrderDetailActivity.this, LogisticsInfoActivity.class);
                     intent.putExtra(LogisticsInfoActivity.LOGISTICS_COMPANY, goodsOrderBean.getRefundExpressCom());
                     intent.putExtra(LogisticsInfoActivity.LOGISTICS_DATA, logisticsModel);
@@ -496,6 +499,12 @@ public class OrderDetailActivity extends BaseActivity {
         specifications.setText(goodsOrderBean.getAttributeVal());
         count.setText("×" + goodsOrderBean.getCount());
         tvCount.setText("共" + goodsOrderBean.getCount() + "件商品");
+        tvRewardAmount.setText("¥" + String.format(Locale.getDefault(), "%.2f", goodsOrderBean.getRebatePv()));
+        if (goodsOrderBean.getStatus() == GoodsOrderInfo.TYPE_COMPLETED) {
+            llReward.setVisibility(View.VISIBLE);
+        } else {
+            llReward.setVisibility(View.GONE);
+        }
         remark.setText(goodsOrderBean.getRemark());
         if (goodsOrderBean.getDetailAddress() != null && !TextUtils.isEmpty(goodsOrderBean.getDetailAddress())) {
             rlAddress.setVisibility(View.VISIBLE);
@@ -506,7 +515,11 @@ public class OrderDetailActivity extends BaseActivity {
         userName.setText(goodsOrderBean.getBuyerName());
         tvPhone.setText(goodsOrderBean.getBuyerPhone());
         setSpannableString2(String.format(Locale.getDefault(), "%.2f", goodsOrderBean.getPrice()), tvPrice);
-        setSpannableString(String.format(Locale.getDefault(), "%.2f", goodsOrderBean.getAmount()), amount);
+        if (goodsOrderBean.getStatus() == GoodsOrderInfo.TYPE_CANCEL || goodsOrderBean.getStatus() == GoodsOrderInfo.TYPE_NO_PAY) {
+            setSpannableString("合计：", String.format(Locale.getDefault(), "%.2f", goodsOrderBean.getAmount()), amount);
+        } else {
+            setSpannableString("实付：", String.format(Locale.getDefault(), "%.2f", goodsOrderBean.getAmount()), amount);
+        }
         merchantsName.setText(goodsOrderBean.getShopName());
         Glide.with(mContext).load(goodsOrderBean.getGoodsImg())
                 .apply(new RequestOptions().placeholder(R.mipmap.g10_04weijiazai).error(R.mipmap.g10_04weijiazai)).into(imageView);
@@ -720,7 +733,7 @@ public class OrderDetailActivity extends BaseActivity {
     }
 
     @SuppressLint("SetTextI18n")
-    private void setSpannableString(String str3, TextView view) {
+    private void setSpannableString(String str1, String str3, TextView view) {
         view.setText("");
         SpannableString span1 = new SpannableString(str1);
         SpannableString span2 = new SpannableString(str2);

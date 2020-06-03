@@ -4,13 +4,16 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.feitianzhu.huangliwo.strategy.bean.TitileBean;
+
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by bch on 2020/5/25
  */
 public class StrategyAdapter extends FragmentPagerAdapter {
-    private String[] mTitles = new String[]{"会员须知", "正品保障"};
+    public List<TitileBean> mTitles;
     public ArrayList<Fragment> list = new ArrayList<>();
 
     public StrategyAdapter(FragmentManager fm) {
@@ -30,6 +33,10 @@ public class StrategyAdapter extends FragmentPagerAdapter {
     //用来设置tab的标题
     @Override
     public CharSequence getPageTitle(int position) {
-        return mTitles[position];
+        if (mTitles != null && mTitles.size() >= 0) {
+            return mTitles.get(position).getColumnName();
+        } else {
+            return "..";
+        }
     }
 }

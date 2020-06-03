@@ -36,6 +36,7 @@ import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.core.network.ApiLifeCallBack;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
+import com.feitianzhu.huangliwo.im.CustomerserviceActivity;
 import com.feitianzhu.huangliwo.login.LoginActivity;
 import com.feitianzhu.huangliwo.model.AddShoppingCartBody;
 import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
@@ -159,6 +160,7 @@ public class ShopsDetailActivity extends BaseActivity {
     private WebView gooddetail_web;
     @BindView(R.id.service)
     LinearLayout service;
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_shops_detail;
@@ -332,7 +334,7 @@ public class ShopsDetailActivity extends BaseActivity {
         tvAmount.append(span3);
 
         if (goodsListBean.getGoodsIntroduceImgList() == null || goodsListBean.getGoodsIntroduceImgList().size() <= 0) {
-           // llGoodsDetail.setVisibility(View.GONE);
+            // llGoodsDetail.setVisibility(View.GONE);
 
         } else {
             if (goodsListBean.getGoodsIntroduceImgList().size() > 1) {
@@ -427,7 +429,7 @@ public class ShopsDetailActivity extends BaseActivity {
         }
     }
 
-    @OnClick({R.id.left_button, R.id.tv_pay, R.id.rl_more_evaluation, R.id.add_shopping_cart, R.id.shopping_cart, R.id.call_phone, R.id.collect, R.id.select_specifications, R.id.right_img, R.id.ll_rebate,R.id.service})
+    @OnClick({R.id.left_button, R.id.tv_pay, R.id.rl_more_evaluation, R.id.add_shopping_cart, R.id.shopping_cart, R.id.call_phone, R.id.collect, R.id.select_specifications, R.id.right_img, R.id.ll_rebate, R.id.service})
     @SingleClick()
     public void onClick(View view) {
         Intent intent;
@@ -442,14 +444,14 @@ public class ShopsDetailActivity extends BaseActivity {
                     startActivity(intent);
                     return;
                 }
-                isBuyGoods = true;
-              /*  if (goodsListBean.getStockCount() <= 0) {
-                    ToastUtils.show("当前商品已售完");
+                if (goodsListBean.getSellOut() == 1) {
+                    ToastUtils.show("商品已售罄");
                     return;
-                }*/
+                }
+
+                isBuyGoods = true;
                 if (specifications.size() > 0) {
                     showSpeDialog();
-                    //return;
                 } else {
                     intent = new Intent(ShopsDetailActivity.this, ShopPayActivity.class);
                     if (valueId != null) {
@@ -474,6 +476,10 @@ public class ShopsDetailActivity extends BaseActivity {
                 if (token == null || TextUtils.isEmpty(token)) {
                     intent = new Intent(this, LoginActivity.class);
                     startActivity(intent);
+                    return;
+                }
+                if (goodsListBean.getSellOut() == 1) {
+                    ToastUtils.show("商品已售罄");
                     return;
                 }
                 isAddShoppingCart = true;
@@ -574,7 +580,12 @@ public class ShopsDetailActivity extends BaseActivity {
                 startActivity(intent);
                 break;
             case R.id.service:
-                startActivity(new Intent(ShopsDetailActivity.this, Customerservice.class));
+                if (token == null || TextUtils.isEmpty(token)) {
+                    intent = new Intent(this, LoginActivity.class);
+                    startActivity(intent);
+                    return;
+                }
+                startActivity(new Intent(ShopsDetailActivity.this, CustomerserviceActivity.class));
                 break;
         }
 
@@ -582,7 +593,7 @@ public class ShopsDetailActivity extends BaseActivity {
 
 
     public void showSpeDialog() {
-        new CustomSpecificationDialog(this).setData(specifications,goodsListBean)
+        new CustomSpecificationDialog(this).setData(specifications, goodsListBean)
                 .setNegativeButton(new CustomSpecificationDialog.OnOkClickListener() {
                     @Override
                     public void onOkClick(List<ProductParameters.GoodsSpecifications> data) {

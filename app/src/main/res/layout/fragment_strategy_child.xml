@@ -14,7 +14,7 @@
         android:id="@+id/imageView9"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_115"
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         android:src="@color/bank_bg01" />
 
 

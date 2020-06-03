@@ -5,8 +5,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.feitianzhu.huangliwo.R;
+import com.feitianzhu.huangliwo.RxCodeConstants;
 import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
+import com.feitianzhu.huangliwo.core.rxbus.RxBus;
 import com.feitianzhu.huangliwo.home.HomeFragment;
+import com.hyphenate.chat.EMClient;
 
 public class SessionlistActivity extends BaseActivity {
        private ConversationListFragment conversationListFragment;
@@ -18,6 +21,8 @@ public class SessionlistActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+
+
         mTransaction = getSupportFragmentManager().beginTransaction();
         conversationListFragment = new ConversationListFragment();
         mTransaction.add(R.id.fragment_container, conversationListFragment);
