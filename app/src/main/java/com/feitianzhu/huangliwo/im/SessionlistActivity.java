@@ -21,9 +21,7 @@ public class SessionlistActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        //所有未读消息数清零
-        EMClient.getInstance().chatManager().markAllConversationsAsRead();
-        RxBus.getDefault().post(RxCodeConstants.IM_MESSAGE,false);
+
 
         mTransaction = getSupportFragmentManager().beginTransaction();
         conversationListFragment = new ConversationListFragment();
