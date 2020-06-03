@@ -95,8 +95,8 @@
 
             <TextView
                 android:id="@+id/tv_pay"
-                android:layout_width="106dp"
-                android:layout_height="35dp"
+                android:layout_width="@dimen/dp_100"
+                android:layout_height="@dimen/dp_35"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/dp_10"
@@ -109,10 +109,10 @@
 
             <TextView
                 android:id="@+id/add_shopping_cart"
-                android:layout_width="106dp"
-                android:layout_height="35dp"
+                android:layout_width="@dimen/dp_100"
+                android:layout_height="@dimen/dp_35"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="15dp"
+                android:layout_marginRight="@dimen/dp_15"
                 android:layout_toLeftOf="@id/tv_pay"
                 android:background="@drawable/shape_fed428_r5"
                 android:gravity="center"
@@ -347,6 +347,7 @@
                     android:orientation="vertical"
                     android:padding="@dimen/dp_10">
 
+
                     <RelativeLayout
                         android:id="@+id/rl_more_evaluation"
                         android:layout_width="match_parent"
@@ -376,7 +377,6 @@
                             android:textSize="14sp" />
 
                     </RelativeLayout>
-
 
                     <LinearLayout
                         android:id="@+id/ll_evaluate"
