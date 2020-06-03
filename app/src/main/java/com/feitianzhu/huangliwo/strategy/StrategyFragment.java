@@ -41,29 +41,23 @@ public class StrategyFragment extends BaseBindingFragment {
     @Override
     protected void init() {
         StrategyAdapter strategyAdapter = new StrategyAdapter(getChildFragmentManager());
-        List<TitileBean> mTitles=new ArrayList<>();
-        mTitles.add(new TitileBean("会员须知"));
-        mTitles.add(new TitileBean("正品保障"));
-        strategyAdapter.mTitles = mTitles;
-
-
         ArrayList<Fragment> fragments = new ArrayList<>();
-//        TitleIdRequest titleIdRequest = new TitleIdRequest();
-//        titleIdRequest.isShowLoading = true;
-//        titleIdRequest.call(new ApiCallBack<List<TitileBean>>() {
-//            @Override
-//            public void onAPIResponse(List<TitileBean> response) {
-//                if (response != null && response.size() >= 0) {
-//                    strategyAdapter.mTitles = response;
-//                    strategyAdapter.notifyDataSetChanged();
-//                }
-//            }
-//
-//            @Override
-//            public void onAPIError(int errorCode, String errorMsg) {
-//
-//            }
-//        });
+        TitleIdRequest titleIdRequest = new TitleIdRequest();
+        titleIdRequest.isShowLoading = true;
+        titleIdRequest.call(new ApiCallBack<List<TitileBean>>() {
+            @Override
+            public void onAPIResponse(List<TitileBean> response) {
+                if (response != null && response.size() >= 0) {
+                    strategyAdapter.mTitles = response;
+                    strategyAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onAPIError(int errorCode, String errorMsg) {
+
+            }
+        });
 
 
         StrategyChildFragment strategyChildFragment1 = new StrategyChildFragment();
@@ -102,7 +96,7 @@ public class StrategyFragment extends BaseBindingFragment {
             }
         });
         TabLayout.Tab tabAt = binding.tabLayout.getTabAt(0);
-        if (tabAt!=null){
+        if (tabAt != null) {
             CharSequence text = tabAt.getText();
             SpannableString spannableString = new SpannableString(text);
             StyleSpan styleSpan = new StyleSpan(Typeface.BOLD);
