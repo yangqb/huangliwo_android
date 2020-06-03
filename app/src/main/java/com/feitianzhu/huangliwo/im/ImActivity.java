@@ -21,6 +21,7 @@ import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 import com.gyf.immersionbar.ImmersionBar;
+import com.hjq.toast.ToastUtils;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.EaseUI;
@@ -54,31 +55,39 @@ public class ImActivity extends BaseActivity {
         OtherUserInfoRequest otherUserInfoRequest = new OtherUserInfoRequest();
         String[] split = stringExtra.split("-");
         otherUserInfoRequest.userId = split[0];
+        otherUserInfoRequest.isShowLoading = true;
         otherUserInfoRequest.call(new ApiCallBack<MineInfoModel>() {
             @Override
             public void onAPIResponse(MineInfoModel response) {
-                Log.e("TAG", "onAPIResponse: " + response.getNickName());
                 //设置聊天头像
                 EaseChatRow.OtherIMG = response.getHeadImg();
+                //所有未读消息数清零
+                EMClient.getInstance().chatManager().markAllConversationsAsRead();
+                RxBus.getDefault().post(RxCodeConstants.IM_MESSAGE, false);
+
+                chatFragment = new EaseChatFragment();
+                chatFragment.setAvatar(UserInfoUtils.getUserInfo(ImActivity.this).getHeadImg());
+                chatFragment.setName(UserInfoUtils.getUserInfo(ImActivity.this).getNickName());
+                chatFragment.setTitle(response.getNickName());
+                //pass parameters to chat fragment
+                chatFragment.setArguments(getIntent().getExtras());
+                getSupportFragmentManager().beginTransaction().add(R.id.container, chatFragment).commit();
             }
 
             @Override
             public void onAPIError(int errorCode, String errorMsg) {
-
+                ToastUtils.show("客服信息获取失败");
+                finish();
+//                chatFragment = new EaseChatFragment();
+//                chatFragment.setAvatar(UserInfoUtils.getUserInfo(ImActivity.this).getHeadImg());
+//                chatFragment.setName(UserInfoUtils.getUserInfo(ImActivity.this).getNickName());
+////                chatFragment.setTitle(response.getNickName());
+//                //pass parameters to chat fragment
+//                chatFragment.setArguments(getIntent().getExtras());
+//                getSupportFragmentManager().beginTransaction().add(R.id.container, chatFragment).commit();
             }
         });
-//        String name = getIntent().getStringExtra("name");
-//        String icon = getIntent().getStringExtra("icon");
-        //所有未读消息数清零
-        EMClient.getInstance().chatManager().markAllConversationsAsRead();
-        RxBus.getDefault().post(RxCodeConstants.IM_MESSAGE, false);
 
-        chatFragment = new EaseChatFragment();
-        chatFragment.setAvatar(UserInfoUtils.getUserInfo(this).getHeadImg());
-        chatFragment.setName(UserInfoUtils.getUserInfo(this).getNickName());
-        //pass parameters to chat fragment
-        chatFragment.setArguments(getIntent().getExtras());
-        getSupportFragmentManager().beginTransaction().add(R.id.container, chatFragment).commit();
     }
 
     @Override
