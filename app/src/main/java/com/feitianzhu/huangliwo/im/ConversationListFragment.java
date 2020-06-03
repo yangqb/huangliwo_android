@@ -1,6 +1,7 @@
 package com.feitianzhu.huangliwo.im;
 
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -32,6 +33,7 @@ public class ConversationListFragment extends EaseConversationListFragment {
         errorText = (TextView) errorView.findViewById(R.id.tv_connect_errormsg);
         userId = SPUtils.getString(getActivity(), Constant.SP_LOGIN_USERID);
     }
+
     @Override
     protected void setUpView() {
         super.setUpView();
@@ -58,10 +60,10 @@ public class ConversationListFragment extends EaseConversationListFragment {
     @Override
     protected void onConnectionDisconnected() {
         super.onConnectionDisconnected();
-        if (NetUtils.hasNetwork(getActivity())){
-         errorText.setText(R.string.can_not_connect_chat_server_connection);
+        if (NetUtils.hasNetwork(getActivity())) {
+            errorText.setText(R.string.can_not_connect_chat_server_connection);
         } else {
-          errorText.setText(R.string.the_current_network);
+            errorText.setText(R.string.the_current_network);
         }
     }
 
