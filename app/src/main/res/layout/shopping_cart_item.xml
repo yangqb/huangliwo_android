@@ -8,11 +8,13 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/dp_10"
-        android:background="@drawable/bg_ffffff_r5"
+        android:layout_marginStart="@dimen/dp_10"
+        android:layout_marginTop="@dimen/dp_10"
+        android:layout_marginEnd="@dimen/dp_10"
+        android:background="@drawable/shape_ffffff_r5"
         android:orientation="horizontal"
         android:paddingTop="@dimen/dp_20"
-        android:paddingBottom="25dp">
+        android:paddingBottom="@dimen/dp_25">
 
         <RelativeLayout
             android:id="@+id/select_goods"
@@ -33,19 +35,49 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <com.itheima.roundedimageview.RoundedImageView
-                android:id="@+id/image"
+            <RelativeLayout
+                android:id="@+id/rl_img"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:layout_marginRight="13dp"
-                android:scaleType="centerCrop"
-                android:src="@mipmap/g10_04weijiazai"
-                app:riv_corner_radius="5dp" />
+                android:layout_marginEnd="13dp">
+
+                <com.itheima.roundedimageview.RoundedImageView
+                    android:id="@+id/image"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/g10_04weijiazai"
+                    app:riv_corner_radius="5dp" />
+
+                <LinearLayout
+                    android:id="@+id/ll_sold_out"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/transparent"
+                    android:orientation="vertical">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="78dp"
+                        android:background="@drawable/shape_sold_out_bg" />
+
+                    <TextView
+                        android:layout_width="100dp"
+                        android:layout_height="22dp"
+                        android:background="@drawable/shape_sold_out"
+                        android:gravity="center"
+                        android:text="商品已售罄"
+                        android:textColor="@color/white"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+
+            </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/image"
+                android:layout_toRightOf="@id/rl_img"
                 android:orientation="vertical">
 
                 <RelativeLayout
@@ -85,7 +117,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="26dp"
                     android:layout_marginTop="15dp"
-                    android:background="@drawable/shape_f1efef_r13"
+                    android:background="@drawable/shape_f7f7f7_r13"
                     android:drawableEnd="@mipmap/g07_04xiala"
                     android:drawablePadding="8dp"
                     android:ellipsize="end"
@@ -127,11 +159,7 @@
                         app:tvWidth="25dp" />-->
                     <include layout="@layout/layout_amount" />
                 </RelativeLayout>
-
             </LinearLayout>
-
         </RelativeLayout>
-
     </LinearLayout>
-
 </LinearLayout>

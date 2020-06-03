@@ -5,6 +5,7 @@ import java.util.List;
 
 public class CollectionInfo implements Serializable {
     public List<CollectionModel> collectList;
+
     public static class CollectionModel implements Serializable {
         public String collectId;// (integer, optional): 收藏物主键ID ,
         public String createDate;// (string, optional): 商品或商家收藏时间 ,
@@ -16,6 +17,7 @@ public class CollectionInfo implements Serializable {
         public String title;// (string, optional): 商品或商家标题 ,
         public int type;// (integer, optional): 收藏类型1：收藏商户，2：收藏商品 ,
         public int userId;// (integer, optional): 用户ID
+        public int sellOut;
     }
 
 }

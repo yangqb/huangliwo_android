@@ -54,24 +54,18 @@ public class ShoppingCartAdapter extends BaseQuickAdapter<ShoppingCartModel.Cart
     @Override
     protected void convert(@NonNull BaseViewHolder helper, ShoppingCartModel.CartGoodsModel item) {
         str1 = "¥ ";
-        /*amountView = ((AmountView) helper.getView(R.id.amount_view));
-        amountView.setGoods_storage(50);
-        amountView.setEditText(item.goodsCount + "");
-        amountView.setOnAmountChangeListener(new AmountView.OnAmountChangeListener() {
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void onAmountChange(View view, int count) {
-                shopCount = count;
-                if (mListener != null) {
-                    mListener.getGoodsAmount(helper.getAdapterPosition(), shopCount);
-                }
-            }
-        });*/
         helper.setText(R.id.etAmount, item.goodsCount + "");
         if (TextUtils.isEmpty(item.speciName)) {
             helper.setVisible(R.id.summary, false);
         } else {
             helper.setVisible(R.id.summary, true);
+        }
+        if (item.sellOut == 1) {
+            helper.setVisible(R.id.ll_sold_out, true);
+            helper.setTextColor(R.id.name, mContext.getResources().getColor(R.color.color_999999));
+        } else {
+            helper.setTextColor(R.id.name, mContext.getResources().getColor(R.color.color_333333));
+            helper.setVisible(R.id.ll_sold_out, false);
         }
         helper.setText(R.id.summary, item.speciName);
         helper.setText(R.id.name, item.title);
