@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.provider.SyncStateContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -140,6 +141,7 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
     private Handler typingHandler = null;
     // "正在输入"功能的开关，打开后本设备发送消息将持续发送cmd类型消息通知对方"正在输入"
     private boolean turnOnTyping;
+    private String avatar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -153,7 +155,8 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-
+        Bundle arguments = getArguments();
+        avatar = arguments.getString("img");
         fragmentArgs = getArguments();
         // check if single chat or group chat
         chatType = fragmentArgs.getInt(EaseConstant.EXTRA_CHAT_TYPE, EaseConstant.CHATTYPE_SINGLE);
@@ -846,8 +849,10 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
     protected void sendTextMessage(String content) {
         if (EaseAtMessageHelper.get().containsAtUsername(content)) {
             sendAtMessage(content);
+
         } else {
             EMMessage message = EMMessage.createTxtSendMessage(content, toChatUsername);
+            message.setAttribute("avatar","http://thirdwx.qlogo.cn/mmopen/vi_32/8WDub7k5z86aDibe5UVU0VnPLdk5hkWkL0lnCF1xtnZsSAapTjcF93StW65h2s13lANvlVndrR79tmuiafJVLaLg/132");
             sendMessage(message);
         }
     }
@@ -911,6 +916,7 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
         if (message == null) {
             return;
         }
+
         if (chatFragmentHelper != null) {
             //set extension
             chatFragmentHelper.onSetMessageAttributes(message);

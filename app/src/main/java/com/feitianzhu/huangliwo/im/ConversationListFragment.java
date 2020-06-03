@@ -32,14 +32,12 @@ public class ConversationListFragment extends EaseConversationListFragment {
         errorText = (TextView) errorView.findViewById(R.id.tv_connect_errormsg);
         userId = SPUtils.getString(getActivity(), Constant.SP_LOGIN_USERID);
     }
-    
     @Override
     protected void setUpView() {
         super.setUpView();
         // register context menu
         registerForContextMenu(conversationListView);
         conversationListView.setOnItemClickListener(new OnItemClickListener() {
-
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 EMConversation conversation = conversationListView.getItem(position);
@@ -49,8 +47,7 @@ public class ConversationListFragment extends EaseConversationListFragment {
                 else {
                     // start chat acitivity
                     Intent intent = new Intent(getActivity(), ImActivity.class);
-                    intent.putExtra(EaseConstant.EXTRA_USER_ID, username);
-//                    intent.putExtra(EaseConstant.EXTRA_USER_ID, username);
+                    intent.putExtra(EaseConstant.EXTRA_USER_ID, userId);
                     startActivity(intent);
                 }
             }
@@ -67,8 +64,8 @@ public class ConversationListFragment extends EaseConversationListFragment {
           errorText.setText(R.string.the_current_network);
         }
     }
-    
-    
+
+
    /* @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
         getActivity().getMenuInflater().inflate(R.menu.em_delete_message, menu); 
