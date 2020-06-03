@@ -11,6 +11,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMMessage.Direct;
@@ -206,9 +208,11 @@ public abstract class EaseChatRow extends LinearLayout {
                 if (message.direct() == Direct.SEND) {
                     //自己的头像
                     if (meIMG != null && !meIMG.equals("")) {
-                        String chat_client_avatar = meIMG;
                         Glide.with(getContext())
-                                .load(chat_client_avatar)
+                                .load(meIMG)
+                                .apply(RequestOptions.placeholderOf(R.drawable.ease_default_avatar)
+                                        .error(R.drawable.ease_default_avatar)
+                                        .diskCacheStrategy(DiskCacheStrategy.ALL))
                                 .into(userAvatarView);
                     }
 
@@ -218,7 +222,14 @@ public abstract class EaseChatRow extends LinearLayout {
                 } else if (message.direct() == Direct.RECEIVE) {
                     //获取对方的头像并设置
                     if (OtherIMG != null && !OtherIMG.equals("")) {
-                        Glide.with(getContext()).load(OtherIMG).into(userAvatarView);
+                        String avatar = message.getStringAttribute("avatar", "");
+
+                        Glide.with(getContext())
+                                .load(avatar)
+                                .apply(RequestOptions.placeholderOf(R.drawable.ease_default_avatar)
+                                        .error(R.drawable.ease_default_avatar)
+                                        .diskCacheStrategy(DiskCacheStrategy.ALL))
+                                .into(userAvatarView);
 
                     }
 //                    String chat_cfo_nick = "狗顺";

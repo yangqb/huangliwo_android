@@ -29,7 +29,35 @@
                 tools:listitem="@layout/fragment_strategy_child1" />
         </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
+        <LinearLayout
+            android:id="@+id/back_top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="25dp"
+            android:layout_marginBottom="25dp"
+            android:background="@drawable/shape_back_top"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:visibility="gone">
 
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@mipmap/fanhuidingbu" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:text="顶部"
+                android:textColor="@color/color_333333"
+                android:textSize="11sp" />
+
+        </LinearLayout>
     </RelativeLayout>
 
 

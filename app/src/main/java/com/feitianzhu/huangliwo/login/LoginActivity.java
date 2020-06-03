@@ -27,6 +27,7 @@ import com.feitianzhu.huangliwo.core.network.networkcheck.NetWorkState;
 import com.feitianzhu.huangliwo.core.network.networkcheck.NetworkConnectChangedReceiver;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
+import com.feitianzhu.huangliwo.im.IMContent;
 import com.feitianzhu.huangliwo.login.entity.LoginEntity;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.WXLoginInfo;
@@ -98,7 +99,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         mRegister.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
         mForgetLayout.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
 
-               layoutLogin.post(new Runnable() {
+        layoutLogin.post(new Runnable() {
             @Override
             public void run() {
                 //不可以直接获取控件位置，放在这个里面获取；
@@ -326,7 +327,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         LoadingUtil.setLoadingViewShow(true);
                         if (response.body().code == 0 && response.body().data != null) {
 
-                            EMClient.getInstance().login(userId+"-dev", "123456", new EMCallBack() {//回调
+                            EMClient.getInstance().login(userId + IMContent.IMTAG, "123456", new EMCallBack() {//回调
                                 @Override
                                 public void onSuccess() {
                                     EMClient.getInstance().groupManager().loadAllGroups();
