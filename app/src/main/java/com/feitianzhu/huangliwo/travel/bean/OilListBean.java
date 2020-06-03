@@ -6,13 +6,14 @@ public class OilListBean {
     /**
      * gasId : BJ000002225
      * gasName : 北京市公交马场加油站
-     * gasLogoSmall : https://static.czb365.com/1536118323836.jpg?x-oss-process=image/resize,m_lfit,h_200,w_200/format,png
-     * gasLogoBig : https://static.czb365.com/1536118323609.jpg?x-oss-process=image/resize,m_lfit,h_420,w_630/format,png
+     * gasLogoSmall : https://static.czb365.com/1590575010398.jpg?x-oss-process=image/resize,m_lfit,h_200,w_200/format,png
+     * gasLogoBig : https://static.czb365.com/1590575010100.jpg?x-oss-process=image/resize,m_lfit,h_420,w_630/format,png
      * gasAddress : 北京市丰台区富丰园340总站内
      * distanceStr : 1km
      * distance : 1069
      * priceYfq : 4.80
      * priceOfficial : 5.50
+     * priceGun : 5.20
      * gasAddressLongitude : 116.284476
      * gasAddressLatitude : 39.83672
      */
@@ -26,6 +27,7 @@ public class OilListBean {
     private int distance;
     private String priceYfq;
     private String priceOfficial;
+    private String priceGun;
     private double gasAddressLongitude;
     private double gasAddressLatitude;
 
@@ -99,6 +101,14 @@ public class OilListBean {
 
     public void setPriceOfficial(String priceOfficial) {
         this.priceOfficial = priceOfficial;
+    }
+
+    public String getPriceGun() {
+        return priceGun;
+    }
+
+    public void setPriceGun(String priceGun) {
+        this.priceGun = priceGun;
     }
 
     public double getGasAddressLongitude() {
