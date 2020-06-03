@@ -53,7 +53,7 @@ public class MyOilAdapter extends BaseQuickAdapter<OilListBean, BaseViewHolder> 
 
                 /*String priceOfficial = item.getOilPriceList().get(i).getPriceOfficial();
                 String priceYfq = item.getOilPriceList().get(i).getPriceYfq();*/
-                String priceOfficial = item.getPriceOfficial();
+                String priceOfficial = item.getPriceGun();
                 String priceYfq = item.getPriceYfq();
                 double v = Double.valueOf(priceOfficial) - Double.valueOf(priceYfq);
                 java.text.DecimalFormat df = new java.text.DecimalFormat("0.00");
