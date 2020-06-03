@@ -157,6 +157,8 @@ public class OrderDetailActivity extends BaseActivity {
     TextView tvRewardAmount;
     @BindView(R.id.ll_reward)
     LinearLayout llReward;
+    @BindView(R.id.refund_tag)
+    TextView refundTag;
     private String token;
     private String userId;
 
@@ -504,6 +506,11 @@ public class OrderDetailActivity extends BaseActivity {
             llReward.setVisibility(View.VISIBLE);
         } else {
             llReward.setVisibility(View.GONE);
+        }
+        if (goodsOrderBean.getNoReason() == 1) {
+            refundTag.setVisibility(View.VISIBLE);
+        } else {
+            refundTag.setVisibility(View.INVISIBLE);
         }
         remark.setText(goodsOrderBean.getRemark());
         if (goodsOrderBean.getDetailAddress() != null && !TextUtils.isEmpty(goodsOrderBean.getDetailAddress())) {

@@ -110,6 +110,15 @@ userName (string, optional): 用户名
         private String refundExpressNum;
         private String refundExpressCom;
         private String refundExpressCode;
+        private int noReason;//是否支持7天无理由 0否 1是
+
+        public int getNoReason() {
+            return noReason;
+        }
+
+        public void setNoReason(int noReason) {
+            this.noReason = noReason;
+        }
 
         public String getRefundExpressCode() {
             return refundExpressCode;
