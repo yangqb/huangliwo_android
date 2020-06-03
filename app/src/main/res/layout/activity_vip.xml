@@ -64,7 +64,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="115dp"
                 android:layout_alignParentBottom="true"
-                android:background="@mipmap/f01_04taitou" />
+                android:background="@mipmap/vip_shuoming" />
+
+            <ImageView
+                android:layout_width="@dimen/dp_14"
+                android:layout_height="@dimen/dp_25"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/dp_40"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/vip_right" />
 
         </RelativeLayout>
     </LinearLayout>
@@ -73,13 +81,14 @@
         android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white">
+       >
 
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/color_f7f7f7">
+            android:background="@color/color_2A2420"
+            >
 
             <LinearLayout
                 android:id="@+id/ll_bottom"
@@ -87,6 +96,7 @@
                 android:layout_height="95dp"
                 android:layout_alignParentBottom="true"
                 android:gravity="center"
+                android:background="@color/white"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -151,14 +161,13 @@
                     android:id="@+id/ll_gifts_presents"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/color_f7f7f7"
-                    android:orientation="vertical"
+                    android:background="@color/color_2A2420"                    android:orientation="vertical"
                     >
 
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/color_f7f7f7"
+                        android:background="@color/color_2A2420"
                         android:tag="sticky">
 
                         <LinearLayout
@@ -207,7 +216,7 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/color_f7f7f7"
+                        android:background="@color/color_2A2420"
                         android:tag="sticky">
 
                         <RelativeLayout

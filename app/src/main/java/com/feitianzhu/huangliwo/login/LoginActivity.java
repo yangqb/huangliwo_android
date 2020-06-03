@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Paint;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -21,6 +22,7 @@ import com.feitianzhu.huangliwo.MainActivity;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
+import com.feitianzhu.huangliwo.core.network.LoadingUtil;
 import com.feitianzhu.huangliwo.core.network.networkcheck.NetWorkState;
 import com.feitianzhu.huangliwo.core.network.networkcheck.NetworkConnectChangedReceiver;
 import com.feitianzhu.huangliwo.http.JsonCallback;
@@ -38,6 +40,8 @@ import com.feitianzhu.huangliwo.utils.UserInfoUtils;
 import com.google.gson.Gson;
 import com.gyf.immersionbar.ImmersionBar;
 import com.hjq.toast.ToastUtils;
+import com.hyphenate.EMCallBack;
+import com.hyphenate.chat.EMClient;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.base.Request;
@@ -319,14 +323,38 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
                     @Override
                     public void onSuccess(Response<LzyResponse<MineInfoModel>> response) {
+                        LoadingUtil.setLoadingViewShow(true);
                         if (response.body().code == 0 && response.body().data != null) {
-                            MineInfoModel userInfo = response.body().data;
-                            SPUtils.putString(LoginActivity.this, Constant.SP_PHONE, userInfo.getPhone());
-                            UserInfoUtils.saveUserInfo(LoginActivity.this, userInfo);
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(intent);
-                            finish();
+
+                            EMClient.getInstance().login(userId+"-dev", "123456", new EMCallBack() {//回调
+                                @Override
+                                public void onSuccess() {
+                                    EMClient.getInstance().groupManager().loadAllGroups();
+                                    EMClient.getInstance().chatManager().loadAllConversations();
+                                    //startActivity(new Intent(Customerservice.this,ImActivity.class));
+                                    MineInfoModel userInfo = response.body().data;
+                                    SPUtils.putString(LoginActivity.this, Constant.SP_PHONE, userInfo.getPhone());
+                                    UserInfoUtils.saveUserInfo(LoginActivity.this, userInfo);
+                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    startActivity(intent);
+                                    finish();
+                                    Log.d("main", "登录聊天服务器成功!");
+                                    LoadingUtil.setLoadingViewShow(false);
+                                }
+
+                                @Override
+                                public void onProgress(int progress, String status) {
+
+                                }
+
+                                @Override
+                                public void onError(int code, String message) {
+                                    LoadingUtil.setLoadingViewShow(false);
+                                    Log.i("onError", "onError: " + code + message);
+                                    Log.d("main", "登录聊天服务器失败！");
+                                }
+                            });
                         }
                     }
 

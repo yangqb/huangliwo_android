@@ -39,7 +39,8 @@ public class ImActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-
+        String name = getIntent().getStringExtra("name");
+        String icon = getIntent().getStringExtra("icon");
         //所有未读消息数清零
         EMClient.getInstance().chatManager().markAllConversationsAsRead();
         RxBus.getDefault().post(RxCodeConstants.IM_MESSAGE, false);
@@ -47,11 +48,10 @@ public class ImActivity extends BaseActivity {
         EaseUI easeUI = EaseUI.getInstance();
 //需要easeui库显示用户头像和昵称设置此provider
         easeUI.setUserProfileProvider(new EaseUI.EaseUserProfileProvider() {
-
             @Override
             public EaseUser getUser(String username) {
-                EaseUser easeUser = new EaseUser("heh");
-                easeUser.setAvatar("http://8.129.218.83:8088/user/merchant/2020/02/06/b7c4ca93a5f54acaafabe8c74d9da213.jpg");
+                EaseUser easeUser = new EaseUser(name);
+                easeUser.setAvatar(icon);
                 return easeUser;
 //                return getUserInfo(username);
             }

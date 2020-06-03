@@ -21,10 +21,11 @@
                 android:id="@+id/present_img"
                 android:layout_width="@dimen/dp_100"
                 android:layout_height="@dimen/dp_70"
-                android:layout_marginRight="15dp"
-                android:layout_gravity="center_horizontal"
                 android:background="@mipmap/g10_04weijiazai"
-                android:scaleType="centerCrop" />
+                android:scaleType="centerCrop"
+                android:layout_marginTop="@dimen/dp_3"
+                android:layout_gravity="center_horizontal"
+                />
 
             <TextView
                 android:id="@+id/present_name"

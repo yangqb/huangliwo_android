@@ -64,33 +64,12 @@ public class CustomerservicelistActivity extends BaseActivity {
                 adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                        EMClient.getInstance().login("14701776629", "123456", new EMCallBack() {//回调
-                            @Override
-                            public void onSuccess() {
-                                EMClient.getInstance().groupManager().loadAllGroups();
-                                EMClient.getInstance().chatManager().loadAllConversations();
-                                //startActivity(new Intent(Customerservice.this,ImActivity.class));
-                                Intent intent = new Intent(CustomerservicelistActivity.this, ImActivity.class);
-                                //username为对方的环信id
-//                                intent.putExtra(EaseConstant.EXTRA_USER_ID, response.get(position).getUserId());
-                                intent.putExtra(EaseConstant.EXTRA_USER_ID, "13671192850");
-                                startActivity(intent);
-                                Log.d("main", "登录聊天服务器成功!");
-                                LoadingUtil.setLoadingViewShow(false);
-                            }
-
-                            @Override
-                            public void onProgress(int progress, String status) {
-
-                            }
-
-                            @Override
-                            public void onError(int code, String message) {
-                                LoadingUtil.setLoadingViewShow(false);
-                                Log.i("onError", "onError: " + code + message);
-                                Log.d("main", "登录聊天服务器失败！");
-                            }
-                        });
+                        Intent intent = new Intent(CustomerservicelistActivity.this, ImActivity.class);
+                        //username为对方的环信id
+                        intent.putExtra("name",response.get(position).getNick());
+                        intent.putExtra("icon",response.get(position).getIcon());
+                        intent.putExtra(EaseConstant.EXTRA_USER_ID, response.get(position).getUserId()+"-dev");
+                        startActivity(intent);
                     }
                 });
             }

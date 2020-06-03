@@ -13,7 +13,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.feitianzhu.huangliwo.R;
+import com.feitianzhu.huangliwo.common.Constant;
+import com.feitianzhu.huangliwo.login.LoginActivity;
+import com.feitianzhu.huangliwo.settings.ChangeLoginPassword;
 import com.feitianzhu.huangliwo.shop.ImActivity;
+import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMConversation.EMConversationType;
@@ -22,18 +26,21 @@ import com.hyphenate.easeui.model.EaseAtMessageHelper;
 import com.hyphenate.easeui.model.EaseDingMessageHelper;
 import com.hyphenate.easeui.ui.EaseConversationListFragment;
 import com.hyphenate.util.NetUtils;
-import com.lljjcoder.Constant;
 
 public class ConversationListFragment extends EaseConversationListFragment {
 
     private TextView errorText;
+    private String userId;
+
 
     @Override
     protected void initView() {
         super.initView();
+
         View errorView = (LinearLayout) View.inflate(getActivity(), R.layout.em_chat_neterror_item, null);
         errorItemContainer.addView(errorView);
         errorText = (TextView) errorView.findViewById(R.id.tv_connect_errormsg);
+        userId = SPUtils.getString(getActivity(), Constant.SP_LOGIN_USERID);
     }
     
     @Override
@@ -52,17 +59,7 @@ public class ConversationListFragment extends EaseConversationListFragment {
                 else {
                     // start chat acitivity
                     Intent intent = new Intent(getActivity(), ImActivity.class);
-                    if(conversation.isGroup()){
-                      /*  if(conversation.getType() == EMConversationType.ChatRoom){
-                            // it's group chat
-                            intent.putExtra(Constant.EXTRA_CHAT_TYPE, Constant.CHATTYPE_CHATROOM);
-                        }else{
-                            intent.putExtra(Constant.EXTRA_CHAT_TYPE, Constant.CHATTYPE_GROUP);
-                        }*/
-
-                    }
-                    // it's single chat
-                    intent.putExtra(EaseConstant.EXTRA_USER_ID, "13671192850");
+                    intent.putExtra(EaseConstant.EXTRA_USER_ID, userId);
                     startActivity(intent);
                 }
             }
