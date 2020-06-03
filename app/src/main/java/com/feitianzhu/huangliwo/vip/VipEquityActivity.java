@@ -47,12 +47,10 @@ public class VipEquityActivity extends BaseUiActivity {
 
     @Override
     public ImmersionBar getOpenImmersionBar() {
-        return  ImmersionBar.with(this)
-                .fitsSystemWindows(true)
+        return ImmersionBar.with(this)
+                .fitsSystemWindows(false)
                 .statusBarDarkFont(true, 0.2f)
-                .navigationBarColor(R.color.transparent)
-                .statusBarColor(R.color.F3D18A)
-                .navigationBarDarkIcon(true);
+                .statusBarColor(R.color.transparent);
     }
 
     @Override

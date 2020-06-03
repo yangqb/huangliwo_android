@@ -14,6 +14,7 @@ public class DocOrderDetailInfo implements Serializable {
     public long expiresDate;//":1585895495000,
     public long nowTimeStamp;//":1590719796249
     public String message;
+    public double discount;
     public DocOrderDetail detail;
     public DocOrderDetailXcdInfo xcd;
     public DocOrderDetailOtherInfo other;

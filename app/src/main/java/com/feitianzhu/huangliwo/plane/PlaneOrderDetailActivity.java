@@ -8,6 +8,7 @@ import android.os.CountDownTimer;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -31,6 +32,7 @@ import com.feitianzhu.huangliwo.model.PlaneOrderModel;
 import com.feitianzhu.huangliwo.model.PlaneOrderStatus;
 import com.feitianzhu.huangliwo.shop.ui.OrderDetailActivity;
 import com.feitianzhu.huangliwo.utils.DateUtils;
+import com.feitianzhu.huangliwo.utils.DoubleUtil;
 import com.feitianzhu.huangliwo.utils.MathUtils;
 import com.feitianzhu.huangliwo.utils.PayUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
@@ -270,7 +272,13 @@ public class PlaneOrderDetailActivity extends BaseActivity {
                             if (response.body().code == 0) {
                                 docOrderDetailInfo = response.body().result;
                                 time = (docOrderDetailInfo.expiresDate - docOrderDetailInfo.nowTimeStamp) / 1000;
-                                countDownTimer();
+                                if (orderModel.status == PlaneOrderStatus.BOOK_OK) {
+                                    countDownTimer();
+                                }
+                                if (orderModel.status == PlaneOrderStatus.TICKET_OK) {
+                                    tvCountdown.setText("奖励¥" + MathUtils.subZero(String.valueOf(DoubleUtil.mul(docOrderDetailInfo.discount, orderModel.noPayAmount))));
+                                    tvCountdown.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+                                }
                                 goDate.setText(DateUtils.strToStr(docOrderDetailInfo.flightInfo.get(0).deptTime) + DateUtils.strToDate2(DateUtils.strToStr2(docOrderDetailInfo.flightInfo.get(0).deptTime)));
                                 goCity.setText(docOrderDetailInfo.flightInfo.get(0).dptCity + "-" + docOrderDetailInfo.flightInfo.get(0).arrCity);
                                 goDepTime.setText(docOrderDetailInfo.flightInfo.get(0).deptTime.split("-")[3]);
@@ -348,7 +356,13 @@ public class PlaneOrderDetailActivity extends BaseActivity {
                             if (response.body().code == 0) {
                                 docOrderDetailInfo = response.body().result;
                                 time = (docOrderDetailInfo.expiresDate - docOrderDetailInfo.nowTimeStamp) / 1000;
-                                countDownTimer();
+                                if (orderModel.status == PlaneOrderStatus.BOOK_OK) {
+                                    countDownTimer();
+                                }
+                                if (orderModel.status == PlaneOrderStatus.TICKET_OK) {
+                                    tvCountdown.setText("奖励¥" + MathUtils.subZero(String.valueOf(DoubleUtil.mul(docOrderDetailInfo.discount, orderModel.noPayAmount))));
+                                    tvCountdown.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+                                }
                                 goDepDate.setText(DateUtils.strToStr(docOrderDetailInfo.flightInfo.get(0).deptTime) + DateUtils.strToDate2(DateUtils.strToStr2(docOrderDetailInfo.flightInfo.get(0).deptTime)));
                                 goCityName.setText(docOrderDetailInfo.flightInfo.get(0).dptCity + "-" + docOrderDetailInfo.flightInfo.get(0).arrCity);
                                 backDepDate.setText(DateUtils.strToStr(docOrderDetailInfo.flightInfo.get(1).deptTime) + DateUtils.strToDate2(DateUtils.strToStr2(docOrderDetailInfo.flightInfo.get(1).deptTime)));
@@ -471,7 +485,7 @@ public class PlaneOrderDetailActivity extends BaseActivity {
                         .asCustom(new CustomTotalPriceInfoView(PlaneOrderDetailActivity.this).setData(priceDetailInfo)).show();
                 break;
             case R.id.pay:
-               if (time <= 0) {
+                if (time <= 0) {
                     ToastUtils.show("订单已关闭，请重新预定机票");
                 } else {
                     payValidate();
