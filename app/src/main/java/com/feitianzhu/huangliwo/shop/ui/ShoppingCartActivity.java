@@ -464,12 +464,15 @@ public class ShoppingCartActivity extends BaseActivity {
                 ArrayList<ShoppingCartModel.CartGoodsModel> selectCartModels = new ArrayList<>();
                 for (ShoppingCartModel.CartGoodsModel shoppingCartModel : shoppingCartModels
                 ) {
-                    if (shoppingCartModel.sellOut == 1) {
-                        ToastUtils.show("有商品已售罄无法购买");
-                        return;
-                    }
                     if (shoppingCartModel.checks == 1) {
                         selectCartModels.add(shoppingCartModel);
+                    }
+                }
+
+                for (ShoppingCartModel.CartGoodsModel cartGoodsModel : selectCartModels) {
+                    if (cartGoodsModel.sellOut == 1) {
+                        ToastUtils.show("有商品已售罄无法购买");
+                        return;
                     }
                 }
                 if (selectCartModels.size() > 0) {
