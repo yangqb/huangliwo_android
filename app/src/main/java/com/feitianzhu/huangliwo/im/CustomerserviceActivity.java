@@ -80,13 +80,13 @@ public class CustomerserviceActivity extends BaseActivity {
             case R.id.shopissues:
 
                 LoadingUtil.setLoadingViewShow(false);
-                if (response!=null &&response.size()>0) {
+                if (response != null && response.size() > 0) {
                     Intent intent = new Intent(CustomerserviceActivity.this, ImActivity.class);
                     //username为对方的环信id
 //                    intent.putExtra("name",response.get(0).getNick());
 //                    intent.putExtra("icon",response.get(0).getIcon());
 //                    intent.putExtra(EaseConstant.EXTRA_USER_ID, "688577"+"-dev");
-                    intent.putExtra(EaseConstant.EXTRA_USER_ID, response.get(0).getUserId()+"-dev");
+                    intent.putExtra(EaseConstant.EXTRA_USER_ID, response.get(0).getUserId() + IMContent.IMTAG);
                     startActivity(intent);
                 }
                 break;
