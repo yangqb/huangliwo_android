@@ -2,17 +2,14 @@ package com.feitianzhu.huangliwo.strategy.bean;
 
 public class TitileBean {
 
+
     /**
-     * columnId : 2
-     * columnName : 正品保障
+     * columnId : 8
+     * columnName : 姚杨姚杨
      */
 
     private int columnId;
-    private String columnName;
-
-    public TitileBean(String columnName) {
-        this.columnName = columnName;
-    }
+    private String columnName = "";
 
     public int getColumnId() {
         return columnId;

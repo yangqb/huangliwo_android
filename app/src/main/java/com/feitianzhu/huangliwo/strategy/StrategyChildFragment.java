@@ -4,10 +4,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
@@ -49,7 +51,46 @@ public class StrategyChildFragment extends BaseBindingFragment {
 
     @Override
     protected void init() {
+        binding.backTop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                binding.backTop.setVisibility(View.GONE);
+                binding.list.scrollToPosition(0);
+            }
+        });
+        binding.list.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
 
+
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (type == 0) {
+                    LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                    int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
+                    if (firstVisibleItemPosition != 0) {
+                        binding.backTop.setVisibility(View.VISIBLE);
+                    } else {
+                        binding.backTop.setVisibility(View.GONE);
+                    }
+                }else {
+                    GridLayoutManager layoutManager = (GridLayoutManager) recyclerView.getLayoutManager();
+                    int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
+                    if (firstVisibleItemPosition != 0) {
+                        binding.backTop.setVisibility(View.VISIBLE);
+                    } else {
+                        binding.backTop.setVisibility(View.GONE);
+                    }
+                }
+
+
+
+            }
+        });
         binding.refreshLayout.setEnableRefresh(true);
         binding.refreshLayout.setEnableLoadMore(true);
         binding.refreshLayout.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
