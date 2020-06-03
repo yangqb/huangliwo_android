@@ -84,7 +84,11 @@ public class OrderAdapter extends BaseMultiItemQuickAdapter<MultipleItemOrderMod
                 }
 
             } else {
-                helper.setGone(R.id.refund_tag, true);
+                if (item.getGoodsOrderListBean().getNoReason() == 1) {
+                    helper.setGone(R.id.refund_tag, true);
+                } else {
+                    helper.setGone(R.id.refund_tag, false);
+                }
                 helper.setGone(R.id.ll_reward, true);
                 if (item.getGoodsOrderListBean().getStatus() == GoodsOrderInfo.TYPE_COMPLETED) {
                     if (item.getGoodsOrderListBean().getIsEval() == 1) { //是否评价
