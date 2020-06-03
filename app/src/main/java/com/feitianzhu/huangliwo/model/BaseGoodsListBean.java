@@ -32,6 +32,7 @@ public class BaseGoodsListBean implements Serializable {
     private String isPoints;
     private int isCollect;
     private float scale;
+    private int sellOut;
 
     private List<GoodsImgsListBean> goodsImgsList;
     private List<GoodsEvaluateMode> evalList;
@@ -42,6 +43,14 @@ public class BaseGoodsListBean implements Serializable {
 
     public void setGoodsIntroduceImgList(List<String> goodsIntroduceImgList) {
         this.goodsIntroduceImgList = goodsIntroduceImgList;
+    }
+
+    public int getSellOut() {
+        return sellOut;
+    }
+
+    public void setSellOut(int sellOut) {
+        this.sellOut = sellOut;
     }
 
     public float getScale() {

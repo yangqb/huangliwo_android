@@ -265,7 +265,7 @@ public class OrderDetailActivity extends BaseActivity {
                 submit();
                 break;
             case R.id.rl_logistics_info:
-                if (logisticsModel != null && logisticsModel.getData().size() > 0) {
+                if (logisticsModel != null && logisticsModel.getData() != null && logisticsModel.getData().size() > 0) {
                     intent = new Intent(OrderDetailActivity.this, LogisticsInfoActivity.class);
                     intent.putExtra(LogisticsInfoActivity.LOGISTICS_COMPANY, goodsOrderBean.getRefundExpressCom());
                     intent.putExtra(LogisticsInfoActivity.LOGISTICS_DATA, logisticsModel);

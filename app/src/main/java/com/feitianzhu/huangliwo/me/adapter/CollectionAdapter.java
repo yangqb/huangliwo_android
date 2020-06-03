@@ -48,13 +48,23 @@ public class CollectionAdapter extends BaseItemDraggableAdapter<CollectionInfo.C
             String discount = String.valueOf((100 - item.rebatePv * 100));
             helper.setText(R.id.tv_rebate, "奖励" + MathUtils.subZero(discount) + "%");
             helper.setText(R.id.vip_rebate, "奖励" + MathUtils.subZero(discount) + "%");
-            helper.setGone(R.id.price,false);
+            helper.setGone(R.id.price, false);
+            helper.setGone(R.id.ll_sold_out, false);
         } else {
+            if (item.sellOut == 1) {
+                helper.setGone(R.id.ll_sold_out, true);
+                helper.setTextColor(R.id.goodsName, mContext.getResources().getColor(R.color.color_999999));
+                helper.setTextColor(R.id.describe, mContext.getResources().getColor(R.color.color_999999));
+            } else {
+                helper.setTextColor(R.id.goodsName, mContext.getResources().getColor(R.color.color_333333));
+                helper.setTextColor(R.id.describe, mContext.getResources().getColor(R.color.color_333333));
+                helper.setGone(R.id.ll_sold_out, false);
+            }
             String rebatePv = String.format(Locale.getDefault(), "%.2f", item.rebatePv);
             helper.setText(R.id.tv_rebate, "奖励¥" + MathUtils.subZero(rebatePv));
             helper.setText(R.id.vip_rebate, "奖励" + MathUtils.subZero(rebatePv));
             setSpannableString(MathUtils.subZero(String.valueOf(item.price)), helper.getView(R.id.price));
-            helper.setGone(R.id.price,true);
+            helper.setGone(R.id.price, true);
         }
         helper.addOnClickListener(R.id.ll_rebate);
     }
