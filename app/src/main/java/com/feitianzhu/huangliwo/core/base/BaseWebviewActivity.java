@@ -72,6 +72,7 @@ public class BaseWebviewActivity extends BaseBindingActivity {
 
         webview.onResume();
         webview.getSettings().setJavaScriptEnabled(true);
+        webview.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         webview.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
         webview.getSettings().setDomStorageEnabled(true);
         webview.getSettings().setDatabaseEnabled(true);
@@ -85,10 +86,10 @@ public class BaseWebviewActivity extends BaseBindingActivity {
             webview.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         }
 
-        if (isVideo) {
-//            视屏自动播放
-            webview.getSettings().setMediaPlaybackRequiresUserGesture(false);
-        }
+//        if (isVideo) {
+////            视屏自动播放
+//            webview.getSettings().setMediaPlaybackRequiresUserGesture(false);
+//        }
 
         if (StringUtils.isEmpty(url)) {
             ToastUtils.show("网址为空");
@@ -236,6 +237,8 @@ public class BaseWebviewActivity extends BaseBindingActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        dataBinding.webView.clearHistory();
         dataBinding.webView.destroy();
+        dataBinding.webView.clearFormData();
     }
 }

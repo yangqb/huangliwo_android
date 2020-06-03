@@ -141,7 +141,7 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
     private Handler typingHandler = null;
     // "正在输入"功能的开关，打开后本设备发送消息将持续发送cmd类型消息通知对方"正在输入"
     private boolean turnOnTyping;
-    private String avatar;
+    private String avatar, name;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -151,6 +151,14 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState, boolean roaming) {
         isRoaming = roaming;
         return inflater.inflate(R.layout.ease_fragment_chat, container, false);
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
@@ -852,7 +860,6 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
 
         } else {
             EMMessage message = EMMessage.createTxtSendMessage(content, toChatUsername);
-            message.setAttribute("avatar","http://thirdwx.qlogo.cn/mmopen/vi_32/8WDub7k5z86aDibe5UVU0VnPLdk5hkWkL0lnCF1xtnZsSAapTjcF93StW65h2s13lANvlVndrR79tmuiafJVLaLg/132");
             sendMessage(message);
         }
     }
@@ -913,6 +920,8 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
 
 
     protected void sendMessage(EMMessage message) {
+        message.setAttribute("avatar", avatar);
+        message.setAttribute("userName", name);
         if (message == null) {
             return;
         }

@@ -73,22 +73,9 @@ public class ImActivity extends BaseActivity {
         EMClient.getInstance().chatManager().markAllConversationsAsRead();
         RxBus.getDefault().post(RxCodeConstants.IM_MESSAGE, false);
 
-//        EaseUI easeUI = EaseUI.getInstance();
-//
-////        easeUI.
-////需要easeui库显示用户头像和昵称设置此provider
-//        easeUI.setUserProfileProvider(new EaseUI.EaseUserProfileProvider() {
-//
-//            @Override
-//            public EaseUser getUser(String username) {
-//                EaseUser easeUser = new EaseUser(name);
-//                easeUser.setAvatar(icon);
-//                return easeUser;
-////                return getUserInfo(username);
-//            }
-//        });
-        //use EaseChatFratFragment
         chatFragment = new EaseChatFragment();
+        chatFragment.setAvatar(UserInfoUtils.getUserInfo(this).getHeadImg());
+        chatFragment.setName(UserInfoUtils.getUserInfo(this).getNickName());
         //pass parameters to chat fragment
         chatFragment.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction().add(R.id.container, chatFragment).commit();
