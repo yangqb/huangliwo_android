@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/color_f7f7f7"
-    tools:context=".shop.Customerservice">
+    tools:context=".im.CustomerserviceActivity">
     <include layout="@layout/layout_head"></include>
     <LinearLayout
         android:orientation="vertical"

@@ -7,14 +7,14 @@
     <data>
          <variable
              name="serviceModel"
-             type="com.feitianzhu.huangliwo.shop.CustomerservicelistActivity" />
+             type="com.feitianzhu.huangliwo.im.CustomerservicelistActivity" />
     </data>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context=".shop.CustomerservicelistActivity">
+        tools:context=".im.CustomerservicelistActivity">
 
         <include  android:id="@+id/headservice" layout="@layout/layout_head"></include>
 

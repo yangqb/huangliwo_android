@@ -33,24 +33,20 @@ public abstract class AbsActivity extends AppCompatActivity {
         if (getOpenImmersionBar() != null) {
             getOpenImmersionBar().init();
 
-        } else {
-            ImmersionBar.with(this)
-                    .fitsSystemWindows(true)
-                    .statusBarDarkFont(true, 0.2f)
-                    .navigationBarColor(R.color.white)
-                    .statusBarColor(R.color.white)
-                    .navigationBarDarkIcon(true)
-                    .init();
         }
 
     }
-
     public void initBase() {
 
     }
 
     public ImmersionBar getOpenImmersionBar() {
-        return null;
+        return ImmersionBar.with(this)
+                .fitsSystemWindows(true)
+                .statusBarDarkFont(true, 0.2f)
+                .navigationBarColor(R.color.white)
+                .statusBarColor(R.color.white)
+                .navigationBarDarkIcon(true);
     }
 
 

@@ -36,6 +36,7 @@ import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.core.network.ApiLifeCallBack;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
+import com.feitianzhu.huangliwo.im.CustomerserviceActivity;
 import com.feitianzhu.huangliwo.login.LoginActivity;
 import com.feitianzhu.huangliwo.model.AddShoppingCartBody;
 import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
@@ -584,7 +585,7 @@ public class ShopsDetailActivity extends BaseActivity {
                     startActivity(intent);
                     return;
                 }
-                startActivity(new Intent(ShopsDetailActivity.this, Customerservice.class));
+                startActivity(new Intent(ShopsDetailActivity.this, CustomerserviceActivity.class));
                 break;
         }
 

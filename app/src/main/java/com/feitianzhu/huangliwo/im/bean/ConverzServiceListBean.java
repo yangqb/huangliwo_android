@@ -16,7 +16,7 @@ public class ConverzServiceListBean {
     private String nick;
     private String icon;
     private int userId;
-    private String type;
+    private int type;
 
     public int getId() {
         return id;
@@ -58,11 +58,11 @@ public class ConverzServiceListBean {
         this.userId = userId;
     }
 
-    public String getType() {
+    public int getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(int type) {
         this.type = type;
     }
 }
