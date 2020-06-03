@@ -127,18 +127,19 @@ public class EaseConversationAdapter extends ArrayAdapter<EMConversation> {
 //            EaseUserUtils.setUserAvatar(getContext(), username, holder.avatar);
 //            EaseUserUtils.setUserNick(username, holder.name);
             EMMessage lastMessage = conversation.getLastMessage();
-            String avatar = lastMessage.getStringAttribute("avatar", "");
-            Glide.with(getContext()).load(avatar)
-                    .apply(RequestOptions.placeholderOf(R.drawable.ease_default_avatar)
-                            .error(R.drawable.ease_default_avatar)
-                            .diskCacheStrategy(DiskCacheStrategy.ALL))
-                    .into(holder.avatar);
+            if (lastMessage.direct() == EMMessage.Direct.RECEIVE) {
+                String avatar = lastMessage.getStringAttribute("avatar", "");
+                Glide.with(getContext()).load(avatar)
+                        .apply(RequestOptions.placeholderOf(R.drawable.ease_default_avatar)
+                                .error(R.drawable.ease_default_avatar)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL))
+                        .into(holder.avatar);
 
-            String userName = lastMessage.getStringAttribute("userName", "");
+                String userName = lastMessage.getStringAttribute("userName", "");
 
-            holder.avatar.setImageResource(R.drawable.ease_app_panel_video_icon);
-            EaseUserUtils.setUserNick(userName, holder.name);
-
+//                holder.avatar.setImageResource(R.drawable.ease_app_panel_video_icon);
+                EaseUserUtils.setUserNick(userName, holder.name);
+            }
 
             holder.motioned.setVisibility(View.GONE);
         }
