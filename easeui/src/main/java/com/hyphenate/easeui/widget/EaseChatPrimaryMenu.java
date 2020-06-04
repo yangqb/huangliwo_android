@@ -1,6 +1,13 @@
 package com.hyphenate.easeui.widget;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -18,6 +25,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hyphenate.easeui.R;
+import com.hyphenate.easeui.ui.EaseChatFragment;
 import com.hyphenate.util.EMLog;
 
 /**
@@ -202,10 +210,28 @@ public class EaseChatPrimaryMenu extends EaseChatPrimaryMenuBase implements OnCl
                 listener.onSendBtnClicked(s);
             }
         } else if (id == R.id.btn_set_mode_voice) {
-            setModeVoice();
-            showNormalFaceImage();
-            if(listener != null)
-                listener.onToggleVoiceBtnClicked();
+            //使用兼容库就无需判断系统版本
+            int hasWriteStoragePermission = ContextCompat.checkSelfPermission(chatFragment.getActivity(), Manifest.permission.RECORD_AUDIO);
+            if (hasWriteStoragePermission == PackageManager.PERMISSION_GRANTED) {
+                //拥有权限，执行操作
+                setModeVoice();
+                showNormalFaceImage();
+                if(listener != null)
+                    listener.onToggleVoiceBtnClicked();
+            } else {
+                //用户不同意，向用户展示该权限作用
+                if (!ActivityCompat.shouldShowRequestPermissionRationale(chatFragment.getActivity(), Manifest.permission.RECORD_AUDIO)) {
+                    Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                    Uri uri = Uri.fromParts("package", chatFragment.getActivity().getPackageName(), null);
+                    intent.setData(uri);
+                    chatFragment.getActivity().startActivity(intent);
+                    //没有权限，向用户请求权限
+                } else {
+                    ActivityCompat.requestPermissions(chatFragment.getActivity(), new String[]{Manifest.permission.RECORD_AUDIO}, 1133);
+                }
+
+            }
+
         } else if (id == R.id.btn_set_mode_keyboard) {
             setModeKeyboard();
             showNormalFaceImage();
