@@ -3,7 +3,7 @@ package com.feitianzhu.huangliwo.core.network;
 import com.alibaba.fastjson.annotation.JSONField;
 
 /**
- * Created by bch on 2020/5/11
+ * Created by bch on 2020/6/4
  * 通用请求返回公共处理类
  */
 public class BaseTraveResponse extends BaseApiResponse {
