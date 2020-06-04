@@ -1,13 +1,9 @@
 package com.feitianzhu.huangliwo;
 
-import android.Manifest;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -111,19 +107,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-     /*   if (ContextCompat.checkSelfPermission(this,
-                                 Manifest.permission.RECORD_AUDIO)
-                         != PackageManager.PERMISSION_GRANTED) {
-                         if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                                         Manifest.permission.RECORD_AUDIO)) {
-                             } else {
-                                 ActivityCompat.requestPermissions(this,
-                                                 new String[]{Manifest.permission.RECORD_AUDIO,
-                                                         Manifest.permission.RECORD_AUDIO}, 1);
-                             }
-                     }*/
-
         EventBus.getDefault().register(this);
         LocationUtils.getInstance().start();
         ImmersionBar.with(this)
@@ -143,20 +126,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mTransaction.commit();
         GlobalUtil.setMainActivity(this);
     }
-/*    @Override
-      public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-                 if (requestCode == 1) {
-                         for (int i = 0; i < permissions.length; i++) {
-                               *//*  if (grantResults[i] == PERMISSION_GRANTED) {
-                                         Toast.makeText(this, "" + "权限" + permissions[i] + "申请成功", Toast.LENGTH_SHORT).show();
-                                     } else {
-                                         Toast.makeText(this, "" + "权限" + permissions[i] + "申请失败", Toast.LENGTH_SHORT).show();
-                                     }*//*
-                             }
-                     }
-             }*/
-
 
     @Override
     protected int getLayoutId() {
