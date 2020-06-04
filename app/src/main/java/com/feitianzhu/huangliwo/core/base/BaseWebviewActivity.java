@@ -192,7 +192,7 @@ public class BaseWebviewActivity extends BaseBindingActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        dataBinding.webView.reload();
+//        dataBinding.webView.reload();
     }
 
 
@@ -206,7 +206,9 @@ public class BaseWebviewActivity extends BaseBindingActivity {
         } else {
             //    bly://
             Intent intent;
-            switch (baseWebviewModel.url) {
+            String replace = baseWebviewModel.url.replace("bly://", "");
+//            bly://goodsDetail
+            switch (replace) {
                 case "goodsDetail":
                     //商品详情
                     intent = new Intent(this, ShopsDetailActivity.class);
@@ -227,6 +229,7 @@ public class BaseWebviewActivity extends BaseBindingActivity {
                     finish();
                     break;
                 default:
+                    Log.e("TAG", "openURL: " + baseWebviewModel.url);
                     ToastUtils.show("意外情况,请联系客服");
                     break;
             }

@@ -119,7 +119,7 @@ public class MyCenterFragment extends SFFragment {
     private static final String ARG_PARAM2 = "param2";
     Integer[] integers = {R.mipmap.o05_01gouwuche, R.mipmap.o05_02dizhi, R.mipmap.o05_03renzheng, R.mipmap.o05_04bangding,
             R.mipmap.shoucang, R.mipmap.o05_06tuidian, R.mipmap.o05_tuiguang, R.mipmap.o05_09bagnzhu, R.mipmap.o05_09bangzu,
-            R.mipmap.o05_kefu};
+           /* R.mipmap.o05_kefu*/};
 
     public MyCenterFragment() {
     }

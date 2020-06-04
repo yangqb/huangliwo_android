@@ -1,7 +1,10 @@
 package com.feitianzhu.huangliwo.core.network;
 
 import com.alibaba.fastjson.TypeReference;
+import com.feitianzhu.huangliwo.core.network.BaseRequest;
+import com.feitianzhu.huangliwo.core.network.BaseResponse;
 import com.feitianzhu.huangliwo.utils.Urls;
+import com.hjq.toast.ToastUtils;
 
 /**
  * Created by bch on 2020/5/20
@@ -9,7 +12,7 @@ import com.feitianzhu.huangliwo.utils.Urls;
  * 切换域名
  * 用这个基类的几个请求都是对接团油的接口,出问题的几率非常大,最好吧服务器返回的message展示出来
  */
-public abstract class BaseTravelRequest extends BaseRequest {
+public abstract class BaseTravelUrlRequest extends BaseRequest {
     /**
      * 设置域名 端口
      *
@@ -28,7 +31,7 @@ public abstract class BaseTravelRequest extends BaseRequest {
      */
     @Override
     public TypeReference getResponseType() {
-        return new TypeReference<BaseTraveResponse>() {
+        return new TypeReference<BaseResponse>() {
         };
     }
 

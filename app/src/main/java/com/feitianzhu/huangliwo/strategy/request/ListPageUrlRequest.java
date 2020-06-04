@@ -1,20 +1,17 @@
 package com.feitianzhu.huangliwo.strategy.request;
 
 import com.alibaba.fastjson.TypeReference;
-import com.feitianzhu.huangliwo.core.network.BaseRequest;
-import com.feitianzhu.huangliwo.core.network.BaseTravelRequest;
+import com.feitianzhu.huangliwo.core.network.BaseTravelUrlRequest;
 import com.feitianzhu.huangliwo.core.network.ParamsBuilder;
 import com.feitianzhu.huangliwo.strategy.bean.ListPageBean;
 import com.feitianzhu.huangliwo.utils.StringUtils;
 
 import java.util.List;
 
-import static com.feitianzhu.huangliwo.utils.Urls.TICKET_BASE_URL;
-
 /**
  * Created by bch on 2020/5/29
  */
-public class ListPageRequest extends BaseTravelRequest {
+public class ListPageUrlRequest extends BaseTravelUrlRequest {
     //    当前页码
     public int currentPage;
     //    每页显示条数
