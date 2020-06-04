@@ -10,7 +10,9 @@ import com.cretin.tools.cityselect.model.CityModel;
 import com.cretin.tools.cityselect.view.CitySelectView;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
+import com.feitianzhu.huangliwo.core.network.ApiLifeCallBack;
 import com.feitianzhu.huangliwo.model.CustomCityModel;
+import com.feitianzhu.huangliwo.plane.request.PlaneCityRequest;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hjq.toast.ToastUtils;
@@ -156,49 +158,33 @@ public class SelectPlaneCityActivity extends BaseActivity {
         });
     }
 
-    public void initCnCity() {
-        //设置所有城市数据
-        Type jsonType = new TypeToken<List<CustomCityModel>>() {
-        }.getType();
-        cnStatusLs = new Gson().fromJson(cnJson, jsonType);
-        //设置热门城市列表 这都是瞎写的 哈哈哈
-        for (int i = 0; i < cnStatusLs.size(); i++) {
-            CityModel cityModel = new CityModel(cnStatusLs.get(i).city, cnStatusLs.get(i).country, cnStatusLs.get(i).szm);
-            cnAllCitys.add(cityModel);
-            if ("北京".equals(cnStatusLs.get(i).city) || "上海".equals(cnStatusLs.get(i).city) || "广州".equals(cnStatusLs.get(i).city) || "深圳".equals(cnStatusLs.get(i).city) || "武汉".equals(cnStatusLs.get(i).city)) {
-                cnHotCitys.add(cityModel);
-            }
-
-            /*if (!TextUtils.isEmpty(Constant.mCity)) {
-                if (Constant.mCity.equals(statusLs.get(i).city)) {
-                    //设置当前城市数据
-                    currentCity = cityModel;
-                    //绑定数据到视图 需要 所有城市列表 热门城市列表 和 当前城市列表 其中 所有城市列表是必传的 热门城市和当前城市是选填的 不传就不会显示对应的视图
-                }
-            }*/
-        }
-
-        cnCitySelectView.bindData(cnAllCitys, cnHotCitys, cnCurrentCity);
-        //设置搜索框的文案提示
-        cnCitySelectView.setSearchTips("请输入城市名称或者拼音");
-        cnCitySelectView.setShowCityCode(false);
-    }
-
     public void initInterCity() {
         //设置所有城市数据
-        Type jsonType = new TypeToken<List<CustomCityModel>>() {
-        }.getType();
-        interStatusLs = new Gson().fromJson(interJson, jsonType);
-        //设置热门城市列表 这都是瞎写的 哈哈哈
-        for (int i = 0; i < interStatusLs.size(); i++) {
-            CityModel cityModel = new CityModel(interStatusLs.get(i).city, interStatusLs.get(i).country, interStatusLs.get(i).szm);
-            interAllCitys.add(cityModel);
-
-            if (interStatusLs.get(i).id == 5391 || interStatusLs.get(i).id == 47 ||
-                    interStatusLs.get(i).id == 111 || interStatusLs.get(i).id == 5387 || (interStatusLs.get(i).id == 31 || interStatusLs.get(i).id == 789)) {
-                interHotCitys.add(cityModel);
+        PlaneCityRequest request = new PlaneCityRequest();
+        request.flag = 2;
+        request.call(new ApiLifeCallBack<List<CustomCityModel>>() {
+            @Override
+            public void onStart() {
 
             }
+
+            @Override
+            public void onFinsh() {
+
+            }
+
+            @Override
+            public void onAPIResponse(List<CustomCityModel> response) {
+                interStatusLs = response;
+                //设置热门城市列表 这都是瞎写的 哈哈哈
+                for (int i = 0; i < interStatusLs.size(); i++) {
+                    CityModel cityModel = new CityModel(interStatusLs.get(i).city, interStatusLs.get(i).country, interStatusLs.get(i).szm);
+                    interAllCitys.add(cityModel);
+
+                    if (interStatusLs.get(i).id == 5391 || interStatusLs.get(i).id == 47 ||
+                            interStatusLs.get(i).id == 111 || interStatusLs.get(i).id == 5387 || (interStatusLs.get(i).id == 31 || interStatusLs.get(i).id == 789)) {
+                        interHotCitys.add(cityModel);
+                    }
             /*if (!TextUtils.isEmpty(Constant.mCity)) {
                 if (Constant.mCity.equals(statusLs.get(i).city)) {
                     //设置当前城市数据
@@ -206,12 +192,19 @@ public class SelectPlaneCityActivity extends BaseActivity {
                     //绑定数据到视图 需要 所有城市列表 热门城市列表 和 当前城市列表 其中 所有城市列表是必传的 热门城市和当前城市是选填的 不传就不会显示对应的视图
                 }
             }*/
-        }
+                }
 
-        interCitySelectView.bindData(interAllCitys, interHotCitys, interCurrentCity);
-        //设置搜索框的文案提示
-        interCitySelectView.setSearchTips("请输入城市名称或者拼音");
-        interCitySelectView.setShowCityCode(false);
+                interCitySelectView.bindData(interAllCitys, interHotCitys, interCurrentCity);
+                //设置搜索框的文案提示
+                interCitySelectView.setSearchTips("请输入城市名称或者拼音");
+                interCitySelectView.setShowCityCode(false);
+            }
+
+            @Override
+            public void onAPIError(int errorCode, String errorMsg) {
+
+            }
+        });
     }
 
     @OnClick({R.id.btn_domestic, R.id.left_button, R.id.btn_international, R.id.right_button})
@@ -248,6 +241,53 @@ public class SelectPlaneCityActivity extends BaseActivity {
     protected void initData() {
         initCnCity();
         initInterCity();
+    }
+
+    public void initCnCity() {
+        PlaneCityRequest request = new PlaneCityRequest();
+        request.flag = 1;
+        request.call(new ApiLifeCallBack<List<CustomCityModel>>() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onFinsh() {
+
+            }
+
+            @Override
+            public void onAPIResponse(List<CustomCityModel> response) {
+                //设置热门城市列表 这都是瞎写的 哈哈哈
+                cnStatusLs = response;
+                for (int i = 0; i < cnStatusLs.size(); i++) {
+                    CityModel cityModel = new CityModel(cnStatusLs.get(i).city, cnStatusLs.get(i).country, cnStatusLs.get(i).szm);
+                    cnAllCitys.add(cityModel);
+                    if ("北京".equals(cnStatusLs.get(i).city) || "上海".equals(cnStatusLs.get(i).city) || "广州".equals(cnStatusLs.get(i).city) || "深圳".equals(cnStatusLs.get(i).city) || "武汉".equals(cnStatusLs.get(i).city)) {
+                        cnHotCitys.add(cityModel);
+                    }
+
+            /*if (!TextUtils.isEmpty(Constant.mCity)) {
+                if (Constant.mCity.equals(statusLs.get(i).city)) {
+                    //设置当前城市数据
+                    currentCity = cityModel;
+                    //绑定数据到视图 需要 所有城市列表 热门城市列表 和 当前城市列表 其中 所有城市列表是必传的 热门城市和当前城市是选填的 不传就不会显示对应的视图
+                }
+            }*/
+                }
+
+                cnCitySelectView.bindData(cnAllCitys, cnHotCitys, cnCurrentCity);
+                //设置搜索框的文案提示
+                cnCitySelectView.setSearchTips("请输入城市名称或者拼音");
+                cnCitySelectView.setShowCityCode(false);
+            }
+
+            @Override
+            public void onAPIError(int errorCode, String errorMsg) {
+
+            }
+        });
     }
 
     private String readString(InputStream in) {
