@@ -64,14 +64,14 @@ public class CenterAdapter extends BaseQuickAdapter<Integer, BaseViewHolder> {
             case 8:
                 textView.setText("帮助中心");
                 break;
-       /*     case 9:
+            case 9:
                 textView.setText("客服中心");
                 if (isMessageShow) {
                     helper.getView(R.id.red).setVisibility(View.VISIBLE);
                 } else {
                     helper.getView(R.id.red).setVisibility(View.GONE);
                 }
-                break;*/
+                break;
         }
     }
 
