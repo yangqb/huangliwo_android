@@ -11,7 +11,7 @@ import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.core.network.ApiCallBack;
 import com.feitianzhu.huangliwo.core.network.LoadingUtil;
 import com.feitianzhu.huangliwo.im.bean.ConverzServiceListBean;
-import com.feitianzhu.huangliwo.im.request.ConverServiceRequest;
+import com.feitianzhu.huangliwo.im.request.ConverServiceUrlRequest;
 import com.gyf.immersionbar.ImmersionBar;
 import com.hyphenate.easeui.EaseConstant;
 
@@ -46,7 +46,7 @@ public class CustomerserviceActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        ConverServiceRequest converServiceRequest = new ConverServiceRequest();
+        ConverServiceUrlRequest converServiceRequest = new ConverServiceUrlRequest();
         converServiceRequest.isShowLoading = true;
         converServiceRequest.call(new ApiCallBack<List<ConverzServiceListBean>>() {
             @Override

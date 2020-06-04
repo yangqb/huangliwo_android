@@ -40,10 +40,6 @@
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
 
 
-
-
-
-
     <application
         android:name=".App"
         android:allowBackup="true"

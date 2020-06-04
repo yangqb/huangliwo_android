@@ -13,7 +13,7 @@ import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.core.network.ApiCallBack;
 import com.feitianzhu.huangliwo.im.adapter.ConverServiceAdapter;
 import com.feitianzhu.huangliwo.im.bean.ConverzServiceListBean;
-import com.feitianzhu.huangliwo.im.request.ConverServiceRequest;
+import com.feitianzhu.huangliwo.im.request.ConverServiceUrlRequest;
 import com.hyphenate.easeui.EaseConstant;
 
 import java.util.List;
@@ -43,7 +43,7 @@ public class CustomerservicelistActivity extends BaseActivity {
     @Override
     protected void initData() {
         servicerecy.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        ConverServiceRequest converServiceRequest = new ConverServiceRequest();
+        ConverServiceUrlRequest converServiceRequest = new ConverServiceUrlRequest();
         converServiceRequest.call(new ApiCallBack<List<ConverzServiceListBean>>() {
             @Override
             public void onAPIResponse(List<ConverzServiceListBean> response) {

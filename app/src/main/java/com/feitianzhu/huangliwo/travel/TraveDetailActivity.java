@@ -23,7 +23,7 @@ import com.feitianzhu.huangliwo.travel.adapter.DistanceGunAdapter;
 import com.feitianzhu.huangliwo.travel.adapter.DistanceOilInfoAdapter;
 import com.feitianzhu.huangliwo.travel.bean.OilListBean;
 import com.feitianzhu.huangliwo.travel.bean.OilStationsDetailBean;
-import com.feitianzhu.huangliwo.travel.request.OilStationsDetailRequest;
+import com.feitianzhu.huangliwo.travel.request.OilStationsDetailUrlRequest;
 import com.feitianzhu.huangliwo.travel.request.OilTimeRequest;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.StringUtils;
@@ -99,7 +99,7 @@ public class TraveDetailActivity extends BaseBindingActivity {
         distanceAdapter2 = new DistanceGunAdapter(null);
         dataBinding.gun.setLayoutManager(new GridLayoutManager(this, 3));
         dataBinding.gun.setAdapter(distanceAdapter2);
-        OilStationsDetailRequest oilStationsDetailRequest = new OilStationsDetailRequest();
+        OilStationsDetailUrlRequest oilStationsDetailRequest = new OilStationsDetailUrlRequest();
         oilStationsDetailRequest.isShowLoading = true;
         oilStationsDetailRequest.gasIds = oilListBean.getGasId();
         oilStationsDetailRequest.phone = SPUtils.getString(this, SP_PHONE);

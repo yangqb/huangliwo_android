@@ -1,14 +1,12 @@
 package com.feitianzhu.huangliwo.im.request;
 
 import com.alibaba.fastjson.TypeReference;
-import com.feitianzhu.huangliwo.core.network.BaseRequest;
-import com.feitianzhu.huangliwo.core.network.BaseTravelRequest;
+import com.feitianzhu.huangliwo.core.network.BaseTravelUrlRequest;
 import com.feitianzhu.huangliwo.im.bean.ConverzServiceListBean;
-import com.feitianzhu.huangliwo.utils.Urls;
 
 import java.util.List;
 
-public class ConverServiceRequest extends BaseTravelRequest {
+public class ConverServiceUrlRequest extends BaseTravelUrlRequest {
 
 
     @Override

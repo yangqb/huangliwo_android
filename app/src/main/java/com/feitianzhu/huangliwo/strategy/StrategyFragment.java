@@ -1,7 +1,6 @@
 package com.feitianzhu.huangliwo.strategy;
 
 import android.graphics.Typeface;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -14,13 +13,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.feitianzhu.huangliwo.MainActivity;
-import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.core.base.fragment.BaseBindingFragment;
 import com.feitianzhu.huangliwo.core.network.ApiCallBack;
 import com.feitianzhu.huangliwo.databinding.StrategyFragmentBinding;
 import com.feitianzhu.huangliwo.strategy.adapter.StrategyAdapter;
 import com.feitianzhu.huangliwo.strategy.bean.TitileBean;
-import com.feitianzhu.huangliwo.strategy.request.TitleIdRequest;
+import com.feitianzhu.huangliwo.strategy.request.TitleIdUrlRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +40,7 @@ public class StrategyFragment extends BaseBindingFragment {
     protected void init() {
         StrategyAdapter strategyAdapter = new StrategyAdapter(getChildFragmentManager());
         ArrayList<Fragment> fragments = new ArrayList<>();
-        TitleIdRequest titleIdRequest = new TitleIdRequest();
+        TitleIdUrlRequest titleIdRequest = new TitleIdUrlRequest();
         titleIdRequest.isShowLoading = true;
         titleIdRequest.call(new ApiCallBack<List<TitileBean>>() {
             @Override

@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.feitianzhu.huangliwo.R;
@@ -20,7 +19,7 @@ import com.feitianzhu.huangliwo.databinding.FragmentStrategyChildListBinding;
 import com.feitianzhu.huangliwo.strategy.adapter.StrategyItem1Adapter;
 import com.feitianzhu.huangliwo.strategy.adapter.StrategyItemAdapter;
 import com.feitianzhu.huangliwo.strategy.bean.ListPageBean;
-import com.feitianzhu.huangliwo.strategy.request.ListPageRequest;
+import com.feitianzhu.huangliwo.strategy.request.ListPageUrlRequest;
 import com.feitianzhu.huangliwo.utils.doubleclick.SingleClick;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
@@ -176,7 +175,7 @@ public class StrategyChildFragment extends BaseBindingFragment {
 
 
     private void request(int i) {
-        ListPageRequest listPageRequest = new ListPageRequest();
+        ListPageUrlRequest listPageRequest = new ListPageUrlRequest();
         listPageRequest.isShowLoading = true;
         if (type == 0) {
             listPageRequest.columnId = 1;

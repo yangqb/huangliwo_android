@@ -2,7 +2,7 @@ package com.feitianzhu.huangliwo.travel.request;
 
 import com.alibaba.fastjson.TypeReference;
 import com.feitianzhu.huangliwo.core.network.ParamsBuilder;
-import com.feitianzhu.huangliwo.core.network.BaseTravelRequest;
+import com.feitianzhu.huangliwo.core.network.BaseTravelUrlRequest;
 import com.feitianzhu.huangliwo.travel.bean.OilListBean;
 
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by bch on 2020/5/20
  */
-public class OilStationsRequest extends BaseTravelRequest {
+public class OilStationsUrlRequest extends BaseTravelUrlRequest {
     public String longitude;
     public String latitude;
     public String accessToken;
@@ -25,7 +25,7 @@ public class OilStationsRequest extends BaseTravelRequest {
         return "fleetin/getOilStations";
     }
 
-    public OilStationsRequest(String longitude, String latitude, int kilometre, int oilNum, int limitNum, int curPage) {
+    public OilStationsUrlRequest(String longitude, String latitude, int kilometre, int oilNum, int limitNum, int curPage) {
         this.longitude = longitude;
         this.latitude = latitude;
         this.kilometre = kilometre;
