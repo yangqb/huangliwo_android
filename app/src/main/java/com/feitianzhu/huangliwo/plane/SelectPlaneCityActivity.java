@@ -10,7 +10,9 @@ import com.cretin.tools.cityselect.model.CityModel;
 import com.cretin.tools.cityselect.view.CitySelectView;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
+import com.feitianzhu.huangliwo.core.network.ApiLifeCallBack;
 import com.feitianzhu.huangliwo.model.CustomCityModel;
+import com.feitianzhu.huangliwo.plane.request.PlaneCityRequest;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hjq.toast.ToastUtils;
@@ -248,6 +250,34 @@ public class SelectPlaneCityActivity extends BaseActivity {
     protected void initData() {
         initCnCity();
         initInterCity();
+
+        getCityData();
+    }
+
+    public void getCityData() {
+        PlaneCityRequest request = new PlaneCityRequest();
+        request.flag = 1;
+        request.call(new ApiLifeCallBack() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onFinsh() {
+
+            }
+
+            @Override
+            public void onAPIResponse(Object response) {
+                Object object = response;
+            }
+
+            @Override
+            public void onAPIError(int errorCode, String errorMsg) {
+
+            }
+        });
     }
 
     private String readString(InputStream in) {
