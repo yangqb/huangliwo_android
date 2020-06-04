@@ -29,6 +29,7 @@ import com.feitianzhu.huangliwo.common.impl.onConnectionFinishLinstener;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.http.PlaneResponse;
+import com.feitianzhu.huangliwo.login.LoginActivity;
 import com.feitianzhu.huangliwo.me.AddressManagementActivity;
 import com.feitianzhu.huangliwo.model.AddressInfo;
 import com.feitianzhu.huangliwo.model.BaggageRuleInfo;
@@ -53,6 +54,7 @@ import com.feitianzhu.huangliwo.model.PayModel;
 import com.feitianzhu.huangliwo.model.RefundChangeInfo;
 import com.feitianzhu.huangliwo.model.ReimbursementModel;
 import com.feitianzhu.huangliwo.model.UserClientInfo;
+import com.feitianzhu.huangliwo.settings.ChangeLoginPassword;
 import com.feitianzhu.huangliwo.utils.DateUtils;
 import com.feitianzhu.huangliwo.utils.MathUtils;
 import com.feitianzhu.huangliwo.utils.PayUtils;
@@ -73,6 +75,8 @@ import com.feitianzhu.huangliwo.view.SwitchButton;
 import com.google.gson.Gson;
 import com.hjq.toast.ToastUtils;
 import com.lxj.xpopup.XPopup;
+import com.lxj.xpopup.interfaces.OnCancelListener;
+import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.PostRequest;
@@ -103,7 +107,7 @@ public class EditPlaneReserveActivity extends BaseActivity {
     private SelectPassengerAdapter mAdapter;
     private BaggageRuleInfo baggageRuleInfo;
     private List<GoBackBaggageRuleInfo> baggageRuleInfos;
-    private List<PassengerModel> list = new ArrayList<>();
+    private List<PassengerModel> passengerList = new ArrayList<>();
     private CustomPriceDetailInfo priceDetailInfo = new CustomPriceDetailInfo();
     private CustomPlaneDetailInfo customPlaneDetailInfo;
     private String userId;
@@ -324,7 +328,7 @@ public class EditPlaneReserveActivity extends BaseActivity {
         }
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter = new SelectPassengerAdapter(list);
+        mAdapter = new SelectPassengerAdapter(passengerList);
         recyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
 
@@ -361,8 +365,8 @@ public class EditPlaneReserveActivity extends BaseActivity {
                     llReimbursement.setVisibility(View.GONE);
                     priceDetailInfo.postage = 0;
                 }
-                if (list != null && list.size() > 0) {
-                    calculationPrice(list);
+                if (passengerList != null && passengerList.size() > 0) {
+                    calculationPrice(passengerList);
                 }
             }
         });
@@ -370,9 +374,9 @@ public class EditPlaneReserveActivity extends BaseActivity {
         mAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                list.remove(position);
+                passengerList.remove(position);
                 mAdapter.notifyDataSetChanged();
-                calculationPrice(list);
+                calculationPrice(passengerList);
             }
         });
     }
@@ -614,7 +618,7 @@ public class EditPlaneReserveActivity extends BaseActivity {
                         .show();
                 break;
             case R.id.btn_submit:
-                if (list.size() == 0) {
+                if (passengerList.size() == 0) {
                     ToastUtils.show("请选择乘机人");
                     return;
                 }
@@ -654,16 +658,29 @@ public class EditPlaneReserveActivity extends BaseActivity {
                 } else if (priceDetailInfo.num > 0 && priceDetailInfo.cnum > priceDetailInfo.num * 2) {
                     ToastUtils.show("一名成人最多携带2名儿童");
                 } else {
-                    if (type == 0 || type == 2) {
-                        docSubmit();
-                    } else {
-                        interSubmit();
+                    if (!switchButton.isChecked()) {
+                        new XPopup.Builder(EditPlaneReserveActivity.this)
+                                .asConfirm("", "确认不需要报销凭证提交订单吗?", "取消", "确定", new OnConfirmListener() {
+                                    @Override
+                                    public void onConfirm() {
+                                        if (type == 0 || type == 2) {
+                                            docSubmit();
+                                        } else {
+                                            interSubmit();
+                                        }
+                                    }
+                                }, new OnCancelListener() {
+                                    @Override
+                                    public void onCancel() {
+
+                                    }
+                                }, false)
+                                .bindLayout(R.layout.layout_dialog_login).show();
                     }
                 }
-
                 break;
             case R.id.priceInfo:
-                if (list.size() == 0) {
+                if (passengerList.size() == 0) {
                     ToastUtils.show("请选择乘机人");
                 } else {
                     new XPopup.Builder(this)
@@ -874,24 +891,24 @@ public class EditPlaneReserveActivity extends BaseActivity {
                 childPriceTags.add(babyTagInfo.get(j).productPackageCode);
             }
         }
-        for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).ageType == 1 && babyTagInfo == null) {
+        for (int i = 0; i < passengerList.size(); i++) {
+            if (passengerList.get(i).ageType == 1 && babyTagInfo == null) {
                 ToastUtils.show("不支持儿童生单");
                 return;
             }
         }
 
-        for (int i = 0; i < list.size(); i++) {
+        for (int i = 0; i < passengerList.size(); i++) {
             DocPassengerInfo docPassengerInfo = new DocPassengerInfo();
-            docPassengerInfo.ageType = list.get(i).ageType;
-            docPassengerInfo.birthday = list.get(i).birthday;
-            docPassengerInfo.cardNo = list.get(i).cardNo;
-            docPassengerInfo.mobile = "";
+            docPassengerInfo.ageType = passengerList.get(i).ageType;
+            docPassengerInfo.birthday = passengerList.get(i).birthday;
+            docPassengerInfo.cardNo = passengerList.get(i).cardNo;
+            docPassengerInfo.mobile = contactPhone.getText().toString().trim();
             docPassengerInfo.mobilePreNum = "86";
-            docPassengerInfo.name = list.get(i).name;
-            docPassengerInfo.sex = list.get(i).sex;
-            docPassengerInfo.cardType = list.get(i).cardType;
-            if (list.get(i).ageType == 0) {
+            docPassengerInfo.name = passengerList.get(i).name;
+            docPassengerInfo.sex = passengerList.get(i).sex;
+            docPassengerInfo.cardType = passengerList.get(i).cardType;
+            if (passengerList.get(i).ageType == 0) {
                 docPassengerInfo.priceTags = aduPriceTags;
             } else {
                 docPassengerInfo.priceTags = childPriceTags;
@@ -1045,7 +1062,7 @@ public class EditPlaneReserveActivity extends BaseActivity {
     private String taxpayerId = "";
 
     public void createOrder(String bkResult) {
-        String passengerJson = new Gson().toJson(list);
+        String passengerJson = new Gson().toJson(passengerList);
 
         if (switchButton.isChecked()) {
             sjr = addressBean.getUserName();
@@ -1080,7 +1097,7 @@ public class EditPlaneReserveActivity extends BaseActivity {
                 .params("contact", contactName.getText().toString().trim())
                 .params("contactMob", contactPhone.getText().toString().trim())
                 //.params("contactPreNum", cityModel == null ? "86" : cityModel.getExtra().toString())
-                .params("cardNo", list.get(0).cardNo)
+                .params("cardNo", passengerList.get(0).cardNo)
                 .params("bookingResult", bkResult)
                 .params("needXcd", switchButton.isChecked())
                 .params("address", address)
@@ -1195,10 +1212,10 @@ public class EditPlaneReserveActivity extends BaseActivity {
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_CODE) {
                 ArrayList<PassengerModel> selectPassenger = data.getParcelableArrayListExtra(PassengerListActivity.SELECT_PASSENGER);
-                list.addAll(selectPassenger);
-                removeDuplicate(list);
+                passengerList.addAll(selectPassenger);
+                removeDuplicate(passengerList);
                 mAdapter.notifyDataSetChanged();
-                calculationPrice(list);
+                calculationPrice(passengerList);
             } else if (requestCode == REQUEST_ADDRESS_CODE) {
                 addressBean = (AddressInfo.ShopAddressListBean) data.getSerializableExtra(AddressManagementActivity.ADDRESS_DATA);
                 if (addressBean != null) {
