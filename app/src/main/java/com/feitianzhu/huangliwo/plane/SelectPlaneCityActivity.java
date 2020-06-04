@@ -74,12 +74,13 @@ public class SelectPlaneCityActivity extends BaseActivity {
     protected void initView() {
         rightText.setText("确定");
         rightText.setVisibility(View.GONE);
-        try {
+        //后台获取数据
+        /*try {
             cnJson = readString(mContext.getAssets().open("cn.json"));
             interJson = readString(mContext.getAssets().open("internation.json"));
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
         //设置城市选择之后的事件监听
         cnCitySelectView.setOnCitySelectListener(new OnCitySelectListener() {
             @Override
@@ -158,55 +159,6 @@ public class SelectPlaneCityActivity extends BaseActivity {
         });
     }
 
-    public void initInterCity() {
-        //设置所有城市数据
-        PlaneCityRequest request = new PlaneCityRequest();
-        request.flag = 2;
-        request.call(new ApiLifeCallBack<List<CustomCityModel>>() {
-            @Override
-            public void onStart() {
-
-            }
-
-            @Override
-            public void onFinsh() {
-
-            }
-
-            @Override
-            public void onAPIResponse(List<CustomCityModel> response) {
-                interStatusLs = response;
-                //设置热门城市列表 这都是瞎写的 哈哈哈
-                for (int i = 0; i < interStatusLs.size(); i++) {
-                    CityModel cityModel = new CityModel(interStatusLs.get(i).city, interStatusLs.get(i).country, interStatusLs.get(i).szm);
-                    interAllCitys.add(cityModel);
-
-                    if (interStatusLs.get(i).id == 5391 || interStatusLs.get(i).id == 47 ||
-                            interStatusLs.get(i).id == 111 || interStatusLs.get(i).id == 5387 || (interStatusLs.get(i).id == 31 || interStatusLs.get(i).id == 789)) {
-                        interHotCitys.add(cityModel);
-                    }
-            /*if (!TextUtils.isEmpty(Constant.mCity)) {
-                if (Constant.mCity.equals(statusLs.get(i).city)) {
-                    //设置当前城市数据
-                    currentCity = cityModel;
-                    //绑定数据到视图 需要 所有城市列表 热门城市列表 和 当前城市列表 其中 所有城市列表是必传的 热门城市和当前城市是选填的 不传就不会显示对应的视图
-                }
-            }*/
-                }
-
-                interCitySelectView.bindData(interAllCitys, interHotCitys, interCurrentCity);
-                //设置搜索框的文案提示
-                interCitySelectView.setSearchTips("请输入城市名称或者拼音");
-                interCitySelectView.setShowCityCode(false);
-            }
-
-            @Override
-            public void onAPIError(int errorCode, String errorMsg) {
-
-            }
-        });
-    }
-
     @OnClick({R.id.btn_domestic, R.id.left_button, R.id.btn_international, R.id.right_button})
     public void onClick(View view) {
         switch (view.getId()) {
@@ -281,6 +233,55 @@ public class SelectPlaneCityActivity extends BaseActivity {
                 //设置搜索框的文案提示
                 cnCitySelectView.setSearchTips("请输入城市名称或者拼音");
                 cnCitySelectView.setShowCityCode(false);
+            }
+
+            @Override
+            public void onAPIError(int errorCode, String errorMsg) {
+
+            }
+        });
+    }
+
+    public void initInterCity() {
+        //设置所有城市数据
+        PlaneCityRequest request = new PlaneCityRequest();
+        request.flag = 2;
+        request.call(new ApiLifeCallBack<List<CustomCityModel>>() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onFinsh() {
+
+            }
+
+            @Override
+            public void onAPIResponse(List<CustomCityModel> response) {
+                interStatusLs = response;
+                //设置热门城市列表 这都是瞎写的 哈哈哈
+                for (int i = 0; i < interStatusLs.size(); i++) {
+                    CityModel cityModel = new CityModel(interStatusLs.get(i).city, interStatusLs.get(i).country, interStatusLs.get(i).szm);
+                    interAllCitys.add(cityModel);
+
+                    if (interStatusLs.get(i).id == 5391 || interStatusLs.get(i).id == 47 ||
+                            interStatusLs.get(i).id == 111 || interStatusLs.get(i).id == 5387 || (interStatusLs.get(i).id == 31 || interStatusLs.get(i).id == 789)) {
+                        interHotCitys.add(cityModel);
+                    }
+            /*if (!TextUtils.isEmpty(Constant.mCity)) {
+                if (Constant.mCity.equals(statusLs.get(i).city)) {
+                    //设置当前城市数据
+                    currentCity = cityModel;
+                    //绑定数据到视图 需要 所有城市列表 热门城市列表 和 当前城市列表 其中 所有城市列表是必传的 热门城市和当前城市是选填的 不传就不会显示对应的视图
+                }
+            }*/
+                }
+
+                interCitySelectView.bindData(interAllCitys, interHotCitys, interCurrentCity);
+                //设置搜索框的文案提示
+                interCitySelectView.setSearchTips("请输入城市名称或者拼音");
+                interCitySelectView.setShowCityCode(false);
             }
 
             @Override
