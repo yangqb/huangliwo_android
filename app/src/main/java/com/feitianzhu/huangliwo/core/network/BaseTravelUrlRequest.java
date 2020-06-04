@@ -10,7 +10,7 @@ import com.hjq.toast.ToastUtils;
  * Created by bch on 2020/5/20
  * 为什么需要这个基类,
  * 切换域名
- * 用这个基类的几个请求都是对接团油的接口,出问题的几率非常大,最好吧服务器返回的message展示出来
+
  */
 public abstract class BaseTravelUrlRequest extends BaseRequest {
     /**
