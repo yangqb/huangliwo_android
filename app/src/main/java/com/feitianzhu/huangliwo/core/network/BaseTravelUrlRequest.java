@@ -1,14 +1,18 @@
 package com.feitianzhu.huangliwo.core.network;
 
 import com.alibaba.fastjson.TypeReference;
+import com.feitianzhu.huangliwo.core.network.BaseRequest;
+import com.feitianzhu.huangliwo.core.network.BaseResponse;
 import com.feitianzhu.huangliwo.utils.Urls;
+import com.hjq.toast.ToastUtils;
 
 /**
- * Created by bch on 2020/6/4
+ * Created by bch on 2020/5/20
  * 为什么需要这个基类,
  * 切换域名
+
  */
-public abstract class BaseTravelRequest extends BaseRequest {
+public abstract class BaseTravelUrlRequest extends BaseRequest {
     /**
      * 设置域名 端口
      *
@@ -27,7 +31,7 @@ public abstract class BaseTravelRequest extends BaseRequest {
      */
     @Override
     public TypeReference getResponseType() {
-        return new TypeReference<BaseTraveResponse>() {
+        return new TypeReference<BaseResponse>() {
         };
     }
 

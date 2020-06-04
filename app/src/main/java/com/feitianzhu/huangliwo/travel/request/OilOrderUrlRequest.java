@@ -2,12 +2,12 @@ package com.feitianzhu.huangliwo.travel.request;
 
 import com.alibaba.fastjson.TypeReference;
 import com.feitianzhu.huangliwo.core.network.ParamsBuilder;
-import com.feitianzhu.huangliwo.core.network.BaseTravelRequest;
+import com.feitianzhu.huangliwo.core.network.BaseTravelUrlRequest;
 import com.feitianzhu.huangliwo.travel.bean.OilOrederBean;
 
 import java.util.List;
 
-public class OilOrderRequest extends BaseTravelRequest {
+public class OilOrderUrlRequest extends BaseTravelUrlRequest {
     public int limitNum;
     public int curPage;
     public String phone;
@@ -19,7 +19,7 @@ public class OilOrderRequest extends BaseTravelRequest {
         return "fleetin/getOrderInfo";
     }
 
-    public OilOrderRequest(int limitNum, int curPage, String phone) {
+    public OilOrderUrlRequest(int limitNum, int curPage, String phone) {
         this.limitNum = limitNum;
         this.curPage = curPage;
         this.phone = phone;

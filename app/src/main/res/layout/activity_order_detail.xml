@@ -476,7 +476,8 @@
                                 android:gravity="center"
                                 android:text="7天无理由"
                                 android:textColor="@color/color_333333"
-                                android:textSize="10sp" />
+                                android:textSize="10sp"
+                                android:visibility="invisible" />
 
                         </LinearLayout>
 

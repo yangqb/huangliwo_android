@@ -12,7 +12,7 @@ import com.feitianzhu.huangliwo.core.network.ApiCallBack;
 import com.feitianzhu.huangliwo.databinding.ActivityTraveFormBinding;
 import com.feitianzhu.huangliwo.travel.adapter.TraveFormAdapter;
 import com.feitianzhu.huangliwo.travel.bean.OilOrederBean;
-import com.feitianzhu.huangliwo.travel.request.OilOrderRequest;
+import com.feitianzhu.huangliwo.travel.request.OilOrderUrlRequest;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.gyf.immersionbar.ImmersionBar;
 
@@ -59,7 +59,7 @@ public class TraveFormActivity extends BaseBindingActivity {
 
 
         dataBinding.recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        OilOrderRequest oilOrderRequest = new OilOrderRequest(50, 1, phone);
+        OilOrderUrlRequest oilOrderRequest = new OilOrderUrlRequest(50, 1, phone);
         oilOrderRequest.userId = SPUtils.getString(this, Constant.SP_LOGIN_USERID);
         oilOrderRequest.accessToken = SPUtils.getString(this, Constant.SP_ACCESS_TOKEN);
         oilOrderRequest.call(new ApiCallBack<List<OilOrederBean>>() {
