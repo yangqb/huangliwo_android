@@ -1,18 +1,23 @@
 package com.feitianzhu.huangliwo.im;
 
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.feitianzhu.huangliwo.R;
+import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.core.network.ApiCallBack;
 import com.feitianzhu.huangliwo.core.network.LoadingUtil;
 import com.feitianzhu.huangliwo.im.bean.ConverzServiceListBean;
 import com.feitianzhu.huangliwo.im.request.ConverServiceUrlRequest;
+import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.gyf.immersionbar.ImmersionBar;
+import com.hyphenate.EMCallBack;
+import com.hyphenate.chat.EMClient;
 import com.hyphenate.easeui.EaseConstant;
 
 import java.util.List;
@@ -46,6 +51,32 @@ public class CustomerserviceActivity extends BaseActivity {
 
     @Override
     protected void initData() {
+        if (!SessionlistActivity.s) {
+            EMClient.getInstance().login(SPUtils.getString(this, Constant.SP_LOGIN_USERID) + IMContent.IMTAG, "123456", new EMCallBack() {//回调
+                @Override
+                public void onSuccess() {
+                    EMClient.getInstance().groupManager().loadAllGroups();
+                    EMClient.getInstance().chatManager().loadAllConversations();
+                    //startActivity(new Intent(Customerservice.this,ImActivity.class));
+                    Log.d("main", "登录聊天服务器成功!");
+                    LoadingUtil.setLoadingViewShow(false);
+                    SessionlistActivity.s = true;
+                }
+
+                @Override
+                public void onProgress(int progress, String status) {
+
+                }
+
+                @Override
+                public void onError(int code, String message) {
+                    SessionlistActivity.s = false;
+                    finish();
+                    Log.i("onError", "onError: " + code + message);
+                    Log.d("main", "登录聊天服务器失败！");
+                }
+            });
+        }
         ConverServiceUrlRequest converServiceRequest = new ConverServiceUrlRequest();
         converServiceRequest.isShowLoading = true;
         converServiceRequest.call(new ApiCallBack<List<ConverzServiceListBean>>() {

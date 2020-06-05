@@ -29,6 +29,7 @@ import com.feitianzhu.huangliwo.core.network.LoadingUtil;
 import com.feitianzhu.huangliwo.core.rxbus.RxBus;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
+import com.feitianzhu.huangliwo.im.IMContent;
 import com.feitianzhu.huangliwo.im.SessionlistActivity;
 import com.feitianzhu.huangliwo.login.LoginEvent;
 import com.feitianzhu.huangliwo.me.adapter.CenterAdapter;
@@ -53,6 +54,7 @@ import com.feitianzhu.huangliwo.view.CircleImageView;
 import com.feitianzhu.huangliwo.view.CustomVerificationView;
 import com.feitianzhu.huangliwo.vip.VipActivity;
 import com.hjq.toast.ToastUtils;
+import com.hyphenate.EMCallBack;
 import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
@@ -383,8 +385,39 @@ public class MyCenterFragment extends SFFragment {
                         startActivity(intent);
                         break;
                     case 9:
-                        intent = new Intent(getActivity(), SessionlistActivity.class);
-                        startActivity(intent);
+                        if (!SessionlistActivity.s) {
+                            EMClient.getInstance().login(SPUtils.getString(getActivity(), Constant.SP_LOGIN_USERID) + IMContent.IMTAG, "123456", new EMCallBack() {//回调
+                                @Override
+                                public void onSuccess() {
+                                    EMClient.getInstance().groupManager().loadAllGroups();
+                                    EMClient.getInstance().chatManager().loadAllConversations();
+                                    //startActivity(new Intent(Customerservice.this,ImActivity.class));
+                                    Log.d("main", "登录聊天服务器成功!");
+                                    LoadingUtil.setLoadingViewShow(false);
+                                    SessionlistActivity.s = true;
+                                    Intent intent = new Intent(getActivity(), SessionlistActivity.class);
+                                    startActivity(intent);
+                                }
+
+                                @Override
+                                public void onProgress(int progress, String status) {
+
+                                }
+
+                                @Override
+                                public void onError(int code, String message) {
+                                    SessionlistActivity.s = false;
+                                    ToastUtils.show("登录聊天服务器失败");
+                                    Log.i("onError", "onError: " + code + message);
+//                                    Log.d("main", "登录聊天服务器失败！");
+                                }
+                            });
+                        } else {
+                            intent = new Intent(getActivity(), SessionlistActivity.class);
+                            startActivity(intent);
+                        }
+
+
                         break;
                 }
             }

@@ -28,6 +28,7 @@ import com.feitianzhu.huangliwo.core.network.networkcheck.NetworkConnectChangedR
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.im.IMContent;
+import com.feitianzhu.huangliwo.im.SessionlistActivity;
 import com.feitianzhu.huangliwo.login.entity.LoginEntity;
 import com.feitianzhu.huangliwo.model.MineInfoModel;
 import com.feitianzhu.huangliwo.model.WXLoginInfo;
@@ -322,9 +323,18 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     }
 
                     @Override
-                    public                                                                                                                                                                                                  void onSuccess(Response<LzyResponse<MineInfoModel>> response) {
-                        LoadingUtil.setLoadingViewShow(true);
+                    public void onSuccess(Response<LzyResponse<MineInfoModel>> response) {
+
                         if (response.body().code == 0 && response.body().data != null) {
+                            MineInfoModel userInfo = response.body().data;
+                            SPUtils.putString(LoginActivity.this, Constant.SP_PHONE, userInfo.getPhone());
+                            UserInfoUtils.saveUserInfo(LoginActivity.this, userInfo);
+                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                            finish();
+
+                            LoadingUtil.setLoadingViewShow(true);
 
                             EMClient.getInstance().login(userId + IMContent.IMTAG, "123456", new EMCallBack() {//回调
                                 @Override
@@ -332,15 +342,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                                     EMClient.getInstance().groupManager().loadAllGroups();
                                     EMClient.getInstance().chatManager().loadAllConversations();
                                     //startActivity(new Intent(Customerservice.this,ImActivity.class));
-                                    MineInfoModel userInfo = response.body().data;
-                                    SPUtils.putString(LoginActivity.this, Constant.SP_PHONE, userInfo.getPhone());
-                                    UserInfoUtils.saveUserInfo(LoginActivity.this, userInfo);
-                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    startActivity(intent);
-                                    finish();
                                     Log.d("main", "登录聊天服务器成功!");
                                     LoadingUtil.setLoadingViewShow(false);
+                                    SessionlistActivity.s = true;
                                 }
 
                                 @Override
@@ -350,6 +354,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
                                 @Override
                                 public void onError(int code, String message) {
+                                    SessionlistActivity.s = false;
+
                                     LoadingUtil.setLoadingViewShow(false);
                                     Log.i("onError", "onError: " + code + message);
                                     Log.d("main", "登录聊天服务器失败！");
@@ -357,6 +363,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                             });
                         }
                     }
+
 
                     @Override
                     public void onError(Response<LzyResponse<MineInfoModel>> response) {
