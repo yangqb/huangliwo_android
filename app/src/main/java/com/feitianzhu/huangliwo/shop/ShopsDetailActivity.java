@@ -201,7 +201,8 @@ public class ShopsDetailActivity extends BaseActivity {
         gooddetail_web.setWebChromeClient(new WebChromeClient());
         gooddetail_web.setHorizontalScrollBarEnabled(false);//水平不显示
         gooddetail_web.setVerticalScrollBarEnabled(false);
-        gooddetail_web.loadUrl("http://8.129.218.83/#/service");
+        gooddetail_web.setVerticalScrollBarEnabled(false);
+        gooddetail_web.loadUrl("http://8.129.218.83/service");
     }
 
     public void getUserInfo() {
