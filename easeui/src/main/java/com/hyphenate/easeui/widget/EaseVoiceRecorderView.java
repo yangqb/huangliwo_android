@@ -159,6 +159,7 @@ public class EaseVoiceRecorderView extends RelativeLayout {
     }
 
     public void startRecording() {
+
         if (!EaseCommonUtils.isSdcardExist()) {
             Toast.makeText(context, R.string.Send_voice_need_sdcard_support, Toast.LENGTH_SHORT).show();
             return;

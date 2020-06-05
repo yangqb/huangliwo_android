@@ -4,6 +4,7 @@ import android.content.Context;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.AttributeSet;
@@ -52,6 +53,7 @@ public class ImActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+//        requestPermission();
         //设置本人头像
         EaseChatRow.meIMG = UserInfoUtils.getUserInfo(this).getHeadImg();
         String stringExtra = getIntent().getStringExtra(EaseConstant.EXTRA_USER_ID);
@@ -91,6 +93,14 @@ public class ImActivity extends BaseActivity {
             }
         });
 
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (chatFragment != null && !chatFragment.isDetached()) {
+            chatFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        }
     }
 
     @Override

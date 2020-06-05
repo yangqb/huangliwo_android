@@ -590,7 +590,10 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                         } else if (type == 1) {
                             binding.swipeLayout.finishRefresh();
                         }
-                        ToastUtils.show(response.body().msg);
+                        if (response.body()!=null){
+                            ToastUtils.show(response.body().msg);
+                        }
+
 
                         multipleItemList.clear();
                         goodsListBeans.clear();
@@ -731,7 +734,9 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                         } else if (type == 1) {
                             binding.swipeLayout.finishRefresh();
                         }
-                        ToastUtils.show(response.body().msg);
+                        if (response.body()!=null){
+                            ToastUtils.show(response.body().msg);
+                        }
 
                         multipleItemList.clear();
                         merchantsList.clear();
