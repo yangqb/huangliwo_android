@@ -51,32 +51,6 @@ public class CustomerserviceActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        if (!SessionlistActivity.s) {
-            EMClient.getInstance().login(SPUtils.getString(this, Constant.SP_LOGIN_USERID) + IMContent.IMTAG, "123456", new EMCallBack() {//回调
-                @Override
-                public void onSuccess() {
-                    EMClient.getInstance().groupManager().loadAllGroups();
-                    EMClient.getInstance().chatManager().loadAllConversations();
-                    //startActivity(new Intent(Customerservice.this,ImActivity.class));
-                    Log.d("main", "登录聊天服务器成功!");
-                    LoadingUtil.setLoadingViewShow(false);
-                    SessionlistActivity.s = true;
-                }
-
-                @Override
-                public void onProgress(int progress, String status) {
-
-                }
-
-                @Override
-                public void onError(int code, String message) {
-                    SessionlistActivity.s = false;
-                    finish();
-                    Log.i("onError", "onError: " + code + message);
-                    Log.d("main", "登录聊天服务器失败！");
-                }
-            });
-        }
         ConverServiceUrlRequest converServiceRequest = new ConverServiceUrlRequest();
         converServiceRequest.isShowLoading = true;
         converServiceRequest.call(new ApiCallBack<List<ConverzServiceListBean>>() {

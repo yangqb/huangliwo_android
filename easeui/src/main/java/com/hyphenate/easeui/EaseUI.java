@@ -146,7 +146,6 @@ public final class EaseUI {
     
     private void registerMessageListener() {
         EMClient.getInstance().chatManager().addMessageListener(new EMMessageListener() {
-            
             @Override
             public void onMessageReceived(List<EMMessage> messages) {
                 EaseAtMessageHelper.get().parseMessages(messages);
