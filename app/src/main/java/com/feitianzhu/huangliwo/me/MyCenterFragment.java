@@ -52,7 +52,10 @@ import com.feitianzhu.huangliwo.utils.doubleclick.SingleClick;
 import com.feitianzhu.huangliwo.view.CircleImageView;
 import com.feitianzhu.huangliwo.view.CustomVerificationView;
 import com.feitianzhu.huangliwo.vip.VipActivity;
+import com.hjq.toast.ToastUtils;
+import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMMessage;
 import com.lxj.xpopup.XPopup;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
@@ -65,6 +68,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindView;
@@ -73,6 +77,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.reactivex.functions.Consumer;
 
+import static com.feitianzhu.huangliwo.RxCodeConstants.IM_MESSAGE;
 import static com.feitianzhu.huangliwo.common.Constant.POST_MINE_INFO;
 
 /**
@@ -120,6 +125,7 @@ public class MyCenterFragment extends SFFragment {
     Integer[] integers = {R.mipmap.o05_01gouwuche, R.mipmap.o05_02dizhi, R.mipmap.o05_03renzheng, R.mipmap.o05_04bangding,
             R.mipmap.shoucang, R.mipmap.o05_06tuidian, R.mipmap.o05_tuiguang, R.mipmap.o05_09bagnzhu, R.mipmap.o05_09bangzu,
             R.mipmap.o05_kefu};
+    private EMMessageListener msgListener;
 
     public MyCenterFragment() {
     }
@@ -158,27 +164,19 @@ public class MyCenterFragment extends SFFragment {
         mRecyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
         mRecyclerView.setNestedScrollingEnabled(false);
-
+        refrshMsg();
         getUserInfo();
         ShopDao.loadUserAuthImpl(getActivity());
         initListener();
         getData();
-        RxBus.getDefault().toObservable(RxCodeConstants.IM_MESSAGE, Boolean.class).subscribe(new Consumer<Boolean>() {
+        RxBus.getDefault().toObservable(IM_MESSAGE, Boolean.class).subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(Boolean aBoolean) throws Exception {
-                if (adapter != null) {
-//                获取所有未读消息数量
-                    int unreadMessageCount = EMClient.getInstance().chatManager().getUnreadMessageCount();
-                    Log.e("TAG", "onHiddenChanged: " + unreadMessageCount);
-                    if (unreadMessageCount > 0) {
-                        adapter.setMessageRed(true);
-                    } else {
-                        adapter.setMessageRed(false);
-                    }
-                    adapter.notifyDataSetChanged();
-                }
+                refrshMsg();
             }
         });
+
+
         return view;
     }
 
@@ -399,7 +397,54 @@ public class MyCenterFragment extends SFFragment {
                 getData();
             }
         });
+        msgListener = new EMMessageListener() {
 
+            @Override
+            public void onMessageReceived(List<EMMessage> messages) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //收到消息
+                        refrshMsg();
+
+                    }
+                });
+
+            }
+
+            @Override
+            public void onCmdMessageReceived(List<EMMessage> messages) {
+                //收到透传消息
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //收到消息
+                        refrshMsg();
+                    }
+                });
+            }
+
+            @Override
+            public void onMessageRead(List<EMMessage> messages) {
+                //收到已读回执
+            }
+
+            @Override
+            public void onMessageDelivered(List<EMMessage> message) {
+                //收到已送达回执
+            }
+
+            @Override
+            public void onMessageRecalled(List<EMMessage> messages) {
+                //消息被撤回
+            }
+
+            @Override
+            public void onMessageChanged(EMMessage message, Object change) {
+                //消息状态变动
+            }
+        };
+        EMClient.getInstance().chatManager().addMessageListener(msgListener);
     }
 
 
@@ -588,17 +633,26 @@ public class MyCenterFragment extends SFFragment {
         super.onHiddenChanged(hidden);
         if (!hidden) {
             getUserInfo();
-            if (adapter != null) {
+            refrshMsg();
+
+        }
+    }
+
+    private void refrshMsg() {
+        if (adapter != null) {
 //                获取所有未读消息数量
-                int unreadMessageCount = EMClient.getInstance().chatManager().getUnreadMessageCount();
-                Log.e("TAG", "onHiddenChanged: " + unreadMessageCount);
-                if (unreadMessageCount > 0) {
-                    adapter.setMessageRed(true);
-                } else {
-                    adapter.setMessageRed(false);
-                }
-                adapter.notifyDataSetChanged();
+            int unreadMessageCount = EMClient.getInstance().chatManager().getUnreadMessageCount();
+            Log.e("TAG", "onHiddenChanged: " + unreadMessageCount);
+            if (unreadMessageCount > 0) {
+                adapter.setMessageRed(true);
+            } else {
+                adapter.setMessageRed(false);
             }
+
+//            adapter.setNewData(Arrays.asList(integers));
+//            mRecyclerView.setAdapter(adapter);
+
+            adapter.notifyDataSetChanged();
 
         }
     }
@@ -625,5 +679,6 @@ public class MyCenterFragment extends SFFragment {
         super.onDestroy();
         unbinder.unbind();
         EventBus.getDefault().unregister(this);
+        EMClient.getInstance().chatManager().removeMessageListener(msgListener);
     }
 }

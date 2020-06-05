@@ -988,6 +988,7 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
         if (isMessageListInited) {
             messageList.refreshSelectLast();
         }
+        hideKeyboard();
     }
 
 

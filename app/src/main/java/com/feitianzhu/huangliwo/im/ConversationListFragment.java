@@ -54,7 +54,6 @@ public class ConversationListFragment extends EaseConversationListFragment {
                 }
             }
         });
-        super.setUpView();
     }
 
     @Override

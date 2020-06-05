@@ -149,7 +149,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         mRegister.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
         mForgetLayout.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
 
-        initListener();
+//        initListener();
 
     }
 
