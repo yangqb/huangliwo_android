@@ -221,15 +221,15 @@ public class EaseChatPrimaryMenu extends EaseChatPrimaryMenuBase implements OnCl
                     listener.onToggleVoiceBtnClicked();
             } else {
                 //用户不同意，向用户展示该权限作用
-                if (!ActivityCompat.shouldShowRequestPermissionRationale(chatFragment.getActivity(), Manifest.permission.RECORD_AUDIO)) {
-                    Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                    Uri uri = Uri.fromParts("package", chatFragment.getActivity().getPackageName(), null);
-                    intent.setData(uri);
-                    chatFragment.getActivity().startActivity(intent);
-                    //没有权限，向用户请求权限
-                } else {
-                    ActivityCompat.requestPermissions(chatFragment.getActivity(), new String[]{Manifest.permission.RECORD_AUDIO}, 1133);
-                }
+//                if (!ActivityCompat.shouldShowRequestPermissionRationale(chatFragment.getActivity(), Manifest.permission.RECORD_AUDIO)) {
+//                    Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+//                    Uri uri = Uri.fromParts("package", chatFragment.getActivity().getPackageName(), null);
+//                    intent.setData(uri);
+//                    chatFragment.getActivity().startActivity(intent);
+//                    //没有权限，向用户请求权限
+//                } else {
+                ActivityCompat.requestPermissions(chatFragment.getActivity(), new String[]{Manifest.permission.RECORD_AUDIO}, 1133);
+//                }
 
             }
 

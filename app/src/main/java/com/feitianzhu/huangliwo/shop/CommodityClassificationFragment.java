@@ -594,7 +594,6 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                             ToastUtils.show(response.body().msg);
                         }
 
-
                         multipleItemList.clear();
                         goodsListBeans.clear();
                         rightAdapter.setNewData(multipleItemList);

@@ -325,19 +325,20 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     public                                                                                                                                                                                                  void onSuccess(Response<LzyResponse<MineInfoModel>> response) {
                         LoadingUtil.setLoadingViewShow(true);
                         if (response.body().code == 0 && response.body().data != null) {
-                            MineInfoModel userInfo = response.body().data;
-                            SPUtils.putString(LoginActivity.this, Constant.SP_PHONE, userInfo.getPhone());
-                            UserInfoUtils.saveUserInfo(LoginActivity.this, userInfo);
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(intent);
-                            finish();
-                          /*  EMClient.getInstance().login(userId + IMContent.IMTAG, "123456", new EMCallBack() {//回调
+
+                            EMClient.getInstance().login(userId + IMContent.IMTAG, "123456", new EMCallBack() {//回调
                                 @Override
                                 public void onSuccess() {
                                     EMClient.getInstance().groupManager().loadAllGroups();
                                     EMClient.getInstance().chatManager().loadAllConversations();
                                     //startActivity(new Intent(Customerservice.this,ImActivity.class));
+                                    MineInfoModel userInfo = response.body().data;
+                                    SPUtils.putString(LoginActivity.this, Constant.SP_PHONE, userInfo.getPhone());
+                                    UserInfoUtils.saveUserInfo(LoginActivity.this, userInfo);
+                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    startActivity(intent);
+                                    finish();
                                     Log.d("main", "登录聊天服务器成功!");
                                     LoadingUtil.setLoadingViewShow(false);
                                 }
@@ -353,7 +354,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                                     Log.i("onError", "onError: " + code + message);
                                     Log.d("main", "登录聊天服务器失败！");
                                 }
-                            });*/
+                            });
                         }
                     }
 

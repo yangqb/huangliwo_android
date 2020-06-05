@@ -26,6 +26,7 @@ import com.feitianzhu.huangliwo.core.base.activity.BaseBindingActivity;
 import com.feitianzhu.huangliwo.core.SkipToUtil;
 import com.feitianzhu.huangliwo.core.base.bena.BaseWebviewModel;
 import com.feitianzhu.huangliwo.databinding.ActivityBaseWebviewBinding;
+import com.feitianzhu.huangliwo.shop.ShopClassfityActivity;
 import com.feitianzhu.huangliwo.shop.ShopMerchantsDetailActivity;
 import com.feitianzhu.huangliwo.shop.ShopsDetailActivity;
 import com.feitianzhu.huangliwo.utils.SPUtils;
@@ -132,7 +133,12 @@ public class BaseWebviewActivity extends BaseBindingActivity {
             @Override
             public void onReceivedTitle(WebView view, String title) {
                 super.onReceivedTitle(view, title);
-                dataBinding.titleName.setText(title);
+                if (title.equals("mobile") || title.contains("Raiders")) {
+
+                } else {
+                    dataBinding.titleName.setText(title);
+                }
+
             }
 
             @Override
@@ -207,23 +213,29 @@ public class BaseWebviewActivity extends BaseBindingActivity {
             //    bly://
             Intent intent;
             String replace = baseWebviewModel.url.replace("bly://", "");
-//            bly://goodsDetail
+            Log.e("TAG", "openURL: " + baseWebviewModel.param.get("id"));
             switch (replace) {
                 case "goodsDetail":
                     //商品详情
                     intent = new Intent(this, ShopsDetailActivity.class);
-                    intent.putExtra(ShopsDetailActivity.GOODS_DETAIL_DATA, baseWebviewModel.param.get("id"));
+                    String id = baseWebviewModel.param.get("id");
+                    intent.putExtra(ShopsDetailActivity.GOODS_DETAIL_DATA, Integer.parseInt(id));
                     startActivity(intent);
                     break;
                 case "storeDetail":
                     //店铺详情
                     intent = new Intent(this, ShopMerchantsDetailActivity.class);
-                    intent.putExtra(ShopMerchantsDetailActivity.MERCHANTS_ID, baseWebviewModel.param.get("id"));
+                    String id1 = baseWebviewModel.param.get("id");
+                    intent.putExtra(ShopMerchantsDetailActivity.MERCHANTS_ID, Integer.parseInt(id1));
                     startActivity(intent);
                     break;
                 case "web":
                     //去其他webview
                     toBaseWebviewActivity(this, baseWebviewModel.param.get("url"));
+                    break;
+                case "cateList":
+                    //去其他webview
+                    ShopClassfityActivity.getInstance(this, baseWebviewModel.param.get("title"), baseWebviewModel.param.get("id"));
                     break;
                 case "back":
                     finish();

@@ -117,7 +117,9 @@ public class HomeFragment extends SFFragment implements ProvinceCallBack {
     public void showHeadImg() {
         userInfo = UserInfoUtils.getUserInfo(getActivity());
         String headImg = userInfo.getHeadImg();
-        Glide.with(mContext).load(headImg).apply(RequestOptions.placeholderOf(R.mipmap.b08_01touxiang).error(R.mipmap.b08_01touxiang).dontAnimate())
+        Glide.with(mContext).load(headImg)
+                .apply(RequestOptions.placeholderOf(R.mipmap.b08_01touxiang)
+                        .error(R.mipmap.b08_01touxiang).dontAnimate())
                 .into(ivHead);
     }
 

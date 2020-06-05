@@ -821,15 +821,15 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
                         selectPicFromCamera();
                     } else {
                         //用户不同意，向用户展示该权限作用
-                        if (!ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.CAMERA)) {
-                            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                            Uri uri = Uri.fromParts("package", getActivity().getPackageName(), null);
-                            intent.setData(uri);
-                            getActivity().startActivity(intent);
-                            //没有权限，向用户请求权限
-                        } else {
+//                        if (!ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.CAMERA)) {
+//                            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+//                            Uri uri = Uri.fromParts("package", getActivity().getPackageName(), null);
+//                            intent.setData(uri);
+//                            getActivity().startActivity(intent);
+//                            //没有权限，向用户请求权限
+//                        } else {
                             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, 1123);
-                        }
+//                        }
 
                     }
 
