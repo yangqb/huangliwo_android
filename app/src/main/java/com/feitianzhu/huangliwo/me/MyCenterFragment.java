@@ -407,7 +407,7 @@ public class MyCenterFragment extends SFFragment {
                                 @Override
                                 public void onError(int code, String message) {
                                     SessionlistActivity.s = false;
-                                    ToastUtils.show("登录聊天服务器失败");
+                                    ToastUtils.show("登录聊天室失败,请联系人工客服");
                                     Log.i("onError", "onError: " + code + message);
 //                                    Log.d("main", "登录聊天服务器失败！");
                                 }
