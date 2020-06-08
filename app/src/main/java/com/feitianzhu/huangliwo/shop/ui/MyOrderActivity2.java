@@ -771,10 +771,10 @@ public class MyOrderActivity2 extends BaseActivity {
                                     intent.putExtra(LogisticsInfoActivity.LOGISTICS_DATA, logisticsModel);
                                     startActivity(intent);
                                 } else {
-                                    ToastUtils.show("暂无物流信息");
+                                    ToastUtils.show("商品待出库");
                                 }
                             } else {
-                                ToastUtils.show("暂无物流信息");
+                                ToastUtils.show("商品待出库");
                             }
                         }
 
@@ -784,7 +784,7 @@ public class MyOrderActivity2 extends BaseActivity {
                         }
                     });
         } else {
-            ToastUtils.show("暂无物流信息");
+            ToastUtils.show("商品待出库");
         }
     }
 
