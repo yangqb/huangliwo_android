@@ -336,7 +336,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
                             LoadingUtil.setLoadingViewShow(true);
 
-                            EMClient.getInstance().login(userId + IMContent.IMTAG, "123456", new EMCallBack() {//回调
+                            EMClient.getInstance().login(userId + IMContent.IMTAGLOGIN, "123456", new EMCallBack() {//回调
                                 @Override
                                 public void onSuccess() {
                                     EMClient.getInstance().groupManager().loadAllGroups();
