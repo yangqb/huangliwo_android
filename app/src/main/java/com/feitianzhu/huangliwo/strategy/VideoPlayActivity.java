@@ -83,7 +83,7 @@ public class VideoPlayActivity extends BaseBindingActivity {
             }
         });
 //切换渲染模式
-        GSYVideoType.setShowType(GSYVideoType.SCREEN_TYPE_16_9);
+//        GSYVideoType.setShowType(GSYVideoType.SCREEN_TYPE_16_9);
 //        GSYVideoType.SCREEN_TYPE_16_9
         playBinding.videoPlayer.getFullscreenButton().setVisibility(View.VISIBLE);
         playBinding.videoPlayer.getFullscreenButton().setOnClickListener(new View.OnClickListener() {
