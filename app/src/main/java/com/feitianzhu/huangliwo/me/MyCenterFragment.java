@@ -386,7 +386,7 @@ public class MyCenterFragment extends SFFragment {
                         break;
                     case 9:
                         if (!SessionlistActivity.s) {
-                            EMClient.getInstance().login(SPUtils.getString(getActivity(), Constant.SP_LOGIN_USERID) + IMContent.IMTAG, "123456", new EMCallBack() {//回调
+                            EMClient.getInstance().login(SPUtils.getString(getActivity(), Constant.SP_LOGIN_USERID) + IMContent.IMTAGLOGIN, "123456", new EMCallBack() {//回调
                                 @Override
                                 public void onSuccess() {
                                     EMClient.getInstance().groupManager().loadAllGroups();
