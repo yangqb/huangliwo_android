@@ -311,8 +311,11 @@ public class TravelHomeActivity extends BaseActivity {
                                 Intent intent = new Intent(TravelHomeActivity.this, LoginActivity.class);
                                 startActivity(intent);
                             } else {
-                                if (UserInfoUtils.getUserInfo(TravelHomeActivity.this).getAccountType() != 0) {
-                                    TraveDetailActivity.toTraveDetailActivity(TravelHomeActivity.this, oilListBean);
+                                TraveDetailActivity.toTraveDetailActivity(TravelHomeActivity.this, oilListBean);
+                                /**
+                                 * 是否是会员判断
+                                 */
+                              /*  if (UserInfoUtils.getUserInfo(TravelHomeActivity.this).getAccountType() != 0) {
                                 } else {
                                     View inflate = getLayoutInflater().inflate(R.layout.oil_dialog_item, null);
                                     TextView dilagimagedimiss = inflate.findViewById(R.id.dilagimagedimiss);
@@ -335,7 +338,7 @@ public class TravelHomeActivity extends BaseActivity {
                                         }
                                     });
                                     myDialog.show();
-                                }
+                                }*/
                             }
                         }
                     });
