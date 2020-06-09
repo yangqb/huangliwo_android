@@ -86,7 +86,6 @@ public class SetMealPayActivity extends BaseActivity {
     ImageView alipayIcon;
     @BindView(R.id.balancePay_icon)
     ImageView balancePayIcon;
-    @SingleClick()
     @Override
     protected int getLayoutId() {
         return R.layout.activity_setmeal_pay;
