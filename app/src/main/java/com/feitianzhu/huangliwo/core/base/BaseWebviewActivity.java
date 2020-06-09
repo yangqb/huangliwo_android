@@ -240,6 +240,8 @@ public class BaseWebviewActivity extends BaseBindingActivity {
                 case "back":
                     finish();
                     break;
+                case "getUserId":
+                    return SPUtils.getString(getApplication(), Constant.SP_LOGIN_USERID);
                 default:
                     Log.e("TAG", "openURL: " + baseWebviewModel.url);
                     ToastUtils.show("意外情况,请联系客服");
