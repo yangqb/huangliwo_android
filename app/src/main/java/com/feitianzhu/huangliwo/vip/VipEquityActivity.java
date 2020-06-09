@@ -70,7 +70,7 @@ public class VipEquityActivity extends BaseUiActivity {
         });
 
         viewDataBinding.title1.setText(Html.fromHtml(getResources().getString(R.string.vip_title)));
-        viewDataBinding.titl2.setText(Html.fromHtml(getResources().getString(R.string.vip_title2)));
+//        viewDataBinding.titl2.setText(Html.fromHtml(getResources().getString(R.string.vip_title2)));
         viewDataBinding.title3.setText(Html.fromHtml(getResources().getString(R.string.vip_title3)));
         ArrayList<VipBean> strings = new ArrayList<>();
 

@@ -130,6 +130,7 @@ public class BaseWebviewActivity extends BaseBindingActivity {
         });
 
         webview.setWebChromeClient(new WebChromeClient() {
+
             @Override
             public void onReceivedTitle(WebView view, String title) {
                 super.onReceivedTitle(view, title);
@@ -201,6 +202,10 @@ public class BaseWebviewActivity extends BaseBindingActivity {
 //        dataBinding.webView.reload();
     }
 
+    @JavascriptInterface
+    public String getUserId(String command) {
+        return SPUtils.getString(getApplication(), Constant.SP_LOGIN_USERID, "");
+    }
 
     @JavascriptInterface
     public String openURL(String command) {

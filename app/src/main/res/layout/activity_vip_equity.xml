@@ -345,6 +345,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/dp_10"
                             android:background="#fffff6df"
+                            android:visibility="gone"
                             android:orientation="horizontal">
 
                             <ImageView
@@ -407,7 +408,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:layout_marginStart="@dimen/dp_5"
-                                android:src="@mipmap/vip_equ_num7" />
+                                android:src="@mipmap/vip_equ_num6" />
 
                             <LinearLayout
                                 android:layout_width="match_parent"
