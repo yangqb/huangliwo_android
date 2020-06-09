@@ -386,8 +386,8 @@
                             android:orientation="vertical">
 
                             <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="@dimen/dp_21"
+                                android:layout_height="@dimen/dp_21"
                                 android:src="@mipmap/k01_04dingdan" />
 
                             <TextView
@@ -409,8 +409,8 @@
                             android:orientation="vertical">
 
                             <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="@dimen/dp_21"
+                                android:layout_height="@dimen/dp_21"
                                 android:src="@mipmap/k01_06xuanzuo" />
 
                             <TextView

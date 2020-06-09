@@ -205,9 +205,8 @@ public class ShopPayActivity extends BaseActivity {
         });
     }
 
-
-    @OnClick({R.id.left_button, R.id.tv_pay, R.id.weixinPay_icon, R.id.alipay_icon, R.id.balancePay_icon, R.id.rl_address, R.id.no_address})
     @SingleClick()
+    @OnClick({R.id.left_button, R.id.tv_pay, R.id.weixinPay_icon, R.id.alipay_icon, R.id.balancePay_icon, R.id.rl_address, R.id.no_address})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_pay:

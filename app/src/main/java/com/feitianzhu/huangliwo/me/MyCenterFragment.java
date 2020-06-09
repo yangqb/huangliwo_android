@@ -391,7 +391,7 @@ public class MyCenterFragment extends SFFragment {
                                 public void onSuccess() {
                                     EMClient.getInstance().groupManager().loadAllGroups();
                                     EMClient.getInstance().chatManager().loadAllConversations();
-                                    //startActivity(new Intent(Customerservice.this,ImActivity.class));
+                                     //startActivity(new Intent(Customerservice.this,ImActivity.class));
                                     Log.d("main", "登录聊天服务器成功!");
                                     LoadingUtil.setLoadingViewShow(false);
                                     SessionlistActivity.s = true;
