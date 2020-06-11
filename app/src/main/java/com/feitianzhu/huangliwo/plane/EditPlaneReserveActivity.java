@@ -636,47 +636,60 @@ public class EditPlaneReserveActivity extends BaseActivity {
                     }
                 }
 
-                if ((invoicePosition == 1 || invoicePosition == 3 || invoicePosition == 4) && TextUtils.isEmpty(editInvoiceTitle.getText().toString().trim())) {
-                    ToastUtils.show("请填写发票抬头");
-                    return;
-                }
-                if (invoicePosition == 1 || invoicePosition == 3 && TextUtils.isEmpty(editNum.getText().toString().trim())) {
-                    ToastUtils.show("请填写纳税人识别号");
-                    return;
-                }
-                if (switchButton.isChecked() && addressBean == null) {
-                    ToastUtils.show("请选择收货地址");
-                    return;
-                }
-
                 if (priceDetailInfo.num == 0 && priceDetailInfo.cnum > 0) {
-                    String content = "儿童乘机须由18岁以上成人陪同，\n请请假成人";
+                    String content = "儿童乘机须由18岁以上成人陪同，\n请添加成人";
                     new XPopup.Builder(this)
                             .asConfirm("提示", content, "", "确定", null, null, true)
                             .bindLayout(R.layout.layout_dialog) //绑定已有布局
                             .show();
-                } else if (priceDetailInfo.num > 0 && priceDetailInfo.cnum > priceDetailInfo.num * 2) {
-                    ToastUtils.show("一名成人最多携带2名儿童");
-                } else {
-                    if (!switchButton.isChecked()) {
-                        new XPopup.Builder(EditPlaneReserveActivity.this)
-                                .asConfirm("", "确认不需要报销凭证提交订单吗?", "取消", "确定", new OnConfirmListener() {
-                                    @Override
-                                    public void onConfirm() {
-                                        if (type == 0 || type == 2) {
-                                            docSubmit();
-                                        } else {
-                                            interSubmit();
-                                        }
-                                    }
-                                }, new OnCancelListener() {
-                                    @Override
-                                    public void onCancel() {
+                    return;
+                }
 
-                                    }
-                                }, false)
-                                .bindLayout(R.layout.layout_dialog_login).show();
+                if (priceDetailInfo.num > 0 && priceDetailInfo.cnum > priceDetailInfo.num * 2) {
+                    ToastUtils.show("一名成人最多携带2名儿童");
+                    return;
+                }
+
+                if (switchButton.isChecked()) {
+                    if (invoicePosition == 0) {
+                        ToastUtils.show("请选择发票类型");
+                        return;
                     }
+                    if ((invoicePosition == 1 || invoicePosition == 3 || invoicePosition == 4) && TextUtils.isEmpty(editInvoiceTitle.getText().toString().trim())) {
+                        ToastUtils.show("请填写发票抬头");
+                        return;
+                    }
+                    if (invoicePosition == 1 || invoicePosition == 3 && TextUtils.isEmpty(editNum.getText().toString().trim())) {
+                        ToastUtils.show("请填写纳税人识别号");
+                        return;
+                    }
+                    if (addressBean == null) {
+                        ToastUtils.show("请选择收货地址");
+                        return;
+                    }
+                    if (type == 0 || type == 2) {
+                        docSubmit();
+                    } else {
+                        interSubmit();
+                    }
+                } else {
+                    new XPopup.Builder(EditPlaneReserveActivity.this)
+                            .asConfirm("", "确认不需要报销凭证提交订单吗?", "取消", "确定", new OnConfirmListener() {
+                                @Override
+                                public void onConfirm() {
+                                    if (type == 0 || type == 2) {
+                                        docSubmit();
+                                    } else {
+                                        interSubmit();
+                                    }
+                                }
+                            }, new OnCancelListener() {
+                                @Override
+                                public void onCancel() {
+
+                                }
+                            }, false)
+                            .bindLayout(R.layout.layout_dialog_login).show();
                 }
                 break;
             case R.id.priceInfo:
