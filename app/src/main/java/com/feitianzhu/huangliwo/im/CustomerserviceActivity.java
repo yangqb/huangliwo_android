@@ -91,7 +91,7 @@ public class CustomerserviceActivity extends BaseActivity {
 //                    intent.putExtra("name",response.get(0).getNick());
 //                    intent.putExtra("icon",response.get(0).getIcon());
 //                    intent.putExtra(EaseConstant.EXTRA_USER_ID, "688577"+"-dev");
-                    intent.putExtra(EaseConstant.EXTRA_USER_ID, response.get(0).getUserId() + IMContent.IMTAG);
+                    intent.putExtra(EaseConstant.EXTRA_USER_ID, response.get(0).getUserId() + IMContent.IMTAGLOGIN);
                     startActivity(intent);
                 }
                 break;

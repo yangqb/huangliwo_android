@@ -62,7 +62,7 @@ public class CustomerservicelistActivity extends BaseActivity {
                         //username为对方的环信id
                         intent.putExtra("name",response.get(position).getNick());
                         intent.putExtra("icon",response.get(position).getIcon());
-                        intent.putExtra(EaseConstant.EXTRA_USER_ID, response.get(position).getUserId()+IMContent.IMTAG);
+                        intent.putExtra(EaseConstant.EXTRA_USER_ID, response.get(position).getUserId()+IMContent.IMTAGLOGIN);
                         startActivity(intent);
                     }
                 });

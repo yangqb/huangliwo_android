@@ -333,9 +333,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
                             finish();
-
                             LoadingUtil.setLoadingViewShow(true);
-
                             EMClient.getInstance().login(userId + IMContent.IMTAGLOGIN, "123456", new EMCallBack() {//回调
                                 @Override
                                 public void onSuccess() {
@@ -355,7 +353,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                                 @Override
                                 public void onError(int code, String message) {
                                     SessionlistActivity.s = false;
-
                                     LoadingUtil.setLoadingViewShow(false);
                                     Log.i("onError", "onError: " + code + message);
                                     Log.d("main", "登录聊天服务器失败！");

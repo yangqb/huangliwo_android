@@ -619,6 +619,8 @@ public class ShopsDetailActivity extends BaseActivity {
                                 ToastUtils.show("登录聊天室失败,请联系人工客服");
                             }
                         });
+                    }else{
+                        startActivity(new Intent(ShopsDetailActivity.this, CustomerserviceActivity.class));
                     }
                 }
                 break;
