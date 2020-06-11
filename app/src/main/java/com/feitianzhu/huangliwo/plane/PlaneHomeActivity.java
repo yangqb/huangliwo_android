@@ -236,11 +236,9 @@ public class PlaneHomeActivity extends BaseActivity {
                 }
                 CustomFightCityInfo customFightCityInfo = new CustomFightCityInfo();
                 customFightCityInfo.depCityName=startCityName.getText().toString();
-                customFightCityInfo.depCityName = tvStartCity;
                 customFightCityInfo.depAirPortCode = depCodeData;
                 customFightCityInfo.goDate = startDateStr;
-                customFightCityInfo.depCityName=endCityName.getText().toString();
-                customFightCityInfo.arrCityName = tvEndCity;
+                customFightCityInfo.arrCityName=endCityName.getText().toString();
                 customFightCityInfo.arrAirPortCode = arrCodeData;
                 customFightCityInfo.backDate = endDateStr;
                 if (searchType == 2 || searchType == 3) {
