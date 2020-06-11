@@ -83,9 +83,9 @@ public class VideoPlayActivity extends BaseBindingActivity {
             }
         });
 //切换渲染模式
-        GSYVideoType.setShowType(GSYVideoType.SCREEN_MATCH_FULL);
+//        GSYVideoType.setShowType(GSYVideoType.SCREEN_TYPE_16_9);
 //        GSYVideoType.SCREEN_TYPE_16_9
-        playBinding.videoPlayer.getFullscreenButton().setVisibility(View.GONE);
+        playBinding.videoPlayer.getFullscreenButton().setVisibility(View.VISIBLE);
         playBinding.videoPlayer.getFullscreenButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -95,14 +95,12 @@ public class VideoPlayActivity extends BaseBindingActivity {
                 playBinding.videoPlayer.startWindowFullscreen(VideoPlayActivity.this, true, true);
             }
         });
-        GSYVideoType.setShowType(GSYVideoType.SCREEN_TYPE_16_9);
-
         GSYVideoOptionBuilder gsyVideoOption = new GSYVideoOptionBuilder();
         gsyVideoOption
                 .setIsTouchWiget(true)
                 .setRotateViewAuto(false)
                 .setLockLand(false)
-                .setAutoFullWithSize(false)
+                .setAutoFullWithSize(true)
                 .setShowFullAnimation(false)
                 .setNeedLockFull(true)
                 .setUrl(url)

@@ -1,18 +1,23 @@
 package com.feitianzhu.huangliwo.im;
 
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.feitianzhu.huangliwo.R;
+import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.core.network.ApiCallBack;
 import com.feitianzhu.huangliwo.core.network.LoadingUtil;
 import com.feitianzhu.huangliwo.im.bean.ConverzServiceListBean;
 import com.feitianzhu.huangliwo.im.request.ConverServiceUrlRequest;
+import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.gyf.immersionbar.ImmersionBar;
+import com.hyphenate.EMCallBack;
+import com.hyphenate.chat.EMClient;
 import com.hyphenate.easeui.EaseConstant;
 
 import java.util.List;
@@ -86,7 +91,7 @@ public class CustomerserviceActivity extends BaseActivity {
 //                    intent.putExtra("name",response.get(0).getNick());
 //                    intent.putExtra("icon",response.get(0).getIcon());
 //                    intent.putExtra(EaseConstant.EXTRA_USER_ID, "688577"+"-dev");
-                    intent.putExtra(EaseConstant.EXTRA_USER_ID, response.get(0).getUserId() + IMContent.IMTAG);
+                    intent.putExtra(EaseConstant.EXTRA_USER_ID, response.get(0).getUserId() + IMContent.IMTAGLOGIN);
                     startActivity(intent);
                 }
                 break;

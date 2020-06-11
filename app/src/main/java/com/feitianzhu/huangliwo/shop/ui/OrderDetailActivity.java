@@ -448,7 +448,7 @@ public class OrderDetailActivity extends BaseActivity {
                                     logisticsName.setText("退货物流：" + goodsOrderBean.getRefundExpressCom() + "(" + goodsOrderBean.getRefundExpressNum() + ")");
                                     getLogisticsInfo(goodsOrderBean.getRefundExpressNum(), goodsOrderBean.getRefundExpressCode());
                                 } else {
-                                    itemInfo.setText("暂无物流信息");
+                                    itemInfo.setText("商品待出库");
                                 }
                             }
                             showView();
@@ -479,10 +479,10 @@ public class OrderDetailActivity extends BaseActivity {
                                 itemInfo.setText(logisticsModel.getData().get(0).getContext());
                                 logisticsTime.setText(logisticsModel.getData().get(0).getFtime());
                             } else {
-                                itemInfo.setText("暂无物流信息");
+                                itemInfo.setText("商品待出库");
                             }
                         } else {
-                            itemInfo.setText("暂无物流信息");
+                            itemInfo.setText("商品待出库");
                         }
                     }
 

@@ -15,6 +15,7 @@ import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -34,9 +35,12 @@ import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
 import com.feitianzhu.huangliwo.core.network.ApiLifeCallBack;
+import com.feitianzhu.huangliwo.core.network.LoadingUtil;
 import com.feitianzhu.huangliwo.http.JsonCallback;
 import com.feitianzhu.huangliwo.http.LzyResponse;
 import com.feitianzhu.huangliwo.im.CustomerserviceActivity;
+import com.feitianzhu.huangliwo.im.IMContent;
+import com.feitianzhu.huangliwo.im.SessionlistActivity;
 import com.feitianzhu.huangliwo.login.LoginActivity;
 import com.feitianzhu.huangliwo.model.AddShoppingCartBody;
 import com.feitianzhu.huangliwo.model.BaseGoodsListBean;
@@ -58,6 +62,8 @@ import com.google.gson.Gson;
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.XXPermissions;
 import com.hjq.toast.ToastUtils;
+import com.hyphenate.EMCallBack;
+import com.hyphenate.chat.EMClient;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.lzy.okgo.OkGo;
@@ -201,7 +207,8 @@ public class ShopsDetailActivity extends BaseActivity {
         gooddetail_web.setWebChromeClient(new WebChromeClient());
         gooddetail_web.setHorizontalScrollBarEnabled(false);//水平不显示
         gooddetail_web.setVerticalScrollBarEnabled(false);
-        gooddetail_web.loadUrl("http://8.129.218.83/#/service");
+        gooddetail_web.setVerticalScrollBarEnabled(false);
+        gooddetail_web.loadUrl("http://app.bldby.shop/service");
     }
 
     public void getUserInfo() {
@@ -584,8 +591,38 @@ public class ShopsDetailActivity extends BaseActivity {
                     intent = new Intent(this, LoginActivity.class);
                     startActivity(intent);
                     return;
+                }else{
+                    if (!SessionlistActivity.s) {
+                        EMClient.getInstance().login(SPUtils.getString(this, Constant.SP_LOGIN_USERID) + IMContent.IMTAGLOGIN, "123456", new EMCallBack() {//回调
+                            @Override
+                            public void onSuccess() {
+                                EMClient.getInstance().groupManager().loadAllGroups();
+                                EMClient.getInstance().chatManager().loadAllConversations();
+                                //startActivity(new Intent(Customerservice.this,ImActivity.class));
+                                Log.d("main", "登录聊天服务器成功!");
+                                startActivity(new Intent(ShopsDetailActivity.this, CustomerserviceActivity.class));
+                                LoadingUtil.setLoadingViewShow(false);
+                                SessionlistActivity.s = true;
+                            }
+
+                            @Override
+                            public void onProgress(int progress, String status) {
+
+                            }
+
+                            @Override
+                            public void onError(int code, String message) {
+                                SessionlistActivity.s = false;
+                                LoadingUtil.setLoadingViewShow(false);
+                                Log.i("onError", "onError: " + code + message);
+                                Log.d("main", "登录聊天服务器失败！");
+                                ToastUtils.show("登录聊天室失败,请联系人工客服");
+                            }
+                        });
+                    }else{
+                        startActivity(new Intent(ShopsDetailActivity.this, CustomerserviceActivity.class));
+                    }
                 }
-                startActivity(new Intent(ShopsDetailActivity.this, CustomerserviceActivity.class));
                 break;
         }
 

@@ -71,7 +71,6 @@ public class MyOilAdapter extends BaseQuickAdapter<OilListBean, BaseViewHolder> 
                     Intent intent = new Intent(mContext, LoginActivity.class);
                     mContext.startActivity(intent);
                 } else {
-                    if (UserInfoUtils.getUserInfo(mContext).getAccountType() != 0) {
                         view = LayoutInflater.from(mContext).inflate(
                                 R.layout.popup_layout_itemnavigation, null);
                         PopupWindow  popupWindow = new PopupWindow(view,
@@ -128,7 +127,11 @@ public class MyOilAdapter extends BaseQuickAdapter<OilListBean, BaseViewHolder> 
                         });
                         popupWindow.showAtLocation(helper.getView(R.id.oilname), Gravity.BOTTOM, 0,0);
 
-                    } else {
+                   // if (UserInfoUtils.getUserInfo(mContext).getAccountType() != 0) { }
+                    /**
+                     * 是否是会员判断
+                     */
+                    /*else {
                         View inflate =LayoutInflater.from(mContext).inflate(R.layout.oil_dialog_item, null);
                         TextView dilagimagedimiss = inflate.findViewById(R.id.dilagimagedimiss);
                         TextView dilagimageupdate = inflate.findViewById(R.id.dilagimageupdate);
@@ -150,7 +153,7 @@ public class MyOilAdapter extends BaseQuickAdapter<OilListBean, BaseViewHolder> 
                             }
                         });
                         myDialog.show();
-                    }
+                    }*/
                 }
 
 

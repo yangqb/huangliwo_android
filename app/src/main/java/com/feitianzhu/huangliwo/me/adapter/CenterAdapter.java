@@ -1,5 +1,6 @@
 package com.feitianzhu.huangliwo.me.adapter;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -35,7 +36,6 @@ public class CenterAdapter extends BaseQuickAdapter<Integer, BaseViewHolder> {
             helper.getView(R.id.item).setVisibility(View.VISIBLE);
         }*/
         helper.getView(R.id.red).setVisibility(View.GONE);
-
         switch (helper.getAdapterPosition()) {
             case 0:
                 textView.setText("购物车");
@@ -64,14 +64,13 @@ public class CenterAdapter extends BaseQuickAdapter<Integer, BaseViewHolder> {
             case 8:
                 textView.setText("帮助中心");
                 break;
-       /*     case 9:
+            case 9:
+                Log.e("TAG", "convert: " + isMessageShow);
                 textView.setText("客服中心");
                 if (isMessageShow) {
                     helper.getView(R.id.red).setVisibility(View.VISIBLE);
-                } else {
-                    helper.getView(R.id.red).setVisibility(View.GONE);
                 }
-                break;*/
+                break;
         }
     }
 

@@ -10,10 +10,13 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 
+import com.hyphenate.easeui.ui.EaseChatFragment;
+
 public abstract class EaseChatPrimaryMenuBase extends RelativeLayout{
     protected EaseChatPrimaryMenuListener listener;
     protected Activity activity;
     protected InputMethodManager inputManager;
+    public EaseChatFragment chatFragment;
 
     public EaseChatPrimaryMenuBase(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);

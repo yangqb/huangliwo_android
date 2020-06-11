@@ -41,7 +41,7 @@ public class StrategyFragment extends BaseBindingFragment {
         StrategyAdapter strategyAdapter = new StrategyAdapter(getChildFragmentManager());
         ArrayList<Fragment> fragments = new ArrayList<>();
         TitleIdUrlRequest titleIdRequest = new TitleIdUrlRequest();
-        titleIdRequest.isShowLoading = true;
+//        titleIdRequest.isShowLoading = true;
         titleIdRequest.call(new ApiCallBack<List<TitileBean>>() {
             @Override
             public void onAPIResponse(List<TitileBean> response) {

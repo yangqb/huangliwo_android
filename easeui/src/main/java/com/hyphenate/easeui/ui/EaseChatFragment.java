@@ -1,10 +1,13 @@
 package com.hyphenate.easeui.ui;
 
+import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
@@ -12,9 +15,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.provider.SyncStateContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.util.Log;
@@ -141,7 +147,7 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
     private Handler typingHandler = null;
     // "正在输入"功能的开关，打开后本设备发送消息将持续发送cmd类型消息通知对方"正在输入"
     private boolean turnOnTyping;
-    private String avatar, name,title;
+    private String avatar, name, title;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -207,6 +213,7 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
 
         extendMenuItemClickListener = new MyItemClickListener();
         inputMenu = (EaseChatInputMenu) getView().findViewById(R.id.input_menu);
+        inputMenu.chatFragment = this;
         registerExtendMenuItem();
         // init input menu
         inputMenu.init(null);
@@ -579,6 +586,8 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.e("TAG", "onActivityResult: " + requestCode);
+
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_CODE_CAMERA) { // capture new image
                 if (cameraFile != null && cameraFile.exists())
@@ -805,9 +814,28 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
             }
             switch (itemId) {
                 case ITEM_TAKE_PICTURE:
-                    selectPicFromCamera();
+                    //使用兼容库就无需判断系统版本
+                    int hasWriteStoragePermission = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA);
+                    if (hasWriteStoragePermission == PackageManager.PERMISSION_GRANTED) {
+                        //拥有权限，执行操作
+                        selectPicFromCamera();
+                    } else {
+                        //用户不同意，向用户展示该权限作用
+//                        if (!ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.CAMERA)) {
+//                            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+//                            Uri uri = Uri.fromParts("package", getActivity().getPackageName(), null);
+//                            intent.setData(uri);
+//                            getActivity().startActivity(intent);
+//                            //没有权限，向用户请求权限
+//                        } else {
+                            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, 1123);
+//                        }
+
+                    }
+
                     break;
                 case ITEM_PICTURE:
+
                     selectPicFromLocal();
                     break;
                 case ITEM_LOCATION:
@@ -819,6 +847,22 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
             }
         }
 
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        Log.e("TAG", "onRequestPermissionsResult: " + requestCode);
+        if (requestCode == 1123) {
+            //拥有权限，执行操作
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                selectPicFromCamera();
+
+            }
+        } else if (requestCode == 1133) {
+
+        }
     }
 
     /**
@@ -944,6 +988,7 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
         if (isMessageListInited) {
             messageList.refreshSelectLast();
         }
+        hideKeyboard();
     }
 
 
@@ -1043,7 +1088,8 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
         //noinspection ResultOfMethodCallIgnored
         cameraFile.getParentFile().mkdirs();
         startActivityForResult(
-                new Intent(MediaStore.ACTION_IMAGE_CAPTURE).putExtra(MediaStore.EXTRA_OUTPUT, EaseCompat.getUriForFile(getContext(), cameraFile)),
+                new Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                        .putExtra(MediaStore.EXTRA_OUTPUT, EaseCompat.getUriForFile(getContext(), cameraFile)),
                 REQUEST_CODE_CAMERA);
     }
 

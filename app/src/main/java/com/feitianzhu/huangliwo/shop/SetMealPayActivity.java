@@ -28,6 +28,7 @@ import com.feitianzhu.huangliwo.pushshop.bean.SetMealInfo;
 import com.feitianzhu.huangliwo.utils.PayUtils;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.Urls;
+import com.feitianzhu.huangliwo.utils.doubleclick.SingleClick;
 import com.google.gson.Gson;
 import com.hjq.toast.ToastUtils;
 import com.lzy.okgo.OkGo;
@@ -85,7 +86,6 @@ public class SetMealPayActivity extends BaseActivity {
     ImageView alipayIcon;
     @BindView(R.id.balancePay_icon)
     ImageView balancePayIcon;
-
     @Override
     protected int getLayoutId() {
         return R.layout.activity_setmeal_pay;
@@ -160,7 +160,6 @@ public class SetMealPayActivity extends BaseActivity {
                 break;
         }
     }
-
     public void pay() {
         if (payChannel.equals("wx")) {
             appId = Constant.WX_APP_ID;

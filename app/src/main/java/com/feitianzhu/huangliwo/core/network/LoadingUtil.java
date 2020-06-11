@@ -47,9 +47,9 @@ public class LoadingUtil {
         }
     }
 
-    public static void setLoadingViewShow(Boolean show, String c) {
-        setLoadingViewShowWithContent(show, c);
-    }
+//    public static void setLoadingViewShow(Boolean show, String c) {
+//        setLoadingViewShowWithContent(show, c);
+//    }
 
     public static void setLoadingViewShow(Boolean show) {
         setLoadingViewShowWithContent(show, "加载中");

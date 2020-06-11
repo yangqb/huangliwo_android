@@ -87,8 +87,6 @@ import static com.feitianzhu.huangliwo.login.LoginEvent.EDITOR_INFO;
 public class CommodityClassificationFragment extends SFFragment implements ProvinceCallBack {
 
 
-
-
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -335,7 +333,7 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
         leftAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                LinearLayoutManager linearLayoutManager = (LinearLayoutManager)   binding.leftRecyclerView.getLayoutManager();
+                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) binding.leftRecyclerView.getLayoutManager();
                 linearLayoutManager.scrollToPositionWithOffset(position, 0);
                 binding.nescro.scrollTo(0, 0);
                 leftAdapter.setSelect(position);
@@ -419,25 +417,31 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                 if (pos >= leftAdapter.getData().size() - 1) {
                     leftAdapter.setSelect(pos);
 
-                    LinearLayoutManager linearLayoutManager = (LinearLayoutManager)   binding.leftRecyclerView.getLayoutManager();
+                    LinearLayoutManager linearLayoutManager = (LinearLayoutManager) binding.leftRecyclerView.getLayoutManager();
                     linearLayoutManager.scrollToPositionWithOffset(pos, 0);
 //                    binding.leftRecyclerView.scrollToPosition(pos);
                 } else {
                     pos = pos + 1;
                     leftAdapter.setSelect(pos);
-                    LinearLayoutManager linearLayoutManager = (LinearLayoutManager)   binding.leftRecyclerView.getLayoutManager();
+                    LinearLayoutManager linearLayoutManager = (LinearLayoutManager) binding.leftRecyclerView.getLayoutManager();
                     linearLayoutManager.scrollToPositionWithOffset(pos, 0);
 //                    binding.leftRecyclerView.scrollToPosition(pos);
                 }
                 leftAdapter.notifyDataSetChanged();
                 if (mParam1 == 1) {
                     //获取当前分类的商品
-                    clsMearchantsId = merchantsClassifyList.get(pos).getClsId();
-                    getMerchants(clsMearchantsId, 0);
+                    if (merchantsClassifyList != null && merchantsClassifyList.size() > 0) {
+                        clsMearchantsId = merchantsClassifyList.get(pos).getClsId();
+                        getMerchants(clsMearchantsId, 0);
+                    }
+
                 } else {
                     //获取当前分类的商品
-                    clsShopId = shopClassifyLsit.get(pos).getClsId();
-                    getShops(clsShopId, 0);
+                    if (shopClassifyLsit != null && shopClassifyLsit.size() > 0) {
+                        clsShopId = shopClassifyLsit.get(pos).getClsId();
+                        getShops(clsShopId, 0);
+                    }
+
                 }
 
             }
@@ -456,18 +460,23 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                     leftAdapter.setSelect(pos);
 //                    binding.leftRecyclerView.scrollToPosition(pos);
                 }
-                LinearLayoutManager linearLayoutManager = (LinearLayoutManager)   binding.leftRecyclerView.getLayoutManager();
+                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) binding.leftRecyclerView.getLayoutManager();
                 linearLayoutManager.scrollToPositionWithOffset(pos, 0);
                 leftAdapter.notifyDataSetChanged();
 
                 if (mParam1 == 1) {
                     //获取当前分类的商品
-                    clsMearchantsId = merchantsClassifyList.get(pos).getClsId();
-                    getMerchants(clsMearchantsId, 1);
+                    if (merchantsClassifyList != null && merchantsClassifyList.size() > 0) {
+                        clsMearchantsId = merchantsClassifyList.get(pos).getClsId();
+                        getMerchants(clsMearchantsId, 1);
+                    }
+
                 } else {
                     //获取当前分类的商品
-                    clsShopId = shopClassifyLsit.get(pos).getClsId();
-                    getShops(clsShopId, 1);
+                    if (shopClassifyLsit != null && shopClassifyLsit.size() > 0) {
+                        clsShopId = shopClassifyLsit.get(pos).getClsId();
+                        getShops(clsShopId, 1);
+                    }
                 }
             }
         });
@@ -590,7 +599,9 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                         } else if (type == 1) {
                             binding.swipeLayout.finishRefresh();
                         }
-                        ToastUtils.show(response.body().msg);
+                        if (response.body() != null) {
+                            ToastUtils.show(response.body().msg);
+                        }
 
                         multipleItemList.clear();
                         goodsListBeans.clear();
@@ -731,7 +742,9 @@ public class CommodityClassificationFragment extends SFFragment implements Provi
                         } else if (type == 1) {
                             binding.swipeLayout.finishRefresh();
                         }
-                        ToastUtils.show(response.body().msg);
+                        if (response.body() != null) {
+                            ToastUtils.show(response.body().msg);
+                        }
 
                         multipleItemList.clear();
                         merchantsList.clear();
