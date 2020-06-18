@@ -49,6 +49,7 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:icon,android:theme,android:label">
+
         <activity android:name=".shop.ShopClassfityActivity"></activity>
         <activity android:name="com.hyphenate.easeui.ui.EaseShowBigImageActivity" />
         <activity
@@ -71,6 +72,7 @@
             android:name="com.vivo.push.sdk.LinkProxyClientActivity"
             android:exported="false"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" /> <!-- 推送配置项 -->
+
         <meta-data
             android:name="com.vivo.push.api_key"
             android:value="9f4487969a20bfa150d1ffe8f7f99d43" />

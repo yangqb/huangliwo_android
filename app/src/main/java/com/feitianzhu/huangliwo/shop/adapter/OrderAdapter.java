@@ -47,7 +47,7 @@ public class OrderAdapter extends BaseMultiItemQuickAdapter<MultipleItemOrderMod
             amount = String.format(Locale.getDefault(), "%.2f", item.getGoodsOrderListBean().getAmount());
             price = String.format(Locale.getDefault(), "%.2f", item.getGoodsOrderListBean().getPrice());
             setSpannableString2(price, helper.getView(R.id.tv_amount));
-            rewardAmount = "¥" + String.format(Locale.getDefault(), "%.2f", item.getGoodsOrderListBean().getRebatePv());
+            rewardAmount = "¥" + String.format(Locale.getDefault(), "%.2f", item.getGoodsOrderListBean().getRebatePv() * item.getGoodsOrderListBean().getCount());
             helper.setText(R.id.reward_amount, rewardAmount);
             helper.setText(R.id.specifications, item.getGoodsOrderListBean().getAttributeVal());
             helper.setText(R.id.summary, item.getGoodsOrderListBean().getGoodName());
