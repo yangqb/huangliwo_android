@@ -2,6 +2,7 @@ package com.feitianzhu.huangliwo.shop.adapter;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -40,9 +41,12 @@ public class LogisticsAdapter extends BaseQuickAdapter<LogisticsInfo, BaseViewHo
         }
 
         helper.setText(R.id.content, item.getContext());
-        String[] date = DateUtils.strToString(item.getFtime()).split(" ");
-        helper.setText(R.id.time, date[0] + "\n" + date[1]);
-
+        if (item.getFtime() == null || TextUtils.isEmpty(item.getFtime())) {
+            helper.setText(R.id.time, "");
+        } else {
+            String[] date = DateUtils.strToString(item.getFtime()).split(" ");
+            helper.setText(R.id.time, date[0] + "\n" + date[1]);
+        }
     }
 
 }

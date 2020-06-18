@@ -32,15 +32,20 @@ public class TeamAdapter extends BaseQuickAdapter<TeamModel, BaseViewHolder> {
         Glide.with(mContext).load(item.headImg).apply(new RequestOptions().error(R.mipmap.b08_01touxiang).placeholder(R.mipmap.b08_01touxiang)).into((CircleImageView) helper.getView(R.id.head));
         helper.setText(R.id.name, item.nickName);
         helper.setText(R.id.time, "注册时间：" + DateUtils.getFormatedDateTime("yyyy-MM-dd", item.registeDate));
-        helper.setText(R.id.recommendCount, "直推人数：" + item.subordinateCount);
+        helper.setText(R.id.recommendCount, "直推会员：" + item.subordinateCount);
         helper.setText(R.id.contributionAmount, "贡献收入：¥" + MathUtils.subZero(String.valueOf(item.totalConsume)));
         helper.setText(R.id.phone, "电话：" + item.phone);
         if (item.accountType == 0) {
             helper.setText(R.id.grade, "消费者");
+        } else if (item.accountType == 3) {
+            helper.setText(R.id.grade, "");
+//            helper.setText(R.id.grade, "合伙人");
         } else if (item.accountType == 4) {
             helper.setText(R.id.grade, "超级会员");
         } else if (item.accountType == 5) {
             helper.setText(R.id.grade, "优选会员");
+        } else {
+            helper.setText(R.id.grade, "");
         }
     }
 }

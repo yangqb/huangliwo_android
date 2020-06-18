@@ -82,7 +82,7 @@
             android:id="@+id/recommendCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="直推人数：36"
+            android:text="直推人数："
             android:textColor="@color/color_333333"
             android:textSize="13sp" />
 
@@ -91,7 +91,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:text="超级会员"
+            android:text=""
             android:textColor="@color/color_333333"
             android:textSize="13sp" />
 
