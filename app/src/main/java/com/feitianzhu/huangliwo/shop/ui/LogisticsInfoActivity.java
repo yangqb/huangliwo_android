@@ -14,11 +14,15 @@ import android.widget.TextView;
 import com.feitianzhu.huangliwo.R;
 import com.feitianzhu.huangliwo.common.Constant;
 import com.feitianzhu.huangliwo.common.base.activity.BaseActivity;
+import com.feitianzhu.huangliwo.model.LogisticsInfo;
 import com.feitianzhu.huangliwo.model.LogisticsModel;
 import com.feitianzhu.huangliwo.shop.adapter.LogisticsAdapter;
 import com.feitianzhu.huangliwo.utils.SPUtils;
 import com.feitianzhu.huangliwo.utils.StringUtils;
 import com.hjq.toast.ToastUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,10 +34,9 @@ import butterknife.OnClick;
 public class LogisticsInfoActivity extends BaseActivity {
     public static final String LOGISTICS_DATA = "logistics_data";
     public static final String LOGISTICS_COMPANY = "logistics_company";
+    public static final String ORDER_CREATE_TIME = "order_create_time";
     @BindView(R.id.data)
     LinearLayout data;
-    @BindView(R.id.rootView)
-    LinearLayout rootView;
     private LogisticsAdapter adapter;
     private LogisticsModel logisticsModel;
     private String logisticsCompany = "";
@@ -49,6 +52,8 @@ public class LogisticsInfoActivity extends BaseActivity {
     TextView tvCopy;
     @BindView(R.id.line)
     View line;
+    @BindView(R.id.ll_logistics)
+    LinearLayout llLogistics;
     private String token;
     private String userId;
 
@@ -66,25 +71,29 @@ public class LogisticsInfoActivity extends BaseActivity {
 
         logisticsCompany = getIntent().getStringExtra(LOGISTICS_COMPANY);
         titleName.setText("物流信息");
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setNestedScrollingEnabled(false);
+        if (logisticsModel == null) {
+            String createTime = getIntent().getStringExtra(ORDER_CREATE_TIME);
+            LogisticsInfo logisticsInfo = new LogisticsInfo();
+            logisticsInfo.setContext("订单处理中：\n等待库房确认、商品打包、出库");
+            logisticsInfo.setFtime(createTime);
+            List<LogisticsInfo> logisticsInfos = new ArrayList<>();
+            logisticsInfos.add(logisticsInfo);
+            adapter = new LogisticsAdapter(logisticsInfos);
+            recyclerView.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+        }
 
-        if (logisticsCompany != null && !StringUtils.isEmpty(logisticsModel.getNu()) && !logisticsModel.getNu().equals("null")) {
-            data.setVisibility(View.VISIBLE);
-            rootView.setVisibility(View.GONE);
+        if (logisticsModel != null && logisticsCompany != null && !StringUtils.isEmpty(logisticsModel.getNu()) && !logisticsModel.getNu().equals("null")) {
             tvLogisticsNo.setText("物流编号" + logisticsModel.getNu());
-            tvCopy.setVisibility(View.VISIBLE);
+            llLogistics.setVisibility(View.VISIBLE);
             line.setVisibility(View.VISIBLE);
             tvCompanyName.setText(logisticsCompany);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            recyclerView.setNestedScrollingEnabled(false);
             adapter = new LogisticsAdapter(logisticsModel.getData());
             recyclerView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
-        } else {
-            data.setVisibility(View.GONE);
-            rootView.setVisibility(View.VISIBLE);
         }
-
-
     }
 
     @Override

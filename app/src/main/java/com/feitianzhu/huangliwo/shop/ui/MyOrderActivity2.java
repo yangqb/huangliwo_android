@@ -112,13 +112,11 @@ public class MyOrderActivity2 extends BaseActivity {
             if (status == GoodsOrderInfo.TYPE_All) {
                 tabLayout.setCurrentTab(0);
             } else if (status == GoodsOrderInfo.TYPE_WAIT_COMMENTS) {
-                tabLayout.setCurrentTab(4);
+                tabLayout.setCurrentTab(3);
             } else if (status == GoodsOrderInfo.TYPE_NO_PAY) {
                 tabLayout.setCurrentTab(1);
-            } else if (status == GoodsOrderInfo.TYPE_WAIT_DELIVERY) {
+            } else if (status == GoodsOrderInfo.TYPE_WAIT_DELIVERY || status == GoodsOrderInfo.TYPE_WAIT_RECEIVING) {
                 tabLayout.setCurrentTab(2);
-            } else if (status == GoodsOrderInfo.TYPE_WAIT_RECEIVING) {
-                tabLayout.setCurrentTab(3);
             }
         } else {
             tabLayout.setVisibility(View.GONE);
@@ -328,7 +326,7 @@ public class MyOrderActivity2 extends BaseActivity {
                                         .show();
                             } else if (goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_WAIT_RECEIVING || goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_COMPLETED) {
                                 //查看物流
-                                checkLogisticsInfo(goodsOrderList.get(position).getExpressNo(), goodsOrderList.get(position).getLogisticCpName());
+                                checkLogisticsInfo(goodsOrderList.get(position).getExpressNo(), goodsOrderList.get(position).getLogisticCpName(), goodsOrderList.get(position).getCreateDate());
                                 /*intent = new Intent(MyOrderActivity2.this, LogisticsInfoActivity.class);
                                 intent.putExtra(LogisticsInfoActivity.LOGISTICS_COMPANY, goodsOrderList.get(position).getLogisticCpName());
                                 intent.putExtra(LogisticsInfoActivity.LOGISTICS_NO, goodsOrderList.get(position).getExpressNo());
@@ -751,7 +749,9 @@ public class MyOrderActivity2 extends BaseActivity {
                 });
     }
 
-    public void checkLogisticsInfo(String logisticsNo, String logisticsName) {
+    private LogisticsModel logisticsModel;
+
+    public void checkLogisticsInfo(String logisticsNo, String logisticsName, String createTime) {
         if (logisticsNo != null && !TextUtils.isEmpty(logisticsNo)) {
             OkGo.<LzyResponse<String>>get(Urls.GET_LOGISTICS_INFO)
                     .tag(this)
@@ -761,21 +761,21 @@ public class MyOrderActivity2 extends BaseActivity {
                     .execute(new JsonCallback<LzyResponse<String>>() {
                         @Override
                         public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<String>> response) {
-                            super.onSuccess(MyOrderActivity2.this, response.body().msg, response.body().code);
+                            //super.onSuccess(MyOrderActivity2.this, response.body().msg, response.body().code);
                             if (response.body().code == 0 && response.body().data != null && !TextUtils.isEmpty(response.body().data)) {
                                 String jsonStr = response.body().data;
-                                LogisticsModel logisticsModel = new Gson().fromJson(jsonStr, LogisticsModel.class);
-                                if (logisticsModel.getData() != null && logisticsModel.getData().size() > 0) {
-                                    Intent intent = new Intent(MyOrderActivity2.this, LogisticsInfoActivity.class);
-                                    intent.putExtra(LogisticsInfoActivity.LOGISTICS_COMPANY, logisticsName);
-                                    intent.putExtra(LogisticsInfoActivity.LOGISTICS_DATA, logisticsModel);
-                                    startActivity(intent);
-                                } else {
-                                    ToastUtils.show("商品待出库");
+                                logisticsModel = new Gson().fromJson(jsonStr, LogisticsModel.class);
+                                if (logisticsModel.getData() == null || logisticsModel.getData().size() <= 0) {
+                                    logisticsModel = null;
                                 }
                             } else {
-                                ToastUtils.show("商品待出库");
+                                logisticsModel = null;
                             }
+                            Intent intent = new Intent(MyOrderActivity2.this, LogisticsInfoActivity.class);
+                            intent.putExtra(LogisticsInfoActivity.LOGISTICS_COMPANY, logisticsName);
+                            intent.putExtra(LogisticsInfoActivity.ORDER_CREATE_TIME, createTime);
+                            intent.putExtra(LogisticsInfoActivity.LOGISTICS_DATA, logisticsModel);
+                            startActivity(intent);
                         }
 
                         @Override
@@ -784,7 +784,12 @@ public class MyOrderActivity2 extends BaseActivity {
                         }
                     });
         } else {
-            ToastUtils.show("商品待出库");
+            logisticsModel = null;
+            Intent intent = new Intent(MyOrderActivity2.this, LogisticsInfoActivity.class);
+            intent.putExtra(LogisticsInfoActivity.LOGISTICS_COMPANY, logisticsName);
+            intent.putExtra(LogisticsInfoActivity.ORDER_CREATE_TIME, createTime);
+            intent.putExtra(LogisticsInfoActivity.LOGISTICS_DATA, logisticsModel);
+            startActivity(intent);
         }
     }
 

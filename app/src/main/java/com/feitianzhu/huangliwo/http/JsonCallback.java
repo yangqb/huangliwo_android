@@ -186,7 +186,7 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
             } else {
-                ToastUtils.show(string == null ? "" : string);
+                ToastUtils.show(string == null ? "服务器错误" : string);
             }
         }
     }
