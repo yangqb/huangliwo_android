@@ -111,6 +111,15 @@ userName (string, optional): 用户名
         private String refundExpressCom;
         private String refundExpressCode;
         private int noReason;//是否支持7天无理由 0否 1是
+        private String createTime;//订单创建时间
+
+        public String getCreateTime() {
+            return createTime;
+        }
+
+        public void setCreateTime(String createTime) {
+            this.createTime = createTime;
+        }
 
         public int getNoReason() {
             return noReason;

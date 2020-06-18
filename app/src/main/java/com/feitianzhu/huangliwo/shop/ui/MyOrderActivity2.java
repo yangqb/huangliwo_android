@@ -326,7 +326,7 @@ public class MyOrderActivity2 extends BaseActivity {
                                         .show();
                             } else if (goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_WAIT_RECEIVING || goodsOrderList.get(position).getStatus() == GoodsOrderInfo.TYPE_COMPLETED) {
                                 //查看物流
-                                checkLogisticsInfo(goodsOrderList.get(position).getExpressNo(), goodsOrderList.get(position).getLogisticCpName(), goodsOrderList.get(position).getCreateDate());
+                                checkLogisticsInfo(goodsOrderList.get(position).getExpressNo(), goodsOrderList.get(position).getLogisticCpName(), goodsOrderList.get(position).getCreateTime());
                                 /*intent = new Intent(MyOrderActivity2.this, LogisticsInfoActivity.class);
                                 intent.putExtra(LogisticsInfoActivity.LOGISTICS_COMPANY, goodsOrderList.get(position).getLogisticCpName());
                                 intent.putExtra(LogisticsInfoActivity.LOGISTICS_NO, goodsOrderList.get(position).getExpressNo());
